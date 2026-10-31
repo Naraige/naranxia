@@ -23,3 +23,12 @@ jobs:
             NOTES="Naranxia $V"; [ -f game/NOTES.md ] && NOTES="$(cat game/NOTES.md)"
             gh release create "$V" game/naranxia.html --title "Naranxia $V" --notes "$NOTES"
           fi
+      - name: Announce on Discord
+        env:
+          HOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        if: env.HOOK != ''
+        run: |
+          V=$(tr -d '[:space:]' < game/VERSION)
+          NOTES=$(cat game/NOTES.md 2>/dev/null || echo "")
+          MSG=$(printf '**Naranxia %s is out!** The game updates itself at next launch.\n\n%s\n\nDownload: https://github.com/%s/releases/latest' "$V" "$NOTES" "$GITHUB_REPOSITORY")
+          jq -n --arg c "${MSG:0:1990}" '{username:"Naranxia",content:$c}' | curl -sS -H 'Content-Type: application/json' -d @- "$HOOK"
