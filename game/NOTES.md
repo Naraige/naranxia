@@ -1,0 +1,4 @@
+- Rival AI kingdoms: 4 kingdoms start like you (castle, 4 peasants, 2 knights), gather, build farms, houses, barracks, towers, storehouse, academy, guild and market, rebuild in stone, raise walls with gates, garrison archers and found new settlements.
+- They fight the hordes on your side; when a castle falls its people turn.
+- One difficulty: the "Zombie swarm" option is gone.
+- Saves: a reloaded game carries on exactly as it would have.
