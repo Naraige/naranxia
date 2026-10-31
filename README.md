@@ -1,2 +1,1 @@
-# naranxia
-Naranxia Game
+# Naranxia — le royaume du roi Naraige
