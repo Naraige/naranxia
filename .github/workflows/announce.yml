@@ -1,0 +1,24 @@
+# Posts the announcements listed in announce/QUEUE to Discord, one message per version, in order.
+name: Announce on Discord
+on:
+  push:
+    branches: [main]
+    paths: [announce/QUEUE]
+  workflow_dispatch:
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post each update
+        env:
+          HOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          [ -n "$HOOK" ] || { echo "DISCORD_WEBHOOK secret is not set"; exit 1; }
+          while read -r V; do
+            [ -n "$V" ] || continue
+            F="announce/$V.md"; [ -f "$F" ] || continue
+            MSG=$(printf '%s\n\nDownload: https://github.com/%s/releases/tag/%s' "$(cat "$F")" "$GITHUB_REPOSITORY" "$V")
+            jq -n --arg c "${MSG:0:1990}" '{username:"Naranxia",content:$c}' | curl -fsS -H 'Content-Type: application/json' -d @- "$HOOK"
+            sleep 3
+          done < announce/QUEUE
