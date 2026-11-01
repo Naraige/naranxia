@@ -1,1 +1,3 @@
-- **Languages:** English, Français, Español, Deutsch, Italiano and Português. Pick yours with the flag button on the title screen or in Settings; every menu, button, tooltip and message follows.
+- Sharper icons everywhere: every icon is now drawn at 2.5x the resolution with a new painted finish (rim light, smooth outline, soft shadow).
+- New look for menus and windows: rounded, bevelled panels and buttons with a glossy top, soft shadows and a glow on hover and selection.
+- New desktop icon and launcher screen; fresh installers are attached to this release.

@@ -1,0 +1,37 @@
+# Builds the desktop installers (Windows setup, Mac Apple Silicon + Intel, Linux) and attaches them to the latest release.
+# Runs when the launcher or its icons change, or by hand.
+name: Build installers
+on:
+  push:
+    branches: [main]
+    paths: [app/**]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq nsis zip
+      - name: Package
+        working-directory: app
+        run: |
+          npm ci --no-audit --no-fund
+          mkdir -p src/game && cp ../game/naranxia.html src/game/naranxia.html
+          node pack.js linux:x64,win32:x64,darwin:x64,darwin:arm64
+          cp linux-install.sh dist/Naranxia-linux-x64/install.sh && chmod +x dist/Naranxia-linux-x64/install.sh
+          mkdir -p out && makensis -V2 installer.nsi
+          (cd dist && tar -czf ../out/Naranxia-Linux-x64.tar.gz Naranxia-linux-x64)
+          (cd dist/Naranxia-darwin-arm64 && zip -qry ../../out/Naranxia-Mac-AppleSilicon.zip Naranxia.app)
+          (cd dist/Naranxia-darwin-x64 && zip -qry ../../out/Naranxia-Mac-Intel.zip Naranxia.app)
+          ls -la out
+      - name: Attach to the latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          T=$(gh release view --json tagName -q .tagName)
+          gh release upload "$T" app/out/* --clobber

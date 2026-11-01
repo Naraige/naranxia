@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Naranxia</title>
+<style>
+html,body{margin:0;height:100%;background:#0d1220;color:#ead8ba;font-family:Georgia,'Times New Roman',serif;overflow:hidden}
+.w{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+ background:radial-gradient(ellipse at 50% 40%,#25304a 0%,#0d1220 70%)}
+h1{margin:0;font-size:64px;letter-spacing:10px;color:#f0c75e;text-shadow:0 3px 0 #6b4a16,0 0 30px rgba(240,199,94,.35)}
+.sub{font-size:15px;letter-spacing:4px;color:#b59773;text-transform:uppercase}
+.bar{width:340px;height:8px;border-radius:4px;background:#1c2438;border:1px solid #3a4560;overflow:hidden}
+.fill{height:100%;width:8%;background:linear-gradient(90deg,#c9922e,#f0c75e);transition:width .4s}
+#msg{font-size:14px;color:#d9c7a6;min-height:18px}
+</style></head><body>
+<div class="w"><img src="icon.png" style="width:150px;height:150px;filter:drop-shadow(0 8px 24px rgba(240,199,94,.35))"><h1>NARANXIA</h1><div class="sub">The kingdom of King Naraige</div>
+<div class="bar"><div class="fill" id="f"></div></div><div id="msg">Starting...</div></div>
+<script>
+window.NARX&&NARX.onStatus(s=>{document.getElementById('msg').textContent=s.msg;if(s.p!=null)document.getElementById('f').style.width=Math.round(s.p*100)+'%'});
+</script></body></html>

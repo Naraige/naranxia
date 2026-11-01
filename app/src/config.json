@@ -1,0 +1,4 @@
+{
+  "repo": "Naraige/naranxia",
+  "note": "GitHub repository (owner/name) whose latest Release holds the game build (.html asset). The launcher downloads it when its tag is newer than the installed version."
+}
