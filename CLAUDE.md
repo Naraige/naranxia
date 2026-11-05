@@ -11,7 +11,7 @@ Talk to him in French, briefly. He plays the builds himself and reports bugs and
 | `src/game.js` | the whole game, readable (about 5000 long lines, 850 KB). **Edit this.** |
 | `src/shell.html` | HTML/CSS shell around the script (title, fonts, canvases, Three.js r128 from cdnjs) |
 | `game/naranxia.html` | the shipped build (packed). Changing it or `game/VERSION` on `main` **publishes a release** |
-| `game/VERSION`, `game/NOTES.md` | current version (`v87`) and the player-facing notes of that release |
+| `game/VERSION`, `game/NOTES.md` | current version (`v88`) and the player-facing notes of that release |
 | `app/` | Electron desktop launcher: it downloads the `.html` of the latest GitHub release at start-up; `installers.yml` rebuilds the installers when `app/**` changes |
 | `announce/` | Discord texts `vNN.md`; pushing a change to `announce/QUEUE` reposts the versions it lists |
 | `tools/` | `build.sh`, `build_dist.mjs`, `run.py` (headless test runner), `fontroute.py`, `preview/` (renders units, buildings and gear to images) |
@@ -29,6 +29,7 @@ python3 tools/run.py tests/det.js        # the same game twice must give identic
 python3 tools/run.py tests/save.js       # save / load round trip (slow: several minutes)
 python3 tests/mp8.py naranxia_readable.html 40   # 2 headless clients in co-op: economy, research, waves; prints FIRST DIVERGENCE on a desync
 python3 tests/mpk.py naranxia_readable.html 40   # co-op: king, royal guards, orders, fights
+python3 tests/mp_resync.py naranxia_readable.html 120   # co-op: one machine is corrupted on purpose, the automatic resync must bring both back (RESULT OK)
 ```
 
 `tools/run.py script.js` evaluates the function written in `script.js` inside the loaded game, so a test is plain game code.
@@ -52,7 +53,10 @@ The King chose "versions directes": code a batch, test it, release it as the nex
 - Co-op is lockstep over PeerJS: both clients run the same simulation from the same seed and exchange only player
   commands (`mpPush` then `mpExec`) and a state hash per tick (`mpChk`). Every gameplay change must stay deterministic:
   the simulation uses its seeded RNG, never `Math.random()` or `Date` inside `update()`, iterates in a stable order, and
-  player actions go through commands. Run `tests/mp8.py` and `tests/mpk.py` after touching gameplay.
+  player actions go through commands. Run `tests/mp8.py`, `tests/mpk.py` and `tests/mp_resync.py` after touching gameplay.
+- When the hashes differ the host freezes the lockstep, sends a snapshot (save format, `mpResync`), the guest loads it, then the host
+  loads the same snapshot (`mpResApply`); command and hash messages carry an epoch (`MP.ep`). Anything that must survive a resync
+  has to be in `SAVA` (the save registry).
 - Every text shown to players goes through `T_()` with its translations (EN, FR, ES, DE, IT, PT) in the table near `const LANGS`.
 - Art direction approved by the King: Minecraft characters made the Blockbench way: the MC player model (8 px head,
   8x12x4 body, 4x12x4 limbs, outer layer with transparent pixels) plus 2 or 3 extra cubes per unit, the detail in pixel

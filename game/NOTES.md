@@ -1,8 +1,2 @@
-- Turn your castle before founding it: press R (or "Turn castle") on the site screen; its door faces the side you choose.
-- Castles now stand at the height of their site instead of sinking into hillsides.
-- Co-op: you see your partner's castle (and where they are looking) while choosing your site, the two castles may stand side by side, and both players need the same version to start.
-- Co-op: the second player's land is protected like the first one's (AI kingdoms no longer settle next to it, hordes are sized the same).
-- Our units take ramps to change level: blocks you raise or dig can no longer be climbed (zombie miners still cut steps for the horde).
-- Double-click a building to select all of yours of that type: Upgrade turns every wooden one to stone at once.
-- Click a tower or your castle to see its range as a ring on the ground.
-- New "Quit game" button in the menu (in co-op your partner carries on alone), and "Exit to desktop" in the desktop app.
+- Co-op: when the two games drift apart they now resynchronize by themselves in a few seconds (the host sends its game to the partner): no more restarting or reconnecting. The banner shows "Co-op: resynchronizing...".
+- Co-op: fixed a cause of drifting apart: zombies and AI units were given a different owner on each machine.
