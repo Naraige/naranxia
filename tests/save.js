@@ -9,6 +9,6 @@ async()=>{const T0=performance.now();let s=31;const RR=Math.random;const seedR=k
  seedR(5);rollWorld();randomSite();CX=pickPos.tx;CY=pickPos.ty;reset();startGame();for(let k=0;k<50;k++)update(.05);
  const t2=performance.now();await svApply(txt);const tLoad=performance.now()-t2;const D2=dg();
  seedR(77);for(let k=0;k<400;k++)update(.05);const B=dg();
- const imgs=[];render3D(.05);imgs.push(renderer.domElement.toDataURL('image/jpeg',.8));Math.random=RR;
+ render3D(.05);Math.random=RR;
  const w={};for(const x of window.__svw)w[x]=(w[x]||0)+1;
- return JSON.stringify({imgs,len:txt.length,tPack,tLoad,same0:D1===D2,sameCont:A===B,D1,D2,A,B,w})}
+ return JSON.stringify({ok:D1===D2&&A===B,len:txt.length,tPack:Math.round(tPack),tLoad:Math.round(tLoad),same0:D1===D2,sameCont:A===B,w})}

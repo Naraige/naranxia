@@ -11,7 +11,7 @@ Talk to him in French, briefly. He plays the builds himself and reports bugs and
 | `src/game.js` | the whole game, readable (about 5000 long lines, 850 KB). **Edit this.** |
 | `src/shell.html` | HTML/CSS shell around the script (title, fonts, canvases, Three.js r128 from cdnjs) |
 | `game/naranxia.html` | the shipped build (packed). Changing it or `game/VERSION` on `main` **publishes a release** |
-| `game/VERSION`, `game/NOTES.md` | current version (`v86`) and the player-facing notes of that release |
+| `game/VERSION`, `game/NOTES.md` | current version (`v87`) and the player-facing notes of that release |
 | `app/` | Electron desktop launcher: it downloads the `.html` of the latest GitHub release at start-up; `installers.yml` rebuilds the installers when `app/**` changes |
 | `announce/` | Discord texts `vNN.md`; pushing a change to `announce/QUEUE` reposts the versions it lists |
 | `tools/` | `build.sh`, `build_dist.mjs`, `run.py` (headless test runner), `fontroute.py`, `preview/` (renders units, buildings and gear to images) |
