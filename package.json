@@ -1,0 +1,12 @@
+{
+  "name": "naranxia-dev",
+  "private": true,
+  "description": "Build and test tools for Naranxia (the game itself needs no npm package)",
+  "devDependencies": {
+    "@fontsource/cinzel": "5.3.0",
+    "@fontsource/marcellus": "5.3.0",
+    "@gfx/zopfli": "1.0.15",
+    "terser": "5.31.0",
+    "three": "0.128.0"
+  }
+}
