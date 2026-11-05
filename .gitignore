@@ -4,3 +4,4 @@ app/out/
 app/src/game/
 node_modules/
 dist/
+__pycache__/
