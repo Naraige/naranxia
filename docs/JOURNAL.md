@@ -16,8 +16,12 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
   GitHub issues as the backlog (labels + templates), CLAUDE.md "Working efficiently".
 - Verified locally: smoke, det, tools, mp8, mpk, mp_resync, mp_convoy all PASS; convoy: 2 porters, 60 wood + 30 stone each, delivered at ticks 698 / 745
   on both machines, porters home, 1331 hash checks equal.
-- Left: restyle of king, captain, bannerman, gunner, zombies, then buildings (issue, label restyle). Second player's placement and invisible
-  buildings were never reproduced (identical in a real 2-client lobby test): waiting for an F8 report (label needs-report).
+- CI: ubuntu-latest became 26.04, unsupported by Playwright 1.56 -> test.yml pinned to ubuntu-24.04. The first v89 release run was blocked by that,
+  re-run by hand (release.yml now has workflow_dispatch, and posts on Discord only for a new release) -> all green, release v89 out,
+  the CI build equals the shipped file. Local suite on the 2-core agent box takes ~25 min (smoke 274 s, tools 288 s, mp* ~200 s each): let CI run it.
+- Artifact https://claude.ai/artifact/QrDKDMuFAotHdCus8kQiz5 updated to v89. The King saved the `/naranxia` skill (session start + batch routine).
+- Left: restyle of king, captain, bannerman, gunner, zombies, then buildings (issues #1, #2). Second player's placement and invisible
+  buildings were never reproduced (identical in a real 2-client lobby test): waiting for an F8 report (#3, #4). Save/load continuation differs (#5).
 
 ## 2026-11-05 · v88
 - Co-op automatic resync: hash mismatch -> host freezes, sends its save in 48 KB chunks ('rs0'/'rs1'), guest loads, then host loads the same
