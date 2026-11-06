@@ -37,6 +37,7 @@ npm test                       # quick suite, logs in dist/test-logs/
 npm test -- --full             # quick suite plus save round trip
 npm test -- det mp8            # select tests by name
 python3 tools/run.py X.js [out.png|-] [W H wait] [html]   # evaluates the JS function in X.js inside the loaded game
+python3 tools/profile.py                                  # CPU profile of 6000 sim ticks (after npm run build); hashes must not change
 python3 tools/repro.py report.json [sec] [after.png]      # opens a player's bug report (F8): errors, screenshot, replays the save
 python3 tools/addtexts.py texts.json                      # {"English": [FR, ES, DE, IT, PT]} into the block of the next version
 bash tools/release.sh vNN "title"                         # bump, build, test, commit, and push (see Releasing)
@@ -68,6 +69,10 @@ The King chose "versions directes": code a batch, test it, release it as the nex
   Screenshots only for visual changes, 1280x720, look once.
 - Let GitHub run the full suite; locally run the tests of what changed.
 - One conversation per batch; the journal and the issues carry the memory between conversations.
+- Before building: `ls node_modules/esbuild` (a stale `node_modules` makes `npm run build` fail and leaves an old `dist/`); run `npm ci` if missing.
+- CI logs (`actions/jobs/ID/logs`) can be read with `gh api`, but the `test-logs` artifact download is blocked: find the failing test in the job log (`grep -aE "PASS|FAIL"`).
+- The swarm (`gameplay/swarm.js`, `swStep`, ~20 % of sim time) is already tuned: hoisting closures gave no gain. Profile with `tools/profile.py` before touching it.
+- `mp_convoy` is real-time bound (400 s budget in `tools/test_all.mjs`): a failure on CI alone is usually the slow runner.
 - Agent shell quirks: a bare `sleep` is refused (use `timeout N bash -c 'until COND; do sleep 5; done'` or a background run);
   the gh GraphQL API may be refused (use `gh api repos/...` REST, as `tools/ci_status.sh`).
 
