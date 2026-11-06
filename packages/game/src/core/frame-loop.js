@@ -52,7 +52,11 @@ function loop(ts){const lt0=performance.now(),dt=Math.min(.05,(ts-(sessionState.
   if(inputState.box){frameLoopState.CWD=1;canvasesState.ctx.strokeStyle='#ffe14a';canvasesState.ctx.lineWidth=Math.max(1,inputState.DPR);canvasesState.ctx.fillStyle='rgba(255,225,74,.15)';const x=Math.min(inputState.box.x1,inputState.box.x2),y=Math.min(inputState.box.y1,inputState.box.y2),w=Math.abs(inputState.box.x2-inputState.box.x1),h=Math.abs(inputState.box.y2-inputState.box.y1);canvasesState.ctx.fillRect(x,y,w,h);canvasesState.ctx.strokeRect(x+.5,y+.5,w,h)}
   if(PINGS.length){frameLoopState.CWD=1;drawPings()}}}finally{canvasesState.ctx=hc}}
  if(!sessionState.started||frameLoopState.UIT<0||ts-frameLoopState.UIT>=22||ts<frameLoopState.UIT){UIDT=frameLoopState.UIT>=0&&ts>frameLoopState.UIT?Math.min(.1,(ts-frameLoopState.UIT)/1000):dt;frameLoopState.UIT=ts;canvasesState.ctx.setTransform(1,0,0,1,0,0);canvasesState.ctx.clearRect(0,0,cv.width,cv.height);drawUI()}
- placeInput();{const cu=sessionState.started&&sessionState.mode?'crosshair':sessionState.started&&inputState.panMode?'grab':'default';if(cu!==CUR0){CUR0=cu;cv.style.cursor=cu}}drsTick(ts,lt0);if(diagnosticsState.BUGQ)bugCapture();requestAnimationFrame(loop)}
+ placeInput();{const cu=sessionState.started&&sessionState.mode?'crosshair':sessionState.started&&inputState.panMode?'grab':'default';if(cu!==CUR0){CUR0=cu;cv.style.cursor=cu}}drsTick(ts,lt0);if(diagnosticsState.BUGQ)bugCapture();hideBoot();requestAnimationFrame(loop)}
+
+/* the launch splash (index.html) fades out once a few frames of the title scene are on screen */
+let bootFrames = 0;
+function hideBoot(){if(bootFrames>=0&&++bootFrames>=4){bootFrames=-1;const b=document.getElementById('boot');if(b){b.classList.add('done');setTimeout(()=>b.remove(),1300)}}}
 export let UIDT = 1/60;
 let CUR0 = '';
 let SHF = 0;
