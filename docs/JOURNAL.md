@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-06 · CI, tooling and save investigation (#5)
+
+- `mp_convoy` budget raised to 400 s (it failed twice on the slow CI runner only); Chromium cached in CI; new `tools/profile.py` (CPU profile of 6000 sim ticks). The swarm (`swStep`) is already tuned: hoisting closures gave no measurable gain.
+- `tests/save.js` now pauses the live loop during pack/load (it skewed `sameCont`). #5 root cause found, not fixed: `svEncode` skips `zf zft _tc pfS` (SVSKIP); after a load `u.pfS` is undefined so `movement.js` resets `pfB` (stuck detection), and worker paths drift from tick ~20-50 on. Terrain and cosmetic fields are not the cause. Fix idea: save the path field key of `pfS` and rebind it after load. Harmless for players.
+- GitHub answered "account was suspended" (403) at the end of the session, so the #5 comment with this analysis is not posted yet: post it when access is back.
+
 ## 2026-11-06 · Source migration
 
 - Replaced the numbered script fragments and tracked HTML bundle with domain ES modules, styles, and assets in `packages/game`. The Electron workspace is under `apps/desktop`.
