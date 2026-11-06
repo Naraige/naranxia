@@ -5,6 +5,7 @@ on:
   push:
     branches: [main]
     paths: [game/VERSION, game/naranxia.html]
+  workflow_dispatch:   # run it again by hand (Actions tab) if a release was blocked
 permissions:
   contents: write
 jobs:
@@ -19,6 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create the release
+        id: rel
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -28,11 +30,13 @@ jobs:
           else
             NOTES="Naranxia $V"; [ -f game/NOTES.md ] && NOTES="$(cat game/NOTES.md)"
             gh release create "$V" game/naranxia.html --title "Naranxia $V" --notes "$NOTES"
+            echo "new=1" >> "$GITHUB_OUTPUT"
           fi
       - name: Announce on Discord
         env:
           HOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        if: env.HOOK != ''
+        # only for a new release: a re-run must not post the same version twice
+        if: env.HOOK != '' && steps.rel.outputs.new == '1'
         run: |
           V=$(tr -d '[:space:]' < game/VERSION)
           NOTES=$(cat game/NOTES.md 2>/dev/null || echo "")
