@@ -12,7 +12,7 @@ const FACE2=(mid,low,R)=>({F:['hhhhhhhh','hhhhhhhh','hssssssh','srrssrrs','swess
 /* a pixel cut-out wall of a crown: rows top first, '.' = gap; plane xy (front / back) or yz (sides) */
 function pxCut(G,rows,map,o){const H=rows.length,W=rows[0].length;pxSpriteF(G,W,H,(u,v)=>{const c=rows[H-1-v][u];return c==='.'?null:map[c]},o)}
 /* ---------------- KING NARAIGE: A open face, beard and crown / B royal great helm under the crown ---------------- */
-function pxKing(P,AL){const vr=(window.__KV||'A'),helm=vr==='B',
+function pxKing(P,AL){const vr=(window.__KV||'B'),helm=vr==='B',
   map=pxMap2({h:'#7a4422',r:'#4e2a12',E:'#f3efe6',q:'#d6d0c2',x:'#18181c',R:'#a62832',Q:'#c94450',X:'#6c111b',j:'#e8303a',z:'#3a7aff'},thp());
  const K={hatMat:4,jacketMat:0,sleeveMat:4,pantsMat:4,
   head:FACE2('shhmmhhs','hhhhhhhh',['hhhhhhhh','hhhhhhhh','sssshhhh','sssshhhh','ssSshhhh','sssshhhh','hhsshhhh','hhhhhhhh']),

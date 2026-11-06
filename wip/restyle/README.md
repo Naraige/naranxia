@@ -17,7 +17,7 @@ Status (Nov 2026):
   under the crown), captain (gilded breastplate, red sash, open bascinet, chevron shield, gilded sword), bannerman (kettle hat,
   gambeson, cross tabard), gunners (doublet, apron, bandolier, feather), zombies as pixel skins driven by the same zSpec
   (outfits, headgear, wounds, MUTX proportions; runner skeletons with thin limbs, brute shackle and spikes, bomber keg, acid sacs,
-  miner helmet and pick), royal sword. All in `sets_units2.js`. Waiting for the King's codes.
+  miner helmet and pick), royal sword. All in `sets_units2.js`. Approved by the King on 2026-11-06, no remarks: king variant B (royal helm under the crown, now the default), all other rows as shown.
 - still old style: capes (king, captain, guard), the banner, the cannon, the swarm crowd (swGeoV, kept light for speed); then buildings.
 - build time: 74 pixel zombie variants in 164 ms (old builder 49 ms).
 - boards: `bash tools/build.sh && python3 wip/restyle/restyle.py dist/game.js dist/game_restyle.js && GAME_JS=dist/game_restyle.js bash tools/build.sh`,
