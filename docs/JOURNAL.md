@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-06 · Source migration
+
+- Replaced the numbered script fragments and tracked HTML bundle with domain ES modules, styles, and assets in `packages/game`. The Electron workspace is under `apps/desktop`.
+- Build and test commands run from the npm workspace. Release CI publishes the browser artifact from the successful test job.
+- Verified the v91 browser suite and repeated all four co-op scenarios with strict test setup. The archived and modular title and in-game captures matched pixel for pixel at 680×420.
+- Loaded an archived v91 save in the modular build and matched the original state fingerprint. Mixed archived and modular peers delivered both convoys on the same ticks and matched all 554 sampled hashes.
+- Built Windows and Linux Electron packages and checked the offline installation and save handlers with isolated profiles. The macOS build matrix remains in CI, since the Windows test host could not create the package symlinks.
+
 ## 2026-11-06 · v91
 - All 13 ideas of the King (issues #6-#18) in one batch, "tout ensemble". Removed by him: events, day/night cycle, co-op roles, difficulty modes. Added by him: seasons with weather.
 - Seasons and weather (`23_weather.js`, #6): season = 4 waves, weather fixed per wave from a hash of waveN, rain/snow/petals/leaves particles, thunder, sounds, top-bar label; visual and audio only (terrain colours are baked, so the season tints light, sky and fog).

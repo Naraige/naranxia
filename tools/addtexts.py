@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Add translations to src/game/14_texts.js, one key per line, in the block of the version being made.
+"""Add translations to packages/game/src/i18n/translations.js, one key per line, in the block of the version being made.
 
 usage:  python3 tools/addtexts.py texts.json        (or - to read stdin)
         texts.json = {"English text": ["FR", "ES", "DE", "IT", "PT"], ...}   templates use {0} {1}
@@ -7,7 +7,7 @@ The block is "/* texts added in vNN */" with NN = game/VERSION + 1 (created on t
 Keys already in the table are reported and skipped (edit them by hand). Checks 5 translations and the same {n} in each."""
 import json,re,sys,os
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-P=os.path.join(ROOT,'src/game/14_texts.js')
+P=os.path.join(ROOT,'packages/game/src/i18n/translations.js')
 new=json.load(sys.stdin if sys.argv[1]=='-' else open(sys.argv[1],encoding='utf-8'))
 v=int(open(os.path.join(ROOT,'game/VERSION')).read().strip().lstrip('v'))+1
 s=open(P,encoding='utf-8').read()
