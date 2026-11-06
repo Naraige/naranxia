@@ -1,2 +1,7 @@
-- Co-op: when the two games drift apart they now resynchronize by themselves in a few seconds (the host sends its game to the partner): no more restarting or reconnecting. The banner shows "Co-op: resynchronizing...".
-- Co-op: fixed a cause of drifting apart: zombies and AI units were given a different owner on each machine.
+- New: Troops panel (F2 or the army button at the top): every unit by type and what it is doing. Click a line to select those units.
+- New: peasant tasks. Select peasants, then Wood, Stone, Gold, Farm or Build sends them to the nearest job.
+- New in co-op: resource convoys. Castle menu > Send: choose gold, wood, stone and food, and porters carry them to your partner's castle (dots on the map). Zombies can stop them; if they cannot get through in 2 minutes, the goods come back.
+- New research: Fire arrows (Academy, after Fletching). Archers set zombies on fire for 3 seconds.
+- New: bug report. Press F8 (or Esc > Report a bug) to save a file with everything needed to fix the bug, then send it on Discord with a few words.
+- New: test mode for solo games (F10): resources, research, waves and zombies on demand, speed up to x8. A game where it is used earns no achievements.
+- Unit names in the selection are now translated.

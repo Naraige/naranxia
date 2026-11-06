@@ -1,4 +1,4 @@
-# Publishes a GitHub Release every time game/VERSION changes on main.
+# Publishes a GitHub Release every time game/VERSION changes on main, after the tests pass (test.yml).
 # The desktop launcher downloads the .html asset of the latest release at start-up.
 name: Publish game update
 on:
@@ -8,7 +8,13 @@ on:
 permissions:
   contents: write
 jobs:
+  test:
+    # the release only goes out when the headless tests pass on this commit
+    uses: ./.github/workflows/test.yml
+    with:
+      ship: true
   release:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

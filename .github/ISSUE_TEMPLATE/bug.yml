@@ -1,0 +1,30 @@
+name: Bug / Bogue
+description: Something does not work / quelque chose ne marche pas
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / Que s'est-il passé ?
+      description: What you did, what you expected, what you saw / ce que vous avez fait, attendu, vu
+    validations: {required: true}
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Bottom right of the main menu (Esc), e.g. v89 / en bas à droite du menu
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      options: [Solo, Co-op host / hôte, Co-op guest / invité]
+  - type: dropdown
+    id: often
+    attributes:
+      label: How often? / Fréquence
+      options: [Always / toujours, Sometimes / parfois, Once / une fois]
+  - type: textarea
+    id: report
+    attributes:
+      label: Bug report (F8) / Rapport de bug (F8)
+      description: Press F8 in the game (or Esc > Report a bug), then drag the naranxia-bug-*.json file here / glissez le fichier ici

@@ -1,0 +1,14 @@
+name: Idea / Idée
+description: A wish or a new feature / un souhait ou une nouveauté
+labels: [idea]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea / L'idée
+    validations: {required: true}
+  - type: dropdown
+    id: prio
+    attributes:
+      label: Priority / Priorité
+      options: [Normal, Urgent, Later / plus tard]

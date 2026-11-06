@@ -1,0 +1,53 @@
+# Headless tests (tools/test_all.sh) on every push that touches the game or the tests, on pull requests,
+# by hand (Actions tab > tests > Run workflow), and before every release (called by release.yml).
+name: tests
+on:
+  push:
+    paths: [src/**, tests/**, tools/**, game/VERSION, package.json, package-lock.json, .github/workflows/test.yml]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      full:
+        description: also run the save / load round trip (slow)
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      ship:
+        type: boolean
+        default: false
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install
+        run: |
+          npm ci
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Build
+        run: bash tools/build.sh --dist
+      - name: The shipped file is the build of this commit
+        if: inputs.ship
+        run: cmp dist/naranxia.html game/naranxia.html || echo "::warning::game/naranxia.html differs from a fresh build of src/ (forgot to copy dist/naranxia.html?)"
+      - name: Tests
+        run: J=2 bash tools/test_all.sh ${{ inputs.full && '--full' || '' }}
+      - name: Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: dist/test-logs
+          retention-days: 7

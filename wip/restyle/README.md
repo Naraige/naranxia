@@ -2,9 +2,10 @@
 
 Minecraft / Blockbench look for units and gear. Shown to the King as preview boards; **do not ship until he approves the whole set**.
 
-- `restyle.py` patches `src/game.js` into a restyled copy: `python3 wip/restyle/restyle.py src/game.js dist/game_restyle.js`,
+- `restyle.py` patches the joined game script (`dist/game.js`, written by `tools/build.sh` from `src/game/*.js`) into a restyled copy:
+  `bash tools/build.sh && python3 wip/restyle/restyle.py dist/game.js dist/game_restyle.js`,
   then `GAME_JS=dist/game_restyle.js bash tools/build.sh` and render boards with `tools/preview/showshot.py`.
-  The patch uses exact string replacements, so re-check it after editing `src/game.js`.
+  The patch uses exact string replacements, so re-check it after editing `src/game/`.
 - `sets_skin.js` is the editable copy of the unit skins and gear embedded in `restyle.py` (between `SETS=r'''` and `'''`).
 
 Status (Nov 2026):
