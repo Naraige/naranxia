@@ -115,4 +115,18 @@ g=R(g,"r.shp=[.2*VX,-5.0*VX,2.1*VX]","r.shp=[.2*VX,-5.0*VX,(PXON?SHZ:2.1)*VX]")
 # softer unit light: a smooth ramp instead of hard bands (keeps the warm light / cool shade)
 g=R(g,"  float bd=.42+.3*smoothstep(.24,.36,r)+.28*smoothstep(.52,.64,r)+.16*smoothstep(1.,1.25,r);vec3 tnt=mix(vec3(.66,.76,1.08),vec3(1.06,1.,.9),smoothstep(.36,.7,r));\n  reflectedLight.directDiffuse=alb*irr/max(li,1e-4)*bd*uLMax*tnt;",
       "  float bd=mix(.42,1.12,smoothstep(.04,1.2,r));vec3 tnt=mix(vec3(.76,.83,1.05),vec3(1.04,1.,.94),smoothstep(.25,.8,r));\n  reflectedLight.directDiffuse=alb*irr/max(li,1e-4)*bd*uLMax*tnt;")
+# buildings (round 4): Minecraft block textures in the surface shader: every surface on a pixel grid (18 per tile), stone in
+# staggered bricks with mortar, wood in planks with butt joints, per-pixel colour noise; the painted ink lines are toned down
+PXSH=r"""
+#ifndef TERR
+ {float PXS=+(window.__PXS||18)+0.;vec2 pc=floor(uv*PXS+.001);float pn=hn3(vec3(pc,aN.y>.5?7.3:(aN.x>.5?3.1:5.7)));vec3 c0=diffuseColor.rgb;
+  float row=floor(pc.y/4.),bx=mod(pc.x+mod(row,2.)*4.,8.),mor=(mod(pc.y,4.)<.5||bx<.5)?1.:0.;
+  float prow=floor(pc.y/4.),pe=mod(pc.x+prow*5.,16.)<.5?1.:0.,pli=(mod(pc.y,4.)<.5||pe>.5)?1.:0.;
+  if(aN.y>.5){mor=(mod(pc.x,8.)<.5||mod(pc.y,8.)<.5)?1.:0.;pli=mod(pc.x,4.)<.5?1.:0.;}
+  vec3 cS=c0*(.9+.2*pn)*mix(1.,.64,mor),cW=c0*(.86+.2*pn)*mix(1.,.68,pli),cO=c0*(.93+.14*pn);
+  float wS=clamp(kS*1.6,0.,1.),wW=clamp(kD*1.4,0.,1.)*(1.-wS);
+  diffuseColor.rgb=mix(mix(cO,cW,wW),cS,wS);}
+#endif"""
+PXSH=PXSH.replace("+(window.__PXS||18)+0.","18.")
+g=R(g,"diffuseColor.rgb=mix(bc,bc*vec3(.1,.085,.12),ink);\n#ifdef TERR","diffuseColor.rgb=mix(bc,bc*vec3(.1,.085,.12),ink*.3);"+PXSH+"\n#ifdef TERR")
 open(dst,'w').write(g);print('ok')
