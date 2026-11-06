@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-06 · Title screen, menu and settings (v92, not released: GitHub access suspended)
+
+- Asked by the King ("guide moi", answers: season and weather, Continue first, tabs): title screen shows the season and weather of the last game over the army scene (`ui/title-weather.js`, 2D particles: rain, fog, snow, petals, pollen, leaves; last wave stored in `localStorage dk_last` by `saveBest`; `wxKindFor(w)` exported from `rendering/weather.js`).
+- Main menu: Continue (newest save, `svPeek` / `continueLast` in `ui/save-menu.js`) first when a save exists, then Singleplayer, Multiplayer, Load game, Tutorial (clears `dk_tut`), then one row Options / Sound / Language; "Last game: wave N - K zombies slain" and the season label under it. In-game menu unchanged.
+- Settings in 4 tabs: Game (language, tutorial on/off, King skill keys), Graphics, Sound, Controls. 7 new texts in 6 languages (v92 block).
+- Verified: screenshots 1280x720 (title with snow / autumn leaves / spring petals, Continue with a forced save, Game tab). IndexedDB does not work from file:// in the headless browser, so Continue was checked with a forced `saveMenuState.last`. Not verified: FR/DE text widths, small screens, touch, real desktop launcher.
+- Not committed to a release: no NOTES.md bump and no version change yet; release when GitHub is back.
+
 ## 2026-11-06 · CI, tooling and save investigation (#5)
 
 - `mp_convoy` budget raised to 400 s (it failed twice on the slow CI runner only); Chromium cached in CI; new `tools/profile.py` (CPU profile of 6000 sim ticks). The swarm (`swStep`) is already tuned: hoisting closures gave no measurable gain.

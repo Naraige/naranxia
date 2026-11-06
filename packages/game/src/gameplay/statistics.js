@@ -14,7 +14,7 @@ export const statisticsState = {
   SBR: null,
 };
 
-export function saveBest(){if(diagnosticsState.DEVU)return;sbRec();try{if(sessionState.waveN>sessionState.best.w||(sessionState.waveN===sessionState.best.w&&sessionState.kills>sessionState.best.k)){sessionState.best={w:sessionState.waveN,k:sessionState.kills};localStorage.setItem('dk_best',JSON.stringify(sessionState.best))}}catch(e){}}
+export function saveBest(){if(diagnosticsState.DEVU)return;sbRec();try{localStorage.setItem('dk_last',JSON.stringify({w:sessionState.waveN,k:sessionState.kills}))}catch(e){}try{if(sessionState.waveN>sessionState.best.w||(sessionState.waveN===sessionState.best.w&&sessionState.kills>sessionState.best.k)){sessionState.best={w:sessionState.waveN,k:sessionState.kills};localStorage.setItem('dk_best',JSON.stringify(sessionState.best))}}catch(e){}}
 /* ================= END-OF-GAME STATS (#18) =================
    Counted for the local player only and never read by the simulation: the update wrapper measures what the sim added to the
    resources, hit() records who hit last (LH) so a kill is credited to a unit type, everything else is "Towers and cannons". */

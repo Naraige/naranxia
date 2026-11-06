@@ -16,10 +16,11 @@ import { hudState, U } from './hud.js';
 import { dIc, IC } from './icons.js';
 import { KNAMES, PAL, THEME } from './kingdom-theme.js';
 import { pill } from './minimap.js';
-import { drawSaves, saveMenuState } from './save-menu.js';
+import { continueLast, drawSaves, saveMenuState, svPeek } from './save-menu.js';
 import { drawSettings, nmI, settingsState } from './settings.js';
 import { openPicker } from './site-picker.js';
 import { tutStart } from './tutorial.js';
+import { drawTitleWeather, lastRun, titleSeasonColor, titleWeatherLabel } from './title-weather.js';
 import { FFT } from './typography.js';
 
 function menuCx(UW,pw){return UW/2}
@@ -28,7 +29,7 @@ function menuCx(UW,pw){return UW/2}
 function titleBack(UW,UH,cx,pw){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH);g.addColorStop(0,'rgba(6,10,22,.08)');g.addColorStop(.55,'rgba(6,10,22,.12)');g.addColorStop(1,'rgba(6,10,22,.6)');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillRect(0,0,UW,UH);
  {const rg=canvasesState.ctx.createRadialGradient(cx,UH*.4,20,cx,UH*.4,Math.max(UW,UH)*.55);rg.addColorStop(0,'rgba(8,6,16,.5)');rg.addColorStop(1,'rgba(8,6,16,0)');canvasesState.ctx.fillStyle=rg;canvasesState.ctx.fillRect(0,0,UW,UH)}}
 
-export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];const pw=Math.min(300,UW-16),cx=menuCx(UW,pw),small=UH<330;if(!sessionState.inGame&&TFADE>.003&&!window.__cam){canvasesState.ctx.fillStyle='rgba(4,3,8,'+(TFADE*.92).toFixed(3)+')';canvasesState.ctx.fillRect(0,0,UW,UH)}titleBack(UW,UH,cx,pw);
+export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];const pw=Math.min(300,UW-16),cx=menuCx(UW,pw),small=UH<330;if(!sessionState.inGame&&TFADE>.003&&!window.__cam){canvasesState.ctx.fillStyle='rgba(4,3,8,'+(TFADE*.92).toFixed(3)+')';canvasesState.ctx.fillRect(0,0,UW,UH)}titleBack(UW,UH,cx,pw);if(!sessionState.inGame&&!settingsState.settingsOpen&&!saveMenuState.saveOpen&&!languageState.langOpen&&!settingsState.setupOpen)drawTitleWeather(UW,UH);
  if(settingsState.settingsOpen){dirtBack(UW,UH);drawSettings(UW,UH,cx);return}
   if(saveMenuState.saveOpen){dirtBack(UW,UH);drawSaves(UW,UH,cx);return}
   if(languageState.langOpen){dirtBack(UW,UH);drawLang(UW,UH,cx);return}
@@ -40,12 +41,20 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
   const tw2=canvasesState.ctx.measureText(sp).width;canvasesState.ctx.fillStyle='rgba(4,3,8,.75)';canvasesState.ctx.fillText(sp,cx+1,y+1.5);canvasesState.ctx.shadowColor='rgba(60,190,255,'+(.85*a).toFixed(3)+')';canvasesState.ctx.shadowBlur=Math.max(4,cs*1.5);canvasesState.ctx.fillStyle='#c8f3ff';canvasesState.ctx.fillText(sp,cx,y);canvasesState.ctx.shadowBlur=0;canvasesState.ctx.shadowColor='transparent';
   const ly=Math.round(y+S*.55),lg=Math.min(60,cs*7);for(const sd of[-1,1]){const x0=cx+sd*(tw2/2+8),gr=canvasesState.ctx.createLinearGradient(x0,0,x0+sd*lg,0);gr.addColorStop(0,'rgba(214,176,96,.9)');gr.addColorStop(1,'rgba(214,176,96,0)');canvasesState.ctx.fillStyle=gr;canvasesState.ctx.fillRect(Math.min(x0,x0+sd*lg),ly,lg,1);arcDia(x0,ly+.5,2,'#d8b060')}
   canvasesState.ctx.restore();y+=S+Math.round(small?6:cs*1.3)}
- }const bw=Math.min(UW-24,Math.max(200,Math.min(300,UW*.5))),bh=small?22:26,gp=small?5:9,bx=Math.round(cx-bw/2);
- const mb=(lab,fn)=>{pill(bx,y,bw,bh,lab,BTN,BTNH,fn,null,1.15);y+=bh+gp};
- mb(sessionState.inGame?'Back to Game':'Singleplayer',sessionState.inGame?startGame:()=>{settingsState.setupOpen=true});if(sessionState.inGame&&!MP.on)mb('Save / Load',()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null});else if(!sessionState.inGame)mb('Load game',()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null});if(sessionState.inGame)mb('New game',newGame);if(sessionState.inGame)mb('Quit game',quitGame);if(sessionState.inGame&&!MP.on)mb('Tutorial',()=>{tutStart(true);startGame()});if(sessionState.inGame)mb('Report a bug [F8]',bugReport);mb('Multiplayer (Co-op)',mpOpen);if(!sessionState.inGame&&window.NARX&&NARX.desktop)mb('Exit to desktop',()=>window.close());
- {const hw=Math.round((bw-gp)/2);pill(bx,y,hw,bh,'Options',BTN,BTNH,()=>{settingsState.settingsOpen=true},null,1.15);pill(bx+hw+gp,y,bw-hw-gp,bh,sndOn?'Sound: on':'Sound: off',BTN,BTNH,()=>{toggleSound()},null,1.15);y+=bh+gp}
- if(sessionState.best.w>0){TC('Best: wave '+sessionState.best.w+'  -  '+sessionState.best.k+' zombies slain',cx,y+2,'#ffff55',.9);y+=16}
- const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);T_('Naranxia',6,UH-12,'#c8c8c8',.75);{const lw=Math.max(96,tw(LANGS[LANG][0],1)+40);langBtn(6,UH-42,lw,22,LANG,()=>{languageState.langOpen=true},false)}}
+ }const ig=sessionState.inGame,bw=Math.min(UW-24,Math.max(200,Math.min(300,UW*.5))),gp=small?5:9,bx=Math.round(cx-bw/2),wide=bw>=250;
+ if(!ig&&saveMenuState.last===undefined){saveMenuState.last=null;svPeek()}
+ const nb=(ig?(MP.on?5:7):5)+(!ig&&saveMenuState.last?1:0)+(!ig&&window.NARX&&NARX.desktop?1:0)+(ig?0:1)+(wide||ig?0:1),bh=Math.max(16,Math.min(small?22:26,Math.floor((UH-(ig?20:60)-y)/nb)-gp));
+ const mb=(lab,fn,hl)=>{pill(bx,y,bw,bh,lab,hl?GRN:BTN,hl?GRNH:BTNH,fn,null,1.15);y+=bh+gp};
+ const openLoad=()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null},openTut=()=>{try{localStorage.removeItem('dk_tut')}catch(e){}settingsState.setupOpen=true};
+ if(ig){mb('Back to Game',startGame);if(!MP.on)mb('Save / Load',openLoad);mb('New game',newGame);mb('Quit game',quitGame);if(!MP.on)mb('Tutorial',()=>{tutStart(true);startGame()});mb('Report a bug [F8]',bugReport);mb('Multiplayer (Co-op)',mpOpen)}
+ else{if(saveMenuState.last)mb('Continue',continueLast,1);mb('Singleplayer',()=>{settingsState.setupOpen=true});mb('Multiplayer (Co-op)',mpOpen);mb('Load game',openLoad);mb('Tutorial',openTut);if(window.NARX&&NARX.desktop)mb('Exit to desktop',()=>window.close())}
+ {const sd=()=>{toggleSound()},lg=()=>{languageState.langOpen=true};
+  if(ig){const hw=Math.round((bw-gp)/2);pill(bx,y,hw,bh,'Options',BTN,BTNH,()=>{settingsState.settingsOpen=true},null,1.15);pill(bx+hw+gp,y,bw-hw-gp,bh,sndOn?'Sound: on':'Sound: off',BTN,BTNH,sd,null,1.15);y+=bh+gp}
+  else if(wide){const lw=Math.max(96,Math.round(bw*.36)),hw=Math.round((bw-lw-2*gp)/2);pill(bx,y,hw,bh,'Options',BTN,BTNH,()=>{settingsState.settingsOpen=true},null,1.05);pill(bx+hw+gp,y,hw,bh,sndOn?'Sound: on':'Sound: off',BTN,BTNH,sd,null,1.05);langBtn(bx+2*hw+2*gp,y,bw-2*hw-2*gp,bh,LANG,lg,false);y+=bh+gp}
+  else{const hw=Math.round((bw-gp)/2);pill(bx,y,hw,bh,'Options',BTN,BTNH,()=>{settingsState.settingsOpen=true},null,1.15);pill(bx+hw+gp,y,bw-hw-gp,bh,sndOn?'Sound: on':'Sound: off',BTN,BTNH,sd,null,1.15);y+=bh+gp;langBtn(bx,y,bw,bh,LANG,lg,false);y+=bh+gp}}
+ if(!ig){const r=lastRun();if(r&&UH-y>34){TC('Last game: wave '+r.w+'  -  '+r.k+' zombies slain',cx,y+2,'#c4a37a',.85);y+=13;TC(titleWeatherLabel(),cx,y+2,titleSeasonColor(),.85);y+=15}
+  if(sessionState.best.w>0&&UH-y>18){TC('Best: wave '+sessionState.best.w+'  -  '+sessionState.best.k+' zombies slain',cx,y+2,'#ffff55',.9);y+=16}}
+ const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);T_('Naranxia',6,UH-12,'#c8c8c8',.75);}
 
 const MCSPL=['Survive the night!','Also try Co-op!','Hold the line!','100% blocky!','Mind the swarm!','Build towers!','Zombies hate walls!','Protect the castle!','Now with keeps!','Gold! Wood! Stone!','100x the swarm!','Ten thousand zombies!','Red eyes in the dark!'];
 

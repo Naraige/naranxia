@@ -49,21 +49,27 @@ function setGfx(v){sceneState.GQ=v?1:0;GQU.value=sceneState.GQ;try{localStorage.
 
 let setTab=0;
 
-export function drawSettings(UW,UH,cx){const W=Math.min(UW-12,setTab?560:340),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=6,H=UH-12;frame(X,Y,W,H,PAN,6);TTL('Settings',X+10,Y+7,1.35);
- {const tw0=Math.min(62,(W-120)/2);[['General',0],['Controls',1]].forEach(([n,v],i)=>pill(X+W-10-(tw0+4)*(2-i)+4,Y+7,tw0,15,n,BTN,BTNH,()=>{setTab=v;settingsState.rebind=null},null,.8,setTab===v))}
+const tutOn=()=>{try{return localStorage.getItem('dk_tut')!=='1'}catch(e){return true}};
+const tutSet=on=>{try{if(on)localStorage.removeItem('dk_tut');else localStorage.setItem('dk_tut','1')}catch(e){}};
+
+/* tabs: 0 Game, 1 Graphics, 2 Sound, 3 Controls */
+export function drawSettings(UW,UH,cx){const W=Math.min(UW-12,setTab===3?560:340),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=6,H=UH-12;frame(X,Y,W,H,PAN,6);TTL('Settings',X+10,Y+7,1.35);
+ {const tw0=Math.min(62,(W-96)/4-4);[['Game',0],['Graphics',1],['Sound',2],['Controls',3]].forEach(([n,v],i)=>pill(X+W-10-(tw0+4)*(4-i)+4,Y+7,tw0,15,n,BTN,BTNH,()=>{setTab=v;settingsState.rebind=null},null,.7,setTab===v))}
  let y=Y+28;
- if(setTab){T_('Click a key, then press the new one  (Esc cancels)',X+10,y+3,'#d9b27a',.75);pill(X+W-100,y,90,15,'Reset keys',BTN,BTNH,()=>{KB={...KDEF};saveKB()},null,.8);y+=21;
+ if(setTab===3){T_('Click a key, then press the new one  (Esc cancels)',X+10,y+3,'#d9b27a',.75);pill(X+W-100,y,90,15,'Reset keys',BTN,BTNH,()=>{KB={...KDEF};saveKB()},null,.8);y+=21;
   const acts=Object.keys(KDEF),avail=Y+H-30-y;let cols=Math.max(1,Math.min(4,Math.floor((W-20)/130)));while(cols<4&&avail/Math.ceil(acts.length/cols)<12&&(W-20)/(cols+1)>=96)cols++;
   const rows=Math.ceil(acts.length/cols),cw=(W-20)/cols,rh=Math.min(16,avail/rows);
   acts.forEach((a,i)=>{const c=(i/rows)|0,r=i%rows,x=X+10+c*cw,yy=y+r*rh;const lb=ACTL[a];let sc=.72;while(sc>.5&&tw(lb,sc)>cw-48)sc-=.04;T_(lb,x,yy+Math.max(1,(rh-10)/2),'#ead8ba',sc);
    uiBtn(x+cw-44,yy,38,rh-2,settingsState.rebind===a?GRN:BTN,settingsState.rebind===a?GRNH:BTNH,()=>{settingsState.rebind=a},null,(bx,by,bw,bh)=>TC(settingsState.rebind===a?'...':kdisp(KB[a]),bx+bw/2,by+(bh-6)/2,'#fff',.7))})}
- else{T_('Music',X+10,y+1,'#ead8ba',.85);slider(X+96,y,W-96-34,soundState.vM,v=>{soundState.vM=v;applyVol();saveVol()});T_(Math.round(soundState.vM*100)+'',X+W-28,y+1,'#d9b27a',.8);y+=17;
- T_('Sound effects',X+10,y+1,'#ead8ba',.85);slider(X+96,y,W-96-34,soundState.vS,v=>{soundState.vS=v;applyVol();saveVol()});T_(Math.round(soundState.vS*100)+'',X+W-28,y+1,'#d9b27a',.8);y+=19;
- const bw3=Math.min(100,(W-30)/2);pill(X+10,y,bw3,16,'Sound: '+(sndOn?'on':'off'),BTN,BTNH,toggleSound,null,.85);y+=20;
-
- T_('Language',X+10,y+3,'#ead8ba',.85);{const lw=Math.min(150,W-120);langBtn(X+W-10-lw,y-2,lw,20,LANG,()=>{languageState.langOpen=true;settingsState.settingsOpen=false},false)}y+=24;
-  T_('Graphics',X+10,y+3,'#ead8ba',.85);{const bw6=Math.min(70,(W-130)/2);[['Ultra HD',1],['Fast',0]].forEach(([n,v],i)=>pill(X+W-10-(bw6+4)*(2-i)+4,y,bw6,16,n,BTN,BTNH,()=>setGfx(v),null,.8,sceneState.GQ===v))}y+=22;
- T_('Interface size',X+10,y+3,'#ead8ba',.85);{const bw4=Math.min(60,(W-130)/3);[['Small',.8],['Normal',1],['Large',1.25]].forEach(([n,v],i)=>pill(X+W-10-(bw4+4)*(3-i)+4,y,bw4,16,n,BTN,BTNH,()=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch(e){}rs()},null,.8,Math.abs(uiMul-v)<.01))}y+=22;}
+ else if(setTab===2){T_('Music',X+10,y+1,'#ead8ba',.85);slider(X+96,y,W-96-34,soundState.vM,v=>{soundState.vM=v;applyVol();saveVol()});T_(Math.round(soundState.vM*100)+'',X+W-28,y+1,'#d9b27a',.8);y+=17;
+  T_('Sound effects',X+10,y+1,'#ead8ba',.85);slider(X+96,y,W-96-34,soundState.vS,v=>{soundState.vS=v;applyVol();saveVol()});T_(Math.round(soundState.vS*100)+'',X+W-28,y+1,'#d9b27a',.8);y+=19;
+  const bw3=Math.min(100,(W-30)/2);pill(X+10,y,bw3,16,'Sound: '+(sndOn?'on':'off'),BTN,BTNH,toggleSound,null,.85);y+=20}
+ else if(setTab===1){T_('Graphics',X+10,y+3,'#ead8ba',.85);{const bw6=Math.min(70,(W-130)/2);[['Ultra HD',1],['Fast',0]].forEach(([n,v],i)=>pill(X+W-10-(bw6+4)*(2-i)+4,y,bw6,16,n,BTN,BTNH,()=>setGfx(v),null,.8,sceneState.GQ===v))}y+=24;
+  T_('Interface size',X+10,y+3,'#ead8ba',.85);{const bw4=Math.min(60,(W-130)/3);[['Small',.8],['Normal',1],['Large',1.25]].forEach(([n,v],i)=>pill(X+W-10-(bw4+4)*(3-i)+4,y,bw4,16,n,BTN,BTNH,()=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch(e){}rs()},null,.8,Math.abs(uiMul-v)<.01))}y+=24}
+ else{T_('Language',X+10,y+3,'#ead8ba',.85);{const lw=Math.min(150,W-120);langBtn(X+W-10-lw,y-2,lw,20,LANG,()=>{languageState.langOpen=true;settingsState.settingsOpen=false},false)}y+=26;
+  T_('Tutorial',X+10,y+3,'#ead8ba',.85);{const tb=Math.min(110,W-120),on=tutOn();pill(X+W-10-tb,y,tb,16,on?'Tutorial: on':'Tutorial: off',on?GRN:BTN,on?GRNH:BTNH,()=>tutSet(!on),null,.8)}y+=26;
+  T_('King skills',X+10,y+1,'#d9b27a',.8);y+=14;
+  for(const a of['cry','charge']){T_(ACTL[a],X+14,y+3,'#ead8ba',.8);uiBtn(X+W-54,y,44,16,BTN,BTNH,()=>{setTab=3;settingsState.rebind=a},null,(bx,by,bw,bh)=>TC(kdisp(KB[a]),bx+bw/2,by+(bh-6)/2,'#fff',.75));y+=20}}
  pill(X+W/2-40,Y+H-22,80,16,'Back',BTN,BTNH,()=>{settingsState.settingsOpen=false;settingsState.rebind=null;setTab=0;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}},null,.9)}
 
 export function initializeSettings() {

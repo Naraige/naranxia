@@ -12,6 +12,7 @@ import { pill } from './minimap.js';
 export const saveMenuState = {
   saveOpen: false,
   svList: null,
+  last: undefined,
 };
 
 let svBusy = '';
@@ -19,7 +20,11 @@ let svSel = -1;
 
 const svName=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return 'Wave '+sessionState.waveN+' - '+d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+'h'+p(d.getMinutes())};
 
-async function svRefresh(){try{saveMenuState.svList=await SVST.list()}catch(e){saveMenuState.svList=[];svBusy='Saves are not available here'}}
+async function svRefresh(){try{saveMenuState.svList=await SVST.list()}catch(e){saveMenuState.svList=[];svBusy='Saves are not available here'}saveMenuState.last=saveMenuState.svList[0]||null}
+
+/* title screen: look for the newest save once (Continue button), and load it */
+export async function svPeek(){try{const l=await SVST.list();saveMenuState.last=l&&l[0]||null}catch(e){saveMenuState.last=null}}
+export async function continueLast(){if(svBusy)return;const s=saveMenuState.last;if(s)await loadGame(s.name)}
 
 export async function saveGame(name,quiet){if(MP.on||!sessionState.inGame||sessionState.over){if(!quiet){hudDisplayState.msgS=MP.on?'Saving is for solo games':'Nothing to save';hudDisplayState.msgT=3}return}
  svBusy='Saving...';try{const d=await svPack();await SVST.put(name||svName(),d,{date:Date.now(),wave:sessionState.waveN});svBusy='';if(!quiet){hudDisplayState.msgS='Game saved';hudDisplayState.msgT=3;snd('build')}await svRefresh()}catch(e){svBusy='';hudDisplayState.msgS='Save failed: '+e.message;hudDisplayState.msgT=4;console.error(e)}}

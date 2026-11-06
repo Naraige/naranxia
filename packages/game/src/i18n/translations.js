@@ -854,7 +854,17 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v91 */
+  /* texts added in v92 */
+Object.assign(TRD,{
+"Continue":["Continuer","Continuar","Fortsetzen","Continua","Continuar"],
+"Last game: wave {0}  -  {1} zombies slain":["Dernière partie : vague {0}  -  {1} zombies tués","Última partida: oleada {0}  -  {1} zombis abatidos","Letztes Spiel: Welle {0}  -  {1} Zombies getötet","Ultima partita: ondata {0}  -  {1} zombi uccisi","Último jogo: onda {0}  -  {1} zumbis abatidos"],
+"Game":["Jeu","Juego","Spiel","Gioco","Jogo"],
+"Sound":["Son","Sonido","Ton","Audio","Som"],
+"Tutorial: on":["Tutoriel : activé","Tutorial: sí","Tutorial: an","Tutorial: on","Tutorial: ligado"],
+"Tutorial: off":["Tutoriel : désactivé","Tutorial: no","Tutorial: aus","Tutorial: off","Tutorial: desligado"],
+"King skills":["Compétences du Roi","Habilidades del Rey","Fähigkeiten des Königs","Abilità del Re","Habilidades do Rei"]
+});
+/* texts added in v91 */
   Object.assign(TRD,{
   "Tutorial":["Tutoriel","Tutorial","Tutorial","Tutorial","Tutorial"],
   "Tutorial {0}/{1}":["Tutoriel {0}/{1}","Tutorial {0}/{1}","Tutorial {0}/{1}","Tutorial {0}/{1}","Tutorial {0}/{1}"],

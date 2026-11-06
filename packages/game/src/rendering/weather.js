@@ -11,9 +11,9 @@ import { THREE } from './three.js';
    Visual and audio only: the season and the weather are derived from the wave number (simulation state, equal on both co-op machines),
    everything drawn here is smoothed with the real frame time and never touches units, structures or the seeded RNG.
    A season lasts 4 waves (Spring, Summer, Autumn, Winter, then again). Each wave has one weather: Clear, Rain, Fog or Snow. */
-const SEAS = ['Spring','Summer','Autumn','Winter'];
+export const SEAS = ['Spring','Summer','Autumn','Winter'];
 export const SEASC = ['#9be07a','#ffd86a','#ff9a4a','#bfe4ff'];
-const WXN = ['Clear','Rain','Fog','Snow'];
+export const WXN = ['Clear','Rain','Fog','Snow'];
 
 const SEAST=[[1,1.03,.98],[1.05,1.02,.93],[1.12,.96,.82],[.9,.98,1.12]];
 
@@ -26,8 +26,10 @@ let _wg;
 
 export const seasonIdx=()=>sessionState.inGame&&sessionState.started?(((sessionState.waveN|0)/4)|0)%4:0;
 
-export function wxKind(){const w=sessionState.waveN|0;if(!sessionState.inGame||!sessionState.started||w<1)return 0;const s=seasonIdx(),h=((w*2654435761+s*40503)>>>0)%100;
+/* weather of a wave (0 clear, 1 rain, 2 fog, 3 snow): also used by the title screen for the last game */
+export function wxKindFor(w){w|=0;if(w<1)return 0;const s=((w/4)|0)%4,h=((w*2654435761+s*40503)>>>0)%100;
  if(s===0)return h<38?1:h<48?2:0;if(s===1)return h<12?2:h<22?1:0;if(s===2)return h<30?2:h<60?1:0;return h<55?3:h<65?2:0}
+export const wxKind=()=>sessionState.inGame&&sessionState.started?wxKindFor(sessionState.waveN):0;
 
 export const wxLabel=()=>SEAS[seasonIdx()]+(wxKind()?' - '+WXN[wxKind()]:'');
 

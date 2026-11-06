@@ -32,6 +32,7 @@ import { objTick, SPK } from '../multiplayer/objectives.js';
 import { MP } from '../multiplayer/session.js';
 import { svApply } from '../persistence/restore.js';
 import { SAVA, svAssign, svPack } from '../persistence/save-format.js';
+import { continueLast, saveMenuState, svPeek } from '../ui/save-menu.js';
 import { FOWU } from '../rendering/fog.js';
 import { render3D, setRender3DHandler } from '../rendering/frame.js';
 import { matV } from '../rendering/materials.js';
@@ -207,6 +208,9 @@ export function installBrowserConsole() {
     svApply: { get: () => svApply },
     svAssign: { get: () => svAssign },
     svPack: { get: () => svPack },
+    saveMenuState: { get: () => saveMenuState },
+    svPeek: { get: () => svPeek },
+    continueLast: { get: () => continueLast },
     ter: { get: () => ter },
     tilesFor: { get: () => tilesFor },
     time: { get: () => sessionState.time, set: value => { sessionState.time = value; } },
