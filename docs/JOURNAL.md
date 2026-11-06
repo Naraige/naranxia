@@ -8,7 +8,9 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Buildings are already block-built; round 4 adds Minecraft block textures in the matV surface shader (restyle.py `PXSH`, not on
   terrain: `#ifndef TERR`): 18 pixels per tile, stone = staggered bricks with mortar, wood = planks with butt joints, per-pixel noise,
   painted ink lines at 30%. No geometry change, no cost on the CPU.
-- Board version 3: A with textures / B without. Waiting for his choice; then ship the whole revamp (rounds 2-4) in one release, credit bugbilly.
+- Board version 3: A with textures / B without. He answered that the castle needs redoing (dislikes its design): two new stone castles
+  in `sets_units2.js` (pxCastleA square fortress, pxCastleB great keep; `castleGeo5` patched, window.__CV picks), board version 4 (A/B, C = old).
+  Waiting for his choice (and A/B for the textures); the wood castle (tier 0) will follow the chosen design; then ship the whole revamp (rounds 2-4) in one release, credit bugbilly.
 
 ## 2026-11-06 · restyle round 3 (wip, not released)
 - Pixel capes (king cape + cape2 velvet and ermine with gold crown medallion, captain team cape with gold sun and hem, guard red cape
