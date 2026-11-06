@@ -4,7 +4,7 @@ async()=>{const T0=performance.now();let s=31;const RR=Math.random;const seedR=k
  for(let i=0;i<4;i++)units.push(mkU(0,'knight',(CX+4.5)*TS,(CY+4.5)*TS));
  for(let k=0;k<2400;k++){if(k===200)waveT=0;update(.05)}
  const dg=()=>{let h=0;for(const u of units)h=(h*31+Math.round(u.x)+Math.round(u.y)*7+Math.round(u.hp))|0;let hs=0;for(const q of structs)hs=(hs*31+Math.round(q.hp)+q.tx)|0;let ht=0;for(let i=0;i<HT.length;i+=97)ht=(ht*31+HT[i]+ter[i]*3)|0;return [units.length,structs.length,h,hs,ht,waveN,Math.round(time*100),JSON.stringify(RESP)].join('|')};
- const D1=dg();window.__svw=[];const t1=performance.now();const txt=await svPack();const tPack=performance.now()-t1;
+ const D1=dg();paused=true;/* the live frame loop would keep ticking during the awaits */window.__svw=[];const t1=performance.now();const txt=await svPack();const tPack=performance.now()-t1;
  seedR(77);for(let k=0;k<400;k++)update(.05);const A=dg();
  seedR(5);rollWorld();randomSite();CX=pickPos.tx;CY=pickPos.ty;reset();startGame();for(let k=0;k<50;k++)update(.05);
  const t2=performance.now();await svApply(txt);const tLoad=performance.now()-t2;const D2=dg();
