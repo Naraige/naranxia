@@ -20,7 +20,7 @@ A list from the King goes into issues first (one per item, labels below), then i
 | `src/game/14_texts.js` | translations, one key per line; add with `tools/addtexts.py` |
 | `src/shell.html` | HTML/CSS shell around the script (title, fonts, canvases, Three.js r128 from cdnjs) |
 | `game/naranxia.html` | the shipped build (packed). Changing it or `game/VERSION` on `main` **publishes a release** (after the tests) |
-| `game/VERSION`, `game/NOTES.md` | current version (`v89`) and the player-facing notes of that release |
+| `game/VERSION`, `game/NOTES.md` | current version (`v90`) and the player-facing notes of that release |
 | `docs/JOURNAL.md` | what was done, verified and decided, per batch (newest first) |
 | `app/` | Electron desktop launcher: it downloads the `.html` of the latest GitHub release at start-up; `installers.yml` rebuilds the installers when `app/**` changes |
 | `announce/` | Discord texts `vNN.md`; pushing a change to `announce/QUEUE` reposts the versions it lists |

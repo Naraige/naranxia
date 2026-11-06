@@ -277,35 +277,40 @@ function pxCannon(){const G=newG(),BZ=PDP(['#5a3a10','#8a5a1e','#b8822e','#dca84
    A = square fortress: curtain walls, four square corner towers, a keep with a steep slate roof, a gatehouse with a portcullis
    B = great keep: one massive square keep with four corner turrets and a stepped slate spire, low walls and corner towers
    front = +z, the 5 x 5 tiles go from 0 to 5; C5.flag = where the animated flag stands */
-function pxCastleMer(G,x0,z0,x1,z1,y,s){s=s||.26;const put=(x,z)=>{bS(G,x,y,z,s,s,s,QS[1]);bS(G,x,y+s,z,s+.03,.03,s+.03,QTR)};
+/* wood or stone: the same castle A in logs and planks for the wooden tier */
+let PXCW=false;
+const pS=(G,x,y,z,w,h,d,c)=>PXCW?bW(G,x,y,z,w,h,d,(c===QTR||c===QSD2)?QW3:(c===QS[1]?QLOG:QW2)):bS(G,x,y,z,w,h,d,c);
+const pSt=(G,x,y0,z,w,d,h,o)=>{if(!PXCW)return qStone(G,x,y0,z,w,d,h,o);const n=Math.max(1,Math.round(h/.2)),q=h/n;for(let k=0;k<n;k++)bW(G,x,y0+k*q,z,w,q,d,k%2?QW1:QW2)};
+const pQu=(G,x0,z0,x1,z1,y0,h)=>{if(!PXCW)return qQuoin(G,x0,z0,x1,z1,y0,h)};
+function pxCastleMer(G,x0,z0,x1,z1,y,s){s=s||.26;const put=(x,z)=>{pS(G,x,y,z,s,s,s,QS[1]);pS(G,x,y+s,z,s+.03,.03,s+.03,QTR)};
  const nx=Math.max(1,Math.round((x1-x0)/(s*2))),nz=Math.max(1,Math.round((z1-z0)/(s*2)));
  for(let i=0;i<=nx;i++){const x=x0+(x1-x0)*i/nx;put(x,z0);put(x,z1)}for(let j=1;j<nz;j++){const z=z0+(z1-z0)*j/nz;put(x0,z);put(x1,z)}}
 function pxCastleGate(G,gz1){const ax0=2.5,aw=.82,ah=1.25,az=gz1+.005;bP(G,ax0,.2,az-.02,aw,ah,.06,'#18171c');bP(G,ax0,.2+ah,az-.02,aw*.6,.12,.06,'#18171c');
- for(const s of[-1,1]){bS(G,ax0+s*(aw/2+.06),.2,az,.12,ah+.12,.06,QTR)}bS(G,ax0,.32+ah,az,aw+.24,.14,.06,QTR);
+ for(const s of[-1,1]){pS(G,ax0+s*(aw/2+.06),.2,az,.12,ah+.12,.06,QTR)}pS(G,ax0,.32+ah,az,aw+.24,.14,.06,QTR);
  for(let i=0;i<6;i++)bP(G,ax0-aw/2+.08+i*(aw-.16)/5,.6,az-.035,.03,ah-.42,.03,QIR);for(const y of[.75,1.15])bP(G,ax0,y,az-.035,aw-.06,.03,.03,QIR);
- bS(G,ax0,.2,az+.14,aw+.3,.04,.3,QSD2);for(const s of[-1,1])qLamp(G,2.5+s*.62,1.45,gz1+.1,true)}
-function pxCastleA(){const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);
- for(let i=0;i<10;i++)for(let j=0;j<10;j++)bS(G,.25+i*.5,.2,.25+j*.5,.49,.025,.49,QS[(i*3+j*5)%4]);
- const WT=2.3,TH=.5;const cw=(x,z,w,d)=>{qStone(G,x,.2,z,w,d,WT-.2,{moss:1});bS(G,x,WT,z,w+.06,.08,d+.06,QTR)};
+ pS(G,ax0,.2,az+.14,aw+.3,.04,.3,QSD2);for(const s of[-1,1])qLamp(G,2.5+s*.62,1.45,gz1+.1,true)}
+function pxCastleA(wood){PXCW=!!wood;const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);
+ for(let i=0;i<10;i++)for(let j=0;j<10;j++)pS(G,.25+i*.5,.2,.25+j*.5,.49,.025,.49,QS[(i*3+j*5)%4]);
+ const WT=2.3,TH=.5;const cw=(x,z,w,d)=>{pSt(G,x,.2,z,w,d,WT-.2,{moss:1});pS(G,x,WT,z,w+.06,.08,d+.06,QTR)};
  cw(2.5,.3,3.4,TH);cw(.3,2.5,TH,3.4);cw(4.7,2.5,TH,3.4);cw(1.05,4.7,1.1,TH);cw(3.95,4.7,1.1,TH);
  pxCastleMer(G,.9,.08,4.1,.08,WT+.08);pxCastleMer(G,.08,.9,.08,4.1,WT+.08);pxCastleMer(G,4.92,.9,4.92,4.1,WT+.08);
  for(const z of[1.4,2.5,3.6]){qSlit(G,.045,1.2,z,false);qSlit(G,4.955,1.2,z,false)}
  /* square corner towers with a cornice, chunky crenels, banners on the front pair */
  for(const[x,z]of[[.65,.65],[4.35,.65],[.65,4.35],[4.35,4.35]]){const bk=z<2.5,H=bk?3.9:3.4,W=1.25,ox=x<2.5?-1:1,oz=z<2.5?-1:1;
-  qPlinth(G,x,0,z,W+.12,W+.12,.2);qStone(G,x,.2,z,W,W,H-.2,{moss:1,ph:bk?1:0});qQuoin(G,x-W/2,z-W/2,x+W/2,z+W/2,.2,H-.2);
-  bS(G,x,H,z,W+.18,.12,W+.18,QTR);bS(G,x,H+.12,z,W+.1,.06,W+.1,QSD2);pxCastleMer(G,x-W/2-.04,z-W/2-.04,x+W/2+.04,z+W/2+.04,H+.12,.28);
+  qPlinth(G,x,0,z,W+.12,W+.12,.2);pSt(G,x,.2,z,W,W,H-.2,{moss:1,ph:bk?1:0});pQu(G,x-W/2,z-W/2,x+W/2,z+W/2,.2,H-.2);
+  pS(G,x,H,z,W+.18,.12,W+.18,QTR);pS(G,x,H+.12,z,W+.1,.06,W+.1,QSD2);pxCastleMer(G,x-W/2-.04,z-W/2-.04,x+W/2+.04,z+W/2+.04,H+.12,.28);
   qSlit(G,x+ox*(W/2+.005),1.3,z,false);qSlit(G,x,1.3,z+oz*(W/2+.005),true);qWin(G,x+ox*(W/2+.012),2.6,z,false,ox,{w:.16,h:.24,glow:1});qWin(G,x,2.6,z+oz*(W/2+.012),true,oz,{w:.16,h:.24,glow:1});
   if(!bk)qBan(G,x,H-.95,z+W/2+.03,true,1,.36,.8);else qFlag(G,x,H+.18,z,.8)}
  /* keep: square, steep slate gable roof with dormers, banners, a door */
- const kx=2.5,kz=1.75,KW=2.2,KD=1.9,KH=3.9;qPlinth(G,kx,.2,kz,KW+.12,KD+.12,.12);qStone(G,kx,.32,kz,KW,KD,KH-.32,{ph:1});qQuoin(G,kx-KW/2,kz-KD/2,kx+KW/2,kz+KD/2,.32,KH-.32);
- bS(G,kx,KH,kz,KW+.16,.1,KD+.16,QTR);
+ const kx=2.5,kz=1.75,KW=2.2,KD=1.9,KH=3.9;qPlinth(G,kx,.2,kz,KW+.12,KD+.12,.12);pSt(G,kx,.32,kz,KW,KD,KH-.32,{ph:1});pQu(G,kx-KW/2,kz-KD/2,kx+KW/2,kz+KD/2,.32,KH-.32);
+ pS(G,kx,KH,kz,KW+.16,.1,KD+.16,QTR);
  for(const[x,z,ax,n]of[[kx,kz+KD/2,true,1],[kx+KW/2,kz,false,1],[kx-KW/2,kz,false,-1]]){const L=ax?KW:KD;for(const o of[-.3,.3]){const w=o*L;qWin(G,ax?x+w:x+n*.012,2.7,ax?z+n*.012:z+w,ax,n,{w:.18,h:.34,glow:1})}}
  qDoor(G,kx,kz+KD/2+.016,true,1,{y:.32,w:.5,h:.8,wood:1});qBan(G,kx-.7,1.6,kz+KD/2+.04,true,1,.3,.7);qBan(G,kx+.7,1.6,kz+KD/2+.04,true,1,.3,.7);
- const rt=qRoof(G,kx,kz,KW+.1,KD+.1,KH+.1,QSL,true,{rise:.3,run:.17});C5.flag=(typeof rt==='number'?rt:KH+1.9)+.05;
- bS(G,kx-.55,KH+.1,kz+.5,.1,.9,.1,QSD);qFlag(G,kx,C5.flag-.05,kz,.9);
+ const rt=qRoof(G,kx,kz,KW+.1,KD+.1,KH+.1,PXCW?QSH:QSL,true,{rise:.3,run:.17});C5.flag=(typeof rt==='number'?rt:KH+1.9)+.05;C5.wflag=C5.flag;
+ pS(G,kx-.55,KH+.1,kz+.5,.1,.9,.1,QSD);qFlag(G,kx,C5.flag-.05,kz,.9);
  /* gatehouse: a square block over the gate, crenellated, the arms of the kingdom */
- const gz0=4.15,gz1=5.05,GH=3.0,gzc=(gz0+gz1)/2;qStone(G,2.5,.2,gzc,1.9,gz1-gz0,GH-.2,{moss:1,ph:2});qQuoin(G,1.55,gz0,3.45,gz1,.2,GH-.2);
- bS(G,2.5,GH,gzc,2.06,.12,gz1-gz0+.12,QTR);pxCastleMer(G,1.5,gz0-.02,3.5,gz1+.04,GH+.12,.26);pxCastleGate(G,gz1);qBan(G,2.5,1.75,gz1+.04,true,1,.4,.75);
+ const gz0=4.15,gz1=5.05,GH=3.0,gzc=(gz0+gz1)/2;pSt(G,2.5,.2,gzc,1.9,gz1-gz0,GH-.2,{moss:1,ph:2});pQu(G,1.55,gz0,3.45,gz1,.2,GH-.2);
+ pS(G,2.5,GH,gzc,2.06,.12,gz1-gz0+.12,QTR);pxCastleMer(G,1.5,gz0-.02,3.5,gz1+.04,GH+.12,.26);pxCastleGate(G,gz1);qBan(G,2.5,1.75,gz1+.04,true,1,.4,.75);
  qBarrel(G,3.3,3.2,.22);qBarrel(G,3.5,3.0,.22);qCrate(G,1.6,3.0,.22,.26);for(const[x,z]of[[1.6,3.9],[3.4,3.9]])qPost(G,x,.22,z,.55,true);
  return toGeo(G)}
 function pxCastleB(){const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);

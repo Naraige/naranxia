@@ -605,7 +605,7 @@ function woodCastleGeo(){const G=newG();bP(G,1.5,0,1.5,3,.2,3,'#5a4a32');bP(G,1.
 /* ---- castle 5x5 (stone): a tall keep with a copper spire at the back, four round corner towers, square flank towers,
    crenellated curtain walls with a wall walk, a twin-turret gatehouse and a lived-in courtyard; front = +z ---- */
 const C5={kx:2.5,kz:1.6,flag:8.9,wflag:6.2};
-function castleGeo5(){const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);
+function castleGeo5(){if(PXON)return (window.__CV==='B'?pxCastleB:pxCastleA)(false);const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);
  for(let i=0;i<10;i++)for(let j=0;j<10;j++)bS(G,.25+i*.5,.2,.25+j*.5,.49,.025,.49,QS[(i*3+j*5)%4]);
  const WT=2.5,TH=.42;
  const cw=(x,z,w,d)=>{qStone(G,x,.2,z,w,d,WT-.2,{moss:1});qCornice(G,x,WT,z,w+.05,d+.05,.07);bS(G,x,WT+.07,z,w-.04,.025,d-.04,QSD2)};
@@ -663,7 +663,7 @@ function castleGeo5(){const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);
  return toGeo(G)}
 /* ---- castle 5x5 (wood): sharpened-log palisade with a wall walk, four watchtowers, a gate with a fighting platform,
    a great hall with a lookout tower and a busy yard; front = +z ---- */
-function woodCastleGeo5(){const G=newG();bP(G,2.5,0,2.5,5,.2,5,'#5a4a32');bP(G,2.5,.2,2.5,4.92,.06,4.92,'#75664a');
+function woodCastleGeo5(){if(PXON&&window.__CV!=='B'){const r=pxCastleA(true);PXCW=false;return r}const G=newG();bP(G,2.5,0,2.5,5,.2,5,'#5a4a32');bP(G,2.5,.2,2.5,4.92,.06,4.92,'#75664a');
  const pal=(x,z,h)=>{bW(G,x,.26,z,.21,h,.21,QLOG);bW(G,x,.26+h,z,.14,.08,.14,QLOGT);bW(G,x,.34+h,z,.07,.09,.07,QLOGT)};
  const hh=i=>1.75+((i*7)%3)*.1;
  for(let i=0;i<17;i++){const t=.14+i*.295;pal(t,.13,hh(i));if(t>.6&&t<4.4){pal(.13,t,hh(i+2));pal(4.87,t,hh(i+4))}if((t<1.75||t>3.25)&&t>.6&&t<4.4)pal(t,4.87,hh(i+1))}

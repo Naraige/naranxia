@@ -122,7 +122,16 @@ matV.onBeforeCompile=sh=>{sh.uniforms.uHQ=GQU;sh.uniforms.uLMax=LMU;sh.vertexSha
  if(kD>0.){float gr=vn3(vec3(rA.x*.9,rA.y*9.,4.));ink=max(ink,inkL(gr,.5,1.1)*.5*FA(9.)*kD);}
  if(kN>0.){float rp=vn3(vec3(wq.x*.5+wq.z*.9,0.,wq.z*.3)*3.);ink=max(ink,inkL(rp,.5,1.)*.25*FA(3.)*kN);}
  bc*=mix(tw*(.9+.2*macro),vec3(1.),kT*.9);if(aN.y<.5)bc*=.94;
- diffuseColor.rgb=mix(bc,bc*vec3(.1,.085,.12),ink);
+ diffuseColor.rgb=mix(bc,bc*vec3(.1,.085,.12),ink*.3);
+#ifndef TERR
+ {float PXS=18.;vec2 pc=floor(uv*PXS+.001);float pn=hn3(vec3(pc,aN.y>.5?7.3:(aN.x>.5?3.1:5.7)));vec3 c0=diffuseColor.rgb;
+  float row=floor(pc.y/4.),bx=mod(pc.x+mod(row,2.)*4.,8.),mor=(mod(pc.y,4.)<.5||bx<.5)?1.:0.;
+  float prow=floor(pc.y/4.),pe=mod(pc.x+prow*5.,16.)<.5?1.:0.,pli=(mod(pc.y,4.)<.5||pe>.5)?1.:0.;
+  if(aN.y>.5){mor=(mod(pc.x,8.)<.5||mod(pc.y,8.)<.5)?1.:0.;pli=mod(pc.x,4.)<.5?1.:0.;}
+  vec3 cS=c0*(.9+.2*pn)*mix(1.,.64,mor),cW=c0*(.86+.2*pn)*mix(1.,.68,pli),cO=c0*(.93+.14*pn);
+  float wS=clamp(kS*1.6,0.,1.),wW=clamp(kD*1.4,0.,1.)*(1.-wS);
+  diffuseColor.rgb=mix(mix(cO,cW,wW),cS,wS);}
+#endif
 #ifdef TERR
  if(vWP.y<11.9&&vMat<8.5){float dw=clamp((11.92-vWP.y)*.32+.25,0.,1.);diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.09,.24,.3),dw*.85);}
 #endif

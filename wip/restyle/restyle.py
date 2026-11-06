@@ -129,5 +129,6 @@ PXSH=r"""
 #endif"""
 PXSH=PXSH.replace("+(window.__PXS||18)+0.","18.")
 g=R(g,"diffuseColor.rgb=mix(bc,bc*vec3(.1,.085,.12),ink);\n#ifdef TERR","diffuseColor.rgb=mix(bc,bc*vec3(.1,.085,.12),ink*.3);"+PXSH+"\n#ifdef TERR")
-g=R(g,"function castleGeo5(){const G=newG();","function castleGeo5(){if(PXON)return (window.__CV==='B'?pxCastleB:pxCastleA)();const G=newG();")
+g=R(g,"function castleGeo5(){const G=newG();","function castleGeo5(){if(PXON)return (window.__CV==='B'?pxCastleB:pxCastleA)(false);const G=newG();")
+g=R(g,"function woodCastleGeo5(){const G=newG();","function woodCastleGeo5(){if(PXON&&window.__CV!=='B'){const r=pxCastleA(true);PXCW=false;return r}const G=newG();")
 open(dst,'w').write(g);print('ok')

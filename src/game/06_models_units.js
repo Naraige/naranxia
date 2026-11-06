@@ -28,15 +28,15 @@ function toolGeos(){if(TOOLG.axe)return TOOLG;const mk=f=>{const G=newG();f(G);r
  TOOLG.hammer=mk(G=>{handleG(G,7.4,WD);tb(G,0,-.6,7.15,1.35,2.5,1.7,ID);tb(G,0,-1.95,7.15,1.45,.35,1.8,IL);tb(G,0,.62,7.15,1.4,.3,1.75,IR);tb(G,0,-.6,7.15,1.42,.3,1.78,'#5a606c')});
  const sword=(bl,bd,gd,gd2)=>mk(G=>{tb(G,0,0,0,.7,.7,2.0,'#4a2e16');tb(G,0,0,-1.45,1.0,1.0,.9,gd);tb(G,0,0,-1.95,.6,.6,.3,gd2);tb(G,0,0,1.25,.9,3.4,.75,gd);tb(G,0,1.85,1.25,.7,.5,.8,gd2);tb(G,0,-1.85,1.25,.7,.5,.8,gd2);
   tb(G,0,0,6.0,.34,1.25,8.6,bl);tb(G,0,0,5.6,.38,.32,7.0,bd);tb(G,0,0,10.6,.3,.8,1.0,bl);tb(G,0,0,11.25,.26,.36,.6,bl)});
- TOOLG.sword=sword('#e8edf5','#a9b2c2','#d9b13a','#fff0a8');TOOLG.gsword=sword('#ffe9a0','#d0a03a','#c8862a','#fff6c8');
- TOOLG.rsword=mk(G=>{const GDc='#d4a234',GD2c='#ecc964',ST='#dfe5ee',SD='#9aa3b2',SL='#f7f9fc';
+ TOOLG.sword=PXON?pxSword():sword('#e8edf5','#a9b2c2','#d9b13a','#fff0a8');TOOLG.gsword=PXON?pxCapSword():sword('#ffe9a0','#d0a03a','#c8862a','#fff6c8');
+ TOOLG.rsword=PXON?pxRoyalSword():mk(G=>{const GDc='#d4a234',GD2c='#ecc964',ST='#dfe5ee',SD='#9aa3b2',SL='#f7f9fc';
   tb(G,0,0,-.1,.62,.62,2.5,'#1f2c5c');for(const z of[-.9,-.1,.7])tb(G,0,0,z,.68,.68,.16,GDc);
   tb(G,0,0,-1.75,1.0,1.0,.8,GDc);tb(G,0,0,-2.3,.62,.62,.4,GD2c);tb(G,0,0,-1.75,1.08,.42,.42,'#d8283a');
   tb(G,0,0,1.55,.95,5.4,.8,GDc);for(const s of[1,-1]){tb(G,0,s*2.9,1.75,.85,.7,1.1,GD2c);tb(G,0,s*2.95,2.35,.6,.45,.5,GDc)}tb(G,0,0,1.55,1.02,.9,.9,GD2c);tb(G,0,0,1.55,1.06,.46,.46,'#3a7aff');
   tb(G,0,0,2.4,.5,1.7,.9,GDc);
   tb(G,0,0,6.6,.38,1.6,7.6,ST);tb(G,0,0,11.5,.34,1.25,2.2,ST);tb(G,0,0,13.1,.3,.82,1.0,ST);tb(G,0,0,13.9,.24,.4,.6,SL);
   tb(G,0,0,7.2,.42,.36,8.6,SD);for(const s of[1,-1])tb(G,0,s*.74,7.6,.3,.12,10.2,SL)});
- TOOLG.halberd=mk(G=>{const WD='#5e3f24',WD2='#3b2614',ST='#c9d0dc',SD='#7e8797',SL='#f2f5fa',GDc='#d4a234',GD2c='#ecc964',H=15.6;
+ TOOLG.halberd=PXON?pxHalberd():mk(G=>{const WD='#5e3f24',WD2='#3b2614',ST='#c9d0dc',SD='#7e8797',SL='#f2f5fa',GDc='#d4a234',GD2c='#ecc964',H=15.6;
   tb(G,0,0,5.0,.56,.56,21.6,WD);for(const z of[-1.9,-1.1,-.3,.5])tb(G,0,0,z,.64,.64,.3,WD2);
   tb(G,0,0,-5.75,.74,.74,.6,GDc);tb(G,0,0,-6.15,.5,.5,.3,GD2c);tb(G,0,0,7.2,.66,.66,.36,GDc);
   for(const s of[-1,1])tb(G,0,s*.32,H-1.9,.3,.1,3.6,SD);tb(G,0,0,H+.1,.84,.84,.9,GDc);tb(G,0,0,H-.5,.72,.72,.3,GD2c);
@@ -46,7 +46,7 @@ function toolGeos(){if(TOOLG.axe)return TOOLG;const mk=f=>{const G=newG();f(G);r
   tb(G,0,.85,H+.1,.3,1.0,.7,SD);tb(G,0,1.7,H-.1,.26,.8,.55,ST);tb(G,0,2.35,H-.4,.22,.6,.45,ST);tb(G,0,2.8,H-.75,.18,.4,.4,SL);
   tb(G,0,0,H-2.6,1.0,1.0,.16,GDc);tb(G,0,0,H-3.1,.96,.96,.8,'#a3202a');tb(G,0,0,H-3.8,.8,.8,.7,'#86161f');tb(G,0,0,H-4.35,.6,.6,.45,'#6a1018')});
  /* bow: grip in the fist, limbs along z, bent toward the archer (+y), string on the archer side */
- TOOLG.bow=mk(G=>{tb(G,0,0,0,.8,.95,1.5,'#4a2e16');for(let k=0;k<6;k++){const z=1.05+k*1.08,y=.07*k*k;[1,-1].forEach(sg=>tb(G,0,y,sg*z,.55-.04*k,.75,1.2,k===5?'#5a3a1a':'#8a5a2a'))}[1,-1].forEach(sg=>tb(G,0,2.6,sg*6.75,.5,.5,.5,'#d9b13a'));
+ TOOLG.bow=PXON?pxBow():mk(G=>{tb(G,0,0,0,.8,.95,1.5,'#4a2e16');for(let k=0;k<6;k++){const z=1.05+k*1.08,y=.07*k*k;[1,-1].forEach(sg=>tb(G,0,y,sg*z,.55-.04*k,.75,1.2,k===5?'#5a3a1a':'#8a5a2a'))}[1,-1].forEach(sg=>tb(G,0,2.6,sg*6.75,.5,.5,.5,'#d9b13a'));
   tb(G,0,2.72,0,.14,.14,13.5,'#efe9d6')});
  return TOOLG}
 const vx=(k,cx,y0,cz,w,h,d,c)=>bxc(RT.X[k],cx*VX,y0*VX,cz*VX,w*VX,h*VX,d*VX,c);
@@ -72,13 +72,695 @@ function mcLimbs(G,LG,AG,c){/* legs */
 function mcTorso(G,c){vb(G,0,5.5,0,3.7,5.5,1.84,c.shirt);vb(G,0,5.5,0,3.78,.5,1.9,c.belt||darkenC(c.shirt));if(c.chest)vb(G,0,7.6,.95,2.4,2.6,.1,c.chest)}
 const darkenC=c=>lighten(c,-.0)&&(()=>{const h=hex(c);return '#'+h.map(v=>Math.round(v*.7).toString(16).padStart(2,'0')).join('')})();
 
-let ALB=0,ALF=null;const alv=()=>ALF!=null?ALF:(RS2.done.plate?1:0)+(RS2.done.mail?1:0);
+
+/* ================= DUNGEON-HERO STYLE CHARACTERS =================
+   A Minecraft character (8px head, 8x12x4 body, 4x12x4 limbs) with a face, hair and bare forearms, wearing simple chunky
+   armour pieces built from boxes on the same pixel grid. Clean flat pixel colours (base, light top, dark lip). Boxes are
+   collected first, then emitted with ambient occlusion at the corners of every merged quad (rays against the other pieces
+   of the same body part), which gives soft contact shadows under brims, pauldrons, belts and plates. Units: pixels. */
+const PXV=5.5/12,PXC=new Map();
+const pxRGB=h=>{let c=PXC.get(h);if(!c){c=rgb(h);PXC.set(h,c)}return c};
+const PXSH={F:.94,B:.78,R:.88,L:.82,T:1,D:.62};
+let PXS=null,PXT=null;
+const PXAD=(()=>{const N=14,r=[];for(let i=0;i<N;i++){const z=Math.sqrt(1-(i+.5)/N),q=Math.sqrt(1-z*z),a=i*2.39996;r.push([q*Math.cos(a),q*Math.sin(a),z])}return r})();
+const PXAR=3.4,PXAK=.6,PXMQ=4;
+function pxBox(Gx,x,y,z,w,h,d,paint,o){o=o||{};const b={Gx,x,y,z,w,h,d,paint,mat:o.mat||0,no:o.no||'',ao:o.ao!==false,only:!!o.only,grid:o.grid||null,m:PXT?PXT.m:null,mi:PXT?PXT.mi:null};if(PXS)PXS.push(b);else pxFlush([b])}
+function pxScene(fn){const sv=PXS;PXS=[];let L;try{fn()}finally{L=PXS;PXS=sv}pxFlush(L)}
+function pxRot(Gx,fn,rot,piv){const T=new THREE.Matrix4().makeTranslation(piv[0],piv[1],piv[2]).multiply(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(rot[0],rot[1],rot[2]))).multiply(new THREE.Matrix4().makeTranslation(-piv[0],-piv[1],-piv[2]));
+ const sv=PXT,m=sv?sv.m.clone().multiply(T):T;PXT={m,mi:m.clone().invert()};try{fn(Gx)}finally{PXT=sv}}
+const pxMP=(m,p)=>{if(!m)return p;const e=m.elements;return[e[0]*p[0]+e[4]*p[1]+e[8]*p[2]+e[12],e[1]*p[0]+e[5]*p[1]+e[9]*p[2]+e[13],e[2]*p[0]+e[6]*p[1]+e[10]*p[2]+e[14]]};
+const pxMD=(m,p)=>{if(!m)return p;const e=m.elements;return[e[0]*p[0]+e[4]*p[1]+e[8]*p[2],e[1]*p[0]+e[5]*p[1]+e[9]*p[2],e[2]*p[0]+e[6]*p[1]+e[10]*p[2]]};
+function pxHit(o,d,b){let O=o,D=d;if(b.mi){O=pxMP(b.mi,o);D=pxMD(b.mi,d)}let t0=1e-4,t1=PXAR;const lo=[b.x,b.y,b.z],hi=[b.x+b.w,b.y+b.h,b.z+b.d];
+ for(let a=0;a<3;a++){if(Math.abs(D[a])<1e-9){if(O[a]<lo[a]||O[a]>hi[a])return Infinity;continue}let ta=(lo[a]-O[a])/D[a],tb=(hi[a]-O[a])/D[a];if(ta>tb){const t=ta;ta=tb;tb=t}if(ta>t0)t0=ta;if(tb<t1)t1=tb;if(t0>t1)return Infinity}return t0}
+function pxOcc(p,n,L,self){const ax=Math.abs(n[0])<.9?[1,0,0]:[0,1,0],t1=[n[1]*ax[2]-n[2]*ax[1],n[2]*ax[0]-n[0]*ax[2],n[0]*ax[1]-n[1]*ax[0]],l1=Math.hypot(t1[0],t1[1],t1[2]);t1[0]/=l1;t1[1]/=l1;t1[2]/=l1;
+ const t2=[n[1]*t1[2]-n[2]*t1[1],n[2]*t1[0]-n[0]*t1[2],n[0]*t1[1]-n[1]*t1[0]];let s=0;
+ for(const q of PXAD){const d=[t1[0]*q[0]+t2[0]*q[1]+n[0]*q[2],t1[1]*q[0]+t2[1]*q[1]+n[1]*q[2],t1[2]*q[0]+t2[2]*q[1]+n[2]*q[2]];let tm=Infinity;
+  for(const b of L){if(b===self)continue;const t=pxHit(p,d,b);if(t<tm)tm=t}if(tm<PXAR)s+=1-tm/PXAR}
+ return s/PXAD.length}
+function pxFlush(L){const by=new Map();for(const b of L){if(!by.has(b.Gx))by.set(b.Gx,[]);by.get(b.Gx).push(b)}
+ for(const[,list]of by){const occ=list.filter(b=>b.ao);for(const b of list)if(!b.only)pxEmit(b,occ)}}
+function pxEmit(b,occ){const s=PXV*VX,mo=BMAT;BMAT=b.mat;
+ const W=b.grid?b.grid[0]:Math.max(1,Math.round(b.w)),H=b.grid?b.grid[1]:Math.max(1,Math.round(b.h)),D=b.grid?b.grid[2]:Math.max(1,Math.round(b.d)),sx=b.w/W,sy=b.h/H,sz=b.d/D,x0=b.x,y0=b.y,z0=b.z,x1=x0+b.w,y1=y0+b.h,z1=z0+b.d;
+ const F=[['F',[x0,y0,z1],[sx,0,0],[0,sy,0],[0,0,1],W,H],['B',[x1,y0,z0],[-sx,0,0],[0,sy,0],[0,0,-1],W,H],['R',[x1,y0,z1],[0,0,-sz],[0,sy,0],[1,0,0],D,H],
+  ['L',[x0,y0,z0],[0,0,sz],[0,sy,0],[-1,0,0],D,H],['T',[x0,y1,z1],[sx,0,0],[0,0,-sz],[0,1,0],W,D],['D',[x0,y0,z0],[sx,0,0],[0,0,sz],[0,-1,0],W,D]];
+ try{for(const[f,o,du,dv,n,FW,FH]of F){if(b.no.indexOf(f)>=0)continue;const nW=pxMD(b.m,n),C=new Array(FW*FH);
+  for(let v=0;v<FH;v++)for(let u=0;u<FW;u++)C[v*FW+u]=b.paint(f,u,v,FW,FH)||null;
+  const dn=new Uint8Array(FW*FH),k0=PXSH[f],ac=new Map();
+  const aoAt=(uu,vv)=>{const key=uu*1000+vv;let r=ac.get(key);if(r!==undefined)return r;r=0;if(occ.length>1){
+    const p=[o[0]+du[0]*uu+dv[0]*vv+n[0]*.03,o[1]+du[1]*uu+dv[1]*vv+n[1]*.03,o[2]+du[2]*uu+dv[2]*vv+n[2]*.03];r=pxOcc(pxMP(b.m,p),nW,occ,b)}ac.set(key,r);return r};
+  for(let v=0;v<FH;v++)for(let u=0;u<FW;u++){const i=v*FW+u,c=C[i];if(dn[i]||!c)continue;let w=1;while(u+w<FW&&w<PXMQ&&!dn[i+w]&&C[i+w]===c)w++;
+   let h=1;grow:while(v+h<FH&&h<PXMQ){for(let q=0;q<w;q++){const j=(v+h)*FW+u+q;if(dn[j]||C[j]!==c)break grow}h++}
+   for(let a=0;a<h;a++)for(let q=0;q<w;q++)dn[(v+a)*FW+u+q]=1;
+   const P=(uu,vv)=>{const p=pxMP(b.m,[o[0]+du[0]*uu+dv[0]*vv,o[1]+du[1]*uu+dv[1]*vv,o[2]+du[2]*uu+dv[2]*vv]);return[p[0]*s,p[1]*s,p[2]*s]},
+    ins=.3,col=(uu,vv)=>{const a=aoAt(uu+(uu>u?-ins:ins)*0,vv);return shade(pxRGB(c),k0*(1-PXAK*Math.min(1,a*1.3)))};
+   let A=P(u+w,v),B=P(u+w,v+h),Cc=P(u,v+h),Dd=P(u,v),cA=col(u+w,v),cB=col(u+w,v+h),cC=col(u,v+h),cD=col(u,v);
+   const e1=[B[0]-A[0],B[1]-A[1],B[2]-A[2]],e2=[Cc[0]-B[0],Cc[1]-B[1],Cc[2]-B[2]],cr=[e1[1]*e2[2]-e1[2]*e2[1],e1[2]*e2[0]-e1[0]*e2[2],e1[0]*e2[1]-e1[1]*e2[0]];
+   if(cr[0]*nW[0]+cr[1]*nW[1]+cr[2]*nW[2]<0){let t=A;A=Dd;Dd=t;t=B;B=Cc;Cc=t;t=cA;cA=cD;cD=t;t=cB;cB=cC;cC=t}
+   quad(b.Gx,A,B,Cc,Dd,nW,cA,cB,cC,cD)}}}finally{BMAT=mo}}
+function pxCat(Gx,T,pf,nf,flip){const o=Gx.P.length/3,n=T.P.length/3;if(Gx.M)while(Gx.M.length<o)Gx.M.push(0);
+ for(let i=0;i<n;i++){const p=[T.P[i*3],T.P[i*3+1],T.P[i*3+2]],q=[T.N[i*3],T.N[i*3+1],T.N[i*3+2]],P2=pf?pf(p):p,N2=nf?nf(q):q;
+  Gx.P.push(P2[0],P2[1],P2[2]);Gx.N.push(N2[0],N2[1],N2[2]);Gx.C.push(T.C[i*3],T.C[i*3+1],T.C[i*3+2]);if(Gx.M)Gx.M.push((T.M&&T.M[i])||0)}
+ for(let i=0;i<T.I.length;i+=3){if(flip)Gx.I.push(T.I[i]+o,T.I[i+2]+o,T.I[i+1]+o);else Gx.I.push(T.I[i]+o,T.I[i+1]+o,T.I[i+2]+o)}if(T.hm)Gx.hm=1}
+function pxArms(P,fn){const T=newG();pxScene(()=>fn(T));pxCat(P.AG,T);pxCat(P.LA,T,p=>[-p[0]-2.76*VX,p[1]+10.45*VX,p[2]],q=>[-q[0],q[1],q[2]],true)}
+const shadeHex=(c,k)=>{const h=hex(c);return '#'+h.map(q=>Math.max(0,Math.min(255,Math.round(q*k))).toString(16).padStart(2,'0')).join('')};
+/* palettes are written as the colour you see; PD turns them into albedo (the toon light lifts lit faces by about 1.4) */
+const PD=h=>shadeHex(h,.704),PDP=a=>a.map(PD);
+const PXST=PDP(['#3f4651','#6b7380','#99a0aa','#c4c9d0','#e6e9ed']),PXGO=PDP(['#7d5410','#b8861c','#ecbd3a','#ffdc6e','#fff2bc']),
+ PXLE=PDP(['#3c220e','#5e381c','#86522c','#a96c3c','#c88a54']),PXDK=PD('#15171c');
+const teamPal=c=>[shadeHex(c,.42),shadeHex(c,.62),shadeHex(c,.82),c,lighten(c,.28)];
+/* clean bevel: light top row, dark bottom lip, flat base; light top face, dark underside */
+const pBv=(P,o)=>{o=o||{};return(f,u,v,W,H)=>{if(f==='T')return o.top||P[3];if(f==='D')return P[1];if(H>=2&&v===H-1)return P[3];if(H>=3&&v===0)return o.lip||P[1];return P[2]}};
+const pFl=c=>()=>c;
+/* a ring of plate (or cloth) around a limb: bright top row, dark lip, a few worn pixels */
+const pRing=(P,o)=>{o=o||{};return(f,u,v,W,H)=>{if(f==='T')return P[3];if(f==='D')return P[0];if(v===H-1)return o.hi?P[4]:P[3];if(H>=2&&v===0)return P[1];
+ if(o.ln){if(o.ln.indexOf(v)>=0)return P[1];if(o.ln.indexOf(v-1)>=0)return P[3]}if(o.fr&&f==='F'&&(u===Math.floor(W/2)))return P[3];if(o.fg&&f==='F'&&v<=1)return u%2?P[1]:P[3];
+ if(o.n!==false){const n=pxN(f,u,v,o.s||0);if(n<.13)return P[1];if(n>.91)return P[3]}return P[2]}};
+const pxN=(f,u,v,s)=>{const x=Math.sin(u*12.9898+v*78.233+f.charCodeAt(0)*37.719+s*11.3)*43758.5453;return x-Math.floor(x)};
+/* rings stacked down a limb (4px limb centred on x=z=0): each [y0, height, inflate, palette, options] */
+function pxRings(T,L){for(const r of L){const[y0,h,inf,Pl,o]=r;pxBox(T,-2-inf,y0,-2-inf,4+2*inf,h,4+2*inf,pRing(Pl,o),{mat:o&&o.mat!==undefined?o.mat:4})}}
+const PXWR=PDP(['#6e6250','#948670','#b8a98e','#d4c6aa','#e6dcc4']);
+/* ---- faces: skin, eyes, brows, hair; hair styles: 0 short, 1 fringe, 2 long, 3 none ---- */
+const SKINS=[['#a8664c','#c98262','#e8a684'],['#8f5a40','#b57452','#d4946e'],['#6e4430','#93603f','#b07a54'],['#b27a5c','#d69c78','#f0bc96']];
+function pxHead(P,o){const Sk=PDP(SKINS[o.skin||0]),Hr=o.hair?PDP(o.hair):null,st=o.hs||0,EY=PD(o.eye||'#3fa65a'),WH=PD('#f4f4f4'),BR=Hr?Hr[0]:PD('#4a3020'),MO=PD('#8e4a3c'),Bd=o.beard?PDP(o.beard):null;
+ pxBox(P.HG,-4,24,-4,8,8,8,(f,u,v,W,H)=>{
+  if(f==='T')return Hr?((u+v)%3===0?Hr[2]:Hr[1]):Sk[1];if(f==='D')return Sk[0];
+  if(f==='F'){if(Hr){if(v===7)return Hr[1];if(v===6&&(st===1?(u!==5):(u<=1||u>=6||u===3)))return u===3?Hr[2]:Hr[1];if(v===5&&(u===0||u===7)&&st!==3)return Hr[0]}
+   if(v===4&&(u===1||u===2||u===5||u===6))return BR;if(v===3){if(u===1||u===6)return WH;if(u===2||u===5)return EY}
+   if(Bd&&v<=2&&!(v>=1&&(u===3||u===4))&&!(v===2&&u>=2&&u<=5))return v===0?Bd[0]:Bd[1];
+   if(v===2&&(u===3||u===4))return Sk[1];if(v===1&&(u===3||u===4))return MO;return v===0?Sk[1]:Sk[2]}
+  const back=(f==='B')||(f==='R'&&u>=4)||(f==='L'&&u<=3);
+  if(Hr){if(v>=6)return Hr[1];if(back&&v>=(st===2?1:3))return v===3&&st!==2?Hr[0]:Hr[1];if(st===2&&(f==='R'?u>=2:f==='L'?u<=5:false)&&v>=2)return Hr[1]}
+  if((f==='R'&&u===3||f==='L'&&u===4)&&v===3)return Sk[0];return Sk[1]},{mat:0})}
+/* ---- the body underneath: shirt (sleeves), bare forearms, trousers, boots ---- */
+function pxBody(P,o){const Sh=PDP(o.shirt||['#283c5e','#3a5788','#4b6fa8','#6a8cc4']),Pa=PDP(o.pants||['#1d2a42','#2a3b5c','#344a72']),Bt=o.boots?PDP(o.boots):PXLE;
+ pxBox(P.G,-4,12,-2,8,12,4,(f,u,v,W,H)=>{if(f==='T')return Sh[2];if(f==='D')return Sh[0];if(v===H-1)return Sh[3];if(v<=1)return Sh[1];return Sh[2]},{mat:0});
+ pxBox(P.LG,-2,-12,-2,4,12,4,(f,u,v,W,H)=>{if(f==='T')return Pa[2];if(f==='D')return Bt[0];if(v<=3)return v===3?Bt[3]:(v===0?Bt[1]:Bt[2]);return v===4?Pa[0]:Pa[1+(v>9?1:0)]},{mat:0});
+ pxBox(P.LG,-30,-40,-30,60,28,60,()=>PXDK,{only:true})}
+function pxArm0(T,o){const Sk=PDP(SKINS[o.skin||0]),Sh=PDP(o.shirt||['#283c5e','#3a5788','#4b6fa8','#6a8cc4']),bare=o.bare!==false,sl=o.sleeve||6;
+ pxBox(T,-2,-12,-2,4,12,4,(f,u,v,W,H)=>{if(f==='T')return Sh[2];if(f==='D')return Sk[0];if(!bare||v>=12-sl)return v===12-sl?Sh[1]:Sh[2];return v<=1?Sk[1]:Sk[2]},{mat:0})}
+
+const pE=(u,v,W,H)=>Math.min(u,v,W-1-u,H-1-v);
+/* ================= BLOCKBENCH-STYLE SKINS =================
+   Each unit is the plain Minecraft player model: six base cubes and six outer-layer cubes (hat +0.5px, jacket / sleeves /
+   trousers +0.25px, texture kept on the 64x64 grid, '.' = transparent so the base layer shows through), plus only a few
+   extra cubes (crest, pauldrons, brim, quiver). The detail lives in the pixel art below, one string per row, top row first.
+   A face given as '~R' is the mirror of face R; 'F' alone reuses face F. */
+function pxPaint(spec,map){return(f,u,v,W,H)=>{let s=spec&&spec[f];if(!s)return null;let mir=false;if(typeof s==='string'){mir=s[0]==='~';s=spec[mir?s.slice(1):s]}
+ if(typeof s==='function')return s(u,v,W,H);const row=s[H-1-v];if(!row)return null;const c=row[mir?W-1-u:u];if(c===undefined||c==='.')return null;const col=map[c];return col===undefined?null:col}}
+function pxSkin(P,K,map,o){o=o||{};const B=(Gx,x,y,z,w,h,d,spec,g,m,ao)=>{if(spec)pxBox(Gx,x,y,z,w,h,d,pxPaint(spec,map),{mat:m||0,grid:g,ao:ao!==false})};
+ B(P.HG,-4,24,-4,8,8,8,K.head,null,0);B(P.HG,-4.5,23.5,-4.5,9,9,9,K.hat,[8,8,8],K.hatMat||0,false);
+ B(P.G,-4,12,-2,8,12,4,K.body,null,0);B(P.G,-4.25,11.75,-2.25,8.5,12.5,4.5,K.jacket,[8,12,4],K.jacketMat||0,false);
+ B(P.LG,-2,-12,-2,4,12,4,K.leg,null,0);B(P.LG,-2.25,-12.25,-2.25,4.5,12.5,4.5,K.pants,[4,12,4],K.pantsMat||0,false);
+ pxBox(P.LG,-30,-40,-30,60,28,60,()=>null,{only:true})}
+function pxSkinArms(T,K,map){if(K.arm)pxBox(T,-2,-12,-2,4,12,4,pxPaint(K.arm,map),{mat:0});if(K.sleeve)pxBox(T,-2.25,-12.25,-2.25,4.5,12.5,4.5,pxPaint(K.sleeve,map),{mat:K.sleeveMat||0,grid:[4,12,4],ao:false})}
+/* colour maps: letters to display colours, turned into albedo once */
+const pxMap=(o,tm)=>{const m={};for(const k in o)m[k]=PD(o[k]);if(tm){const T=teamPal(tm);m.V=T[0];m.t=T[1];m.T=T[2];m.U=T[3];m.Y=T[4]}return m};
+/* ---------------- KNIGHT ---------------- */
+const SK_KNIGHT={hatMat:4,jacketMat:4,sleeveMat:4,pantsMat:4,
+ head:{F:['ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss'],B:'F',R:'F',L:'F',T:'F',D:'F'},
+ hat:{F:['hhhhhhhh','llllllll','mmmGGmmm','kkkGGkkk','mmmGGmmm','mmmggmmm','dmdggdmd','dddddddd'],
+  R:['hhhhhhhh','llllllll','mmmmmmml','kkmmGmmm','dmmmmmmm','mmmmmmmm','mmmmmmmd','dddddddd'],L:'~R',
+  B:['hhhhhhhh','lllhllll','mmmlmmmm','mmmlmmmm','mmmlmmmm','dmmlmmmd','dmmlmmmd','dddddddd'],
+  T:['lhhhhhhl','hlmggmlh','hmmggmmh','hmmggmmh','hmmggmmh','hmmggmmh','hlmggmlh','lhhGGhhl']},
+ body:{F:['xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx'],B:'F',R:['xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx'],L:'R',T:['dddddddd','dddddddd','dddddddd','dddddddd'],D:'T'},
+ jacket:{F:['whhhhhhw','hlmmmmlh','lmtTTtml','lmtGGtml','lmGGggml','dmtggtmd','dmtTTtmd','nbbGGbbn','dltTTtld','mhtTTthm','dmtTTtmd','ddtTTtdd'],
+  R:['hhhh','llll','mmml','mmmm','mmmm','dmmm','dddd','bbbn','mmmm','hhhh','mmmm','dddd'],L:'~R',
+  B:['hhhhhhhh','llllllll','mmtTTtmm','mmtTTtmm','dmtTTtmd','dmtTTtmd','dmtTTtmd','nbbbbbbn','dmtTTtmd','mhtTTthm','dmtTTtmd','ddtTTtdd'],
+  T:['hhhhhhhh','hllllllh','hllllllh','whhhhhhw']},
+ arm:{F:['xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx'],B:'F',R:'F',L:'F',T:['xxxx','xxxx','xxxx','xxxx'],D:'T'},
+ sleeve:{F:['hhhh','llll','mlmm','dmmd','....','whhw','lmml','....','hhhh','lmml','hhhh','lmlm'],
+  R:['hhhh','llll','mmmm','dmmd','....','hhhh','lmml','....','hhhh','mmmm','hhhh','mdmd'],L:'R',
+  B:['llll','mmmm','dmmd','dddd','....','hhhh','mmmm','....','llll','mmmm','llll','dmdm'],T:['hhhh','hllh','hllh','hhhh'],D:['dddd','dddd','dddd','dddd']},
+ leg:{F:['xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx'],B:'F',R:'F',L:'F',T:['xxxx','xxxx','xxxx','xxxx'],D:'T'},
+ pants:{F:['llll','mmmm','dmmd','....','hhhh','hwwh','lmml','....','hllh','lmml','bBBb','dmmd'],
+  R:['llll','mmmm','dmmm','....','hhhh','hhhl','lmml','....','hlll','lmml','bBBb','dmmd'],L:'~R',
+  B:['llll','mmmm','dmmd','....','llll','mmmm','dmmd','....','llll','mmmm','bbbb','dddd'],T:['llll','llll','llll','llll'],D:['dddd','dddd','dddd','dddd']}};
+function pxKnight(P,AL){const map=pxMap({k:'#141519',d:'#2c2e34',m:'#4a4d55',l:'#6d717a',h:'#949aa3',w:'#c4c8ce',x:'#1d1e22',y:'#2c2e33',
+  g:'#d4a234',G:'#f0cc5c',o:'#9a6e1e',b:'#6e4826',B:'#8d6136',n:'#4a2e16',s:'#c98262'},thp()),K=SK_KNIGHT,S=n=>map[n];
+ pxScene(()=>{pxSkin(P,K,map);
+  pxBox(P.HG,-.5,32.5,-4.25,1,1,8.5,pxPaint({F:['G'],B:['o'],R:['GGGGGGGG'],L:'R',T:['g','G','G','G','G','G','G','g'],D:['o','o','o','o','o','o','o','o']},{G:map.G,o:map.o,g:map.g}),{mat:4,grid:[1,1,8]});
+  if(AL>=2){pxBox(P.HG,-.5,33.5,-3,1,2,4,pxPaint({F:['U','T'],B:['T','t'],R:['UUUU','TTTT'],L:'R',T:['U','U','U','U'],D:['t','t','t','t']},map),{mat:7,grid:[1,2,4]});pxBox(P.HG,-.5,32,-5.6,1,2.5,2,pxPaint({F:['T','T','t'],B:'F',R:['TT','TT','tt'],L:'R',T:['T','T'],D:['t','t']},map),{mat:7,grid:[1,3,2]})}});
+ pxArms(P,T=>{pxSkinArms(T,K,map);
+  pxBox(T,-3,-1.25,-3,6,3,6,pxPaint({T:['mllllm','lhhhhl','lhwwhl','lhhhhl','lhhhhl','mllllm'],F:['hhhhhh','lmmmml','oggggo'],B:'F',R:'F',L:'F',D:['dddddd','dddddd','dddddd','dddddd','dddddd','dddddd']},map),{mat:4})});
+}
+/* ---------------- ROYAL GUARD ---------------- */
+const SK_GUARD={hatMat:4,jacketMat:4,sleeveMat:4,pantsMat:4,
+ head:SK_KNIGHT.head,
+ hat:{F:['UUUUUUUU','TTTUUTTT','oggGGggo','TTTTTTTT','kkkkkkkk','tllllllt','tlhllhlt','tddddddt'],
+  R:['UUUUUUUU','TTTTTTTU','gggggggo','TTTTTTTT','kkTTTTTT','lltTTTTT','ldtTTTTt','dttttttt'],L:'~R',
+  B:['UUUUUUUU','TTTTTTTT','gggggggg','TTTTTTTT','TTTTTTTT','tTTTTTTt','tTTTTTTt','tttttttt'],
+  T:['TUUUUUUT','UTTTTTTU','UTTggTTU','UTTggTTU','UTTggTTU','UTTggTTU','UTTTTTTU','TUUUUUUT']},
+ body:SK_KNIGHT.body,
+ jacket:{F:['UUUUUUUU','TtrRRrtT','TtRgGRtT','TtgGGgtT','TtRgGRtT','TtRRRRtT','TtrRRrtT','nbbGGbbn','TtRRRRtT','UtRRRRtU','TtRRRRtT','ttggggtt'],
+  R:['UUUU','TTTT','TTTT','TTTT','TTTT','tTTT','tttt','bbbn','TTTT','UUUU','TTTT','tttt'],L:'~R',
+  B:['UUUUUUUU','TTrrrrTT','TTrRRrTT','TTrRRrTT','TTrRRrTT','TTrRRrTT','TtrRRrtT','nbbbbbbn','TtrRRrtT','UtrRRrtU','TtrRRrtT','ttggggtt'],
+  T:['UUUUUUUU','UTTTTTTU','UTTTTTTU','UUUUUUUU']},
+ arm:SK_KNIGHT.arm,
+ sleeve:{F:['UUUU','TTTT','TTTT','oggo','....','UUUU','TttT','....','hhhh','lmml','GggG','lmlm'],
+  R:['UUUU','TTTT','TTTT','oggo','....','UUUU','TTTT','....','hhhh','mmmm','gggo','mdmd'],L:'R',
+  B:['TTTT','TTTT','tTTt','oggo','....','UUUU','TTTT','....','llll','mmmm','oggo','dmdm'],T:['UUUU','UTTU','UTTU','UUUU'],D:['dddd','dddd','dddd','dddd']},
+ leg:SK_KNIGHT.leg,
+ pants:{F:['TTTT','TTTT','tTTt','....','hhhh','hwwh','lmml','....','UUUU','TttT','bBBb','dmmd'],
+  R:['TTTT','TTTT','tTTT','....','hhhh','hhhl','lmml','....','UUUU','TTTT','bBBb','dmmd'],L:'~R',
+  B:['TTTT','TTTT','tTTt','....','llll','mmmm','dmmd','....','UUUU','TTTT','bbbb','dddd'],T:['TTTT','TTTT','TTTT','TTTT'],D:['dddd','dddd','dddd','dddd']}};
+function pxGuard(P,AL){const map=pxMap({k:'#141519',d:'#2c2e34',m:'#4a4d55',l:'#6d717a',h:'#949aa3',w:'#c4c8ce',x:'#1d1e22',y:'#2c2e33',
+  g:'#d4a234',G:'#f0cc5c',o:'#9a6e1e',b:'#6e4826',B:'#8d6136',n:'#4a2e16',s:'#c98262',R:'#a62832',r:'#7a1a24',Q:'#c94450'},thp()),K=SK_GUARD;
+ pxScene(()=>{pxSkin(P,K,map);
+  pxBox(P.HG,-.6,32.5,-2.5,1.2,3,3,pxPaint({F:['Q','R','r'],B:'F',R:['QQQ','RRR','rrr'],L:'R',T:['Q','Q','Q'],D:['r','r','r']},map),{mat:7,grid:[1,3,3]});
+  pxBox(P.HG,-.6,31,-5.2,1.2,3.5,2.7,pxPaint({F:['R','R','r','r'],B:'F',R:['QRR','RRR','rRR','rrr'],L:'R',T:['Q','Q','Q'],D:['r','r','r']},map),{mat:7,grid:[1,4,3]})});
+ pxArms(P,T=>{pxSkinArms(T,K,map);
+  pxBox(T,-3.25,-1.25,-3.25,6.5,3,6.5,pxPaint({T:['TUUUUT','UYYYYU','UYYYYU','UYYYYU','UYYYYU','TUUUUT'],F:['UUUUUU','TTTTTT','oggggo'],B:'F',R:'F',L:'F',D:['tttttt','tttttt','tttttt','tttttt','tttttt','tttttt']},map),{mat:4,grid:[6,3,6]})});
+}
+/* ---------------- ARCHER ---------------- */
+const SK_ARCHER={hatMat:7,jacketMat:0,
+ head:{F:['hhhhhhhh','hhhhhhhh','hsssssss','srrssrrs','swessews','sssSSsss','sssmmsss','ssssssss'],
+  R:['hhhhhhhh','hhhhhhhh','sssshhhh','sssshhhh','ssSshhhh','sssshhhh','ssssshhh','ssssssss'],L:'~R',
+  B:['hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','ssssssss'],T:['hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh'],D:['ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss']},
+ hat:{F:['GGGGGGGG','gggggggg','g......g','g......g','g......g','g......g','q......q','q......q'],
+  R:['GGGGGGGG','gggggggg','gggggggg','qggggggg','qggggggg','qggggggq','qqgggggq','qqqqqqqq'],L:'~R',
+  B:['GGGGGGGG','gggggggg','gggggggg','gggqgggg','gggqgggg','gggqgggg','qggqgggq','qqqqqqqq'],
+  T:['gggggggg','gGgggGgg','gggggggg','ggGgggGg','gggggggg','gGgggggg','ggggGggg','GGGGGGGG']},
+ body:{F:['VVVVVVVV','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vvvvvvvv','vvvvvvvv'],B:'F',R:['VVVV','VVVV','VVVV','VVVV','VVVV','VVVV','VVVV','VVVV','VVVV','vvvv','vvvv','vvvv'],L:'R',T:['VVVVVVVV','VVVVVVVV','VVVVVVVV','VVVVVVVV'],D:['vvvvvvvv','vvvvvvvv','vvvvvvvv','vvvvvvvv']},
+ jacket:{F:['.bbbbnb.','bBbbbnBb','bbBbnbbb','bbBnbbbb','bbnBbbbb','bnbBbbbb','nbbBbbbn','nnnyynnn','bbbBbbbb','bbbBbbbb','bbbbbbbb','nbbbbbbn'],
+  R:['bbbb','bbbb','bbbb','bbbb','bbbb','bbbb','nbbb','nnnn','bbbb','bbbb','bbbb','nnnn'],L:'~R',
+  B:['.bbnbbb.','bbbbnbbb','bbbbbnbb','bbbbbbnb','bbbbbbnb','bbbbbbbn','nbbbbbbn','nnnnnnnn','bbbbbbbb','bbbbbbbb','bbbbbbbb','nbbbbbbn'],T:['bbbbbbbb','b......b','b......b','bbbbbbbb']},
+ arm:{F:['VVVV','VVVV','VVVV','VVVV','VVVV','vvvv','ssss','ssss','ssss','ssss','SsSs','SSSS'],B:'F',R:'F',L:'F',T:['VVVV','VVVV','VVVV','VVVV'],D:['SSSS','SSSS','SSSS','SSSS']},
+ sleeve:{F:['....','....','....','....','....','VVVV','....','BBBB','bnbb','bybb','nnnn','....'],R:['....','....','....','....','....','VVVV','....','BBBB','bbnb','bbbb','nnnn','....'],L:'R',B:'R',T:null,D:null},
+ leg:{F:['PPPP','PPPP','PPPP','pPPp','PPPP','PPPP','pPPp','PPPP','bbbb','bbbb','bbbb','nnnn'],B:'F',R:'F',L:'F',T:['PPPP','PPPP','PPPP','PPPP'],D:['nnnn','nnnn','nnnn','nnnn']},
+ pants:{F:['....','....','....','....','....','....','BBBB','bbbb','bnbb','bbbb','bbbb','nnnn'],R:['....','....','....','....','....','....','BBBB','bbbb','bbnb','bbbb','bbbb','nnnn'],L:'~R',B:'R',T:null,D:['nnnn','nnnn','nnnn','nnnn']}};
+function pxArcher(P,AL){const map=pxMap({s:'#e8a684',S:'#c98262',h:'#6b3e1e',r:'#4a2a14',e:'#3fa65a',w:'#f4f4f4',m:'#8e4a3c',
+  G:'#58a852',g:'#3f8a3e',q:'#2f6a30',V:'#3f8a3e',v:'#2f6a30',b:'#86522c',B:'#a96c3c',n:'#5e381c',y:'#ecbd3a',P:'#4e3a26',p:'#3a2a1a'}),K=SK_ARCHER;
+ pxScene(()=>{pxSkin(P,K,map);
+  pxBox(P.HG,-1.5,26.5,-5.75,3,3.5,1.25,pxPaint({F:['ggg','ggg','qqq'],B:['GGG','ggg','qqq'],R:['G','g','q'],L:'R',T:['GGG'],D:['qqq']},map),{mat:7,grid:[3,3,1]});
+  pxRot(P.G,T=>{pxBox(T,.6,13,-5.1,3,8.5,2.6,pxPaint({F:['BBB','bbb','bbb','bnb','bbb','bbb','yyy','nnn'],B:'F',R:['BB','bb','bb','bb','bb','bb','yy','nn'],L:'R',T:['nnn','nnn'],D:['nnn','nnn']},map),{mat:0,grid:[3,8,2]});
+   pxBox(T,1,21.5,-4.4,2.2,1.4,1.2,pxPaint({F:['wQw','ffr'],B:'F',R:['w','f'],L:'R',T:['wQw'],D:['fff']},{w:PD('#f2f2f2'),Q:PD('#d03a2e'),f:PD('#c8a070'),r:PD('#d03a2e')}),{mat:0,grid:[3,2,1]})},[0,0,-.32],[2,17,-4]);
+ });
+ pxArms(P,T=>pxSkinArms(T,K,map));
+}
+/* ---------------- PEASANT (six variants: hat, skin, hair, beard, tunic colour) ---------------- */
+function pxPeasant(P,AL){const pv=ZVAR&&ZVAR.hint==='p'?ZVAR.v%6:0;
+ const SH=[['#6e4424','#8a5a32'],['#56642c','#6e7e3e'],['#6a3a32','#7c4a42'],['#3e4e62','#55667a'],['#6e6038','#8a7a52'],['#563a54','#6a4a6a']][pv],
+  HR=[['#5a3a1a','#3a2410'],['#2a1a10','#160e08'],['#8a6a3a','#6a5028'],['#1e1a18','#120f0e'],['#a0522d','#6e3216'],['#6a6a62','#4a4a44']][pv],
+  SK=[['#e8a684','#c98262'],['#f0bc96','#d69c78'],['#d4946e','#b57452'],['#e8a684','#c98262'],['#b07a54','#93603f'],['#f0bc96','#d69c78']][pv],hat=[0,2,0,1,3,0][pv],beard=pv===3||pv===5;
+ const map=pxMap({s:SK[0],S:SK[1],h:HR[0],r:HR[1],e:['#3a78c2','#6b4423','#3fa65a','#6b4423','#3a78c2','#6b4423'][pv],w:'#f4f4f4',m:'#8e4a3c',
+  V:SH[1],v:SH[0],a:'#ddd0ae',A:'#b4a682',c:'#c8a868',C:'#a08448',P:'#433824',p:'#2e2618',b:'#86522c',n:'#5e381c',W:'#d4c6aa',X:'#b8a98e',
+  Z:'#d4b45c',z:'#a88a42',Y:'#ecd27a',k:'#6a5038',K:'#86684a',q:'#d8cbaa',Q:'#b0a284'});
+ const face=beard?['hhhhhhhh','hhhhhhhh','hsssssss','srrssrrs','swessews','rssSSssr','rrrmmrrr','rrrrrrrr']:['hhhhhhhh','hhhhhhhh','hsssssss','srrssrrs','swessews','sssSSsss','sssmmsss','ssssssss'];
+ const K={jacketMat:0,
+  head:{F:face,R:['hhhhhhhh','hhhhhhhh','sssshhhh','sssshhhh','ssSshhhh','sssshhhh','ssssshhh','ssssssss'],L:'~R',B:['hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','ssssssss'],T:['hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh','hhhhhhhh'],D:['ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss']},
+  hat:hat===0?null
+   :hat===1?{F:['KKKKKKKK','kkkkkkkk','kkkkkkkk','........','........','........','........','........'],R:['KKKKKKKK','kkkkkkkk','kkkkkkkk','kkkk....','........','........','........','........'],L:'~R',B:['KKKKKKKK','kkkkkkkk','kkkkkkkk','kkkkkkkk','kkkkkkkk','........','........','........'],T:['KKKKKKKK','KKKKKKKK','KKKKKKKK','KKKKKKKK','KKKKKKKK','KKKKKKKK','KKKKKKKK','KKKKKKKK']}
+   :hat===2?{F:['qqqqqqqq','QqqqqqqQ','Q......Q','........','........','........','........','........'],R:['qqqqqqqq','qqqqqqqq','qqqqqqqq','Qqqqqqqq','.Qqqqqqq','..QQqqqq','.....QQq','........'],L:'~R',B:['qqqqqqqq','qqqqqqqq','qqqqqqqq','qqqqqqqq','qqqqqqqq','QqqqqqqQ','QQqqqqQQ','..QqqQ..'],T:['qqqqqqqq','qqqqqqqq','qqqqqqqq','qqqqqqqq','qqqqqqqq','qqqqqqqq','qqqqqqqq','qqqqqqqq']}
+   :null,
+  body:{F:['VVVVVVVV','VVVssVVV','VVVVVVVV','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vvvvvvvv','vvvvvvvv'],B:['VVVVVVVV','VVVVVVVV','VVVVVVVV','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vVVVVVVv','vvvvvvvv','vvvvvvvv'],R:['VVVV','VVVV','VVVV','VVVV','VVVV','VVVV','VVVV','VVVV','VVVV','vvvv','vvvv','vvvv'],L:'R',T:['VVVVVVVV','VVVVVVVV','VVVVVVVV','VVVVVVVV'],D:['vvvvvvvv','vvvvvvvv','vvvvvvvv','vvvvvvvv']},
+  jacket:{F:['........','........','........','........','cCcCcCcC','.aaaaaa.','.aaaaaa.','.aAaaAa.','.aaaaaa.','.aaaaaa.','.AaaaaA.','..AAAA..'],R:['....','....','....','....','cCcC','....','....','....','....','....','....','....'],L:'R',B:['........','........','........','........','cCcCcCcC','........','........','........','........','........','........','........'],T:null,D:null},
+  arm:{F:['VVVV','VVVV','VVVV','VVVV','VVVV','ssss','ssss','ssss','ssss','ssss','SsSs','SSSS'],B:'F',R:'F',L:'F',T:['VVVV','VVVV','VVVV','VVVV'],D:['SSSS','SSSS','SSSS','SSSS']},
+  sleeve:{F:['....','....','....','....','....','VVVV','....','....','....','....','....','....'],B:'F',R:'F',L:'F',T:null,D:null},
+  leg:{F:['PPPP','PPPP','PPPP','pPPp','PPPP','PPPP','PPPP','PPPP','PPPP','PPPP','bbbb','nnnn'],B:'F',R:'F',L:'F',T:['PPPP','PPPP','PPPP','PPPP'],D:['nnnn','nnnn','nnnn','nnnn']},
+  pants:{F:['....','....','....','....','....','....','WWWW','XWXW','WXWX','XWXW','bbbb','nnnn'],R:['....','....','....','....','....','....','WWWW','XWXW','WXWX','XWXW','bbbb','nnnn'],L:'R',B:'R',T:null,D:['nnnn','nnnn','nnnn','nnnn']}};
+ pxScene(()=>{pxSkin(P,K,map);if(hat===0)pxBox(P.HG,-4.25,31.75,-4.25,8.5,2.25,8.5,pxPaint({F:['YZZZZZZY','zZZZZZZz','kkkkkkkk'],B:'F',R:'F',L:'F',T:['ZZZZZZZZ','ZYZZZZYZ','ZZZZZZZZ','ZZZYZZZZ','ZZZZZZZZ','ZYZZZYZZ','ZZZZZZZZ','ZZZZZZZZ'],D:null},map),{mat:0,grid:[8,3,8]});if(hat===0)pxBox(P.HG,-6,31.25,-6,12,.75,12,pxPaint({T:['zZZZZZZZZZZz','ZZYZZZZZZYZZ','ZZZZZZZZZZZZ','ZZZZZYZZZZZZ','ZYZZZZZZZZYZ','ZZZZZZZZZZZZ','ZZZZZZZZZZZZ','ZZZYZZZZZYZZ','ZZZZZZZZZZZZ','ZZZZZZZYZZZZ','ZZYZZZZZZZZZ','zZZZZZZZZZZz'],F:['zzzzzzzzzzzz'],B:'F',R:'F',L:'F',D:['zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz','zzzzzzzzzzzz']},map),{mat:0})});
+ pxArms(P,T=>pxSkinArms(T,K,map));
+}
+/* ================= GEAR: Naranxia arms, in the Blockbench item manner =================
+   our own designs (steel, leather, wood, team colours, a little brass) built the Blockbench way: chunky bevelled 3D parts
+   for hilts, sockets, bosses and rims, flat 2D pixel parts with finer pixels for blades and painted faces, wrapped grips
+   with bands; built on the item grid then scaled down like items in a Minecraft hand.
+   tool space: x = thickness, y = width, z = length; grip at the origin */
+const RGO=PDP(['#7a4a10','#b07a22','#d9a83a','#f2cc66','#fff0b0']),RRU=PDP(['#7a1018','#c8202e','#ff6a70','#ffc0c8']),
+ RSV=PDP(['#5d6674','#8a94a3','#b9c1cc','#dde2e8','#f7f9fb']),RDS=PDP(['#2c3038','#454b55','#626a76','#858d99','#a9b0ba']),
+ RLE=PDP(['#2e1c0e','#4a2e16','#6b4423','#8a5a32','#a87244']),RWD=PDP(['#3a2414','#57361e','#74492a','#8f5e36','#a8743f']);
+/* bevelled part: bright top row and left column, dark lip below; works for any palette */
+const pBev=P=>(f,u,v,W,H)=>{if(f==='T')return (u===0||v===0)&&W>2?P[4]:P[3];if(f==='D')return P[0];if(H>=2&&v===H-1)return P[4];if(H>=3&&v===0)return P[1];return (u===0&&W>=3)?P[3]:P[2]};
+const pGo=pBev(RGO);
+const pGem=P=>(f,u,v,W,H)=>{if(f==='D')return P[0];if(W>=3&&H>=3){if(u===0||v===0||u===W-1||v===H-1)return P[1];return (u===1&&v===H-2)?P[3]:P[2]}return (u===0&&v===H-1)?P[3]:((u===W-1||v===0)?P[0]:P[1])};
+const pWrap=P=>(f,u,v,W,H)=>{if(f==='T'||f==='D')return P[2];const q=(f==='F'||f==='B')?v:u;return (q+v)%2?P[1]:P[3]};
+const gx=(G,x,y,z,w,h,d,p,o)=>pxBox(G,x,y,z,w,h,d,p,Object.assign({mat:4},o||{}));
+const gem=(G,x,y,z,w,h,d,P)=>gx(G,x,y,z,w,h,d,pGem(P||RRU),{mat:5,grid:[Math.max(2,Math.round(w*2)),Math.max(2,Math.round(h*2)),Math.max(2,Math.round(d*2))]});
+const GSC=.72,gScale=(geo,k)=>{geo.scale(k,k,k);return geo};
+const teamGem=()=>{const T=teamPal(thp());return[T[0],T[2],T[3],T[4]]};
+/* flat pixel sprite from a colour function on a W x H grid of cells of size ps (v = 0 is the bottom row) */
+function pxSpriteF(G,W,H,col,o){const ps=o.ps||1,d=o.d||1,mat=o.mat===undefined?4:o.mat;
+ for(let v=0;v<H;v++){let u=0;while(u<W){const c=col(u,v);if(!c){u++;continue}let e=u;while(e<W&&col(e,v)===c)e++;
+   if(o.plane==='yz')pxBox(G,-d/2+(o.x||0),o.y+v*ps,o.z+u*ps,d,ps,(e-u)*ps,(f)=>f==='R'||f==='L'?c:shadeHex(c,f==='T'?.96:.8),{mat,ao:false,grid:[1,1,1]});
+   else pxBox(G,o.x+u*ps,o.y+v*ps,-d/2+(o.z||0),(e-u)*ps,ps,d,(f)=>f==='F'?c:(f==='B'?(o.back||c):shadeHex(c,f==='T'?.96:.8)),{mat,ao:false,grid:[1,1,1]});
+   u=e}}}
+/* ---------------- knight's arming sword ----------------
+   flat steel blade in fine pixels (bright edge, fuller, a few glints, stepped point), a straight steel cross-guard with
+   blocky flared ends, a brown leather grip with a steel band, a steel wheel pommel with a team-coloured stone */
+function pxSword(){const G=newG(),S=RSV;
+ pxScene(()=>{
+  pxSpriteF(G,52,9,(u,v)=>{const L=52,hw=u<L-9?4:Math.max(0,4-(u-(L-9))*.5),y=v-4;if(Math.abs(y)>hw+.01)return null;
+   if(Math.abs(y)>hw-1)return y>0?S[4]:S[1];if(y===0&&u<L-10)return S[0];const n=pxN('F',u>>1,v,5);if(n>.9)return S[4];return y>0?S[3]:S[2]},{plane:'yz',x:0,y:-2.25,z:3.2,ps:.5,d:1.2});
+  gx(G,-.85,-1.7,2.2,1.7,3.4,1.3,pBev(RSV));
+  gx(G,-.95,-4.6,1,1.9,9.2,1.4,pBev(RSV));gx(G,-1.15,-5.9,.7,2.3,1.7,2,pBev(RSV));gx(G,-1.15,4.2,.7,2.3,1.7,2,pBev(RSV));
+  gx(G,-.75,-.75,-5.2,1.5,1.5,6.2,pWrap(RLE),{mat:0});gx(G,-.95,-.95,-2.6,1.9,1.9,.8,pBev(RSV));
+  gx(G,-.85,-1.7,-7.6,1.7,3.4,2.4,pBev(RSV));gem(G,.85,-.6,-7,.35,1.2,1.2,teamGem());gem(G,-1.2,-.6,-7,.35,1.2,1.2,teamGem());
+ });return gScale(toGeo(G),.9)}
+/* ---------------- shields: the Minecraft shield ----------------
+   built like the Minecraft shield (reference: "Minecraft Shield" by bugbilly, CC BY 4.0): a 12 x 22 plate one pixel thick,
+   five vertical planks two pixels wide (light left pixel, dark right pixel, lighter end grain on top), an iron rim one pixel
+   wide standing a little proud of the wood, eight rivets in two columns with a shadow pixel under each (small raised studs
+   on the front), the same planks and rivets on the back, and an iron bracket handle with a leather-wrapped grip.
+   Our heraldry is painted on the front planks, so the plank lines still show through the paint. */
+const SHW=PDP(['#463724','#5b4a33','#705c41','#87704f','#9b835e']),SHI=PDP(['#3a3f47','#596069','#7f8792','#a3aab4','#c8ced6']),
+ SHG=PDP(['#6e4a0e','#a8741e','#d7a83c','#f6d27a','#fff0b8']),SHK=PDP(['#262a31','#363c46','#4c5560','#66707c']);
+const SH_RIV=[[2,3],[9,3],[2,8],[9,8],[2,13],[9,13],[2,18],[9,18]];
+function pxMcShield(art,pal,AL){const G=newG(),IR=AL>=2?SHG:SHI;
+ const riv=(u,r)=>{for(const q of SH_RIV)if(q[0]===u&&q[1]===r)return true;return false};
+ const wood=(u,r,f)=>{const x=u-1,lf=(x&1)===0,n=pxN('W',x,Math.floor((r+x*3)/3),7),k=pxN(f,u,r,9);
+  if(r===1)return lf?SHW[4]:SHW[3];if(r===20)return lf?SHW[2]:SHW[1];
+  if(lf)return n>.8?SHW[4]:(k<.06?SHW[2]:SHW[3]);return n<.15?SHW[1]:(k>.95?SHW[3]:SHW[2])};
+ const chAt=(u,r,front)=>front&&art?((art[r-1]||'')[u-1]||'.'):'.';
+ const isField=c=>c==='.'||c==='T'||c==='R';
+ const base=(u,r,f,front)=>{const c=chAt(u,r,front);if(c!=='.'&&pal[c]){const lf=((u-1)&1)===0;return r===1?pal[c][0]:(lf?pal[c][0]:pal[c][1])}return wood(u,r,f)};
+ /* u 1..10 across, r 1..20 down; the rivet, its shadow below and a darker pixel to its right */
+ const face=(u,r,f,front)=>{const c=chAt(u,r,front),b=base(u,r,f,front);if(!isField(c))return b;
+  if(riv(u,r))return front?SHI[3]:SHI[2];if(riv(u,r-1)&&isField(chAt(u,r-1,front)))return shadeHex(b,.62);if(riv(u-1,r)&&isField(chAt(u-1,r,front)))return shadeHex(b,.84);return b};
+ const rim=side=>(f,u,v,W,H)=>{if(f==='T')return IR[3];if(f==='D')return IR[0];
+  if(f==='F'||f==='B'){if(side==='t')return (u===0||u===W-1)?IR[4]:IR[3];if(side==='b')return (u===0||u===W-1)?IR[2]:IR[1];return IR[2]}
+  return IR[2]};
+ pxScene(()=>{
+  /* planks: front painted, back bare */
+  gx(G,-5,-10,-.5,10,20,1,(f,u,v,W,H)=>face(u+1,20-v,f,f==='F'),{mat:0,grid:[10,20,1],no:'RLTD'});
+  /* iron rim, a little thicker than the wood */
+  gx(G,-6,10,-.65,12,1,1.3,rim('t'),{grid:[12,1,1]});gx(G,-6,-11,-.65,12,1,1.3,rim('b'),{grid:[12,1,1]});
+  gx(G,-6,-10,-.65,1,20,1.3,rim('l'),{grid:[1,20,1]});gx(G,5,-10,-.65,1,20,1.3,rim('r'),{grid:[1,20,1]});
+  /* raised rivet studs on the front (only where the paint is field or bare wood) */
+  for(const[u,r]of SH_RIV){if(!isField(chAt(u,r,true)))continue;const x=-6+u+.5,y=11-r-.5;
+   gx(G,x-.32,y-.32,.5,.64,.64,.24,(f)=>f==='T'?SHI[4]:(f==='D'?SHI[1]:(f==='F'?SHI[3]:SHI[2])),{grid:[1,1,1]})}
+  /* bracket handle: two iron arms out of the back and a grip bar wrapped in leather */
+  const pK=(f,u,v,W,H)=>f==='T'?SHK[3]:(f==='D'?SHK[0]:(v===H-1?SHK[3]:SHK[2]));
+  gx(G,-2,2,-5.2,4,1.4,4.7,pK,{grid:[4,1,4]});gx(G,-2,-3.4,-5.2,4,1.4,4.7,pK,{grid:[4,1,4]});
+  gx(G,-2,-3.4,-6.6,4,6.8,1.4,pK,{grid:[4,6,1]});gx(G,-2.15,-1.7,-6.75,4.3,3.4,1.7,pWrap(RLE),{mat:0,grid:[4,4,2]});
+ });return G}
+/* heraldry, 10 x 20 inside the rim (top row first); '.' leaves the wood bare, T is the team colour, H its light edge */
+const ART_KNIGHT_A=['....TT....','....TT....','....TT....','....TT....','HHHHHHHHHH','TTTTTTTTTT','....TT....','....TT....','....TT....','....TT....',
+ '....TT....','....TT....','....TT....','....TT....','....TT....','....TT....','....TT....','....TT....','....TT....','....TT....'];
+const ART_KNIGHT_B=['TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','CCCCCCCCCC','cccccccccc','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT',
+ 'TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT','TTTTccTTTT'];
+const ART_CROWN=['TTTTTTTTTT','TTTTTTTTTT','TgTTggTTgT','TggTggTggT','TggggggggT','TgrgrrgrgT','TkkkkkkkkT','TTTTTTTTTT'];
+const ART_GUARD_A=ART_CROWN.concat(['TTTTTTTTTT','YYYYYYYYYY','..........','..........','..........','..........','..........','..........','..........','..........','..........','..........']);
+const ART_GUARD_B=ART_CROWN.concat(['TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','YYYYYYYYYY','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT']);
+/* royal guard arms, like its tabard: a red pale between team flanks with a gold crown on top, the gold sun below and a gold base */
+const ART_GUARD_R1=['TTRRRRRRTT','TTgRggRgTT','TTggggggTT','TTgrggrgTT','TTkkkkkkTT','TTRRRRRRTT','TTRRRRRRTT','TTRRRRRRTT','TTRRggRRTT','TTRgGGgRTT',
+ 'TTgGYYGgTT','TTgGYYGgTT','TTRgGGgRTT','TTRRggRRTT','TTRRRRRRTT','TTRRRRRRTT','TTRRRRRRTT','TTkkkkkkTT','TTggggggTT','TTRRRRRRTT'];
+/* royal guard arms, chief: the crown on a team chief over a gold line, the gold sun on red below */
+const ART_GUARD_R2=['TTTTTTTTTT','TgTTggTTgT','TggTggTggT','TggggggggT','TgrgrrgrgT','TkkkkkkkkT','TTTTTTTTTT','YYYYYYYYYY','RRRRRRRRRR','RRRRRRRRRR',
+ 'RRRRRRRRRR','RRRRggRRRR','RRRgGGgRRR','RRgGYYGgRR','RRgGYYGgRR','RRRgGGgRRR','RRRRggRRRR','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR'];
+/* royal guard arms, quartered team and red with a small crown and the gold sun on the crossing */
+const ART_GUARD_R3=['TTTTTRRRRR','TTgTggRgRR','TTggggggRR','TTkkkkkkRR','TTTTTRRRRR','TTTTTRRRRR','TTTTTRRRRR','TTTTggRRRR','TTTgGGgRRR','TTgGYYGgRR',
+ 'RRgGYYGgTT','RRRgGGgTTT','RRRRggTTTT','RRRRRTTTTT','RRRRRTTTTT','RRRRRTTTTT','RRRRRTTTTT','RRRRRTTTTT','RRRRRTTTTT','RRRRRTTTTT'];
+const shPal=()=>{const T=teamPal(thp());return{T:[T[2],shadeHex(T[2],.84)],H:[T[3],T[2]],c:PDP(['#ece6d4','#d2cab3']),C:PDP(['#fbf7ec','#ece6d4']),
+ g:PDP(['#e8ba4c','#c9962e']),G:PDP(['#f6d27a','#e8ba4c']),k:PDP(['#a87818','#8e6412']),r:PDP(['#d42a36','#a81c26']),Y:PDP(['#fff0b8','#f6d27a']),
+ R:PDP(['#b42c38','#98222d'])}};
+/* variants: default = full banner field (knight: pale cross; royal guard: red pale with crown and sun) */
+function pxShield(AL,vr){const art=vr==='0'?null:(vr==='A'?ART_KNIGHT_A:ART_KNIGHT_B);return gScale(toGeo(pxMcShield(art,shPal(),AL)),.95)}
+function pxGuardShield(AL,vr){const art=vr==='0'?null:(({A:ART_GUARD_A,B:ART_GUARD_B,R2:ART_GUARD_R2,R3:ART_GUARD_R3})[vr]||ART_GUARD_R1);return gScale(toGeo(pxMcShield(art,shPal(),AL)),.98)}
+/* ---------------- halberd ----------------
+   a Blockbench voxel weapon: every pixel is a cube one shaft-thickness wide. A spear point with two lugs, a crescent axe
+   with a hollow and two horns, a back hook, a deep steel socket block, a brass collar with a small team tassel, a banded
+   wooden shaft, a wrapped leather grip and a steel foot. Rows are drawn top first, the shaft is column 6. */
+const pInPoly=(P,x,y)=>{let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,yi]=P[i],[xj,yj]=P[j];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c}return c};
+const HALB=[
+ '.......L.......','.......L.......','.......L.......','.......L.......','......LMD......','......LMD......','....L.L.D......','...LM..K.......',
+ '..LMM..w.......','..LMD..W.......','.LMMD..w.......','.LMD...W.......','LMMDDD.S.DMM...','LMMD.D.S....ML.','LMD....S.....L.','LMD....S.....L.',
+ 'LMMD.D.S.......','LMMDDD.S.......','.LMD...W.......','.LMMD..G.......','..LMD..wY......','..LMM..WT......','...LM..wT......','....L..WT......'];
+function pxHalberd(){const G=newG(),V=1.4,Tm=teamPal(thp()),N=52,G0=37,
+ SV=PDP(['#3c4655','#576579','#8796a8','#b4c1cf','#dce4ec']),
+ C={L:PD('#bfcad6'),M:PD('#8796a8'),D:PD('#56637a'),K:PD('#2d343f'),W:PD('#6e4b32'),w:PD('#533724'),V:PD('#7d5a3e'),Y:PD('#e0b040'),T:Tm[2],B:PD('#3d2716'),b:PD('#5a3a22')};
+ const rows=[];
+ for(let r=0;r<N;r++){if(r<HALB.length){rows.push(HALB[r]);continue}
+  let ch=(r>=34&&r<=40)?(r%2?'B':'b'):(['W','w','V'][Math.floor(pxN('P',r,0,4)*3)]);if(r===49)ch='K';if(r>=50)ch=r===50?'M':'D';
+  rows.push('.......'+ch+'.......')}
+ const zc=r=>(G0-r)*V;
+ pxScene(()=>{
+  pxSpriteF(G,N,15,(u,v)=>{const ch=rows[N-1-u][v];return (ch==='.'||ch==='S'||ch==='G')?null:C[ch]},{plane:'yz',x:0,y:-7.5*V,z:zc(N-1)-V/2,ps:V,d:V});
+  gx(G,-V,-1.5*V,zc(17)-V/2,2*V,3*V,6*V,pBev(SV),{grid:[2,3,6]});
+  gx(G,-V,-V,zc(19)-V/2,2*V,2*V,V,pGo,{grid:[2,2,1]});
+ });return gScale(toGeo(G),1.0)}
+const RST=RSV,pGrip=(f,u,v)=>{const Tm=teamPal(thp()),q=(f==='T'||f==='D')?v:u;return q%2?Tm[1]:Tm[3]};
+/* ---------------- bow ----------------
+   recurve limbs made of three straight wooden segments each (3D, rotated), brass rings at the joints, a leather grip with
+   a team band and an arrow rest, steel nocks with flat (2D) brass horn tips, flat brass leaf plates on the belly, the string */
+function pxBow(){const G=newG(),Wd=RWD,Tm=teamPal(thp());
+ const seg=(y0,z0,y1,z1,t,w,P)=>{const L=Math.hypot(y1-y0,z1-z0),cy=(y0+y1)/2,cz=(z0+z1)/2,a=Math.atan2(-(y1-y0),z1-z0);
+  pxRot(G,T=>gx(T,-t/2,cy-w/2,cz-L/2-.15,t,w,L+.3,(f,u,v,W,H)=>f==='T'?P[4]:(f==='D'?P[1]:(v===H-1?P[3]:P[2])),{mat:0}),[a,0,0],[0,cy,cz])};
+ pxScene(()=>{
+  for(const sg of[-1,1]){const pts=[[0,2.4],[1.4,8.6],[3.9,14.2],[3.1,18]].map(([y,z])=>[y,z*sg]);
+   seg(pts[0][0],pts[0][1],pts[1][0],pts[1][1],1.5,2,Wd);seg(pts[1][0],pts[1][1],pts[2][0],pts[2][1],1.4,1.8,Wd);seg(pts[2][0],pts[2][1],pts[3][0],pts[3][1],1.3,1.6,Wd);
+   for(const k of[1,2]){const[y,z]=pts[k];gx(G,-.95,y-1.1,z-.55,1.9,2.2,1.1,pGo)}
+   const[ty,tz]=pts[3];gx(G,-.8,ty-.8,tz-(sg>0?.2:1.2),1.6,1.6,1.4,pBev(RSV));
+   pxSpriteF(G,4,5,(u,v)=>{const ok=sg>0?(u<=v&&u>=v-1):(3-u<=v&&3-u>=v-1);return ok?(v>2?RGO[4]:RGO[2]):null},{plane:'yz',x:0,y:ty+.6,z:sg>0?tz-.4:tz-1.6,ps:.5,d:.7});
+   pxSpriteF(G,7,3,(u,v)=>{const m=Math.abs(u-3);return (v===1&&m<=3)||(v!==1&&m<=1)?(v===2?RGO[4]:RGO[2]):null},{plane:'yz',x:0,y:-1.9,z:sg>0?3.4:-6.9,ps:.5,d:.6});}
+  gx(G,-1.05,-1.25,-2.6,2.1,2.5,5.2,pWrap(RLE),{mat:0});gx(G,-1.15,-1.35,-.45,2.3,2.7,.9,(f,u,v,W,H)=>f==='T'?Tm[4]:(v===H-1?Tm[3]:Tm[2]),{mat:0});
+  gx(G,-.5,1.25,-.6,1,.8,1.2,pBev(RSV));
+  gx(G,-.15,3.15,-18.2,.3,.3,36.4,()=>PD('#efe9d6'),{mat:0,ao:false});
+ });return gScale(toGeo(G),.95)}
+
+/* ================= RESTYLE ROUND 2: king, captain, bannerman, gunners, zombies =================
+   Same Blockbench manner as the knight / royal guard: the Minecraft player model with an outer layer, a few extra
+   cubes, the detail in the pixel art. Steel shades are the digits 0 (darkest) .. 5, gold g G o, leather b B n,
+   the team colours V t T U Y come from pxMap. */
+const PXF2={s:'#e0a07c',S:'#c27f5c',w:'#f4f4f4',e:'#3a6ec2',m:'#8e4a3c',0:'#141519',1:'#2c2e34',2:'#4a4d55',3:'#6d717a',4:'#949aa3',5:'#c4c8ce',
+ g:'#d4a234',G:'#f0cc5c',o:'#9a6e1e',b:'#6e4826',B:'#8d6136',n:'#4a2e16'};
+const pxMap2=(o,tm)=>pxMap(Object.assign({},PXF2,o),tm);
+const rep2=(r,n)=>Array(n).fill(r);
+const CH4=Array.from({length:12},(_,i)=>i%2?'2121':'1212'),CH8=CH4.map(r=>r+r);
+const FACE2=(mid,low,R)=>({F:['hhhhhhhh','hhhhhhhh','hssssssh','srrssrrs','swessews','sssSSsss',mid||'sssmmsss',low||'ssssssss'],
+ R:R||['hhhhhhhh','hhhhhhhh','sssshhhh','sssshhhh','ssSshhhh','sssshhhh','ssssshhh','ssssssss'],L:'~R',B:rep2('hhhhhhhh',7).concat(['ssssssss']),T:rep2('hhhhhhhh',8),D:rep2('ssssssss',8)});
+/* a pixel cut-out wall of a crown: rows top first, '.' = gap; plane xy (front / back) or yz (sides) */
+function pxCut(G,rows,map,o){const H=rows.length,W=rows[0].length;pxSpriteF(G,W,H,(u,v)=>{const c=rows[H-1-v][u];return c==='.'?null:map[c]},o)}
+/* ---------------- KING NARAIGE: A open face, beard and crown / B royal great helm under the crown ---------------- */
+function pxKing(P,AL){const vr=(window.__KV||'B'),helm=vr==='B',
+  map=pxMap2({h:'#7a4422',r:'#4e2a12',E:'#f3efe6',q:'#d6d0c2',x:'#18181c',R:'#a62832',Q:'#c94450',X:'#6c111b',j:'#e8303a',z:'#3a7aff'},thp());
+ const K={hatMat:4,jacketMat:0,sleeveMat:4,pantsMat:4,
+  head:FACE2('shhmmhhs','hhhhhhhh',['hhhhhhhh','hhhhhhhh','sssshhhh','sssshhhh','ssSshhhh','sssshhhh','hhsshhhh','hhhhhhhh']),
+  hat:helm?{F:['oggggggo','44444444','333gG333','000gG000','333gG333','313gG313','3333g333','22222222'],
+    R:['oggggggo','44444444','33333334','00333333','33333333','31333333','33333332','22222222'],L:'~R',
+    B:['oggggggo','44444444','33343333','33343333','33343333','23343332','23343332','22222222'],
+    T:['44444444','43333334','433gg334','43gGGg34','43gGGg34','433gg334','43333334','44444444']}:null,
+  body:{F:CH8,B:'F',R:CH4,L:'R',T:rep2('11111111',4),D:'T'},
+  jacket:{F:['EExEExEE','qEEEEEEq','gUUUUUUg','gUGUUGUg','gUGGGGUg','gUUUUUUg','XRRGGRRX','gUUUUUUg','gUUUUUUg','gTUUUUTg','gTTUUTTg','oggggggo'],
+   R:['EExE','qEEq','gUUU','UUUU','UUUU','UUUU','XRRR','UUUU','UUUU','TUUU','TTUU','oggg'],L:'~R',
+   B:['EExEExEE','qEEEEEEq','gUUUUUUg','gUUUUUUg','gUUUUUUg','gUUUUUUg','XRRRRRRX','gUUUUUUg','gUUUUUUg','gTUUUUTg','gTTUUTTg','oggggggo'],
+   T:['EEEEEEEE','ExEEExEE','EEExEEEx','EEEEEEEE']},
+  arm:{F:CH4,B:'F',R:'F',L:'F',T:rep2('1111',4),D:'T'},
+  sleeve:{F:['4444','3443','3333','2332','4444','gGGg','4554','3443','3333','2332','gGGg','2222'],R:'F',L:'F',
+   B:['3333','2332','2222','1221','3333','oggo','3333','2332','2222','1221','oggo','1111'],T:['4444','4334','4334','4444'],D:rep2('1111',4)},
+  leg:{F:CH4,B:'F',R:'F',L:'F',T:rep2('1111',4),D:'T'},
+  pants:{F:['3333','2222','1221','....','4444','gGGg','3443','....','4334','3443','2222','1111'],R:['3333','2222','1222','....','4444','gGGg','3443','....','4333','3443','2222','1111'],L:'~R',
+   B:['3333','2222','1221','....','3333','2222','1221','....','3333','2222','1111','1111'],T:rep2('3333',4),D:rep2('1111',4)}};
+ pxScene(()=>{pxSkin(P,K,map);
+  /* ermine collar over the shoulders */
+  pxBox(P.G,-4.3,21.6,-2.6,8.6,2.6,5.2,pxPaint({F:['EExEEExEE','qEEEqEEEq'],B:'F',R:['ExEEE','qEEqE'],L:'R',T:['EEExEEEEE','ExEEEEExE','EEEEEEEEE','EExEEEExE','EEEEEEEEE']},map),{mat:0,grid:[9,2,5]});
+  /* the crown: four cut-out gold walls with rubies and sapphires */
+  const y0=helm?32.3:31.1,h=helm?4.9:4.6,ps=(2*h)/9,FR=['G...G...G','gG.GgG.Gg','ggggggggg','gjgzgzgjg'],SD=['...G...','..GgG..','ggggggg','gzgjgzg'],o={ps,d:.9,mat:4};
+  pxCut(P.HG,FR,map,Object.assign({x:-h,y:y0,z:h-.45},o));pxCut(P.HG,FR,map,Object.assign({x:-h,y:y0,z:-h+.45},o));
+  pxCut(P.HG,SD,map,Object.assign({plane:'yz',x:h-.45,y:y0,z:-h+ps},o));pxCut(P.HG,SD,map,Object.assign({plane:'yz',x:-h+.45,y:y0,z:-h+ps},o));
+ });
+ pxArms(P,T=>{pxSkinArms(T,K,map);
+  pxBox(T,-3.1,-1.4,-3.1,6.2,3.2,6.2,pxPaint({T:['oggggo','g5445g','g4554g','g4554g','g5445g','oggggo'],F:['444444','333333','oggggo'],B:'F',R:'F',L:'F',D:rep2('111111',6)},map),{mat:4,grid:[6,3,6]})});
+}
+/* ---------------- CAPTAIN: gilded breastplate, red officer sash, team skirt, open bascinet, gold pauldrons ---------------- */
+function pxCaptain(P,AL){const map=pxMap2({h:'#4a2c16',r:'#2e1a0c',R:'#b8323c',Q:'#de5a62',X:'#7a1a24'},thp());
+ const K={hatMat:4,jacketMat:4,sleeveMat:4,pantsMat:4,
+  head:FACE2('shhmmhhs'),
+  hat:{F:['44444444','3gggggg3','3......3','3......3','3......3','3......3','33....33','33....33'],
+   R:['44444444','33333333','33333333','33333332','33333332','33333322','33333322','22222222'],L:'~R',
+   B:['44444444','33333333','33333333','33333333','23333332','23333332','22222222','22222222'],
+   T:['44444444','43333334','433gg334','433gg334','433gg334','433gg334','43333334','44444444']},
+  body:{F:CH8,B:'F',R:CH4,L:'R',T:rep2('11111111',4),D:'T'},
+  jacket:{F:['oggggggo','gRQGGGGg','gGRQGGGg','gGGRQGGg','ggGGRQgg','ogGGGRQo','nbbGGbRn','TUUUUUUT','tUUTTUUt','tUUTTUUt','tTTttTTt','tttttttt'],
+   R:['oggg','gGGg','gGGg','gGGg','ggGg','oggg','nbbn','TUUU','tUUU','tUUU','tTTT','tttt'],L:'~R',
+   B:['oggggggo','gggggggg','gGggggGg','gggggggg','gggggggg','oggggggo','nbbbbbbn','TUUUUUUT','tUUUUUUt','tUUUUUUt','tTTttTTt','tttttttt'],
+   T:['oggggggo','gGGGGGGg','gGGGGGGg','oggggggo']},
+  arm:{F:CH4,B:'F',R:'F',L:'F',T:rep2('1111',4),D:'T'},
+  sleeve:{F:['GGGG','gggg','oggo','....','GGGG','gGGg','oggo','....','4444','3443','gggg','2323'],R:'F',L:'F',
+   B:['gggg','oooo','oooo','....','gggg','oggo','oooo','....','3333','2222','oooo','1212'],T:['GGGG','GggG','GggG','GGGG'],D:rep2('1111',4)},
+  leg:{F:CH4,B:'F',R:'F',L:'F',T:rep2('1111',4),D:'T'},
+  pants:{F:['UUUU','UUUU','TUUT','....','gGGg','oggo','3443','....','4334','3443','2222','1111'],R:['UUUU','UUUU','TUUU','....','gGGg','oggo','3443','....','4333','3443','2222','1111'],L:'~R',
+   B:['TTTT','TTTT','tTTt','....','gggg','oooo','3333','....','3333','2222','1111','1111'],T:rep2('UUUU',4),D:rep2('1111',4)}};
+ pxScene(()=>pxSkin(P,K,map));
+ pxArms(P,T=>{pxSkinArms(T,K,map);
+  pxBox(T,-3.1,-1.4,-3.1,6.2,3.2,6.2,pxPaint({T:['oggggo','gGGGGg','gGRRGg','gGRRGg','gGGGGg','oggggo'],F:['GGGGGG','gggggg','oooooo'],B:'F',R:'F',L:'F',D:rep2('111111',6)},map),{mat:4,grid:[6,3,6]})});
+}
+/* ---------------- BANNERMAN: kettle hat, quilted gambeson, team tabard with a white cross, steel vambraces ---------------- */
+function pxBannerman(P,AL){const map=pxMap2({h:'#5a3a1a',r:'#3a2410',a:'#ddd0ae',A:'#b4a682',c:'#f2ecdc',y:'#d9a83a',P:'#433824',p:'#2e2618'},thp());
+ const Q8=Array.from({length:12},(_,i)=>i%2?'aaAaaaAa':'aAaaaAaa'),Q4=Q8.map(r=>r.slice(0,4));
+ const K={hatMat:4,jacketMat:0,sleeveMat:4,
+  head:FACE2(),
+  hat:{F:['44444444','33333333','22222222','........','........','........','........','........'],R:'F',L:'F',B:'F',
+   T:['44444444','43333334','43333334','43344334','43344334','43333334','43333334','44444444']},
+  body:{F:Q8,B:'F',R:Q4,L:'R',T:rep2('aaaaaaaa',4),D:'T'},
+  jacket:{F:['aaaaaaaa','aTTccTTa','aTTccTTa','acccccca','aTTccTTa','aTTccTTa','nbbyybbn','aTTccTTa','aTTccTTa','AtTccTtA','AttccttA','AAAAAAAA'],
+   R:['aaaa','aAaa','aaAa','aaaa','aAaa','aaAa','nbbn','aaaa','aAaa','aaAa','AaaA','AAAA'],L:'~R',B:'F',T:['aaaaaaaa','aAaaaaAa','aaaaaaaa','aaaaaaaa']},
+  arm:{F:Q4.slice(0,9).concat(['ssss','ssss','SSSS']),B:'F',R:'F',L:'F',T:rep2('aaaa',4),D:rep2('SSSS',4)},
+  sleeve:{F:['....','....','....','....','....','4444','3443','3333','2222','....','....','....'],R:'F',L:'F',B:['....','....','....','....','....','3333','2222','2222','1111','....','....','....'],T:null,D:null},
+  leg:{F:['PPPP','PPPP','PPPP','pPPp','PPPP','PPPP','PPPP','PPPP','PPPP','PPPP','PPPP','PPPP'],B:'F',R:'F',L:'F',T:rep2('PPPP',4),D:rep2('nnnn',4)},
+  pants:{F:['....','....','....','....','....','....','BBBB','bBbB','bbbb','bnbb','bbbb','nnnn'],R:'F',L:'F',B:'F',T:null,D:rep2('nnnn',4)}};
+ pxScene(()=>{pxSkin(P,K,map);
+  pxBox(P.HG,-6,29.4,-6,12,.8,12,(f,u,v,W,H)=>f==='T'?((u===0||v===0||u===W-1||v===H-1)?map['4']:map['3']):(f==='D'?map['1']:map['2']),{mat:4,grid:[12,1,12]})});
+ pxArms(P,T=>pxSkinArms(T,K,map));
+}
+/* ---------------- GUNNERS: team doublet, brass buttons, leather apron, bandolier of flasks, cap with a white feather ---------------- */
+function pxGunner(P,AL){const map=pxMap2({h:'#3a2410',r:'#24160a',y:'#d9a83a',z:'#f2cc66',c:'#f2efe6',C:'#cfcabc',P:'#3e3a36',p:'#2a2622'},thp());
+ const K={jacketMat:0,
+  head:FACE2('shhhhhhs','sssmmsss'),
+  hat:{F:['UUUUUUUU','yyyyyyyy','........','........','........','........','........','........'],R:'F',L:'F',B:'F',
+   T:['UUUUUUUU','UYYUUUUU','UYUUUUUU','UUUUUUUU','UUUUUUUU','UUUUUUUU','UUUUUUUU','UUUUUUUU']},
+  body:{F:rep2('UUUUUUUU',12),B:'F',R:rep2('UUUU',12),L:'R',T:rep2('UUUUUUUU',4),D:'T'},
+  jacket:{F:['tUUUUUbt','UUUUUbyU','UUUUbbUU','UUUbyUUU','UUbbUUUU','nnnyynnn','UBBBBBBU','UBbbbbBU','UBbbbbBU','tBbbbbBt','tBbnnbBt','tnnnnnnt'],
+   R:['tUUU','UUUU','UUUU','UUUU','UUUU','nnnn','UUUU','UUUU','tUUU','tUUU','ttUU','tttt'],L:'~R',
+   B:['tUUUUUUt','UbUUUUUU','UUbUUUUU','UUUbUUUU','UUUUbUUU','nnnnnnnn','UUUUUUUU','UUUUUUUU','tUUUUUUt','tUUUUUUt','ttUUUUtt','tttttttt'],
+   T:['tUUUUUbt','UUUUUbUU','UUUUUUUU','tUUUUUUt']},
+  arm:{F:rep2('UUUU',7).concat(['tttt','ssss','ssss','SsSs','SSSS']),B:'F',R:'F',L:'F',T:rep2('UUUU',4),D:rep2('SSSS',4)},
+  sleeve:{F:['....','....','....','....','....','....','yUUy','tttt','....','....','....','....'],R:'F',L:'F',B:'F',T:null,D:null},
+  leg:{F:['PPPP','PPPP','PPPP','pPPp','PPPP','PPPP','PPPP','PPPP','PPPP','PPPP','PPPP','PPPP'],B:'F',R:'F',L:'F',T:rep2('PPPP',4),D:rep2('nnnn',4)},
+  pants:{F:['....','....','....','....','....','....','....','bbbb','bnbb','bbbb','bbbb','nnnn'],R:'F',L:'F',B:'F',T:null,D:rep2('nnnn',4)}};
+ pxScene(()=>{pxSkin(P,K,map);
+  pxBox(P.HG,3.4,30.4,-1.2,1.1,4.2,1.1,f=>f==='D'?map.C:map.c,{mat:0,grid:[1,4,1]});pxBox(P.HG,3.4,33.8,-2.7,1.1,2,1.6,f=>f==='T'?map.c:map.C,{mat:0,grid:[1,2,2]})});
+ pxArms(P,T=>pxSkinArms(T,K,map));
+}
+/* ---------------- gear: the king's sword, the captain's sword, the captain's shield ---------------- */
+function pxRoyalSword(){const G=newG(),S=RSV;
+ pxScene(()=>{
+  pxSpriteF(G,60,9,(u,v)=>{const L=60,hw=u<L-10?4:Math.max(0,4-(u-(L-10))*.45),y=v-4;if(Math.abs(y)>hw+.01)return null;
+   if(Math.abs(y)>hw-1)return y>0?S[4]:S[1];if(y===0&&u<L-12)return u%7===3?RGO[3]:S[0];const n=pxN('K',u>>1,v,5);if(n>.9)return S[4];return y>0?S[3]:S[2]},{plane:'yz',x:0,y:-2.25,z:3.4,ps:.5,d:1.2});
+  gx(G,-.85,-1.6,2.6,1.7,3.2,1.2,pGo);
+  gx(G,-.95,-5.2,1.6,1.9,10.4,1.6,pGo);gx(G,-1.1,-6.7,.5,2.2,1.9,2.6,pGo);gx(G,-1.1,4.8,.5,2.2,1.9,2.6,pGo);
+  gem(G,.9,-.7,1.7,.4,1.4,1.4,RRU);gem(G,-1.3,-.7,1.7,.4,1.4,1.4,RRU);
+  gx(G,-.75,-.75,-5.6,1.5,1.5,6.6,pWrap(RRU),{mat:0});gx(G,-.95,-.95,-3,1.9,1.9,.7,pGo);gx(G,-.95,-.95,-5.3,1.9,1.9,.7,pGo);
+  gx(G,-1.1,-1.6,-8.2,2.2,3.2,2.6,pGo);gem(G,1.1,-.6,-7.6,.35,1.2,1.2,RRU);gem(G,-1.45,-.6,-7.6,.35,1.2,1.2,RRU);
+ });return gScale(toGeo(G),.92)}
+function pxCapSword(){const G=newG(),S=RSV;
+ pxScene(()=>{
+  pxSpriteF(G,58,9,(u,v)=>{const L=58,hw=u<L-9?4:Math.max(0,4-(u-(L-9))*.5),y=v-4;if(Math.abs(y)>hw+.01)return null;
+   if(Math.abs(y)>hw-1)return y>0?S[4]:S[1];if(y===0&&u<L-11)return S[0];const n=pxN('Q',u>>1,v,7);if(n>.92)return S[4];return y>0?S[3]:S[2]},{plane:'yz',x:0,y:-2.25,z:3.3,ps:.5,d:1.2});
+  gx(G,-.85,-1.7,2.3,1.7,3.4,1.3,pBev(RSV));
+  gx(G,-.95,-5.4,1.1,1.9,10.8,1.4,pBev(RSV));gx(G,-1.15,-6.8,.6,2.3,1.8,2.2,pGo);gx(G,-1.15,5,.6,2.3,1.8,2.2,pGo);
+  gx(G,-.75,-.75,-5.8,1.5,1.5,6.8,pWrap(RLE),{mat:0});gx(G,-.95,-.95,-2.8,1.9,1.9,.7,pGo);gx(G,-.95,-.95,-5.4,1.9,1.9,.7,pGo);
+  gx(G,-.95,-1.8,-8.4,1.9,3.6,2.6,pGo);gem(G,.95,-.6,-7.8,.35,1.2,1.2,teamGem());gem(G,-1.3,-.6,-7.8,.35,1.2,1.2,teamGem());
+ });return gScale(toGeo(G),.9)}
+/* captain's arms: a team chief with the gold sun, a gold chevron, red below */
+const ART_CAPTAIN=['TTTTTTTTTT','TTTTggTTTT','TTTgGGgTTT','TTgGYYGgTT','TTTgGGgTTT','TTTTggTTTT','TTTTTTTTTT',
+ 'TTTTGGTTTT','TTTGggGTTT','TTGgRRgGTT','TGgRRRRgGT','GgRRRRRRgG','gRRRRRRRRg','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR'];
+function pxCaptainShield(AL,vr){return gScale(toGeo(pxMcShield(vr==='0'?null:ART_CAPTAIN,shPal(),AL)),.95)}
+/* ================= ZOMBIES: the same random undead (zSpec: skin, decay, outfit, headgear, wounds) as pixel skins =================
+   the part sizes follow the old body mutations (MUTX: the brute's big arm, the bomber's barrel chest...); arms are built one by one */
+function pxArms2(P,fR,fL){const TR=newG(),TL=newG();pxScene(()=>fR(TR));pxScene(()=>fL(TL));pxCat(P.AG,TR);pxCat(P.LA,TL,p=>[-p[0]-2.76*VX,p[1]+10.45*VX,p[2]],q=>[-q[0],q[1],q[2]],true)}
+function pxZombie(type,ZV,P){
+ const S=zSpec(type,ZV?ZV.v:0,ZV?ZV.hint:null),MT=MUTX[type],sd=S.seed>>>0,o=S.outfit,dc=S.decay,hd=S.head;
+ const skel=dc==='skel',bony=dc==='bones',mum=dc==='mummy',dried=dc==='dried'||mum,C=PD;
+ const mixH=(a,b,t)=>{const A=[1,3,5].map(i=>parseInt(a.slice(i,i+2),16)),B=[1,3,5].map(i=>parseInt(b.slice(i,i+2),16));return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')},
+  zg=h=>dried?h:mixH(h,'#4f8a44',.32);
+ const SK=C(zg(S.sk[0])),SKD=C(zg(S.sk[1])),SKL=C(zg(S.sk[2])),BN=C(S.bn[0]),BN2=C(S.bn[1]),BND=C(S.bn[2]),DK=C('#160c08'),FL=C('#6a1e14'),FL2=C('#9a3424'),
+  WR=C('#cbbd98'),WR2=C('#a99c7a'),HAIR=C(S.hairc),EY=C(S.eye),RU=C('#5a3a20'),ST=PDP(['#2c2e34','#4a4d55','#6d717a','#949aa3']),GO=PDP(['#9a6e1e','#d4a234','#f0cc5c']);
+ const TUNh=o==='soldier'?'#6e7078':o==='gambeson'?'#b6a684':o==='monk'?((sd&1)?ZCL.wool:ZCL.black):o==='shroud'?'#cbbd98':o==='rags'||o==='peasant'?ZCL.burlap:o==='hooded'?'#5a3a22':S.tun;
+ const TC=C(TUNh),TD=shadeHex(TC,.78),T2=C(S.tun2||TUNh),T2D=shadeHex(T2,.78),HO=C(S.hose);
+ const nz=(f,u,v)=>pxN(f,u+(sd%89),v+((sd>>7)%83),sd%13);
+ const tT=(MT&&MT.T)||[1,1,1,0,0];
+ const zb=(R,Gx,x,y,z,w,h,d,paint,op)=>{const t=MT&&MT[R];if(t){const py=R==='H'?24:R==='T'?12:0;x*=t[0];w*=t[0];y=(y-py)*t[1]+py+t[3];h*=t[1];z=z*t[2]+t[4];d*=t[2]}pxBox(Gx,x,y,z,w,h,d,paint,op)};
+ const skin=(f,u,r)=>{const n=nz(f,u,r);if(dried)return n<.18?SKD:(n>.86?SKL:SK);const w=nz('W'+f,u>>1,r>>1);if(w>.95)return (u+r)%2?FL2:FL;if(n<.13)return SKD;if(n>.93)return SKL;return SK};
+ const wrap=(f,u,r)=>{const n=nz('w'+f,u,r);if(n<.05)return DK;return ((r+(n<.22?1:0))%2)?WR:WR2};
+ const bone=(f,u,r)=>{const n=nz('b'+f,u,r);return n<.15?BN2:(n>.93?BND:BN)};
+ /* ---- head ---- */
+ const hairOn=S.hair!=='none'&&!skel&&!mum;
+ const head=(f,u,v,W,H)=>{const r=H-1-v;
+  if(skel){if(f==='F'){if((r===3||r===4)&&(u===1||u===2||u===5||u===6))return DK;if(r===5&&(u===3||u===4))return DK;if(r===6)return (u===0||u===7)?BN2:(u%2?BN:DK);if(r===7)return (u>=1&&u<=6)?BN2:BND}return bone(f,u,r)}
+  if(mum){if(f==='F'&&r===4&&(u===2||u===5||u===6))return DK;return wrap(f,u,r)}
+  if(hairOn&&(f==='T'||(f==='B'&&r<6)||((f==='R'||f==='L')&&r<3)||(f==='F'&&r<1))){const n=nz('h'+f,u,r);if(S.hair==='patchy'&&n<.45)return skin(f,u,r);if(S.hair==='stringy'&&n<.25)return skin(f,u,r);return n>.8?shadeHex(HAIR,.8):HAIR}
+  if(f==='F'){if(r===4&&(u===1||u===2||u===5||u===6))return DK;if(r===5&&(u===3||u===4))return SKD;
+   if(type==='acid'&&r>=6&&(u===3||u===4))return C('#b8f040');
+   if(r===6&&u>=2&&u<=5)return (S.jawOff||u===3||u===4)?DK:SKD;if(r===7&&S.jawOff&&u>=2&&u<=5)return u%2?BN:DK;
+   if(S.cheek&&r>=5&&r<=6&&(S.cheek<0?u<=1:u>=6))return r===5?BN:BN2;if(S.skullPatch&&r<=2&&u<=2)return BN}
+  if(S.skullPatch&&f==='T'&&u<3&&r<3)return BN;
+  return skin(f,u,r)};
+ /* ---- torso, arms, legs (bare body) ---- */
+ const body=(f,u,v,W,H)=>{const r=H-1-v;
+  if(skel){if(f==='F'){if(u===3||u===4)return r<11?BN2:BND;if(r>=1&&r<=7)return r%2?BN:DK;return (r>=8&&r<=9)?DK:BN2}if(f==='B'){if(u===3||u===4)return BN;return (r>=1&&r<=7&&r%2)?BN2:DK}return (r>=1&&r<=7&&r%2)?BN:DK}
+  if(mum)return wrap(f,u,r);
+  if(bony&&f==='F'&&r>=2&&r<=7&&u>=1&&u<=6&&((S.cheek>=0?u<=3:u>=4)||nz('rb',u,r)<.35))return r%2?BN:FL;
+  if(type==='acid'&&nz('p'+f,u,r)>.93)return C('#c8ff60');
+  return skin(f,u,r)};
+ const limb=(bare,k)=>(f,u,v,W,H)=>{const r=H-1-v;if(skel)return r%4===3?BN2:BN;if(mum)return wrap(f,u,r);
+  if(bare&&r>=6){const n=nz('a'+k+f,u,r);return r>=10?(n<.5?BN:BN2):(n<.3?FL:(n<.7?BN:BN2))}return skin(f,u,r)};
+ const leg=(f,u,v,W,H)=>{const r=H-1-v;if(skel)return r%4===3?BN2:BN;if(mum)return wrap(f,u,r);
+  if(o==='bare')return r>=11?SKD:skin(f,u,r);if(r>=10)return r===11?DK:RU;return nz('l'+f,u,r)<.1?shadeHex(HO,.8):HO};
+ /* ---- clothes (outer layer): torn hems and holes from the seed ---- */
+ const torn=(f,u,r,k,lim)=>{const n=nz('t'+f+k,u,r);return r>=lim-((n*3)|0)};
+ const hole=(f,u,r,p)=>nz('o'+f,u,r)<p;
+ let jacket=null,sleeve=null,pants=null;const sh=(c,f)=>f==='T'?c:(f==='D'?null:c);
+ if(o==='tunic'||o==='peasant'||o==='rags'||o==='gambeson'||o==='hooded'){const qu=o==='gambeson',rag=o==='rags'?.3:.07,BELT=o==='peasant'?C('#c8a868'):C('#4a3622');
+  jacket=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D')return null;if(f==='T')return TC;if(torn(f,u,r,'j',11))return null;if(hole(f,u,r,rag))return null;if(r===6&&o!=='rags')return BELT;
+   if(qu)return ((u+r)%3===0)?TD:TC;if(o==='peasant'&&nz('pa'+f,u>>1,r>>1)>.85)return lighten(TC,.1);return nz('c'+f,u,r)<.15?TD:TC};
+  sleeve=(f,u,v,W,H)=>{const r=H-1-v,len=qu?9:o==='hooded'?11:5;if(f==='D')return null;if(f==='T')return TC;if(r>=len||torn(f,u,r,'s',len))return null;if(hole(f,u,r,rag))return null;return (qu&&(u+r)%3===0)?TD:TC}}
+ else if(o==='soldier'){
+  jacket=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D')return null;if(torn(f,u,r,'j',12))return null;if(hole(f,u,r,.06))return null;
+   if((f==='F'||f==='B')&&u>=2&&u<=5&&r>=1)return r===6?C('#4a3622'):(nz('c'+f,u,r)<.12?T2D:T2);return (u+r)%2?ST[1]:ST[2]};
+  sleeve=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D'||r>=6||torn(f,u,r,'s',6))return null;return (u+r)%2?ST[1]:ST[2]}}
+ else if(o==='monk'||o==='shroud'||o==='noble'){
+  jacket=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D')return null;if(o==='shroud')return hole(f,u,r,.12)?null:wrap(f,u,r);
+   if(o==='noble'){if(r===0)return C('#e6e0d0');if((f==='F')&&(u===3||u===4)&&r>=1&&r<=8&&r%2)return GO[1];if(torn(f,u,r,'j',12))return null;return nz('c'+f,u,r)<.12?T2D:T2}
+   if(r===6)return C('#c8a868');if(hole(f,u,r,.05))return null;return nz('c'+f,u,r)<.15?TD:TC};
+  sleeve=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D')return null;if(o==='shroud')return (r>=9||hole(f,u,r,.15))?null:wrap(f,u,r);if(r>=(o==='noble'?11:10)||torn(f,u,r,'s',10))return null;return o==='noble'?(r%3===1?GO[1]:T2):TC};
+  if(o==='monk')pants=(f,u,v,W,H)=>{const r=H-1-v;if(f==='T'||f==='D')return null;if(torn(f,u,r,'p',11))return null;return nz('m'+f,u,r)<.15?TD:TC};
+  if(o==='shroud')pants=(f,u,v,W,H)=>{const r=H-1-v;if(f==='T'||f==='D')return null;return hole(f,u,r,.25)?null:wrap(f,u,r)}}
+ if(o==='bare'&&!skel&&!mum)pants=(f,u,v,W,H)=>{const r=H-1-v;if(f==='T'||f==='D'||r>3)return null;if(torn(f,u,r,'p',4))return null;return C(ZCL.burlap)};
+ if(type==='bomber'){const s0=jacket;jacket=(f,u,v,W,H)=>{const r=H-1-v;if((f==='F'||f==='B')&&Math.abs((f==='F'?u:7-u)-(r*.62+.5))<.9)return C('#4a2e16');if(f==='T'&&(u===1||u===2))return C('#4a2e16');return s0?s0(f,u,v,W,H):null}}
+ /* ---- headgear (outer layer) ---- */
+ const win=(f,u,r,a,b)=>f==='F'&&r>=a&&r<=b&&u>=1&&u<=6;
+ const STEEL=(f,u,r)=>f==='T'?ST[3]:(r===0?ST[3]:(r===1?ST[2]:ST[1]));
+ let hat=null,brim=null,lamp=false;
+ if(hd==='kettle'){hat=(f,u,v,W,H)=>{const r=H-1-v;return f==='D'?null:(f==='T'||r<3?STEEL(f,u,r):null)};brim=[ST[2],ST[1],ST[3]]}
+ else if(hd==='nasal')hat=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D')return null;if(f==='T'||r<3)return STEEL(f,u,r);if(f==='F'&&(u===3||u===4)&&r<6)return ST[2];return null};
+ else if(hd==='coif')hat=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D'||win(f,u,r,2,6))return null;return (u+r)%2?ST[1]:ST[2]};
+ else if(hd==='hood'||hd==='ghood'){const HC=hd==='ghood'?C(ZCL.green):TC;hat=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D'||win(f,u,r,2,7))return null;if(hole(f,u,r,.06))return null;return nz('hd'+f,u,r)<.15?shadeHex(HC,.8):HC}}
+ else if(hd==='straw'){hat=(f,u,v,W,H)=>{const r=H-1-v;return f==='D'?null:(f==='T'||r<2?C(nz('st'+f,u,r)<.3?'#a88a42':'#d4b45c'):null)};brim=[C('#d4b45c'),C('#a88a42'),C('#ecd27a')]}
+ else if(hd==='lcoif')hat=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D')return null;if(f==='T'||r<2)return C('#d8cbaa');if((f==='R'||f==='L')&&r<6)return C('#c4b694');return null};
+ else if(hd==='circlet')hat=(f,u,v,W,H)=>{const r=H-1-v;return (f!=='T'&&f!=='D'&&r===2)?(u%3===1?GO[2]:GO[1]):null};
+ else if(hd==='shroud')hat=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D'||win(f,u,r,3,5))return null;return wrap(f,u,r)};
+ else if(hd==='mhelm'){hat=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D')return null;if(f==='T')return C(nz('mh',u,r)<.2?'#8a6a2a':'#a8823a');if(r<3)return r===2?C('#5a3a1a'):C('#a8823a');return null};lamp=true}
+ /* ---- build ---- */
+ const lw=skel?2:4;
+ pxScene(()=>{
+  zb('H',P.HG,-4,24,-4,8,8,8,head,{mat:0,grid:[8,8,8]});
+  if(hat)zb('H',P.HG,-4.5,23.5,-4.5,9,9,9,hat,{mat:hd==='kettle'||hd==='nasal'||hd==='coif'?4:0,grid:[8,8,8],ao:false});
+  if(brim)zb('H',P.HG,-6,29.4,-6,12,.8,12,(f,u,v,W,H)=>f==='T'?((u===0||v===0||u===W-1||v===H-1)?brim[2]:brim[0]):(f==='D'?brim[1]:brim[0]),{mat:hd==='kettle'?4:0,grid:[12,1,12]});
+  if(lamp){zb('H',P.HG,-1.2,30.2,4.4,2.4,2,1.2,f=>f==='F'?C('#fff2a0'):C('#6a5a3a'),{mat:5,grid:[2,2,1]});zb('H',P.HG,-4.6,29.7,3.2,9.2,.6,2,()=>C('#5a3a1a'),{mat:0,grid:[8,1,2]})}
+  /* eyes that glow in the dark sockets (one for a mummy) */
+  for(const x of(mum?[1]:[-2,1]))zb('H',P.HG,x,27,4,1,1,.14,()=>EY,{mat:5,grid:[1,1,1],ao:false});
+  zb('T',P.G,-4,12,-2,8,12,4,body,{mat:0,grid:[8,12,4]});
+  if(jacket)zb('T',P.G,-4.25,11.75,-2.25,8.5,12.5,4.5,jacket,{mat:o==='soldier'?4:0,grid:[8,12,4],ao:false});
+  zb('L',P.LG,-lw/2,-12,-lw/2,lw,12,lw,leg,{mat:0,grid:[4,12,4]});
+  if(pants&&!skel)zb('L',P.LG,-2.25,-12.25,-2.25,4.5,12.5,4.5,pants,{mat:0,grid:[4,12,4],ao:false});
+  pxBox(P.LG,-30,-40,-30,60,28,60,()=>null,{only:true});
+  /* arrows stuck in the back */
+  for(let i=0;i<S.arrows;i++){const ax=-2.5+5*nz('ar',i,1),ay=15+6*nz('ar',i,2),z0=-2*tT[2]+tT[4];
+   pxBox(P.G,ax-.25,ay-.25,z0-5.5,.5,.5,6.2,()=>C('#8a6a3a'),{mat:0,grid:[1,1,6],ao:false});pxBox(P.G,ax-.1,ay-.9,z0-5.6,.2,1.8,1.4,()=>C('#efe9d6'),{mat:0,grid:[1,2,1],ao:false})}
+  /* the bomber's powder keg, fuse and spark; the acid spitter's glowing sacs */
+  const zB=-2.25*tT[2]+tT[4],xW=4.25*tT[0];
+  if(type==='bomber'){const W2=6,yk=(13-12)*tT[1]+12;pxBox(P.G,-W2/2,yk,zB-5,W2,8,5,(f,u,v,W,H)=>{if(f==='T'||f==='D')return (u+v)%3?RWD[2]:RWD[1];if(v===1||v===6)return RDS[1];return u%2?RWD[2]:RWD[3]},{mat:0,grid:[6,8,5]});
+   pxBox(P.G,-.3,yk+8,zB-2.8,.6,2,.6,()=>C('#3a2a1a'),{mat:0,grid:[1,2,1],ao:false});pxBox(P.G,-.45,yk+10,zB-2.95,.9,.9,.9,()=>C('#ffb02a'),{mat:5,grid:[1,1,1],ao:false})}
+  if(type==='acid')for(const[sx,sy,sz,s]of[[-2.6,19,0,3.4],[1.4,16,-.6,2.8],[-.4,21.2,-.2,2.4]])pxBox(P.G,sx,sy*tT[1]+(1-tT[1])*12,zB-s*.75+sz,s,s,s,(f,u,v)=>((u+v)%2?C('#9ae030'):C('#c8ff60')),{mat:5,grid:[2,2,2],ao:false});
+ });
+ /* arms one by one: the brute's right arm is huge, shackle and chain on its left wrist, bone spikes on its shoulder; the miner holds a pick */
+ const arm=(R)=>T=>{const t=MT&&MT[R],ab=(x,y,z,w,h,d,p,op)=>{if(t){x*=t[0];w*=t[0];y=y*t[1];h*=t[1];z*=t[2];d*=t[2]}pxBox(T,x,y,z,w,h,d,p,op)};
+  ab(-lw/2,-12,-lw/2,lw,12,lw,limb(R==='AR'?S.armR:S.armL,R),{mat:0,grid:[4,12,4]});
+  if(sleeve&&!skel)ab(-2.25,-12.25,-2.25,4.5,12.5,4.5,sleeve,{mat:o==='soldier'?4:0,grid:[4,12,4],ao:false});
+  if(type==='brute'&&R==='AR')for(const[x,z,h]of[[-.8,-1,3.4],[.6,.9,2.6]])ab(x,0,z,1.2,h,1.2,(f)=>f==='T'?BN2:BN,{mat:0,grid:[1,3,1]});
+  if(type==='brute'&&R==='AL'){ab(-2.6,-9.6,-2.6,5.2,1.8,5.2,(f,u,v)=>f==='T'||f==='D'?ST[1]:(u%2?ST[2]:ST[1]),{mat:4,grid:[5,2,5]});for(let i=0;i<3;i++)ab(-.5,-11.2-i*1.4,2.4,1,1.2,.6,()=>ST[i%2?1:2],{mat:4,grid:[1,1,1],ao:false})}
+  if(type==='miner'&&R==='AR'){ab(-.5,-11.5,-1.5,1,1,11,(f,u,v)=>((u+v)%2?RWD[2]:RWD[3]),{mat:0,grid:[1,1,11]});ab(-.6,-16,8.6,1.2,9,1.5,(f,u,v,W,H)=>v===0||v===H-1?RDS[1]:RDS[3],{mat:4,grid:[1,9,1]})}};
+ pxArms2(P,arm('AR'),arm('AL'));
+}
+/* ================= ROUND 3: capes, the bannerman's banner, the cannon, the swarm's skin tone ================= */
+const pxZg=h=>{const A=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)),B=[0x4f,0x8a,0x44];return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*.32).toString(16).padStart(2,'0')).join('')};
+/* capes: a Minecraft cape (one pixel thick, the art on the back) with folds, hems and an emblem; s = 1 / PXV converts old units */
+function pxCapes(type,P0){const X=P0.X;if(!X)return;const s=1/PXV,Tm=teamPal(thp()),C=PD;
+ const R=PDP(['#6c111b','#8e1a26','#a62832','#c94450']),E=C('#f3efe6'),Ex=C('#18181c'),G=PDP(['#9a6e1e','#d4a234','#f0cc5c']);
+ const cape=(Gx,w,h,z,W,H,col)=>pxBox(Gx,-w/2,-h,z,w,h,1.1,(f,u,v)=>{const r=H-1-v;return col(f,u,r,W,H)},{mat:0,grid:[W,H,1]});
+ const fold=(u,W)=>u%3===1?1:(u%3===2?2:0);
+ const sun=(u,r,u0,r0)=>{const du=u-u0,dr=r-r0;if(Math.abs(du)+Math.abs(dr)<=1)return G[2];if((du===0&&Math.abs(dr)===2)||(dr===0&&Math.abs(du)===2))return G[1];return null};
+ if(type==='guard'){X.cape=newG();cape(X.cape,4.5*s,7.6*s,-.65*s,10,16,(f,u,r,W,H)=>{if(r<=1)return r?Tm[2]:Tm[3];if(r===H-1)return G[1];if(f==='B'||f==='F'){const c=sun(u,r,4.5|0,5);if(c&&f==='B')return c}return R[[2,1,3][fold(u)]]})}
+ if(type==='captain'){X.cape=newG();cape(X.cape,4.2*s,9*s,-.65*s,10,18,(f,u,r,W,H)=>{if(r>=H-2)return r===H-1?G[0]:G[1];if(f==='B'){const c=sun(u,r,4,4);if(c)return c}return [Tm[3],Tm[2],Tm[4]][fold(u)]})}
+ if(type==='king'){X.cape=newG();X.cape2=newG();
+  const erm=(u,r,W)=>(u===0||u===W-1)?((r%3===1)?Ex:E):null;
+  cape(X.cape,5.6*s,5*s,-.67*s,12,11,(f,u,r,W,H)=>{const e=erm(u,r,W);if(e)return e;if(r<=1)return (r===1&&u%3===1)?Ex:E;
+   if(f==='B'&&r>=3&&r<=7&&u>=3&&u<=8){const du=u-5.5,dr=r-5;if(Math.abs(du)<=2&&Math.abs(dr)<=2){if(dr===-2)return (u%2)?G[2]:null;return dr===2?G[0]:G[1]}}return R[[2,1,3][fold(u)]]});
+  cape(X.cape2,6.6*s,5.3*s,-.67*s,14,12,(f,u,r,W,H)=>{const e=erm(u,r,W);if(e)return e;if(r>=H-2)return r===H-1?G[0]:G[2];return R[[2,1,3][fold(u)]]})}}
+/* the bannerman's banner: three chained cloth pieces painted as one 20 x 30 Minecraft banner: team field, gold border,
+   a gold fleur-de-lis, a swallow tail cut in the bottom */
+const FLEUR=['...GG...','..GGGG..','..GGGG..','G..GG..G','GG.GG.GG','GGGGGGGG','.GGGGGG.','...GG...','..GGGG..','...GG...'];
+function pxBanner(X){const s=1/PXV,Tm=teamPal(thp()),G=PDP(['#9a6e1e','#d4a234','#f0cc5c']),BW=11.2,SH=5.6,TOT=16.6,W=20,H=30,rp=TOT/H;
+ const px=(u,r)=>{if(r>=24){const half=(r-23)*1.55;if(Math.abs(u-9.5)<half)return null}if(r===0)return G[0];if(r===1)return G[2];if(u===0||u===W-1)return G[1];
+  if(r===H-1||(r>=24&&Math.abs(Math.abs(u-9.5)-(r-23)*1.55)<.9))return G[0];const fr=r-7,fc=u-6;if(fr>=0&&fr<10&&fc>=0&&fc<8&&FLEUR[fr][fc]!=='.')return fc<4?G[2]:G[1];
+  if(r===3||r===21)return G[1];return (u%4===3)?Tm[2]:(r>18?Tm[2]:Tm[3])};
+ ['ban','ban2','ban3'].forEach((k,i)=>{X[k]=newG();const g0=-SH*i,g1=i<2?-SH*(i+1):-TOT,r0=Math.round(-g0/rp),r1=Math.round(-g1/rp),nr=r1-r0;
+  pxBox(X[k],-BW/2*s,-(g0-g1)*s,-.25*s,BW*s,(g0-g1)*s,.55*s,(f,u,v)=>{if(f==='T'||f==='D')return f==='T'&&i===0?G[1]:null;const r=r0+(nr-1-v);return px(f==='B'?W-1-u:u,r)},{mat:0,grid:[W,nr,1],ao:false})})}
+/* the cannon: bronze barrel with reinforcing rings and a cascabel, plank carriage, spoked wheels with iron tyres */
+function pxCannon(){const G=newG(),BZ=PDP(['#5a3a10','#8a5a1e','#b8822e','#dca84a','#f2cc6a']),k=1/(PXV*VX);
+ const wood=(f,u,v)=>((u+v)%5===0?RWD[1]:(f==='T'?RWD[3]:RWD[2])),iron=(f)=>f==='T'?RDS[3]:RDS[1];
+ pxScene(()=>{
+  for(const sx of[-1,1]){const x=sx*11.8,y=7.4,z=15.7,X0=sx>0?x:x-2.2;
+   pxBox(G,X0,y-7,z-3,2.2,14,6,iron,{mat:4,grid:[2,14,6]});pxBox(G,X0,y-3,z-7,2.2,6,14,iron,{mat:4,grid:[2,6,14]});pxBox(G,X0,y-5.5,z-5.5,2.2,11,11,iron,{mat:4,grid:[2,11,11]});
+   pxBox(G,X0+(sx>0?-.2:.2),y-5.2,z-5.2,2.6,10.4,10.4,(f,u,v)=>(f==='R'||f==='L')?((u===5||v===5||u===v||u===10-v)?RWD[3]:RWD[1]):RWD[2],{mat:0,grid:[2,11,11]});
+   pxBox(G,sx>0?x+2.2:x-3.6,y-1.6,z-1.6,1.4,3.2,3.2,pBev(BZ),{grid:[1,3,3]})}
+  pxBox(G,-11,6.4,14.6,22,2,2,iron,{mat:4,grid:[22,2,2]});
+  pxBox(G,-4,5,2,2,8,22,wood,{mat:0,grid:[2,8,22]});pxBox(G,2,5,2,2,8,22,wood,{mat:0,grid:[2,8,22]});
+  pxBox(G,-3,2,-14,6,4,17,wood,{mat:0,grid:[6,4,17]});pxBox(G,-2.5,1.5,-14.5,5,3,2,iron,{mat:4,grid:[5,3,2]});
+  pxBox(G,-3.6,10,-1,7.2,7.2,28,(f,u,v,W,H)=>{if(f==='F')return (u>=2&&u<=4&&v>=2&&v<=4)?RDS[0]:BZ[3];if(f==='B')return BZ[1];const q=f==='T'||f==='D'?v:u;return f==='T'?BZ[3]:(v===H-1?BZ[3]:BZ[2])},{grid:[7,7,28]});
+  for(const[z0,l]of[[-1.5,3.5],[11,1.6],[23.6,3.8]])pxBox(G,-4.4,9.2,z0,8.8,8.8,l,pBev(BZ),{grid:[8,8,2]});
+  pxBox(G,-1.6,12,-4,3.2,3.2,3,pBev(BZ),{grid:[3,3,3]});
+  for(const[x,z]of[[-17,-2],[-14,-3],[-15.5,.5]])pxBox(G,x,0,z,3,3,3,()=>RDS[0],{mat:4,grid:[3,3,3]});
+ });return toGeo(G)}
+/* ================= ROUND 4b: the castle, rebuilt the Minecraft way (square towers, chunky crenels, steep block roofs) =================
+   A = square fortress: curtain walls, four square corner towers, a keep with a steep slate roof, a gatehouse with a portcullis
+   B = great keep: one massive square keep with four corner turrets and a stepped slate spire, low walls and corner towers
+   front = +z, the 5 x 5 tiles go from 0 to 5; C5.flag = where the animated flag stands */
+/* wood or stone: the same castle A in logs and planks for the wooden tier */
+let PXCW=false;
+const pS=(G,x,y,z,w,h,d,c)=>PXCW?bW(G,x,y,z,w,h,d,(c===QTR||c===QSD2)?QW3:(c===QS[1]?QLOG:QW2)):bS(G,x,y,z,w,h,d,c);
+const pSt=(G,x,y0,z,w,d,h,o)=>{if(!PXCW)return qStone(G,x,y0,z,w,d,h,o);const n=Math.max(1,Math.round(h/.2)),q=h/n;for(let k=0;k<n;k++)bW(G,x,y0+k*q,z,w,q,d,k%2?QW1:QW2)};
+const pQu=(G,x0,z0,x1,z1,y0,h)=>{if(!PXCW)return qQuoin(G,x0,z0,x1,z1,y0,h)};
+function pxCastleMer(G,x0,z0,x1,z1,y,s){s=s||.26;const put=(x,z)=>{pS(G,x,y,z,s,s,s,QS[1]);pS(G,x,y+s,z,s+.03,.03,s+.03,QTR)};
+ const nx=Math.max(1,Math.round((x1-x0)/(s*2))),nz=Math.max(1,Math.round((z1-z0)/(s*2)));
+ for(let i=0;i<=nx;i++){const x=x0+(x1-x0)*i/nx;put(x,z0);put(x,z1)}for(let j=1;j<nz;j++){const z=z0+(z1-z0)*j/nz;put(x0,z);put(x1,z)}}
+function pxCastleGate(G,gz1){const ax0=2.5,aw=.82,ah=1.25,az=gz1+.005;bP(G,ax0,.2,az-.02,aw,ah,.06,'#18171c');bP(G,ax0,.2+ah,az-.02,aw*.6,.12,.06,'#18171c');
+ for(const s of[-1,1]){pS(G,ax0+s*(aw/2+.06),.2,az,.12,ah+.12,.06,QTR)}pS(G,ax0,.32+ah,az,aw+.24,.14,.06,QTR);
+ for(let i=0;i<6;i++)bP(G,ax0-aw/2+.08+i*(aw-.16)/5,.6,az-.035,.03,ah-.42,.03,QIR);for(const y of[.75,1.15])bP(G,ax0,y,az-.035,aw-.06,.03,.03,QIR);
+ pS(G,ax0,.2,az+.14,aw+.3,.04,.3,QSD2);for(const s of[-1,1])qLamp(G,2.5+s*.62,1.45,gz1+.1,true)}
+function pxCastleA(wood){PXCW=!!wood;const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);
+ for(let i=0;i<10;i++)for(let j=0;j<10;j++)pS(G,.25+i*.5,.2,.25+j*.5,.49,.025,.49,QS[(i*3+j*5)%4]);
+ const WT=2.3,TH=.5;const cw=(x,z,w,d)=>{pSt(G,x,.2,z,w,d,WT-.2,{moss:1});pS(G,x,WT,z,w+.06,.08,d+.06,QTR)};
+ cw(2.5,.3,3.4,TH);cw(.3,2.5,TH,3.4);cw(4.7,2.5,TH,3.4);cw(1.05,4.7,1.1,TH);cw(3.95,4.7,1.1,TH);
+ pxCastleMer(G,.9,.08,4.1,.08,WT+.08);pxCastleMer(G,.08,.9,.08,4.1,WT+.08);pxCastleMer(G,4.92,.9,4.92,4.1,WT+.08);
+ for(const z of[1.4,2.5,3.6]){qSlit(G,.045,1.2,z,false);qSlit(G,4.955,1.2,z,false)}
+ /* square corner towers with a cornice, chunky crenels, banners on the front pair */
+ for(const[x,z]of[[.65,.65],[4.35,.65],[.65,4.35],[4.35,4.35]]){const bk=z<2.5,H=bk?3.9:3.4,W=1.25,ox=x<2.5?-1:1,oz=z<2.5?-1:1;
+  qPlinth(G,x,0,z,W+.12,W+.12,.2);pSt(G,x,.2,z,W,W,H-.2,{moss:1,ph:bk?1:0});pQu(G,x-W/2,z-W/2,x+W/2,z+W/2,.2,H-.2);
+  pS(G,x,H,z,W+.18,.12,W+.18,QTR);pS(G,x,H+.12,z,W+.1,.06,W+.1,QSD2);pxCastleMer(G,x-W/2-.04,z-W/2-.04,x+W/2+.04,z+W/2+.04,H+.12,.28);
+  qSlit(G,x+ox*(W/2+.005),1.3,z,false);qSlit(G,x,1.3,z+oz*(W/2+.005),true);qWin(G,x+ox*(W/2+.012),2.6,z,false,ox,{w:.16,h:.24,glow:1});qWin(G,x,2.6,z+oz*(W/2+.012),true,oz,{w:.16,h:.24,glow:1});
+  if(!bk)qBan(G,x,H-.95,z+W/2+.03,true,1,.36,.8);else qFlag(G,x,H+.18,z,.8)}
+ /* keep: square, steep slate gable roof with dormers, banners, a door */
+ const kx=2.5,kz=1.75,KW=2.2,KD=1.9,KH=3.9;qPlinth(G,kx,.2,kz,KW+.12,KD+.12,.12);pSt(G,kx,.32,kz,KW,KD,KH-.32,{ph:1});pQu(G,kx-KW/2,kz-KD/2,kx+KW/2,kz+KD/2,.32,KH-.32);
+ pS(G,kx,KH,kz,KW+.16,.1,KD+.16,QTR);
+ for(const[x,z,ax,n]of[[kx,kz+KD/2,true,1],[kx+KW/2,kz,false,1],[kx-KW/2,kz,false,-1]]){const L=ax?KW:KD;for(const o of[-.3,.3]){const w=o*L;qWin(G,ax?x+w:x+n*.012,2.7,ax?z+n*.012:z+w,ax,n,{w:.18,h:.34,glow:1})}}
+ qDoor(G,kx,kz+KD/2+.016,true,1,{y:.32,w:.5,h:.8,wood:1});qBan(G,kx-.7,1.6,kz+KD/2+.04,true,1,.3,.7);qBan(G,kx+.7,1.6,kz+KD/2+.04,true,1,.3,.7);
+ const rt=qRoof(G,kx,kz,KW+.1,KD+.1,KH+.1,PXCW?QSH:QSL,true,{rise:.3,run:.17});C5.flag=(typeof rt==='number'?rt:KH+1.9)+.05;C5.wflag=C5.flag;
+ pS(G,kx-.55,KH+.1,kz+.5,.1,.9,.1,QSD);qFlag(G,kx,C5.flag-.05,kz,.9);
+ /* gatehouse: a square block over the gate, crenellated, the arms of the kingdom */
+ const gz0=4.15,gz1=5.05,GH=3.0,gzc=(gz0+gz1)/2;pSt(G,2.5,.2,gzc,1.9,gz1-gz0,GH-.2,{moss:1,ph:2});pQu(G,1.55,gz0,3.45,gz1,.2,GH-.2);
+ pS(G,2.5,GH,gzc,2.06,.12,gz1-gz0+.12,QTR);pxCastleMer(G,1.5,gz0-.02,3.5,gz1+.04,GH+.12,.26);pxCastleGate(G,gz1);qBan(G,2.5,1.75,gz1+.04,true,1,.4,.75);
+ qBarrel(G,3.3,3.2,.22);qBarrel(G,3.5,3.0,.22);qCrate(G,1.6,3.0,.22,.26);for(const[x,z]of[[1.6,3.9],[3.4,3.9]])qPost(G,x,.22,z,.55,true);
+ return toGeo(G)}
+function pxCastleB(){const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);
+ for(let i=0;i<10;i++)for(let j=0;j<10;j++)bS(G,.25+i*.5,.2,.25+j*.5,.49,.025,.49,QS[(i*3+j*5)%4]);
+ const WT=1.7,TH=.4;const cw=(x,z,w,d)=>{qStone(G,x,.2,z,w,d,WT-.2,{moss:1});bS(G,x,WT,z,w+.06,.08,d+.06,QTR)};
+ cw(2.5,.22,3.8,TH);cw(.22,2.5,TH,3.8);cw(4.78,2.5,TH,3.8);cw(1.0,4.78,1.2,TH);cw(4.0,4.78,1.2,TH);
+ pxCastleMer(G,.8,.04,4.2,.04,WT+.08,.24);pxCastleMer(G,.04,.8,.04,4.2,WT+.08,.24);pxCastleMer(G,4.96,.8,4.96,4.2,WT+.08,.24);
+ for(const[x,z]of[[.5,.5],[4.5,.5],[.5,4.5],[4.5,4.5]]){const W=.95,H=2.5;qStone(G,x,.2,z,W,W,H-.2,{moss:1});bS(G,x,H,z,W+.14,.1,W+.14,QTR);pxCastleMer(G,x-W/2-.03,z-W/2-.03,x+W/2+.03,z+W/2+.03,H+.1,.24)}
+ /* the great keep */
+ const kx=2.5,kz=2.2,KW=2.7,KH=4.6;qPlinth(G,kx,.2,kz,KW+.14,KW+.14,.14);qStone(G,kx,.34,kz,KW,KW,KH-.34,{ph:1});qQuoin(G,kx-KW/2,kz-KW/2,kx+KW/2,kz+KW/2,.34,KH-.34);
+ for(const y of[1.6,3.1])bS(G,kx,y,kz,KW+.08,.08,KW+.08,QTR);bS(G,kx,KH,kz,KW+.2,.12,KW+.2,QTR);pxCastleMer(G,kx-KW/2-.06,kz-KW/2-.06,kx+KW/2+.06,kz+KW/2+.06,KH+.12,.3);
+ for(const[x,z,ax,n]of[[kx,kz+KW/2,true,1],[kx,kz-KW/2,true,-1],[kx+KW/2,kz,false,1],[kx-KW/2,kz,false,-1]]){for(const o of[-.65,0,.65]){qWin(G,ax?x+o:x+n*.012,3.55,ax?z+n*.012:z+o,ax,n,{w:.18,h:.36,glow:1})}qWin(G,ax?x-.6:x+n*.012,2.1,ax?z+n*.012:z-.6,ax,n,{w:.16,h:.3,glow:1});qWin(G,ax?x+.6:x+n*.012,2.1,ax?z+n*.012:z+.6,ax,n,{w:.16,h:.3,glow:1})}
+ qDoor(G,kx,kz+KW/2+.016,true,1,{y:.34,w:.56,h:.86,wood:1});qBan(G,kx-.85,2.3,kz+KW/2+.04,true,1,.34,.9);qBan(G,kx+.85,2.3,kz+KW/2+.04,true,1,.34,.9);
+ /* corner turrets with stepped slate roofs, the stepped spire in the middle */
+ for(const[a,b]of[[-1,-1],[1,-1],[-1,1],[1,1]]){const x=kx+a*(KW/2-.05),z=kz+b*(KW/2-.05),W=.72,H=KH+.9;qStone(G,x,KH-.4,z,W,W,H-KH+.4,{ph:2});bS(G,x,H,z,W+.12,.08,W+.12,QTR);qPyr(G,x,z,H+.08,W+.16,W+.16,QSL,.16,.09)}
+ const sb=KH+.12,SW=1.3;qStone(G,kx,sb,kz,SW,SW,.9,{ph:1});for(const[x,z,ax,n]of[[kx,kz+SW/2,true,1],[kx+SW/2,kz,false,1],[kx-SW/2,kz,false,-1],[kx,kz-SW/2,true,-1]])qWin(G,x+(ax?0:n*.012),sb+.3,z+(ax?n*.012:0),ax,n,{w:.2,h:.36,glow:1});
+ const kt=qPyr(G,kx,kz,sb+.9,SW+.2,SW+.2,QSL,.2,.1);C5.flag=(typeof kt==='number'?kt:sb+2.2)+.05;qFlag(G,kx,C5.flag-.05,kz,.9);
+ /* small gatehouse */
+ const gz0=4.35,gz1=5.05,GH=2.3;qStone(G,2.5,.2,(gz0+gz1)/2,1.7,gz1-gz0,GH-.2,{moss:1});bS(G,2.5,GH,(gz0+gz1)/2,1.84,.1,gz1-gz0+.12,QTR);pxCastleMer(G,1.62,gz0,3.38,gz1+.03,GH+.1,.24);pxCastleGate(G,gz1);
+ return toGeo(G)}
+
+let PXON=true,SHZ=+(window.__SHZ||1.35);let ALB=0,ALF=null;const alv=()=>ALF!=null?ALF:(RS2.done.plate?1:0)+(RS2.done.mail?1:0);
 const HA={st:'#a9b0be',st2:'#878e9d',st3:'#666c7a',sth:'#cfd5df',ml:'#7f8591',ml2:'#61666f',br:'#c39a45',br2:'#e2c06a',gd:'#d4a234',gd2:'#ecc964',gdd:'#9a6e1e',lt:'#6b4423',lt2:'#4a2e16',lt3:'#8a5a32',em:'#f4ecd8',hx:'#62e4ff',dk:'#141218'};
 function hkPut(Gx,m){return(x,y,z,w,h,d,c)=>{const o=BMAT;BMAT=m;try{bxc(Gx,x*VX,y*VX,z*VX,w*VX,h*VX,d*VX,c)}finally{BMAT=o}}}
 function humanKit(type,AL,P){
  const{G,HG,LA,LG,AG}=P,t=hkPut(G,0),tm=hkPut(G,4),tc=hkPut(G,7),tg=hkPut(G,5),hd=hkPut(HG,0),hm=hkPut(HG,4),hc=hkPut(HG,7),hg=hkPut(HG,5),k=hkPut(LG,0),km=hkPut(LG,4),
   A=(m,dx,y,z,w,h,d,c)=>{hkPut(AG,m)(dx,y,z,w,h,d,c);hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c)},AE=(m,dx,y,z,w,h,d,c)=>hkPut(AG,m)(dx,y,z,w,h,d,c),AW=(m,dx,y,z,w,h,d,c)=>hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c),
   L=(m,x,y,z,w,h,d,c)=>hkPut(LA,m)(x,y,z,w,h,d,c),P1=thp(),P2=ths(),PD=thd(),skin='#c68a5e';
+ if(PXON&&(type==='king'||type==='captain'||type==='bannerman')){({king:pxKing,captain:pxCaptain,bannerman:pxBannerman})[type](P,AL);return null}
+ if(PXON&&(type==='gunner'||type==='gunner2')){pxGunner(P,AL);if(type==='gunner2'){AE(0,0,-4.65,1.6,.3,.3,7.4,'#8a6a3a');AE(0,0,-4.85,5.5,.68,.68,1.0,'#4a3a2a');AE(0,0,-4.75,-2.3,.4,.4,.4,'#5a4428')}return{h:15.6}}
+ if(PXON&&(type==='peasant'||type==='archer'||type==='guard')){({peasant:pxPeasant,archer:pxArcher,guard:pxGuard})[type](P,AL);return{h:type==='guard'?21:15.6}}
  if(type==='peasant'){
   const pv=ZVAR&&ZVAR.hint==='p'?ZVAR.v%6:0,psh=['#8a5a32','#6e7a3e','#7c4a42','#55667a','#8a7a52','#6a4a6a'][pv],psk=['#c68a5e','#d8a07a','#a8704a','#c88a62','#b67e56','#dca888'][pv],phr=['#5a3a1a','#2a1a10','#8a6a3a','#1e1a18','#a0522d','#6a6a62'][pv],phat=[0,2,0,1,3,0][pv];
   mcTorso(G,{shirt:psh,belt:'#5a3a1a'});mcLimbs(G,LG,AG,{pants:['#5a4a30','#4a4038','#5e5240','#3e3a36','#5a4a30','#4e4234'][pv],sleeve:psh,hand:psk,shoes:'#3a2a18'});mcHead(G,psk,phr);
@@ -161,6 +843,7 @@ function humanKit(type,AL,P){
   hm(0,15.32,0,.5,.42,3.5,GD);hd(0,10.6,-1.55,3.6,.9,1.0,ARD);
   return{h:21}}
  /* knight / captain / bannerman */
+ if(type==='knight'&&PXON){pxKnight(P,AL);return null}
  const cap=type==='captain',ban=type==='bannerman',pl=cap?HA.gd:HA.st,plh=cap?HA.gd2:HA.sth,pld=cap?HA.gdd:HA.st2,tr=cap?HA.sth:(AL>=2?HA.gd:HA.br);
  mcTorso(G,{shirt:P1,belt:P2});mcLimbs(G,LG,AG,{pants:'#55555e',sleeve:HA.ml,hand:skin,shoes:'#3a3a42',bare:false});mcHead(G,skin,ban?'#4a2e16':null);
  t(0,5.5,0,3.86,5.5,1.98,HA.ml);A(0,0,-5.4,0,1.9,5.4,1.9,HA.ml);k(0,-5.4,0,1.9,5.3,1.9,HA.ml2);
@@ -195,7 +878,7 @@ function mcModel(type,z){
   if(cap){h=19;P0.X={cape:newG(),plume:newG()};vb(G,0,14.5,0,1.4,.6,3.6,'#d03030');
    vx('cape',0,-9,-.4,4.2,9,.5,thp());vx('cape',0,-9.4,-.4,4.4,.8,.7,'#e6b83a');vx('plume',0,0,0,1.2,1.1,1.4,'#d03030');vx('plume',0,1.0,-1.1,1.0,1.4,2.4,'#e04040');vx('plume',0,1.0,-3.4,.9,1.2,2.4,'#ff6a5a');vx('plume',0,.2,-5.4,.7,1.0,2.2,'#ff8a7a');
    parts=[{k:'cape',x:0,y:10.8*VX,z:-1.2*VX},{k:'plume',x:0,y:15.2*VX,z:-.6*VX}]}
-  if(type==='bannerman'){h=40;const B=bannerKit(G);P0.X=B.X;parts=B.parts}
+  if(type==='bannerman'){h=40;const B=bannerKit(G);P0.X=B.X;parts=B.parts;if(PXON)pxBanner(B.X)}
   if(type==='king'){h=23;sc=1.72;P0.X={cape:newG(),cape2:newG()};const L1=5.0,L2=5.3,RED='#9e1b26',REDD='#6c111b',REDL='#b8283a',ERM='#f3efe6',ERS='#141418',GD=HA.gd,GD2=HA.gd2;
    vx('cape',0,-L1,-.42,5.6,L1,.5,RED);for(const x of[-1.95,-.65,.65,1.95]){vx('cape',x,-L1,-.69,.3,L1-.9,.06,REDD);vx('cape',x+.3,-L1,-.69,.18,L1-.9,.05,REDL)}
    for(const s of[-1,1]){vx('cape',s*2.62,-L1,-.42,.36,L1,.56,ERM);for(let y=-1.3;y>-L1;y-=1.25)vx('cape',s*2.62,y,-.72,.16,.3,.05,ERS)}
@@ -208,10 +891,11 @@ function mcModel(type,z){
   if(type==='guard'){h=21;sc=1.5;P0.X={cape:newG(),plume:newG()};const L=7.6,W=4.5,RED='#9e1b26',REDD='#6c111b';
    vx('cape',0,-L,-.4,W,L,.5,RED);for(const x of[-1.4,0,1.4])vx('cape',x,-L+.3,-.66,.26,L-1.2,.05,REDD);vx('cape',0,-L-.3,-.4,W+.1,.45,.6,HA.gd);vx('cape',0,-.7,-.4,W+.2,.7,.62,thd());
    vx('plume',0,0,0,.5,.9,1.2,RED);vx('plume',0,.3,-1.0,.48,1.1,1.6,RED);vx('plume',0,.1,-2.4,.46,1.0,1.6,REDD);vx('plume',0,-.4,-3.6,.42,.9,1.2,REDD);
-   parts=[{k:'cape',x:0,y:10.8*VX,z:-1.3*VX},{k:'plume',x:0,y:15.55*VX,z:.9*VX}]}
+   parts=PXON?[{k:'cape',x:0,y:10.8*VX,z:-1.45*VX}]:[{k:'cape',x:0,y:10.8*VX,z:-1.3*VX},{k:'plume',x:0,y:15.55*VX,z:.9*VX}]}
 
  }
- const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X},{hip:5.5,sh:10.4,neck:11,lx:.95,ax:2.76,h,sc});r.tools=type==='peasant'?T:null;r.weap=NOWEAP||MVAR==='cine'?null:type==='knight'?'sword':type==='captain'?'gsword':type==='king'?'rsword':type==='guard'?'halberd':type==='archer'?'bow':null;r.shield=(type==='knight'||type==='captain'||type==='guard')&&MVAR!=='cine'?shieldGeo(type,ALB):null;r.shp=[.2*VX,-5.0*VX,2.1*VX];RT=null;return r}
+ if(PXON)pxCapes(type,P0);
+ const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X},{hip:5.5,sh:10.4,neck:11,lx:.95,ax:2.76,h,sc});r.tools=type==='peasant'?T:null;r.weap=NOWEAP||MVAR==='cine'?null:type==='knight'?'sword':type==='captain'?'gsword':type==='king'?'rsword':type==='guard'?'halberd':type==='archer'?'bow':null;r.shield=(type==='knight'||type==='captain'||type==='guard')&&MVAR!=='cine'?shieldGeo(type,ALB):null;r.shp=[.2*VX,-5.0*VX,(PXON?SHZ:2.1)*VX];RT=null;return r}
 
 function mkModel0(type,z){return mcModel(type,z)}
 /* ================= v73: medieval undead — decomposition, half-skeletons, skeletons ================= */
@@ -411,7 +1095,7 @@ function zBuild(S,E){const LD=!!S.lod,r=zRand(S.seed^1540483477),[SK,SKD,SKL]=S.
   b('T',-3.8,19,-6.8,3.8,27.4,-2.5,'#6a5434');b('T',-3.0,26.8,-6.2,3.0,27.9,-3.0,'#4e3c24');b('T',-2.2,21.2,-6.9,-.6,22.8,-6.7,OR,4);b('T',.8,23.4,-6.9,2.6,25.0,-6.7,OR,4);b('T',-.4,24.8,-6.9,1.2,26.2,-6.7,'#8a8a92');
   for(const x of[-1.45,0,1.45])b('AL',x-.55,-16.6,-.9,x+.55,-11.4,.9,BN2)}}
 /* unit models (Minecraft-style groups; 1 px = .46 vb) */
-function zombieKit(type,ZV,P){const{G,HG,LA,LG,AG}=P,k=.46,S=zSpec(type,ZV?ZV.v:0,ZV?ZV.hint:null);
+function zombieKit(type,ZV,P){if(PXON&&!window.__ZOLD){pxZombie(type,ZV,P);return}const{G,HG,LA,LG,AG}=P,k=.46,S=zSpec(type,ZV?ZV.v:0,ZV?ZV.hint:null);
 /* fixed tiny epsilon (bxc's counter-based one could swallow sub-pixel details such as eyes) */
  const put=(Gx,m,yo,x0,y0,z0,x1,y1,z1,c)=>{const o=BMAT;BMAT=m;try{const e=.00012,q=k*VX;addBox(Gx,x0*q-e,(yo+y0*k)*VX-e,z0*q-e,x1*q+e,(yo+y1*k)*VX+e,z1*q+e,rgb(c))}finally{BMAT=o}};
  zBuild(S,(R,x0,y0,z0,x1,y1,z1,c,m)=>{
@@ -422,7 +1106,7 @@ function zombieKit(type,ZV,P){const{G,HG,LA,LG,AG}=P,k=.46,S=zSpec(type,ZV?ZV.v:
   else if(R==='L')put(LG,m,-5.5,x0,y0,z0,x1,y1,z1,c)});
  return S}
 /* swarm geometry: same generator, swarm pixel units (SWPX), parts for the vertex animation, glow + skin flags; tiny details dropped */
-function swGeoV(S){S.lod=1;const P=[],N=[],C=[],I=[],A=[],GL=[],SKA=[],u=SWPX;
+function swGeoV(S){S.lod=1;if(PXON&&S.decay!=='dried'&&S.decay!=='mummy')S=Object.assign({},S,{sk:S.sk.map(pxZg)});const P=[],N=[],C=[],I=[],A=[],GL=[],SKA=[],u=SWPX;
  const box=(x0,y0,z0,x1,y1,z1,c,part,gl,sk)=>{const G=newG();addBox(G,x0*u,y0*u,z0*u,x1*u,y1*u,z1*u,rgb(c));const o=P.length/3;for(const v of G.P)P.push(v);for(const v of G.N)N.push(v);for(const v of G.C)C.push(v);for(const ix of G.I)I.push(ix+o);for(let q=0;q<G.P.length/3;q++){A.push(part);GL.push(gl);SKA.push(sk)}};
  zBuild(S,(R,x0,y0,z0,x1,y1,z1,c,m,sk)=>{const gl=m===5?1:0;if(!gl&&Math.max(x1-x0,y1-y0,z1-z0)<(R==='H'?.75:1.05))return;
   if(R==='T'||R==='H')box(x0,y0,z0,x1,y1,z1,c,0,gl,sk);
@@ -475,7 +1159,7 @@ function embPut(rows,put,cx,ytop,z,px,d,col,keep){const W=rows[0].length;
  for(let r=0;r<rows.length;r++){const row=rows[r];let x=0;while(x<W){const ch=row[x];if(ch==='.'){x++;continue}let e=x;while(e+1<W&&row[e+1]===ch)e++;
   const n=e-x+1,mx=cx+(x+n/2-W/2)*px,y=ytop-(r+1)*px;if(!keep||keep(mx,y,n*px)){const q=col[ch]||col['#'];put(q[0],mx,y,z,n*px,px,d,q[1])}x=e+1}}}
 /* heater shield, face toward +z, origin = strap point; kind knight|captain, AL armour level */
-function shieldGeo(kind,AL){const G=newG(),put=(m,x,y,z,w,h,d,c)=>{const o=BMAT;BMAT=m;try{bxc(G,x*VX,y*VX,z*VX,w*VX,h*VX,d*VX,c)}finally{BMAT=o}};
+function shieldGeo(kind,AL){if(PXON&&/^knight/.test(kind))return pxShield(AL,kind.slice(6));if(PXON&&/^guard/.test(kind))return pxGuardShield(AL,kind.slice(5));if(PXON&&/^captain/.test(kind))return pxCaptainShield(AL,kind.slice(7));const G=newG(),put=(m,x,y,z,w,h,d,c)=>{const o=BMAT;BMAT=m;try{bxc(G,x*VX,y*VX,z*VX,w*VX,h*VX,d*VX,c)}finally{BMAT=o}};
  if(kind==='guard'){const F=thp(),FL=lighten(F,.12),GD=HA.gd,GD2=HA.gd2,GDD=HA.gdd,W=4.9,Y0=-6.2,Y1=3.3,H=Y1-Y0,cy=-1.0;
   put(0,0,Y0,-.08,W,H,.34,'#5c4126');put(4,0,Y0-.1,.12,W+.2,H+.2,.18,GDD);put(0,0,Y0+.35,.24,W-.7,H-.7,.16,F);put(0,0,Y0+.9,.33,W-1.8,H-1.8,.06,FL);
   put(4,0,Y1-.38,.3,W,.38,.14,GD);put(4,0,Y0,.3,W,.38,.14,GD);for(const s of[-1,1])put(4,s*(W/2-.19),Y0,.3,.38,H,.14,GD);put(4,0,Y1-.05,.3,1.6,.42,.14,GD);put(4,0,Y1+.3,.3,.7,.3,.14,GD2);
@@ -580,7 +1264,7 @@ function buildArmy(){titleDispose();reserveDispose();const R=Math.random,J=a=>(R
 /* Minecraft-skin shading for characters: per-skin-pixel noise in model space (no world grid lines) */
 const GLTOON=`
  {vec3 alb=max(diffuseColor.rgb,vec3(.004));vec3 irr=(reflectedLight.directDiffuse+reflectedLight.indirectDiffuse)/alb;float li=dot(irr,vec3(.299,.587,.114));float r=li/max(uLMax,.05);
-  float bd=.42+.3*smoothstep(.24,.36,r)+.28*smoothstep(.52,.64,r)+.16*smoothstep(1.,1.25,r);vec3 tnt=mix(vec3(.66,.76,1.08),vec3(1.06,1.,.9),smoothstep(.36,.7,r));
+  float bd=mix(.42,1.12,smoothstep(.04,1.2,r));vec3 tnt=mix(vec3(.76,.83,1.05),vec3(1.04,1.,.94),smoothstep(.25,.8,r));
   reflectedLight.directDiffuse=alb*irr/max(li,1e-4)*bd*uLMax*tnt;reflectedLight.indirectDiffuse=vec3(0.);}
 `;
 const GLUMAT=`
@@ -638,7 +1322,7 @@ function uiFlush(){for(const b of UIB.values())b.n=0;
 /* units are drawn at 76% so a man stands about a quarter of a house high (the title screen keeps its own framing) */
 const UNITK=.76;
 const T_C=u=>T.cannon.cdt;
-function cannonG(){const G=newG(),WD='#5e4026',WL='#7a5532',IR='#9a7438',IR2='#c09048',BR='#2c2e33';
+function cannonG(){if(PXON)return pxCannon();const G=newG(),WD='#5e4026',WL='#7a5532',IR='#9a7438',IR2='#c09048',BR='#2c2e33';
  for(const sx of[-1,1]){const x=sx*.27;bxc(G,x,.02,.36,.07,.4,.16,WD);bxc(G,x,.14,.36,.07,.16,.4,WD);bxc(G,x,.07,.36,.07,.3,.3,WL);bxc(G,x+sx*.04,.17,.36,.05,.1,.1,IR)}
  bxc(G,0,.17,.36,.6,.06,.06,IR);bxc(G,0,.2,.2,.36,.1,.5,WD);bxc(G,0,.12,-.1,.16,.08,.36,WD);bxc(G,0,.08,-.27,.2,.06,.08,IR);
  bxc(G,0,.29,.3,.17,.17,.62,IR);bxc(G,0,.27,.04,.22,.21,.14,IR2);bxc(G,0,.31,-.05,.08,.08,.06,IR);bxc(G,0,.28,.62,.21,.21,.07,IR2);bxc(G,0,.33,.66,.08,.08,.01,BR);

@@ -1,4 +1,4 @@
-# Restyle in progress (not released)
+# Restyle (shipped in v90, merged into src/game; kept for reference, do not re-apply)
 
 Minecraft / Blockbench look for units and gear. Shown to the King as preview boards; **do not ship until he approves the whole set**.
 
