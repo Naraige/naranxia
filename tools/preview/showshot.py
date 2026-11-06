@@ -2,6 +2,7 @@ import json,base64,sys,os
 ROOT=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from playwright.sync_api import sync_playwright
 # usage: python3 tools/preview/showshot.py naranxia_readable.html "window.__U='knight,guard';window.__B='-';window.__TL='sword,sh_knight'" outdir
+# optional 4th arg: tools/preview/j_show2.js, whose __U entries are type~variant~hint~yaw (zombie~3, zombie~1~knight, king~~~3.6)
 # window.__U units (name@yaw), __B buildings ('-' none), __TL tools/shields (key@yaw@AL@pitch@v), __N size, __SH shadows, __GR grade, __BG background
 html=sys.argv[1];pre=sys.argv[2];outdir=sys.argv[3]
 os.makedirs(outdir,exist_ok=True)
@@ -13,6 +14,6 @@ with sync_playwright() as p:
     pg.route('**/fonts.googleapis.com/**',lambda r:r.abort())
     pg.goto('file://'+os.path.join(ROOT,'dist',html));pg.wait_for_timeout(2500)
     pg.evaluate(pre)
-    d=json.loads(pg.evaluate(open(os.path.join(ROOT,'tools/preview/j_show.js')).read()))
+    d=json.loads(pg.evaluate(open(sys.argv[4] if len(sys.argv)>4 else os.path.join(ROOT,'tools/preview/j_show.js')).read()))
     for k,v in d.items(): open(os.path.join(outdir,k+'.jpg'),'wb').write(base64.b64decode(v.split(',')[1]))
     print(len(d),'ERRS',errs[:3]);b.close()

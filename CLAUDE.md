@@ -89,7 +89,8 @@ The King chose "versions directes": code a batch, test it, release it as the nex
   8x12x4 body, 4x12x4 limbs, outer layer with transparent pixels) plus 2 or 3 extra cubes per unit, the detail in pixel
   textures; gear in the Blockbench item manner (voxel weapons; shields built like the Minecraft shield: 12x22x1 planks,
   iron rim, rivets, bracket handle). Take the style of a reference, never copy a third-party model.
-  Visual choices go to the King as a review page (`tools/board.py`, artifact) with numbered variants.
+  Visual choices go to the King as a review page (`tools/board.py`) published to https://claude.ai/artifact/HsTZDU2YgpyBYxceCBFiJr
+  (same URL for every board), numbered rows of lettered variants; he answers with a code like "1A 2B".
 
 ## Issues (backlog)
 
