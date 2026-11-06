@@ -14,7 +14,7 @@ declare -A CMD=(
  [tools]="python3 tests/tools.py"
  [mp8]="python3 tests/mp8.py naranxia_readable.html 40"
  [mpk]="python3 tests/mpk.py naranxia_readable.html 40"
- [mp_resync]="python3 tests/mp_resync.py naranxia_readable.html 120"
+ [mp_resync]="python3 tests/mp_resync.py naranxia_readable.html 220"
  [mp_convoy]="python3 tests/mp_convoy.py naranxia_readable.html 150"
  [save]="python3 tools/run.py tests/save.js"
 )

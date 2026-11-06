@@ -10,6 +10,8 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
   `wip/restyle/restyle.py` run on the joined parts (markers), result identical to the preview build (cmp). Toggles left in the code:
   `PXON` (const true), `window.__KV` (king, default B), `window.__CV` (castle, default A), `window.__ZOLD` (old zombies).
 - Verified locally: det PASS, tools PASS, one in-game screenshot (wooden castle A, terrain, units). GitHub runs the rest before releasing.
+- CI: the release run passed every test and published v90; the parallel standalone run failed mp_resync once (slow runner, J=2):
+  its time budget raised from 120 to 220 s in test_all.sh. Watch it.
 - wip/restyle is now history: do not run restyle.py again on src (its strings are already replaced).
 
 ## 2026-11-06 · restyle round 4: buildings (wip, not released)
