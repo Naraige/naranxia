@@ -74,7 +74,7 @@ function snd(n,x,y){if(!AC||!sndOn||AC.state!=='running')return;const t=performa
  lastS[n]=t;bud++;const g=AC.createGain();g.gain.value=v;if(pan&&AC.createStereoPanner){const p=AC.createStereoPanner();p.pan.value=pan;g.connect(p);p.connect(SB)}else g.connect(SB);OUT=g;try{SFX[n]()}catch(e){}OUT=SB}
 /* ambience: wind always, birds by day, crickets / owls / distant wolves by night */
 function ambTick(){if(!AC||!sndOn||AC.state!=='running')return;OUT=SB;const on=started&&!paused;if(WIND)WIND.forEach((g,i)=>g.gain.setTargetAtTime(on?(i?.016:.045)*(1.2-dayK*.4):.02,AC.currentTime,1.2));if(!on)return;
- if(dayK>.55&&Math.random()<.38){const f=2400+Math.random()*1700,n=2+((Math.random()*4)|0);for(let i=0;i<n;i++){tn(f*(1+i%2*.12),.06,'sine',.028,f*1.35,i*.1);tn(f*2.01,.04,'sine',.008,0,i*.1)}}
+ if(dayK>.55&&seasonIdx()!==3&&WX.w[1]<.4&&Math.random()<.38){const f=2400+Math.random()*1700,n=2+((Math.random()*4)|0);for(let i=0;i<n;i++){tn(f*(1+i%2*.12),.06,'sine',.028,f*1.35,i*.1);tn(f*2.01,.04,'sine',.008,0,i*.1)}}
  if(dayK<.42){if(Math.random()<.7)for(let i=0;i<4;i++){tn(4400,.05,'sine',.012,4380,i*.07);tn(4400,.05,'sine',.012,4380,.45+i*.07)}
   if(Math.random()<.06){tn(390,.32,'sine',.05,370);tn(330,.5,'sine',.045,315,.42)}
   if(Math.random()<.025){const t0=Math.random()*.3;tn(420,1.6,'triangle',.03,700,t0);tn(700,1.2,'triangle',.022,520,t0+1.4)}}}
@@ -117,6 +117,7 @@ function musStep(st,t,m,sp){const s128=st%128,bar=(s128/16)|0,s16=st%16,ch=SCO[b
   if(s16===0){ch[1].forEach(n=>strings(n,t,bd*1.02,.05,900));bassN(ch[0],t,bd,.12,250)}
   if(s16%2===0){const ar=[ch[1][0],ch[1][1],ch[1][2],ch[1][1]+12];pluck(ar[(s16/2)%4]+12,t,.055,1.1)}
   if(A&&s16===0&&bar%2===0){const e=MEL.find(q=>q[0]===s128);if(e)bell(e[1]+12,t,.04)}
+  if(seasonIdx()===3&&s16===8&&bar%2===0)bell(ch[1][1]+24,t,.026);if(seasonIdx()===2&&s16===12&&bar%4===1)pluck(ch[1][0]+7,t,.04,1.6);
   if(A)for(const e of MEL)if(e[0]===s128&&e[2]>=4)pluck(e[1]+12,t,.07,2.2)}
  else if(m==='night'){
   if(s16===0){choir(ch[1][0],t,bd*1.05,.04);strings(ch[0]+12,t,bd*1.05,.05,600);bassN(ch[0]-12,t,bd,.1,180)}

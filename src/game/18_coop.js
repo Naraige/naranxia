@@ -15,6 +15,7 @@ const repairB=function(sid){if(gated()){mpPush({k:'rp',b:sid});return}return rep
 startResearch2=function(k){if(gated()){mpPush({k:'r2',n:k});return}return _N.startResearch2(k)};
 callWave=function(){if(gated()){mpPush({k:'w'});return}return _N.callWave()};
 trade=function(k){if(gated()){mpPush({k:'tr',n:k});return}return _N.trade(k)};
+kingSkill=function(n){if(gated()){mpPush({k:'ks',n});return}return kingSkill0(n)};
 const sendConvoy=function(c){if(gated()){mpPush({k:'cv',g:c.g|0,w:c.w|0,s:c.s|0,f:c.f|0});return}return sendConvoy0(c)};
 const ROLEK=new Set(['rb+','rb-','rr+','rr-','rt+','rt-']),roleAdj=function(r,d){if(gated()){mpPush({k:'ro',r,d});return}return roleAdj0(r,d)};
 setStance=function(st){if(gated()){mpPush({k:'st',i:selIds(),s:st});return}return _N.setStance(st)};
@@ -35,6 +36,7 @@ function mpExec(c,mine){const m0=msgS,mt0=msgT,sl=selB,fm=formType,br=buildRot;M
   case'g':withSel(new Set(c.i),()=>_N.groupSel());break;
   case'u':withSel(new Set(c.i),()=>_N.ungroupSel());break
   case'st':withSel(new Set(c.i),()=>_N.setStance(c.s));break
+  case'ks':kingSkill0(c.n);break;
   case'cv':sendConvoy0(c);break}}
  finally{MP.ex=false;MP.rmt=false;setPl(LPL());selB=sl;formType=fm;buildRot=br;if(!mine){msgS=m0;msgT=mt0;if(MP.note){msgS=MP.note;msgT=4;MP.note=null}}}}
 function setPause(v){paused=v;autoPaused=false;if(MP.on)mpSend({k:'p',v})}
@@ -87,7 +89,7 @@ function mpFrame(dt){if(over||MP.rsy)return;MP.acc=Math.min(.3,MP.acc+dt);if(pau
   delete MP.loc[MP.tick];delete MP.rem[MP.tick];MP.tick++;MP.acc-=MPSTEP;n++;
   if(MP.tick%90===0){const h=mpHash();MP.hs[MP.tick]=h;mpSend({k:'h',t:MP.tick,h,e:MP.ep});mpChk(MP.tick)}}
  if(n===8)MP.acc=0}
-function mpBegin(st){SEED=st.seed;GPR=st.gpr;CX=st.cx;CY=st.cy;CROT=st.cr&3;diffI=0;SWF=100;SITE2={tx:st.cx2,ty:st.cy2,rot:st.cr2&3};picking=false;setupOpen=false;settingsOpen=false;
+function mpBegin(st){msgS='Co-op: Alt+click pings the map / Shift: defend / Ctrl: gather / Shift+Ctrl: attack';msgT=12;SEED=st.seed;GPR=st.gpr;CX=st.cx;CY=st.cy;CROT=st.cr&3;diffI=0;SWF=100;SITE2={tx:st.cx2,ty:st.cy2,rot:st.cr2&3};picking=false;setupOpen=false;settingsOpen=false;
  MP.on=true;const sd=Math.floor(SEED*1e6)+1;Math.random=rngf(sd);try{reset()}finally{Math.random=REALR}
  inGame=false;camSave=null;startGame();spd=1;paused=false;over=false;setPl(LPL());home();
  MP.simR=rngf(sd+977);MP.tick=0;MP.sent=MPD-1;MP.acc=0;MP.out=[];MP.loc={};MP.rem={};MP.hs={};MP.hr={};MP.desync=false;MP.stall=false;MP.ep=0;MP.rsy=null;MP.rsLast=-1e9;MP.hl=[];MP.dsN=0;

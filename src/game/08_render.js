@@ -315,7 +315,7 @@ function render3D(dt){frameN++;updateCamera(dt);updateChunks(7);
   if(s.door){let op=0;for(const u of units)if(u.t===0&&!u.gar&&Math.abs(u.x-s.x)<TS*2.1&&Math.abs(u.y-s.y)<TS*2.1){op=1;break}
    if((op>.5)!==!!s.dopen){s.dopen=op>.5;snd('gate',s.x,s.y)}s.dop+=(op-s.dop)*Math.min(1,dt*(s.door.userData.lv?4:7));if(s.door.userData.lv){const a=s.dop*1.5;s.door.userData.lv[0].rotation.y=a;s.door.userData.lv[1].rotation.y=-a}else s.door.scale.y=Math.max(.08,1-s.dop*.92)}}
  
- WUT.value=clockT;updateLit();syncFx();fireflies(dt);smkFlush();syncClouds();applyDay(dt);updateTerr();pulseRoutes();
+ WUT.value=clockT;updateLit();syncFx();fireflies(dt);smkFlush();syncClouds();applyDay(dt);weatherTick(dt);spkSync();updateTerr();pulseRoutes();
  rflagUpd();
  if(mode==='movec'&&!over){const hc=HOMEC();if(hc)govBuild('mv'+ver+':'+structs.length+':'+hc.tx+','+hc.ty+':'+(hc.rot|0)+':'+OWN.size,hc.tx+2,hc.ty+2,41,(x,y)=>moveOK(x,y))}else govHide();
  ghost.visible=rangeRing.visible=false;GB1.g.visible=false;rampPool.forEach(m=>m.visible=false);ghost.material.depthTest=true;if(TGH)TGH.visible=false;if(GBW)GBW.visible=false;

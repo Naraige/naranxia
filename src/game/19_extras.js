@@ -42,13 +42,15 @@ function chatLine(who,t){const d=document.createElement('div');d.style.cssText='
 mpChatI.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){const t=mpChatI.value.trim();if(t&&MP.conn){mpSend({k:'chat',t});chatLine('You',t)}mpChatI.value='';mpChatI.style.display='none';mpChatI.blur()}else if(e.key==='Escape'){mpChatI.value='';mpChatI.style.display='none';mpChatI.blur()}});
 addEventListener('keydown',e=>{if(e.key==='Enter'&&MP.conn&&started&&document.activeElement!==mpChatI&&document.activeElement!==nmI){e.preventDefault();mpChatI.style.display='block';mpChatI.focus()}},true);
 const PINGS=[];
-function addPing(x,y,mine){PINGS.push({x,y,t:5,mine});snd('click')}
+const PNGT=[['Look here','#ffd23c'],['Defend here','#6fa8ff'],['Gather here','#7fe08a'],['Attack here','#ff6a6a']];
+function addPing(x,y,mine,p){p=p>=0&&p<4?p|0:0;PINGS.push({x,y,t:p?7:5,mine,p});snd('click')}
 function drawPings(){if(!started||!PINGS.length)return;ctx.setTransform(1,0,0,1,0,0);const k=Math.max(1,DPR),dt=Math.min(.05,(performance.now()-(drawPings.t||performance.now()))/1000)||.016;drawPings.t=performance.now();
  for(let i=PINGS.length-1;i>=0;i--){const p=PINGS[i];p.t-=dt;if(p.t<=0){PINGS.splice(i,1);continue}
   const q=scr(p.x/TS,(HT[(p.y/TS|0)*TW+(p.x/TS|0)]||0)+.3,p.y/TS);if(!q.ok)continue;const r=(10+((p.t*2)%1)*22)*k;
-  ctx.strokeStyle=p.mine?'rgba(255,210,60,.95)':'rgba(120,220,255,.95)';ctx.lineWidth=2.5*k;ctx.beginPath();ctx.arc(q.x,q.y,r,0,6.283);ctx.stroke();ctx.beginPath();ctx.arc(q.x,q.y,3*k,0,6.283);ctx.fillStyle=ctx.strokeStyle;ctx.fill()}}
-cv.addEventListener('pointerdown',e=>{if(e.altKey&&MP.conn&&started){const w=wpos();mpSend({k:'ping',x:w.x,y:w.y});addPing(w.x,w.y,true);e.stopImmediatePropagation();e.preventDefault()}},true);
-const _mm=mpMsg;mpMsg=function(m){if(m.k==='chat'){chatLine('Partner',String(m.t||'').slice(0,120));snd('click')}else if(m.k==='ping')addPing(+m.x,+m.y,false);else return _mm(m)};
+  ctx.strokeStyle=p.p?PNGT[p.p][1]:p.mine?'rgba(255,210,60,.95)':'rgba(120,220,255,.95)';ctx.lineWidth=2.5*k;ctx.beginPath();ctx.arc(q.x,q.y,r,0,6.283);ctx.stroke();ctx.beginPath();ctx.arc(q.x,q.y,3*k,0,6.283);ctx.fillStyle=ctx.strokeStyle;ctx.fill();
+  if(p.p){ctx.save();ctx.scale(k,k);const lab=PNGT[p.p][0],w=tw(lab,.8)+10,lx=q.x/k-w/2,ly=q.y/k-34;ctx.fillStyle='rgba(20,14,8,.78)';ctx.fillRect(lx,ly,w,13);ctx.fillStyle=PNGT[p.p][1];ctx.fillRect(lx,ly+12,w,1.5);T_(lab,lx+5,ly+3,'#ffffff',.8);ctx.restore()}}}
+cv.addEventListener('pointerdown',e=>{if(e.altKey&&MP.conn&&started){const w=wpos(),pt=(e.shiftKey?1:0)+(e.ctrlKey?2:0)+(e.shiftKey&&e.ctrlKey?0:0),pp=e.shiftKey&&e.ctrlKey?3:e.shiftKey?1:e.ctrlKey?2:0;mpSend({k:'ping',x:w.x,y:w.y,p:pp});addPing(w.x,w.y,true,pp);e.stopImmediatePropagation();e.preventDefault()}},true);
+const _mm=mpMsg;mpMsg=function(m){if(m.k==='chat'){chatLine('Partner',String(m.t||'').slice(0,120));snd('click')}else if(m.k==='ping')addPing(+m.x,+m.y,false,m.p|0);else return _mm(m)};
 /* partner cursor + castle site during placement */
 MP.cur=null;let _pcT=0,_pcL='';
 function pkOther(){if(PK.oth)return PK.oth;const g=new THREE.Group(),m=c=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.95,depthTest:false});

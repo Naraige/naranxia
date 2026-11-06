@@ -16,11 +16,11 @@ A list from the King goes into issues first (one per item, labels below), then i
 
 | path | what |
 |---|---|
-| `src/game/NN_*.js` | the whole game, readable, in 23 ordered parts (joined in name order by the build into `dist/game.js`). **Edit these.** |
+| `src/game/NN_*.js` | the whole game, readable, in 31 ordered parts (joined in name order by the build into `dist/game.js`). **Edit these.** |
 | `src/game/14_texts.js` | translations, one key per line; add with `tools/addtexts.py` |
 | `src/shell.html` | HTML/CSS shell around the script (title, fonts, canvases, Three.js r128 from cdnjs) |
 | `game/naranxia.html` | the shipped build (packed). Changing it or `game/VERSION` on `main` **publishes a release** (after the tests) |
-| `game/VERSION`, `game/NOTES.md` | current version (`v90`) and the player-facing notes of that release |
+| `game/VERSION`, `game/NOTES.md` | current version (`v91`) and the player-facing notes of that release |
 | `docs/JOURNAL.md` | what was done, verified and decided, per batch (newest first) |
 | `app/` | Electron desktop launcher: it downloads the `.html` of the latest GitHub release at start-up; `installers.yml` rebuilds the installers when `app/**` changes |
 | `announce/` | Discord texts `vNN.md`; pushing a change to `announce/QUEUE` reposts the versions it lists |
@@ -34,7 +34,7 @@ A list from the King goes into issues first (one per item, labels below), then i
 bash tools/build.sh            # dist/game.js + dist/naranxia_readable.html + syntax check
 bash tools/build.sh --dist     # + dist/naranxia.html (packed: what ships)
 bash tools/test_all.sh         # quick suite, one line per test, logs in dist/test-logs/ (about 6 min)
-bash tools/test_all.sh det mp8 # only some: smoke det tools mp8 mpk mp_resync mp_convoy save
+bash tools/test_all.sh det mp8 # only some: smoke det tools features mp8 mpk mp_resync mp_convoy save
 python3 tools/run.py X.js [out.png|-] [W H wait] [html]   # evaluates the JS function in X.js inside the loaded game
 python3 tools/repro.py report.json [sec] [after.png]      # opens a player's bug report (F8): errors, screenshot, replays the save
 python3 tools/addtexts.py texts.json                      # {"English": [FR, ES, DE, IT, PT]} into the block of the next version
@@ -42,7 +42,7 @@ bash tools/release.sh vNN "title"                         # bump, build, smoke, 
 bash tools/ci_status.sh [--wait]                          # GitHub Actions runs (tests, release)
 ```
 
-Tests: `smoke` (packed build plays a wave), `det` (same game twice = same hashes), `tools` (test mode and bug report),
+Tests: `smoke` (packed build plays a wave), `det` (same game twice = same hashes), `tools` (test mode and bug report), `features` (v91 features: seasons, traps, boss, king skills, stats, goals),
 `mp8` / `mpk` (2 headless co-op clients: economy, research, waves / king, guards, fights; FIRST DIVERGENCE on a desync),
 `mp_resync` (one machine corrupted on purpose, the auto resync must fix it), `mp_convoy` (convoy delivered at the same tick on both),
 `save` (save / load round trip, slow; same0 must be true, sameCont=false is known). GitHub runs the quick suite on every push
@@ -106,4 +106,6 @@ Title in English, body: what he said (French is fine), version, solo/co-op. Comm
 - `09_pick_live` live castle placement view; `10_audio`; `11_ai` hordes and AI kingdoms; `12_title` title scene, site picker, `icoUnit`
 - `13_ui_kit`, `14_texts` (translations), `15_i18n_icons` `L`, `T_`, languages, vector icons; `16_hud` `NAMES`, `TIPS`, menus, tasks (`assignJob`), panels (troops, convoy), `drawUI`, Esc menu
 - `17_input` `startGame`, `loop`, input, `pickUnit`, `openMenu`; `18_coop` `MP`, `mpStart`, `mpBegin`, `mpMsg`, `mpExec`, `mpChk`, resync, lobby
-- `19_extras` control groups, chat, pings, F-keys; `20_icons_mc` 3D icons; `21_save` `svEncode`, `svApply`, `SAVA`; `22_tools` bug report (F8), test mode (F10)
+- `19_extras` control groups, chat, typed pings, F-keys; `20_icons_mc` 3D icons; `21_save` `svEncode`, `svApply`, `SAVA`; `22_tools` bug report (F8), test mode (F10)
+- `23_weather` seasons + weather (visual only, from `waveN`); `24_stats` end stats, records by map, the `update` wrapper (calls `update0` then `objTick`, `kingTick`, `trapTick`, `eraTick`); `25_boss` wave boss; `26_coop_goals`; `27_king_skills`; `28_traps` spike traps + boiling oil; `29_tutorial`; `30_touch`
+- Early `let/const` (`GST`, `LH`, `OBJ`, `SPK`, `TUT`) live at the end of `00_core` because `reset()` runs while the parts load

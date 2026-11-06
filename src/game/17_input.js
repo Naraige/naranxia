@@ -37,7 +37,7 @@ cv.onpointermove=e=>{mouse=pos(e);if(e.pointerType==='mouse'&&e.buttons===0&&(pt
  if(ptr.fo){if(ptr.m>8)ptr.fo.w1=wpos()}
  else if(ptr.rot){if(ptr.m>8){CAM.yaw-=dx*.007;CAM.pitch=Math.max(.35,Math.min(1.38,CAM.pitch+dy*.005))}}
  else if(ptr.pan){if(ptr.m>8)panCam(dx*k,dy*k)}
- else if(ptr.m>8){if((mode==='path'||mode==='raise'||mode==='dig'||mode==='upgrade')&&!over)paint();else box={x1:ptr.sx,y1:ptr.sy,x2:mouse.x,y2:mouse.y}}};
+ else if(ptr.m>8){if((mode==='path'||mode==='raise'||mode==='dig'||mode==='upgrade'||mode==='spike')&&!over)paint();else box={x1:ptr.sx,y1:ptr.sy,x2:mouse.x,y2:mouse.y}}};
 cv.onpointerup=()=>{mmDrag=false;if(ptr&&ptr.pk&&PKL.on){if(ptr.m<=6&&ptr.btn===0&&PKL.hit){pkSet(PKL.hit.tx,PKL.hit.ty,PKL.hit.ok);pickMsg=PKL.hit.ok?'':'Pick dry, gentle land away from the edge of the world';snd('click')}ptr=null;return}
  if(ptr&&ptr.pk){if(ptr.m<=6&&ptr.btn===0&&PK&&PK.hit){pkSet(PK.hit.tx,PK.hit.ty,PK.hit.ok);pickMsg=PK.hit.ok?'':'Pick dry, gentle land away from the edge of the world';snd('click');PKL.on=true;pkLiveFocus(PK.hit.tx,PK.hit.ty)}ptr=null;return}if(sliderDrag){sliderDrag=null;snd('sword');return}if(!ptr)return;
  if(ptr.fo&&ptr.m>8&&ptr.fo.w1){const a=ptr.fo.w0,b=ptr.fo.w1,fm=Math.atan2(b.x-a.x,b.y-a.y),ft=formType;if(!formType)formType=1;FORCEF=fm;try{order(a)}finally{FORCEF=null;formType=ft}puff(a.x,a.y,'#ffe14a',8,40);ptr=null;FPV=null;return}
@@ -59,6 +59,7 @@ addEventListener('keydown',e=>{aInit();if(document.activeElement===nmI)return;co
  if(!e.ctrlKey&&!e.shiftKey&&!e.metaKey&&['1','2','3','4'].includes(k)&&sel().some(u=>u.type!=='peasant')){setStance(['agg','def','hold','stop'][+k-1]);return}
  const a=Object.keys(KB).find(x=>KB[x]===k);if(!a)return;if(k.length===1&&!/[a-z0-9]/.test(k))e.preventDefault();
  if(a==='map'){showMap=!showMap;return}
+ if(a==='cry'||a==='charge'){kingSkill(a);return}
  if(showMap)return;
  if(BK.includes(a)||a==='upgrade'||a==='barracks'||a==='farm'||a==='storage'||a==='house'||a==='academy'||a==='market'||a==='forester'||a==='guild'||a==='torch'||a==='rally'||a==='rallyc'||a==='movec'||a==='ramp'||a==='tier'||a==='demolish'||a==='raise'||a==='dig'||a==='ballista'||a==='trebuchet'){buy(a);return}
  if(a==='rotate'){if(mode){buildRot=(buildRot+1)&3;msgS='Rotated '+buildRot*90+' deg';msgT=1.5}else if(selB&&selB.t===0&&ROTT.has(selB.type))build('rotate',selB.tx,selB.ty)}

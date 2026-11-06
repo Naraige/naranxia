@@ -1,5 +1,7 @@
-- New look: every unit is now a Minecraft-style character with pixel textures: King Naraige (royal helm under his crown), captain, royal guard, knights, archers, peasants, bannerman and gunners.
-- New look for the zombies: each one is still different (clothes, helmets, wounds), with greenish skin and glowing eyes; skeleton runners, the chained brute, the bomber with his powder keg, the acid spitter and the miner with his lamp.
-- New weapons and shields in the Minecraft item style (shields based on "Minecraft Shield" by bugbilly, CC BY 4.0).
-- New castle: a square fortress with chunky battlements, a keep with a steep slate roof and a gatehouse with a portcullis, in wood at the start and in stone after the upgrade.
-- Capes, the bannerman's banner and the cannon redone in the same style; buildings get Minecraft block textures (stone bricks, planks).
+- Seasons and weather: a season lasts 4 waves (Spring, Summer, Autumn, Winter), each wave has its own weather (clear, rain with thunder, fog, snow), with falling petals, pollen and leaves, season colours, weather sounds and a label in the top bar.
+- Wave boss: every 10th wave a giant brute joins the horde with its own health bar. It stomps buildings and troops around it; killing it pays 400 gold.
+- King skills: War cry [<] (your troops near him hit 35% harder for 8 s) and Royal charge [>] (he runs and hits much harder for 4 s and throws zombies back). Buttons under the top bar, keys can be changed in Options.
+- Defense: spike traps (passable, zombies standing on them are hurt until they break; drag to place several), Boiling oil research (walls, gates and towers scald zombies next to them) and Iron age research (units hit 10% harder, buildings slowly mend).
+- Co-op: ping types (Alt+click look, +Shift defend, +Ctrl gather, +Shift+Ctrl attack) and shared goals (reach wave 5, 10, 15... and slay zombies together) that pay both players.
+- End of game: stats (resources earned, best unit, units lost), your three best runs on the same map and a "new record" banner, daily map flagged.
+- Guided tutorial the first time you play (Esc menu > Tutorial to see it again), touch controls (pinch to zoom, two fingers to move, tap the ground to order), dust on hits and construction, a snowy bell in the winter calm music.

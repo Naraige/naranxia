@@ -12,16 +12,17 @@ declare -A CMD=(
  [smoke]="python3 tools/run.py tests/smoke.js - 1280 720 300 naranxia.html"
  [det]="python3 tools/run.py tests/det.js"
  [tools]="python3 tests/tools.py"
+ [features]="python3 tools/run.py tests/features.js"
  [mp8]="python3 tests/mp8.py naranxia_readable.html 40"
  [mpk]="python3 tests/mpk.py naranxia_readable.html 40"
  [mp_resync]="python3 tests/mp_resync.py naranxia_readable.html 220"
  [mp_convoy]="python3 tests/mp_convoy.py naranxia_readable.html 150"
  [save]="python3 tools/run.py tests/save.js"
 )
-QUICK="smoke det tools mp8 mpk mp_resync mp_convoy"
+QUICK="smoke det tools features mp8 mpk mp_resync mp_convoy"
 # a test passes when its log shows this, and none of: Traceback, EXC, FIRST DIVERGENCE, an ERRS line with errors
 declare -A OK=(
- [smoke]='^ERRS \[\]' [det]='"same":true' [tools]='^RESULT OK' [mp8]='^ERRS \[\] \[\]' [mpk]='^ERRS \[\] \[\]'
+ [smoke]='^ERRS \[\]' [det]='"same":true' [tools]='^RESULT OK' [features]='"ok":true' [mp8]='^ERRS \[\] \[\]' [mpk]='^ERRS \[\] \[\]'
  [mp_resync]='^RESULT OK' [mp_convoy]='^RESULT OK' [save]='"same0":true'
 )
 L=()
