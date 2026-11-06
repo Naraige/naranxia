@@ -1,0 +1,115 @@
+import { snd } from '../audio/sound.js';
+import { REALR } from '../core/random.js';
+import { ach } from './achievements.js';
+import { build } from './construction.js';
+import { HOMEC, LPL, playersState, setTier } from './players.js';
+import {
+  C,
+  CSTONE,
+  CWOOD,
+  POPBASE,
+  POPHOUSE,
+  POPMAX,
+  RN2,
+  ROTT,
+  RPRE,
+  RS,
+  RS2,
+  RT2,
+  SH,
+  T,
+  TRAIN,
+  TW,
+  UPC,
+} from './rules.js';
+import { curB, selectionState } from './selection.js';
+import { sessionState } from './session.js';
+import { repairB } from '../multiplayer/commands.js';
+import { MP } from '../multiplayer/session.js';
+import { puff } from '../rendering/effects.js';
+import { icoPart } from '../rendering/pixel-icons.js';
+import { buildStructMesh, refreshNear } from '../rendering/structures.js';
+import { hudDisplayState } from '../ui/hud-state.js';
+import { occ } from '../world/terrain.js';
+
+export const economyState = {
+  priceT: 0,
+  alertT: 0,
+  farmT: 0,
+};
+
+/* ================= MARKET: sell wood / stone for gold, buy them back; prices move with every trade and drift back ================= */
+export const PBASE={w:1,s:1.3,f:.8},PRICE={w:1,s:1.3,f:.8},TRADEK=new Set(['sellw','sells','buyw','buys','sellf','buyf']);
+
+export const tradeGain=k=>Math.max(1,Math.round(50*PRICE[k]*.8)),tradeCost=k=>Math.max(1,Math.round(50*PRICE[k]*1.25));
+
+export function syncTradeC(){C.sellw={w:50};C.sells={s:50};C.sellf={f:50};C.buyw={g:tradeCost('w')};C.buys={g:tradeCost('s')};C.buyf={g:tradeCost('f')}}
+
+function hasMarket(p){p|=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='market'&&s.prog>=1&&s.hp>0&&(s.pl|0)===p)return true;return false}
+
+export let trade = function trade(k){if(sessionState.over||!TRADEK.has(k))return;if(!hasMarket(playersState.CURPL)){hudDisplayState.msgS='Build a Market to trade';hudDisplayState.msgT=3;snd('err');return}const r=k[k.length-1],nm=r==='w'?'wood':r==='f'?'food':'stone';
+ if(k[0]==='s'){if(sessionState.res[r]<50){hudDisplayState.msgS='You need 50 '+nm+' to sell';hudDisplayState.msgT=2.5;snd('err');return}const g=tradeGain(r);sessionState.res[r]-=50;sessionState.res.g+=g;PRICE[r]=Math.max(.3,PRICE[r]*.95);hudDisplayState.msgS='Sold 50 '+nm+' for '+g+' gold'}
+ else{const c=tradeCost(r);if(sessionState.res.g<c){hudDisplayState.msgS='You need '+c+' gold to buy 50 '+nm;hudDisplayState.msgT=2.5;snd('err');return}sessionState.res.g-=c;sessionState.res[r]+=50;PRICE[r]=Math.min(4,PRICE[r]*1.05);hudDisplayState.msgS='Bought 50 '+nm+' for '+c+' gold'}
+ hudDisplayState.msgT=2.5;snd('coin');syncTradeC()};
+
+export function priceTick(dt){economyState.priceT-=dt;if(economyState.priceT>0)return;economyState.priceT=5;let ch=0;for(const k in PBASE){const d=PBASE[k]-PRICE[k];if(Math.abs(d)>.002){PRICE[k]+=d*.12;ch=1}}if(ch)syncTradeC()}
+
+export function hasAcademy(p){p|=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='academy'&&s.prog>=1&&s.hp>0&&(s.pl|0)===p)return true;return false}
+
+export const popOf=t=>t==='cannon'?2:t==='king'?3:t==='guard'?0:1;
+
+/* the king of player p (one at most) and what the castle offers: the king, or a guard to refill his escort */
+export const royalOf=p=>{p|=0;for(const k of sessionState.units)if(k.t===0&&k.type==='king'&&k.hp>0&&(k.pl|0)===p)return k;return null};
+
+export function royalBtns(){const p=playersState.CURPL|0,K=royalOf(p);if(!K)return sessionState.queue.some(q=>q.type==='king'&&(q.b.pl|0)===p)?[]:['king'];const n=(K.sq?K.sq.length:0)+sessionState.queue.filter(q=>q.type==='guard'&&(q.b.pl|0)===p).length;return n<2?['guard']:[]}
+
+export function popUsed(p){p|=0;let n=0;for(const u of sessionState.units)if(u.t===0&&u.hp>0&&(u.pl|0)===p)n+=popOf(u.type);for(const q of sessionState.queue)if((q.b.pl|0)===p)n+=popOf(q.type);return n}
+
+export function popCap(p){p|=0;let n=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='house'&&s.prog>=1&&s.hp>0&&(s.pl|0)===p)n++;return Math.min(POPMAX,POPBASE+n*POPHOUSE)}
+
+export let train = function train(type){const b=curB();if(b.type==='academy'||b.type==='market'||b.type==='guild')return;if(type==='cannon'&&!RS.done){hudDisplayState.msgS='The cannon needs Stonemasonry';hudDisplayState.msgT=3;snd('err');return}if(!sessionState.over&&popUsed(playersState.CURPL)+popOf(type)>popCap(playersState.CURPL)){hudDisplayState.msgS='Population limit: build houses';hudDisplayState.msgT=3;snd('err');return}if(type==='king'||type==='guard'){if(b.type!=='castle'){hudDisplayState.msgS='The king is summoned at your castle';hudDisplayState.msgT=3;snd('err');return}const p=playersState.CURPL|0,K=royalOf(p);
+  if(type==='king'&&(K||sessionState.queue.some(q=>q.type==='king'&&(q.b.pl|0)===p))){hudDisplayState.msgS='Your kingdom already has a king';hudDisplayState.msgT=3;snd('err');return}
+  if(type==='guard'){if(!K){hudDisplayState.msgS='Royal guards serve King Naraige: summon him first';hudDisplayState.msgT=3;snd('err');return}if((K.sq?K.sq.length:0)+sessionState.queue.filter(q=>q.type==='guard'&&(q.b.pl|0)===p).length>=2){hudDisplayState.msgS='King Naraige already has his 2 royal guards';hudDisplayState.msgT=3;snd('err');return}}}
+ else if(type!=='peasant'&&b.type==='castle'){hudDisplayState.msgS='Units are trained in a Barracks: build one, then click it';hudDisplayState.msgT=3;snd('err');return}if(sessionState.over||sessionState.queue.filter(q=>q.b===b).length>=6)return;if(!ok(C[type])){if((C[type].f||0)>(sessionState.res.f||0)&&playersState.CURPL===LPL()){hudDisplayState.msgS='Not enough food: build farms and put a peasant on each';hudDisplayState.msgT=3;snd('err')}return}pay(C[type]);const tt=TRAIN[type]*(b.type==='castle'?1:.65)*(RS2.done.drill?.75:1);sessionState.queue.push({type,left:tt,tot:tt,b})};
+
+export const ok=c=>Object.entries(c).every(([k,v])=>sessionState.res[k]>=v),pay=c=>Object.entries(c).forEach(([k,v])=>sessionState.res[k]-=v);
+export const ALERTS=[];
+
+export let startResearch2 = function startResearch2(k){if(sessionState.over||RS2.done[k])return;if(RS2.on){hudDisplayState.msgS='One research at a time: '+RN2[RS2.on]+' is in progress';hudDisplayState.msgT=3;snd('err');return}if(!hasAcademy(playersState.CURPL)){hudDisplayState.msgS='Build an Academy to research';hudDisplayState.msgT=3;snd('err');return}if(RPRE[k]&&!(RPRE[k]==='masonry'?RS.done:RS2.done[RPRE[k]])){hudDisplayState.msgS=RN2[k]+' needs '+(RPRE[k]==='masonry'?'Stonemasonry':RN2[RPRE[k]]);hudDisplayState.msgT=3;snd('err');return}if(!ok(C[k])){hudDisplayState.msgS=RN2[k]+' is too expensive';hudDisplayState.msgT=3;snd('err');return}pay(C[k]);RS2.on=k;RS2.t=0;snd('build');hudDisplayState.msgS='Researching '+RN2[k]+'...';hudDisplayState.msgT=3};
+
+function farmCount(p){let n=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='farm'&&s.prog>=1&&(p===undefined||(s.pl|0)===p))n++;return n}
+
+export function extraSim(dt){{for(const s of sessionState.structs)if(s.rally&&s.t===0&&(s.pl|0)===LPL()&&(s.type!=='barracks'||s===selectionState.selB)&&REALR()<dt*.9)puff(s.rally.x,s.rally.y,'#7dffa0',2,26)}if(economyState.alertT>0)economyState.alertT-=dt;for(let i=ALERTS.length-1;i>=0;i--){ALERTS[i].t-=dt;if(ALERTS[i].t<=0)ALERTS.splice(i,1)}
+ if(RS2.on){RS2.t+=dt;if(RS2.t>=RT2[RS2.on]){const k=RS2.on;RS2.done[k]=true;if(k==='plate'||k==='mail')setTimeout(()=>{try{icoPart('units')}catch(e){}},0);ach('res');RS2.on=null;snd('fanfare');sessionState.bannerT=4;sessionState.bannerS=RN2[k].toUpperCase();sessionState.bannerS2=({iron:'Your soldiers hit 25% harder',plate:'Your side takes 22% less damage',drill:'Units train 25% faster',steel:'Your soldiers hit 20% harder again',mail:'Your side takes 15% less damage again',tools:'Peasants gather 33% faster',harvest:'Farms yield 50% more food',fletch:'Archers and towers hit 25-40% harder',fire:'Archers set zombies on fire',bastion:'Buildings have 40% more strength',oil:'Walls, gates and towers scald zombies next to them',era:'Iron age: your units hit 10% harder, buildings slowly mend'})[k]}else{hudDisplayState.msgS='Researching '+RN2[RS2.on]+' '+Math.floor(RS2.t/RT2[RS2.on]*100)+'%';hudDisplayState.msgT=1}}
+}
+
+export let startResearch = function startResearch(){if(RS.done||RS.on||sessionState.over)return;if(!hasAcademy(playersState.CURPL)){hudDisplayState.msgS='Build an Academy to research';hudDisplayState.msgT=3;snd('err');return}if(!ok(C.upgrade)){hudDisplayState.msgS='Stonemasonry needs 200 stone and 100 wood';hudDisplayState.msgT=3;snd('err');return}pay(C.upgrade);RS.on=true;RS.t=0;snd('build');hudDisplayState.msgS='Researching Stonemasonry...';hudDisplayState.msgT=3};
+
+export function finishResearch(){ach('res');RS.done=true;RS.on=false;Object.assign(C,playersState.BTIER?CSTONE:CWOOD);setTimeout(()=>{try{icoPart('tier')}catch(e){}},0);snd('horn');sessionState.bannerT=5;sessionState.bannerS='STONE AGE';sessionState.bannerS2='Select a building and press Upgrade, or use the Stone upgrade tool'}
+
+export function doUpgrade(tx,ty){const o=occ.get(ty*TW+tx);if(!o||o.t!==0||o.tier!==0||o.prog<1)return;if(!RS.done){hudDisplayState.msgS='Stone upgrades need Stonemasonry (Academy)';hudDisplayState.msgT=3;snd('err');return}const c=UPC[o.type];if(!c)return;if(!ok(c)){hudDisplayState.msgS='Not enough resources to upgrade';hudDisplayState.msgT=2;snd('err');return}pay(c);const r=o.hp/o.max;o.max=SH[o.type];o.hp=Math.round(o.max*r);o.tier=1;buildStructMesh(o);refreshNear(o);puff(o.x,o.y,'#d9d9d9',12,80);snd('build',o.x,o.y)}
+
+export function buy(k){if(sessionState.over)return;if(k==='demolish'&&selectionState.selB&&sessionState.structs.includes(selectionState.selB)&&selectionState.selB!==HOMEC()&&selectionState.selB.type!=='castle'){build('demolish',selectionState.selB.tx,selectionState.selB.ty);return}if(k==='repair'){const s=selectionState.selB&&sessionState.structs.includes(selectionState.selB)?selectionState.selB:HOMEC();if(s)repairB(s.sid);return}if(TRADEK.has(k)){trade(k);return}if(k==='rotate'){if(selectionState.selB&&selectionState.selB.t===0&&ROTT.has(selectionState.selB.type))build('rotate',selectionState.selB.tx,selectionState.selB.ty);return}if(k==='tier'){if(!RS.done){hudDisplayState.msgS='Stone needs Stonemasonry';hudDisplayState.msgT=3;snd('err');return}setTier(!playersState.BTIER);hudDisplayState.msgS='New buildings: '+(playersState.BTIER?'stone':'wood');hudDisplayState.msgT=2;snd('click');return}if(k==='upgrade'){startResearch();return}if(k in RT2){startResearch2(k);return}if((k==='ballista'||k==='trebuchet')&&!RS.done){hudDisplayState.msgS='Siege weapons need Stonemasonry';hudDisplayState.msgT=3;snd('err');return}if(k in T){sessionState.mode=null;snd('click');train(k)}else{sessionState.units.forEach(u=>u.sel=false);sessionState.mode=sessionState.mode===k?null:k}}
+
+
+export function army(){sessionState.units.forEach(u=>u.sel=u.t===0&&u.type!=='peasant'&&(!MP.on||(u.pl|0)===playersState.CURPL))}
+
+export function setTrainHandler(handler) {
+  train = handler;
+}
+
+export function setStartResearchHandler(handler) {
+  startResearch = handler;
+}
+
+export function setStartResearch2Handler(handler) {
+  startResearch2 = handler;
+}
+
+export function setTradeHandler(handler) {
+  trade = handler;
+}
+
+export function initializeEconomy() {
+  syncTradeC();
+}

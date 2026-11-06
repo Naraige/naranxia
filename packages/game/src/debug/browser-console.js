@@ -1,0 +1,231 @@
+import { inTerr } from '../ai/kingdoms.js';
+import { bossStomp } from '../ai/wave-boss.js';
+import { RHAS, roleAdj0 } from '../ai/worker-roles.js';
+import { forester, SAPL } from '../ai/workplaces.js';
+import { PUD, SCRT } from '../ai/zombies.js';
+import { dist } from '../core/math.js';
+import { rngf } from '../core/random.js';
+import { GVER } from '../core/version.js';
+import { diagnosticsState, ERRLOG } from './diagnostics.js';
+import { bugReport, devAct, devToggle } from './tools.js';
+import { ach, ACH } from '../gameplay/achievements.js';
+import { build, constructionState, setBuildHandler, tilesFor, valid } from '../gameplay/construction.js';
+import { buy, PRICE, setTrainHandler, train } from '../gameplay/economy.js';
+import { mkU, spawnPos } from '../gameplay/entities.js';
+import { formationsState, order, setOrderHandler } from '../gameplay/formations.js';
+import { kingOf, kingSkill0, kingTick, kskLeft } from '../gameplay/king-skills.js';
+import { setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
+import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
+import { reset } from '../gameplay/reset.js';
+import { LH, RS, RS2, RT2, rulesState, T, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
+import { selectionState } from '../gameplay/selection.js';
+import { sessionState } from '../gameplay/session.js';
+import { simulationState } from '../gameplay/simulation.js';
+import { gstBest, sbRec, setUpdateHandler, statisticsState, update } from '../gameplay/statistics.js';
+import { SW } from '../gameplay/swarm.js';
+import { callWave, restT, setCallWaveHandler, wave, wavesState } from '../gameplay/waves.js';
+import { _N, mpExec, mpPush, roleAdj, sendConvoy, setMpExecHandler } from '../multiplayer/commands.js';
+import { convoyStep, setConvoyStepHandler } from '../multiplayer/convoys.js';
+import { mpStart, mpWorldSync } from '../multiplayer/lobby.js';
+import { mpHash, mpMsg, setMpMsgHandler } from '../multiplayer/lockstep.js';
+import { objTick, SPK } from '../multiplayer/objectives.js';
+import { MP } from '../multiplayer/session.js';
+import { svApply } from '../persistence/restore.js';
+import { SAVA, svAssign, svPack } from '../persistence/save-format.js';
+import { FOWU } from '../rendering/fog.js';
+import { render3D, setRender3DHandler } from '../rendering/frame.js';
+import { matV } from '../rendering/materials.js';
+import { icoUnit } from '../rendering/model-icons.js';
+import { shieldGeo } from '../rendering/models/heraldry.js';
+import { sGeo } from '../rendering/models/structures.js';
+import { toolGeos } from '../rendering/models/unit-parts.js';
+import { ZNV } from '../rendering/models/zombies.js';
+import { rs } from '../rendering/resolution.js';
+import { CAM, renderer, scene } from '../rendering/scene.js';
+import { buildStructMesh, setBuildStructMeshHandler } from '../rendering/structures.js';
+import { unitG } from '../rendering/terrain.js';
+import { animUnit } from '../rendering/unit-animation.js';
+import { matUI } from '../rendering/unit-instances.js';
+import { seasonIdx, weatherTick, WX, wxKind, wxLabel } from '../rendering/weather.js';
+import { cv } from '../ui/canvases.js';
+import { convoyPanelState, CVA } from '../ui/convoy-panel.js';
+import { hudDisplayState } from '../ui/hud-state.js';
+import {
+  buildPreview,
+  confirmPick,
+  randomSite,
+  setConfirmPickHandler,
+  sitePickerState,
+} from '../ui/site-picker.js';
+import { gOK } from '../world/routes.js';
+import {
+  HT,
+  occ,
+  pth,
+  rollWorld,
+  setRollWorldHandler,
+  stairs,
+  starterTiles,
+  ter,
+  terrainState,
+  TFL,
+} from '../world/terrain.js';
+import { freeTile } from '../world/traversal.js';
+
+// Browser automation and the in-repo preview tools evaluate these names in the page.
+// Gameplay code uses imports and never reads through this console interface.
+export function installBrowserConsole() {
+  const bindings = {
+    ACH: { get: () => ACH },
+    CAM: { get: () => CAM },
+    CS: { get: () => sessionState.CS, set: value => { sessionState.CS = value; } },
+    CS2: { get: () => sessionState.CS2, set: value => { sessionState.CS2 = value; } },
+    CURPL: { get: () => playersState.CURPL, set: value => { playersState.CURPL = value; } },
+    CVA: { get: () => CVA },
+    CX: { get: () => terrainState.CX, set: value => { terrainState.CX = value; } },
+    CY: { get: () => terrainState.CY, set: value => { terrainState.CY = value; } },
+    DEVU: { get: () => diagnosticsState.DEVU, set: value => { diagnosticsState.DEVU = value; } },
+    ERRLOG: { get: () => ERRLOG },
+    FGS: { get: () => formationsState.FGS, set: value => { formationsState.FGS = value; } },
+    FORCEF: { get: () => formationsState.FORCEF, set: value => { formationsState.FORCEF = value; } },
+    FOWU: { get: () => FOWU },
+    GPR: { get: () => terrainState.GPR, set: value => { terrainState.GPR = value; } },
+    GST: { get: () => rulesState.GST, set: value => { rulesState.GST = value; } },
+    GVER: { get: () => GVER },
+    HT: { get: () => HT },
+    LH: { get: () => LH },
+    LPL: { get: () => LPL },
+    MP: { get: () => MP },
+    OBJ: { get: () => statisticsState.OBJ, set: value => { statisticsState.OBJ = value; } },
+    PRICE: { get: () => PRICE },
+    PUD: { get: () => PUD },
+    RESP: { get: () => playersState.RESP, set: value => { playersState.RESP = value; } },
+    RHAS: { get: () => RHAS },
+    ROUTES: { get: () => terrainState.ROUTES, set: value => { terrainState.ROUTES = value; } },
+    RS: { get: () => RS },
+    RS2: { get: () => RS2 },
+    RT2: { get: () => RT2 },
+    SAPL: { get: () => SAPL },
+    SAVA: { get: () => SAVA },
+    SBR: { get: () => statisticsState.SBR, set: value => { statisticsState.SBR = value; } },
+    SCRT: { get: () => SCRT },
+    SEED: { get: () => terrainState.SEED, set: value => { terrainState.SEED = value; } },
+    SITE2: { get: () => sessionState.SITE2, set: value => { sessionState.SITE2 = value; } },
+    SPK: { get: () => SPK },
+    SW: { get: () => SW },
+    T: { get: () => T },
+    TFL: { get: () => TFL },
+    TRAIN: { get: () => TRAIN },
+    TS: { get: () => TS },
+    TW: { get: () => TW },
+    UPC: { get: () => UPC },
+    WX: { get: () => WX },
+    ZNV: { get: () => ZNV },
+    _N: { get: () => _N },
+    ach: { get: () => ach },
+    animUnit: { get: () => animUnit },
+    bossStomp: { get: () => bossStomp },
+    bugReport: { get: () => bugReport },
+    build: { get: () => build, set: setBuildHandler },
+    buildPreview: { get: () => buildPreview },
+    buildStructMesh: { get: () => buildStructMesh, set: setBuildStructMeshHandler },
+    buy: { get: () => buy },
+    callWave: { get: () => callWave, set: setCallWaveHandler },
+    confirmPick: { get: () => confirmPick, set: setConfirmPickHandler },
+    convoyOpen: { get: () => convoyPanelState.convoyOpen, set: value => { convoyPanelState.convoyOpen = value; } },
+    convoyStep: { get: () => convoyStep, set: setConvoyStepHandler },
+    cv: { get: () => cv },
+    devAct: { get: () => devAct },
+    devOpen: { get: () => diagnosticsState.devOpen, set: value => { diagnosticsState.devOpen = value; } },
+    devToggle: { get: () => devToggle },
+    dist: { get: () => dist },
+    forester: { get: () => forester },
+    formType: { get: () => constructionState.formType, set: value => { constructionState.formType = value; } },
+    freeTile: { get: () => freeTile },
+    gOK: { get: () => gOK },
+    gstBest: { get: () => gstBest },
+    hordeOn: { get: () => wavesState.hordeOn, set: value => { wavesState.hordeOn = value; } },
+    hordeT: { get: () => wavesState.hordeT, set: value => { wavesState.hordeT = value; } },
+    icoUnit: { get: () => icoUnit },
+    inGame: { get: () => sessionState.inGame, set: value => { sessionState.inGame = value; } },
+    inTerr: { get: () => inTerr },
+    kills: { get: () => sessionState.kills, set: value => { sessionState.kills = value; } },
+    kingOf: { get: () => kingOf },
+    kingSkill0: { get: () => kingSkill0 },
+    kingTick: { get: () => kingTick },
+    kskLeft: { get: () => kskLeft },
+    matUI: { get: () => matUI },
+    matV: { get: () => matV },
+    mkU: { get: () => mkU },
+    mode: { get: () => sessionState.mode, set: value => { sessionState.mode = value; } },
+    mpExec: { get: () => mpExec, set: setMpExecHandler },
+    mpHash: { get: () => mpHash },
+    mpMsg: { get: () => mpMsg, set: setMpMsgHandler },
+    mpPush: { get: () => mpPush },
+    mpStart: { get: () => mpStart },
+    mpWorldSync: { get: () => mpWorldSync },
+    msgS: { get: () => hudDisplayState.msgS, set: value => { hudDisplayState.msgS = value; } },
+    nextL: { get: () => sessionState.nextL, set: value => { sessionState.nextL = value; } },
+    nightLv: { get: () => wavesState.nightLv, set: value => { wavesState.nightLv = value; } },
+    objTick: { get: () => objTick },
+    occ: { get: () => occ },
+    order: { get: () => order, set: setOrderHandler },
+    over: { get: () => sessionState.over, set: value => { sessionState.over = value; } },
+    paused: { get: () => sessionState.paused, set: value => { sessionState.paused = value; } },
+    pickPos: { get: () => sitePickerState.pickPos, set: value => { sitePickerState.pickPos = value; } },
+    pth: { get: () => pth },
+    pvKey: { get: () => sitePickerState.pvKey, set: value => { sitePickerState.pvKey = value; } },
+    queue: { get: () => sessionState.queue, set: value => { sessionState.queue = value; } },
+    randomSite: { get: () => randomSite },
+    render3D: { get: () => render3D, set: setRender3DHandler },
+    renderer: { get: () => renderer },
+    res: { get: () => sessionState.res, set: value => { sessionState.res = value; } },
+    reset: { get: () => reset },
+    restT: { get: () => restT },
+    rngf: { get: () => rngf },
+    roleAdj: { get: () => roleAdj },
+    roleAdj0: { get: () => roleAdj0 },
+    rollWorld: { get: () => rollWorld, set: setRollWorldHandler },
+    rs: { get: () => rs },
+    sGeo: { get: () => sGeo },
+    sbRec: { get: () => sbRec },
+    scene: { get: () => scene },
+    seasonIdx: { get: () => seasonIdx },
+    selB: { get: () => selectionState.selB, set: value => { selectionState.selB = value; } },
+    sendConvoy: { get: () => sendConvoy },
+    setPl: { get: () => setPl },
+    setTier: { get: () => setTier },
+    shelOn: { get: () => simulationState.shelOn, set: value => { simulationState.shelOn = value; } },
+    shieldGeo: { get: () => shieldGeo },
+    spawnPos: { get: () => spawnPos },
+    spd: { get: () => sessionState.spd, set: value => { sessionState.spd = value; } },
+    stairs: { get: () => stairs },
+    startGame: { get: () => startGame, set: setStartGameHandler },
+    started: { get: () => sessionState.started, set: value => { sessionState.started = value; } },
+    starterTiles: { get: () => starterTiles },
+    structs: { get: () => sessionState.structs, set: value => { sessionState.structs = value; } },
+    svApply: { get: () => svApply },
+    svAssign: { get: () => svAssign },
+    svPack: { get: () => svPack },
+    ter: { get: () => ter },
+    tilesFor: { get: () => tilesFor },
+    time: { get: () => sessionState.time, set: value => { sessionState.time = value; } },
+    toolGeos: { get: () => toolGeos },
+    train: { get: () => train, set: setTrainHandler },
+    unitG: { get: () => unitG },
+    units: { get: () => sessionState.units, set: value => { sessionState.units = value; } },
+    update: { get: () => update, set: setUpdateHandler },
+    valid: { get: () => valid },
+    ver: { get: () => sessionState.ver, set: value => { sessionState.ver = value; } },
+    wave: { get: () => wave },
+    waveN: { get: () => sessionState.waveN, set: value => { sessionState.waveN = value; } },
+    waveOn: { get: () => wavesState.waveOn, set: value => { wavesState.waveOn = value; } },
+    waveST: { get: () => wavesState.waveST, set: value => { wavesState.waveST = value; } },
+    waveT: { get: () => sessionState.waveT, set: value => { sessionState.waveT = value; } },
+    weatherTick: { get: () => weatherTick },
+    wxKind: { get: () => wxKind },
+    wxLabel: { get: () => wxLabel },
+  };
+  for (const descriptor of Object.values(bindings)) descriptor.configurable = true;
+  Object.defineProperties(globalThis, bindings);
+}

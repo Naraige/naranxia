@@ -1,4 +1,5 @@
 import json,time,sys
+from pathlib import Path
 from playwright.sync_api import sync_playwright
 import os
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)));sys.path.insert(0,os.path.join(ROOT,'tools'))
@@ -6,7 +7,7 @@ import fontroute
 html=sys.argv[1] if len(sys.argv)>1 else 'naranxia_readable.html'
 DUR=float(sys.argv[2]) if len(sys.argv)>2 else 70
 RENDER=len(sys.argv)>3 and sys.argv[3]=='render'
-INIT="""()=>{window.__out=[];MP.dc={readyState:'open',send:s=>window.__out.push(s)};
+INIT="""()=>{'use strict';window.__out=[];MP.dc={readyState:'open',send:s=>window.__out.push(s)};
  if(!window.__RENDER)render3D=function(){};else renderer.render=function(){};
  const _e=mpExec;mpExec=function(c,m){if(c.k==='zz'){const cs=c.p?CS2:CS;for(let i=0;i<c.n;i++){const a=i/c.n*6.283,f=freeTile(Math.round(cs.tx+Math.cos(a)*c.r),Math.round(cs.ty+Math.sin(a)*c.r));if(f)units.push(mkU(1,i%5===4?'runner':'zombie',(f[0]+.5)*TS,(f[1]+.5)*TS))}return}return _e(c,m)};
  const _sg=startGame;startGame=function(){_sg();for(const R of RESP){R.g=99999;R.w=99999;R.s=99999}};
@@ -68,7 +69,7 @@ with sync_playwright() as p:
         pg=br.new_page(viewport={'width':480,'height':320});errs=[]
         pg.on('pageerror',lambda e,errs=errs:errs.append(str(e)[:300]))
         fontroute.setup(pg);pg.route('**/three.min.js',lambda r:r.fulfill(path=os.path.join(ROOT,'node_modules/three/build/three.min.js'),content_type='application/javascript'))
-        pg.goto('file://'+os.path.join(ROOT,'dist',html),timeout=180000);pg.wait_for_timeout(2500)
+        pg.goto((Path(ROOT)/'dist'/html).resolve().as_uri(),timeout=180000);pg.wait_for_timeout(2500)
         if RENDER:pg.evaluate('()=>{window.__RENDER=1}')
         P('loaded',i,pg.evaluate(INIT));pages.append((pg,errs))
     A,ea=pages[0];B,eb=pages[1]

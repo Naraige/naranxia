@@ -1,24 +1,27 @@
-# Publishes a GitHub Release every time game/VERSION changes on main, after the tests pass (test.yml).
-# The desktop launcher downloads the .html asset of the latest release at start-up.
+# Builds, tests, and publishes a GitHub release when game/VERSION changes on main.
 name: Publish game update
 on:
   push:
     branches: [main]
-    paths: [game/VERSION, game/naranxia.html]
-  workflow_dispatch:   # run it again by hand (Actions tab) if a release was blocked
+    paths: [game/VERSION]
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
   test:
-    # the release only goes out when the headless tests pass on this commit
     uses: ./.github/workflows/test.yml
     with:
-      ship: true
+      full: true
   release:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download tested release asset
+        uses: actions/download-artifact@v4
+        with:
+          name: browser-release
+          path: dist
       - name: Create the release
         id: rel
         env:
@@ -26,16 +29,15 @@ jobs:
         run: |
           V=$(tr -d '[:space:]' < game/VERSION)
           if gh release view "$V" >/dev/null 2>&1; then
-            gh release upload "$V" game/naranxia.html --clobber
+            gh release upload "$V" dist/naranxia.html --clobber
           else
             NOTES="Naranxia $V"; [ -f game/NOTES.md ] && NOTES="$(cat game/NOTES.md)"
-            gh release create "$V" game/naranxia.html --title "Naranxia $V" --notes "$NOTES"
+            gh release create "$V" dist/naranxia.html --title "Naranxia $V" --notes "$NOTES"
             echo "new=1" >> "$GITHUB_OUTPUT"
           fi
       - name: Announce on Discord
         env:
           HOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        # only for a new release: a re-run must not post the same version twice
         if: env.HOOK != '' && steps.rel.outputs.new == '1'
         run: |
           V=$(tr -d '[:space:]' < game/VERSION)

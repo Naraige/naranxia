@@ -1,10 +1,16 @@
 # Builds the desktop installers (Windows setup, Mac Apple Silicon + Intel, Linux) and attaches them to the latest release.
-# Runs when the launcher or its icons change, or by hand.
+# Rebuilds the desktop installers when packaging inputs change, or by hand.
 name: Build installers
 on:
   push:
     branches: [main]
-    paths: [app/**]
+    paths:
+      - apps/desktop/**
+      - .github/workflows/installers.yml
+      - tools/build.mjs
+      - tools/build_dist.mjs
+      - package.json
+      - package-lock.json
   workflow_dispatch:
 permissions:
   contents: write
@@ -17,12 +23,14 @@ jobs:
         with: { node-version: 20 }
       - name: Tools
         run: sudo apt-get update -qq && sudo apt-get install -y -qq nsis zip
-      - name: Package
-        working-directory: app
+      - name: Install workspace dependencies
         run: |
           npm ci --no-audit --no-fund
-          mkdir -p src/game && cp ../game/naranxia.html src/game/naranxia.html
-          node pack.js linux:x64,win32:x64,darwin:x64,darwin:arm64
+      - name: Package Electron apps from source
+        run: npm run package:desktop -- linux:x64,win32:x64,darwin:x64,darwin:arm64
+      - name: Build installer archives
+        working-directory: apps/desktop
+        run: |
           cp linux-install.sh dist/Naranxia-linux-x64/install.sh && chmod +x dist/Naranxia-linux-x64/install.sh
           mkdir -p out && makensis -V2 installer.nsi
           (cd dist && tar -czf ../out/Naranxia-Linux-x64.tar.gz Naranxia-linux-x64)
@@ -34,4 +42,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           T=$(gh release view --json tagName -q .tagName)
-          gh release upload "$T" app/out/* --clobber
+          gh release upload "$T" apps/desktop/out/* --clobber

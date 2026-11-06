@@ -1,0 +1,14 @@
+{
+  "name": "@naranxia/desktop",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Electron launcher and installers for Naranxia",
+  "scripts": {
+    "build": "node pack.js"
+  },
+  "devDependencies": {
+    "@electron/packager": "18.4.4",
+    "electron": "33.4.11",
+    "three": "0.128.0"
+  }
+}

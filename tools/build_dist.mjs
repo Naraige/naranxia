@@ -3,8 +3,10 @@
 import fs from 'fs';import zlib from 'zlib';import {minify} from 'terser';import zopfli from '@gfx/zopfli';
 const html=fs.readFileSync('dist/naranxia_readable.html','utf8');
 const open='<script>\n',i0=html.indexOf(open),i1=html.lastIndexOf('</script>');
+if(i0<0||i1<i0)throw new Error('readable build is missing its inline game script');
 const head=html.slice(0,i0),code=html.slice(i0+open.length,i1),tail=html.slice(i1);
-const V=(code.match(/const GVER='(v\d+)'/)||[])[1]||'v?';
+const V=fs.readFileSync('game/VERSION','utf8').trim();
+if(!/^v\d+$/.test(V))throw new Error(`Invalid game/VERSION: ${V}`);
 const r=await minify(code,{ecma:2020,toplevel:false,
  compress:{passes:2,keep_fargs:true,keep_infinity:true,pure_getters:false,unsafe:false,unsafe_math:false,typeofs:false,hoist_funs:false,reduce_funcs:false,sequences:true,drop_console:false},
  mangle:{toplevel:false,keep_fnames:false},format:{comments:false,ascii_only:false,semicolons:true}});

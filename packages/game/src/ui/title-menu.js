@@ -1,0 +1,76 @@
+import { AC, sndOn, toggleSound } from '../audio/sound.js';
+import { GVER } from '../core/version.js';
+import { bugReport } from '../debug/tools.js';
+import { newGame, quitGame, startGame } from '../gameplay/lifecycle.js';
+import { sessionState } from '../gameplay/session.js';
+import { drawLang, L, LANG, langBtn, LANGS, languageState, T_, TC, TTL, tw } from '../i18n/language.js';
+import { mpOpen } from '../multiplayer/lobby.js';
+import { MP } from '../multiplayer/session.js';
+import { bannerPattern, drawEmblemR, EMB, gemSwatch, saveTheme, shieldTile } from '../rendering/kingdom-banner.js';
+import { BANNER, retheme } from '../rendering/structures.js';
+import { TFADE } from '../rendering/title-scene.js';
+import { uiBtn } from './build-menu.js';
+import { canvasesState } from './canvases.js';
+import { arcDia, BTN, BTNH, dirtBack, frame, gold, GRN, GRNH, PAN, rr } from './drawing.js';
+import { hudState, U } from './hud.js';
+import { dIc, IC } from './icons.js';
+import { KNAMES, PAL, THEME } from './kingdom-theme.js';
+import { pill } from './minimap.js';
+import { drawSaves, saveMenuState } from './save-menu.js';
+import { drawSettings, nmI, settingsState } from './settings.js';
+import { openPicker } from './site-picker.js';
+import { tutStart } from './tutorial.js';
+import { FFT } from './typography.js';
+
+function menuCx(UW,pw){return UW/2}
+
+
+function titleBack(UW,UH,cx,pw){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH);g.addColorStop(0,'rgba(6,10,22,.08)');g.addColorStop(.55,'rgba(6,10,22,.12)');g.addColorStop(1,'rgba(6,10,22,.6)');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillRect(0,0,UW,UH);
+ {const rg=canvasesState.ctx.createRadialGradient(cx,UH*.4,20,cx,UH*.4,Math.max(UW,UH)*.55);rg.addColorStop(0,'rgba(8,6,16,.5)');rg.addColorStop(1,'rgba(8,6,16,0)');canvasesState.ctx.fillStyle=rg;canvasesState.ctx.fillRect(0,0,UW,UH)}}
+
+export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];const pw=Math.min(300,UW-16),cx=menuCx(UW,pw),small=UH<330;if(!sessionState.inGame&&TFADE>.003&&!window.__cam){canvasesState.ctx.fillStyle='rgba(4,3,8,'+(TFADE*.92).toFixed(3)+')';canvasesState.ctx.fillRect(0,0,UW,UH)}titleBack(UW,UH,cx,pw);
+ if(settingsState.settingsOpen){dirtBack(UW,UH);drawSettings(UW,UH,cx);return}
+  if(saveMenuState.saveOpen){dirtBack(UW,UH);drawSaves(UW,UH,cx);return}
+  if(languageState.langOpen){dirtBack(UW,UH);drawLang(UW,UH,cx);return}
+ if(settingsState.setupOpen){dirtBack(UW,UH);drawSetup(UW,UH,cx,Math.min(UW-16,380),small);return}
+ let y=Math.max(8,UH*(small?.05:.1));uiBtn(UW-30,6,24,20,BTN,BTNH,()=>{settingsState.settingsOpen=true},['Settings'],(x,yy,w,h)=>dIc(IC.gear,x+5,yy+3,14));
+ if(sessionState.inGame){canvasesState.ctx.fillStyle='rgba(0,0,0,.45)';canvasesState.ctx.fillRect(0,0,UW,UH);y=Math.max(12,UH*.16);TTL('Game Menu',cx,y,1.75,'center');y+=34}else{
+ const gw=Math.min(UW*.8,440),cs=Math.max(4,Math.floor(gw/47)),lw=cs*47,lx=Math.round(cx-lw/2);mcLogo('NARANXIA',lx,Math.round(y),cs);y+=cs*5+cs*1.1;
+ {const sp=L(MCSPL[Math.floor(sessionState.clockT/7)%MCSPL.length]),a=.7+.3*Math.sin(sessionState.clockT*2.3),S=Math.round(Math.max(9,Math.min(cs*1.75,15)));canvasesState.ctx.save();canvasesState.ctx.textAlign='center';canvasesState.ctx.textBaseline='top';canvasesState.ctx.font='600 '+S+'px '+FFT;
+  const tw2=canvasesState.ctx.measureText(sp).width;canvasesState.ctx.fillStyle='rgba(4,3,8,.75)';canvasesState.ctx.fillText(sp,cx+1,y+1.5);canvasesState.ctx.shadowColor='rgba(60,190,255,'+(.85*a).toFixed(3)+')';canvasesState.ctx.shadowBlur=Math.max(4,cs*1.5);canvasesState.ctx.fillStyle='#c8f3ff';canvasesState.ctx.fillText(sp,cx,y);canvasesState.ctx.shadowBlur=0;canvasesState.ctx.shadowColor='transparent';
+  const ly=Math.round(y+S*.55),lg=Math.min(60,cs*7);for(const sd of[-1,1]){const x0=cx+sd*(tw2/2+8),gr=canvasesState.ctx.createLinearGradient(x0,0,x0+sd*lg,0);gr.addColorStop(0,'rgba(214,176,96,.9)');gr.addColorStop(1,'rgba(214,176,96,0)');canvasesState.ctx.fillStyle=gr;canvasesState.ctx.fillRect(Math.min(x0,x0+sd*lg),ly,lg,1);arcDia(x0,ly+.5,2,'#d8b060')}
+  canvasesState.ctx.restore();y+=S+Math.round(small?6:cs*1.3)}
+ }const bw=Math.min(UW-24,Math.max(200,Math.min(300,UW*.5))),bh=small?22:26,gp=small?5:9,bx=Math.round(cx-bw/2);
+ const mb=(lab,fn)=>{pill(bx,y,bw,bh,lab,BTN,BTNH,fn,null,1.15);y+=bh+gp};
+ mb(sessionState.inGame?'Back to Game':'Singleplayer',sessionState.inGame?startGame:()=>{settingsState.setupOpen=true});if(sessionState.inGame&&!MP.on)mb('Save / Load',()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null});else if(!sessionState.inGame)mb('Load game',()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null});if(sessionState.inGame)mb('New game',newGame);if(sessionState.inGame)mb('Quit game',quitGame);if(sessionState.inGame&&!MP.on)mb('Tutorial',()=>{tutStart(true);startGame()});if(sessionState.inGame)mb('Report a bug [F8]',bugReport);mb('Multiplayer (Co-op)',mpOpen);if(!sessionState.inGame&&window.NARX&&NARX.desktop)mb('Exit to desktop',()=>window.close());
+ {const hw=Math.round((bw-gp)/2);pill(bx,y,hw,bh,'Options',BTN,BTNH,()=>{settingsState.settingsOpen=true},null,1.15);pill(bx+hw+gp,y,bw-hw-gp,bh,sndOn?'Sound: on':'Sound: off',BTN,BTNH,()=>{toggleSound()},null,1.15);y+=bh+gp}
+ if(sessionState.best.w>0){TC('Best: wave '+sessionState.best.w+'  -  '+sessionState.best.k+' zombies slain',cx,y+2,'#ffff55',.9);y+=16}
+ const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);T_('Naranxia',6,UH-12,'#c8c8c8',.75);{const lw=Math.max(96,tw(LANGS[LANG][0],1)+40);langBtn(6,UH-42,lw,22,LANG,()=>{languageState.langOpen=true},false)}}
+
+const MCSPL=['Survive the night!','Also try Co-op!','Hold the line!','100% blocky!','Mind the swarm!','Build towers!','Zombies hate walls!','Protect the castle!','Now with keeps!','Gold! Wood! Stone!','100x the swarm!','Ten thousand zombies!','Red eyes in the dark!'];
+
+
+function mcLogo(txt,x0,y0,cs){const lw=cs*47,hh=cs*5;canvasesState.ctx.save();canvasesState.ctx.textBaseline='alphabetic';canvasesState.ctx.textAlign='center';
+ let S=100;canvasesState.ctx.font='700 '+S+'px '+FFT;const w100=canvasesState.ctx.measureText(txt).width||1;S=Math.min(lw/w100*100,hh/.72);canvasesState.ctx.font='700 '+Math.round(S)+'px '+FFT;
+ const cx=x0+lw/2,by=y0+hh;canvasesState.ctx.lineJoin='round';
+ canvasesState.ctx.shadowColor='rgba(80,190,255,.6)';canvasesState.ctx.shadowBlur=cs*2.2;canvasesState.ctx.fillStyle='#0b0810';canvasesState.ctx.fillText(txt,cx,by);canvasesState.ctx.shadowBlur=0;canvasesState.ctx.shadowColor='transparent';
+ canvasesState.ctx.lineWidth=Math.max(2,cs*.7);canvasesState.ctx.strokeStyle='#0b0810';canvasesState.ctx.strokeText(txt,cx,by+cs*.35);canvasesState.ctx.strokeText(txt,cx,by);
+ const g=canvasesState.ctx.createLinearGradient(0,by-S*.72,0,by);g.addColorStop(0,'#fff3c8');g.addColorStop(.45,'#f1c55a');g.addColorStop(.55,'#d79a32');g.addColorStop(1,'#8a5a18');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillText(txt,cx,by);
+ canvasesState.ctx.lineWidth=Math.max(1,cs*.18);canvasesState.ctx.strokeStyle='rgba(255,246,214,.55)';canvasesState.ctx.strokeText(txt,cx,by-cs*.1);
+ {const sw=((sessionState.clockT*.16)%1.7)-.3;if(sw>-.25&&sw<1.25){const bx=x0+sw*lw,w2=cs*2.2;canvasesState.ctx.save();canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(bx-w2+cs*3,y0-cs);canvasesState.ctx.lineTo(bx+w2+cs*3,y0-cs);canvasesState.ctx.lineTo(bx+w2-cs*3,by+cs);canvasesState.ctx.lineTo(bx-w2-cs*3,by+cs);canvasesState.ctx.closePath();canvasesState.ctx.clip();canvasesState.ctx.globalAlpha=.6;canvasesState.ctx.fillStyle='#fffbea';canvasesState.ctx.fillText(txt,cx,by);canvasesState.ctx.restore()}}
+ canvasesState.ctx.restore()}
+
+function drawSetup(UW,UH,cx,pw,small){let y=Math.max(6,UH*(small?.03:.06));TTL('New kingdom',cx,y,1.65,'center');y+=22;
+ const eh=small?86:138;frame(cx-pw/2,y,pw,eh,PAN,6);const bnx=cx-pw/2+10,bnh=eh-14,bnw=bnh*2/3;canvasesState.ctx.imageSmoothingEnabled=true;canvasesState.ctx.drawImage(BANNER,bnx,y+7,bnw,bnh);
+ const ex=bnx+bnw+10,ew=cx+pw/2-10-ex;T_('Your kingdom',ex,y+5,'#c4a37a',.8);
+ const fy=y+15;settingsState.nameBox={x:ex,y:fy,w:ew-24,h:15};uiBtn(ex+ew-22,fy,22,15,BTN,BTNH,()=>{THEME.n=KNAMES[(Math.random()*KNAMES.length)|0];nmI.value=THEME.n;saveTheme()},['Random name'],(x,yy,w)=>dIc(IC.dice,x+4,yy+1.5,12));
+ const LW=small?0:58,rx=ex+LW,rw=ew-LW,row=(lab,n,yy,sz,draw,sel,pick,tip)=>{if(LW)T_(lab,ex,yy+(sz-9*.72)/2,'#c4a37a',.72);const per=Math.max(1,Math.floor((rw+2.5)/(sz+2.5)));for(let i=0;i<n;i++){const sx2=rx+(i%per)*(sz+2.5),sy=yy+((i/per)|0)*(sz+3);draw(sx2,sy,sz,i);if(i===sel)gold(sx2-1,sy-1,sz+2,sz+2,4);hudState.uiHits.push({...U(sx2,sy,sz,sz),fn:()=>{pick(i);saveTheme();retheme()},tip:tip(i)})}return Math.ceil(n/per)*(sz+3)};
+ const sq=(x,yy,sz,col)=>{rr(x,yy,sz,sz,3);canvasesState.ctx.fillStyle=col;canvasesState.ctx.fill();canvasesState.ctx.lineWidth=1;canvasesState.ctx.strokeStyle='rgba(0,0,0,.6)';canvasesState.ctx.stroke()};
+ let ry=fy+20;const sw=Math.max(8,Math.min(15,(rw+2.5)/PAL.length-2.5));
+ ry+=row('Colour',PAL.length,ry,sw,(x,yy,sz,i)=>gemSwatch(x,yy,sz,PAL[i][1]),THEME.c,i=>{THEME.c=i},i=>[PAL[i][0]+' colours']);
+ if(!small)ry+=row('2nd colour',PAL.length,ry,sw,(x,yy,sz,i)=>{gemSwatch(x,yy,sz,PAL[i][1]);canvasesState.ctx.save();canvasesState.ctx.beginPath();canvasesState.ctx.arc(x+sz/2,yy+sz/2,sz/2-.3,0,6.283);canvasesState.ctx.clip();canvasesState.ctx.fillStyle=PAL[THEME.c][1];canvasesState.ctx.fillRect(x,yy,sz/2,sz);canvasesState.ctx.restore();canvasesState.ctx.beginPath();canvasesState.ctx.arc(x+sz/2,yy+sz/2,sz/2-.3,0,6.283);canvasesState.ctx.lineWidth=.9;canvasesState.ctx.strokeStyle='#c99a3a';canvasesState.ctx.stroke()},THEME.c2,i=>{THEME.c2=i},i=>['Pattern colour: '+PAL[i][0]]);
+ if(!small)ry+=row('Pattern',8,ry,sw+3,(x,yy,sz,i)=>shieldTile(x,yy,sz,(X,Y,W,H)=>{canvasesState.ctx.translate(X,Y);bannerPattern(canvasesState.ctx,W,H,i,PAL[THEME.c2][1])}),THEME.p|0,i=>{THEME.p=i},i=>[['Plain','Per pale','Chevron','Bend','Quarterly','Fess','Bordure','Saltire'][i]]);
+ ry+=row('Emblem',EMB.length,ry,sw+3,(x,yy,sz,i)=>shieldTile(x,yy,sz,(X,Y,W,H)=>drawEmblemR(X+W*.14,Y+H*.1,W*.72,i)),THEME.e,i=>{THEME.e=i},()=>['Emblem']);
+ y+=eh+10;
+ {const s='Long calm between waves, then a slow swarm. It grows stronger each wave.';let sc=.85;while(sc>.64&&tw(s,sc)>UW-14)sc-=.03;if(tw(s,sc)<=UW-14){TC(s,cx,y+3,'#c4a37a',sc);y+=22}else{const q=s.split('. ');TC(q[0]+'.',cx,y,'#c4a37a',.8);TC(q[1],cx,y+11,'#c4a37a',.8);y+=26}}
+ const by=Math.min(UH-30,y+4);pill(cx-pw/2+14,by,(pw-28)*.34,22,'Back',BTN,BTNH,()=>{settingsState.setupOpen=false},null,.95);pill(cx-pw/2+14+(pw-28)*.36,by,(pw-28)*.64,22,'Choose site',GRN,GRNH,()=>{openPicker()},IC.map,1)}

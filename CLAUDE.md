@@ -1,7 +1,7 @@
 # Naranxia: guide for Claude
 
-Naranxia is a browser strategy / tower-defence game (castle, peasants, army, zombie waves, 2-player co-op), one HTML file,
-3D with Three.js r128, made by Naraige (the user, "King Naraige"; the King unit is named after him).
+Naranxia is a browser strategy and tower defence game with solo play and two-player co-op, built with Three.js r128.
+It was made by Naraige ("King Naraige", after whom the King unit is named).
 Talk to him in French, briefly, one line per point. He plays the builds himself and reports bugs and wishes in lists.
 He wants sessions cheap: follow "Working efficiently" below and log every batch in `docs/JOURNAL.md`.
 
@@ -9,36 +9,37 @@ He wants sessions cheap: follow "Working efficiently" below and log every batch 
 
 1. Read the top 2 entries of `docs/JOURNAL.md` (newest first): state, what was verified, what is left. Trust it: do not re-check what it says is verified.
 2. Open issues = the backlog: `gh api 'repos/Naraige/naranxia/issues?state=open&per_page=50' --jq '.[]|"#\(.number) [\(.labels|map(.name)|join(","))] \(.title)"'`.
-3. `npm ci` only if `node_modules/` is missing; then `bash tools/build.sh`.
+3. Run `npm ci` when dependencies need installing, then `npm run build`.
 A list from the King goes into issues first (one per item, labels below), then into a batch.
 
 ## Repository
 
 | path | what |
 |---|---|
-| `src/game/NN_*.js` | the whole game, readable, in 31 ordered parts (joined in name order by the build into `dist/game.js`). **Edit these.** |
-| `src/game/14_texts.js` | translations, one key per line; add with `tools/addtexts.py` |
-| `src/shell.html` | HTML/CSS shell around the script (title, fonts, canvases, Three.js r128 from cdnjs) |
-| `game/naranxia.html` | the shipped build (packed). Changing it or `game/VERSION` on `main` **publishes a release** (after the tests) |
-| `game/VERSION`, `game/NOTES.md` | current version (`v91`) and the player-facing notes of that release |
+| `packages/game/src/` | game implementation by system, with browser startup in `main.js` |
+| `packages/game/src/i18n/translations.js` | translations, one key per line. Add keys with `tools/addtexts.py` |
+| `packages/game/index.html` | browser entry point |
+| `dist/naranxia.html` | generated compressed game, attached to the GitHub release |
+| `game/VERSION`, `game/NOTES.md` | release version and player-facing notes |
 | `docs/JOURNAL.md` | what was done, verified and decided, per batch (newest first) |
-| `app/` | Electron desktop launcher: it downloads the `.html` of the latest GitHub release at start-up; `installers.yml` rebuilds the installers when `app/**` changes |
+| `apps/desktop/` | Electron launcher, save bridge, and platform installers. The launcher checks the latest GitHub release at startup |
 | `announce/` | Discord texts `vNN.md`; pushing a change to `announce/QUEUE` reposts the versions it lists |
-| `tools/` | `build.sh`, `build_dist.mjs`, `test_all.sh`, `release.sh`, `ci_status.sh`, `addtexts.py`, `repro.py`, `board.py`, `run.py`, `fontroute.py`, `preview/` |
+| `tools/` | build, release, test, translation, and preview tools |
 | `tests/` | headless tests (see below) |
-| `wip/` | unreleased work (the Minecraft / Blockbench restyle), see `wip/restyle/README.md` |
 
-## Build, test, release (from the repo root; node 18+, python3 with playwright and chromium)
+## Build, test, and release
 
 ```sh
-bash tools/build.sh            # dist/game.js + dist/naranxia_readable.html + syntax check
-bash tools/build.sh --dist     # + dist/naranxia.html (packed: what ships)
-bash tools/test_all.sh         # quick suite, one line per test, logs in dist/test-logs/ (about 6 min)
-bash tools/test_all.sh det mp8 # only some: smoke det tools features mp8 mpk mp_resync mp_convoy save
+npm run dev                    # load ES modules from the development server
+npm run build                  # build dist/naranxia_readable.html
+npm run build:release          # also build dist/naranxia.html for releases
+npm test                       # quick suite, logs in dist/test-logs/
+npm test -- --full             # quick suite plus save round trip
+npm test -- det mp8            # select tests by name
 python3 tools/run.py X.js [out.png|-] [W H wait] [html]   # evaluates the JS function in X.js inside the loaded game
 python3 tools/repro.py report.json [sec] [after.png]      # opens a player's bug report (F8): errors, screenshot, replays the save
 python3 tools/addtexts.py texts.json                      # {"English": [FR, ES, DE, IT, PT]} into the block of the next version
-bash tools/release.sh vNN "title"                         # bump, build, smoke, copy, commit, push (see Releasing)
+bash tools/release.sh vNN "title"                         # bump, build, test, commit, and push (see Releasing)
 bash tools/ci_status.sh [--wait]                          # GitHub Actions runs (tests, release)
 ```
 
@@ -52,7 +53,7 @@ touching code (`.github/workflows/test.yml`) and before every release. The packe
 
 The King chose "versions directes": code a batch, test it, release it as the next version (no extra go-ahead needed for a batch he asked for).
 
-1. Edit `src/game/`. Rewrite `game/NOTES.md` (3 to 8 short bullets for players, in English). Add the journal entry `## YYYY-MM-DD · vNN` on top of `docs/JOURNAL.md`.
+1. Edit the relevant modules under `packages/game/src/`. Rewrite `game/NOTES.md` (3 to 8 short bullets for players, in English). Add the journal entry `## YYYY-MM-DD · vNN` on top of `docs/JOURNAL.md`.
 2. Run locally only the tests the change touches (gameplay: `det mp8 mpk`, co-op: `mp_resync`, visuals: a screenshot).
 3. `COMMIT_TRAILER="<attribution lines>" bash tools/release.sh vNN "title"` then `bash tools/ci_status.sh --wait`:
    GitHub runs all the tests, then creates release vNN (the launchers update themselves) and posts the notes on Discord.
@@ -61,9 +62,8 @@ The King chose "versions directes": code a batch, test it, release it as the nex
 
 ## Working efficiently (the King asked to keep usage low)
 
-- Don't explore: use the code map below, then `grep -n -o '.\{0,80\}NAME.\{0,80\}' src/game/*.js` (never print whole long lines).
-- Edit the part files with Edit; no full-file rewrites, no re-reading files you just edited.
-- Long outputs go to files (`> dist/x.log`), read with `tail`/`grep`. Tests print one line each through `test_all.sh`.
+- Use the source map in the README and `rg --max-columns 180 NAME packages/game/src` to find the owning module.
+- Send long outputs to files under `dist/`. The test runner prints one line per test.
 - Headless WebGL is slow: stub `renderer.render` when no picture is needed (as `tests/mp*.py` and `tools/repro.py` do).
   Screenshots only for visual changes, 1280x720, look once.
 - Let GitHub run the full suite; locally run the tests of what changed.
@@ -82,7 +82,7 @@ The King chose "versions directes": code a batch, test it, release it as the nex
 - When the hashes differ the host freezes the lockstep, sends a snapshot (save format, `mpResync`), the guest loads it, then the host
   loads the same snapshot (`mpResApply`); command and hash messages carry an epoch (`MP.ep`). Anything that must survive a resync
   has to be in `SAVA` (the save registry) or on units / structures (saved whole).
-- Every text shown to players goes through `T_()` / `L()` with its translations (EN, FR, ES, DE, IT, PT) in `14_texts.js`.
+- Every text shown to players goes through `T_()` / `L()` with its translations (EN, FR, ES, DE, IT, PT) in `i18n/translations.js`.
   Templates use `{0}`; `L()` also splits on ' - ', ' | ' and 3 spaces, not on ': '. French uses "vous".
 - Test mode (F10) is solo only and blocks achievements and the best score (`DEVU`); the bug report (F8) only reads state.
 - Art direction approved by the King: Minecraft characters made the Blockbench way: the MC player model (8 px head,
@@ -97,15 +97,10 @@ The King chose "versions directes": code a batch, test it, release it as the nex
 Labels: `bug`, `idea`, `coop`, `ui`, `gameplay`, `restyle`, `needs-report` (waiting for an F8 report from the King).
 Title in English, body: what he said (French is fine), version, solo/co-op. Commits say `Fixes #N` to close them.
 
-## Code map (`src/game/`)
+## Runtime entry points
 
-- `00_core` constants, unit stats `T`, error log; `01_world` `rollWorld`, terrain, `smChunk`, `freeTile`, passability `canStep` / `canStepZ` / `rampStep`, stairs
-- `02_logic` `reset`, `mkU`, `build`, `train`, research (`RS`, `RS2`), market, castle placement rules; `03_units` unit AI, `hit`, `peasant`, shelter, convoys (`sendConvoy0`, `convoyStep`), roles, zombies (bomber, acid, fire, miner), `wave`
-- `04_sim` swarm, night, `update(dt)`, `calcFD`, achievements `ach`, `saveBest`; `05_engine3d` renderer, surfaces, terrain meshes, props, fog
-- `06_models_units` `humanKit`, items, `shieldGeo`; `07_models_buildings` `sGeo`; `08_render` fx, camera, overlays, `render3D`, `home`
-- `09_pick_live` live castle placement view; `10_audio`; `11_ai` hordes and AI kingdoms; `12_title` title scene, site picker, `icoUnit`
-- `13_ui_kit`, `14_texts` (translations), `15_i18n_icons` `L`, `T_`, languages, vector icons; `16_hud` `NAMES`, `TIPS`, menus, tasks (`assignJob`), panels (troops, convoy), `drawUI`, Esc menu
-- `17_input` `startGame`, `loop`, input, `pickUnit`, `openMenu`; `18_coop` `MP`, `mpStart`, `mpBegin`, `mpMsg`, `mpExec`, `mpChk`, resync, lobby
-- `19_extras` control groups, chat, typed pings, F-keys; `20_icons_mc` 3D icons; `21_save` `svEncode`, `svApply`, `SAVA`; `22_tools` bug report (F8), test mode (F10)
-- `23_weather` seasons + weather (visual only, from `waveN`); `24_stats` end stats, records by map, the `update` wrapper (calls `update0` then `objTick`, `kingTick`, `trapTick`, `eraTick`); `25_boss` wave boss; `26_coop_goals`; `27_king_skills`; `28_traps` spike traps + boiling oil; `29_tutorial`; `30_touch`
-- Early `let/const` (`GST`, `LH`, `OBJ`, `SPK`, `TUT`) live at the end of `00_core` because `reset()` runs while the parts load
+- `core/frame-loop.js` drives the game. `gameplay/simulation.js` runs the simulation and `gameplay/statistics.js` wraps each tick.
+- `world/terrain.js` rolls the world and generates chunks. `world/traversal.js` and `world/pathfinding.js` handle movement queries.
+- `multiplayer/lockstep.js` advances co-op ticks. `multiplayer/commands.js` dispatches player actions and `multiplayer/resync.js` handles snapshots.
+- `persistence/save-format.js` defines `SAVA` and encodes the object graph. `persistence/restore.js` applies saves, and `persistence/save-storage.js` chooses browser or desktop storage.
+- `rendering/frame.js` draws the game view. `rendering/title-scene.js` and `rendering/site-picker.js` draw the other scenes.

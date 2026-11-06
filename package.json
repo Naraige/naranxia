@@ -1,12 +1,25 @@
 {
   "name": "naranxia-dev",
   "private": true,
-  "description": "Build and test tools for Naranxia (the game itself needs no npm package)",
+  "description": "Naranxia game, web and desktop workspace",
+  "workspaces": [
+    "packages/*",
+    "apps/desktop"
+  ],
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "build:release": "npm run build && node tools/build_dist.mjs",
+    "package:desktop": "npm run build:release && npm run build --workspace @naranxia/desktop --",
+    "dev": "vite --host 127.0.0.1 --config tools/vite.config.mjs",
+    "test": "npm run build:release && node tools/test_all.mjs"
+  },
   "devDependencies": {
     "@fontsource/cinzel": "5.3.0",
     "@fontsource/marcellus": "5.3.0",
     "@gfx/zopfli": "1.0.15",
+    "esbuild": "0.24.2",
     "terser": "5.31.0",
-    "three": "0.128.0"
+    "three": "0.128.0",
+    "vite": "5.4.14"
   }
 }
