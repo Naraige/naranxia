@@ -105,6 +105,11 @@ g=R(g,"TOOLG.gsword=sword('#ffe9a0','#d0a03a','#c8862a','#fff6c8');","TOOLG.gswo
 g=R(g,"TOOLG.rsword=mk(G=>{","TOOLG.rsword=PXON?pxRoyalSword():mk(G=>{")
 g=R(g,"if(PXON&&/^guard/.test(kind))return pxGuardShield(AL,kind.slice(5));","if(PXON&&/^guard/.test(kind))return pxGuardShield(AL,kind.slice(5));if(PXON&&/^captain/.test(kind))return pxCaptainShield(AL,kind.slice(7));")
 g=R(g,"function zombieKit(type,ZV,P){","function zombieKit(type,ZV,P){if(PXON&&!window.__ZOLD){pxZombie(type,ZV,P);return}")
+# round 3: pixel capes, banner, cannon; the swarm takes the same green tint as the zombies
+g=R(g," const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X}"," if(PXON)pxCapes(type,P0);\n const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X}")
+g=R(g,"if(type==='bannerman'){h=40;const B=bannerKit(G);P0.X=B.X;parts=B.parts}","if(type==='bannerman'){h=40;const B=bannerKit(G);P0.X=B.X;parts=B.parts;if(PXON)pxBanner(B.X)}")
+g=R(g,"function cannonG(){","function cannonG(){if(PXON)return pxCannon();")
+g=R(g,"function swGeoV(S){S.lod=1;","function swGeoV(S){S.lod=1;if(PXON&&S.decay!=='dried'&&S.decay!=='mummy')S=Object.assign({},S,{sk:S.sk.map(pxZg)});")
 # the shield sits on the forearm (plate against the sleeve, the bracket behind the arm) instead of floating in front of it
 g=R(g,"r.shp=[.2*VX,-5.0*VX,2.1*VX]","r.shp=[.2*VX,-5.0*VX,(PXON?SHZ:2.1)*VX]")
 # softer unit light: a smooth ramp instead of hard bands (keeps the warm light / cool shade)
