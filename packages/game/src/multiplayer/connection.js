@@ -9,9 +9,11 @@ import { MP } from './session.js';
 let PCFG;
 const CODEC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
+export const peerConfig=()=>PCFG||{};
+
 const rcode=()=>Array.from({length:5},()=>CODEC[(REALR()*CODEC.length)|0]).join('');
 
-function loadPeer(){return window.Peer?Promise.resolve():new Promise((res,rej)=>{const s=document.createElement('script');s.src=window.MP_PEER_SRC||'https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js';s.onload=res;s.onerror=()=>rej(new Error('load'));document.head.appendChild(s);setTimeout(()=>rej(new Error('timeout')),9000)})}
+export function loadPeer(){return window.Peer?Promise.resolve():new Promise((res,rej)=>{const s=document.createElement('script');s.src=window.MP_PEER_SRC||'https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js';s.onload=res;s.onerror=()=>rej(new Error('load'));document.head.appendChild(s);setTimeout(()=>rej(new Error('timeout')),9000)})}
 
 function attach(c){MP.pcon=c;c.on('open',()=>{MP.dc={readyState:'open',send:s=>c.send(s)};mpConnected()});c.on('data',d=>{try{mpMsg(typeof d==='string'?JSON.parse(d):d)}catch(e){}});c.on('close',mpLost);c.on('error',mpLost)}
 
