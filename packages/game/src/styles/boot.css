@@ -15,8 +15,8 @@
 
 /* studio card: plays first, any key or click skips it */
 #boot .st{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#05080e;animation:stIn 2s ease-in-out both;font-family:Inter,'Segoe UI',system-ui,Arial,sans-serif;color:#eef3fb}
-#boot .sm{filter:drop-shadow(0 0 14px rgba(90,210,255,.45))}
-#boot .sn{font-weight:700;font-size:clamp(18px,3.6vw,34px);letter-spacing:.3em;padding-left:.3em;text-align:center}
+#boot .sm{width:clamp(150px,26vw,300px);height:auto;margin-bottom:10px;filter:drop-shadow(0 0 22px rgba(90,210,255,.5))}
+#boot .sn{font-weight:700;font-size:clamp(16px,3.4vw,34px);letter-spacing:.22em;padding-left:.22em;white-space:nowrap;text-align:center}
 #boot .sp{font-weight:500;font-size:clamp(11px,1.6vw,14px);letter-spacing:.5em;padding-left:.5em;color:#9fb0c6}
 #boot .st2{animation-delay:2s;animation-duration:1.9s}#boot .cl{font-weight:600;letter-spacing:.2em;padding-left:.2em}#boot .sc{position:absolute;bottom:6vh;font-weight:500;font-size:clamp(11px,1.5vw,13px);letter-spacing:.12em;color:#6f819a}
 @keyframes stIn{0%{opacity:0}22%{opacity:1}78%{opacity:1}100%{opacity:0;visibility:hidden}}
