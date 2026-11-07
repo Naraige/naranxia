@@ -46,7 +46,7 @@ import { sGeo } from '../rendering/models/structures.js';
 import { toolGeos } from '../rendering/models/unit-parts.js';
 import { ZNV } from '../rendering/models/zombies.js';
 import { rs } from '../rendering/resolution.js';
-import { CAM, renderer, scene } from '../rendering/scene.js';
+import { CAM, hemi, renderer, scene, sun } from '../rendering/scene.js';
 import { buildStructMesh, setBuildStructMeshHandler } from '../rendering/structures.js';
 import { unitG } from '../rendering/terrain.js';
 import { animUnit } from '../rendering/unit-animation.js';
@@ -195,6 +195,8 @@ export function installBrowserConsole() {
     sGeo: { get: () => sGeo },
     sbRec: { get: () => sbRec },
     scene: { get: () => scene },
+    sun: { get: () => sun },
+    hemi: { get: () => hemi },
     seasonIdx: { get: () => seasonIdx },
     selB: { get: () => selectionState.selB, set: value => { selectionState.selB = value; } },
     sendConvoy: { get: () => sendConvoy },
