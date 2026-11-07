@@ -17,6 +17,7 @@ let link = null;      // promise of the current hub link: { hub: true } or { hub
 let me = null;        // { peer, games: Map, own: Map(conn -> Set(code)) } while this page is the hub
 let pub = null;
 let beat = 0;
+let ackT = 0;
 
 export const registryOn = () => true;
 
@@ -47,7 +48,7 @@ function serve(c) {
       if (typeof m === 'string') m = JSON.parse(m);
       if (!m || typeof m !== 'object') return;
       if (m.k === 'list') c.send({ k: 'games', l: hubList() });
-      else if (m.k === 'pub') hubAdd(m.code, m.name, m.ver, c);
+      else if (m.k === 'pub') { hubAdd(m.code, m.name, m.ver, c); c.send({ k: 'ack' }) }
       else if (m.k === 'unpub') { const g = me.games.get(String(m.code)); if (g && g.c === c) me.games.delete(g.code) }
     } catch (e) { /* ignore a bad message */ }
   });
@@ -83,6 +84,7 @@ function connect() {
         const p = new Peer(peerConfig());
         p.on('open', () => {
           const conn = p.connect(HUB, { reliable: true, serialization: 'json' });
+          conn.on('data', (m) => { if (typeof m === 'string') { try { m = JSON.parse(m) } catch (e) { return } } if (m && m.k === 'ack') ackT = Date.now() });
           conn.on('open', () => { ok({ hub: false, conn, peer: p }) });
           conn.on('close', () => { if (link) reset() });
           conn.on('error', () => { if (link) reset() });
@@ -118,13 +120,17 @@ export async function registryList() {
   });
 }
 
-async function announce() {
+async function announce(again) {
   if (!pub) return;
   try {
     const l = await ensure();
     if (!pub) return;
-    if (l.hub) hubAdd(pub.code, pub.name, pub.ver, null);
-    else l.conn.send({ k: 'pub', ...pub });
+    if (l.hub) { hubAdd(pub.code, pub.name, pub.ver, null); return }
+    if (!l.conn.open) { reset(); if (!again) announce(true); return }
+    const t = Date.now();
+    l.conn.send({ k: 'pub', ...pub });
+    /* the hub acknowledges every announcement: silence means it is gone, so claim or find the hub again */
+    setTimeout(() => { if (pub && link && ackT < t && !again) { reset(); announce(true) } }, 6000);
   } catch (e) { /* retried at the next beat */ }
 }
 
