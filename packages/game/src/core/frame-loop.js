@@ -58,7 +58,7 @@ function loop(ts){const lt0=performance.now(),dt=Math.min(.05,(ts-(sessionState.
 let bootFrames = 0;
 let bootSkip=false;function skipBoot(){if(bootSkip)return;bootSkip=true;const b=document.getElementById('boot');if(b)b.classList.add('skip')}
 try{for(const ev of['pointerdown','keydown'])addEventListener(ev,skipBoot,{once:true,passive:true})}catch(e){}
-function hideBoot(){if(bootFrames>=0&&++bootFrames>=4&&(bootSkip||performance.now()>4400)){bootFrames=-1;const b=document.getElementById('boot');if(b){b.classList.add('done');setTimeout(()=>b.remove(),1300)}}}
+function hideBoot(){if(bootFrames>=0&&++bootFrames>=4&&(bootSkip||performance.now()>5800)){bootFrames=-1;const b=document.getElementById('boot');if(b){b.classList.add('done');setTimeout(()=>b.remove(),1300)}}}
 export let UIDT = 1/60;
 let CUR0 = '';
 let SHF = 0;
