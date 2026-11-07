@@ -33,7 +33,7 @@
 #boot .sm{animation:stHit .35s ease-out .9s both}
 #boot .sn{animation:stName 1s ease-out .55s both}
 #boot .st:not(.st2) .sp{animation:stName 1s ease-out .85s both}
-#boot .st2 .sp,#boot .st2 .sn{animation:stName .9s ease-out .15s both}
+#boot .st2 .sp{animation:stName .9s ease-out .55s both}#boot .st2 .sn{animation:stName .9s ease-out .75s both}
 @keyframes stDraw{to{stroke-dashoffset:0}}
 @keyframes stGrow{to{transform:scaleX(1)}}
 @keyframes stRay{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
@@ -42,3 +42,13 @@
 @keyframes stName{from{opacity:0;transform:translateY(8px);letter-spacing:.5em}to{opacity:1;transform:none}}
 @keyframes stGlow{0%{opacity:0;transform:scale(.7)}40%{opacity:1}100%{opacity:.7;transform:scale(1.1)}}
 @media(prefers-reduced-motion:reduce){#boot .sa,#boot .sb,#boot .sr,#boot .sh,#boot .sm,#boot .sn,#boot .sp,#boot .st::before{animation:none!important;opacity:1;transform:none;stroke-dashoffset:0}}
+
+/* Claude card: chevrons slide in, the cursor blinks, then the credit reads */
+#boot .st2::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(90,210,255,.2),transparent 60%);opacity:0;animation:stGlow 1.9s ease-out both}
+#boot .sm2{width:clamp(110px,18vw,200px);height:auto;margin-bottom:6px;filter:drop-shadow(0 0 18px rgba(90,210,255,.45))}
+#boot .c1,#boot .c2{opacity:0;animation:stSlide 0.6s ease-out .1s forwards}
+#boot .c1{--dx:-26px}#boot .c2{--dx:26px}
+#boot .cu{opacity:0;animation:stCur .9s steps(1,end) .5s 2 both}
+@keyframes stSlide{from{opacity:0;transform:translateX(var(--dx))}to{opacity:1;transform:none}}
+@keyframes stCur{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
+@media(prefers-reduced-motion:reduce){#boot .c1,#boot .c2,#boot .cu{animation:none!important;opacity:1;transform:none}}
