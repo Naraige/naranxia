@@ -1,4 +1,6 @@
 import { AC, sndOn, toggleSound } from '../audio/sound.js';
+import { inputState } from '../input/state.js';
+import { GNOTES } from '../core/version.js';
 import { GVER } from '../core/version.js';
 import { bugReport } from '../debug/tools.js';
 import { newGame, quitGame, startGame } from '../gameplay/lifecycle.js';
@@ -12,7 +14,8 @@ import { TFADE } from '../rendering/title-scene.js';
 import { uiBtn } from './build-menu.js';
 import { canvasesState } from './canvases.js';
 import { arcDia, BTN, BTNH, dirtBack, frame, gold, GRN, GRNH, PAN, rr } from './drawing.js';
-import { hudState, U } from './hud.js';
+import { hudState, inR, U } from './hud.js';
+import { NAV, navAdd, navBegin, navEnd, navPoll } from './menu-nav.js';
 import { dIc, IC } from './icons.js';
 import { KNAMES, PAL, THEME } from './kingdom-theme.js';
 import { pill } from './minimap.js';
@@ -26,6 +29,7 @@ import { FFT } from './typography.js';
 function menuCx(UW,pw){return UW/2}
 
 let TT0 = -1;
+let notesOpen = false;
 
 
 function titleBack(UW,UH,cx,pw){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH);g.addColorStop(0,'rgba(6,10,22,.08)');g.addColorStop(.55,'rgba(6,10,22,.12)');g.addColorStop(1,'rgba(6,10,22,.6)');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillRect(0,0,UW,UH);
@@ -36,6 +40,8 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
   if(saveMenuState.saveOpen){dirtBack(UW,UH);drawSaves(UW,UH,cx);return}
   if(languageState.langOpen){dirtBack(UW,UH);drawLang(UW,UH,cx);return}
  if(settingsState.setupOpen){dirtBack(UW,UH);drawSetup(UW,UH,cx,Math.min(UW-16,380),small);return}
+ if(notesOpen){NAV.onEsc=()=>{notesOpen=false};navBegin(false);dirtBack(UW,UH);drawNotes(UW,UH,cx);return}
+ NAV.onEsc=null;navBegin(!sessionState.inGame);navPoll();
  let y=Math.max(8,UH*(small?.05:.1));uiBtn(UW-30,6,24,20,BTN,BTNH,()=>{settingsState.settingsOpen=true},['Settings'],(x,yy,w,h)=>dIc(IC.gear,x+5,yy+3,14));
  if(sessionState.inGame){canvasesState.ctx.fillStyle='rgba(0,0,0,.45)';canvasesState.ctx.fillRect(0,0,UW,UH);y=Math.max(12,UH*.16);TTL('Game Menu',cx,y,1.75,'center');y+=34}else{
  canvasesState.ctx.globalAlpha=ease(ent(.5,1.4));const gw=Math.min(UW*.8,440),cs=Math.max(4,Math.floor(gw/47)),lw=cs*47,lx=Math.round(cx-lw/2);mcLogo('NARANXIA',lx,Math.round(y),cs);y+=cs*5+cs*1.1;
@@ -46,17 +52,25 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
  }canvasesState.ctx.globalAlpha=ease(ent(1,1.9));const ig=sessionState.inGame,bw=Math.min(UW-24,Math.max(200,Math.min(300,UW*.5))),gp=small?5:9,bx=Math.round(cx-bw/2),wide=bw>=250;
  if(!ig&&saveMenuState.last===undefined){saveMenuState.last=null;svPeek()}
  const nb=(ig?(MP.on?5:7):5)+(!ig&&saveMenuState.last?1:0)+(!ig&&window.NARX&&NARX.desktop?1:0)+(ig?0:1)+(wide||ig?0:1),bh=Math.max(16,Math.min(small?22:26,Math.floor((UH-(ig?20:60)-y)/nb)-gp));
- const mb=(lab,fn,hl)=>{pill(bx,y,bw,bh,lab,hl?GRN:BTN,hl?GRNH:BTNH,fn,null,1.15);y+=bh+gp};
+ const hv=(x,yy,w,h)=>inR(inputState.mouse,U(x,yy,w,h)),mb=(lab,fn,hl)=>{const k=ig?-1:navAdd(fn,hv(bx,y,bw,bh));pill(bx,y,bw,bh,lab,hl?GRN:BTN,hl?GRNH:BTNH,fn,null,1.15,k>=0&&NAV.sel===k);y+=bh+gp};
  const openLoad=()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null},openTut=()=>{try{localStorage.removeItem('dk_tut')}catch(e){}settingsState.setupOpen=true};
  if(ig){mb('Back to Game',startGame);if(!MP.on)mb('Save / Load',openLoad);mb('New game',newGame);mb('Quit game',quitGame);if(!MP.on)mb('Tutorial',()=>{tutStart(true);startGame()});mb('Report a bug [F8]',bugReport);mb('Multiplayer (Co-op)',mpOpen)}
  else{if(saveMenuState.last)mb('Continue',continueLast,1);mb('Singleplayer',()=>{settingsState.setupOpen=true});mb('Multiplayer (Co-op)',mpOpen);mb('Load game',openLoad);mb('Tutorial',openTut);if(window.NARX&&NARX.desktop)mb('Exit to desktop',()=>window.close())}
- {const sd=()=>{toggleSound()},lg=()=>{languageState.langOpen=true};
-  if(ig){const hw=Math.round((bw-gp)/2);pill(bx,y,hw,bh,'Options',BTN,BTNH,()=>{settingsState.settingsOpen=true},null,1.15);pill(bx+hw+gp,y,bw-hw-gp,bh,sndOn?'Sound: on':'Sound: off',BTN,BTNH,sd,null,1.15);y+=bh+gp}
-  else if(wide){const lw=Math.max(96,Math.round(bw*.36)),hw=Math.round((bw-lw-2*gp)/2);pill(bx,y,hw,bh,'Options',BTN,BTNH,()=>{settingsState.settingsOpen=true},null,1.05);pill(bx+hw+gp,y,hw,bh,sndOn?'Sound: on':'Sound: off',BTN,BTNH,sd,null,1.05);langBtn(bx+2*hw+2*gp,y,bw-2*hw-2*gp,bh,LANG,lg,false);y+=bh+gp}
-  else{const hw=Math.round((bw-gp)/2);pill(bx,y,hw,bh,'Options',BTN,BTNH,()=>{settingsState.settingsOpen=true},null,1.15);pill(bx+hw+gp,y,bw-hw-gp,bh,sndOn?'Sound: on':'Sound: off',BTN,BTNH,sd,null,1.15);y+=bh+gp;langBtn(bx,y,bw,bh,LANG,lg,false);y+=bh+gp}}
+ {const sd=()=>{toggleSound()},lg=()=>{languageState.langOpen=true},op=()=>{settingsState.settingsOpen=true},sl=sndOn?'Sound: on':'Sound: off';
+  const row=(x,w,lab,fn,lang)=>{const k=ig?-1:navAdd(fn,hv(x,y,w,bh)),on=k>=0&&NAV.sel===k;if(lang){langBtn(x,y,w,bh,LANG,fn,false);if(on)gold(x,y,w,bh)}else pill(x,y,w,bh,lab,BTN,BTNH,fn,null,wide&&!ig?1.05:1.15,on)};
+  if(ig){const hw=Math.round((bw-gp)/2);row(bx,hw,'Options',op);row(bx+hw+gp,bw-hw-gp,sl,sd);y+=bh+gp}
+  else if(wide){const lw=Math.max(96,Math.round(bw*.36)),hw=Math.round((bw-lw-2*gp)/2);row(bx,hw,'Options',op);row(bx+hw+gp,hw,sl,sd);row(bx+2*hw+2*gp,bw-2*hw-2*gp,'',lg,1);y+=bh+gp}
+  else{const hw=Math.round((bw-gp)/2);row(bx,hw,'Options',op);row(bx+hw+gp,bw-hw-gp,sl,sd);y+=bh+gp;row(bx,bw,'',lg,1);y+=bh+gp}}
  if(!ig){const r=lastRun();if(r&&UH-y>34){TC('Last game: wave '+r.w+'  -  '+r.k+' zombies slain',cx,y+2,'#c4a37a',.85);y+=13;TC(titleWeatherLabel(),cx,y+2,titleSeasonColor(),.85);y+=15}
   if(sessionState.best.w>0&&UH-y>18){TC('Best: wave '+sessionState.best.w+'  -  '+sessionState.best.k+' zombies slain',cx,y+2,'#ffff55',.9);y+=16}}
- canvasesState.ctx.globalAlpha=1;const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);T_('Naranxia',6,UH-12,'#c8c8c8',.75);}
+ canvasesState.ctx.globalAlpha=1;const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);if(!ig&&GNOTES){const nw=Math.max(96,tw('What\'s new',.8)+22),nx=UW-nw-8,ny=UH-34,k=navAdd(()=>{notesOpen=true},hv(nx,ny,nw,18));pill(nx,ny,nw,18,'What\'s new',BTN,BTNH,()=>{notesOpen=true},null,.8,NAV.sel===k)}navEnd();T_('Naranxia',6,UH-12,'#c8c8c8',.75);}
+
+function drawNotes(UW,UH,cx){const W=Math.min(UW-12,480),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=8,H=UH-16;frame(X,Y,W,H,PAN,6);TTL('What\'s new',X+10,Y+7,1.35);T_(GVER,X+W-10-tw(GVER,.9),Y+10,'#d9b27a',.9);
+ const items=String(GNOTES||'').split('\n').map(l=>l.replace(/^\s*[-*]\s*/,'').trim()).filter(Boolean),maxW=W-44,top=Y+32,room=H-top+Y-34;
+ let sc=.82,lines;const wrap=sc=>{const out=[];for(const it of items){const ws=it.split(' ');let cur='';let first=true;for(const w of ws){const t=cur?cur+' '+w:w;if(cur&&tw(t,sc)>maxW){out.push([cur,first]);first=false;cur=w}else cur=t}if(cur)out.push([cur,first])}return out};
+ lines=wrap(sc);while(sc>.58&&lines.length*(10.5*sc/.82+1)>room){sc-=.04;lines=wrap(sc)}
+ let y=top;const lh=Math.round(10.5*sc/.82+1);for(const[t,first]of lines){if(y>Y+H-34)break;if(first)arcDia(X+16,y+4,2,'#d8b060');T_(t,X+26,y,'#ead8ba',sc);y+=lh+(first&&false?0:0)}
+ pill(X+W/2-40,Y+H-24,80,16,'Back',BTN,BTNH,()=>{notesOpen=false},null,.9)}
 
 const MCSPL=['Survive the night!','Also try Co-op!','Hold the line!','100% blocky!','Mind the swarm!','Build towers!','Zombies hate walls!','Protect the castle!','Now with keeps!','Gold! Wood! Stone!','100x the swarm!','Ten thousand zombies!','Red eyes in the dark!'];
 

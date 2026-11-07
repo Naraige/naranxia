@@ -856,6 +856,7 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"What's new":["Nouveautés","Novedades","Neuigkeiten","Novità","Novidades"],
 "Continue":["Continuer","Continuar","Fortsetzen","Continua","Continuar"],
 "Last game: wave {0}  -  {1} zombies slain":["Dernière partie : vague {0}  -  {1} zombies tués","Última partida: oleada {0}  -  {1} zombis abatidos","Letztes Spiel: Welle {0}  -  {1} Zombies getötet","Ultima partita: ondata {0}  -  {1} zombi uccisi","Último jogo: onda {0}  -  {1} zumbis abatidos"],
 "Game":["Jeu","Juego","Spiel","Gioco","Jogo"],

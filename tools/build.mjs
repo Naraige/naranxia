@@ -8,6 +8,7 @@ const game = path.join(root, 'packages', 'game');
 const out = path.join(root, 'dist');
 const version = (await fs.readFile(path.join(root, 'game', 'VERSION'), 'utf8')).trim();
 if (!/^v\d+$/.test(version)) throw new Error(`Invalid game/VERSION: ${version}`);
+const notes = await fs.readFile(path.join(root, 'game', 'NOTES.md'), 'utf8').catch(() => '');
 await fs.mkdir(out, { recursive: true });
 
 const entry = path.join(game, 'src', 'main.js');
@@ -25,7 +26,7 @@ if (htmlSource.split(styleTag).length !== 2) {
 const [js, css] = await Promise.all([
   build({
     entryPoints: [entry], outfile: path.join(out, 'naranxia-bundle.js'), bundle: true, write: false, platform: 'browser',
-    format: 'iife', target: ['es2020'], define: { __NX_VERSION__: JSON.stringify(version) },
+    format: 'iife', target: ['es2020'], define: { __NX_VERSION__: JSON.stringify(version), __NX_NOTES__: JSON.stringify(notes.trim()) },
     legalComments: 'none', charset: 'utf8', logLevel: 'warning',
   }),
   build({

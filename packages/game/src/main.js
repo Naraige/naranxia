@@ -61,6 +61,7 @@ import { initializeKingdomTheme } from './ui/kingdom-theme.js';
 import { initializeMinimapDisplay } from './ui/minimap.js';
 import { initializeSaveMenu } from './ui/save-menu.js';
 import { initializeSettings } from './ui/settings.js';
+import { initializeMenuNav } from './ui/menu-nav.js';
 import { initializeSitePickerMenu } from './ui/site-picker.js';
 import { initializeTypography } from './ui/typography.js';
 import { initializeTerrain } from './world/terrain.js';
@@ -121,6 +122,7 @@ initializeMinimapDisplay();
 initializeBuildMenu();
 initializeSitePickerMenu();
 initializeSettings();
+initializeMenuNav();
 initializeDesktopInput();
 initializeFrameLoop();
 
