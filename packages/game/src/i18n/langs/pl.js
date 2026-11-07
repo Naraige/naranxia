@@ -1046,4 +1046,7 @@ export const PL = {
   "D-pad: move": "Krzyżak: ruch",
   "A: select": "A: wybierz",
   "B: back": "B: wstecz",
+  "Public game: listed in the lobby": "Gra publiczna: widoczna w lobby",
+  "Private game: only with the code": "Gra prywatna: tylko z kodem",
+  "Join a game": "Dołącz do gry",
 };

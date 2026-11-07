@@ -856,6 +856,9 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Public game: listed in the lobby":["Partie publique : visible dans le lobby","Partida pública: visible en el lobby","Öffentliches Spiel: in der Lobby sichtbar","Partita pubblica: visibile nella lobby","Jogo público: visível no lobby"],
+"Private game: only with the code":["Partie privée : uniquement avec le code","Partida privada: solo con el código","Privates Spiel: nur mit dem Code","Partita privata: solo con il codice","Jogo privado: apenas com o código"],
+"Join a game":["Rejoindre une partie","Unirse a una partida","Spiel beitreten","Unisciti a una partita","Entrar num jogo"],
 "Records":["Records","Récords","Rekorde","Record","Recordes"],
 "No record yet":["Aucun record pour l'instant","Aún no hay récords","Noch kein Rekord","Nessun record per ora","Ainda sem recordes"],
 "Up / Down: move":["Haut / Bas : naviguer","Arriba / Abajo: mover","Hoch / Runter: bewegen","Su / Giù: muovi","Cima / Baixo: mover"],

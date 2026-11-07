@@ -41,7 +41,11 @@ export function lobbyNote(t){mpStatus(t)}
 
 export function mpFallback(v){}
 
-function lobbyTexts(){$m('mpBL').textContent=L('Public games');$m('mpPubH').textContent=L('Public games');$m('mpPubT').textContent=L('List my game in the public lobby');$m('mpPubR').textContent=L('Refresh')}
+function pubLabel(){const on=$m('mpPub').checked;$m('mpPubT').textContent=(on?'\uD83C\uDF10 ':'\uD83D\uDD12 ')+L(on?'Public game: listed in the lobby':'Private game: only with the code')}
+
+function lobbyTexts(){$m('mpBL').textContent=L('Public games');$m('mpPubH').textContent=L('Public games');pubLabel();$m('mpPubR').textContent=L('Refresh')}
+
+export function mpOpenJoin(){mpOpen();$m('mpBJ').click()}
 
 export function mpOpen(){lobbyTexts();mpModal(true);if(MP.conn)lobbyShow()}
 
@@ -101,6 +105,8 @@ export function initializeLobby() {
   $m('mpBL').onclick=()=>{$m('mpHome').style.display='none';$m('mpPubP').style.display='block';$m('mpBack').style.display='inline-block';pubRefresh()};
 
   $m('mpPubR').onclick=pubRefresh;
+
+  $m('mpPub').onchange=pubLabel;
 
   $m('mpBack').onclick=pubBack;
 

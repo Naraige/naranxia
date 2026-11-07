@@ -6,7 +6,7 @@ import { bugReport } from '../debug/tools.js';
 import { newGame, quitGame, startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
 import { drawLang, L, LANG, langBtn, LANGS, languageState, T_, TC, TTL, tw } from '../i18n/language.js';
-import { mpOpen } from '../multiplayer/lobby.js';
+import { mpOpen, mpOpenJoin } from '../multiplayer/lobby.js';
 import { MP } from '../multiplayer/session.js';
 import { bannerPattern, drawEmblemR, EMB, gemSwatch, saveTheme, shieldTile } from '../rendering/kingdom-banner.js';
 import { BANNER, retheme } from '../rendering/structures.js';
@@ -70,7 +70,7 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
  if(!ig){const r=lastRun();if(r&&UH-y>34){TC('Last game: wave '+r.w+'  -  '+r.k+' zombies slain',cx,y+2,'#c4a37a',.85);y+=13;{const wl=titleWeatherLabel(),ww=tw(wl,.85);arcDia(cx-ww/2-8,y+6,2.5,titleSeasonColor())}TC(titleWeatherLabel(),cx,y+2,titleSeasonColor(),.85);y+=15}
   if(sessionState.best.w>0&&UH-y>18){TC('Best: wave '+sessionState.best.w+'  -  '+sessionState.best.k+' zombies slain',cx,y+2,'#ffff55',.9);y+=16}}
  if(!ig&&UH-y>30&&UH>260){const t=TIPS[TIPN];let sc=.8;while(sc>.58&&tw(t,sc)>UW-40)sc-=.04;if(tw(t,sc)<=UW-40)TC(t,cx,Math.min(y+6,UH-40),'#9fd6e6',sc)}
- canvasesState.ctx.globalAlpha=1;if(UH>240)TC(NAV.active?(padOn()?'D-pad: move | A: select | B: back':'Up / Down: move | Enter: select | Esc: back'):'',cx,UH-27,'#8d8068',.72);const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);if(!ig&&GNOTES){const nw=Math.max(96,tw('What\'s new',.8)+22),nx=UW-nw-8,ny=UH-34,k=navAdd(()=>{notesOpen=true},hv(nx,ny,nw,18));pill(nx,ny,nw,18,'What\'s new',BTN,BTNH,()=>{notesOpen=true},null,.8,NAV.sel===k)}if(!ig){const rn=Math.max(70,tw('Records',.8)+22),k2=navAdd(()=>{recOpen=true},hv(8,UH-34,rn,18));pill(8,UH-34,rn,18,'Records',BTN,BTNH,()=>{recOpen=true},null,.8,NAV.sel===k2)}navEnd();T_('Naranxia',6,UH-12,'#c8c8c8',.75);}
+ canvasesState.ctx.globalAlpha=1;if(UH>240)TC(NAV.active?(padOn()?'D-pad: move | A: select | B: back':'Up / Down: move | Enter: select | Esc: back'):'',cx,UH-27,'#8d8068',.72);const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);if(!ig&&GNOTES){const nw=Math.max(96,tw('What\'s new',.8)+22),nx=UW-nw-8,ny=UH-34,k=navAdd(()=>{notesOpen=true},hv(nx,ny,nw,18));pill(nx,ny,nw,18,'What\'s new',BTN,BTNH,()=>{notesOpen=true},null,.8,NAV.sel===k)}if(!ig){const rn=Math.max(70,tw('Records',.8)+22),k2=navAdd(()=>{recOpen=true},hv(8,UH-34,rn,18));pill(8,UH-34,rn,18,'Records',BTN,BTNH,()=>{recOpen=true},null,.8,NAV.sel===k2);const jn=Math.max(90,tw('Join a game',.8)+22),k3=navAdd(mpOpenJoin,hv(14+rn,UH-34,jn,18));pill(14+rn,UH-34,jn,18,'Join a game',BTN,BTNH,mpOpenJoin,null,.8,NAV.sel===k3)}navEnd();T_('Naranxia',6,UH-12,'#c8c8c8',.75);}
 
 function drawRecords(UW,UH,cx){const W=Math.min(UW-12,420),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=8,H=UH-16;frame(X,Y,W,H,PAN,6);TTL('Records',X+10,Y+7,1.35);
  let y=Y+34;const b=sessionState.best,r=lastRun();

@@ -3,8 +3,10 @@
    The order here is the order in the language list, after English, French, Spanish, German, Italian and Portuguese. */
 import { NL } from './nl.js';
 import { PL } from './pl.js';
+import { TR } from './tr.js';
 
 export const EXTRA = [
   { name: 'Nederlands', flag: 'nl', tr: NL },
   { name: 'Polski', flag: 'pl', tr: PL },
+  { name: 'Türkçe', flag: 'tr', tr: TR },
 ];

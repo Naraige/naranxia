@@ -1046,4 +1046,7 @@ export const NL = {
   "D-pad: move": "D-pad: bewegen",
   "A: select": "A: kiezen",
   "B: back": "B: terug",
+  "Public game: listed in the lobby": "Openbaar spel: zichtbaar in de lobby",
+  "Private game: only with the code": "Privéspel: alleen met de code",
+  "Join a game": "Aan een spel meedoen",
 };
