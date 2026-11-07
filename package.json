@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@fontsource/cinzel": "5.3.0",
+    "@fontsource/inter": "5.3.0",
     "@fontsource/marcellus": "5.3.0",
     "@gfx/zopfli": "1.0.15",
     "esbuild": "0.24.2",

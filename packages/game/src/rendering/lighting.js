@@ -45,16 +45,16 @@ function applyLamps(){const N=nightK;if(N<.02){LAMPM.count=0;HALOM.count=0;LP.fo
  near.sort((a,b)=>a[0]-b[0]);for(let i=0;i<6;i++){const l=LP[i],q=near[i];if(q){l.position.set(q[1][0]/TS,q[1][2]+.4,q[1][1]/TS);l.intensity=(q[1][3]>1?.58:.4)*N*(1+.1*Math.sin(sessionState.clockT*8+i*2))}else l.intensity=0}}
 
 export function applyDay(dt){const tg=nightTarget();nightK+=(tg-nightK)*Math.min(1,(dt||.016)*1.4);const N=nightK,sm=1-N,dusk=Math.pow(Math.sin(N*Math.PI),2);
- _sk.copy(SKYN).lerp(SKYD,sm).lerp(SKYU,dusk*.45);scene.background.copy(_sk);scene.fog.color.copy(_sk);hemi.intensity=.3+.32*sm;sun.intensity=.12+.66*sm;LMU.value=hemi.intensity+sun.intensity;sun.color.copy(SUND).lerp(SUNU,dusk*.7);dayK=sm;applyLamps()}
+ _sk.copy(SKYN).lerp(SKYD,sm).lerp(SKYU,dusk*.45);scene.background.copy(_sk);scene.fog.color.copy(_sk);hemi.intensity=(.3+.32*sm)*1.06;sun.intensity=(.12+.66*sm)*1.19;LMU.value=hemi.intensity+sun.intensity;sun.color.copy(SUND).lerp(SUNU,dusk*.7);dayK=sm;applyLamps()}
 
 export let dayK=1;
 
 export function initializeSceneLighting() {
-  SKYD = new THREE.Color(0x9ccaf0);
+  SKYD = new THREE.Color(0xb9d2ee);
   SKYN = new THREE.Color(0x141c3c);
   SKYU = new THREE.Color(0xf0a070);
   _sk = new THREE.Color();
-  SUND = new THREE.Color(0xfff1d2);
+  SUND = new THREE.Color(0xe6f0ff);
   SUNU = new THREE.Color(0xff9a60);
   _sc = new THREE.Color();
   for(let i=0;i<6;i++){const l=new THREE.PointLight(0xff9a48,0,17,2);l.position.set(0,-50,0);scene.add(l);LP.push(l)}

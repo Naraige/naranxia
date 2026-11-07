@@ -19,7 +19,7 @@ export function initializeChat() {
 
   Object.assign(mpChatBox.style,{position:'fixed',left:'8px',bottom:'210px',zIndex:9,maxWidth:'46vw',pointerEvents:'none',font:'400 18px VT323,"Courier New",monospace',color:'#ffffff',textShadow:'2px 2px 0 #3f3f3f'});
 
-  Object.assign(mpChatI.style,{position:'fixed',left:'8px',bottom:'180px',width:'min(360px,60vw)',zIndex:10,display:'none',background:'rgba(12,16,24,.88)',color:'#f2e4c4',border:'1px solid #c9a24f',borderRadius:'2px',padding:'5px 9px',font:'400 16px "NaxNum","Marcellus",Georgia,serif',outline:'none',boxShadow:'0 0 0 1px #07060b'});
+  Object.assign(mpChatI.style,{position:'fixed',left:'8px',bottom:'180px',width:'min(360px,60vw)',zIndex:10,display:'none',background:'rgba(12,16,24,.88)',color:'#f2e4c4',border:'1px solid #c9a24f',borderRadius:'2px',padding:'5px 9px',font:'400 16px "Inter","Segoe UI",system-ui,-apple-system,Arial,sans-serif',outline:'none',boxShadow:'0 0 0 1px #07060b'});
 
   mpChatI.placeholder='Message to your partner (Enter to send)';
   mpChatI.maxLength=120;

@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-07 · Design refresh: glass UI, Inter, cool light (v92, not released)
+
+- The King chose on the review board: 1A glass buttons/frames, 2A top bar, 3A build tiles, 4A title, 5A Inter, 6C cool world light (rows in `dist/board/spec.json`).
+- `ui/drawing.js`: `frame()` now draws dark glass (soft shadow, 1 px light edge, cyan accent on hover/confirm, teal/red tints); slots, tooltips, chat/top bar restyled; `arcDeco` removed; selection ring cyan.
+- Fonts: Inter 500-800 (Google Fonts link, `@fontsource/inter` for tests via `tools/fontroute.py`) replaces Cinzel/Marcellus/NaxNum in canvas (`ui/typography.js`), co-op CSS, boot; `naranxia-numerals.woff2` deleted. `fontOf` sizes retuned (.88 body, .8 heading).
+- `rendering/lighting.js`: sky `0xb9d2ee`, sun `0xe6f0ff`, intensities x1.19 sun / x1.06 hemi.
+- Verified: build, title + in-game screenshots, no page errors. NOT verified: fitcheck (running), det/mp tests (visual-only change), title logo look (headless clock too slow), co-op window look.
+- Left: 3D units/buildings polish (second board), unpushed (GitHub suspended), release v92 with NOTES.md.
+
 ## 2026-11-07 · Text never spills out of buttons (v92, not released)
 
 - The King: nothing may overflow a button, in every menu and language. `fitSc()` (language.js) shrinks a label to fit (min .45), used by `pill` and `langBtn`; `TCf()` shrinks then ends with an ellipsis (build tiles: name, Done / Free / Locked / Masonry, costs down to .34); `uiBtn` clips its content to the button and reports any text that still sticks out (`setClipBox` in `T_`); HTML buttons of the co-op window wrap (`#mp button` CSS).
