@@ -856,6 +856,21 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Records":["Records","Récords","Rekorde","Record","Recordes"],
+"No record yet":["Aucun record pour l'instant","Aún no hay récords","Noch kein Rekord","Nessun record per ora","Ainda sem recordes"],
+"Up / Down: move":["Haut / Bas : naviguer","Arriba / Abajo: mover","Hoch / Runter: bewegen","Su / Giù: muovi","Cima / Baixo: mover"],
+"Enter: select":["Entrée : choisir","Intro: elegir","Enter: auswählen","Invio: scegli","Enter: escolher"],
+"Esc: back":["Échap : retour","Esc: volver","Esc: zurück","Esc: indietro","Esc: voltar"],
+"D-pad: move":["Croix : naviguer","Cruceta: mover","Steuerkreuz: bewegen","D-pad: muovi","D-pad: mover"],
+"A: select":["A : choisir","A: elegir","A: auswählen","A: scegli","A: escolher"],
+"B: back":["B : retour","B: volver","B: zurück","B: indietro","B: voltar"],
+"Public games":["Parties publiques","Partidas públicas","Öffentliche Spiele","Partite pubbliche","Partidas públicas"],
+"List my game in the public lobby":["Afficher ma partie dans le lobby public","Mostrar mi partida en el lobby público","Mein Spiel in der öffentlichen Lobby anzeigen","Mostra la mia partita nella lobby pubblica","Mostrar o meu jogo no lobby público"],
+"Refresh":["Actualiser","Actualizar","Aktualisieren","Aggiorna","Atualizar"],
+"Join":["Rejoindre","Unirse","Beitreten","Unisciti","Entrar"],
+"The public lobby is not set up yet: join with a code.":["Le lobby public n'est pas encore configuré : rejoignez avec un code.","El lobby público aún no está configurado: únete con un código.","Die öffentliche Lobby ist noch nicht eingerichtet: Tritt mit einem Code bei.","La lobby pubblica non è ancora configurata: entra con un codice.","O lobby público ainda não está configurado: entre com um código."],
+"Could not reach the lobby. Check your connection and try again.":["Impossible de joindre le lobby. Vérifiez votre connexion et réessayez.","No se pudo conectar con el lobby. Comprueba tu conexión e inténtalo de nuevo.","Die Lobby ist nicht erreichbar. Prüfe deine Verbindung und versuche es erneut.","Impossibile raggiungere la lobby. Controlla la connessione e riprova.","Não foi possível contactar o lobby. Verifique a ligação e tente novamente."],
+"No public game right now: host one!":["Aucune partie publique pour le moment : créez-en une !","Ninguna partida pública ahora: ¡crea una!","Gerade kein öffentliches Spiel: Erstelle eins!","Nessuna partita pubblica al momento: creane una!","Nenhum jogo público agora: crie um!"],
 "What's new":["Nouveautés","Novedades","Neuigkeiten","Novità","Novidades"],
 "Continue":["Continuer","Continuar","Fortsetzen","Continua","Continuar"],
 "Last game: wave {0}  -  {1} zombies slain":["Dernière partie : vague {0}  -  {1} zombies tués","Última partida: oleada {0}  -  {1} zombis abatidos","Letztes Spiel: Welle {0}  -  {1} Zombies getötet","Ultima partita: ondata {0}  -  {1} zombi uccisi","Último jogo: onda {0}  -  {1} zumbis abatidos"],

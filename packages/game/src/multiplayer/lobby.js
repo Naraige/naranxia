@@ -1,9 +1,11 @@
 import { GVER } from '../core/version.js';
 import { sessionState } from '../gameplay/session.js';
 import { swarmState } from '../gameplay/swarm.js';
+import { L } from '../i18n/language.js';
 import { _N } from './commands.js';
 import { lobbyHost, lobbyJoin } from './connection.js';
 import { mpBegin, mpSend } from './lockstep.js';
+import { registryHide, registryList, registryOn } from './registry.js';
 import { MP } from './session.js';
 import { THEME } from '../ui/kingdom-theme.js';
 import { settingsState } from '../ui/settings.js';
@@ -14,7 +16,7 @@ import { rollWorld, setRollWorldHandler, terrainState } from '../world/terrain.j
 export const sitesFar=(a,b)=>!a||!b||Math.max(Math.abs(a.tx-b.tx),Math.abs(a.ty-b.ty))>=10;
 
 /* ---- lobby state ---- */
-export function mpConnected(){MP.conn=true;MP.mine=null;MP.theirs=null;mpSend({k:'hello',n:THEME.n,v:GVER});if(MP.host)mpWorldSync();lobbyRender();lobbyShow()}
+export function mpConnected(){registryHide();MP.conn=true;MP.mine=null;MP.theirs=null;mpSend({k:'hello',n:THEME.n,v:GVER});if(MP.host)mpWorldSync();lobbyRender();lobbyShow()}
 
 export function mpWorldSync(){if(MP.conn&&MP.host){MP.theirs=null;mpSend({k:'w',seed:terrainState.SEED,gpr:terrainState.GPR,d:sessionState.diffI});MP.mine=null;lobbyRender()}}
 
@@ -39,9 +41,11 @@ export function lobbyNote(t){mpStatus(t)}
 
 export function mpFallback(v){}
 
-export function mpOpen(){mpModal(true);if(MP.conn)lobbyShow()}
+function lobbyTexts(){$m('mpBL').textContent=L('Public games');$m('mpPubH').textContent=L('Public games');$m('mpPubT').textContent=L('List my game in the public lobby');$m('mpPubR').textContent=L('Refresh')}
 
-export function lobbyShow(){mpModal(true);$m('mpHostP').style.display='none';$m('mpHome').style.display='none';$m('mpJoinP').style.display='none';$m('mpLobby').style.display=(MP.conn||MP.code)?'block':'none';$m('mpBack').style.display='none';lobbyRender()}
+export function mpOpen(){lobbyTexts();mpModal(true);if(MP.conn)lobbyShow()}
+
+export function lobbyShow(){mpModal(true);$m('mpHostP').style.display='none';$m('mpHome').style.display='none';$m('mpJoinP').style.display='none';$m('mpLobby').style.display=(MP.conn||MP.code)?'block':'none';$m('mpBack').style.display='none';$m('mpPubP').style.display='none';lobbyRender()}
 
 export function lobbyRender(){const L=$m('mpLobby');if(!L)return;$m('mpRoom').textContent=MP.code||'-----';
  const me=THEME.n||'You',row=(id,name,on,rdy,txt)=>{const e=$m(id);e.className='pl'+(on?' on':' off')+(rdy?' rdy':'');e.children[1].textContent=name;e.children[2].textContent=txt};
@@ -62,6 +66,15 @@ export function initializeLobbyState() {
    if(!sitesFar(me,MP.theirs)){sitePickerState.pickMsg='Your castles would overlap: move a little away from your partner';return}
    me.rot=sessionState.PKROT&3;MP.mine=me;mpSend({k:'ready',cx:me.tx,cy:me.ty,r:me.rot});sitePickerState.picking=false;settingsState.setupOpen=false;lobbyRender();lobbyShow()});
 }
+
+/* ---- public games list ---- */
+function pubBack(){$m('mpPubP').style.display='none';$m('mpJoinP').style.display='none';$m('mpHostP').style.display='none';$m('mpHome').style.display='block';$m('mpBack').style.display='none'}
+
+export async function pubRefresh(){const box=$m('mpPubL'),note=t=>{box.textContent='';const d=document.createElement('div');d.className='none';d.textContent=L(t);box.appendChild(d)};
+ if(!registryOn()){note('The public lobby is not set up yet: join with a code.');return}
+ note('Loading...');let list;try{list=await registryList()}catch(e){note('Could not reach the lobby. Check your connection and try again.');return}
+ if(!list.length){note('No public game right now: host one!');return}
+ box.textContent='';for(const g of list){const r=document.createElement('div');r.className='pg';const n=document.createElement('span');n.className='nm';n.textContent=g.name||L('Nameless');const c=document.createElement('span');c.className='cd2';c.textContent=g.code+(g.ver&&g.ver!==GVER?'  ('+g.ver+')':'');const b=document.createElement('button');b.className='pri';b.textContent=L('Join');b.onclick=()=>{$m('mpPubP').style.display='none';lobbyJoin(g.code)};r.append(n,c,b);box.appendChild(r)}}
 
 export function initializeLobby() {
   mpEl = document.createElement('div');
@@ -85,7 +98,11 @@ export function initializeLobby() {
 
   $m('mpBJ').onclick=()=>{$m('mpHome').style.display='none';$m('mpJoinP').style.display='block';$m('mpBack').style.display='inline-block';$m('mpCode').focus()};
 
-  $m('mpBack').onclick=()=>{$m('mpJoinP').style.display='none';$m('mpHostP').style.display='none';$m('mpHome').style.display='block';$m('mpBack').style.display='none'};
+  $m('mpBL').onclick=()=>{$m('mpHome').style.display='none';$m('mpPubP').style.display='block';$m('mpBack').style.display='inline-block';pubRefresh()};
+
+  $m('mpPubR').onclick=pubRefresh;
+
+  $m('mpBack').onclick=pubBack;
 
   $m('mpGo').onclick=()=>lobbyJoin($m('mpCode').value);
 

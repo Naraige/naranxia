@@ -76,7 +76,10 @@ export function TTL(s,x,y,sc,al){s=L(String(s));const S=TTS(sc);canvasesState.ct
 export function twH(s,sc){canvasesState.ctx.font='700 '+TTS(sc)+'px '+FFT;return canvasesState.ctx.measureText(L(String(s))).width}
 
 export function initializeLanguage() {
-  try{LANG=Math.max(0,Math.min(LANGS.length-1,+(localStorage.getItem('dk_lang')||0)|0))}catch(e){}
+  let saved=null;try{saved=localStorage.getItem('dk_lang')}catch(e){}
+  if(saved!==null)LANG=Math.max(0,Math.min(LANGS.length-1,+saved|0));
+  else{/* first launch: the browser language, when we have it */
+   try{const c=String((navigator.languages&&navigator.languages[0])||navigator.language||'en').slice(0,2).toLowerCase(),i=LANGS.findIndex(l=>l[1]===c);if(i>0)LANG=i}catch(e){}}
 }
 
 export function initializeTranslationLookup() {

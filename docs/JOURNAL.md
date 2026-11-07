@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-07 · Menu polish, public lobby, languages (v92, not released: GitHub access suspended)
+
+- Asked by the King ("tout" + "un lobby pour voir toutes les parties publiques"). Menu: tip of the day (a tutorial line, by day), key / pad hint line (`padOn()`), season diamond before the weather label, time-of-day tint + stars on the title (real clock, UI only), first-launch language from `navigator.language` (never saved, the picker still wins), keyboard nav also in the solo pause menu (Space ignored in game, off in co-op), "Records" panel (best, last run, top runs from `dk_sb`).
+- Public lobby: `multiplayer/registry.js` (client: list, announce every 15 s, withdraw on connect / reset) + `tools/lobby-server.mjs` (memory-only registry, 40 s TTL, CORS open, no deps). UI in the co-op window: "Public games" list with Join, "List my game in the public lobby" checkbox on Host. Needs `window.MP_LOBBY_URL` (https) to be set: with no URL the list says it is not set up. The registry only holds code, host name, version; connections stay peer to peer.
+- Languages: Dutch and Polish complete (`i18n/langs/`, `node tools/langcheck.mjs`). Turkish, RU, UK, JA, ZH, KO, AR not done: sentence fragments joined in code and Arabic RTL need code work first.
+- Verified: build, langcheck 0 missing, menu nav by state (`NAV.sel`), lobby list rendered with a mocked registry, server by curl, screenshot of the title (FR auto, night). Not verified: real PeerJS host + public listing end to end (no network from the sandbox), gamepad hardware, the pause-menu nav in a real game.
+- Left: choose where to host the registry and set `MP_LOBBY_URL` (launcher + `index.html`); release v92 (VERSION, NOTES.md) when GitHub is back.
+
 ## 2026-11-07 · Launch splash (v92, not released: GitHub access suspended)
 
 - New launch: `#boot` splash in `index.html` + `styles/boot.css` (dark ember sky, gold NARANXIA logo, shimmering bar), shown by the HTML before any script runs (the page used to flash light blue), faded out by `hideBoot()` in `core/frame-loop.js` after 4 frames of the title scene; then the logo fades in (0.5 to 1.4 s) and the menu after it (1 to 1.9 s) in `ui/title-menu.js` (`ent`/`ease`, globalAlpha, title only, in-game menu unchanged). No new texts.

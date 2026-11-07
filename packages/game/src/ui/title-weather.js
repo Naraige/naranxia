@@ -49,6 +49,14 @@ export function drawTitleWeather(UW, UH) {
   c.save();
   c.fillStyle = SEAWASH[s];
   c.fillRect(0, 0, UW, UH);
+  const hr = new Date().getHours(), night = hr >= 21 || hr < 5;
+  const tod = night ? 'rgba(8,14,44,.30)' : hr >= 18 ? 'rgba(255,120,50,.10)' : hr < 8 ? 'rgba(255,170,110,.09)' : '';
+  if (tod) { c.fillStyle = tod; c.fillRect(0, 0, UW, UH) }
+  if (night) for (let i = 0; i < 40; i++) {
+    const p = parts[i], tw = .35 + .65 * Math.abs(Math.sin(now * (.6 + p.v) + p.ph));
+    c.fillStyle = 'rgba(255,248,220,' + (tw * .8).toFixed(2) + ')';
+    c.fillRect(Math.round(p.x * .9 + 6), Math.round(p.y * .45), p.z > .8 ? 2 : 1, p.z > .8 ? 2 : 1);
+  }
   if (k === 2) { c.fillStyle = 'rgba(170,175,185,.22)'; c.fillRect(0, 0, UW, UH) }
   const rain = k === 1, snow = k === 3 || (s === 3 && k === 0);
   const n = rain ? NP : snow ? 110 : k === 2 ? 0 : 36;

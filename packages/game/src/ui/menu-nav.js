@@ -1,4 +1,5 @@
 import { snd } from '../audio/sound.js';
+import { sessionState } from '../gameplay/session.js';
 import { inputState } from '../input/state.js';
 
 /* ================= TITLE MENU: keyboard and gamepad navigation, hover feedback =================
@@ -51,8 +52,13 @@ export function initializeMenuNav() {
     if (!NAV.active || modalOpen()) return;
     if (e.key === 'ArrowDown') { e.preventDefault(); move(1) }
     else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1) }
-    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); press() }
+    else if (e.key === 'Enter' || (e.key === ' ' && !sessionState.inGame)) { e.preventDefault(); press() }
   });
+}
+
+export function padOn() {
+  try { const l = navigator.getGamepads ? navigator.getGamepads() : []; for (const p of l) if (p && p.connected) return true } catch (e) { }
+  return false;
 }
 
 /* gamepad: called once per drawn frame while the menu is shown */

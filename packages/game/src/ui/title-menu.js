@@ -15,7 +15,7 @@ import { uiBtn } from './build-menu.js';
 import { canvasesState } from './canvases.js';
 import { arcDia, BTN, BTNH, dirtBack, frame, gold, GRN, GRNH, PAN, rr } from './drawing.js';
 import { hudState, inR, U } from './hud.js';
-import { NAV, navAdd, navBegin, navEnd, navPoll } from './menu-nav.js';
+import { NAV, navAdd, navBegin, navEnd, navPoll, padOn } from './menu-nav.js';
 import { dIc, IC } from './icons.js';
 import { KNAMES, PAL, THEME } from './kingdom-theme.js';
 import { pill } from './minimap.js';
@@ -30,6 +30,11 @@ function menuCx(UW,pw){return UW/2}
 
 let TT0 = -1;
 let notesOpen = false;
+let recOpen = false;
+
+/* tip of the day: one of the tutorial lines, changing each day */
+const TIPS = ['Right-click a tree, a rock or gold: your peasants gather it', 'Build a house in the Town menu to raise your population limit', 'Train a knight in the Train bar: knights fight the zombies', 'Build walls or a tower in the Defense menu to hold the lanes', 'Try a spike trap in the Defense menu: zombies on it get hurt', 'Zombies follow the red lines: the top bar counts down to the wave', 'Research Stonemasonry in the castle menu to build in stone'];
+const TIPN = (Date.now() / 864e5 | 0) % TIPS.length;
 
 
 function titleBack(UW,UH,cx,pw){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH);g.addColorStop(0,'rgba(6,10,22,.08)');g.addColorStop(.55,'rgba(6,10,22,.12)');g.addColorStop(1,'rgba(6,10,22,.6)');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillRect(0,0,UW,UH);
@@ -41,7 +46,8 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
   if(languageState.langOpen){dirtBack(UW,UH);drawLang(UW,UH,cx);return}
  if(settingsState.setupOpen){dirtBack(UW,UH);drawSetup(UW,UH,cx,Math.min(UW-16,380),small);return}
  if(notesOpen){NAV.onEsc=()=>{notesOpen=false};navBegin(false);dirtBack(UW,UH);drawNotes(UW,UH,cx);return}
- NAV.onEsc=null;navBegin(!sessionState.inGame);navPoll();
+ if(recOpen){NAV.onEsc=()=>{recOpen=false};navBegin(false);dirtBack(UW,UH);drawRecords(UW,UH,cx);return}
+ NAV.onEsc=null;navBegin(!sessionState.inGame||!MP.on);navPoll();
  let y=Math.max(8,UH*(small?.05:.1));uiBtn(UW-30,6,24,20,BTN,BTNH,()=>{settingsState.settingsOpen=true},['Settings'],(x,yy,w,h)=>dIc(IC.gear,x+5,yy+3,14));
  if(sessionState.inGame){canvasesState.ctx.fillStyle='rgba(0,0,0,.45)';canvasesState.ctx.fillRect(0,0,UW,UH);y=Math.max(12,UH*.16);TTL('Game Menu',cx,y,1.75,'center');y+=34}else{
  canvasesState.ctx.globalAlpha=ease(ent(.5,1.4));const gw=Math.min(UW*.8,440),cs=Math.max(4,Math.floor(gw/47)),lw=cs*47,lx=Math.round(cx-lw/2);mcLogo('NARANXIA',lx,Math.round(y),cs);y+=cs*5+cs*1.1;
@@ -52,18 +58,29 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
  }canvasesState.ctx.globalAlpha=ease(ent(1,1.9));const ig=sessionState.inGame,bw=Math.min(UW-24,Math.max(200,Math.min(300,UW*.5))),gp=small?5:9,bx=Math.round(cx-bw/2),wide=bw>=250;
  if(!ig&&saveMenuState.last===undefined){saveMenuState.last=null;svPeek()}
  const nb=(ig?(MP.on?5:7):5)+(!ig&&saveMenuState.last?1:0)+(!ig&&window.NARX&&NARX.desktop?1:0)+(ig?0:1)+(wide||ig?0:1),bh=Math.max(16,Math.min(small?22:26,Math.floor((UH-(ig?20:60)-y)/nb)-gp));
- const hv=(x,yy,w,h)=>inR(inputState.mouse,U(x,yy,w,h)),mb=(lab,fn,hl)=>{const k=ig?-1:navAdd(fn,hv(bx,y,bw,bh));pill(bx,y,bw,bh,lab,hl?GRN:BTN,hl?GRNH:BTNH,fn,null,1.15,k>=0&&NAV.sel===k);y+=bh+gp};
+ const hv=(x,yy,w,h)=>inR(inputState.mouse,U(x,yy,w,h)),mb=(lab,fn,hl)=>{const k=navAdd(fn,hv(bx,y,bw,bh));pill(bx,y,bw,bh,lab,hl?GRN:BTN,hl?GRNH:BTNH,fn,null,1.15,k>=0&&NAV.sel===k);y+=bh+gp};
  const openLoad=()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null},openTut=()=>{try{localStorage.removeItem('dk_tut')}catch(e){}settingsState.setupOpen=true};
  if(ig){mb('Back to Game',startGame);if(!MP.on)mb('Save / Load',openLoad);mb('New game',newGame);mb('Quit game',quitGame);if(!MP.on)mb('Tutorial',()=>{tutStart(true);startGame()});mb('Report a bug [F8]',bugReport);mb('Multiplayer (Co-op)',mpOpen)}
  else{if(saveMenuState.last)mb('Continue',continueLast,1);mb('Singleplayer',()=>{settingsState.setupOpen=true});mb('Multiplayer (Co-op)',mpOpen);mb('Load game',openLoad);mb('Tutorial',openTut);if(window.NARX&&NARX.desktop)mb('Exit to desktop',()=>window.close())}
  {const sd=()=>{toggleSound()},lg=()=>{languageState.langOpen=true},op=()=>{settingsState.settingsOpen=true},sl=sndOn?'Sound: on':'Sound: off';
-  const row=(x,w,lab,fn,lang)=>{const k=ig?-1:navAdd(fn,hv(x,y,w,bh)),on=k>=0&&NAV.sel===k;if(lang){langBtn(x,y,w,bh,LANG,fn,false);if(on)gold(x,y,w,bh)}else pill(x,y,w,bh,lab,BTN,BTNH,fn,null,wide&&!ig?1.05:1.15,on)};
+  const row=(x,w,lab,fn,lang)=>{const k=navAdd(fn,hv(x,y,w,bh)),on=k>=0&&NAV.sel===k;if(lang){langBtn(x,y,w,bh,LANG,fn,false);if(on)gold(x,y,w,bh)}else pill(x,y,w,bh,lab,BTN,BTNH,fn,null,wide&&!ig?1.05:1.15,on)};
   if(ig){const hw=Math.round((bw-gp)/2);row(bx,hw,'Options',op);row(bx+hw+gp,bw-hw-gp,sl,sd);y+=bh+gp}
   else if(wide){const lw=Math.max(96,Math.round(bw*.36)),hw=Math.round((bw-lw-2*gp)/2);row(bx,hw,'Options',op);row(bx+hw+gp,hw,sl,sd);row(bx+2*hw+2*gp,bw-2*hw-2*gp,'',lg,1);y+=bh+gp}
   else{const hw=Math.round((bw-gp)/2);row(bx,hw,'Options',op);row(bx+hw+gp,bw-hw-gp,sl,sd);y+=bh+gp;row(bx,bw,'',lg,1);y+=bh+gp}}
- if(!ig){const r=lastRun();if(r&&UH-y>34){TC('Last game: wave '+r.w+'  -  '+r.k+' zombies slain',cx,y+2,'#c4a37a',.85);y+=13;TC(titleWeatherLabel(),cx,y+2,titleSeasonColor(),.85);y+=15}
+ if(!ig){const r=lastRun();if(r&&UH-y>34){TC('Last game: wave '+r.w+'  -  '+r.k+' zombies slain',cx,y+2,'#c4a37a',.85);y+=13;{const wl=titleWeatherLabel(),ww=tw(wl,.85);arcDia(cx-ww/2-8,y+6,2.5,titleSeasonColor())}TC(titleWeatherLabel(),cx,y+2,titleSeasonColor(),.85);y+=15}
   if(sessionState.best.w>0&&UH-y>18){TC('Best: wave '+sessionState.best.w+'  -  '+sessionState.best.k+' zombies slain',cx,y+2,'#ffff55',.9);y+=16}}
- canvasesState.ctx.globalAlpha=1;const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);if(!ig&&GNOTES){const nw=Math.max(96,tw('What\'s new',.8)+22),nx=UW-nw-8,ny=UH-34,k=navAdd(()=>{notesOpen=true},hv(nx,ny,nw,18));pill(nx,ny,nw,18,'What\'s new',BTN,BTNH,()=>{notesOpen=true},null,.8,NAV.sel===k)}navEnd();T_('Naranxia',6,UH-12,'#c8c8c8',.75);}
+ if(!ig&&UH-y>30&&UH>260){const t=TIPS[TIPN];let sc=.8;while(sc>.58&&tw(t,sc)>UW-40)sc-=.04;if(tw(t,sc)<=UW-40)TC(t,cx,Math.min(y+6,UH-40),'#9fd6e6',sc)}
+ canvasesState.ctx.globalAlpha=1;if(UH>240)TC(NAV.active?(padOn()?'D-pad: move | A: select | B: back':'Up / Down: move | Enter: select | Esc: back'):'',cx,UH-27,'#8d8068',.72);const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);if(!ig&&GNOTES){const nw=Math.max(96,tw('What\'s new',.8)+22),nx=UW-nw-8,ny=UH-34,k=navAdd(()=>{notesOpen=true},hv(nx,ny,nw,18));pill(nx,ny,nw,18,'What\'s new',BTN,BTNH,()=>{notesOpen=true},null,.8,NAV.sel===k)}if(!ig){const rn=Math.max(70,tw('Records',.8)+22),k2=navAdd(()=>{recOpen=true},hv(8,UH-34,rn,18));pill(8,UH-34,rn,18,'Records',BTN,BTNH,()=>{recOpen=true},null,.8,NAV.sel===k2)}navEnd();T_('Naranxia',6,UH-12,'#c8c8c8',.75);}
+
+function drawRecords(UW,UH,cx){const W=Math.min(UW-12,420),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=8,H=UH-16;frame(X,Y,W,H,PAN,6);TTL('Records',X+10,Y+7,1.35);
+ let y=Y+34;const b=sessionState.best,r=lastRun();
+ if(b&&b.w>0){T_('Best: wave '+b.w+'  -  '+b.k+' zombies slain',X+14,y,'#ffff55',.9);y+=16}
+ if(r){T_('Last game: wave '+r.w+'  -  '+r.k+' zombies slain',X+14,y,'#c4a37a',.85);y+=13;T_(titleWeatherLabel(),X+14,y,titleSeasonColor(),.85);y+=17}
+ let runs=[];try{const all=JSON.parse(localStorage.getItem('dk_sb')||'{}');for(const k in all)for(const e of all[k])if(e&&e.w>=0)runs.push(e)}catch(e){}
+ runs.sort((a,b2)=>b2.s-a.s);runs=runs.slice(0,Math.max(0,Math.min(8,Math.floor((Y+H-34-y-16)/14))));
+ if(!(b&&b.w>0)&&!r&&!runs.length)T_('No record yet',X+14,y,'#c4a37a',.85);
+ else if(runs.length){T_('Best runs',X+14,y,'#d9b27a',.85);y+=15;runs.forEach((e,i)=>{T_('#'+(i+1)+'   Wave '+e.w+'   '+e.k+' kills',X+22,y,'#ead8ba',.82);y+=14})}
+ pill(X+W/2-40,Y+H-24,80,16,'Back',BTN,BTNH,()=>{recOpen=false},null,.9)}
 
 function drawNotes(UW,UH,cx){const W=Math.min(UW-12,480),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=8,H=UH-16;frame(X,Y,W,H,PAN,6);TTL('What\'s new',X+10,Y+7,1.35);T_(GVER,X+W-10-tw(GVER,.9),Y+10,'#d9b27a',.9);
  const items=String(GNOTES||'').split('\n').map(l=>l.replace(/^\s*[-*]\s*/,'').trim()).filter(Boolean),maxW=W-44,top=Y+32,room=H-top+Y-34;

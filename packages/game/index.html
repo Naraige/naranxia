@@ -14,9 +14,10 @@
   <canvas id="c"></canvas>
   <template id="coop-lobby-template">
     <div class="bx"><h2>Co-op (online, 2 players)</h2><p>Each player founds their own castle on the same map. The economy is shared and you fight the zombies together.</p>
-    <div id="mpHome"><button class="pri" id="mpBH">Host a game</button><button id="mpBJ">Join with a code</button></div>
-    <div id="mpHostP" style="display:none"><div class="step">Choose a room code (like a password) - or leave empty for a random one</div><input class="cd" id="mpHCode" maxlength="16" placeholder="ROSE42" autocomplete="off"><button class="pri" id="mpMk">Create room</button></div>
+    <div id="mpHome"><button class="pri" id="mpBH">Host a game</button><button id="mpBL">Public games</button><button id="mpBJ">Join with a code</button></div>
+    <div id="mpHostP" style="display:none"><div class="step">Choose a room code (like a password) - or leave empty for a random one</div><input class="cd" id="mpHCode" maxlength="16" placeholder="ROSE42" autocomplete="off"><label class="pubchk"><input type="checkbox" id="mpPub"> <span id="mpPubT">List my game in the public lobby</span></label><button class="pri" id="mpMk">Create room</button></div>
     <div id="mpJoinP" style="display:none"><div class="step">Type the code your host gave you</div><input class="cd" id="mpCode" maxlength="16" placeholder="ROSE42" autocomplete="off"><button class="pri" id="mpGo">Join</button></div>
+    <div id="mpPubP" style="display:none"><div class="step" id="mpPubH">Public games</div><div id="mpPubL" class="publ"></div><button id="mpPubR">Refresh</button></div>
     <div id="mpLobby" style="display:none"><div class="step">Your room code - your partner types it to join</div><div class="code" id="mpRoom">-----</div>
     <div class="step">Players</div><div class="pl" id="mpP1"><span class="dot"></span><span class="nm"></span><span class="rd"></span></div><div class="pl" id="mpP2"><span class="dot"></span><span class="nm"></span><span class="rd"></span></div>
     <div><button class="pri" id="mpSite">Choose my castle site</button><button class="pri" id="mpPlay" style="display:none">Play</button></div></div>

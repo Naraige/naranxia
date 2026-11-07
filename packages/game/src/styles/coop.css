@@ -37,3 +37,13 @@
 #mp .pl .dot{border-radius:0 !important;width:9px !important;height:9px !important;transform:rotate(45deg);background:#4a4536 !important;border:1px solid #07060b}#mp .pl.on .dot{background:#79dede !important;box-shadow:0 0 8px #79dede !important}
 #mp .pl .nm{font-family:"Cinzel","Marcellus",serif;font-weight:700;color:#f2e4c4}#mp .pl .rd{color:#d9b27a !important}#mp .pl.rdy .rd{color:#9ff0d8 !important}
 #mpHud{border-radius:2px !important;background:linear-gradient(#26313f,#151b25) !important;border:1px solid #c9a24f !important;color:#f2d27e !important;font:400 14px "NaxNum","Marcellus",Georgia,serif !important;box-shadow:0 0 0 1px #07060b}
+
+/* public lobby */
+#mp .pubchk{display:block;margin:10px 0 4px;font-size:14px;color:#ead8ba;cursor:pointer}
+#mp .pubchk input{vertical-align:middle;margin-right:6px}
+#mp .publ{max-height:240px;overflow:auto;margin:6px 0}
+#mp .publ .pg{display:flex;align-items:center;gap:10px;padding:8px 10px;margin:5px 0;background:rgba(5,8,14,.5);border:1px solid rgba(201,162,79,.35)}
+#mp .publ .pg .nm{flex:1;font-weight:700;color:#f2e4c4}
+#mp .publ .pg .cd2{font-size:12px;color:#d9b27a;letter-spacing:2px}
+#mp .publ .pg button{margin:0 !important;padding:4px 12px !important;font-size:14px !important}
+#mp .publ .none{padding:10px;color:#d9b27a;font-size:14px}

@@ -1,6 +1,8 @@
 import { REALR } from '../core/random.js';
 import { $m, lobbyRender, lobbyShow, mpConnected, mpFallback, mpStatus } from './lobby.js';
 import { mpLost, mpMsg } from './lockstep.js';
+import { THEME } from '../ui/kingdom-theme.js';
+import { registryHide, registryShow } from './registry.js';
 import { MP } from './session.js';
 
 /* ---- connection 1: short room code through the free PeerJS broker ---- */
@@ -17,7 +19,7 @@ const normCode=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,1
 
 export async function lobbyHost(custom,tries){tries=tries||0;custom=normCode(custom);if(custom&&custom.length<3){mpStatus('Your code needs at least 3 letters or digits.');return}mpStatus('Creating your room...');try{await loadPeer()}catch(e){mpStatus('Could not reach the matchmaking service. Check your connection and try again.');mpFallback(true);return}
  MP.host=true;MP.code=custom||rcode();const peer=new Peer('nrx-'+MP.code,PCFG);MP.peer=peer;
- peer.on('open',()=>{lobbyRender();lobbyShow();mpStatus('Waiting for your partner to join...')});
+ peer.on('open',()=>{lobbyRender();lobbyShow();mpStatus('Waiting for your partner to join...');if($m('mpPub').checked)registryShow(MP.code,THEME.n)});
  peer.on('connection',c=>{if(MP.conn){c.close();return}attach(c)});
  peer.on('error',e=>{if(e.type==='unavailable-id'&&custom){peer.destroy();MP.code='';$m('mpHostP').style.display='block';$m('mpLobby').style.display='none';mpStatus('The code '+custom+' is already used by another room: choose a different one.')}else if(e.type==='unavailable-id'&&tries<4){peer.destroy();lobbyHost('',tries+1)}else{mpStatus('Matchmaking error ('+e.type+'). Check your connection and try again.');mpFallback(true)}})}
 
