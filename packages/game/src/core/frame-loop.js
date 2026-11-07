@@ -56,7 +56,9 @@ function loop(ts){const lt0=performance.now(),dt=Math.min(.05,(ts-(sessionState.
 
 /* the launch splash (index.html) fades out once a few frames of the title scene are on screen */
 let bootFrames = 0;
-function hideBoot(){if(bootFrames>=0&&++bootFrames>=4){bootFrames=-1;const b=document.getElementById('boot');if(b){b.classList.add('done');setTimeout(()=>b.remove(),1300)}}}
+let bootSkip=false;function skipBoot(){if(bootSkip)return;bootSkip=true;const b=document.getElementById('boot');if(b)b.classList.add('skip')}
+try{for(const ev of['pointerdown','keydown'])addEventListener(ev,skipBoot,{once:true,passive:true})}catch(e){}
+function hideBoot(){if(bootFrames>=0&&++bootFrames>=4&&(bootSkip||performance.now()>3300)){bootFrames=-1;const b=document.getElementById('boot');if(b){b.classList.add('done');setTimeout(()=>b.remove(),1300)}}}
 export let UIDT = 1/60;
 let CUR0 = '';
 let SHF = 0;
