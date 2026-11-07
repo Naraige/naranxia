@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-07 · Text never spills out of buttons (v92, not released)
+
+- The King: nothing may overflow a button, in every menu and language. `fitSc()` (language.js) shrinks a label to fit (min .45), used by `pill` and `langBtn`; `TCf()` shrinks then ends with an ellipsis (build tiles: name, Done / Free / Locked / Masonry, costs down to .34); `uiBtn` clips its content to the button and reports any text that still sticks out (`setClipBox` in `T_`); HTML buttons of the co-op window wrap (`#mp button` CSS).
+- `tools/fitcheck.py [W H x N]`: one headless page per language, walks title, records, notes, language list, 4 settings tabs, then in game (HUD, build menu, pause menu, troop panel F2, test mode F10, map) and the co-op window; prints overflows (`window.__ovf`). Result: 0 overflows in 9 languages at 1280x720, 700x420 and 360x640 (title/settings only for 360). Catching a real case: German build tile "Steinmetzkunst" / "Sammelpunkt: Bu" was cut, now fits / ends with an ellipsis. Not covered: build sub-menus (Defense, Economy...), convoy dialog, save menu, tutorial popups.
+- Still to do from the "yes" for the 6 other languages: turn the sentence fragments joined in code into whole-sentence keys with {0} (about 60 sites in build-menu.js, waves.js, desktop.js, lobby.js...), then RU, UK, JA, ZH, KO, AR (RTL).
+
 ## 2026-11-07 · Menu polish, public lobby, languages (v92, not released: GitHub access suspended)
 
 - Asked by the King ("tout" + "un lobby pour voir toutes les parties publiques"). Menu: tip of the day (a tutorial line, by day), key / pad hint line (`padOn()`), season diamond before the weather label, time-of-day tint + stars on the title (real clock, UI only), first-launch language from `navigator.language` (never saved, the picker still wins), keyboard nav also in the solo pause menu (Space ignored in game, off in co-op), "Records" panel (best, last run, top runs from `dk_sb`).

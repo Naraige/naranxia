@@ -34,6 +34,9 @@ import { svApply } from '../persistence/restore.js';
 import { SAVA, svAssign, svPack } from '../persistence/save-format.js';
 import { continueLast, saveMenuState, svPeek } from '../ui/save-menu.js';
 import { NAV } from '../ui/menu-nav.js';
+import { settingsDebug, settingsState } from '../ui/settings.js';
+import { titleDebug } from '../ui/title-menu.js';
+import { languageState } from '../i18n/language.js';
 import { FOWU } from '../rendering/fog.js';
 import { render3D, setRender3DHandler } from '../rendering/frame.js';
 import { matV } from '../rendering/materials.js';
@@ -211,6 +214,10 @@ export function installBrowserConsole() {
     svPack: { get: () => svPack },
     saveMenuState: { get: () => saveMenuState },
     NAV: { get: () => NAV },
+    settingsDebug: { get: () => settingsDebug },
+    settingsState: { get: () => settingsState },
+    titleDebug: { get: () => titleDebug },
+    languageState: { get: () => languageState },
     svPeek: { get: () => svPeek },
     continueLast: { get: () => continueLast },
     ter: { get: () => ter },

@@ -37,6 +37,7 @@ npm test                       # quick suite, logs in dist/test-logs/
 npm test -- --full             # quick suite plus save round trip
 npm test -- det mp8            # select tests by name
 python3 tools/run.py X.js [out.png|-] [W H wait] [html]   # evaluates the JS function in X.js inside the loaded game
+python3 tools/fitcheck.py 1280 720 x 9                    # button text overflow in every language (after npm run build; slow, run in background)
 python3 tools/profile.py                                  # CPU profile of 6000 sim ticks (after npm run build); hashes must not change
 python3 tools/repro.py report.json [sec] [after.png]      # opens a player's bug report (F8): errors, screenshot, replays the save
 python3 tools/addtexts.py texts.json                      # {"English": [FR, ES, DE, IT, PT]} into the block of the next version

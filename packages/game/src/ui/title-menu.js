@@ -31,6 +31,7 @@ function menuCx(UW,pw){return UW/2}
 let TT0 = -1;
 let notesOpen = false;
 let recOpen = false;
+export const titleDebug = { rec(v) { recOpen = v }, notes(v) { notesOpen = v } };
 
 /* tip of the day: one of the tutorial lines, changing each day */
 const TIPS = ['Right-click a tree, a rock or gold: your peasants gather it', 'Build a house in the Town menu to raise your population limit', 'Train a knight in the Train bar: knights fight the zombies', 'Build walls or a tower in the Defense menu to hold the lanes', 'Try a spike trap in the Defense menu: zombies on it get hurt', 'Zombies follow the red lines: the top bar counts down to the wave', 'Research Stonemasonry in the castle menu to build in stone'];

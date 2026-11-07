@@ -49,6 +49,8 @@ function setGfx(v){sceneState.GQ=v?1:0;GQU.value=sceneState.GQ;try{localStorage.
 
 let setTab=0;
 
+export const settingsDebug = { tab(n) { setTab = n } };
+
 const tutOn=()=>{try{return localStorage.getItem('dk_tut')!=='1'}catch(e){return true}};
 const tutSet=on=>{try{if(on)localStorage.removeItem('dk_tut');else localStorage.setItem('dk_tut','1')}catch(e){}};
 

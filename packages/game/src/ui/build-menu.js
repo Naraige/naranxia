@@ -20,7 +20,7 @@ import { C, CSTONE, CWOOD, RN2, ROTT, RPRE, RS, RS2, RT_TIME, RT2, T, UPC } from
 import { curB, sel, selBs, selectionState, TRB } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { groupSel, ungroupSel } from '../gameplay/squads.js';
-import { T_, TC, tw } from '../i18n/language.js';
+import { setClipBox, T_, TC, TCf, tw } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { roleAdj, ROLEK } from '../multiplayer/commands.js';
 import { MP } from '../multiplayer/session.js';
@@ -239,7 +239,7 @@ const upTarget=()=>selectionState.selB&&sessionState.structs.includes(selectionS
 
 function itemFn(it){return it.k==='convoy'?()=>{convoyPanelState.convoyOpen=!convoyPanelState.convoyOpen;snd('click')}:JOBK.has(it.k)?()=>assignJob(it.k[1]):it.k==='stoneup'?()=>{const L=selBs().filter(s=>s.tier===0&&UPC[s.type]);if(L.length){for(const s of L)build('upgrade',s.tx,s.ty);return}const b=upTarget();if(b)build('upgrade',b.tx,b.ty)}:it.k==='upgtool'?()=>{if(!RS.done){hudDisplayState.msgS='Needs Stonemasonry';hudDisplayState.msgT=2;snd('err');return}sessionState.units.forEach(u=>u.sel=false);sessionState.mode=sessionState.mode==='upgrade'?null:'upgrade';snd('click')}:it.k.startsWith('cat:')?()=>{buildMenuState.BCAT=it.k.slice(4);snd('click')}:it.k==='back'?()=>{buildMenuState.BCAT=null;snd('click')}:ROLEK.has(it.k)?()=>roleAdj(it.k[1],it.k[2]==='+'?1:-1):STNK.has(it.k)?()=>setStance(it.k):it.k==='form'?()=>{constructionState.formType=(constructionState.formType+1)%FORMS.length;hudDisplayState.msgS='Formation: '+FORMS[constructionState.formType];hudDisplayState.msgT=2}:it.k==='idle'?selIdle:it.k==='buy'?(it.tr!==undefined?()=>tierPick(it):()=>buy(it.id)):it.k==='army'?army:it.k==='group'?groupSel:it.k==='ungroup'?ungroupSel:it.k==='mode'?()=>{inputState.panMode=!inputState.panMode}:null}
 
-export function uiBtn(x,y,w,h,pal,palH,fn,tip,draw,on,dis){const hit=U(x,y,w,h),hv=inR(inputState.mouse,hit)&&!dis&&!!fn;frame(x,y,w,h,dis?(pal===SLOT?SLOTX:BTNX):hv?palH:pal);if(on)gold(x,y,w,h);if(draw)draw(x,y,w,h,hv,dis);hudState.uiHits.push({...hit,fn:dis?null:fn,tip})}
+export function uiBtn(x,y,w,h,pal,palH,fn,tip,draw,on,dis){const hit=U(x,y,w,h),hv=inR(inputState.mouse,hit)&&!dis&&!!fn;frame(x,y,w,h,dis?(pal===SLOT?SLOTX:BTNX):hv?palH:pal);if(on)gold(x,y,w,h);if(draw){const c=canvasesState.ctx;c.save();c.beginPath();c.rect(x+1,y+1,w-2,h-2);c.clip();setClipBox([x,y,w,h]);draw(x,y,w,h,hv,dis);setClipBox(null);c.restore()}hudState.uiHits.push({...hit,fn:dis?null:fn,tip})}
 
 const tierC=it=>it.tr===undefined?C[it.id]:(RS.done&&it.tr?CSTONE:CWOOD)[it.id];
 
@@ -249,7 +249,7 @@ export function costParts(id,cc){const c=cc||C[id]||{};return Object.entries(c).
 
 const RIC=k=>k==='g'?IC.coin:k==='w'?IC.wood:k==='f'?IC.food:IC.stone;
 
-export function drawCost(cp,x,y,w,sc,is){const fit=q=>cp.reduce((a,p)=>a+tw(p[0],q)+is*q/sc+3,-3);while(sc>.45&&fit(sc)>w-1){sc-=.04;is-=.4}const tot=cp.reduce((a,p)=>a+tw(p[0],sc)+is+3,-3);let cx=x+(w-tot)/2;cp.forEach(p=>{dIc(RIC(p[2]),cx,y-1.5,is);cx+=is+1;T_(p[0],cx,y,p[1],sc);cx+=tw(p[0],sc)+3})}
+export function drawCost(cp,x,y,w,sc,is){const fit=q=>cp.reduce((a,p)=>a+tw(p[0],q)+is*q/sc+3,-3);while(sc>.34&&fit(sc)>w-4){sc-=.04;is-=.4}const tot=cp.reduce((a,p)=>a+tw(p[0],sc)+is+3,-3);let cx=x+(w-tot)/2;cp.forEach(p=>{dIc(RIC(p[2]),cx,y-1.5,is);cx+=is+1;T_(p[0],cx,y,p[1],sc);cx+=tw(p[0],sc)+3})}
 
 const STNK=new Set(['agg','def','hold','stop','work']);
 function stanceOn(k){const S=sel().filter(u=>u.type!=='peasant');return S.length>0&&S.every(u=>(u.stn||'agg')===k)}
@@ -260,12 +260,12 @@ export function drawItem(it){const cat=it.k.startsWith('cat:')?it.k.slice(4):nul
  const nm=NAMES[it.id]||'',idleN=it.k==='idle'?idleP().length:0;
  if(it.lab&&!CMP)TN(it.grp,it.x+1,it.y-9.5,'#d6b46a',.72);
  uiBtn(it.x,it.y,it.w,it.h,SLOT,SLOTH,itemFn(it),tip,(x,y,w,h)=>{canvasesState.ctx.globalAlpha=dis?.45:1;if(CMP){dIc(ic,x+((w-17)>>1),y+((h-17)>>1)+1,17);canvasesState.ctx.globalAlpha=1;if(HK[it.id||it.k]!==undefined&&it.tr!==1)T_(HK[it.id||it.k],x+2,y+1.5,'#ffff55',.6);if(idleN)T_('!',x+w-5,y+1,'#ff6a6a',.7);return}dIc(ic,x+((w-16)>>1),y+4,16);
-  let sc=.7;while(sc>.5&&tw(nm,sc)>w-3)sc-=.03;TC(nm,x+w/2,y+21.5,dis?'#b8b8b8':'#ffffff',sc);canvasesState.ctx.globalAlpha=1;
+  TCf(nm,x+w/2,y+21.5,dis?'#b8b8b8':'#ffffff',.7,w-3,.42);canvasesState.ctx.globalAlpha=1;
   const rdn=it.k==='buy'&&((it.id==='upgrade'&&RS.done)||((it.id in RT2)&&RS2.done[it.id])),ron=it.k==='buy'&&((it.id==='upgrade'&&RS.on)||((it.id in RT2)&&RS2.on===it.id));
-  if(rdn){canvasesState.ctx.globalAlpha=1;T_('Done',x+(w-tw('Done',.62))/2,y+29.5,'#6aff7a',.62);canvasesState.ctx.strokeStyle='#0b0810';canvasesState.ctx.lineWidth=3.2;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-12,y+7);canvasesState.ctx.lineTo(x+w-8,y+11);canvasesState.ctx.lineTo(x+w-2.5,y+3.5);canvasesState.ctx.stroke();canvasesState.ctx.strokeStyle='#6aff7a';canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.stroke()}
+  if(rdn){canvasesState.ctx.globalAlpha=1;TCf('Done',x+w/2,y+29.5,'#6aff7a',.62,w-14,.4);canvasesState.ctx.strokeStyle='#0b0810';canvasesState.ctx.lineWidth=3.2;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-12,y+7);canvasesState.ctx.lineTo(x+w-8,y+11);canvasesState.ctx.lineTo(x+w-2.5,y+3.5);canvasesState.ctx.stroke();canvasesState.ctx.strokeStyle='#6aff7a';canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.stroke()}
   else if(ron){const pc=Math.floor((it.id==='upgrade'?RS.t/RT_TIME:RS2.t/RT2[it.id])*100)+'%';T_(pc,x+(w-tw(pc,.62))/2,y+29.5,'#ffe066',.62);canvasesState.ctx.fillStyle='#ffe066';canvasesState.ctx.fillRect(x+3,y+h-3,(w-6)*Math.min(1,parseInt(pc)/100),1.5)}
-  else if(it.k==='buy'&&(it.id==='dig'||it.id==='raise'||it.id==='ramp'))T_('Free',x+(w-tw('Free',.62))/2,y+29.5,'#55ff55',.62);else if(it.tr===1&&!RS.done){T_('Locked',x+(w-tw('Locked',.62))/2,y+29.5,'#ff8a6a',.62)}else if(it.k==='buy'){drawCost(costParts(it.id,tierC(it)),x,y+29.5,w,.62,7)}
-  else if(it.k==='stoneup'){const b=upTarget(),c=b&&UPC[b.type],n=Math.max(1,selBs().filter(s=>s.tier===0&&UPC[s.type]).length);if(!RS.done)T_('Masonry',x+(w-tw('Masonry',.58))/2,y+29.5,'#ff8a6a',.58);else if(c)drawCost(Object.entries(c).map(([k,v])=>[String(v*n),sessionState.res[k]>=v*n?'#d4dae6':sessionState.res[k]>=v?'#f2c14e':'#ff6a6a',k]),x,y+29.5,w,.62,7)}
+  else if(it.k==='buy'&&(it.id==='dig'||it.id==='raise'||it.id==='ramp'))TCf('Free',x+w/2,y+29.5,'#55ff55',.62,w-3,.4);else if(it.tr===1&&!RS.done){TCf('Locked',x+w/2,y+29.5,'#ff8a6a',.62,w-3,.4)}else if(it.k==='buy'){drawCost(costParts(it.id,tierC(it)),x,y+29.5,w,.62,7)}
+  else if(it.k==='stoneup'){const b=upTarget(),c=b&&UPC[b.type],n=Math.max(1,selBs().filter(s=>s.tier===0&&UPC[s.type]).length);if(!RS.done)TCf('Masonry',x+w/2,y+29.5,'#ff8a6a',.58,w-3,.4);else if(c)drawCost(Object.entries(c).map(([k,v])=>[String(v*n),sessionState.res[k]>=v*n?'#d4dae6':sessionState.res[k]>=v?'#f2c14e':'#ff6a6a',k]),x,y+29.5,w,.62,7)}
   else if(it.k==='upgtool')T_('Paint',x+(w-tw('Paint',.62))/2,y+29.5,sessionState.mode==='upgrade'?'#ffff55':'#e0e0e0',.62);else if(it.k==='convoy')T_('Send',x+(w-tw('Send',.62))/2,y+29.5,convoyPanelState.convoyOpen?'#ffff55':'#e0e0e0',.62);else if(JOBK.has(it.k))T_(JOBL[it.k],x+(w-tw(JOBL[it.k],.62))/2,y+29.5,'#e0e0e0',.62);
   else if(cat){const s=BCATS[cat][1].length+' types';T_(s,x+(w-tw(s,.62))/2,y+29.5,'#d6b46a',.62)}
   else if(it.k==='back')T_('Esc',x+(w-tw('Esc',.62))/2,y+29.5,'#ffff55',.62);

@@ -56,7 +56,7 @@ function drawFlag(code,x,y,w,h){canvasesState.ctx.save();canvasesState.ctx.begin
   ln(h*.2,'#fff',0,0,1,1);ln(h*.2,'#fff',1,0,0,1);ln(h*.08,'#c8102e',0,0,1,1);ln(h*.08,'#c8102e',1,0,0,1);R_('#fff',.42,0,.16,1);R_('#fff',0,.36,1,.28);R_('#c8102e',.45,0,.1,1);R_('#c8102e',0,.4,1,.2)}
  canvasesState.ctx.restore();canvasesState.ctx.strokeStyle='rgba(0,0,0,.55)';canvasesState.ctx.lineWidth=1;canvasesState.ctx.strokeRect(x+.5,y+.5,w-1,h-1)}
 
-export function langBtn(x,y,w,h,i,fn,sel){uiBtn(x,y,w,h,sel?GRN:BTN,sel?GRNH:BTNH,fn,null,(X,Y,W2,H2)=>{const fh=Math.min(H2-6,13),fw=fh*1.5;drawFlag(LANGS[i][1],X+6,Y+(H2-fh)/2,fw,fh);T_(LANGS[i][0],X+12+fw,Y+(H2-9)/2+.5,'#fff',1)})}
+export function langBtn(x,y,w,h,i,fn,sel){uiBtn(x,y,w,h,sel?GRN:BTN,sel?GRNH:BTNH,fn,null,(X,Y,W2,H2)=>{const fh=Math.min(H2-6,13),fw=fh*1.5,ls=fitSc(LANGS[i][0],W2-fw-20,1);drawFlag(LANGS[i][1],X+6,Y+(H2-fh)/2,fw,fh);T_(LANGS[i][0],X+12+fw,Y+(H2-9*ls)/2+.5,'#fff',ls)})}
 
 export function drawLang(UW,UH,cx){const two=LANGS.length>8,rows=two?Math.ceil(LANGS.length/2):LANGS.length,W=Math.min(UW-12,two?500:360),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),H=Math.min(UH-16,62+rows*26+30),Y=Math.max(8,(UH-H)/2),cw=two?(W-30)/2:W-24;frame(X,Y,W,H,PAN,6);TTL(L('Choose your language'),X+10,Y+7,1.3);
  LANGS.forEach((l,i)=>langBtn(X+12+(two?(i%2)*(cw+6):0),Y+34+(two?(i/2|0):i)*26,cw,22,i,()=>{setLang(i);languageState.langOpen=false},LANG===i));
@@ -64,7 +64,17 @@ export function drawLang(UW,UH,cx){const two=LANGS.length>8,rows=two?Math.ceil(L
 
 export const tw=(s,sc)=>{const f=fontOf(9*(sc||1));canvasesState.ctx.font=f;s=L(String(s));const k=f+'\u0001'+s;let v=TWM.get(k);if(v===undefined){v=canvasesState.ctx.measureText(s).width;if(TWM.size>3000)TWM.clear();TWM.set(k,v)}return v};
 
-export function T_(s,x,y,col,sc){sc=sc||1;s=L(String(s));setF(9*sc);canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';canvasesState.ctx.fillStyle='rgba(0,0,0,.6)';canvasesState.ctx.fillText(s,x+.5*sc,y+.9*sc);canvasesState.ctx.fillStyle=col||'#fbf1de';canvasesState.ctx.fillText(s,x,y)}
+/* uiBtn sets the box of the button being drawn: text that sticks out of it is reported (tools/fitcheck.py) */
+let CLIPB=null;
+export const setClipBox=b=>{CLIPB=b};
+
+export function T_(s,x,y,col,sc){sc=sc||1;s=L(String(s));if(CLIPB&&s.trim()){const w=tw(s,sc);if(x<CLIPB[0]-.5||x+w>CLIPB[0]+CLIPB[2]+.5){const o=window.__ovf||(window.__ovf=[]);if(o.length<400)o.push(s+' @btn'+Math.round(CLIPB[2]))}}setF(9*sc);canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';canvasesState.ctx.fillStyle='rgba(0,0,0,.6)';canvasesState.ctx.fillText(s,x+.5*sc,y+.9*sc);canvasesState.ctx.fillStyle=col||'#fbf1de';canvasesState.ctx.fillText(s,x,y)}
+
+/* largest scale <= sc (down to min) at which s fits in w; reports what still overflows (checked by tools/fitcheck) */
+export function fitSc(s,w,sc,min){sc=sc||1;min=min||.45;while(sc>min&&tw(s,sc)>w)sc=Math.round((sc-.03)*100)/100;if(tw(s,sc)>w+.5){const o=window.__ovf||(window.__ovf=[]);if(o.length<400)o.push(L(String(s))+' @'+Math.round(w))}return sc}
+
+/* centred text that always fits in w: shrinks to min, then ends with an ellipsis */
+export function TCf(s,cx,y,col,sc,w,min){s=L(String(s));sc=sc||1;min=min||.4;while(sc>min&&tw(s,sc)>w)sc=Math.round((sc-.03)*100)/100;if(tw(s,sc)>w){let t=s;while(t.length>1&&tw(t+'\u2026',sc)>w)t=t.slice(0,-1);s=t+'\u2026'}T_(s,cx-tw(s,sc)/2,y,col,sc)}
 
 export function TC(s,cx,y,col,sc){T_(s,cx-tw(s,sc)/2,y,col,sc)}
 

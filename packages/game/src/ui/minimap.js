@@ -4,7 +4,7 @@ import { CASTLES } from '../gameplay/players.js';
 import { TH, TS, TW } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { SW } from '../gameplay/swarm.js';
-import { T_, TTL, tw, twH } from '../i18n/language.js';
+import { fitSc, T_, TTL, tw, twH } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { pickGround } from '../rendering/camera.js';
 import { FOWC, fowSeenAt, fowVisAt } from '../rendering/fog.js';
@@ -65,7 +65,7 @@ function dwBase(x,y,w,h,big){const sx=w/TW,sy=h/TH;
  canvasesState.ctx.restore()}
 
 /* ---- overlays ---- */
-export function pill(x,y,w,h,label,pal,palH,fn,ic,sc,on,dis){uiBtn(x,y,w,h,pal,palH,fn,null,(X,Y,W2,H2)=>{const s=sc||1,tx=tw(label,s),iw=ic?h*.62+4:0;let cx=X+(W2-tx-iw)/2;if(ic){dIc(ic,cx,Y+(H2-h*.62)/2,h*.62);cx+=iw}T_(label,cx,Y+(H2-9*s)/2+.5*s,dis?'#8a7660':'#fff',s)},on,dis)}
+export function pill(x,y,w,h,label,pal,palH,fn,ic,sc,on,dis){uiBtn(x,y,w,h,pal,palH,fn,null,(X,Y,W2,H2)=>{const iw=ic?h*.62+4:0,s=fitSc(label,W2-iw-8,sc||1),tx=tw(label,s);let cx=X+(W2-tx-iw)/2;if(ic){dIc(ic,cx,Y+(H2-h*.62)/2,h*.62);cx+=iw}T_(label,cx,Y+(H2-9*s)/2+.5*s,dis?'#8a7660':'#fff',s)},on,dis)}
 
 export function drawMapModal(UW,UH){canvasesState.ctx.fillStyle='rgba(5,8,16,.8)';canvasesState.ctx.fillRect(0,0,UW,UH);
  const aw=UW-20,ah=UH-68,mw=Math.min(aw,ah*TW/TH),mh=mw*TH/TW,pw=mw+16,ph=mh+50,px=(UW-pw)/2,py=(UH-ph)/2,mx=px+8,my=py+30;
