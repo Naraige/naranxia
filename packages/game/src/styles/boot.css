@@ -21,3 +21,24 @@
 #boot .st2{animation-delay:2s;animation-duration:1.9s}#boot .cl{font-weight:600;letter-spacing:.2em;padding-left:.2em}#boot .sc{position:absolute;bottom:6vh;font-weight:500;font-size:clamp(11px,1.5vw,13px);letter-spacing:.12em;color:#6f819a}
 @keyframes stIn{0%{opacity:0}22%{opacity:1}78%{opacity:1}100%{opacity:0;visibility:hidden}}
 @media(prefers-reduced-motion:reduce){#boot .st{animation-duration:1s}#boot .st2{animation-delay:1s;animation-duration:1s}#boot .bt{animation-delay:2s}}
+
+/* studio card animation: the sun draws, the hammer swings and strikes, the name opens up */
+#boot .st:not(.st2)::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 62%,rgba(90,210,255,.28),rgba(30,70,110,.12) 38%,transparent 66%);opacity:0;animation:stGlow 2s ease-out both}
+#boot .st>*{position:relative}
+#boot .sa{stroke-dasharray:1;stroke-dashoffset:1;animation:stDraw .8s ease-out .15s forwards}
+#boot .sb{transform-box:fill-box;transform-origin:center;transform:scaleX(0);animation:stGrow .6s ease-out .05s forwards}
+#boot .sr{opacity:0;animation:stRay .35s ease-out forwards}
+#boot .r1{animation-delay:.7s}#boot .r2,#boot .r3{animation-delay:.8s}#boot .r4,#boot .r5{animation-delay:.9s}
+#boot .sh{transform-origin:40px 46px;transform:rotate(-70deg);opacity:0;animation:stSwing .55s cubic-bezier(.5,0,.9,.4) .35s forwards}
+#boot .sm{animation:stHit .35s ease-out .9s both}
+#boot .sn{animation:stName 1s ease-out .55s both}
+#boot .st:not(.st2) .sp{animation:stName 1s ease-out .85s both}
+#boot .st2 .sp,#boot .st2 .sn{animation:stName .9s ease-out .15s both}
+@keyframes stDraw{to{stroke-dashoffset:0}}
+@keyframes stGrow{to{transform:scaleX(1)}}
+@keyframes stRay{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+@keyframes stSwing{0%{opacity:1;transform:rotate(-70deg)}100%{opacity:1;transform:rotate(0)}}
+@keyframes stHit{0%{transform:translateY(0);filter:drop-shadow(0 0 22px rgba(90,210,255,.5))}30%{transform:translateY(3px) scale(1.03);filter:drop-shadow(0 0 40px rgba(180,235,255,.95))}100%{transform:none;filter:drop-shadow(0 0 22px rgba(90,210,255,.5))}}
+@keyframes stName{from{opacity:0;transform:translateY(8px);letter-spacing:.5em}to{opacity:1;transform:none}}
+@keyframes stGlow{0%{opacity:0;transform:scale(.7)}40%{opacity:1}100%{opacity:.7;transform:scale(1.1)}}
+@media(prefers-reduced-motion:reduce){#boot .sa,#boot .sb,#boot .sr,#boot .sh,#boot .sm,#boot .sn,#boot .sp,#boot .st::before{animation:none!important;opacity:1;transform:none;stroke-dashoffset:0}}
