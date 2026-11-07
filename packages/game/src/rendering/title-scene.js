@@ -59,7 +59,7 @@ function zPose(type,zv){const zo=zombiesState.ZVAR;zombiesState.ZVAR=zv||null;le
 export function titleDispose(){for(const u of TARMY){if(u.m){TS3.remove(u.m);u.m.userData.mat.dispose()}}TARMY=[]}
 
 function initTitle(){titleInit=true;TS3.background=gradTex();TS3.fog=new THREE.Fog(0x7a3a30,40,330);
- TLH=new THREE.HemisphereLight(0xd8957f,0x3a2a30,.8);TS3.add(TLH);TLFL=new THREE.DirectionalLight(0xcfe0ff,0);TLFL.position.set(10,80,-60);TS3.add(TLFL);const sun=new THREE.DirectionalLight(0xff9a5a,1.05);sun.position.set(-60,40,-90);TS3.add(sun);const fill=new THREE.DirectionalLight(0x8a6a98,.3);fill.position.set(30,20,60);TS3.add(fill);
+ TLH=new THREE.HemisphereLight(0xc4d2ec,0x3a3a50,1.15);TS3.add(TLH);TLFL=new THREE.DirectionalLight(0xcfe0ff,0);TLFL.position.set(10,80,-60);TS3.add(TLFL);const sun=new THREE.DirectionalLight(0xff9a5a,1.05);sun.position.set(-60,40,-90);TS3.add(sun);const fill=new THREE.DirectionalLight(0x8a6a98,.3);fill.position.set(30,20,60);TS3.add(fill);
  /* voxel terrain in the in-game style: terraced grass hills, dirt, stone, water, blocky trees */
  const CELL=2,X0=-200,NX=200,Z0=-330,NZ2=190,sm=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t)};
  const nz=(x,z)=>Math.sin(x*.045+1.3)*Math.cos(z*.05)+.55*Math.sin(x*.11+z*.07)+.35*Math.sin(z*.13-x*.09+2)+.25*Math.sin(x*.27+z*.23);

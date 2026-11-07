@@ -11,6 +11,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Fonts: Inter 500-800 (Google Fonts link, `@fontsource/inter` for tests via `tools/fontroute.py`) replaces Cinzel/Marcellus/NaxNum in canvas (`ui/typography.js`), co-op CSS, boot; `naranxia-numerals.woff2` deleted. `fontOf` sizes retuned (.88 body, .8 heading).
 - `rendering/lighting.js`: sky `0xb9d2ee`, sun `0xe6f0ff`, intensities x1.19 sun / x1.06 hemi.
 - Verified: build, title + in-game screenshots, no page errors. NOT verified: fitcheck (running), det/mp tests (visual-only change), title logo look (headless clock too slow), co-op window look.
+- Launch polish: splash in dark blue/cyan with white logo and cyan bar (`styles/boot.css`), title logo white/cyan, entry sequence logo .1-.8 s, menu .4-1.1 s, hints/pills 1-1.6 s (`ui/title-menu.js`), duplicate 'Naranxia' label removed, title scene hemisphere light 1.15. Checked on a virtual-clock filmstrip (`launch.py`, scratchpad); the real-time fade lengths were not measured (headless clock is slow). Splash bar is indeterminate (no load progress hook).
 - Left: 3D units/buildings polish (second board), unpushed (GitHub suspended), release v92 with NOTES.md.
 
 ## 2026-11-07 · Text never spills out of buttons (v92, not released)
