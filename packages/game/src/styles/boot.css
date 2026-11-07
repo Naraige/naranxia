@@ -1,20 +1,20 @@
 /* launch splash: shown by the HTML itself, before any script runs, and faded out once the title scene is drawing */
 #boot{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;pointer-events:none;
- background:radial-gradient(ellipse at 50% 70%,#1d3550 0%,#101c2e 38%,#0a111c 72%,#05080e 100%);opacity:1;transition:opacity .9s ease .1s}
+ background:radial-gradient(ellipse at 50% 60%,#ffffff 0%,#f5f8fd 55%,#e8eef7 100%);opacity:1;transition:opacity .9s ease .1s}
 #boot.done{opacity:0}
 #boot.skip .st{display:none}
 
 /* studio card: plays first, any key or click skips it */
-#boot .st{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#05080e;animation:stIn 2s ease-in-out both;font-family:Inter,'Segoe UI',system-ui,Arial,sans-serif;color:#eef3fb}
-#boot .sm{width:clamp(150px,26vw,300px);height:auto;margin-bottom:10px;filter:drop-shadow(0 0 22px rgba(90,210,255,.5))}
+#boot .st{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at 50% 60%,#ffffff 0%,#f5f8fd 55%,#e8eef7 100%);animation:stIn 2s ease-in-out both;font-family:Inter,'Segoe UI',system-ui,Arial,sans-serif;color:#17202e}
+#boot .sm{width:clamp(150px,26vw,300px);height:auto;margin-bottom:10px;filter:drop-shadow(0 6px 16px rgba(47,125,246,.25))}
 #boot .sn{font-weight:700;font-size:clamp(16px,3.4vw,34px);letter-spacing:.22em;padding-left:.22em;white-space:nowrap;text-align:center}
-#boot .sp{font-weight:500;font-size:clamp(11px,1.6vw,14px);letter-spacing:.5em;padding-left:.5em;color:#9fb0c6}
-#boot .st2{animation-delay:2s;animation-duration:2.9s}#boot .cl{font-weight:600;letter-spacing:.2em;padding-left:.2em}#boot .sc{position:absolute;bottom:6vh;font-weight:500;font-size:clamp(11px,1.5vw,13px);letter-spacing:.12em;color:#6f819a}
+#boot .sp{font-weight:500;font-size:clamp(11px,1.6vw,14px);letter-spacing:.5em;padding-left:.5em;color:#5d6b80}
+#boot .st2{animation-delay:2s;animation-duration:2.9s}#boot .cl{font-weight:600;letter-spacing:.2em;padding-left:.2em}#boot .sc{position:absolute;bottom:6vh;font-weight:500;font-size:clamp(11px,1.5vw,13px);letter-spacing:.12em;color:#5d6b80}
 @keyframes stIn{0%{opacity:0}22%{opacity:1}78%{opacity:1}100%{opacity:0;visibility:hidden}}
 @media(prefers-reduced-motion:reduce){#boot .st{animation-duration:1s}#boot .st2{animation-delay:1s;animation-duration:1s}}
 
 /* studio card animation: the sun draws, the hammer swings and strikes, the name opens up */
-#boot .st:not(.st2)::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 62%,rgba(90,210,255,.28),rgba(30,70,110,.12) 38%,transparent 66%);opacity:0;animation:stGlow 2s ease-out both}
+#boot .st:not(.st2)::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 62%,rgba(47,125,246,.14),rgba(47,125,246,.05) 38%,transparent 66%);opacity:0;animation:stGlow 2s ease-out both}
 #boot .st>*{position:relative}
 #boot .sa{stroke-dasharray:1;stroke-dashoffset:1;animation:stDraw .8s ease-out .15s forwards}
 #boot .sb{transform-box:fill-box;transform-origin:center;transform:scaleX(0);animation:stGrow .6s ease-out .05s forwards}
@@ -29,14 +29,14 @@
 @keyframes stGrow{to{transform:scaleX(1)}}
 @keyframes stRay{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
 @keyframes stSwing{0%{opacity:1;transform:rotate(-70deg)}100%{opacity:1;transform:rotate(0)}}
-@keyframes stHit{0%{transform:translateY(0);filter:drop-shadow(0 0 22px rgba(90,210,255,.5))}30%{transform:translateY(3px) scale(1.03);filter:drop-shadow(0 0 40px rgba(180,235,255,.95))}100%{transform:none;filter:drop-shadow(0 0 22px rgba(90,210,255,.5))}}
+@keyframes stHit{0%{transform:translateY(0);filter:drop-shadow(0 6px 16px rgba(47,125,246,.25))}30%{transform:translateY(3px) scale(1.03);filter:drop-shadow(0 0 34px rgba(47,125,246,.55))}100%{transform:none;filter:drop-shadow(0 6px 16px rgba(47,125,246,.25))}}
 @keyframes stName{from{opacity:0;transform:translateY(8px);letter-spacing:.5em}to{opacity:1;transform:none}}
 @keyframes stGlow{0%{opacity:0;transform:scale(.7)}40%{opacity:1}100%{opacity:.7;transform:scale(1.1)}}
 @media(prefers-reduced-motion:reduce){#boot .sa,#boot .sb,#boot .sr,#boot .sh,#boot .sm,#boot .sn,#boot .sp,#boot .st::before{animation:none!important;opacity:1;transform:none;stroke-dashoffset:0}}
 
 /* Claude card: chevrons slide in, the cursor blinks, then the credit reads */
-#boot .st2::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(90,210,255,.2),transparent 60%);opacity:0;animation:stGlow 1.9s ease-out both}
-#boot .sm2{width:clamp(110px,18vw,200px);height:auto;margin-bottom:6px;filter:drop-shadow(0 0 18px rgba(90,210,255,.45))}
+#boot .st2::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(47,125,246,.1),transparent 60%);opacity:0;animation:stGlow 1.9s ease-out both}
+#boot .sm2{width:clamp(110px,18vw,200px);height:auto;margin-bottom:6px;filter:drop-shadow(0 4px 12px rgba(47,125,246,.2))}
 #boot .c1,#boot .c2{opacity:0;animation:stSlide 0.6s ease-out .1s forwards}
 #boot .c1{--dx:-26px}#boot .c2{--dx:26px}
 #boot .cu{opacity:0;animation:stCur .9s steps(1,end) .5s 2 both}

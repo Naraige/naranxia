@@ -41,7 +41,7 @@ import { drawPicker, sitePickerState } from './site-picker.js';
 import { drawTitle } from './title-menu.js';
 import { drawTroops, PLUN, troopPanelState } from './troop-panel.js';
 import { tutBar } from './tutorial.js';
-import { FF } from './typography.js';
+import { FF, ink } from './typography.js';
 import { LAND, rollWorld, terrainState } from '../world/terrain.js';
 
 export const hudState = {
@@ -130,9 +130,9 @@ export function drawBars(){canvasesState.ctx.setTransform(1,0,0,1,0,0);const k=M
  const bar2=(x,y,w,f,c)=>{drew=1;canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(Math.round(x-w/2-1),Math.round(y-1),w+2,3*k+1);canvasesState.ctx.fillStyle=c;canvasesState.ctx.fillRect(Math.round(x-w/2),Math.round(y),Math.max(1,Math.round(w*Math.max(0,Math.min(1,f)))),2*k)};
  for(const u of sessionState.units){const m=T[u.type].hp;if(u.hp>=m||u.hp<=0||u.shel)continue;const md=u.m&&u.m.userData.mdl,q=scr(u.x/TS,(u.dy||0)+(md?md.h*(md.sc||1.35)*UNITK:.8)+.1,u.y/TS);if(q.ok)bar2(q.x,q.y,(u.type==='brute'?26:16)*k,u.hp/m,u.t===1?'#c66bff':u.t===2?'#e8c040':'#6fdc6f')}
  {let n0=0;for(const u of sessionState.units)if(u.shel)n0++;if(n0)for(const c of aliveC()){let n=0;for(const u of sessionState.units)if(u.shel===c)n++;if(!n)continue;const q=scr(c.x/TS,(c.bh||LAND)+(c.tier!==0?6.7:5.7),c.y/TS);
-  if(q.ok){drew=1;canvasesState.ctx.font=Math.round(9*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';const t=L(n+' inside');canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(t,q.x+1,q.y+1);canvasesState.ctx.fillStyle='#ffe08a';canvasesState.ctx.fillText(t,q.x,q.y)}}}
+  if(q.ok){drew=1;canvasesState.ctx.font=Math.round(9*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';const t=L(n+' inside');canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(t,q.x+1,q.y+1);canvasesState.ctx.fillStyle=ink('#ffe08a');canvasesState.ctx.fillText(t,q.x,q.y)}}}
  if(!simulationState.shelOn)for(const s of sessionState.structs){if(s.t!==0||s.prog<1||s.hp<=0||!WKT.has(s.type)||(MP.on&&(s.pl|0)!==LPL())||wkOf(s))continue;const q=scr(s.x/TS,(s.bh||LAND)+1.4,s.y/TS);
-  if(q.ok){drew=1;canvasesState.ctx.font=Math.round(8*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(L('no worker'),q.x+1,q.y+1);canvasesState.ctx.fillStyle='#ffb070';canvasesState.ctx.fillText(L('no worker'),q.x,q.y)}}
- for(const s of sessionState.structs){if(s.garr&&s.garr.length){const q=scr(s.x/TS,(s.bh||LAND)+(s.type==='tower'?4.9:2.7),s.y/TS);if(q.ok){drew=1;canvasesState.ctx.font=Math.round(9*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(s.garr.length+'/'+GCAP[s.type],q.x+1,q.y+1);canvasesState.ctx.fillStyle='#9fe870';canvasesState.ctx.fillText(s.garr.length+'/'+GCAP[s.type],q.x,q.y)}}
+  if(q.ok){drew=1;canvasesState.ctx.font=Math.round(8*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(L('no worker'),q.x+1,q.y+1);canvasesState.ctx.fillStyle=ink('#ffb070');canvasesState.ctx.fillText(L('no worker'),q.x,q.y)}}
+ for(const s of sessionState.structs){if(s.garr&&s.garr.length){const q=scr(s.x/TS,(s.bh||LAND)+(s.type==='tower'?4.9:2.7),s.y/TS);if(q.ok){drew=1;canvasesState.ctx.font=Math.round(9*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(s.garr.length+'/'+GCAP[s.type],q.x+1,q.y+1);canvasesState.ctx.fillStyle=ink('#9fe870');canvasesState.ctx.fillText(s.garr.length+'/'+GCAP[s.type],q.x,q.y)}}
   if(s.hp>=s.max&&s.prog>=1)continue;const q=scr(s.x/TS,(s.bh||LAND)+(({tower:4.9,wall:2.2,gate:2.6,ballista:1.6,trebuchet:3.6,house:3.3,barracks:3.2,storage:2.5,academy:3.6,market:2.7,forester:2.4,guild:3.2,torch:1.9,farm:1.0,keep:5.2,castle:s.tier!==0?6.2:5.2})[s.type]||6.7),s.y/TS);if(!q.ok)continue;
   if(s.prog<1)bar2(q.x,q.y,(s.sz>=3?44+(s.sz-3)*10:24)*k,s.prog,'#ffd23c');else bar2(q.x,q.y,(s.sz>=3?44+(s.sz-3)*10:24)*k,s.hp/s.max,'#6fdc6f')}return drew}

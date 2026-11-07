@@ -2,7 +2,7 @@ import { hex } from '../core/math.js';
 import { rngf } from '../core/random.js';
 import { L } from '../i18n/language.js';
 import { canvasesState, cv, cvs } from './canvases.js';
-import { setF } from './typography.js';
+import { ink, setF } from './typography.js';
 
 export const PAN = ['#1d2530','#b8954c','#0a0d12'];
 export const BTN = ['#263242','#c9a24f','#0b0f14'];
@@ -25,22 +25,22 @@ export function arcDia(cx,cy,r,c){canvasesState.ctx.beginPath();canvasesState.ct
 
 export function frame(x,y,w,h,p,r){if(p===SLOT||p===SLOTH||p===SLOTX){mcSlot(x,y,w,h,p);return}if(p===TIPP){mcTip(x,y,w,h);return}
  x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);
- if(p===CHAT){canvasesState.ctx.fillStyle='rgba(12,17,26,.74)';canvasesState.ctx.fillRect(x,y,w,h);
-  if(y<0&&w>200){const gl=canvasesState.ctx.createLinearGradient(x,0,x+w,0);gl.addColorStop(0,'rgba(120,210,255,0)');gl.addColorStop(.08,'rgba(120,210,255,.55)');gl.addColorStop(.92,'rgba(120,210,255,.55)');gl.addColorStop(1,'rgba(120,210,255,0)');canvasesState.ctx.fillStyle='rgba(5,4,8,.75)';canvasesState.ctx.fillRect(x,y+h,w,1);canvasesState.ctx.fillStyle=gl;canvasesState.ctx.fillRect(x,y+h-1,w,1)}return}
+ if(p===CHAT){canvasesState.ctx.fillStyle='rgba(255,255,255,.74)';canvasesState.ctx.fillRect(x,y,w,h);
+  if(y<0&&w>200){const gl=canvasesState.ctx.createLinearGradient(x,0,x+w,0);gl.addColorStop(0,'rgba(47,125,246,0)');gl.addColorStop(.08,'rgba(47,125,246,.55)');gl.addColorStop(.92,'rgba(47,125,246,.55)');gl.addColorStop(1,'rgba(47,125,246,0)');canvasesState.ctx.fillStyle='rgba(5,4,8,.75)';canvasesState.ctx.fillRect(x,y+h,w,1);canvasesState.ctx.fillStyle=gl;canvasesState.ctx.fillRect(x,y+h-1,w,1)}return}
   const g=canvasesState.ctx,big=h>40,Rd=Math.max(2,Math.min(big?12:8,h/3,w/3)),
    hv=p===BTNH||p===GRNH||p===TABA,ok=p===GRN,bad=p===RDB,off=p===BTNX,btn=hv||ok||bad||off||p===BTN,
-   tint=hv?'90,210,255':ok?'70,200,170':bad?'255,100,110':null;
-  /* glass: soft shadow, translucent body, fine light edge, accent only on hover / confirm / danger */
-  g.fillStyle=big?'rgba(0,0,0,.34)':'rgba(0,0,0,.22)';rr(x,y+(big?4:2),w,h,Rd+1);g.fill();
-  if(btn){g.fillStyle=off?'rgba(255,255,255,.035)':tint?'rgba('+tint+','+(hv?.22:.16)+')':'rgba(255,255,255,.08)';
-   if(!tint&&!off){g.fillStyle=lgc('gb',y,h,0,'rgba(255,255,255,.12)',1,'rgba(255,255,255,.05)')}rr(x,y,w,h,Rd);g.fill();
-   g.strokeStyle=off?'rgba(255,255,255,.09)':tint?'rgb('+tint+')':'rgba(255,255,255,.2)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke();
-   if(tint&&!off){g.globalAlpha=.35;g.strokeStyle='rgb('+tint+')';g.lineWidth=3;rr(x-.5,y-.5,w+1,h+1,Rd+1);g.stroke();g.globalAlpha=1}return}
-  g.fillStyle=lgc('pg'+(big?1:0),y,h,0,'rgba(20,27,40,.80)',1,'rgba(10,14,22,.80)');rr(x,y,w,h,Rd);g.fill();
-  g.strokeStyle='rgba(255,255,255,.16)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke();
-  if(h>12){g.strokeStyle='rgba(255,255,255,.07)';g.beginPath();g.moveTo(x+Rd,y+1.5);g.lineTo(x+w-Rd,y+1.5);g.stroke()}}
+   tint=hv?'47,125,246':ok?'20,160,130':bad?'220,60,70':null;
+  /* light cards: soft shadow, white body, fine grey edge, blue accent on hover / teal confirm / red danger */
+  g.fillStyle=big?'rgba(20,35,60,.1)':'rgba(20,35,60,.14)';rr(x,y+(big?2:2),w,h,Rd+1);g.fill();
+  if(btn){if(tint){g.fillStyle='rgba(255,255,255,.6)';rr(x,y,w,h,Rd);g.fill()}
+   g.fillStyle=off?'rgba(235,239,245,.4)':tint?lgc('lt'+tint,y,h,0,'rgba('+tint+','+(hv?.2:.14)+')',1,'rgba('+tint+','+(hv?.12:.08)+')'):lgc('lb',y,h,0,'rgba(255,255,255,.82)',1,'rgba(240,244,250,.62)');
+   rr(x,y,w,h,Rd);g.fill();
+   g.strokeStyle=off?'rgba(20,30,50,.1)':tint?'rgb('+tint+')':'rgba(20,30,50,.2)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke();
+   if(tint&&!off){g.globalAlpha=.3;g.strokeStyle='rgb('+tint+')';g.lineWidth=3;rr(x-.5,y-.5,w+1,h+1,Rd+1);g.stroke();g.globalAlpha=1}return}
+  g.fillStyle=lgc('pg'+(big?1:0),y,h,0,'rgba(255,255,255,.8)',1,'rgba(244,247,252,.72)');rr(x,y,w,h,Rd);g.fill();
+  g.strokeStyle='rgba(20,30,50,.16)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke()}
 
-export function gold(x,y,w,h,r){const Rd=Math.max(1,Math.min(3.5,w/5,h/5));canvasesState.ctx.save();canvasesState.ctx.shadowColor='rgba(90,210,255,.7)';canvasesState.ctx.shadowBlur=7;canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.strokeStyle='#8fe3ff';rr(x+.9,y+.9,w-1.8,h-1.8,Rd);canvasesState.ctx.stroke();canvasesState.ctx.restore()}
+export function gold(x,y,w,h,r){const Rd=Math.max(1,Math.min(3.5,w/5,h/5));canvasesState.ctx.save();canvasesState.ctx.shadowColor='rgba(47,125,246,.6)';canvasesState.ctx.shadowBlur=7;canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.strokeStyle='#2f7df6';rr(x+.9,y+.9,w-1.8,h-1.8,Rd);canvasesState.ctx.stroke();canvasesState.ctx.restore()}
 
 /* ---- vector icons (16x16 design space, drawn at any size) ---- */
 export const ICO_N=160,ICO_RT=320;
@@ -69,16 +69,16 @@ export function epx(src){const w=src.width,h=src.height,d=src.getContext('2d').g
 
 
 function mcSlot(x,y,w,h,p){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);const g=canvasesState.ctx,X=p===SLOTX,H=p===SLOTH,Rd=Math.max(2,Math.min(8,w/5,h/5));
- g.fillStyle='rgba(0,0,0,.22)';rr(x,y+2,w,h,Rd+1);g.fill();
- g.fillStyle=X?'rgba(255,255,255,.03)':H?'rgba(90,210,255,.2)':lgc('sl',y,h,0,'rgba(255,255,255,.11)',1,'rgba(255,255,255,.04)');rr(x,y,w,h,Rd);g.fill();
- g.save();if(H){g.shadowColor='rgba(90,210,255,.55)';g.shadowBlur=7}
- g.strokeStyle=X?'rgba(255,255,255,.08)':H?'#5ad2ff':'rgba(255,255,255,.18)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke();g.restore()}
+ g.fillStyle='rgba(20,35,60,.12)';rr(x,y+2,w,h,Rd+1);g.fill();
+ g.fillStyle=X?'rgba(235,239,245,.4)':H?lgc('slh',y,h,0,'rgba(47,125,246,.22)',1,'rgba(47,125,246,.12)'):lgc('sl',y,h,0,'rgba(255,255,255,.7)',1,'rgba(240,244,250,.5)');rr(x,y,w,h,Rd);g.fill();
+ g.save();if(H){g.shadowColor='rgba(47,125,246,.45)';g.shadowBlur=7}
+ g.strokeStyle=X?'rgba(20,30,50,.1)':H?'#2f7df6':'rgba(20,30,50,.2)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke();g.restore()}
 
 function mcTip(x,y,w,h){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);const g=canvasesState.ctx,Rd=Math.min(8,h/3);
- g.fillStyle='rgba(0,0,0,.38)';rr(x+1,y+3,w,h,Rd+1);g.fill();g.fillStyle='rgba(12,17,26,.92)';rr(x,y,w,h,Rd);g.fill();
- g.strokeStyle='rgba(255,255,255,.2)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke()}
+ g.fillStyle='rgba(20,35,60,.25)';rr(x+1,y+3,w,h,Rd+1);g.fill();g.fillStyle='rgba(255,255,255,.92)';rr(x,y,w,h,Rd);g.fill();
+ g.strokeStyle='rgba(20,30,50,.22)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke()}
 
-export function TN(s,x,y,col,sc){sc=sc||1;s=L(String(s));setF(9*sc);canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';canvasesState.ctx.fillStyle=col||'#d6b46a';canvasesState.ctx.fillText(s,x,y)}
+export function TN(s,x,y,col,sc){sc=sc||1;s=L(String(s));setF(9*sc);canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';canvasesState.ctx.fillStyle=ink(col||'#d6b46a');canvasesState.ctx.fillText(s,x,y)}
 
 const HRT=['.KKK.KKK.','KRRWKRRRK','KRWRRRRRK','KRRRRRRRK','.KRRRRRK.','..KRRRK..','...KRK...','....K....'];
 
@@ -94,10 +94,10 @@ let HDBG=null;
 function hdBg(){if(HDBG)return HDBG;const N=512,c=cvs(N,N),g=c.getContext('2d'),im=g.createImageData(N,N),d=im.data,R=rngf(4242);
  const oct=[[6,.42],[14,.24],[32,.16],[80,.1],[200,.08]].map(([p,a])=>{const v=new Float32Array(p*p);for(let i=0;i<v.length;i++)v[i]=R();return{p,a,v}});
  for(let y=0;y<N;y++)for(let x=0;x<N;x++){let s=0;for(const o of oct){const p=o.p,fx=x/N*p,fy=y/N*p,ix=Math.floor(fx),iy=Math.floor(fy),tx=fx-ix,ty=fy-iy,sx=tx*tx*(3-2*tx),sy=ty*ty*(3-2*ty),i0=ix%p,i1=(ix+1)%p,j0=iy%p,j1=(iy+1)%p,a=o.v[j0*p+i0],b=o.v[j0*p+i1],c2=o.v[j1*p+i0],e=o.v[j1*p+i1];s+=o.a*((a+(b-a)*sx)*(1-sy)+(c2+(e-c2)*sx)*sy)}
-  const t=Math.max(0,Math.min(1,(s-.22)*1.75)),k=(y*N+x)*4;d[k]=22+t*40;d[k+1]=28+t*42;d[k+2]=38+t*52;d[k+3]=255}
+  const t=Math.max(0,Math.min(1,(s-.22)*1.75)),k=(y*N+x)*4;d[k]=226+t*14;d[k+1]=232+t*12;d[k+2]=242+t*8;d[k+3]=255}
  g.putImageData(im,0,0);return HDBG=c}
 
-export function dirtBack(UW,UH,dark){const p=canvasesState.ctx.createPattern(hdBg(),'repeat');canvasesState.ctx.save();canvasesState.ctx.setTransform(1,0,0,1,0,0);canvasesState.ctx.imageSmoothingEnabled=true;canvasesState.ctx.fillStyle=p;canvasesState.ctx.fillRect(0,0,cv.width,cv.height);canvasesState.ctx.restore();canvasesState.ctx.fillStyle='rgba(0,0,0,'+(dark==null?.55:dark)+')';canvasesState.ctx.fillRect(0,0,UW,UH)}
+export function dirtBack(UW,UH,dark){const p=canvasesState.ctx.createPattern(hdBg(),'repeat');canvasesState.ctx.save();canvasesState.ctx.setTransform(1,0,0,1,0,0);canvasesState.ctx.imageSmoothingEnabled=true;canvasesState.ctx.fillStyle=p;canvasesState.ctx.fillRect(0,0,cv.width,cv.height);canvasesState.ctx.restore();canvasesState.ctx.fillStyle='rgba(255,255,255,.3)';canvasesState.ctx.fillRect(0,0,UW,UH)}
 
 export const lgr=(g,x0,y0,x1,y1,a,b)=>{const q=g.createLinearGradient(x0,y0,x1,y1);q.addColorStop(0,a);q.addColorStop(1,b);return q};
 
