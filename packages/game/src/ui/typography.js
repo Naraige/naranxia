@@ -25,3 +25,9 @@ export function ink(c){if(!LIGHT||!c||typeof c!=='string')return c;let r=INKM.ge
  if(sat<50){o=Lm>.85?[23,32,46]:Lm>.45?[74,90,114]:[R,G,B]}
  else{const k=Lm>.55?.5:Lm>.35?.8:1;o=[Math.round(R*k),Math.round(G*k),Math.round(B*k)]}
  r=A<1||c[0]==='r'?'rgba('+o[0]+','+o[1]+','+o[2]+','+A+')':'rgb('+o[0]+','+o[1]+','+o[2]+')';if(INKM.size>400)INKM.clear();INKM.set(c,r);return r}
+
+/* light buttons on a dark UI: text drawn inside a button rectangle gets the dark ink, everything else keeps its light colors */
+const BR=[];
+export const btnReset=()=>{BR.length=0};
+export const btnAdd=(x,y,w,h)=>{if(BR.length<600)BR.push(x,y,w,h)};
+export const inBtn=(x,y)=>{if(!LIGHT)return false;for(let i=BR.length-4;i>=0;i-=4)if(x>=BR[i]-1&&x<=BR[i]+BR[i+2]+1&&y>=BR[i+1]-1&&y<=BR[i+1]+BR[i+3]+1)return true;return false};

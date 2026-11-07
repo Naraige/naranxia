@@ -5,7 +5,7 @@ import { uiBtn } from '../ui/build-menu.js';
 import { canvasesState } from '../ui/canvases.js';
 import { BTN, BTNH, frame, GRN, GRNH, PAN } from '../ui/drawing.js';
 import { pill } from '../ui/minimap.js';
-import { FFT, fontOf, ink, LIGHT, setF, TWM } from '../ui/typography.js';
+import { FFT, fontOf, ink, inBtn, setF, TWM } from '../ui/typography.js';
 
 export const languageState = {
   langOpen: false,
@@ -68,7 +68,7 @@ export const tw=(s,sc)=>{const f=fontOf(9*(sc||1));canvasesState.ctx.font=f;s=L(
 let CLIPB=null;
 export const setClipBox=b=>{CLIPB=b};
 
-export function T_(s,x,y,col,sc){sc=sc||1;s=L(String(s));if(CLIPB&&s.trim()){const w=tw(s,sc);if(x<CLIPB[0]-.5||x+w>CLIPB[0]+CLIPB[2]+.5){const o=window.__ovf||(window.__ovf=[]);if(o.length<400)o.push(s+' @btn'+Math.round(CLIPB[2]))}}setF(9*sc);canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';if(!LIGHT){canvasesState.ctx.fillStyle='rgba(0,0,0,.6)';canvasesState.ctx.fillText(s,x+.5*sc,y+.9*sc)}canvasesState.ctx.fillStyle=ink(col||'#fbf1de');canvasesState.ctx.fillText(s,x,y)}
+export function T_(s,x,y,col,sc){sc=sc||1;s=L(String(s));if(CLIPB&&s.trim()){const w=tw(s,sc);if(x<CLIPB[0]-.5||x+w>CLIPB[0]+CLIPB[2]+.5){const o=window.__ovf||(window.__ovf=[]);if(o.length<400)o.push(s+' @btn'+Math.round(CLIPB[2]))}}setF(9*sc);canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';const lt=inBtn(x+1,y+1);if(!lt){canvasesState.ctx.fillStyle='rgba(0,0,0,.6)';canvasesState.ctx.fillText(s,x+.5*sc,y+.9*sc)}canvasesState.ctx.fillStyle=lt?ink(col||'#fbf1de'):(col||'#fbf1de');canvasesState.ctx.fillText(s,x,y)}
 
 /* largest scale <= sc (down to min) at which s fits in w; reports what still overflows (checked by tools/fitcheck) */
 export function fitSc(s,w,sc,min){sc=sc||1;min=min||.45;while(sc>min&&tw(s,sc)>w)sc=Math.round((sc-.03)*100)/100;if(tw(s,sc)>w+.5){const o=window.__ovf||(window.__ovf=[]);if(o.length<400)o.push(L(String(s))+' @'+Math.round(w))}return sc}
@@ -80,8 +80,8 @@ export function TC(s,cx,y,col,sc){T_(s,cx-tw(s,sc)/2,y,col,sc)}
 
 export const TTS=sc=>Math.round(9*sc*1.25*.86);
 
-export function TTL(s,x,y,sc,al){s=L(String(s));const S=TTS(sc);canvasesState.ctx.font='700 '+S+'px '+FFT;canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign=al||'left';if(!LIGHT){canvasesState.ctx.fillStyle='rgba(4,3,8,.82)';canvasesState.ctx.fillText(s,x+Math.max(1,S*.05),y+Math.max(1,S*.08))}
- const g=canvasesState.ctx.createLinearGradient(0,y,0,y+S);if(LIGHT){g.addColorStop(0,'#1d2a3f');g.addColorStop(1,'#2f5fa8')}else{g.addColorStop(0,'#fff5d2');g.addColorStop(.47,'#f2c862');g.addColorStop(.53,'#dca23e');g.addColorStop(1,'#a8721f')}canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillText(s,x,y);canvasesState.ctx.textAlign='left'}
+export function TTL(s,x,y,sc,al){s=L(String(s));const S=TTS(sc);canvasesState.ctx.font='700 '+S+'px '+FFT;canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign=al||'left';canvasesState.ctx.fillStyle='rgba(4,3,8,.82)';canvasesState.ctx.fillText(s,x+Math.max(1,S*.05),y+Math.max(1,S*.08));
+ const g=canvasesState.ctx.createLinearGradient(0,y,0,y+S);g.addColorStop(0,'#fff5d2');g.addColorStop(.47,'#f2c862');g.addColorStop(.53,'#dca23e');g.addColorStop(1,'#a8721f');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillText(s,x,y);canvasesState.ctx.textAlign='left'}
 
 export function twH(s,sc){canvasesState.ctx.font='700 '+TTS(sc)+'px '+FFT;return canvasesState.ctx.measureText(L(String(s))).width}
 

@@ -29,6 +29,7 @@ import { drawBars, drawUI } from '../ui/hud.js';
 import { minimapState, refreshMM } from '../ui/minimap.js';
 import { KB, placeInput } from '../ui/settings.js';
 import { sitePickerState } from '../ui/site-picker.js';
+import { btnReset } from '../ui/typography.js';
 import { bgGen, genChunk, genF, NCX, NCY, rollWorld, terrainState } from '../world/terrain.js';
 
 export const frameLoopState = {
@@ -44,7 +45,7 @@ function loop(ts){const lt0=performance.now(),dt=Math.min(.05,(ts-(sessionState.
  if(MP.on)mpFrame(dt);
 
  if(sessionState.started||sessionState.inGame){if(!MP.on){if(sessionState.started&&window.requestIdleCallback){if(!BGI&&terrainState.GI<terrainState.GORD.length){BGI=1;requestIdleCallback(bgIdle,{timeout:700})}}else bgGen(sessionState.started?2.5:14)}if(sessionState.clockT-minimapState.mmT>(terrainState.genN<NCX*NCY?1.2:4)){minimapState.mmT=sessionState.clockT;refreshMM()}}
- FOWU.fowP.value.w=sessionState.started&&sessionState.inGame?1:0;FOWU.fowP.value.z=sessionState.started&&sessionState.inGame?nightK:0;POST.U2.uVig.value=sessionState.started&&sessionState.inGame?1:0;if(SHADOWS&&++SHF>=(DRS.lv>=3?3:2)){SHF=0;renderer.shadowMap.needsUpdate=true}if(sessionState.started)render3D(dt);else if(sitePickerState.picking)(PKL.on?renderPickLive(dt):renderPick(dt));else if(sessionState.inGame&&!sessionState.over)render3D(0);else renderTitle(dt);
+ FOWU.fowP.value.w=sessionState.started&&sessionState.inGame?1:0;FOWU.fowP.value.z=sessionState.started&&sessionState.inGame?nightK:0;POST.U2.uVig.value=sessionState.started&&sessionState.inGame?1:0;if(SHADOWS&&++SHF>=(DRS.lv>=3?3:2)){SHF=0;renderer.shadowMap.needsUpdate=true}if(sessionState.started)render3D(dt);else if(sitePickerState.picking)(PKL.on?renderPickLive(dt):renderPick(dt));else if(sessionState.inGame&&!sessionState.over)render3D(0);else renderTitle(dt);btnReset();
  {const hc=canvasesState.ctx;canvasesState.ctx=cwx;try{if(frameLoopState.CWD){canvasesState.ctx.setTransform(1,0,0,1,0,0);canvasesState.ctx.clearRect(0,0,cw.width,cw.height);frameLoopState.CWD=0}if(sessionState.started){frameLoopState.CWD=drawBars()|0;
   if(inputState.ptr&&inputState.ptr.fo&&inputState.ptr.fo.w1&&inputState.ptr.m>8){frameLoopState.CWD=1;const a=inputState.ptr.fo.w0,b=inputState.ptr.fo.w1,fm=Math.atan2(b.x-a.x,b.y-a.y),FM=sel().filter(u=>u.type!=='peasant'&&!u.gar),ft=constructionState.formType;if(!constructionState.formType)constructionState.formType=1;let sl;try{sl=formSlots(FM,a,fm)}finally{constructionState.formType=ft}
    canvasesState.ctx.lineWidth=Math.max(1,inputState.DPR*1.2);for(const q of sl.values()){const P=scr(q.x/TS,gh(q.x/TS,q.y/TS)+.05,q.y/TS);if(!P.ok)continue;canvasesState.ctx.beginPath();canvasesState.ctx.ellipse(P.x,P.y,6*inputState.DPR,3.4*inputState.DPR,0,0,6.283);canvasesState.ctx.fillStyle='rgba(255,225,74,.28)';canvasesState.ctx.fill();canvasesState.ctx.strokeStyle='#ffe14a';canvasesState.ctx.stroke()}
