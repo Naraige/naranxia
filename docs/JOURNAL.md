@@ -12,7 +12,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - `rendering/lighting.js`: sky `0xb9d2ee`, sun `0xe6f0ff`, intensities x1.19 sun / x1.06 hemi.
 - Verified: build, title + in-game screenshots, no page errors. NOT verified: fitcheck (running), det/mp tests (visual-only change), title logo look (headless clock too slow), co-op window look.
 - Launch polish: splash in dark blue/cyan with white logo and cyan bar (`styles/boot.css`), title logo white/cyan, entry sequence logo .1-.8 s, menu .4-1.1 s, hints/pills 1-1.6 s (`ui/title-menu.js`), duplicate 'Naranxia' label removed, title scene hemisphere light 1.15. Checked on a virtual-clock filmstrip (`launch.py`, scratchpad); the real-time fade lengths were not measured (headless clock is slow). Splash bar is indeterminate (no load progress hook).
-- Studio intro (2.4 s, any key/click skips): hammer-and-dawn mark + HAMMERDAWN STUDIO (HDS) + PRESENTS + 'Made with Claude' (text only, localized FR/ES/DE/IT/PT via navigator.language in index.html), then the NARANXIA splash; hideBoot waits for it (frame-loop.js). Checked with a paused-animation screenshot.
+- Studio intro as 2 cards (studio 2 s, then 'Made with Claude' 1.9 s, any key/click skips): hammer-and-dawn mark + HAMMERDAWN STUDIO (HDS) + PRESENTS + 'Made with Claude' (text only, localized FR/ES/DE/IT/PT via navigator.language in index.html), then the NARANXIA splash; hideBoot waits for it (frame-loop.js). Checked with a paused-animation screenshot.
 - Left: 3D units/buildings polish (second board), unpushed (GitHub suspended), release v92 with NOTES.md.
 
 ## 2026-11-07 · Text never spills out of buttons (v92, not released)
