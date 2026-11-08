@@ -2,14 +2,12 @@ import { RS2 } from '../../gameplay/rules.js';
 import { bxc, geometryState, newG } from '../geometry.js';
 import { lighten } from '../kingdom-banner.js';
 import { bannerKit, heraldryState, shieldGeo } from './heraldry.js';
-import { pxBannerman, pxCaptain, pxGunner, pxKing } from './royal-skins.js';
+import { pxBannerman, pxCaptain, pxEngineer, pxEnvoy, pxGunner, pxKing, pxScout } from './royal-skins.js';
 import { pxArcher, pxGuard, pxKnight, pxPeasant } from './soldier-skins.js';
 import { pxBanner, pxCapes } from './unit-accessories.js';
 import { fin, mcHead, mcLimbs, mcTorso, NOWEAP, toolGeos, unitPartsState, vb, vx, VX } from './unit-parts.js';
 import { zombieKit, zombiesState } from './zombies.js';
 import { thd, thp, ths } from '../../ui/kingdom-theme.js';
-import { mvGet } from './model-variants.js';
-import { guardPavois, mvUnitKit } from './unit-variants.js';
 
 export const unitsState = {
   ALB: 0,
@@ -25,16 +23,14 @@ export const HA={st:'#a9b0be',st2:'#878e9d',st3:'#666c7a',sth:'#cfd5df',ml:'#7f8
 
 function hkPut(Gx,m){return(x,y,z,w,h,d,c)=>{const o=geometryState.BMAT;geometryState.BMAT=m;try{bxc(Gx,x*VX,y*VX,z*VX,w*VX,h*VX,d*VX,c)}finally{geometryState.BMAT=o}}}
 
-/* Studio boards: window.__MV = 'scout:B,king:C...' picks a look variant (model-variants.js); no key = this production kit */
-function humanKit(type,AL,P){const v=mvGet(type);return v?mvUnitKit(type,v,P,AL,{hkPut,HA,base:()=>humanKit0(type,AL,P)}):humanKit0(type,AL,P)}
-
-function humanKit0(type,AL,P){
+function humanKit(type,AL,P){
  const{G,HG,LA,LG,AG}=P,t=hkPut(G,0),tm=hkPut(G,4),tc=hkPut(G,7),tg=hkPut(G,5),hd=hkPut(HG,0),hm=hkPut(HG,4),hc=hkPut(HG,7),hg=hkPut(HG,5),k=hkPut(LG,0),km=hkPut(LG,4),
   A=(m,dx,y,z,w,h,d,c)=>{hkPut(AG,m)(dx,y,z,w,h,d,c);hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c)},AE=(m,dx,y,z,w,h,d,c)=>hkPut(AG,m)(dx,y,z,w,h,d,c),AW=(m,dx,y,z,w,h,d,c)=>hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c),
   L=(m,x,y,z,w,h,d,c)=>hkPut(LA,m)(x,y,z,w,h,d,c),P1=thp(),P2=ths(),PD=thd(),skin='#c68a5e';
  if(PXON&&(type==='king'||type==='captain'||type==='bannerman')){({king:pxKing,captain:pxCaptain,bannerman:pxBannerman})[type](P,AL);return null}
  if(PXON&&(type==='gunner'||type==='gunner2')){pxGunner(P,AL);if(type==='gunner2'){AE(0,0,-4.65,1.6,.3,.3,7.4,'#8a6a3a');AE(0,0,-4.85,5.5,.68,.68,1.0,'#4a3a2a');AE(0,0,-4.75,-2.3,.4,.4,.4,'#5a4428')}return{h:15.6}}
  if(PXON&&(type==='peasant'||type==='archer'||type==='guard')){({peasant:pxPeasant,archer:pxArcher,guard:pxGuard})[type](P,AL);return{h:type==='guard'?21:15.6}}
+ if(PXON&&(type==='scout'||type==='engineer'||type==='envoy')){({scout:pxScout,engineer:pxEngineer,envoy:pxEnvoy})[type](P,AL);return{h:{scout:16,engineer:16.4,envoy:16}[type]}}
  if(type==='scout'){const CL='#4e6b56',CLD='#3a5142';
   mcTorso(G,{shirt:'#5d7a62',belt:HA.lt});mcLimbs(G,LG,AG,{pants:'#4a4a3a',sleeve:'#5d7a62',hand:skin,shoes:'#3a2a18'});mcHead(G,skin,'#5a3a1a');
   tc(0,9.45,0,4.12,1.55,2.26,CL);tc(0,6.4,-1.1,3.5,3.1,.14,CL);tc(0,6.4,-1.12,3.56,.2,.16,CLD);t(0,5.5,0,3.98,.42,2.08,HA.lt2);t(1.3,5.6,1.06,.72,.72,.32,HA.lt);tm(1.3,6.0,1.24,.3,.2,.04,HA.br);
@@ -190,7 +186,7 @@ function mcModel(type,z){
 
  }
  if(PXON)pxCapes(type,P0);
- const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X},{hip:5.5,sh:10.4,neck:11,lx:.95,ax:2.76,h,sc});r.tools=type==='peasant'?T:null;r.weap=NOWEAP||heraldryState.MVAR==='cine'?null:type==='knight'?'sword':type==='captain'?'gsword':type==='king'?'rsword':type==='guard'?'halberd':type==='archer'?'bow':null;r.shield=(type==='knight'||type==='captain'||type==='guard')&&heraldryState.MVAR!=='cine'?(type==='guard'&&mvGet('guard')?guardPavois(mvGet('guard')):shieldGeo(type,unitsState.ALB)):null;r.shp=[.2*VX,-5.0*VX,(PXON?SHZ:2.1)*VX];unitPartsState.RT=null;return r}
+ const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X},{hip:5.5,sh:10.4,neck:11,lx:.95,ax:2.76,h,sc});r.tools=type==='peasant'?T:null;r.weap=NOWEAP||heraldryState.MVAR==='cine'?null:type==='knight'?'sword':type==='captain'?'gsword':type==='king'?'rsword':type==='guard'?'halberd':type==='archer'?'bow':null;r.shield=(type==='knight'||type==='captain'||type==='guard')&&heraldryState.MVAR!=='cine'?shieldGeo(type,unitsState.ALB):null;r.shp=[.2*VX,-5.0*VX,(PXON?SHZ:2.1)*VX];unitPartsState.RT=null;return r}
 
 
 export function mkModel0(type,z){return mcModel(type,z)}

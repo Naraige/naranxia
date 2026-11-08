@@ -4,6 +4,10 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-09 · model variants cleaned, scout/engineer/envoy in pixel layer (local, not released)
+- Deleted refused variants + `window.__MV` (model-variants.js, unit-variants.js); units.js / bastion-buildings.js back to the pre-variant behaviour for king, guard, buildings. `pxScout`, `pxEngineer`, `pxEnvoy` added in royal-skins.js (B silhouettes). Visual only.
+- Verified: build, `det` PASS, showshot front/back of the 3 units; bbox tops sit under the bar height (scout h 16, engineer 16.4, envoy 16). Not run: smoke.
+
 ## 2026-11-08 (night) · King's board answers applied (v92, not released)
 - Answers "1A 2A 3B 4A 5A 6A 7A 8B 9A 10A 11B 12X 13B 14X" (X = keep current): palette, team colours and seasons unchanged; unit bars = 10 pixel segments with bevel (`drawBars` in ui/hud.js); knight plume red, archer/tower/barracks icons already match A; team skin = full tabard; rank stripes 0-3 (min(3, xp/4), knight and archer, player team, model rebuilt on rank change, `u.mrk`); scout, engineer, envoy use model variant B (`MV_DEFAULT` in rendering/models/model-variants.js); king, guard, bastion buildings unchanged.
 - `tools/run.py` now serves the fonts offline (fontroute), it hung on Google Fonts before.
