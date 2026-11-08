@@ -5,6 +5,6 @@ async()=>{let s=47;const RR=Math.random;Math.random=()=>{s=(s*16807)%2147483647;
  const zc=()=>units.filter(u=>u.t===1&&u.hp>0).length;
  {const b=mk(0);b.hp=3000;for(let i=0;i<400;i++)update(.05);O.heal=b.hp>3000;b.hp=0;}
  {const z0=zc();const b=mk(1);for(let i=0;i<400;i++)update(.05);O.bell=zc()>=z0+4;b.hp=0;}
- {const z0=zc();const b=mk(3);for(let i=0;i<400;i++)update(.05);O.hive=zc()>=z0+3;b.hp=0;}
+ {const rc=()=>units.filter(u=>u.t===1&&u.hp>0&&u.type==='runner').length;const r0=rc();const b=mk(3);for(let i=0;i<400;i++)update(.05);O.hive=rc()>=r0+2;b.hp=0;}
  {const b=mk(2);const k=mkU(0,'knight',x+TS*2,y);units.push(k);const h0=k.hp;for(let i=0;i<400;i++)update(.05);O.frost=k.hp<h0;b.hp=0}
  Math.random=RR;return JSON.stringify({ok:O.heal&&O.bell&&O.hive&&O.frost,O})}
