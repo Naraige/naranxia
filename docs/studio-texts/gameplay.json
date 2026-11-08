@@ -1,0 +1,19 @@
+{
+ "brings:": ["annonce :", "trae:", "bringt:", "porta:", "traz:"],
+ "Event:": ["Événement :", "Evento:", "Ereignis:", "Evento:", "Evento:"],
+ "Husks": ["Carcasses", "Cascarones", "Hüllen", "Gusci", "Carcaças"],
+ "Runners": ["Coureurs", "Corredores", "Läufer", "Corridori", "Corredores"],
+ "Brutes": ["Brutes", "Brutos", "Brocken", "Bruti", "Brutos"],
+ "Bombers": ["Kamikazes", "Bombarderos", "Sprenger", "Kamikaze", "Bombardeiros"],
+ "Acid spitters": ["Cracheurs d'acide", "Escupidores de ácido", "Säurespucker", "Sputa-acido", "Cuspidores de ácido"],
+ "Miners": ["Mineurs", "Mineros", "Gräber", "Minatori", "Mineiros"],
+ "Blood Moon": ["Lune de sang", "Luna de sangre", "Blutmond", "Luna di sangue", "Lua de sangue"],
+ "Boss": ["Boss", "Jefe", "Boss", "Boss", "Chefe"],
+ "Wolf pack": ["Meute de loups", "Manada de lobos", "Wolfsrudel", "Branco di lupi", "Alcateia"],
+ "Eclipse": ["Éclipse", "Eclipse", "Finsternis", "Eclissi", "Eclipse"],
+ "Caravan": ["Caravane", "Caravana", "Karawane", "Carovana", "Caravana"],
+ "Rebel envoys": ["Envoyés rebelles", "Enviados rebeldes", "Rebellengesandte", "Inviati ribelli", "Enviados rebeldes"],
+ "Meteor shower": ["Pluie de météores", "Lluvia de meteoritos", "Meteoritenschauer", "Pioggia di meteoriti", "Chuva de meteoros"],
+ "Barter": ["Troc", "Trueque", "Tausch", "Baratto", "Escambo"],
+ "Both prices shift a little": ["Les deux prix bougent un peu", "Ambos precios cambian un poco", "Beide Preise verschieben sich leicht", "Entrambi i prezzi cambiano un po'", "Ambos os preços mudam um pouco"]
+}

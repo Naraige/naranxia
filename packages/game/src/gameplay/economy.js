@@ -39,15 +39,18 @@ export const economyState = {
 };
 
 /* ================= MARKET: sell wood / stone for gold, buy them back; prices move with every trade and drift back ================= */
-export const PBASE={w:1,s:1.3,f:.8},PRICE={w:1,s:1.3,f:.8},TRADEK=new Set(['sellw','sells','buyw','buys','sellf','buyf']);
+export const PBASE={w:1,s:1.3,f:.8},PRICE={w:1,s:1.3,f:.8},TRADEK=new Set(['sellw','sells','buyw','buys','sellf','buyf','xws','xwf','xsw','xsf','xfw','xfs']);
+/* barter: 50 of one resource for another straight at the price ratio (90 %), better than selling then buying back (64 %); both prices move */
+export const barterGet=(a,b)=>Math.max(1,Math.floor(50*PRICE[a]/PRICE[b]*.9));
 
 export const tradeGain=k=>Math.max(1,Math.round(50*PRICE[k]*.8)),tradeCost=k=>Math.max(1,Math.round(50*PRICE[k]*1.25));
 
-export function syncTradeC(){C.sellw={w:50};C.sells={s:50};C.sellf={f:50};C.buyw={g:tradeCost('w')};C.buys={g:tradeCost('s')};C.buyf={g:tradeCost('f')}}
+export function syncTradeC(){C.sellw={w:50};C.sells={s:50};C.sellf={f:50};C.buyw={g:tradeCost('w')};C.buys={g:tradeCost('s')};C.buyf={g:tradeCost('f')};for(const k of TRADEK)if(k[0]==='x')C[k]={[k[1]]:50}}
 
 function hasMarket(p){p|=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='market'&&s.prog>=1&&s.hp>0&&(s.pl|0)===p)return true;return false}
 
 export let trade = function trade(k){if(sessionState.over||!TRADEK.has(k))return;if(!hasMarket(playersState.CURPL)){hudDisplayState.msgS='Build a Market to trade';hudDisplayState.msgT=3;snd('err');return}const r=k[k.length-1],nm=r==='w'?'wood':r==='f'?'food':'stone';
+ if(k[0]==='x'){const a=k[1],b=k[2],na=a==='w'?'wood':a==='f'?'food':'stone',nb=b==='w'?'wood':b==='f'?'food':'stone';if(sessionState.res[a]<50){hudDisplayState.msgS='You need 50 '+na+' to sell';hudDisplayState.msgT=2.5;snd('err');return}const n=barterGet(a,b);sessionState.res[a]-=50;sessionState.res[b]+=n;PRICE[a]=Math.max(.3,PRICE[a]*.97);PRICE[b]=Math.min(4,PRICE[b]*1.03);hudDisplayState.msgS='Swapped 50 '+na+' for '+n+' '+nb;hudDisplayState.msgT=2.5;snd('coin');syncTradeC();return}
  if(k[0]==='s'){if(sessionState.res[r]<50){hudDisplayState.msgS='You need 50 '+nm+' to sell';hudDisplayState.msgT=2.5;snd('err');return}const g=tradeGain(r);sessionState.res[r]-=50;sessionState.res.g+=g;PRICE[r]=Math.max(.3,PRICE[r]*.95);hudDisplayState.msgS='Sold 50 '+nm+' for '+g+' gold'}
  else{const c=tradeCost(r);if(sessionState.res.g<c){hudDisplayState.msgS='You need '+c+' gold to buy 50 '+nm;hudDisplayState.msgT=2.5;snd('err');return}sessionState.res.g-=c;sessionState.res[r]+=50;PRICE[r]=Math.min(4,PRICE[r]*1.05);hudDisplayState.msgS='Bought 50 '+nm+' for '+c+' gold'}
  hudDisplayState.msgT=2.5;snd('coin');syncTradeC()};

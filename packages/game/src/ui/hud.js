@@ -1,5 +1,6 @@
 import { cancelTrain } from '../multiplayer/commands.js';
 import { bossBar } from '../ai/wave-boss.js';
+import { wavePreview } from '../gameplay/wave-preview.js';
 import { wkOf, WKT } from '../ai/workplaces.js';
 import { snd, sndOn, toggleSound } from '../audio/sound.js';
 import { backgroundLoopState } from '../core/background-loop.js';
@@ -90,8 +91,8 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  let rx=UW-5;const tb=(w,ic,fn,tip,on)=>{rx-=w;uiBtn(rx,3,w,17,BTN,BTNH,fn,tip,(x,y,W2,H2)=>dIc(ic,x+(W2-12)/2,y+2.5,12),on);rx-=3};
  tb(18,IC.menu,openMenu,['Main menu [Esc]']);tb(18,IC.army,()=>{troopPanelState.troopsOpen=!troopPanelState.troopsOpen;snd('click')},['Troops [F2]','Every unit and what it is doing'],troopPanelState.troopsOpen);tb(18,IC.gear,()=>{openMenu();settingsState.settingsOpen=true;settingsState.fromGame=true},['Settings']);tb(18,sessionState.paused?IC.play:IC.pause,()=>{setPause(!sessionState.paused)},['Pause [Space]'],sessionState.paused);tb(18,sndOn?IC.sound:IC.mute,toggleSound,['Sound on/off [O]']);
  rx-=21;uiBtn(rx,3,21,17,BTN,BTNH,()=>{if(!MP.on)sessionState.spd=sessionState.spd%3+1},['Game speed [F]'],(x,y,W2)=>TC('x'+sessionState.spd,x+W2/2,y+4,sessionState.spd>1?'#ffd23c':'#fff',.95),sessionState.spd>1);rx-=6;
- const wp=[['Wave '+sessionState.waveN,'#d9b8ff'],[wavesState.waveOn?(wavesState.nightLv>=.5?'Night':(wavesState.hordeD<5000?'Horde '+Math.round(wavesState.hordeD)+' tiles':'Horde')):'Next '+mmss(sessionState.waveT),wavesState.waveOn?(wavesState.nightLv>=.5?'#9fb4ff':'#ffb38a'):sessionState.waveT<10&&((sessionState.clockT*3)|0)%2?'#ff8a8a':'#ffffff'],[sessionState.nextL.map(L=>terrainState.ROUTES[L].dir).join(' '),'#ff7a7a'],[wxLabel(),SEASC[seasonIdx()]]];
- let wwid=0;wp.forEach(p=>wwid+=tw(p[0],.95)+10);if(UW<560||rx-wwid>UW*.42){let x=UW<560?6:rx-wwid;wp.forEach(p=>{T_(p[0],x,7,p[1],.95);x+=tw(p[0],.95)+10});if(UW>=560)rx-=wwid+4;hudState.uiHits.push({...U(UW<560?6:rx,3,wwid,17),tip:['Next wave','Zombies come along the red lines']})}
+ const wp=[['Wave '+sessionState.waveN,'#d9b8ff'],[wavesState.waveOn?(wavesState.nightLv>=.5?'Night':(wavesState.hordeD<5000?'Horde '+Math.round(wavesState.hordeD)+' tiles':'Horde')):'Next '+mmss(sessionState.waveT),wavesState.waveOn?(wavesState.nightLv>=.5?'#9fb4ff':'#ffb38a'):sessionState.waveT<10&&((sessionState.clockT*3)|0)%2?'#ff8a8a':'#ffffff'],[sessionState.nextL.map(L=>terrainState.ROUTES[L].dir).join(' '),'#ff7a7a'],[wxLabel(),SEASC[seasonIdx()]]];const WPV=wavePreview();if(WPV.ev.length)wp.push([WPV.ev[0],'#ffcf6a']);
+ let wwid=0;wp.forEach(p=>wwid+=tw(p[0],.95)+10);if(UW<560||rx-wwid>UW*.42){let x=UW<560?6:rx-wwid;wp.forEach(p=>{T_(p[0],x,7,p[1],.95);x+=tw(p[0],.95)+10});if(UW>=560)rx-=wwid+4;hudState.uiHits.push({...U(UW<560?6:rx,3,wwid,17),tip:['Next wave','Zombies come along the red lines','Wave '+WPV.n+' brings:'].concat(WPV.kinds,WPV.ev.length?['Event:'].concat(WPV.ev,WPV.boss?[WPV.boss]:[]):[])})}
  let x=6;{const nmw=Math.min(90,tw(THEME.n,.9)+4);if(UW>=560){canvasesState.ctx.drawImage(BANNER,x,2,13,19.5);T_(THEME.n,x+17,7,'#fff',.9);hudState.uiHits.push({...U(x,2,17+nmw,20),tip:['Your kingdom','Banner on your castle, towers and gates']});x+=21+nmw}}
  const two=UW<560;settingsState.TOPH=two?46:28;let ry=3;if(two){frame(3,22,UW-6,19,CHAT,6);x=9;rx=UW-6;ry=23}
  const item=(ic,s,col,tip)=>{const n=16+tw(s)+10;if(x+n>rx-4)return;dIc(ic,x,ry+2,13);T_(s,x+16,ry+3.5,col);hudState.uiHits.push({...U(x,ry,n-4,17),tip});x+=n};

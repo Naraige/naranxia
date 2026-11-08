@@ -88,7 +88,7 @@ export function initializeAdditionalIcons() {
   IC.torch=ICN(g=>{ln(g,8,15,8,7,'#5a3a1a',2.4);ln(g,8,15,8,7,'#a8783e',1.2);rrg(g,5,5,6,3,.4,'#4a4a52','#1a1a20',.7);poly(g,[[8,.8],[11,5],[5,5]],lgr(g,0,1,0,5,'#fff1a0','#ff8a2a'),'#8a3a0a',.6)});
 
   {const TRIC={},tic=(k,a,b)=>{const A=IC[a],B2=IC[b],o=TRIC[k];if(o&&o.a===A&&o.b===B2)return o.c;const c=cvs(64,64),g=c.getContext('2d');g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(A,0,0,44,44);g.drawImage(B2,22,22,42,42);TRIC[k]={a:A,b:B2,c};return c};
-   for(const[k,a,b]of[['sellw','wood','coin'],['sells','stone','coin'],['buyw','coin','wood'],['buys','coin','stone'],['sellf','food','coin'],['buyf','coin','food']])Object.defineProperty(IC,k,{get:()=>tic(k,a,b),enumerable:true,configurable:true})}
+   for(const[k,a,b]of[['sellw','wood','coin'],['sells','stone','coin'],['buyw','coin','wood'],['buys','coin','stone'],['sellf','food','coin'],['buyf','coin','food'],['xws','wood','stone'],['xwf','wood','food'],['xsw','stone','wood'],['xsf','stone','food'],['xfw','food','wood'],['xfs','food','stone']])Object.defineProperty(IC,k,{get:()=>tic(k,a,b),enumerable:true,configurable:true})}
 
   IC.food=ICN(g=>{ln(g,11.6,1.2,9.4,8.6,'#8a6a1a',1.1);for(let k=0;k<4;k++){const y=2+k*1.45,x=11.3-k*.5;circ(g,x-1,y+.5,1.05,'#f0c850','#7a5a10',.5);circ(g,x+1,y+.2,1.05,'#e8bc40','#7a5a10',.5)}rrg(g,1.6,7.4,12.4,6.8,3.4,lgr(g,0,7,0,14,'#f2b860','#a8601c'),'#4a2608',.9);for(const x of[5,8,11])ln(g,x-1,9.4,x+1.2,11.6,'#ffe6b0',1.1)});
 
