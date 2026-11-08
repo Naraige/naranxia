@@ -1,0 +1,306 @@
+{
+ "title": "Planches du studio",
+ "intro": "Trois planches : Design (lignes 1 à 3), Texture (4 à 10) et Modèles (11 à 14). Choisissez une variante par ligne, puis copiez le code en bas (ex : 1B 2C 4A). Ce sont des maquettes, le jeu ne change qu'après votre réponse.",
+ "sections": [
+  {
+   "name": "Design · Palette generale du jeu et de l'interface",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/design/r1A.png",
+     "note": "Actuelle : brun chaud, parchemin, accent or (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/design/r1B.png",
+     "note": "Nuit et pierre : fond bleu-ardoise, accent bleu clair, plus froid et lisible"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/design/r1C.png",
+     "note": "Foret et ivoire : fond vert sombre, accent ambre, plus vivant"
+    }
+   ]
+  },
+  {
+   "name": "Design · Couleurs d'equipe",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/design/r2A.png",
+     "note": "Actuelles : vert, bleu, violet rebelles, jaune neutre"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/design/r2B.png",
+     "note": "Classiques : bleu / jaune / rouge rebelles / gris, tres distincts"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/design/r2C.png",
+     "note": "Originales : turquoise / orange / prune / sable, lisibles pour les daltoniens"
+    }
+   ]
+  },
+  {
+   "name": "Design · Style des barres de vie et de progression",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/design/r3A.png",
+     "note": "Actuel : fine barre plate a contour noir"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/design/r3B.png",
+     "note": "Segments pixel (10 crans) avec biseau, style Minecraft"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/design/r3C.png",
+     "note": "Pilule vitree avec degrade et graduations, assortie aux boutons verre"
+    }
+   ]
+  },
+  {
+   "name": "Texture · Icône : Chevalier (casque)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_knight_A.png",
+     "note": "acier sombre, panache rouge"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_knight_B.png",
+     "note": "acier clair, panache or, contour brun"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_knight_C.png",
+     "note": "pierre grise, fond bleu équipe, panache bleu"
+    }
+   ]
+  },
+  {
+   "name": "Texture · Icône : Archer (capuche)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_archer_A.png",
+     "note": "vert forêt sobre"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_archer_B.png",
+     "note": "vert vif, visage clair"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_archer_C.png",
+     "note": "vert-bleu froid, fond équipe"
+    }
+   ]
+  },
+  {
+   "name": "Texture · Icône : Tour",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_tower_A.png",
+     "note": "pierre standard, porte brun foncé"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_tower_B.png",
+     "note": "pierre claire, porte bois chaud"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_tower_C.png",
+     "note": "pierre froide, fond équipe"
+    }
+   ]
+  },
+  {
+   "name": "Texture · Icône : Caserne",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_barracks_A.png",
+     "note": "toit brique, bois terne"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_barracks_B.png",
+     "note": "toit rouge vif, banderole bleue"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/ico_barracks_C.png",
+     "note": "toit bleu équipe, banderole or"
+    }
+   ]
+  },
+  {
+   "name": "Texture · Skin soldat : équipe bleue / rouge (face + dos)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/skin_team_A.png",
+     "note": "écharpe de couleur + ceinture"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/skin_team_B.png",
+     "note": "tabard plein aux couleurs de l'équipe"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/skin_team_C.png",
+     "note": "casque à nasal, crête et épaulières d'équipe"
+    }
+   ]
+  },
+  {
+   "name": "Texture · Skin soldat : rang recrue / élite (face + dos)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/skin_rank_A.png",
+     "note": "galons dorés sur les manches (0 puis 3)"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/skin_rank_B.png",
+     "note": "casque cuir puis casque or à crête rouge"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/skin_rank_C.png",
+     "note": "tenue de toile puis plastron et casque or"
+    }
+   ]
+  },
+  {
+   "name": "Texture · Saisons du terrain : printemps / été / automne / hiver",
+   "variants": [
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/seasons_A.png",
+     "note": "actuel (multiplicateurs RGB du jeu)"
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/seasons_B.png",
+     "note": "palette vive, automne orange, hiver neige blanche"
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/texture/seasons_C.png",
+     "note": "palette douce et naturelle, plus sobre"
+    }
+   ]
+  },
+  {
+   "name": "Modèle · 1 - Eclaireur vs archer (capuche verte)",
+   "variants": [
+    {
+     "id": "X",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r1_0.png",
+     "note": "Modele actuel (reference, choisir X pour ne rien changer). Archer / eclaireur / archer / eclaireur, de face puis de dos."
+    },
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r1_A.png",
+     "note": "Manteau court beige, besace + sac roule, casquette plate a plume, longue-vue."
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r1_B.png",
+     "note": "Long manteau beige, grand sac a armature qui depasse la tete, lunettes relevees, bandana."
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r1_C.png",
+     "note": "Poncho beige, chapeau de paille a larges bords, longue-vue en bandouliere sur le dos."
+    }
+   ]
+  },
+  {
+   "name": "Modèle · 2 - Roi vs garde royal",
+   "variants": [
+    {
+     "id": "X",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r2_0.png",
+     "note": "Modele actuel (reference, choisir X pour ne rien changer). Garde / roi / garde / roi, de face puis de dos."
+    },
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r2_A.png",
+     "note": "Roi : couronne haute a 5 pointes. Garde : crete plate longue + pavois de planches rouge et or."
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r2_B.png",
+     "note": "Roi : couronne a arceaux et croix sur globe. Garde : crete plate en eventail + pavois bleu a creneaux dores."
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r2_C.png",
+     "note": "Roi : couronne a flèches et bonnet rouge tres hauts. Garde : crete plate dorée haute + pavois pointu orne."
+    }
+   ]
+  },
+  {
+   "name": "Modèle · 3 - Paysan / ingenieur / emissaire",
+   "variants": [
+    {
+     "id": "X",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r3_0.png",
+     "note": "Modele actuel (reference, choisir X pour ne rien changer). Paysan, ingenieur, emissaire, ingenieur, emissaire (de face puis de dos)."
+    },
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r3_A.png",
+     "note": "Ingenieur : tablier cuir, casque jaune, gros marteau tenu droit. Emissaire : echarpe rouge aux deux bouts devant, parchemin roule tendu."
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r3_B.png",
+     "note": "Ingenieur : tablier + ceinture d outils, marteau geant dans le dos. Emissaire : echarpe flottant dans le dos, grande feuille deroulee."
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r3_C.png",
+     "note": "Ingenieur : forgeron bras nus, bandana, roue dentee dans le dos. Emissaire : ceinture rouge en bandouliere, toque, parchemin scelle leve."
+    }
+   ]
+  },
+  {
+   "name": "Modèle · 4 - Batiments du bastion lisibles de loin",
+   "variants": [
+    {
+     "id": "X",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r4_0.png",
+     "note": "Modele actuel (reference, choisir X pour ne rien changer). Observatoire (defense, bleu), grenier (economie, vert), sanctuaire (ville, or), forge (guerre, rouge)."
+    },
+    {
+     "id": "A",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r4_A.png",
+     "note": "Toit de la couleur de la fonction + mat a fanion et symbole unique."
+    },
+    {
+     "id": "B",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r4_B.png",
+     "note": "Toit de la couleur de la fonction + haute banderole suspendue avec losange lumineux."
+    },
+    {
+     "id": "C",
+     "img": "/home/claude/naranxia/docs/studio-boards/model/r4_C.png",
+     "note": "Toit de la couleur de la fonction + pilier-lanterne lumineux, visible aussi la nuit."
+    }
+   ]
+  }
+ ]
+}
