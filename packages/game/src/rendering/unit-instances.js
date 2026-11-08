@@ -38,7 +38,7 @@ let ringMat;
 
 export let CARRYG;
 
-const RS3={king:.52,guard:.46,gunner:.3,gunner2:.3,cannon:.56,husk:.26,peasant:.3,knight:.4,archer:.34,bannerman:.34,captain:.45,zombie:.32,runner:.3,brute:.5,bomber:.4,acid:.32,miner:.34};
+const RS3={king:.52,guard:.46,gunner:.3,gunner2:.3,cannon:.56,husk:.26,peasant:.3,knight:.4,archer:.34,bannerman:.34,captain:.45,zombie:.32,runner:.3,brute:.5,bomber:.4,acid:.32,miner:.34,scout:.3,engineer:.3};
 
 export function buildUnitGroup(type,t,zv){unitsState.ALB=t===0?alv():0;const k=type+t+'a'+unitsState.ALB+heraldryState.MVAR+(zv?'v'+zv.v+(zv.hint||''):''),mdl=UM[k]||(UM[k]=(()=>{const zo=zombiesState.ZVAR;zombiesState.ZVAR=zv||null;try{return mkModel(type,t)}finally{zombiesState.ZVAR=zo}})()),g=new THREE.Group();
  const mat=matV.clone();mat.onBeforeCompile=UNITSH;mat.emissive=new THREE.Color(0,0,0);
