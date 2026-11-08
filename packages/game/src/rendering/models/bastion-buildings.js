@@ -1,5 +1,5 @@
 import { newG, toGeo } from '../geometry.js';
-import { bM, bP, bS, bW, bL, qCone, qDoor, qPlinth, qRoof, qStone, qTimber, qWin, QBR, QBR2, QIR, QS, QSL, QW1, QW2 } from './building-parts.js';
+import { bC, bM, bP, bS, bW, bL, qCone, qDoor, qPlinth, qRoof, qStone, qTimber, qWin, QBR, QBR2, QIR, QS, QSL, QW1, QW2, QW3 } from './building-parts.js';
 
 /* ---- last-bastion buildings (2x2 tiles, front = +z): observatory, granary, alarm bell, sanctuary ---- */
 const grass = G => { qPlinth(G, 1, 0, 1, 2, 2, .1); bP(G, 1, .1, 1, 1.9, .03, 1.9, '#6f8a44') };
@@ -51,5 +51,31 @@ export function sanctuaryGeo() {
   bL(G, 1, .85, 1.49, .16, .16, .03, '#ffd98c');
   for (const x of [.72, 1.28]) qWin(G, x, .55, 1.486, true, 1, { glow: 1, w: .14, h: .22 });
   for (let k = 0; k < 2; k++) bS(G, 1, .13 + k * .05, 1.52 + (1 - k) * .1, .6, .05, .14, QS[2]);
+  return toGeo(G);
+}
+
+/* stone beacon tower: a brazier of living flames on a stone crown */
+export function beaconGeo() {
+  const G = newG(); grass(G);
+  qStone(G, 1, .13, 1, .8, .8, 1.6);
+  bS(G, 1, 1.73, 1, 1.0, .1, 1.0, QS[2]);
+  for (const x of [.55, 1.45]) for (const z of [.55, 1.45]) bS(G, x, 1.83, z, .1, .2, .1, QS[1]);
+  bM(G, 1, 1.83, 1, .56, .12, .56, QIR);
+  bL(G, 1, 1.95, 1, .34, .3, .34, '#ff9a2a'); bL(G, 1, 2.25, 1, .2, .26, .2, '#ffd25a'); bL(G, 1.06, 2.5, .96, .1, .16, .1, '#fff0b0');
+  qDoor(G, 1, 1.416, true, 1, { y: .13, w: .26, h: .46, wood: 1, lamp: 1 });
+  qWin(G, 1, 1.0, 1.416, true, 1, { glow: 1, w: .1, h: .26 });
+  return toGeo(G);
+}
+
+/* fenced orchard: four apple trees and a crate of fruit */
+export function orchardGeo() {
+  const G = newG(); grass(G);
+  for (let k = 0; k <= 5; k++) { const t = .2 + k * .32; for (const z of [.2, 1.8]) bW(G, t, .1, z, .05, .22, .05, QW1); if (k > 0 && k < 5) for (const x of [.2, 1.8]) bW(G, x, .1, t, .05, .22, .05, QW1) }
+  bW(G, 1, .24, .2, 1.65, .03, .03, QW3); bW(G, .2, .24, 1, .03, .03, 1.65, QW3); bW(G, 1.8, .24, 1, .03, .03, 1.65, QW3);
+  for (const [x, z] of [[.6, .6], [1.4, .6], [.6, 1.3], [1.4, 1.3]]) {
+    bW(G, x, .1, z, .12, .42, .12, '#6b4a2c'); bC(G, x, .5, z, .56, .34, .56, '#4f9a3c'); bC(G, x, .8, z, .36, .24, .36, '#5fa845');
+    for (const [dx, dz] of [[.22, .1], [-.2, .2], [.05, -.24]]) bM(G, x + dx, .58, z + dz, .07, .07, .07, '#d8402a');
+  }
+  bW(G, 1, .1, 1.62, .34, .16, .22, QW2); bM(G, .94, .26, 1.62, .08, .08, .08, '#d8402a'); bM(G, 1.06, .26, 1.6, .08, .08, .08, '#e0b030');
   return toGeo(G);
 }
