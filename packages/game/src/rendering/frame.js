@@ -1,3 +1,4 @@
+import { syncRuins } from './ruins.js';
 import { OWN, rangeOf, selH, TOWR } from '../ai/kingdoms.js';
 import { snd } from '../audio/sound.js';
 import { dist } from '../core/math.js';
@@ -73,7 +74,7 @@ export const frameState = {
   frameN: 0,
 };
 
-export let render3D = function render3D(dt){frameState.frameN++;updateCamera(dt);updateChunks(7);
+export let render3D = function render3D(dt){frameState.frameN++;updateCamera(dt);updateChunks(7);syncRuins();
  let anyDmg=false;for(const s of sessionState.structs)if(s.t===0&&(s.hp<s.max||s.prog<1)){anyDmg=true;break}
  {const R=(CAM.dist*1.7+26)*TS,cx=CAM.x*TS,cy=CAM.z*TS;camera.updateMatrixWorld();_uPV.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);_uFr.setFromProjectionMatrix(_uPV);
   swarmRenderingState.ZEYN=0;for(const u of sessionState.units){if(u.shel||Math.abs(u.x-cx)>R||Math.abs(u.y-cy)>R)continue;if(u.t!==0&&!fowVisAt(u.x,u.y)){if(u.t===1&&nightK>.25)zEyes(u,Math.min(1,nightK*1.3),0);continue}if(u.dy==null)u.dy=gh(u.x/TS,u.y/TS);_uSp.center.set(u.x/TS,u.dy+.65,u.y/TS);

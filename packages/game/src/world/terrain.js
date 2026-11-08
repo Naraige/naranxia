@@ -39,6 +39,7 @@ export let genF;
 export const occ = new Map();
 export const stairs = new Map();
 export const CAMPS = new Map();
+export const RUINS = new Map();
 export let TFL;
 
 export let mc;
@@ -46,6 +47,12 @@ export let mg;
 function mkGord(){const o=[],ccx=terrainState.CX/CH,ccy=terrainState.CY/CH;for(let j=0;j<NCY;j++)for(let i=0;i<NCX;i++)o.push([Math.min(hyp(i+.5-ccx,j+.5-ccy),sessionState.SITE2?hyp(i+.5-sessionState.SITE2.tx/CH,j+.5-sessionState.SITE2.ty/CH):1e9),j*NCX+i]);o.sort((a,b)=>a[0]-b[0]);terrainState.GORD=o.map(a=>a[1])}
 
 export function bgGen(ms){const t0=performance.now();while(terrainState.GI<terrainState.GORD.length&&performance.now()-t0<ms){const k=terrainState.GORD[terrainState.GI++];if(!genF[k])genChunk(k%NCX,(k/NCX)|0)}}
+
+/* ancient ruins: one explorable landmark in some chunks far from the castle (loot once, see gameplay/ruins.js) */
+function mkRuin(cx,cy,k){const dc=Math.max(Math.abs(cx*CH+16-terrainState.CX),Math.abs(cy*CH+16-terrainState.CY));if(dc<48||hs(cx,cy,terrainState.SEED+171)>.2)return;
+ for(let t=0;t<12;t++){const x=cx*CH+4+((hs(cx,cy,terrainState.SEED+172+t)*(CH-8))|0),y=cy*CH+4+((hs(cx,cy,terrainState.SEED+190+t)*(CH-8))|0),i=y*TW+x;if(ter[i]!==0||FLG[i]||stairs.has(i)||HT[i]<=WLV+1)continue;
+  let ok=true;for(let dy=-1;dy<=1&&ok;dy++)for(let dx=-1;dx<=1;dx++){const j=i+dy*TW+dx;if(ter[j]!==0||FLG[j]||stairs.has(j)||HT[j]!==HT[i]){ok=false;break}}if(!ok)continue;
+  RUINS.set(k,{x:(x+.5)*TS,y:(y+.5)*TS,tx:x,ty:y,h:HT[i],d:Math.round(dc),done:false,cx,cy,v:(hs(cx,cy,terrainState.SEED+173)*3)|0});return}}
 
 function mkCamp(cx,cy,k){return;const dc=Math.max(Math.abs(cx*CH+16-terrainState.CX),Math.abs(cy*CH+16-terrainState.CY));if(dc<70||hs(cx,cy,terrainState.SEED+77)>.42)return;
  for(let t=0;t<12;t++){const x=cx*CH+3+((hs(cx,cy,terrainState.SEED+78+t)*(CH-6))|0),y=cy*CH+3+((hs(cx,cy,terrainState.SEED+90+t)*(CH-6))|0),i=y*TW+x;if(ter[i]!==0||FLG[i]||stairs.has(i)||HT[i]<=WLV+1)continue;
@@ -209,7 +216,7 @@ export function genChunk(cx,cy){if(cx<0||cy<0||cx>=NCX||cy>=NCY)return;const k=c
   if(al>=4&&hs(x,y,sd+16)<.004*P.gd){ter[i]=4;amt[i]=40;continue}
   if(al>=3&&hs(x,y,sd+19)<.006+.002*al){ter[i]=3;amt[i]=8}}
  for(const[i,v]of starterTiles()){const x=i%TW,y=(i/TW)|0;if(x<x0||y<y0||x>=x1||y>=y1||ter[i]===1||ter[i]===5)continue;ter[i]=v[0];amt[i]=v[1]}
- carveRamps(cx,cy);fixAccess(cx,cy);mkCamp(cx,cy,k);mmChunk(cx,cy);sealAround(cx,cy)}
+ carveRamps(cx,cy);fixAccess(cx,cy);mkCamp(cx,cy,k);mkRuin(cx,cy,k);mmChunk(cx,cy);sealAround(cx,cy)}
 
 export function ensureAround(tx,ty,r){const cx=(tx/CH)|0,cy=(ty/CH)|0;for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++)genChunk(cx+i,cy+j)}
 
@@ -217,7 +224,7 @@ export function ensureRect(x0,y0,w,h){for(let cy=Math.max(0,(y0/CH)|0);cy<=Math.
 
 export let rollWorld = function rollWorld(){terrainState.SEED=Math.random()*500;const R=Math.random;terrainState.GPR={fq:.009+R()*.007,wl:.28+R()*.08,mt:.5+R()*.1,rv:.008+R()*.008,rg:.93+R()*.03,am:.7+R()*.5,tr:.5+R()*.2,gd:.8+R()*.5,tc:.003+R()*.01}};
 
-export function initWorld(){mkGord();RAWD.fill(0);smDone.fill(0);SEALD.fill(0);HT.fill(0);ter.fill(0);amt.fill(0);pth.fill(0);FLG.fill(0);genF.fill(0);terrainState.GI=0;terrainState.genN=0;occ.clear();stairs.clear();CAMPS.clear();TFL.fill(0);mg.fillStyle='#10151f';mg.fillRect(0,0,TW,TH);mkRoutes();ensureAround(terrainState.CX,terrainState.CY,2)}
+export function initWorld(){mkGord();RAWD.fill(0);smDone.fill(0);SEALD.fill(0);HT.fill(0);ter.fill(0);amt.fill(0);pth.fill(0);FLG.fill(0);genF.fill(0);terrainState.GI=0;terrainState.genN=0;occ.clear();stairs.clear();CAMPS.clear();RUINS.clear();TFL.fill(0);mg.fillStyle='#10151f';mg.fillRect(0,0,TW,TH);mkRoutes();ensureAround(terrainState.CX,terrainState.CY,2)}
 
 export function setRollWorldHandler(handler) {
   rollWorld = handler;
