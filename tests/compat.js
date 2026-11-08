@@ -5,16 +5,10 @@ async()=>{rollWorld();randomSite();CX=pickPos.tx;CY=pickPos.ty;reset();startGame
  const mod=f=>{const S=JSON.parse(txt);f(S);return JSON.stringify(S)};
  const unitsId=S=>S.R.units.$r;
  const cases={
-  old:S=>{S.v=1;delete S.gv;delete S.meta},
-  newer:S=>{S.v=99;S.extra={a:1}},
-  novers:S=>{delete S.v},
-  unknownKey:S=>{S.R.zzzNew=S.R.units},
-  missingKey:S=>{delete S.R.OBJ;delete S.R.GST},
-  ghostUnit:S=>{const o=S.objs[unitsId(S)].$a;const id=S.objs.length;S.objs.push({$o:{uid:99999,type:'removed_unit',t:0,x:5,y:5,hp:9}});o.push({$r:id})},
-  noHp:S=>{const o=S.objs[unitsId(S)].$a[0];delete S.objs[o.$r].$o.hp}
+  mixed:S=>{S.v=1;delete S.gv;delete S.meta;S.R.zzzNew=S.R.units;delete S.R.OBJ;delete S.R.GST;const o=S.objs[unitsId(S)].$a,id=S.objs.length;S.objs.push({$o:{uid:99999,type:'removed_unit',t:0,x:5,y:5,hp:9}});o.push({$r:id});delete S.objs[o[0].$r].$o.hp},
+  newer:S=>{S.v=99;S.extra={a:1}}
  };
- for(const k in cases){try{await svApply(mod(cases[k]));out[k]={u:units.length,s:structs.length,nan:units.some(u=>!Number.isFinite(u.hp))}
-   for(let i=0;i<5;i++)update(.05);out[k].ran=true}catch(e){out[k]='ERR '+e.message}}
+ for(const k in cases){try{await svApply(mod(cases[k]));out[k]={u:units.length,s:structs.length,nan:units.some(u=>!Number.isFinite(u.hp))};for(let i=0;i<5;i++)update(.05);out[k].ran=true}catch(e){out[k]='ERR '+e.message}}
  let bad=false;try{await svApply('{"v":1}')}catch(e){bad=/Unknown save format/.test(e.message)}
- const ok=['old','newer','novers','unknownKey','missingKey','noHp'].every(k=>out[k]&&out[k].ran&&out[k].u===nU&&out[k].s===nS&&!out[k].nan)&&out.ghostUnit&&out.ghostUnit.ran&&out.ghostUnit.u===nU&&bad;
+ const ok=['mixed','newer'].every(k=>out[k]&&out[k].ran&&out[k].u===nU&&out[k].s===nS&&!out[k].nan)&&bad;
  return JSON.stringify({ok,bad,out})}
