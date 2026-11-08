@@ -91,7 +91,7 @@ function drawNotes(UW,UH,cx){const W=Math.min(UW-12,480),X=Math.max(6,Math.min(U
  let y=top;const lh=Math.round(10.5*sc/.82+1);for(const[t,first]of lines){if(y>Y+H-34)break;if(first)arcDia(X+16,y+4,2,'#d8b060');T_(t,X+26,y,'#ead8ba',sc);y+=lh+(first&&false?0:0)}
  pill(X+W/2-40,Y+H-24,80,16,'Back',BTN,BTNH,()=>{notesOpen=false},null,.9)}
 
-const MCSPL=['Survive the night!','Also try Co-op!','Hold the line!','100% blocky!','Mind the swarm!','Build towers!','Zombies hate walls!','Protect the castle!','Now with keeps!','Gold! Wood! Stone!','100x the swarm!','Ten thousand zombies!','Red eyes in the dark!'];
+const MCSPL=['Survive the night!','Also try Co-op!','Hold the line!','100% blocky!','Mind the swarm!','Build towers!','Zombies hate walls!','Protect the castle!','Now with keeps!','Gold! Wood! Stone!','100x the swarm!','Ten thousand zombies!','Red eyes in the dark!','The last bastion of humanity','Rebel camps watch from afar','Hold the last light'];
 
 
 function mcLogo(txt,x0,y0,cs){const lw=cs*47,hh=cs*5;canvasesState.ctx.save();canvasesState.ctx.textBaseline='alphabetic';canvasesState.ctx.textAlign='center';

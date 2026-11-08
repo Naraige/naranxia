@@ -856,6 +856,9 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"The last bastion of humanity":["Le dernier bastion de l'humanité","El último bastión de la humanidad","Die letzte Bastion der Menschheit","L'ultimo bastione dell'umanità","O último bastião da humanidade"],
+"Rebel camps watch from afar":["Les camps rebelles vous observent de loin","Los campamentos rebeldes vigilan a lo lejos","Rebellenlager beobachten aus der Ferne","I campi ribelli osservano da lontano","Os acampamentos rebeldes observam de longe"],
+"Hold the last light":["Gardez la dernière lumière","Mantén la última luz","Haltet das letzte Licht","Mantieni l'ultima luce","Mantenha a última luz"],
 "Observatory":["Observatoire","Observatorio","Observatorium","Osservatorio","Observatório"],
 "Granary":["Grenier","Granero","Kornspeicher","Granaio","Celeiro"],
 "Alarm bell":["Cloche d'alarme","Campana de alarma","Alarmglocke","Campana d'allarme","Sino de alarme"],
