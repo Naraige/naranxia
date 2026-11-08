@@ -1,5 +1,6 @@
 import { PD, PDP, pxArms, pxBox, PXDK, PXLE, pxRot, pxScene, teamPal } from './pixel-geometry.js';
 import { zombiesState } from './zombies.js';
+import { unitsState } from './units.js';
 import { thp } from '../../ui/kingdom-theme.js';
 
 /* ---- faces: skin, eyes, brows, hair; hair styles: 0 short, 1 fringe, 2 long, 3 none ---- */
@@ -47,6 +48,11 @@ export function pxSkinArms(T,K,map){if(K.arm)pxBox(T,-2,-12,-2,4,12,4,pxPaint(K.
 /* colour maps: letters to display colours, turned into albedo once */
 export const pxMap=(o,tm)=>{const m={};for(const k in o)m[k]=PD(o[k]);if(tm){const T=teamPal(tm);m.V=T[0];m.t=T[1];m.T=T[2];m.U=T[3];m.Y=T[4]}return m};
 
+/* ---- rank galons (King's board choice, rank row A): rank 0..3 = 0..3 gold bands on both sleeves (row numbers count from the top of the arm piece, c = gold colour letter) ---- */
+function pxRankK(K,part,rows,faces,c){const rk=unitsState.RKB|0;if(!rk)return K;const o=Object.assign({},K),q=Object.assign({},K[part]);
+ for(const f of faces)if(Array.isArray(q[f])){q[f]=q[f].slice();for(const j of rows.slice(0,rk))q[f][j]=c+c+c+c}
+ o[part]=q;return o}
+
 /* ---------------- KNIGHT ---------------- */
 const SK_KNIGHT={hatMat:4,jacketMat:4,sleeveMat:4,pantsMat:4,
  head:{F:['ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss','ssssssss'],B:'F',R:'F',L:'F',T:'F',D:'F'},
@@ -55,9 +61,9 @@ const SK_KNIGHT={hatMat:4,jacketMat:4,sleeveMat:4,pantsMat:4,
   B:['hhhhhhhh','lllhllll','mmmlmmmm','mmmlmmmm','mmmlmmmm','dmmlmmmd','dmmlmmmd','dddddddd'],
   T:['lhhhhhhl','hlmggmlh','hmmggmmh','hmmggmmh','hmmggmmh','hmmggmmh','hlmggmlh','lhhGGhhl']},
  body:{F:['xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx','xyxyxyxy','yxyxyxyx'],B:'F',R:['xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx'],L:'R',T:['dddddddd','dddddddd','dddddddd','dddddddd'],D:'T'},
- jacket:{F:['whhhhhhw','hlmmmmlh','lmtTTtml','lmtGGtml','lmGGggml','dmtggtmd','dmtTTtmd','nbbGGbbn','dltTTtld','mhtTTthm','dmtTTtmd','ddtTTtdd'],
+ jacket:{F:['whhhhhhw','htTTTTth','ltTTTTtl','ltTGGTtl','ltTggTtl','dtTTTTtd','dtTTTTtd','nbbGGbbn','dtTTTTtd','mtTTTTtm','dtTTTTtd','dttttttd'],
   R:['hhhh','llll','mmml','mmmm','mmmm','dmmm','dddd','bbbn','mmmm','hhhh','mmmm','dddd'],L:'~R',
-  B:['hhhhhhhh','llllllll','mmtTTtmm','mmtTTtmm','dmtTTtmd','dmtTTtmd','dmtTTtmd','nbbbbbbn','dmtTTtmd','mhtTTthm','dmtTTtmd','ddtTTtdd'],
+  B:['hhhhhhhh','htTTTTth','ltTTTTtl','ltTTTTtl','dtTTTTtd','dtTTTTtd','dtTTTTtd','nbbbbbbn','dtTTTTtd','mtTTTTtm','dtTTTTtd','dttttttd'],
   T:['hhhhhhhh','hllllllh','hllllllh','whhhhhhw']},
  arm:{F:['xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx','xyxy','yxyx'],B:'F',R:'F',L:'F',T:['xxxx','xxxx','xxxx','xxxx'],D:'T'},
  sleeve:{F:['hhhh','llll','mlmm','dmmd','....','whhw','lmml','....','hhhh','lmml','hhhh','lmlm'],
@@ -69,9 +75,9 @@ const SK_KNIGHT={hatMat:4,jacketMat:4,sleeveMat:4,pantsMat:4,
   B:['llll','mmmm','dmmd','....','llll','mmmm','dmmd','....','llll','mmmm','bbbb','dddd'],T:['llll','llll','llll','llll'],D:['dddd','dddd','dddd','dddd']}};
 
 export function pxKnight(P,AL){const map=pxMap({k:'#141519',d:'#2c2e34',m:'#4a4d55',l:'#6d717a',h:'#949aa3',w:'#c4c8ce',x:'#1d1e22',y:'#2c2e33',
-  g:'#d4a234',G:'#f0cc5c',o:'#9a6e1e',b:'#6e4826',B:'#8d6136',n:'#4a2e16',s:'#c98262'},thp()),K=SK_KNIGHT,S=n=>map[n];
+  g:'#d4a234',G:'#f0cc5c',o:'#9a6e1e',b:'#6e4826',B:'#8d6136',n:'#4a2e16',s:'#c98262'},thp()),K=pxRankK(SK_KNIGHT,'sleeve',[4,6,8],['F','R','B'],'G'),S=n=>map[n];
  pxScene(()=>{pxSkin(P,K,map);
-  pxBox(P.HG,-.5,32.5,-4.25,1,1,8.5,pxPaint({F:['G'],B:['o'],R:['GGGGGGGG'],L:'R',T:['g','G','G','G','G','G','G','g'],D:['o','o','o','o','o','o','o','o']},{G:map.G,o:map.o,g:map.g}),{mat:4,grid:[1,1,8]});
+  pxBox(P.HG,-.5,32.5,-4.25,1,1,8.5,pxPaint({F:['q'],B:['Q'],R:['qqqqqqqq'],L:'R',T:['Q','q','q','q','q','q','q','Q'],D:['Q','Q','Q','Q','Q','Q','Q','Q']},{q:PD('#c0392b'),Q:PD('#8a2a20')}),{mat:4,grid:[1,1,8]});
   if(AL>=2){pxBox(P.HG,-.5,33.5,-3,1,2,4,pxPaint({F:['U','T'],B:['T','t'],R:['UUUU','TTTT'],L:'R',T:['U','U','U','U'],D:['t','t','t','t']},map),{mat:7,grid:[1,2,4]});pxBox(P.HG,-.5,32,-5.6,1,2.5,2,pxPaint({F:['T','T','t'],B:'F',R:['TT','TT','tt'],L:'R',T:['T','T'],D:['t','t']},map),{mat:7,grid:[1,3,2]})}});
  pxArms(P,T=>{pxSkinArms(T,K,map);
   pxBox(T,-3,-1.25,-3,6,3,6,pxPaint({T:['mllllm','lhhhhl','lhwwhl','lhhhhl','lhhhhl','mllllm'],F:['hhhhhh','lmmmml','oggggo'],B:'F',R:'F',L:'F',D:['dddddd','dddddd','dddddd','dddddd','dddddd','dddddd']},map),{mat:4})});
@@ -108,7 +114,7 @@ const SK_ARCHER={hatMat:7,jacketMat:0,
  pants:{F:['....','....','....','....','....','....','BBBB','bbbb','bnbb','bbbb','bbbb','nnnn'],R:['....','....','....','....','....','....','BBBB','bbbb','bbnb','bbbb','bbbb','nnnn'],L:'~R',B:'R',T:null,D:['nnnn','nnnn','nnnn','nnnn']}};
 
 export function pxArcher(P,AL){const map=pxMap({s:'#e8a684',S:'#c98262',h:'#6b3e1e',r:'#4a2a14',e:'#3fa65a',w:'#f4f4f4',m:'#8e4a3c',
-  G:'#58a852',g:'#3f8a3e',q:'#2f6a30',V:'#3f8a3e',v:'#2f6a30',b:'#86522c',B:'#a96c3c',n:'#5e381c',y:'#ecbd3a',P:'#4e3a26',p:'#3a2a1a'}),K=SK_ARCHER;
+  G:'#58a852',g:'#3f8a3e',q:'#2f6a30',V:'#3f8a3e',v:'#2f6a30',b:'#86522c',B:'#a96c3c',n:'#5e381c',y:'#ecbd3a',P:'#4e3a26',p:'#3a2a1a'}),K=pxRankK(SK_ARCHER,'arm',[3,1,5],['F'],'y');
  pxScene(()=>{pxSkin(P,K,map);
   pxBox(P.HG,-1.5,26.5,-5.75,3,3.5,1.25,pxPaint({F:['ggg','ggg','qqq'],B:['GGG','ggg','qqq'],R:['G','g','q'],L:'R',T:['GGG'],D:['qqq']},map),{mat:7,grid:[3,3,1]});
   pxRot(P.G,T=>{pxBox(T,.6,13,-5.1,3,8.5,2.6,pxPaint({F:['BBB','bbb','bbb','bnb','bbb','bbb','yyy','nnn'],B:'F',R:['BB','bb','bb','bb','bb','bb','yy','nn'],L:'R',T:['nnn','nnn'],D:['nnn','nnn']},map),{mat:0,grid:[3,8,2]});
