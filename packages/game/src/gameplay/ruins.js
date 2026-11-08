@@ -1,3 +1,4 @@
+import { snd } from '../audio/sound.js';
 import { RUINS } from '../world/terrain.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { playersState } from './players.js';
@@ -27,7 +28,7 @@ export function updateRuins(dt) {
       r.done = true;
       const K = KINDS[r.v % KINDS.length], base = 40 + r.d * .8, R = playersState.RESP[u.pl | 0] || playersState.RESP[0], got = [];
       for (const k in K[1]) { const n = Math.round(base * K[1][k]); R[k] += n; got.push('+' + n + ' ' + NAME[k]) }
-      hudDisplayState.msgS = 'Ruins explored: ' + K[0] + ' (' + got.join(', ') + ')'; hudDisplayState.msgT = 8;
+      snd('ruin', r.x, r.y); hudDisplayState.msgS = 'Ruins explored: ' + K[0] + ' (' + got.join(', ') + ')'; hudDisplayState.msgT = 8;
       break;
     }
   }

@@ -37,6 +37,7 @@ const pos=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*cv.
 
 function mmGo(p){CAM.x=Math.max(2,Math.min(TW-2,(p.x-mmRect.x)/mmRect.w*TW));CAM.z=Math.max(2,Math.min(TH-2,(p.y-mmRect.y)/mmRect.h*TH))}
 
+let hovHit='';
 export function camZoom(d){CAM.dist=Math.max(7,Math.min(80,CAM.dist*(d>0?1.18:1/1.18)))}
 
 export function panCam(dx,dy){const u=2*CAM.dist*Math.tan(camera.fov*Math.PI/360)/cv.height,s=Math.sin(CAM.yaw),c=Math.cos(CAM.yaw),sp=Math.sin(CAM.pitch);
@@ -61,7 +62,7 @@ export function initializeDesktopInput() {
    if(inR(p,mmRect)){hudState.mmDrag=true;mmGo(p);return}if(hudState.uiRects.some(r=>inR(p,r)))return;
    const fo=e.button===2&&!sessionState.mode&&sel().some(u=>u.type!=='peasant');inputState.ptr={x:e.clientX,y:e.clientY,m:0,pan:e.button===0&&inputState.panMode,rot:e.button!==0&&!fo,fo:fo?{w0:wpos(),w1:null}:null,sx:p.x,sy:p.y,btn:e.button};inputState.box=null};
 
-  cv.onpointermove=e=>{inputState.mouse=pos(e);if(e.pointerType==='mouse'&&e.buttons===0&&(inputState.ptr||hudState.mmDrag||settingsState.sliderDrag)){inputState.ptr=null;inputState.box=null;hudState.mmDrag=false;settingsState.sliderDrag=null}if(settingsState.sliderDrag){settingsState.sliderDrag.set(Math.max(0,Math.min(1,(inputState.mouse.x/hudDisplayState.UIS-settingsState.sliderDrag.x)/settingsState.sliderDrag.w)));return}if(hudState.mmDrag){mmGo(inputState.mouse);return}if(!inputState.ptr)return;const dx=e.clientX-inputState.ptr.x,dy=e.clientY-inputState.ptr.y,k=cv.width/cv.getBoundingClientRect().width;
+  cv.onpointermove=e=>{inputState.mouse=pos(e);if(e.pointerType==='mouse'&&e.buttons===0){const hh=hudState.uiHits.find(h=>h.fn&&h.tip&&inR(inputState.mouse,h)),k=hh?(hh.x|0)+','+(hh.y|0)+','+(hh.w|0):'';if(k!==hovHit){hovHit=k;if(k)snd('hover')}}if(e.pointerType==='mouse'&&e.buttons===0&&(inputState.ptr||hudState.mmDrag||settingsState.sliderDrag)){inputState.ptr=null;inputState.box=null;hudState.mmDrag=false;settingsState.sliderDrag=null}if(settingsState.sliderDrag){settingsState.sliderDrag.set(Math.max(0,Math.min(1,(inputState.mouse.x/hudDisplayState.UIS-settingsState.sliderDrag.x)/settingsState.sliderDrag.w)));return}if(hudState.mmDrag){mmGo(inputState.mouse);return}if(!inputState.ptr)return;const dx=e.clientX-inputState.ptr.x,dy=e.clientY-inputState.ptr.y,k=cv.width/cv.getBoundingClientRect().width;
    inputState.ptr.m+=Math.abs(dx)+Math.abs(dy);inputState.ptr.x=e.clientX;inputState.ptr.y=e.clientY;
    if(inputState.ptr.pk&&PKL.on){if(inputState.ptr.m>6){if(inputState.ptr.btn===0)panCam(dx*k,dy*k);else{CAM.yaw-=dx*.007;CAM.pitch=Math.max(.35,Math.min(1.38,CAM.pitch+dy*.005))}}return}
    if(inputState.ptr.pk){if(inputState.ptr.m>6&&PK){if(inputState.ptr.btn===0){const sp=PK.dist*.0012*k;PK.tx-=(dx*Math.cos(PK.yaw)-dy*Math.sin(PK.yaw)/Math.max(.3,Math.sin(PK.pitch)))*sp;PK.tz+=(dx*Math.sin(PK.yaw)+dy*Math.cos(PK.yaw)/Math.max(.3,Math.sin(PK.pitch)))*sp;PK.tx=Math.max(0,Math.min(PVW*PKU,PK.tx));PK.tz=Math.max(0,Math.min(PVH*PKU,PK.tz))}else{PK.yaw-=dx*.007;PK.pitch=Math.max(.3,Math.min(1.45,PK.pitch+dy*.005))}}return}

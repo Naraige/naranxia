@@ -32,7 +32,7 @@ export let convoyStep = function convoyStep(u,dt){const c=u.cv,dest=c.back?(c.fr
  if(dist(u.x,u.y,dest.x,dest.y)<TS*4.6){
   if(!c.back){const Rr=playersState.RESP[c.to];Rr.g+=c.g;Rr.w+=c.w;Rr.s+=c.s;Rr.f=(Rr.f||0)+c.f;
    if(c.to===LPL()){hudDisplayState.msgS='Convoy delivered: +'+cvText(c);hudDisplayState.msgT=4}else if(c.from===LPL()){hudDisplayState.msgS='Your convoy reached your partner';hudDisplayState.msgT=3}
-   puff(u.x,u.y,'#ffd23c',6,40);c.g=c.w=c.s=c.f=0;c.back=true;c.t=0;u.carry=false;cvGo(u,c.from?sessionState.CS2:sessionState.CS)}
+   if(c.to===LPL())snd('convoy');puff(u.x,u.y,'#ffd23c',6,40);c.g=c.w=c.s=c.f=0;c.back=true;c.t=0;u.carry=false;cvGo(u,c.from?sessionState.CS2:sessionState.CS)}
   else{u.cv=null;u.o=null;u.carry=false}
   return}
  /* no way through for two minutes: the goods go back to the sender */
