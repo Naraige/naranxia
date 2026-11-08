@@ -16,6 +16,7 @@ export const sessionState = {
   bannerS2: '',
   kills: 0,
   best: {w:0,k:0},
+  jrn: [],
   clockT: 0,
   camSave: null,
   units: undefined,

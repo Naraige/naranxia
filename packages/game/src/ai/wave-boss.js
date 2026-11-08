@@ -17,8 +17,13 @@ import { canvasesState } from '../ui/canvases.js';
    simulation with its own timer `bt` (sim time), so both co-op machines agree; the units keep the flag in saves (units are saved whole). */
 /* named bosses (lore: the old world's fallen leaders), by order of appearance; the index is stored on the unit */
 export const BOSSN=['The Hollow Warden','The Bell-Bearer','The Frost King','The Hive Queen'];
+/* legend shown on the banner when each boss appears (same order as BOSSN); text only, no effect on the simulation */
+export const BOSSL=['Once he guarded the old gates. Now he guards nothing.','He rang the last bell of the old world. The dead still answer.','He ruled the northern snows. The cold still obeys him.','She fed a whole city to her brood. The brood remembers.'];
+/* kingdom journal: sessionState.jrn = [[wave, kind (0 boss arrives, 1 boss falls), boss index], ...] (numbers only, saved in SAVA, absent = empty) */
+export function jrnAdd(k,bn){const J=sessionState.jrn||(sessionState.jrn=[]);if(J.length<200)J.push([sessionState.waveN|0,k,bn|0])}
+export function bossFell(u){jrnAdd(1,u.bn);sessionState.bannerT=4.5;sessionState.bannerS='BOSS SLAIN';sessionState.bannerS2=BOSSN[u.bn|0]+' - has fallen'}
 export function bossSpawn(L0){if(sessionState.waveN%10||sessionState.waveN<10||!L0.length)return;const L=L0[0],an=spawnAnchor(L),zu=mkU(1,'brute',an.p[0]*TS,an.p[1]*TS,null,L);
- zu.boss=1;zu.bn=(sessionState.waveN/10-1)%BOSSN.length;zu.sv=1.6;zu.hp*=3.5+sessionState.waveN*.25;zu.bmax=zu.hp;zu.ph=an.ph;sessionState.units.push(zu);sessionState.bannerS2='BOSS - a giant brute walks with the horde! '+sessionState.bannerS2}
+ zu.boss=1;zu.bn=(sessionState.waveN/10-1)%BOSSN.length;zu.sv=1.6;zu.hp*=3.5+sessionState.waveN*.25;zu.bmax=zu.hp;zu.ph=an.ph;sessionState.units.push(zu);jrnAdd(0,zu.bn);sessionState.bannerS2=BOSSN[zu.bn]+' - '+BOSSL[zu.bn]}
 
 export function bossStomp(u){const R=TS*3.4,x=u.x,y=u.y;snd('boom',x,y);ring(x,y,'#d8c090',22,300);puff(x,y,'#8a7058',14,100,{T:.8,z:.3,vz:3.4,g:9,s:.15});shake(.4);
  for(const s of sessionState.structs)if(s.hp>0&&s.t!==1&&s.prog>=1){const dd=Math.max(0,dist(s.x,s.y,x,y)-(s.rad||20));if(dd<R)s.hp-=(70+sessionState.waveN*5)*(1-dd/R*.6)*(s.type==='castle'||s.type==='keep'?.5:1)}

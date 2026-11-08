@@ -20,6 +20,7 @@ import { HOMEC, killPl, LPL, playersState, setPl } from './players.js';
 import { GRNG, RS, RS2, RT_TIME, rulesState, SH, T, TS, TW } from './rules.js';
 import { selectionState } from './selection.js';
 import { sessionState } from './session.js';
+import { bossFell } from '../ai/wave-boss.js';
 import { shelGo, shelState, shelTick } from './shelter.js';
 import { ugBuild, ugNear, UGU } from './spatial-index.js';
 import { kingFell, leaveSquad, royalSpawn, slotPos } from './squads.js';
@@ -119,7 +120,7 @@ function simSeen(pl,x,y){for(const s of sessionState.structs)if(s.t===0&&(s.pl|0
   for(const a of sessionState.units){if(a.gar||a.onF)continue;const cx=(a.x/48)|0,cy=(a.y/48)|0;for(let ox=-1;ox<=1;ox++)for(let oy=-1;oy<=1;oy++){const h=grid.get((cx+ox)*4096+cy+oy);if(h===undefined)continue;for(let q=h;q>=0;q=SEPN[q]){const b=sessionState.units[q];if(b.gi<=a.gi)continue;const m=(T[a.type].r+T[b.type].r)*1.12;if(Math.abs(a.x-b.x)>m||Math.abs(a.y-b.y)>m)continue;const dd=dist(a.x,a.y,b.x,b.y);if(dd<m&&dd>0){const pa=a.type==='peasant',pb2=b.type==='peasant',sk=a.t===b.t&&(pa||pb2)?(pa&&pb2?.08:.3):1,nx=(b.x-a.x)/dd,ny=(b.y-a.y)/dd,p=(m-dd)/2*sk;a.x-=nx*p;a.y-=ny*p;b.x+=nx*p;b.y+=ny*p}}}}}
  zDeathFx();for(const u of sessionState.units){collide(u);if(u.hp<=0){if(u.type==='king'&&u.t===0)kingFell(u);
   if(u.conv){puff(u.x,u.y,'#b04bff',10,70);if(u.sq){u.sq.forEach(f=>{f.cap=null});u.sq=null}leaveSquad(u);u.zk=u.type;u.t=1;u.type='zombie';u.hp=T.zombie.hp;u.conv=false;u.sel=false;u.o=null;u.carry=false;u.cd=1;u.lane=-1;u.home=null;u.base=null;u.hh=null}
-  else if(u.nokill){}else{if(!(typeof mcCorpse==='function'&&mcCorpse(u)))puff(u.x,u.y,'#efefef',8,30,{T:.8,z:.35,vz:1.4,g:-.7,s:.12});if(u.type==='brute')shake(.25);snd('die',u.x,u.y);if(u.t===0)rulesState.GST.lost++;if(u.t===1){sessionState.kills++;gstKill(u);if(sessionState.kills===1)ach('k1');if(sessionState.kills===100)ach('k100');if(sessionState.kills===500)ach('k500');const gg=u.boss?400:u.type==='brute'?25:u.type==='miner'?8:u.type==='bomber'?6:u.type==='acid'?5:u.type==='runner'?3:u.type==='husk'?1:2;playersState.RESP[killPl(u)].g+=gg;puff(u.x,u.y,'#ffd23c',3,50)}}}}
+  else if(u.nokill){}else{if(!(typeof mcCorpse==='function'&&mcCorpse(u)))puff(u.x,u.y,'#efefef',8,30,{T:.8,z:.35,vz:1.4,g:-.7,s:.12});if(u.type==='brute')shake(.25);snd('die',u.x,u.y);if(u.t===0)rulesState.GST.lost++;if(u.t===1){if(u.boss)bossFell(u);sessionState.kills++;gstKill(u);if(sessionState.kills===1)ach('k1');if(sessionState.kills===100)ach('k100');if(sessionState.kills===500)ach('k500');const gg=u.boss?400:u.type==='brute'?25:u.type==='miner'?8:u.type==='bomber'?6:u.type==='acid'?5:u.type==='runner'?3:u.type==='husk'?1:2;playersState.RESP[killPl(u)].g+=gg;puff(u.x,u.y,'#ffd23c',3,50)}}}}
  sessionState.units=sessionState.units.filter(u=>u.hp>0);for(const u of sessionState.units){if(u.cap&&(u.cap.hp<=0||u.cap.t===1)){u.cap=null}if(u.sq)u.sq=u.sq.filter(f=>f.hp>0&&f.cap===u)}
  constructionState.mergeT-=dt;if(constructionState.mergeT<=0){constructionState.mergeT=.7;mergeTowers()}
  castleFire(dt);
