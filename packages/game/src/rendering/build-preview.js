@@ -24,7 +24,7 @@ export const buildPreviewState = {
 /* ---- ghost (build preview) ---- */
 let cubeG2;
 
-export const GBM=new Set(['wall','gate','tower','barracks','farm','storage','house','academy','market','forester','guild','observatory','granary','bell','sanctuary','beacon','orchard','torch','movec']);
+export const GBM=new Set(['wall','gate','tower','barracks','farm','storage','house','academy','market','forester','guild','observatory','granary','bell','sanctuary','beacon','orchard','forge','embassy','warroom','sappers','torch','movec']);
 
 function mkGB(solid){const g=new THREE.Group();g.visible=false;scene.add(g);return{g,key:'',solid,mat:solid?matV:new THREE.MeshLambertMaterial({vertexColors:true,transparent:true,opacity:.62,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-3})}}
 
@@ -67,7 +67,7 @@ export function gbwShow(type,o,aim,good){if(!GBW){GBW=new THREE.Group();GBW.user
  GBW.traverse(m=>{if(m.isMesh)m.renderOrder=7});GBW.userData.rot.rotation.y=aim;GBW.position.set(o.tx+.5,o.bh||HT[o.ty*TW+o.tx],o.ty+.5);M.color.set(good?0xa6ffb4:0xff8686);GBW.visible=true}
 
 
-export function ghostMake(G,type,tx,ty,ax,good,alpha){const sz=type==='castle'?5:(type==='tower'||type==='barracks'||type==='farm'||type==='storage'||type==='house'||type==='academy'||type==='market'||type==='forester'||type==='guild'||type==='observatory'||type==='granary'||type==='bell'||type==='sanctuary'||type==='beacon'||type==='orchard'||type==='keep')?2:1,wd=!(stoneOn()&&(type==='barracks'||type==='wall'||type==='gate'||type==='tower')),tier=buildPreviewState.GHO?buildPreviewState.GHO.tier:wd?0:1,gl=buildPreviewState.GHO?buildPreviewState.GHO.gl:constructionState.gateLen,rot=buildPreviewState.GHO?buildPreviewState.GHO.rot:type==='castle'?(HOMEC()?HOMEC().rot|0:0):ROTT.has(type)?constructionState.buildRot&3:0,key=type+'|'+tx+','+ty+'|'+(ax|0)+'|'+tier+'|'+gl+'|'+rot;
+export function ghostMake(G,type,tx,ty,ax,good,alpha){const sz=type==='castle'?5:(type==='tower'||type==='barracks'||type==='farm'||type==='storage'||type==='house'||type==='academy'||type==='market'||type==='forester'||type==='guild'||type==='observatory'||type==='granary'||type==='bell'||type==='sanctuary'||type==='beacon'||type==='orchard'||type==='forge'||type==='embassy'||type==='warroom'||type==='sappers'||type==='keep')?2:1,wd=!(stoneOn()&&(type==='barracks'||type==='wall'||type==='gate'||type==='tower')),tier=buildPreviewState.GHO?buildPreviewState.GHO.tier:wd?0:1,gl=buildPreviewState.GHO?buildPreviewState.GHO.gl:constructionState.gateLen,rot=buildPreviewState.GHO?buildPreviewState.GHO.rot:type==='castle'?(HOMEC()?HOMEC().rot|0:0):ROTT.has(type)?constructionState.buildRot&3:0,key=type+'|'+tx+','+ty+'|'+(ax|0)+'|'+tier+'|'+gl+'|'+rot;
  if(G.key!==key){G.key=key;const s={t:0,type,tier,sz,tx,ty,ax:ax||0,gl,rot,tiles:tilesFor(type,tx,ty,sz,ax,gl),hp:1,max:1,prog:1,ci:0,x:(tx+(type==='gate'?(ax?.5:gl/2):sz/2))*TS,y:(ty+(type==='gate'?(ax?gl/2:.5):sz/2))*TS};
   while(G.g.children.length)G.g.remove(G.g.children[0]);s.o3=G.g;G.g.scale.set(1,1,1);structuresState.BPLOFF=true;try{buildStructMesh0(s)}finally{structuresState.BPLOFF=false}
   if(!G.solid)G.g.traverse(o=>{if(o.isMesh)o.material=G.mat})}
