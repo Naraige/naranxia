@@ -1,0 +1,66 @@
+{
+ "title": "Planche Design : palette, equipes, barres",
+ "intro": "Trois choix visuels. Reponds avec un code comme \"1A 2B 3C\". Les variantes A montrent le rendu actuel. Maquettes schematiques, pas des captures du jeu.",
+ "sections": [
+  {
+   "name": "Palette generale du jeu et de l'interface",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r1A.png",
+     "note": "Actuelle : brun chaud, parchemin, accent or (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "r1B.png",
+     "note": "Nuit et pierre : fond bleu-ardoise, accent bleu clair, plus froid et lisible"
+    },
+    {
+     "id": "C",
+     "img": "r1C.png",
+     "note": "Foret et ivoire : fond vert sombre, accent ambre, plus vivant"
+    }
+   ]
+  },
+  {
+   "name": "Couleurs d'equipe",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r2A.png",
+     "note": "Actuelles : vert, bleu, violet rebelles, jaune neutre"
+    },
+    {
+     "id": "B",
+     "img": "r2B.png",
+     "note": "Classiques : bleu / jaune / rouge rebelles / gris, tres distincts"
+    },
+    {
+     "id": "C",
+     "img": "r2C.png",
+     "note": "Originales : turquoise / orange / prune / sable, lisibles pour les daltoniens"
+    }
+   ]
+  },
+  {
+   "name": "Style des barres de vie et de progression",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r3A.png",
+     "note": "Actuel : fine barre plate a contour noir"
+    },
+    {
+     "id": "B",
+     "img": "r3B.png",
+     "note": "Segments pixel (10 crans) avec biseau, style Minecraft"
+    },
+    {
+     "id": "C",
+     "img": "r3C.png",
+     "note": "Pilule vitree avec degrade et graduations, assortie aux boutons verre"
+    }
+   ]
+  }
+ ]
+}

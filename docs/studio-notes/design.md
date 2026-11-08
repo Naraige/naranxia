@@ -1,0 +1,2 @@
+- Design: planche docs/studio-boards/design/board.html (make.py regenere images+spec.json, board.py le html). Aucun changement du jeu.
+- Lead: publier board.html sur l artifact des planches apres relecture; appliquer la reponse du Roi (ex. 1B 2C 3A).
