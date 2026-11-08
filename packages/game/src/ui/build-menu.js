@@ -92,6 +92,10 @@ academy:'Academy',
 market:'Market',
 forester:'Forester',
 guild:'Guild',
+observatory:'Observatory',
+granary:'Granary',
+bell:'Alarm bell',
+sanctuary:'Sanctuary',
 'rb+':'+1',
 'rb-':'-1',
 'rr+':'+1',
@@ -157,6 +161,10 @@ academy:['Academy [;]','2x2 school: all research is bought here.','Select it to 
 market:['Market [:]','2x2 trading post: select it to sell','wood, stone or food for gold, or buy them'],
 forester:["Forester's hut [[]",'2x2 log cabin: its peasant plants saplings','around it; they grow into trees (wood)'],
 guild:["Builders' guild []]",'2x2 workshop: select it to choose how many','peasants build, repair and reshape the land'],
+observatory:['Observatory','2x2 tower with a telescope: you see','far over the land around it'],
+granary:['Granary','2x2 food store on stilts:','+4 population limit'],
+bell:['Alarm bell','2x2 bell frame: troops around it','attack 15% faster'],
+sanctuary:['Sanctuary','2x2 chapel: troops around it','slowly heal'],
 torch:["Torch [']",'Cheap light: at night whatever stands','outside the light is hurt by the dark'],
 rallyc:['Castle rally [=]','Click the map: new peasants walk there;','on a tree, rock or gold they start working it'],
 house:['House [0]','2x2 cottage: +6 population','Your castle alone supports 18'],
@@ -209,7 +217,7 @@ const RN={g:'gold',w:'wood',s:'stone',f:'food'};
 export let CMP = false;
 const MW=34,MH=38;
 /* build menu in categories: the bar shows Defense / Economy / Town / Land; a click opens that category (Back or Esc to return) */
-const BCATS={def:['Defense',['wall','gate','tower','torch','spike']],eco:['Economy',['farm','forester','storage','market']],town:['Town',['house','barracks','guild','academy']],land:['Land',['path','raise','dig','ramp']],siege:['Siege',['ballista','trebuchet']]},BCI={def:'tower',eco:'farm',town:'house',land:'raise',siege:'ballista'};
+const BCATS={def:['Defense',['wall','gate','tower','torch','spike']],eco:['Economy',['farm','forester','storage','market','granary']],town:['Town',['house','barracks','guild','academy','observatory','bell','sanctuary']],land:['Land',['path','raise','dig','ramp']],siege:['Siege',['ballista','trebuchet']]},BCI={def:'tower',eco:'farm',town:'house',land:'raise',siege:'ballista'};
 
 function catItems(c,siege){return BCATS[c][1]}
 

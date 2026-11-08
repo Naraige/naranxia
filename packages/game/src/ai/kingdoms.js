@@ -54,7 +54,7 @@ const rI=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 /* attack reach of a building in tiles (null if it does not shoot): shown by the selection ring and in the info line */
 export function rangeOf(s){if(!s||s.t!==0||s.prog<1)return null;if(s.type==='castle')return{r:CASTLE_RNG};if(s.type!=='tower')return null;if(s.weapon==='ballista')return{r:720/TS};if(s.weapon==='trebuchet')return{r:1300/TS,min:240/TS};return{r:TOWR+(s.tier!==0?60/TS:0)}}
 
-export const selH=s=>({wall:1.9,gate:2.4,tower:4.5,castle:6.1,barracks:2.9,farm:.7,storage:2.2,house:3.0,academy:3.4,market:2.4,forester:2.2,guild:2.9,torch:1.6,keep:4.9,ballista:1.4,trebuchet:3})[s.type]||2;
+export const selH=s=>({wall:1.9,gate:2.4,tower:4.5,castle:6.1,barracks:2.9,farm:.7,storage:2.2,house:3.0,academy:3.4,market:2.4,forester:2.2,guild:2.9,observatory:3.1,granary:2.4,bell:2.4,sanctuary:2.4,torch:1.6,keep:4.9,ballista:1.4,trebuchet:3})[s.type]||2;
 
 const capPop = l=>14+l*11;
 export const TOWR = 11;

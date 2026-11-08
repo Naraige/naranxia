@@ -856,6 +856,18 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Observatory":["Observatoire","Observatorio","Observatorium","Osservatorio","Observatório"],
+"Granary":["Grenier","Granero","Kornspeicher","Granaio","Celeiro"],
+"Alarm bell":["Cloche d'alarme","Campana de alarma","Alarmglocke","Campana d'allarme","Sino de alarme"],
+"Sanctuary":["Sanctuaire","Santuario","Heiligtum","Santuario","Santuário"],
+"2x2 tower with a telescope: you see":["Tour 2x2 avec longue-vue : vous voyez","Torre 2x2 con telescopio: ves","Turm 2x2 mit Fernrohr: Ihr seht","Torre 2x2 con cannocchiale: vedi","Torre 2x2 com luneta: você vê"],
+"far over the land around it":["loin sur les terres alentour","lejos en las tierras de alrededor","weit über das Land ringsum","lontano sulle terre intorno","longe nas terras ao redor"],
+"2x2 food store on stilts:":["Réserve de nourriture 2x2 sur pilotis :","Almacén de comida 2x2 sobre pilotes:","Nahrungslager 2x2 auf Stelzen:","Deposito di cibo 2x2 su palafitte:","Depósito de comida 2x2 sobre estacas:"],
+"+4 population limit":["+4 de limite de population","+4 al límite de población","+4 Bevölkerungslimit","+4 al limite di popolazione","+4 no limite de população"],
+"2x2 bell frame: troops around it":["Cadre de cloche 2x2 : les troupes autour","Marco de campana 2x2: las tropas cercanas","Glockenstuhl 2x2: Truppen in der Nähe","Struttura 2x2 con campana: le truppe vicine","Estrutura 2x2 com sino: as tropas ao redor"],
+"attack 15% faster":["attaquent 15 % plus vite","atacan un 15 % más rápido","greifen 15 % schneller an","attaccano il 15% più veloce","atacam 15% mais rápido"],
+"2x2 chapel: troops around it":["Chapelle 2x2 : les troupes autour","Capilla 2x2: las tropas cercanas","Kapelle 2x2: Truppen in der Nähe","Cappella 2x2: le truppe vicine","Capela 2x2: as tropas ao redor"],
+"slowly heal":["se soignent lentement","se curan despacio","heilen langsam","guariscono lentamente","curam-se devagar"],
 "Right-click to cancel":["Clic droit pour annuler","Clic derecho para cancelar","Rechtsklick zum Abbrechen","Clic destro per annullare","Clique direito para cancelar"],
 "Refunds the full cost":["Remboursement total","Reembolsa todo el coste","Erstattet die vollen Kosten","Rimborsa il costo intero","Reembolsa o custo total"],
 "Pause when away":["Pause si absent","Pausa si te vas","Pause bei Abwesenheit","Pausa se assente","Pausa se ausente"],

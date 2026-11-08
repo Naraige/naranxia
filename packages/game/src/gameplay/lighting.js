@@ -16,7 +16,7 @@ export function nightTick(dt){wavesState.nightCk-=dt;if(wavesState.nightCk>0)ret
 
 export function nightSim(){if(!sessionState.inGame)return 0;return wavesState.hordeOn?wavesState.nightLv:wavesState.nightLv*(1-smst(0,25,sessionState.time-wavesState.hordeT))}
 
-const LIGHTR={castle:16,keep:12,tower:10,gate:5,barracks:5,academy:5,market:5,storage:5,house:4,torch:7,forester:4,guild:5};
+const LIGHTR={castle:16,keep:12,tower:10,gate:5,barracks:5,academy:5,market:5,storage:5,house:4,torch:7,forester:4,guild:5,observatory:6,granary:4,bell:5,sanctuary:7};
 
 const lampWall=s=>s.type==='wall'&&((s.tiles[0][0]+s.tiles[0][1]*3)%5===0);
 

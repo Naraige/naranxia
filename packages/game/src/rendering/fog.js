@@ -48,7 +48,7 @@ function fowStamp(x,y,r){const cx=x/TS/FWC,cy=y/TS/FWC,rr=r/FWC,r2=rr*rr,r3=Math
  for(let j=y0;j<=y1;j++){fowRA[j]=8;if(x0<fowLo[j])fowLo[j]=x0;if(x1>fowHi[j])fowHi[j]=x1;const dy=j+.5-cy,dy2=dy*dy;for(let i=x0;i<=x1;i++){const dx=i+.5-cx,d=dx*dx+dy2;if(d>r2)continue;const k=j*FW+i,v=d<=r3?2:1;if(fowVis[k]<v)fowVis[k]=v}}}
 
 export const VRN = {cannon:13,peasant:9,knight:11,archer:14,bannerman:11,captain:13,king:14,guard:11};
-const VSN = {castle:28,tower:19,barracks:13,gate:8,wall:6,market:9,torch:8,ballista:19,trebuchet:33,forester:9,guild:9};
+const VSN = {castle:28,tower:19,barracks:13,gate:8,wall:6,market:9,torch:8,ballista:19,trebuchet:33,forester:9,guild:9,observatory:30,granary:7,bell:7,sanctuary:8};
 export const vsnOf=s=>s.weapon?Math.max(VSN[s.type]||6,VSN[s.weapon]||0):(VSN[s.type]||6);
 
 export function fowUpdate(dt){fogState.fowTm-=dt;if(fogState.fowTm>0)return;fogState.fowTm=.2;

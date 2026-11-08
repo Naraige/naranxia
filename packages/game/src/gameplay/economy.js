@@ -65,7 +65,7 @@ export function royalBtns(){const p=playersState.CURPL|0,K=royalOf(p);if(!K)retu
 
 export function popUsed(p){p|=0;let n=0;for(const u of sessionState.units)if(u.t===0&&u.hp>0&&(u.pl|0)===p)n+=popOf(u.type);for(const q of sessionState.queue)if((q.b.pl|0)===p)n+=popOf(q.type);return n}
 
-export function popCap(p){p|=0;let n=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='house'&&s.prog>=1&&s.hp>0&&(s.pl|0)===p)n++;return Math.min(POPMAX,POPBASE+n*POPHOUSE)}
+export function popCap(p){p|=0;let n=0;for(const s of sessionState.structs)if(s.t===0&&s.prog>=1&&s.hp>0&&(s.pl|0)===p){if(s.type==='house')n+=POPHOUSE;else if(s.type==='granary')n+=4}return Math.min(POPMAX,POPBASE+n)}
 
 export let train = function train(type){const b=curB();if(b.type==='academy'||b.type==='market'||b.type==='guild')return;if(type==='cannon'&&!RS.done){hudDisplayState.msgS='The cannon needs Stonemasonry';hudDisplayState.msgT=3;snd('err');return}if(!sessionState.over&&popUsed(playersState.CURPL)+popOf(type)>popCap(playersState.CURPL)){hudDisplayState.msgS='Population limit: build houses';hudDisplayState.msgT=3;snd('err');return}if(type==='king'||type==='guard'){if(b.type!=='castle'){hudDisplayState.msgS='The king is summoned at your castle';hudDisplayState.msgT=3;snd('err');return}const p=playersState.CURPL|0,K=royalOf(p);
   if(type==='king'&&(K||sessionState.queue.some(q=>q.type==='king'&&(q.b.pl|0)===p))){hudDisplayState.msgS='Your kingdom already has a king';hudDisplayState.msgT=3;snd('err');return}
