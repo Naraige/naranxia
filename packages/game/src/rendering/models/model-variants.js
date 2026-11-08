@@ -3,7 +3,7 @@
    (comma or space separated, key:LETTER, letters A / B / C). A key that is absent keeps the production model.
    Once the King has chosen, put the letters in MV_DEFAULT below (e.g. {scout:'B'}) and delete the variants he refused.
    Models are cached after the first build: set __MV before the first model is made (page load) or clear the caches. */
-export const MV_DEFAULT = {};
+export const MV_DEFAULT = { scout: 'B', engineer: 'B', envoy: 'B' };
 
 export function mvGet(key) {
   try {

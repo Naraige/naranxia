@@ -129,7 +129,11 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  canvasesState.ctx.setTransform(1,0,0,1,0,0)}
 
 export function drawBars(){canvasesState.ctx.setTransform(1,0,0,1,0,0);const k=Math.max(1,inputState.DPR);let drew=0;
- const bar2=(x,y,w,f,c)=>{drew=1;canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(Math.round(x-w/2-1),Math.round(y-1),w+2,3*k+1);canvasesState.ctx.fillStyle=c;canvasesState.ctx.fillRect(Math.round(x-w/2),Math.round(y),Math.max(1,Math.round(w*Math.max(0,Math.min(1,f)))),2*k)};
+ const bar2=(x,y,w,f,c)=>{drew=1;const cx=canvasesState.ctx,x0=Math.round(x-w/2),y0=Math.round(y),h=2*k+1,SEG=10,gap=Math.max(1,Math.round(k*.75));
+  /* pixel segments (10 cells) with a bevel: outline, dark well, lit top edge, shaded bottom edge */
+  cx.fillStyle='#000';cx.fillRect(x0-1,y0-1,w+2,h+2);cx.fillStyle='#2b2b2b';cx.fillRect(x0,y0,w,h);
+  const ff=Math.max(0,Math.min(1,f)),n=ff<=0?0:Math.max(1,Math.ceil(ff*SEG-1e-6)),sw=(w-gap*(SEG-1))/SEG;
+  for(let i=0;i<n;i++){const sx=Math.round(x0+i*(sw+gap)),ex=Math.round(x0+i*(sw+gap)+sw),cw=Math.max(1,ex-sx);cx.fillStyle=c;cx.fillRect(sx,y0,cw,h);cx.fillStyle='rgba(255,255,255,.38)';cx.fillRect(sx,y0,cw,Math.max(1,Math.round(k*.6)));cx.fillStyle='rgba(0,0,0,.32)';cx.fillRect(sx,y0+h-Math.max(1,Math.round(k*.6)),cw,Math.max(1,Math.round(k*.6)))}};
  for(const u of sessionState.units){const m=T[u.type].hp;if(u.hp>=m||u.hp<=0||u.shel)continue;const md=u.m&&u.m.userData.mdl,q=scr(u.x/TS,(u.dy||0)+(md?md.h*(md.sc||1.35)*UNITK:.8)+.1,u.y/TS);if(q.ok)bar2(q.x,q.y,(u.type==='brute'?26:16)*k,u.hp/m,u.t===1?'#c66bff':u.t===2?'#e8c040':'#6fdc6f')}
  {let n0=0;for(const u of sessionState.units)if(u.shel)n0++;if(n0)for(const c of aliveC()){let n=0;for(const u of sessionState.units)if(u.shel===c)n++;if(!n)continue;const q=scr(c.x/TS,(c.bh||LAND)+(c.tier!==0?6.7:5.7),c.y/TS);
   if(q.ok){drew=1;canvasesState.ctx.font=Math.round(9*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';const t=L(n+' inside');canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(t,q.x+1,q.y+1);canvasesState.ctx.fillStyle='#ffe08a';canvasesState.ctx.fillText(t,q.x,q.y)}}}
