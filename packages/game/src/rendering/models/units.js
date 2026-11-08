@@ -14,6 +14,7 @@ import { guardPavois, mvUnitKit } from './unit-variants.js';
 export const unitsState = {
   ALB: 0,
   ALF: null,
+  RKB: 0,
 };
 
 export let PXON = true;

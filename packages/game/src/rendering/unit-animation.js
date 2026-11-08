@@ -26,14 +26,16 @@ export function cannonG(){if(PXON)return pxCannon();const G=newG(),WD='#5e4026',
  bxc(G,0,.29,.3,.17,.17,.62,IR);bxc(G,0,.27,.04,.22,.21,.14,IR2);bxc(G,0,.31,-.05,.08,.08,.06,IR);bxc(G,0,.28,.62,.21,.21,.07,IR2);bxc(G,0,.33,.66,.08,.08,.01,BR);
  for(const[x,z]of[[.13,-.06],[.2,-.02],[.16,.04]])bxc(G,x-.4,.01,z+.1,.07,.07,.07,BR);return toGeo(G)}
 
-export function mkUnit(u){const g=buildUnitGroup(u.type==='cannon'?'gunner':u.type,u.t===2?20+(u.ci||0):u.t,zKeyOf(u)||(u.type==='peasant'&&u.t!==1?{v:((u.uid|0)*2654435761>>>0)%6,hint:'p'}:null)),mdl=g.userData.mdl,mat=g.userData.mat;
+/* visual only: gold sleeve stripes (0..3) from the promotion rank, soldiers of the player team */
+const rkOf=u=>u.t===0&&(u.type==='knight'||u.type==='archer')?Math.min(3,(u.xp||0)/4|0):0;
+export function mkUnit(u){const g=buildUnitGroup(u.type==='cannon'?'gunner':u.type,u.t===2?20+(u.ci||0):u.t,zKeyOf(u)||(u.type==='peasant'&&u.t!==1?{v:((u.uid|0)*2654435761>>>0)%6,hint:'p'}:null),rkOf(u)),mdl=g.userData.mdl,mat=g.userData.mat;
  if(u.type==='cannon'){const s0=(mdl.sc||1.35)*UNITK,cn=new THREE.Mesh(GEO.cannonU||(GEO.cannonU=cannonG()),mat);cn.castShadow=SHADOWS;cn.scale.setScalar(.8/s0);cn.position.z=.26/s0;g.add(cn);g.userData.cn=cn;g.userData.cnz=.26/s0;
   const c2=buildUnitGroup('gunner2',u.t,null),e2=c2.userData;c2.remove(e2.ring);c2.traverse(o=>{if(o.isMesh)o.material=mat});c2.position.set(.36/s0,0,.34/s0);c2.rotation.y=-.35;g.add(c2);g.userData.c2=c2}
  if(u.type==='bannerman'){const au=new THREE.Mesh(GEO.auB||(GEO.auB=new THREE.RingGeometry(HEAL_R/TS/1.35/UNITK-.12,HEAL_R/TS/1.35/UNITK,64)),new THREE.MeshBasicMaterial({color:0x7dffa0,transparent:true,opacity:.4,side:THREE.DoubleSide,depthWrite:false}));au.rotation.x=-Math.PI/2;au.position.y=.22;au.renderOrder=1;g.add(au);const fill=new THREE.Mesh(GEO.auBf||(GEO.auBf=new THREE.CircleGeometry(HEAL_R/TS/1.35/UNITK,48)),new THREE.MeshBasicMaterial({color:0x7dffa0,transparent:true,opacity:.09,depthWrite:false}));fill.rotation.x=-Math.PI/2;fill.position.y=.2;g.add(fill);g.userData.aura=au}
  if(u.type==='king'){const R=10/1.72/UNITK,au=new THREE.Mesh(GEO.auK||(GEO.auK=new THREE.RingGeometry(R-.14,R,72)),new THREE.MeshBasicMaterial({color:0xffd23c,transparent:true,opacity:.38,side:THREE.DoubleSide,depthWrite:false}));au.rotation.x=-Math.PI/2;au.position.y=.22;au.renderOrder=1;g.add(au);const fill=new THREE.Mesh(GEO.auKf||(GEO.auKf=new THREE.CircleGeometry(R,56)),new THREE.MeshBasicMaterial({color:0xffd23c,transparent:true,opacity:.06,depthWrite:false}));fill.rotation.x=-Math.PI/2;fill.position.y=.2;g.add(fill);g.userData.aura=au}
  if(u.type==='captain'){const R=8/1.35/UNITK,au=new THREE.Mesh(GEO.auC||(GEO.auC=new THREE.RingGeometry(R-.14,R,64)),new THREE.MeshBasicMaterial({color:0xffd23c,transparent:true,opacity:.38,side:THREE.DoubleSide,depthWrite:false}));au.rotation.x=-Math.PI/2;au.position.y=.22;au.renderOrder=1;g.add(au);const fill=new THREE.Mesh(GEO.auCf||(GEO.auCf=new THREE.CircleGeometry(R,48)),new THREE.MeshBasicMaterial({color:0xffd23c,transparent:true,opacity:.07,depthWrite:false}));fill.rotation.x=-Math.PI/2;fill.position.y=.2;g.add(fill);g.userData.aura=au}
  u.sv=u.sv||(.95+Math.random()*.1);const v=.93+Math.random()*.12;mat.color.setRGB(v,v,v);
- {const s0=(mdl.sc||1.35)*u.sv*(u.ttl?1:UNITK);g.scale.set(-s0,s0,s0);g.userData.sc=s0}if(!u.ttl){const ip=[];g.traverse(o=>{if(o.isMesh&&o.material===mat){o.layers.set(UL);ip.push(o)}});g.userData.ip=ip;g.updateMatrixWorld=uiUMW}u.m=g;u.mt=u.t;u.mal=u.t===0?alv():0;u.dy=gh(u.x/TS,u.y/TS);u.ap=Math.random()*6;u.fa=u.face||0;u.lph=0;scene.add(g);unitG.set(u,g);return g}
+ {const s0=(mdl.sc||1.35)*u.sv*(u.ttl?1:UNITK);g.scale.set(-s0,s0,s0);g.userData.sc=s0}if(!u.ttl){const ip=[];g.traverse(o=>{if(o.isMesh&&o.material===mat){o.layers.set(UL);ip.push(o)}});g.userData.ip=ip;g.updateMatrixWorld=uiUMW}u.m=g;u.mt=u.t;u.mal=u.t===0?alv():0;u.mrk=rkOf(u);u.dy=gh(u.x/TS,u.y/TS);u.ap=Math.random()*6;u.fa=u.face||0;u.lph=0;scene.add(g);unitG.set(u,g);return g}
 
 export const angd=(a,b)=>{let d=b-a;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;return d};
 
@@ -43,7 +45,7 @@ export const sat = t=>Math.max(0,Math.min(1,t));
 export const easeO = t=>1-(1-t)*(1-t);
 const CHOPC = {t:'#9d7a50',w:'#8b5a2b',s:'#cfd6e2',g:'#ffd23c',f:'#8a6a3a',p:'#6a5a3a'};
 
-export function animUnit(u,dt,anyDmg,frame){let g=u.m;if(g&&!u.ttl&&(u.mt!==u.t||(u.t===0&&u.mal!==alv()))){scene.remove(g);unitG.delete(u);g=null}if(!g)g=mkUnit(u);
+export function animUnit(u,dt,anyDmg,frame){let g=u.m;if(g&&!u.ttl&&(u.mt!==u.t||(u.t===0&&u.mal!==alv())||u.mrk!==rkOf(u))){scene.remove(g);unitG.delete(u);g=null}if(!g)g=mkUnit(u);
  const d=g.userData,ty=u.type,z=u.t===1,wl=u.walk>0,T=sessionState.clockT+u.ph0;d.frame=frame;
  if(u.atk>0)u.atk-=dt;if(u.hurt>0)u.hurt-=dt;
  const fast=ty==='runner',heavy=ty==='brute'||ty==='bomber',armored=ty==='knight'||ty==='captain'||ty==='king'||ty==='guard';
