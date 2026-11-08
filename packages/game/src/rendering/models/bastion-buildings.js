@@ -1,5 +1,5 @@
 import { newG, toGeo } from '../geometry.js';
-import { bC, bM, bP, bS, bW, bL, qCone, qDoor, qPlinth, qRoof, qStone, qTimber, qWin, QBR, QBR2, QIR, QS, QSL, QW1, QW2, QW3 } from './building-parts.js';
+import { bC, bM, bP, bS, bW, bL, qBan, qChim, qCone, qDoor, qPlinth, qRoof, qStone, qTimber, qWin, QBR, QBR2, QIR, QS, QSL, QW1, QW2, QW3 } from './building-parts.js';
 
 /* ---- last-bastion buildings (2x2 tiles, front = +z): observatory, granary, alarm bell, sanctuary ---- */
 const grass = G => { qPlinth(G, 1, 0, 1, 2, 2, .1); bP(G, 1, .1, 1, 1.9, .03, 1.9, '#6f8a44') };
@@ -77,5 +77,57 @@ export function orchardGeo() {
     for (const [dx, dz] of [[.22, .1], [-.2, .2], [.05, -.24]]) bM(G, x + dx, .58, z + dz, .07, .07, .07, '#d8402a');
   }
   bW(G, 1, .1, 1.62, .34, .16, .22, QW2); bM(G, .94, .26, 1.62, .08, .08, .08, '#d8402a'); bM(G, 1.06, .26, 1.6, .08, .08, .08, '#e0b030');
+  return toGeo(G);
+}
+
+/* royal forge: a stone smithy with a glowing hearth window, a chimney and an anvil */
+export function forgeGeo() {
+  const G = newG(); grass(G);
+  qStone(G, 1, .13, 1, 1.3, .9, .85);
+  const rt = qRoof(G, 1, 1, 1.38, 1.0, .98, QSL, true, { rise: .2, run: .15, ov0: .1, ov1: .1, side: .1 });
+  qChim(G, .55, .75, .8, rt - .5);
+  qDoor(G, .75, 1.456, true, 1, { y: .13, w: .3, h: .52, wood: 1, lamp: 1 });
+  qWin(G, 1.3, .55, 1.456, true, 1, { glow: 1, w: .24, h: .22 });
+  bM(G, 1.6, .13, 1.62, .34, .14, .18, QIR); bM(G, 1.6, .27, 1.62, .46, .07, .22, QIR); bM(G, 1.78, .27, 1.62, .16, .05, .1, QIR);
+  bW(G, 1.15, .13, 1.7, .3, .16, .2, QW2);
+  return toGeo(G);
+}
+
+/* embassy: a pale hall with a pillared porch and two banners, for the rebel camps' envoys */
+export function embassyGeo() {
+  const G = newG(); grass(G);
+  qStone(G, 1, .13, .85, 1.6, 1.1, .1);
+  bP(G, 1, .23, .85, 1.5, .8, 1.0, '#e8dcc0');
+  qRoof(G, 1, .85, 1.6, 1.1, 1.03, ['#8a4a3a', '#7a3f32', '#6e382d'], true, { rise: .22, run: .15, ov0: .1, ov1: .1, side: .1 });
+  for (const x of [.45, .8, 1.2, 1.55]) bS(G, x, .23, 1.55, .12, .8, .12, QS[2]);
+  bS(G, 1, 1.03, 1.55, 1.3, .08, .3, QS[2]);
+  qDoor(G, 1, 1.356, true, 1, { y: .23, w: .3, h: .54, wood: 1, lamp: 1 });
+  qBan(G, .55, .45, 1.356, true, 1, .2, .45); qBan(G, 1.45, .45, 1.356, true, 1, .2, .45);
+  return toGeo(G);
+}
+
+/* war room: a timber hall with a red roof, a map table and a pole with a war flag */
+export function warRoomGeo() {
+  const G = newG(); grass(G);
+  qStone(G, 1, .13, .9, 1.5, 1.1, .12);
+  qTimber(G, .25, .35, 1.75, 1.45, .25, 1.0, { fill: '#d9c9a0' });
+  qRoof(G, 1, .9, 1.58, 1.18, 1.0, ['#9a3a32', '#8a3029', '#7a2a24'], true, { rise: .22, run: .15, ov0: .1, ov1: .1, side: .1 });
+  qDoor(G, .8, 1.456, true, 1, { y: .25, w: .3, h: .5, wood: 1, lamp: 1 });
+  bW(G, 1.5, .1, 1.72, .5, .22, .34, QW2); bP(G, 1.5, .32, 1.72, .44, .02, .28, '#e8d8a8'); bP(G, 1.4, .34, 1.7, .05, .05, .05, '#b83a3a'); bP(G, 1.6, .34, 1.76, .05, .05, .05, '#2f6ea8');
+  bW(G, .3, .1, 1.75, .05, .9, .05, QW2); bP(G, .42, .76, 1.75, .22, .14, .02, '#b83a3a');
+  return toGeo(G);
+}
+
+/* sappers' workshop: a shed of timber and slate with powder barrels, a cog and a pickaxe */
+export function sappersGeo() {
+  const G = newG(); grass(G);
+  qStone(G, 1, .13, .9, 1.4, 1.0, .1);
+  qTimber(G, .3, .4, 1.7, 1.4, .23, .9, { fill: '#cdbb90' });
+  qRoof(G, 1, .9, 1.5, 1.1, .9, QSL, true, { rise: .2, run: .15, ov0: .1, ov1: .1, side: .1 });
+  qDoor(G, 1, 1.416, true, 1, { y: .23, w: .4, h: .5, wood: 1 });
+  for (const [x, z] of [[.4, 1.65], [.62, 1.7], [.5, 1.9]]) { bW(G, x, .1, z, .2, .28, .2, '#7a5a34'); bM(G, x, .2, z, .22, .03, .22, QIR) }
+  bW(G, 1.45, .1, 1.7, .26, .2, .26, QW1); bW(G, 1.72, .1, 1.62, .22, .16, .22, QW2);
+  bW(G, 1.65, .1, 1.95, .04, .5, .04, QW2); bM(G, 1.65, .55, 1.95, .24, .05, .05, QIR);
+  bM(G, 1.72, .42, .55, .3, .3, .05, QIR);
   return toGeo(G);
 }
