@@ -71,12 +71,24 @@ function horn(f,d,v,t0){const t=AC.currentTime+(t0||0),out=AC.createGain(),lp=AC
  for(const det of[-7,6]){const o=AC.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(f*.94,t);o.frequency.exponentialRampToValueAtTime(f,t+.14);o.detune.value=det;vg.connect(o.frequency);o.connect(lp);o.start(t);o.stop(t+d+.05)}
  out.gain.setValueAtTime(0,t);out.gain.linearRampToValueAtTime(v,t+.12);out.gain.setValueAtTime(v,t+d-.3);out.gain.exponentialRampToValueAtTime(.0001,t+d);lp.connect(out);out.connect(OUT);vib.start(t);vib.stop(t+d+.05)}
 
+function coinSnd(){metal([1568,2350,3730],.24,.08,.3);metal([2093,3140],.3,.06,.38)}
+
 function knock(t0,f,v){tn(f,.09,'sine',v,f*.55,t0);ns(.05,v*.7,'bandpass',f*5,f*3,4,t0)}
 
 const SFX={
  click:()=>{tn(1900,.025,'sine',.07,1500);ns(.018,.05,'highpass',5000,0,1)},
- hover:()=>{tn(2600,.014,'sine',.022,2300)},
  hover:()=>{tn(1250,.02,'sine',.035,1100)},
+ ok:()=>{tn(880,.07,'triangle',.08,0);tn(1320,.1,'triangle',.07,0,.05);ns(.02,.03,'highpass',6000,0,1,.05)},
+ back:()=>{tn(700,.06,'triangle',.07,520);tn(480,.09,'triangle',.06,380,.04)},
+ notice:()=>{tn(1175,.12,'sine',.07,0);tn(1568,.2,'sine',.06,0,.1);tn(2350,.25,'sine',.02,0,.1)},
+ caravan:()=>{for(let i=0;i<4;i++){knock(i*.2,130+i%2*25,.14);metal([2800+i*160,4100],.08,.04,i*.2+.03)}tn(262,.5,'triangle',.07,0,.1);tn(330,.5,'triangle',.06,0,.4);tn(392,.7,'triangle',.07,0,.7);metal([1568,2350,3730],.4,.07,.85)},
+ convoy:()=>{knock(0,150,.16);knock(.14,170,.14);metal([1760,2640,3960],.3,.08,.2);metal([2093,3140],.35,.06,.3)},
+ meteor:()=>{ns(.9,.28,'bandpass',4200,500,1.2);tn(900,.8,'sine',.04,120);for(let i=0;i<4;i++){const t=.5+i*.17+Math.random()*.1;tn(95,.4,'sine',.34,40,t);ns(.3,.3,'lowpass',700,120,1,t);metal([1900,2800],.1,.04,t)}},
+ bloodmoon:()=>{tn(55,2.6,'sawtooth',.09,45);tn(82,2.4,'sine',.2,60,.1);formant(70,2.4,.1,.3,[[300,7,1],[760,9,.4]],.8);horn(110,2.2,.1,.6);tn(104,2.2,'sine',.06,98,.6);for(let i=0;i<3;i++)knock(1.1+i*.55,62,.32)},
+ wolves:()=>{for(const[t0,f]of[[0,330],[.9,290],[1.6,360]]){tn(f,1.5,'sine',.07,f*1.45,t0);tn(f*1.5,1.3,'triangle',.02,f*2.1,t0+.05);tn(f*1.5,.9,'sine',.05,f*.85,t0+1.3)}ns(.6,.04,'bandpass',600,300,1.5,.2)},
+ eclipse:()=>{tn(98,3,'sine',.2,64);tn(147,2.8,'sine',.12,98,.1);metal([196,294,392,588],3,.1,.4);tn(1760,.8,'sine',.05,1320,1.4);tn(1320,.9,'sine',.045,990,1.9);ns(1.8,.1,'bandpass',500,180,1.3,.2)},
+ envoy:()=>{horn(262,.6,.09);horn(330,.5,.09,.5);horn(392,.9,.1,.9);metal([1568,2350],.4,.05,1);coinSnd()},
+ ruin:()=>{ns(.9,.38,'lowpass',500,80,1);tn(70,.7,'sine',.4,38);for(let i=0;i<4;i++)knock(.15+i*.1,200+Math.random()*120,.1);tn(330,1.4,'sine',.06,0,.45);tn(494,1.4,'sine',.05,0,.52);tn(659,1.6,'sine',.04,0,.6);metal([1568,2350,3730],.7,.05,.7)},
  select:()=>{tn(660,.07,'triangle',.12,0);tn(990,.1,'triangle',.09,0,.04);tn(1980,.08,'sine',.025,0,.04)},
  order:()=>{tn(392,.08,'triangle',.14,330);tn(588,.06,'sine',.05,0,.03);ns(.04,.05,'bandpass',2600,0,3)},
  err:()=>{tn(196,.15,'square',.05,150);tn(185,.15,'square',.04,140);tn(98,.16,'sine',.1,80)},
@@ -109,7 +121,7 @@ const SFX={
  spit:()=>{ns(.16,.4,'bandpass',900,300,2.5);tn(190,.12,'sine',.22,90);ns(.1,.18,'highpass',2600,0,1,.06)},
  sizzle:()=>{ns(.9,.17,'highpass',4200,2600,1.2);ns(.5,.09,'bandpass',2200,0,2,.1)}};
 
-const SMIN={fuse:.4,spit:.12,sizzle:.5,sword:.05,zhit:.05,arrow:.06,stone:.09,die:.05,chop:.1,mine:.1,coin:.08,groan:.4,path:.05,dirt:.08,build:.12,click:.02,hover:.05,heal:.3,gate:.3,alarm:1.5,night:4,fanfare:1,victory:2,horn:1};
+const SMIN={fuse:.4,spit:.12,sizzle:.5,ok:.04,back:.04,notice:.3,caravan:2,convoy:1,meteor:2,bloodmoon:4,wolves:3,eclipse:4,envoy:2,ruin:1,sword:.05,zhit:.05,arrow:.06,stone:.09,die:.05,chop:.1,mine:.1,coin:.08,groan:.4,path:.05,dirt:.08,build:.12,click:.02,hover:.05,heal:.3,gate:.3,alarm:1.5,night:4,fanfare:1,victory:2,horn:1};
 
 export let snd = function snd(n,x,y){if(!AC||!sndOn||AC.state!=='running')return;const t=performance.now();if(t-budT>120){budT=t;bud=0}if(bud>=8)return;if(t-(lastS[n]||0)<(SMIN[n]||.03)*1000)return;
  let v=1,pan=0;if(x!==undefined){const wx=x/TS-CAM.x,wz=y/TS-CAM.z,d=hyp(wx,wz);v=Math.max(0,1-d/(CAM.dist+34));v*=v;if(v<.03)return;pan=Math.max(-.85,Math.min(.85,(wx*Math.cos(CAM.yaw)-wz*Math.sin(CAM.yaw))/(CAM.dist*.9+4)))}
