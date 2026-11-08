@@ -1,0 +1,146 @@
+{
+ "title": "Planche Texture : icônes, skins, saisons",
+ "intro": "Roi, 7 lignes, 3 variantes chacune (pixels style Minecraft/Blockbench). Réponds avec un code comme « 1A 2B 3C 4A 5B 6C 7A ». Rien n'est modifié dans le jeu avant ta réponse.",
+ "sections": [
+  {
+   "name": "Icône : Chevalier (casque)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "ico_knight_A.png",
+     "note": "acier sombre, panache rouge"
+    },
+    {
+     "id": "B",
+     "img": "ico_knight_B.png",
+     "note": "acier clair, panache or, contour brun"
+    },
+    {
+     "id": "C",
+     "img": "ico_knight_C.png",
+     "note": "pierre grise, fond bleu équipe, panache bleu"
+    }
+   ]
+  },
+  {
+   "name": "Icône : Archer (capuche)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "ico_archer_A.png",
+     "note": "vert forêt sobre"
+    },
+    {
+     "id": "B",
+     "img": "ico_archer_B.png",
+     "note": "vert vif, visage clair"
+    },
+    {
+     "id": "C",
+     "img": "ico_archer_C.png",
+     "note": "vert-bleu froid, fond équipe"
+    }
+   ]
+  },
+  {
+   "name": "Icône : Tour",
+   "variants": [
+    {
+     "id": "A",
+     "img": "ico_tower_A.png",
+     "note": "pierre standard, porte brun foncé"
+    },
+    {
+     "id": "B",
+     "img": "ico_tower_B.png",
+     "note": "pierre claire, porte bois chaud"
+    },
+    {
+     "id": "C",
+     "img": "ico_tower_C.png",
+     "note": "pierre froide, fond équipe"
+    }
+   ]
+  },
+  {
+   "name": "Icône : Caserne",
+   "variants": [
+    {
+     "id": "A",
+     "img": "ico_barracks_A.png",
+     "note": "toit brique, bois terne"
+    },
+    {
+     "id": "B",
+     "img": "ico_barracks_B.png",
+     "note": "toit rouge vif, banderole bleue"
+    },
+    {
+     "id": "C",
+     "img": "ico_barracks_C.png",
+     "note": "toit bleu équipe, banderole or"
+    }
+   ]
+  },
+  {
+   "name": "Skin soldat : équipe bleue / rouge (face + dos)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "skin_team_A.png",
+     "note": "écharpe de couleur + ceinture"
+    },
+    {
+     "id": "B",
+     "img": "skin_team_B.png",
+     "note": "tabard plein aux couleurs de l'équipe"
+    },
+    {
+     "id": "C",
+     "img": "skin_team_C.png",
+     "note": "casque à nasal, crête et épaulières d'équipe"
+    }
+   ]
+  },
+  {
+   "name": "Skin soldat : rang recrue / élite (face + dos)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "skin_rank_A.png",
+     "note": "galons dorés sur les manches (0 puis 3)"
+    },
+    {
+     "id": "B",
+     "img": "skin_rank_B.png",
+     "note": "casque cuir puis casque or à crête rouge"
+    },
+    {
+     "id": "C",
+     "img": "skin_rank_C.png",
+     "note": "tenue de toile puis plastron et casque or"
+    }
+   ]
+  },
+  {
+   "name": "Saisons du terrain : printemps / été / automne / hiver",
+   "variants": [
+    {
+     "id": "A",
+     "img": "seasons_A.png",
+     "note": "actuel (multiplicateurs RGB du jeu)"
+    },
+    {
+     "id": "B",
+     "img": "seasons_B.png",
+     "note": "palette vive, automne orange, hiver neige blanche"
+    },
+    {
+     "id": "C",
+     "img": "seasons_C.png",
+     "note": "palette douce et naturelle, plus sobre"
+    }
+   ]
+  }
+ ]
+}
