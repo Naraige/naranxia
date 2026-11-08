@@ -13,7 +13,7 @@ export const TRAIN={cannon:30,peasant:9,knight:22,archer:16,bannerman:20,captain
 export const CWOOD={wall:{w:12},gate:{w:25},tower:{w:50},barracks:{w:100},path:{w:3}},CSTONE={wall:{s:30},gate:{w:30,s:40},tower:{w:80,s:120},barracks:{w:70,s:90},path:{s:2}},RS={done:false,on:false,t:0},RT_TIME=45,UPC={barracks:{s:70},wall:{s:30},gate:{s:70},tower:{s:140,w:20},castle:{s:300,w:100},house:{s:40},farm:{s:20},storage:{s:40},academy:{s:80},market:{s:60},forester:{s:30},guild:{s:60}},SH={wall:400,tower:520,gate:360,barracks:700,castle:3000,ballista:260,trebuchet:420},GET={g:10,w:8,s:7},CODE={g:4,w:2,s:3},WORK=4.5;
 
 export const RS2={on:null,t:0,done:{iron:false,plate:false,drill:false,steel:false,mail:false,tools:false,harvest:false,fletch:false,fire:false,bastion:false,oil:false,era:false}},RT2={iron:40,plate:50,drill:35,steel:60,mail:70,tools:30,harvest:40,fletch:45,fire:50,bastion:60,oil:55,era:70},RN2={iron:'Iron weapons',plate:'Plate armor',drill:'Drill training',steel:'Steel weapons',mail:'Chain mail',tools:'Better tools',harvest:'Crop rotation',fletch:'Fletching',fire:'Fire arrows',bastion:'Bastion walls',oil:'Boiling oil',era:'Iron age'},RPRE={steel:'iron',mail:'plate',fire:'fletch',bastion:'masonry',oil:'bastion',era:'steel'};
-export const ROTT=new Set(['barracks','farm','storage','house','academy','market','forester','guild','observatory','granary','bell','sanctuary','tower','keep','castle']),DIR4=[[0,1],[1,0],[0,-1],[-1,0]];
+export const ROTT=new Set(['barracks','farm','storage','house','academy','market','forester','guild','observatory','granary','bell','sanctuary','beacon','orchard','tower','keep','castle']),DIR4=[[0,1],[1,0],[0,-1],[-1,0]];
 
 export const FOOD0=150,FARMT=6,FARMY=6,POPBASE=18,POPHOUSE=6,POPMAX=120,RALLY=[null,null],RALLYC=[null,null],RANKN=['','Veteran','Elite','Champion'];
 export const LH=new WeakMap();
@@ -48,6 +48,10 @@ export function initializeRules() {
   Object.assign(C,{observatory:{w:60,s:80},granary:{w:70,s:20},bell:{w:50,g:30},sanctuary:{s:90,g:60}});
   Object.assign(BT,{observatory:30,granary:22,bell:18,sanctuary:36});
   Object.assign(SH,{observatory:380,granary:300,bell:240,sanctuary:360});
+  /* watch beacon: wide light at night and a far view; orchard: a trickle of food without a peasant */
+  Object.assign(C,{beacon:{w:40,s:60},orchard:{w:60}});
+  Object.assign(BT,{beacon:20,orchard:24});
+  Object.assign(SH,{beacon:280,orchard:200});
 
   Object.assign(C,{movec:{g:100,w:150},rotate:{}});
   Object.assign(SZ,{keep:2});

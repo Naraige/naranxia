@@ -96,6 +96,8 @@ observatory:'Observatory',
 granary:'Granary',
 bell:'Alarm bell',
 sanctuary:'Sanctuary',
+beacon:'Watch beacon',
+orchard:'Orchard',
 'rb+':'+1',
 'rb-':'-1',
 'rr+':'+1',
@@ -165,6 +167,8 @@ observatory:['Observatory','2x2 tower with a telescope: you see','far over the l
 granary:['Granary','2x2 food store on stilts:','+4 population limit'],
 bell:['Alarm bell','2x2 bell frame: troops around it','attack 15% faster'],
 sanctuary:['Sanctuary','2x2 chapel: troops around it','slowly heal'],
+beacon:['Watch beacon','2x2 tower with a living flame: a wide','light at night, and a far view'],
+orchard:['Orchard','2x2 apple grove: a trickle of food','without a peasant'],
 torch:["Torch [']",'Cheap light: at night whatever stands','outside the light is hurt by the dark'],
 rallyc:['Castle rally [=]','Click the map: new peasants walk there;','on a tree, rock or gold they start working it'],
 house:['House [0]','2x2 cottage: +6 population','Your castle alone supports 18'],
@@ -217,7 +221,7 @@ const RN={g:'gold',w:'wood',s:'stone',f:'food'};
 export let CMP = false;
 const MW=34,MH=38;
 /* build menu in categories: the bar shows Defense / Economy / Town / Land; a click opens that category (Back or Esc to return) */
-const BCATS={def:['Defense',['wall','gate','tower','torch','spike']],eco:['Economy',['farm','forester','storage','market','granary']],town:['Town',['house','barracks','guild','academy','observatory','bell','sanctuary']],land:['Land',['path','raise','dig','ramp']],siege:['Siege',['ballista','trebuchet']]},BCI={def:'tower',eco:'farm',town:'house',land:'raise',siege:'ballista'};
+const BCATS={def:['Defense',['wall','gate','tower','torch','beacon','spike']],eco:['Economy',['farm','forester','storage','market','granary','orchard']],town:['Town',['house','barracks','guild','academy','observatory','bell','sanctuary']],land:['Land',['path','raise','dig','ramp']],siege:['Siege',['ballista','trebuchet']]},BCI={def:'tower',eco:'farm',town:'house',land:'raise',siege:'ballista'};
 
 function catItems(c,siege){return BCATS[c][1]}
 

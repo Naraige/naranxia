@@ -131,7 +131,7 @@ IC2.agg=pc16(({Gd,P})=>{Gd(SW.sword,{...SPAL,w:'#ffe0e0',i:'#ff7a6a',d:'#c03a2a'
  const yaw=.62,pit=.36,B=(o,p,n)=>miShotB(o,yaw,p==null?pit:p,n);
  IC2.wall=B(st('wall',10,tr),.3,22);IC2.tower=B(st('tower',0,tr),.3,26);
  IC2.gate=B(st('gate',0,tr,w=>{const d=new THREE.Mesh(tr?(GEO.door||(GEO.door=doorGeo())):(GEO.doorw||(GEO.doorw=doorGeoW())),matV);d.position.set(0,1.32,0);w.add(d)}),.3,24);
- IC2.barracks=B(st('barracks',0,tr));IC2.farm=B(st('farm',0,1),.62);IC2.house=B(st('house',0,0));IC2.storage=B(st('storage',0,0));IC2.academy=B(st('academy',0,0));IC2.market=B(st('market',0,0));IC2.forester=B(st('forester',0,0));IC2.guild=B(st('guild',0,0));IC2.observatory=B(st('observatory',0,0));IC2.granary=B(st('granary',0,0));IC2.bell=B(st('bell',0,0));IC2.sanctuary=B(st('sanctuary',0,0));IC2.torch=B(st('torch',0,1),.3,22);
+ IC2.barracks=B(st('barracks',0,tr));IC2.farm=B(st('farm',0,1),.62);IC2.house=B(st('house',0,0));IC2.storage=B(st('storage',0,0));IC2.academy=B(st('academy',0,0));IC2.market=B(st('market',0,0));IC2.forester=B(st('forester',0,0));IC2.guild=B(st('guild',0,0));IC2.observatory=B(st('observatory',0,0));IC2.granary=B(st('granary',0,0));IC2.bell=B(st('bell',0,0));IC2.sanctuary=B(st('sanctuary',0,0));IC2.beacon=B(st('beacon',0,0));IC2.orchard=B(st('orchard',0,0));IC2.torch=B(st('torch',0,1),.3,22);
  IC2.home=B(st('castle',0,tr),.42);IC2.castle=IC2.home;IC2.keep=B(st('keep',0,tr));
  IC2.ballista=B(st('ballista',0,1,w=>{const h=new THREE.Mesh(GEO.bh||(GEO.bh=ballHead()),matV);h.position.set(0,.6,0);h.rotation.y=.5;w.add(h)}),.45,24);
  IC2.trebuchet=B(st('trebuchet',0,1,w=>{const a=new THREE.Mesh(GEO.ta||(GEO.ta=trebArm()),matV);a.position.set(1,1.78,1);a.rotation.y=.4;w.add(a)}),.4,24);
