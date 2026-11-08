@@ -75,6 +75,7 @@ function knock(t0,f,v){tn(f,.09,'sine',v,f*.55,t0);ns(.05,v*.7,'bandpass',f*5,f*
 
 const SFX={
  click:()=>{tn(1900,.025,'sine',.07,1500);ns(.018,.05,'highpass',5000,0,1)},
+ hover:()=>{tn(2600,.014,'sine',.022,2300)},
  hover:()=>{tn(1250,.02,'sine',.035,1100)},
  select:()=>{tn(660,.07,'triangle',.12,0);tn(990,.1,'triangle',.09,0,.04);tn(1980,.08,'sine',.025,0,.04)},
  order:()=>{tn(392,.08,'triangle',.14,330);tn(588,.06,'sine',.05,0,.03);ns(.04,.05,'bandpass',2600,0,3)},
@@ -108,7 +109,7 @@ const SFX={
  spit:()=>{ns(.16,.4,'bandpass',900,300,2.5);tn(190,.12,'sine',.22,90);ns(.1,.18,'highpass',2600,0,1,.06)},
  sizzle:()=>{ns(.9,.17,'highpass',4200,2600,1.2);ns(.5,.09,'bandpass',2200,0,2,.1)}};
 
-const SMIN={fuse:.4,spit:.12,sizzle:.5,sword:.05,zhit:.05,arrow:.06,stone:.09,die:.05,chop:.1,mine:.1,coin:.08,groan:.4,path:.05,dirt:.08,build:.12,click:.02,heal:.3,gate:.3,alarm:1.5,night:4,fanfare:1,victory:2,horn:1};
+const SMIN={fuse:.4,spit:.12,sizzle:.5,sword:.05,zhit:.05,arrow:.06,stone:.09,die:.05,chop:.1,mine:.1,coin:.08,groan:.4,path:.05,dirt:.08,build:.12,click:.02,hover:.05,heal:.3,gate:.3,alarm:1.5,night:4,fanfare:1,victory:2,horn:1};
 
 export let snd = function snd(n,x,y){if(!AC||!sndOn||AC.state!=='running')return;const t=performance.now();if(t-budT>120){budT=t;bud=0}if(bud>=8)return;if(t-(lastS[n]||0)<(SMIN[n]||.03)*1000)return;
  let v=1,pan=0;if(x!==undefined){const wx=x/TS-CAM.x,wz=y/TS-CAM.z,d=hyp(wx,wz);v=Math.max(0,1-d/(CAM.dist+34));v*=v;if(v<.03)return;pan=Math.max(-.85,Math.min(.85,(wx*Math.cos(CAM.yaw)-wz*Math.sin(CAM.yaw))/(CAM.dist*.9+4)))}

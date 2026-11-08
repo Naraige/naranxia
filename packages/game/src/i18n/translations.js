@@ -856,6 +856,8 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Right-click to cancel":["Clic droit pour annuler","Clic derecho para cancelar","Rechtsklick zum Abbrechen","Clic destro per annullare","Clique direito para cancelar"],
+"Refunds the full cost":["Remboursement total","Reembolsa todo el coste","Erstattet die vollen Kosten","Rimborsa il costo intero","Reembolsa o custo total"],
 "Pause when away":["Pause si absent","Pausa si te vas","Pause bei Abwesenheit","Pausa se assente","Pausa se ausente"],
 "On":["Oui","Sí","An","Sì","Sim"],
 "Off":["Non","No","Aus","No","Não"],

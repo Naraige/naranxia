@@ -50,7 +50,8 @@ export function mpBegin(st){hudDisplayState.msgS='Co-op: Alt+click pings the map
  for(let i=0;i<MPD;i++){MP.loc[i]=[];MP.rem[i]=[]}
  MP.mine=null;MP.theirs=null;mpModal(false)}
 
-export let mpMsg = function mpMsg(m){if(m.k==='c'){if((m.e|0)!==MP.ep)return;MP.rem[m.t]=m.c;if(document.hidden)bgTick()}else if(m.k==='h'){if((m.e|0)!==MP.ep)return;MP.hr[m.t]=m.h;mpChk(m.t)}else if(m.k&&m.k.startsWith('rs')){mpResMsg(m);return}else if(m.k==='p')sessionState.paused=m.v;
+export let mpMsg = function mpMsg(m){if(m.k==='pg'){mpSend({k:'pr',t:m.t});return}if(m.k==='pr'){MP.rtt=Math.round(performance.now()-m.t);return}
+ if(m.k==='c'){if((m.e|0)!==MP.ep)return;MP.rem[m.t]=m.c;if(document.hidden)bgTick()}else if(m.k==='h'){if((m.e|0)!==MP.ep)return;MP.hr[m.t]=m.h;mpChk(m.t)}else if(m.k&&m.k.startsWith('rs')){mpResMsg(m);return}else if(m.k==='p')sessionState.paused=m.v;
  else if(m.k==='hello'){MP.pname=String(m.n||'Player').slice(0,24);MP.pver=String(m.v||'?');snd('spawn');lobbyNote(m.v===GVER?(MP.pname)+' joined the lobby!':'Version mismatch: you run '+GVER+', '+MP.pname+' runs '+(m.v||'an older version')+'. Use the same version or the game will desync.');if(MP.host)mpWorldSync();if(!sitePickerState.picking&&!MP.on)lobbyShow();else lobbyRender()}
  else if(m.k==='w'&&!MP.host){terrainState.SEED=m.seed;terrainState.GPR=m.gpr;sessionState.diffI=m.d;MP.mine=null;MP.theirs=null;if(sitePickerState.picking){openPicker();sitePickerState.pickMsg='The host chose a new map'}lobbyNote('The host chose a map');lobbyRender()}
  else if(m.k==='ready'){const again=!!MP.theirs;MP.theirs={tx:m.cx,ty:m.cy,rot:m.r&3};snd('click');lobbyNote(MP.pname+(again?' moved their castle':' placed their castle'));lobbyRender()}

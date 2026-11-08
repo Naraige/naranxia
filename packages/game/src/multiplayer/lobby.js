@@ -120,7 +120,8 @@ export function initializeLobby() {
 
   $m('mpPlay').onclick=mpStart;
 
-  setInterval(()=>{let t='';if(MP.on){t=MP.rsy?'Co-op: resynchronizing...':MP.desync?'Co-op: OUT OF SYNC':MP.stall?'Co-op: waiting for your partner...':''}
+  setInterval(()=>{if(MP.on)mpSend({k:'pg',t:performance.now()})},2000);
+  setInterval(()=>{let t='';if(MP.on){t=MP.rsy?'Co-op: resynchronizing...':MP.desync?'Co-op: OUT OF SYNC':MP.stall?'Co-op: waiting for your partner...':MP.rtt>=250?'Co-op: slow connection ('+MP.rtt+' ms)':''}
    else if(MP.conn&&sitePickerState.picking){t='Co-op lobby - '+(MP.mine?'your castle: placed':'choose your castle site')+' | '+(MP.pname||'partner')+': '+(MP.theirs?'ready':'choosing...')}
    else if(MP.conn&&!MP.host&&sessionState.started===false&&MP.mine&&MP.theirs)t='Waiting for the host to press Play';
    if(t!==mpHud._t){mpHud._t=t;mpHud.textContent=t;mpHud.style.display=t?'block':'none';mpHud.style.color=MP.desync?'#ff8a8a':'#ffd9a0'}},300);

@@ -72,6 +72,8 @@ export let train = function train(type){const b=curB();if(b.type==='academy'||b.
   if(type==='guard'){if(!K){hudDisplayState.msgS='Royal guards serve King Naraige: summon him first';hudDisplayState.msgT=3;snd('err');return}if((K.sq?K.sq.length:0)+sessionState.queue.filter(q=>q.type==='guard'&&(q.b.pl|0)===p).length>=2){hudDisplayState.msgS='King Naraige already has his 2 royal guards';hudDisplayState.msgT=3;snd('err');return}}}
  else if(type!=='peasant'&&b.type==='castle'){hudDisplayState.msgS='Units are trained in a Barracks: build one, then click it';hudDisplayState.msgT=3;snd('err');return}if(sessionState.over||sessionState.queue.filter(q=>q.b===b).length>=6)return;if(!ok(C[type])){if((C[type].f||0)>(sessionState.res.f||0)&&playersState.CURPL===LPL()){hudDisplayState.msgS='Not enough food: build farms and put a peasant on each';hudDisplayState.msgT=3;snd('err')}return}pay(C[type]);const tt=TRAIN[type]*(b.type==='castle'?1:.65)*(RS2.done.drill?.75:1);sessionState.queue.push({type,left:tt,tot:tt,b})};
 
+/* cancel the i-th queued unit of building sid (this player's): full refund */
+export function cancelTrain0(sid,i){const b=sessionState.structs.find(s=>s.sid===sid&&(s.pl|0)===playersState.CURPL);if(!b)return;let n=-1,qi=-1;sessionState.queue.forEach((q,j)=>{if(q.b===b&&++n===i)qi=j});if(qi<0)return;const q=sessionState.queue[qi];for(const[k,v]of Object.entries(C[q.type]))sessionState.res[k]+=v;sessionState.queue.splice(qi,1)}
 export const ok=c=>Object.entries(c).every(([k,v])=>sessionState.res[k]>=v),pay=c=>Object.entries(c).forEach(([k,v])=>sessionState.res[k]-=v);
 export const ALERTS=[];
 

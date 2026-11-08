@@ -1,3 +1,4 @@
+import { cancelTrain0 } from '../gameplay/economy.js';
 import { repair0, roleAdj0 } from '../ai/worker-roles.js';
 import { setSndHandler, snd } from '../audio/sound.js';
 import { REALR } from '../core/random.js';
@@ -46,6 +47,8 @@ export const repairB=function(sid){if(gated()){mpPush({k:'rp',b:sid});return}ret
 
 export const sendConvoy=function(c){if(gated()){mpPush({k:'cv',g:c.g|0,w:c.w|0,s:c.s|0,f:c.f|0});return}return sendConvoy0(c)};
 
+export const cancelTrain=function(sid,i){if(gated()){mpPush({k:'cq',b:sid,i:i|0});return}return cancelTrain0(sid,i)};
+
 export const ROLEK=new Set(['rb+','rb-','rr+','rr-','rt+','rt-']),roleAdj=function(r,d){if(gated()){mpPush({k:'ro',r,d});return}return roleAdj0(r,d)};
 
 function withSel(S,fn){const keep=sessionState.units.map(u=>u.sel);sessionState.units.forEach(u=>u.sel=S.has(u.uid));try{fn()}finally{sessionState.units.forEach((u,i)=>u.sel=keep[i])}}
@@ -65,6 +68,7 @@ export let mpExec = function mpExec(c,mine){const m0=hudDisplayState.msgS,mt0=hu
   case'u':withSel(new Set(c.i),()=>_N.ungroupSel());break
   case'st':withSel(new Set(c.i),()=>_N.setStance(c.s));break
   case'ks':kingSkill0(c.n);break;
+  case'cq':cancelTrain0(c.b,c.i);break;
   case'cv':sendConvoy0(c);break}}
  finally{MP.ex=false;MP.rmt=false;setPl(LPL());selectionState.selB=sl;constructionState.formType=fm;constructionState.buildRot=br;if(!mine){hudDisplayState.msgS=m0;hudDisplayState.msgT=mt0;if(MP.note){hudDisplayState.msgS=MP.note;hudDisplayState.msgT=4;MP.note=null}}}};
 

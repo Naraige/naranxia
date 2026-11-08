@@ -1,3 +1,4 @@
+import { cancelTrain } from '../multiplayer/commands.js';
 import { bossBar } from '../ai/wave-boss.js';
 import { wkOf, WKT } from '../ai/workplaces.js';
 import { snd, sndOn, toggleSound } from '../audio/sound.js';
@@ -102,7 +103,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  flow(L,px+5,py+5,availW-8);frame(px,py,pw,ph,INV,6);hudState.uiRects.push(U(px,py,pw,ph));for(const it of L)if(it.gap===undefined)drawItem(it);
  const S2=sel();let sy=py-4;const QB=sessionState.queue.filter(q=>q.b===curB());if(QB.length)sy-=22;if(narrow){const yb0=py-mh-9-3-19-19;sy=Math.min(sy,yb0-3)}
  if(S2.length&&!sessionState.over){const cnt={};S2.forEach(u=>cnt[u.type]=(cnt[u.type]||0)+1);const txt=Object.entries(cnt).map(([k,v])=>v+' '+L(v>1?(PLUN[k]||NAMES[k]):NAMES[k])).join(', '),hint=S2.some(u=>u.type==='archer')?'Right-click a wall, gate or tower to garrison':S2.some(u=>u.type==='peasant')?'Right-click a resource to harvest, a building to repair':S2.some(u=>u.type==='captain')?'[G] group nearby soldiers behind the captain':'Right-click to move or attack',w=Math.max(tw(txt,.9),tw(hint,.78))+14;frame(px,sy-26,w,26,CHAT,5);T_(txt,px+7,sy-22,'#ffff55',.9);T_(hint,px+7,sy-11,'#e0e0e0',.78);hudState.uiRects.push(U(px,sy-26,w,26))}
- if(QB.length)QB.forEach((q,i)=>{const bx=px+i*20,by=py-23;frame(bx,by,18,18,SLOT,4);dIc(IC[q.type],bx+2,by+1.5,14);canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(bx+2,by+14,14,3);if(i===0){canvasesState.ctx.fillStyle='#55ff55';canvasesState.ctx.fillRect(bx+2,by+14,Math.max(1,Math.round(14*(1-q.left/q.tot))),2)}});
+ if(QB.length)QB.forEach((q,i)=>{const bx=px+i*20,by=py-23;frame(bx,by,18,18,SLOT,4);dIc(IC[q.type],bx+2,by+1.5,14);canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(bx+2,by+14,14,3);if(i===0){canvasesState.ctx.fillStyle='#55ff55';canvasesState.ctx.fillRect(bx+2,by+14,Math.max(1,Math.round(14*(1-q.left/q.tot))),2)}hudState.uiHits.push({...U(bx,by,18,18),fn:()=>{},rfn:()=>cancelTrain(q.b.sid,i),tip:['Right-click to cancel','Refunds the full cost']})});
  /* minimap = world map */
  const mx2=UW-mw-9,my2=narrow?py-mh-9:UH-mh-9;
  frame(mx2-4,my2-4,mw+8,mh+8,MAPF,5);drawWorld(mx2,my2,mw,mh,false);mmRect=U(mx2,my2,mw,mh);hudState.uiRects.push(U(mx2-3,my2-3,mw+6,mh+6));

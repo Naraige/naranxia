@@ -45,6 +45,7 @@ export async function bugReport(){if(bugBusy)return;bugBusy=true;hudDisplayState
    errors:ERRLOG.slice(),messages:MSGL.slice(),save,shot};
   const d=new Date(),p2=n=>String(n).padStart(2,'0'),nm='naranxia-bug-'+GVER+'-'+d.getFullYear()+p2(d.getMonth()+1)+p2(d.getDate())+'-'+p2(d.getHours())+p2(d.getMinutes())+'.json';
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(rep)],{type:'application/json'}));a.download=nm;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},5000);
+  try{const sm='Naranxia '+GVER+' | '+rep.mode+' | wave '+rep.wave+' | '+rep.units+' units | '+rep.errors.length+' errors'+(rep.errors.length?'\n'+rep.errors.slice(-3).map(e=>String(typeof e==='string'?e:JSON.stringify(e)).slice(0,300)).join('\n'):'');navigator.clipboard.writeText(sm).catch(()=>{})}catch(e){}
   window.__bug=rep;hudDisplayState.msgS='Bug report saved: '+nm+' - send it on Discord with a few words';hudDisplayState.msgT=8;snd('click')}
  catch(e){hudDisplayState.msgS='Bug report failed: '+String(e&&e.message||e).slice(0,80);hudDisplayState.msgT=5;snd('err')}finally{bugBusy=false}}
 
