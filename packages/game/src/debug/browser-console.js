@@ -12,6 +12,7 @@ import { ach, ACH } from '../gameplay/achievements.js';
 import { build, constructionState, setBuildHandler, tilesFor, valid } from '../gameplay/construction.js';
 import { buy, PRICE, setTrainHandler, train } from '../gameplay/economy.js';
 import { mkU, spawnPos } from '../gameplay/entities.js';
+import { wavePreview } from '../gameplay/wave-preview.js';
 import { formationsState, order, setOrderHandler } from '../gameplay/formations.js';
 import { kingOf, kingSkill0, kingTick, kskLeft } from '../gameplay/king-skills.js';
 import { setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
@@ -142,6 +143,7 @@ export function installBrowserConsole() {
     buildPreview: { get: () => buildPreview },
     buildStructMesh: { get: () => buildStructMesh, set: setBuildStructMeshHandler },
     buy: { get: () => buy },
+    wavePreview: { get: () => wavePreview },
     callWave: { get: () => callWave, set: setCallWaveHandler },
     confirmPick: { get: () => confirmPick, set: setConfirmPickHandler },
     convoyOpen: { get: () => convoyPanelState.convoyOpen, set: value => { convoyPanelState.convoyOpen = value; } },

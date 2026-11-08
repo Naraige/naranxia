@@ -10,6 +10,7 @@ import {
   popOf,
   popUsed,
   royalBtns,
+  barterGet,
   tradeCost,
   tradeGain,
   TRADEK,
@@ -249,7 +250,7 @@ function ctxGroups(){const S=sel();if(S.length){const sol=S.some(u=>u.type!=='pe
  const upI=b=>b&&b.tier===0&&UPC[b.type]?['stoneup']:[];
  if(selectionState.selB&&sessionState.structs.includes(selectionState.selB)&&selectionState.selB.prog>=1&&!TRB.has(selectionState.selB.type))return[['Command',upI(selBs().find(s=>s.tier===0)||selectionState.selB).concat(['repair','demolish'],ROTT.has(selectionState.selB.type)?['rotate']:[])]];
  const t=curB().type;
- if(t==='market')return[['Trade',['sellw','sells','sellf','buyw','buys','buyf']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
+ if(t==='market')return[['Trade',['sellw','sells','sellf','buyw','buys','buyf']],['Barter',['xws','xwf','xsw','xsf','xfw','xfs']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
  if(t==='guild')return[['Builders',['rb-','rb+']],['Repairers',['rr-','rr+']],['Terraformers',['rt-','rt+']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
  if(t==='academy')return[['Research',['upgrade','iron','plate','steel','mail','drill','tools','harvest','fletch','fire','bastion','oil','era']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
  if(t==='barracks')return[['Train',['knight','archer','bannerman','captain','scout'].concat(RS.done?['cannon']:[])],['Command',upI(curB()).concat(['army','idle','rally','repair','demolish','rotate','form','mode'])]];
@@ -308,6 +309,7 @@ export function drawItem(it){const cat=it.k.startsWith('cat:')?it.k.slice(4):nul
 
 export function initializeBuildMenu() {
   for(const k of['sellw','sells','buyw','buys','sellf','buyf']){const r=k[k.length-1],sl=k[0]==='s';Object.defineProperty(TIPS,k,{get:()=>sl?['Sell 50 '+RN[r],'You get '+tradeGain(r)+' gold','Each sale lowers the price for a while']:['Buy 50 '+RN[r],'Costs '+tradeCost(r)+' gold','Each purchase raises the price for a while'],enumerable:true,configurable:true});Object.defineProperty(NAMES,k,{get:()=>sl?'+'+tradeGain(r)+' gold':'+50 '+RN[r],enumerable:true,configurable:true})}
+  for(const k of['xws','xwf','xsw','xsf','xfw','xfs']){const a=k[1],b=k[2];Object.defineProperty(TIPS,k,{get:()=>['Swap 50 '+RN[a]+' for '+RN[b],'You get '+barterGet(a,b)+' '+RN[b],'Both prices shift a little'],enumerable:true,configurable:true});Object.defineProperty(NAMES,k,{get:()=>'+'+barterGet(a,b)+' '+RN[b],enumerable:true,configurable:true})}
   Object.defineProperty(NAMES,'tier',{get:()=>RS.done&&playersState.BTIER?'Stone':'Wood',enumerable:true,configurable:true});
 
   for(const c in BCATS){NAMES['cat:'+c]=BCATS[c][0]}

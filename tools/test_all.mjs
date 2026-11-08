@@ -19,13 +19,14 @@ const suite = {
   envoy: { args: ['tools/run.py', 'tests/envoy.js'], pass: /"ok":true/ },
   ruins: { args: ['tools/run.py', 'tests/ruins.js'], pass: /"ok":true/ },
   bastion: { args: ['tools/run.py', 'tests/bastion.js'], pass: /"ok":true/ },
+  market: { args: ['tools/run.py', 'tests/market.js'], pass: /"ok":true/ },
   mp8: { args: ['tests/mp8.py', 'naranxia_readable.html', '40'], pass: /^ERRS \[\] \[\]/m },
   mpk: { args: ['tests/mpk.py', 'naranxia_readable.html', '40'], pass: /^ERRS \[\] \[\]/m },
   mp_resync: { args: ['tests/mp_resync.py', 'naranxia_readable.html', '220'], pass: /^RESULT OK/m },
   mp_convoy: { args: ['tests/mp_convoy.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   save: { args: ['tools/run.py', 'tests/save.js'], pass: /"same0":true/ },
 };
-const quick = ['smoke', 'det', 'tools', 'features', 'bastion', 'mp8', 'mpk', 'mp_resync', 'mp_convoy'];
+const quick = ['smoke', 'det', 'tools', 'features', 'bastion', 'market', 'mp8', 'mpk', 'mp_resync', 'mp_convoy'];
 const args = process.argv.slice(2);
 const names = args.includes('--full')
   ? [...quick, 'save']

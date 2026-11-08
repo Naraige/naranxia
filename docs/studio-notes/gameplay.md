@@ -1,0 +1,3 @@
+# Gameplay studio notes
+- Market barter: 6 trade keys (xws xwf xsw xsf xfw xfs: 50 of one resource for another at the price ratio x0.9, prices move 3 %) in economy.js `trade`, same 'tr' command (lockstep-safe, PRICE already in SAVA, no new state); market menu group 'Barter'. Tip lines 'Swap 50 wood for stone' etc. are concatenated English like the sell/buy tips. Lead: merge docs/studio-texts/gameplay.json, run det mp8 mpk market.
+- Next wave preview (read only): gameplay/wave-preview.js `wavePreview()` mirrors waves.js rules; HUD wave pill shows the first event tag, tooltip lists horde kinds and events ('Zombies' and 'Wave N brings:' pieces: 'Zombies' exists already). Keep in step with waves.js. No sim change.
