@@ -50,7 +50,7 @@ import {
   tgShow,
 } from './build-preview.js';
 import { pickGround, updateCamera } from './camera.js';
-import { fireflies, glow, glowFlush, rflagUpd, smkFlush, syncClouds, syncFx, updateLit } from './effects.js';
+import { fireflies, glow, glowFlush, puff, rflagUpd, smkFlush, syncClouds, syncFx, updateLit } from './effects.js';
 import { fowSeenAt, fowVisAt } from './fog.js';
 import { applyDay, nightK } from './lighting.js';
 import { matV, WUT } from './materials.js';
@@ -75,6 +75,19 @@ export const frameState = {
   frameN: 0,
 };
 
+
+/* Construction animation (visual only): the building rises with s.prog (as before), the scaffold stays a little above it,
+   dust puffs at each fifth of the progress and a short settle bounce when construction is seen to finish.
+   State lives in a WeakMap, never on the structure (saved/hashed); uses real-time dt and Math.random only through puff. */
+const BFX=new WeakMap();
+function bldAnim(s,dt){const o=s.o3,pr=Math.min(1,s.prog),rm=rmotion();let f=BFX.get(s);
+ if(pr<1){if(!f){f={st:Math.floor(pr*5),b:-1};BFX.set(s,f)}f.seen=1;
+  if(s.scaf)s.scaf.scale.y=rm?1:Math.min(1,.2+.8*pr+.3);
+  const st=Math.floor(pr*5);if(st>f.st){f.st=st;if(!rm&&Math.abs(s.x/TS-CAM.x)<CAM.dist*2+20&&Math.abs(s.y/TS-CAM.z)<CAM.dist*2+20){const r=(s.sz||1)*TS*.5;for(let i=0;i<4;i++){const a=i*1.5708+.785;puff(s.x+Math.cos(a)*r,s.y+Math.sin(a)*r,'#c9b48c',2,26,{T:.6,z:.15,vz:.9,g:-.4,s:.14})}}}
+  o.scale.y=.2+.8*pr;return}
+ if(f&&f.seen&&f.b<0){f.b=0;f.seen=0}
+ if(f&&f.b>=0){f.b+=dt;if(rm||f.b>.5){BFX.delete(s);o.scale.y=1;return}const t=f.b/.5;o.scale.y=1+.07*Math.sin(t*Math.PI*3)*(1-t)*(1-t);return}
+ o.scale.y=1}
 export let render3D = function render3D(dt){frameState.frameN++;updateCamera(dt);updateChunks(7);syncRuins();
  let anyDmg=false;for(const s of sessionState.structs)if(s.t===0&&(s.hp<s.max||s.prog<1)){anyDmg=true;break}
  {const R=(CAM.dist*1.7+26)*TS,cx=CAM.x*TS,cy=CAM.z*TS;camera.updateMatrixWorld();_uPV.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);_uFr.setFromProjectionMatrix(_uPV);
@@ -90,7 +103,7 @@ export let render3D = function render3D(dt){frameState.frameN++;updateCamera(dt)
  for(const s of SCAF){if(s.prog>=1||!sessionState.structs.includes(s)){scene.remove(s.scaf);s.scaf=null;SCAF.delete(s)}}
  for(const s of sessionState.structs){if(s.t===2&&s.o3)s.o3.visible=fowSeenAt(s.x,s.y);if(s.t===0&&s.prog<1&&!s.scaf&&s.o3){const H={wall:2.1,gate:2.8,tower:4.6,castle:6.2,barracks:3.1,farm:.8,storage:2.3,house:3.1,academy:3.4,market:2.3,forester:2.2,guild:3.0,observatory:3.3,granary:2.6,bell:2.6,sanctuary:2.6,beacon:3.4,orchard:2.4,forge:3.0,embassy:2.8,warroom:2.9,sappers:2.6,torch:1.5,keep:4.9}[s.type]||2,w=s.type==='gate'?(s.gl||2)*1.05:s.sz,d=s.type==='gate'?.9:s.sz,k=s.type+w+'x'+d+'x'+H,m=new THREE.Mesh(SGEO[k]||(SGEO[k]=scafGeo(w,d,H)),matV);m.position.set(s.x/TS,s.bh||HT[s.ty*TW+s.tx],s.y/TS);if(s.type==='gate'&&s.ax)m.rotation.y=Math.PI/2;scene.add(m);s.scaf=m;SCAF.add(s)}
   if(s.prog>=1&&s.hp<s.max*.3&&s.hp>0&&s.o3&&Math.abs(s.x/TS-CAM.x)<CAM.dist*2+30&&Math.abs(s.y/TS-CAM.z)<CAM.dist*2+30){const fl=.75+.25*Math.sin(sessionState.clockT*13+s.x)+.15*Math.sin(sessionState.clockT*29+s.y),hb=(s.bh||LAND)+1.2+(s.sz||1)*.4;glow(s.x/TS,hb,s.y/TS,1.1*(s.sz||1)*fl,1,.42,.1,.5);glow(s.x/TS,hb+.5,s.y/TS,.5*fl,1,.85,.4,.6)}
-  if(s.flag)s.flag.rotation.y=Math.sin(sessionState.clockT*3)*.3;if(s.o3){const p=.2+.8*Math.min(1,s.prog);s.o3.scale.y=p}
+  if(s.flag)s.flag.rotation.y=Math.sin(sessionState.clockT*3)*.3;if(s.o3)bldAnim(s,dt)
   if(s.bolt){const c=s.wcd>0?s.wcd:0,p=c/3.4;s.bolt.visible=p<.5;s.bolt.position.z=-Math.max(0,Math.min(1,(p-.1)/.4))*.55}
   if(s.head){const a=s.aim||0;s.head.rotation.y+=angd(s.head.rotation.y,a)*Math.min(1,dt*8);s.head.position.z=-Math.max(0,s.rec||0)*.18*Math.cos(s.head.rotation.y);s.head.position.x=-Math.max(0,s.rec||0)*.18*Math.sin(s.head.rotation.y)}
   if(s.arm){const a=s.aim||0,c=s.wcd>0?s.wcd:0,rest=.95,fire=-.95;let ang;if(c>5.7)ang=rest+(fire-rest)*sat((6.2-c)/.22);else if(c>.3)ang=fire+(rest-fire)*easeO(sat((5.7-c)/5.2));else ang=rest;

@@ -1,3 +1,4 @@
+import { rmotion } from '../core/prefs.js';
 import { snd } from '../audio/sound.js';
 import { HEAL_R } from '../gameplay/construction.js';
 import { T, TS } from '../gameplay/rules.js';
@@ -81,9 +82,12 @@ export function animUnit(u,dt,anyDmg,frame){let g=u.m;if(g&&!u.ttl&&(u.mt!==u.t|
    if(jb==='r'){const hs=Math.sin(ph*Math.PI*2)**2;ar=-.9-.8*hs;wr=.5*hs-.2;lean=.12;al=-.5}else{wr=wu?.6*t:st?.6-1.1*t:-.5*(1-(ph-.72)/.28);ar=wu?-.4-2.0*t:st?-2.4+3.0*t:.6*(1-(ph-.72)/.28);al=ar*.6;lean=wu?-.1*t:st?-.1+.4*t:.3*(1-(ph-.72)/.28);twist=wu?.2*t:st?.2-.4*t:-.2*(1-(ph-.72)/.28)}
    headX=.15;if(pr<.62&&ph>=.62){const tx2=Math.sin(u.fa)*18,ty2=Math.cos(u.fa)*18;puff(u.x+tx2,u.y+ty2,jb==='r'?'#d9c9a0':CHOPC[jb]||'#ccc',3,34);snd(jb==='w'?'chop':jb==='r'?'build':(jb==='t'||jb==='f'||jb==='p')?'dirt':'mine',u.x,u.y)}u.lph=ph}else u.lph=0}
  /* hurt flash */
- const hf=u.hurt>0?Math.min(1,u.hurt/.2)*.75:0;d.mat.emissive.setRGB(hf,hf*.25,hf*.25);
+ const hp_=u.hurt>0?Math.min(1,u.hurt/.2):0,hf=hp_*.75,hrm=rmotion();if(hp_>.7&&!hrm)d.mat.emissive.setRGB(.8,.7,.7);else d.mat.emissive.setRGB(hf,hf*.25,hf*.25);
+ /* impact: short recoil opposite to facing + squash (visual only, in the group matrix, never u.x/u.y) */
+ let rc_=0;if(hp_>0&&!hrm&&!u.ttl){rc_=Math.sin((1-hp_)*Math.PI*.9+.2)*(heavy||u.bn!=null?.4:1);}
+ const sq_=rc_>0?rc_:0;if(sq_>0||d.sqz){const s0=d.sc||g.scale.y,q=sq_*.07;g.scale.set(-s0*(1+q*.6),s0*(1-q),s0*(1+q*.6));d.sqz=sq_>0}
  /* apply pose */
- g.position.set(u.x/TS+Math.sin(u.fa)*lunge,u.dy,u.y/TS+Math.cos(u.fa)*lunge);g.rotation.y=u.fa;
+ g.position.set(u.x/TS+Math.sin(u.fa)*(lunge-rc_*.05),u.dy,u.y/TS+Math.cos(u.fa)*(lunge-rc_*.05));g.rotation.y=u.fa;
  d.lL.rotation.x+=(sw-d.lL.rotation.x)*k;d.lR.rotation.x+=(-sw-d.lR.rotation.x)*k;
  const br=Math.sin(T*2.1)*.006;d.body.position.y=d.mdl.hip+(wl?ab*.03*(heavy?1.8:1):br);
  d.body.rotation.x+=(lean-d.body.rotation.x)*k;d.body.rotation.y+=(twist-d.body.rotation.y)*k;d.body.rotation.z+=(sway-d.body.rotation.z)*k;
