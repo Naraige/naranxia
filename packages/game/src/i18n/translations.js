@@ -856,6 +856,14 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Scout":["Éclaireur","Explorador","Späher","Esploratore","Batedor"],
+"Engineer":["Ingénieur","Ingeniero","Ingenieur","Ingegnere","Engenheiro"],
+"Scouts":["Éclaireurs","Exploradores","Späher","Esploratori","Batedores"],
+"Engineers":["Ingénieurs","Ingenieros","Ingenieure","Ingegneri","Engenheiros"],
+"Fast and fragile, sees very far":["Rapide et fragile, voit très loin","Rápido y frágil, ve muy lejos","Schnell und zerbrechlich, sieht sehr weit","Veloce e fragile, vede molto lontano","Rápido e frágil, vê muito longe"],
+"Trained at the barracks":["Formé à la caserne","Se entrena en el cuartel","Wird in der Kaserne ausgebildet","Addestrato in caserma","Treinado no quartel"],
+"Repairs nearby buildings fast":["Répare vite les bâtiments proches","Repara rápido los edificios cercanos","Repariert nahe Gebäude schnell","Ripara in fretta gli edifici vicini","Conserta rápido os edifícios próximos"],
+"Trained at the castle":["Formé au château","Se entrena en el castillo","Wird in der Burg ausgebildet","Addestrato al castello","Treinado no castelo"],
 "Royal forge":["Forge royale","Forja real","Königliche Schmiede","Fucina reale","Forja real"],
 "Embassy":["Ambassade","Embajada","Botschaft","Ambasciata","Embaixada"],
 "War room":["Salle de guerre","Sala de guerra","Kriegsraum","Sala di guerra","Sala de guerra"],

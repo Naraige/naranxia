@@ -123,7 +123,7 @@ IC2.agg=pc16(({Gd,P})=>{Gd(SW.sword,{...SPAL,w:'#ffe0e0',i:'#ff7a6a',d:'#c03a2a'
  IC2.demolish=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,1,1,'#c8282a');for(const x of[.2,.6])bxc(G,x,.08,1.0,.04,.84,.006,'#a01818');bxc(G,.5,.33,1.0,1.002,.34,.008,'#f0f0f0');bxc(G,1.0,.33,.5,.008,.34,1.002,'#f0f0f0');for(const x of[.22,.5,.78]){bxc(G,x,.39,1.004,.16,.22,.008,'#2a2a2a');bxc(G,1.004,.39,x,.008,.22,.16,'#2a2a2a')}bxc(G,.5,1.0,.5,1,.006,1,'#d6d6d6');bxc(G,.5,1.004,.5,.34,.006,.34,'#5a5a5a');bxc(G,.5,1.0,.5,.06,.12,.06,'#3a3a3a')}));
  IC2.movec=miShot(miBlock(G=>{cob(G,'#7a7a7a',33);bxc(G,.5,.72,.5,1.004,.28,1.004,'#b8945f');bxc(G,.5,1.0,.5,1,.008,1,'#c8a46a');bxc(G,.5,1.006,.5,.36,.008,.36,'#9a9aa2');for(const x of[.25,.5,.75]){bxc(G,x,.72,1.004,.02,.28,.008,'#8a6a3a');bxc(G,1.004,.72,x,.008,.28,.02,'#8a6a3a')}}));
  /* ---------- heads ---------- */
- IC2.peasant=miHead('peasant',0);IC2.knight=miHead('knight',0);IC2.archer=miHead('archer',0);IC2.captain=miHead('captain',0);IC2.bannerman=miHead('bannerman',0);IC2.king=miHead('king',0);IC2.guard=miHead('guard',0);
+ IC2.peasant=miHead('peasant',0);IC2.knight=miHead('knight',0);IC2.archer=miHead('archer',0);IC2.captain=miHead('captain',0);IC2.bannerman=miHead('bannerman',0);IC2.scout=miHead('scout',0);IC2.engineer=miHead('engineer',0);IC2.king=miHead('king',0);IC2.guard=miHead('guard',0);
  IC2.skull=miHead('zombie',1);IC2.brute=miHead('brute',1);IC2.runner=miHead('runner',1);
  IC2.idle=miOverlay(miHead('peasant',0),["KKKKK","KzzzK","KKzKK","KzKKK","KzzzK","KKKKK"],{K:'#101018',z:'#ffffff'},14,0);
  /* ---------- buildings: renders of the medieval models ---------- */
@@ -145,7 +145,7 @@ export let icoPart = function icoPart(kind,i){if(!ICR)icoInit();i=i|0;const set=
  if(kind==='tier'){const tr=RS.done?1:0,SZI={tower:2,castle:5},st=(t,m,tier,ex)=>{const s={type:t,t:0,tier,sz:SZI[t]||1,gl:t==='gate'?3:0,tiles:[]},w=new THREE.Group();w.add(new THREE.Mesh(sGeo(s,m||0),matV));if(ex)ex(w);return w},B=(o,p,n)=>miShotB(o,.62,p==null?.36:p,n);
   J=[()=>set('wall',B(st('wall',10,tr),.3,22)),()=>set('tower',B(st('tower',0,tr),.3,26)),()=>set('gate',B(st('gate',0,tr,w=>{const d=new THREE.Mesh(tr?(GEO.door||(GEO.door=doorGeo())):(GEO.doorw||(GEO.doorw=doorGeoW())),matV);d.position.set(0,1.32,0);w.add(d)}),.3,24)),
    ()=>set('barracks',B(st('barracks',0,tr))),()=>{set('home',B(st('castle',0,tr),.42));IC.castle=IC.home},()=>set('keep',B(st('keep',0,tr)))]}
- else J=['knight','archer','captain','bannerman','king','guard'].map(k=>()=>set(k,miHead(k,0)));
+ else J=['knight','archer','captain','bannerman','scout','engineer','king','guard'].map(k=>()=>set(k,miHead(k,0)));
  /* one icon per task so the redraw never holds a frame for long */
  if(i<J.length){J[i]();if(i+1<J.length)setTimeout(()=>{try{icoPart(kind,i+1)}catch(e){}},20)}};
 

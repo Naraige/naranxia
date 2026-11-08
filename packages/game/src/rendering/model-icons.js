@@ -33,7 +33,7 @@ export const ICT=[{},{}],TIERK=new Set(['wall','gate','tower','barracks','path']
 
 function icoObj(k){
  switch(k){
- case 'peasant':case 'idle':return icoUnit('peasant');case 'knight':return icoUnit('knight');case 'archer':return icoUnit('archer');case 'bannerman':return icoUnit('bannerman');case 'captain':return icoUnit('captain');
+ case 'peasant':case 'idle':return icoUnit('peasant');case 'knight':return icoUnit('knight');case 'archer':return icoUnit('archer');case 'bannerman':return icoUnit('bannerman');case 'captain':return icoUnit('captain');case 'scout':return icoUnit('scout');case 'engineer':return icoUnit('engineer');
  case 'skull':return icoUnit('zombie',1);
  case 'cannon':{const w=new THREE.Group(),m=new THREE.Mesh(GEO.cannonU||(GEO.cannonU=cannonG()),matV);m.rotation.y=-.5;w.add(m);return w}
  case 'wall':return icoStruct('wall',10,ICOT<0?(RS.done?1:0):ICOT);case 'tower':return icoStruct('tower',0,ICOT<0?(RS.done?1:0):ICOT);case 'barracks':return icoStruct('barracks',0,ICOT<0?(RS.done?1:0):ICOT);case 'farm':return icoStruct('farm',0,1);
@@ -61,7 +61,7 @@ export function icoShot(obj,yaw,pitch){const R=ICR,cam=R.cam;R.sc.add(obj);obj.u
  const oc=new THREE.Color();renderer.getClearColor(oc);const oa=renderer.getClearAlpha();const fw0=FOWU.fowP.value.w,fz0=FOWU.fowP.value.z;FOWU.fowP.value.w=0;FOWU.fowP.value.z=0;renderer.setClearColor(0x000000,0);renderer.setRenderTarget(R.rt);renderer.clear();renderer.render(R.sc,cam);renderer.readRenderTargetPixels(R.rt,0,0,ICO_RT,ICO_RT,R.buf);renderer.setRenderTarget(null);renderer.setClearColor(oc,oa);FOWU.fowP.value.w=fw0;FOWU.fowP.value.z=fz0;R.sc.remove(obj);
  const N2=ICO_RT,cv2=cvs(N2,N2),g=cv2.getContext('2d'),im=g.createImageData(N2,N2);for(let y=0;y<N2;y++){const sy=N2-1-y;for(let x=0;x<N2;x++){const s=(sy*N2+x)*4,o=(y*N2+x)*4;im.data[o]=R.buf[s];im.data[o+1]=R.buf[s+1];im.data[o+2]=R.buf[s+2];im.data[o+3]=R.buf[s+3]}}g.putImageData(im,0,0);return arcIcon(cv2,ICO_N)}
 
-export let icons3D = function icons3D(){try{if(!ICR)icoInit();const keys=['cannon','peasant','idle','knight','archer','bannerman','captain','skull','wall','tower','gate','barracks','farm','home','upgrade','ballista','trebuchet','path','raise','dig','coin','wood','stone','heart','sword','army','group','ungroup'];
+export let icons3D = function icons3D(){try{if(!ICR)icoInit();const keys=['cannon','peasant','idle','knight','archer','bannerman','captain','scout','engineer','skull','wall','tower','gate','barracks','farm','home','upgrade','ballista','trebuchet','path','raise','dig','coin','wood','stone','heart','sword','army','group','ungroup'];
  for(const k of keys){const o=icoObj(k);if(!o)continue;const yaw=['coin','wood','stone','path','raise','dig','upgrade','heart','sword'].includes(k)?.5:.45;IC[k]=icoShot(o,k==='heart'?0:k==='sword'?Math.PI/2:yaw,k==='heart'||k==='sword'?0:.35)}IC.castle=IC.home;IC.hammer=IC.upgrade;
  try{for(const t of[0,1]){ICOT=t;for(const k of TIERK){const o=icoObj(k);if(o)ICT[t][k]=icoShot(o,k==='path'?.5:.45,.35)}}}finally{ICOT=-1}}catch(e){console.error('icons3D',e)}};
 
