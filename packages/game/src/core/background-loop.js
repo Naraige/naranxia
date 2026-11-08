@@ -1,3 +1,4 @@
+import { pref } from './prefs.js';
 import { sessionState } from '../gameplay/session.js';
 import { update } from '../gameplay/statistics.js';
 import { inputState, keys } from '../input/state.js';
@@ -14,7 +15,7 @@ export const backgroundLoopState = {
 /* alt-tab / hidden tab: solo games pause themselves (and keys held down are released); co-op keeps simulating so the partner is never stalled */
 
 function focusLost(why){for(const k in keys)keys[k]=false;inputState.ptr=null;inputState.box=null;hudState.mmDrag=false;settingsState.sliderDrag=null;
-}
+ if(pref('ap',true)&&!MP.on&&sessionState.started&&sessionState.inGame&&!sessionState.over&&!sessionState.paused){sessionState.paused=true;backgroundLoopState.autoPaused=true}}
 
 /* while the tab is hidden requestAnimationFrame stops: keep the co-op lockstep running from timers and from incoming packets */
 let bgLast=0;

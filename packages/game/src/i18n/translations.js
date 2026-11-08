@@ -856,6 +856,14 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Pause when away":["Pause si absent","Pausa si te vas","Pause bei Abwesenheit","Pausa se assente","Pausa se ausente"],
+"On":["Oui","Sí","An","Sì","Sim"],
+"Off":["Non","No","Aus","No","Não"],
+"Reduce motion":["Moins d'animations","Menos animaciones","Weniger Animationen","Meno animazioni","Menos animações"],
+"Studio intro":["Intro du studio","Intro del estudio","Studio-Intro","Intro dello studio","Intro do estúdio"],
+"First launch only":["Premier lancement","Solo la primera vez","Nur beim ersten Start","Solo al primo avvio","Só na primeira vez"],
+"Every launch":["Chaque lancement","Cada inicio","Jeder Start","Ogni avvio","Cada início"],
+"Autosaved":["Sauvegarde auto faite","Autoguardado","Automatisch gespeichert","Salvato in automatico","Salvo automaticamente"],
 "Public game: listed in the lobby":["Partie publique : visible dans le lobby","Partida pública: visible en el lobby","Öffentliches Spiel: in der Lobby sichtbar","Partita pubblica: visibile nella lobby","Jogo público: visível no lobby"],
 "Private game: only with the code":["Partie privée : uniquement avec le code","Partida privada: solo con el código","Privates Spiel: nur mit dem Code","Partita privata: solo con il codice","Jogo privado: apenas com o código"],
 "Join a game":["Rejoindre une partie","Unirse a una partida","Spiel beitreten","Unisciti a una partita","Entrar num jogo"],

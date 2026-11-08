@@ -1,3 +1,4 @@
+import { pref, setPref } from '../core/prefs.js';
 import { applyVol, saveVol, sndOn, soundState, toggleSound } from '../audio/sound.js';
 import { startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
@@ -70,6 +71,8 @@ export function drawSettings(UW,UH,cx){const W=Math.min(UW-12,setTab===3?560:340
   T_('Interface size',X+10,y+3,'#ead8ba',.85);{const bw4=Math.min(60,(W-130)/3);[['Small',.8],['Normal',1],['Large',1.25]].forEach(([n,v],i)=>pill(X+W-10-(bw4+4)*(3-i)+4,y,bw4,16,n,BTN,BTNH,()=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch(e){}rs()},null,.8,Math.abs(uiMul-v)<.01))}y+=24}
  else{T_('Language',X+10,y+3,'#ead8ba',.85);{const lw=Math.min(150,W-120);langBtn(X+W-10-lw,y-2,lw,20,LANG,()=>{languageState.langOpen=true;settingsState.settingsOpen=false},false)}y+=26;
   T_('Tutorial',X+10,y+3,'#ead8ba',.85);{const tb=Math.min(110,W-120),on=tutOn();pill(X+W-10-tb,y,tb,16,on?'Tutorial: on':'Tutorial: off',on?GRN:BTN,on?GRNH:BTNH,()=>tutSet(!on),null,.8)}y+=26;
+  {const prow=(lab,k,d,a,b)=>{T_(lab,X+10,y+3,'#ead8ba',.85);const tb=Math.min(110,W-120),on=pref(k,d);pill(X+W-10-tb,y,tb,16,on?a:b,on?GRN:BTN,on?GRNH:BTNH,()=>setPref(k,!on),null,.8);y+=26};
+   prow('Pause when away','ap',true,'On','Off');prow('Autosave','as',true,'On','Off');prow('Reduce motion','rm',false,'On','Off');prow('Studio intro','qi',false,'First launch only','Every launch')}
   T_('King skills',X+10,y+1,'#d9b27a',.8);y+=14;
   for(const a of['cry','charge']){T_(ACTL[a],X+14,y+3,'#ead8ba',.8);uiBtn(X+W-54,y,44,16,BTN,BTNH,()=>{setTab=3;settingsState.rebind=a},null,(bx,by,bw,bh)=>TC(kdisp(KB[a]),bx+bw/2,by+(bh-6)/2,'#fff',.75));y+=20}}
  pill(X+W/2-40,Y+H-22,80,16,'Back',BTN,BTNH,()=>{settingsState.settingsOpen=false;settingsState.rebind=null;setTab=0;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}},null,.9)}

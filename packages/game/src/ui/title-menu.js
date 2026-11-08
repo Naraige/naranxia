@@ -1,3 +1,4 @@
+import { pref } from '../core/prefs.js';
 import { AC, sndOn, toggleSound } from '../audio/sound.js';
 import { inputState } from '../input/state.js';
 import { GNOTES } from '../core/version.js';
@@ -99,7 +100,7 @@ function mcLogo(txt,x0,y0,cs){const lw=cs*47,hh=cs*5;canvasesState.ctx.save();ca
  canvasesState.ctx.shadowColor='rgba(80,190,255,.6)';canvasesState.ctx.shadowBlur=cs*2.2;canvasesState.ctx.fillStyle='#0b0810';canvasesState.ctx.fillText(txt,cx,by);canvasesState.ctx.shadowBlur=0;canvasesState.ctx.shadowColor='transparent';
  canvasesState.ctx.lineWidth=Math.max(2,cs*.7);canvasesState.ctx.strokeStyle='#0b0810';canvasesState.ctx.strokeText(txt,cx,by+cs*.35);canvasesState.ctx.strokeText(txt,cx,by);
  const g=canvasesState.ctx.createLinearGradient(0,by-S*.72,0,by);g.addColorStop(0,'#ffffff');g.addColorStop(.45,'#e6f4ff');g.addColorStop(.55,'#b8dcf5');g.addColorStop(1,'#6fa3c8');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillText(txt,cx,by);
- {const sw=((sessionState.clockT*.16)%1.7)-.3;if(sw>-.25&&sw<1.25){const bx=x0+sw*lw,w2=cs*2.2;canvasesState.ctx.save();canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(bx-w2+cs*3,y0-cs);canvasesState.ctx.lineTo(bx+w2+cs*3,y0-cs);canvasesState.ctx.lineTo(bx+w2-cs*3,by+cs);canvasesState.ctx.lineTo(bx-w2-cs*3,by+cs);canvasesState.ctx.closePath();canvasesState.ctx.clip();canvasesState.ctx.globalAlpha=.6;canvasesState.ctx.fillStyle='#fffbea';canvasesState.ctx.fillText(txt,cx,by);canvasesState.ctx.restore()}}
+ {const sw=((sessionState.clockT*.16)%1.7)-.3;if(!pref('rm',false)&&sw>-.25&&sw<1.25){const bx=x0+sw*lw,w2=cs*2.2;canvasesState.ctx.save();canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(bx-w2+cs*3,y0-cs);canvasesState.ctx.lineTo(bx+w2+cs*3,y0-cs);canvasesState.ctx.lineTo(bx+w2-cs*3,by+cs);canvasesState.ctx.lineTo(bx-w2-cs*3,by+cs);canvasesState.ctx.closePath();canvasesState.ctx.clip();canvasesState.ctx.globalAlpha=.6;canvasesState.ctx.fillStyle='#fffbea';canvasesState.ctx.fillText(txt,cx,by);canvasesState.ctx.restore()}}
  canvasesState.ctx.restore()}
 
 function drawSetup(UW,UH,cx,pw,small){let y=Math.max(6,UH*(small?.03:.06));TTL('New kingdom',cx,y,1.65,'center');y+=22;

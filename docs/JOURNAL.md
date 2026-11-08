@@ -5,6 +5,7 @@ Start of a session: read the top 2 entries and trust them (do not re-verify what
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
 ## 2026-11-07 · Design refresh: glass UI, Inter, cool light (v92, not released)
+- QoL (Settings > Game, prefs in localStorage via core/prefs.js): pause when tab/window is away (solo, default on), autosave every 3 min to slot 'Autosave' (solo), reduce motion (skips intro, stops logo shimmer), studio intro first launch only. smoke + det pass. Already existed: UI size, alerts, pings, chat, control groups, Continue first. Not done: co-op latency indicator, F8 copy button, tooltips/shortcuts, select-all-of-type, queue right-click cancel, loading transition, hover sound.
 - Buttons: glass look (translucent body, top gloss, light rim + dark hairline, soft shadow, base under tinted ones). Checked on Settings only.
 
 - The King chose on the review board: 1A glass buttons/frames, 2A top bar, 3A build tiles, 4A title, 5A Inter, 6C cool world light (rows in `dist/board/spec.json`).

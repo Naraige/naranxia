@@ -1,3 +1,4 @@
+import { initializeAutosave } from './gameplay/autosave.js';
 import { initializeWorkplaces } from './ai/workplaces.js';
 import { initializeZombieLanes } from './ai/zombie-lanes.js';
 import { initializeSound } from './audio/sound.js';
@@ -140,6 +141,7 @@ initializeControlGroups();
 initializeShortcuts();
 initializeChat();
 initializePings();
+initializeAutosave();
 initializeChatMessages();
 initializeSitePreview();
 initializeBuildingIcons();
