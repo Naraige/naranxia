@@ -8,7 +8,7 @@ import { SEPM } from '../gameplay/simulation.js';
 import { MPD, mpSend } from './lockstep.js';
 import { MP } from './session.js';
 import { svMini } from '../persistence/restore.js';
-import { svAssign, svDecode, svEncode, SVVER } from '../persistence/save-format.js';
+import { svAssign, svDecode, svEncode, svMigrate } from '../persistence/save-format.js';
 import { fogState, fowT } from '../rendering/fog.js';
 import { icoPart } from '../rendering/pixel-icons.js';
 import { build3D, rmStruct } from '../rendering/structures.js';
@@ -37,7 +37,7 @@ export function mpResMsg(m){
    decoding (asynchronous) comes first, then everything that touches the simulation runs in one go with a seeded random stream,
    so the host and the guest rebuild exactly the same game */
 async function mpResApply(txt,M){const keep=new Set(sessionState.units.filter(u=>u.sel).map(u=>u.uid)),sb=selectionState.selB&&sessionState.structs.includes(selectionState.selB)?selectionState.selB.sid:null,cs=selectionState.castleSel;
- const S=JSON.parse(txt);if(!S||S.v!==SVVER)throw new Error('bad snapshot');const D=await svDecode(S);
+ const S=svMigrate(JSON.parse(txt));const D=await svDecode(S);
  const R0=Math.random;Math.random=rngf((M.sd^0x5bd1e995)>>>0);
  try{sessionState.mode=null;terrainState.SEED=S.R.SEED;terrainState.GPR=JSON.parse(JSON.stringify(S.objs[S.R.GPR.$r].$o));terrainState.CX=S.R.CX;terrainState.CY=S.R.CY;
   sessionState.SITE2=null;for(const q of sessionState.structs||[])rmStruct(q);initWorld();for(const k in D)svAssign(k,D[k]);RAWD.fill(0);smDone.fill(0);

@@ -11,7 +11,7 @@ import { formationsState } from '../gameplay/formations.js';
 import { lightingState } from '../gameplay/lighting.js';
 import { BAD, playersState } from '../gameplay/players.js';
 import { CLM, RL } from '../gameplay/resources.js';
-import { C, RALLY, RALLYC, RS, RS2, rulesState } from '../gameplay/rules.js';
+import { C, RALLY, RALLYC, RS, RS2, rulesState, SH, T } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { simulationState } from '../gameplay/simulation.js';
 import { statisticsState } from '../gameplay/statistics.js';
@@ -30,6 +30,21 @@ import { LVO } from '../world/traversal.js';
 export const SAVA={SPK:[()=>SPK,null],OBJ:[()=>statisticsState.OBJ,v=>{statisticsState.OBJ=v&&v.w?v:{w:1,k:1}}],GST:[()=>rulesState.GST,v=>{rulesState.GST=v&&v.k?v:{k:{},g:0,w:0,s:0,f:0,lost:0}}],SEED:[()=>terrainState.SEED,v=>{terrainState.SEED=v}],GPR:[()=>terrainState.GPR,v=>{terrainState.GPR=v}],CX:[()=>terrainState.CX,v=>{terrainState.CX=v}],CY:[()=>terrainState.CY,v=>{terrainState.CY=v}],SITE2:[()=>sessionState.SITE2,v=>{sessionState.SITE2=v}],HT:[()=>HT,null],ter:[()=>ter,null],amt:[()=>amt,null],pth:[()=>pth,null],FLG:[()=>FLG,null],TFL:[()=>TFL,null],genF:[()=>genF,null],stairs:[()=>stairs,null],ROUTES:[()=>terrainState.ROUTES,v=>{terrainState.ROUTES=v}],RCH:[()=>terrainState.RCH,v=>{terrainState.RCH=v}],GORD:[()=>terrainState.GORD,v=>{terrainState.GORD=v}],GI:[()=>terrainState.GI,v=>{terrainState.GI=v}],genN:[()=>terrainState.genN,v=>{terrainState.genN=v}],SEALD:[()=>SEALD,null],CAMPS:[()=>CAMPS,null],UID:[()=>sessionState.UID,v=>{sessionState.UID=v}],SID:[()=>sessionState.SID,v=>{sessionState.SID=v}],occ:[()=>occ,null],units:[()=>sessionState.units,v=>{sessionState.units=v}],structs:[()=>sessionState.structs,v=>{sessionState.structs=v}],fx:[()=>sessionState.fx,v=>{sessionState.fx=v}],pt:[()=>sessionState.pt,v=>{sessionState.pt=v}],queue:[()=>sessionState.queue,v=>{sessionState.queue=v}],over:[()=>sessionState.over,v=>{sessionState.over=v}],time:[()=>sessionState.time,v=>{sessionState.time=v}],waveT:[()=>sessionState.waveT,v=>{sessionState.waveT=v}],waveI:[()=>sessionState.waveI,v=>{sessionState.waveI=v}],waveN:[()=>sessionState.waveN,v=>{sessionState.waveN=v}],nextL:[()=>sessionState.nextL,v=>{sessionState.nextL=v}],CS:[()=>sessionState.CS,v=>{sessionState.CS=v}],CS2:[()=>sessionState.CS2,v=>{sessionState.CS2=v}],kills:[()=>sessionState.kills,v=>{sessionState.kills=v}],RESP:[()=>playersState.RESP,v=>{playersState.RESP=v}],SAPL:[()=>SAPL,null],PRES:[()=>PRES,null],saplT:[()=>workplacesState.saplT,v=>{workplacesState.saplT=v}],SW:[()=>SW,null],SWH:[()=>SWH,null],SWN:[()=>SWN,null],SWD:[()=>SWD,null],SWARMS:[()=>swarmState.SWARMS,v=>{swarmState.SWARMS=v}],hordeT:[()=>wavesState.hordeT,v=>{wavesState.hordeT=v}],hordeOn:[()=>wavesState.hordeOn,v=>{wavesState.hordeOn=v}],waveOn:[()=>wavesState.waveOn,v=>{wavesState.waveOn=v}],hordeD:[()=>wavesState.hordeD,v=>{wavesState.hordeD=v}],burnAt:[()=>wavesState.burnAt,v=>{wavesState.burnAt=v}],nightLv:[()=>wavesState.nightLv,v=>{wavesState.nightLv=v}],nightCk:[()=>wavesState.nightCk,v=>{wavesState.nightCk=v}],waveST:[()=>wavesState.waveST,v=>{wavesState.waveST=v}],LITL:[()=>lightingState.LITL,v=>{lightingState.LITL=v}],darkT:[()=>lightingState.darkT,v=>{lightingState.darkT=v}],campT:[()=>campsState.campT,v=>{campsState.campT=v}],SIMTK:[()=>simulationState.SIMTK,v=>{simulationState.SIMTK=v}],shelOn:[()=>simulationState.shelOn,v=>{simulationState.shelOn=v}],shelRel:[()=>simulationState.shelRel,v=>{simulationState.shelRel=v}],mergeT:[()=>constructionState.mergeT,v=>{constructionState.mergeT=v}],ACH:[()=>ACH,null],WAVEZ:[()=>wavesState.WAVEZ,v=>{wavesState.WAVEZ=v}],HORDES:[()=>HORDES,null],BASES:[()=>BASES,null],hdT:[()=>kingdomsState.hdT,v=>{kingdomsState.hdT=v}],spawnHT:[()=>kingdomsState.spawnHT,v=>{kingdomsState.spawnHT=v}],baseId:[()=>kingdomsState.baseId,v=>{kingdomsState.baseId=v}],RS:[()=>RS,null],RS2:[()=>RS2,null],ROLE:[()=>ROLE,null],RHAS:[()=>RHAS,null],roleT:[()=>workerRolesState.roleT,v=>{workerRolesState.roleT=v}],RALLY:[()=>RALLY,null],RALLYC:[()=>RALLYC,null],PRICE:[()=>PRICE,null],priceT:[()=>economyState.priceT,v=>{economyState.priceT=v}],CLM:[()=>CLM,null],BAD:[()=>BAD,null],tfo:[()=>tfo,null],LVO:[()=>LVO,null],SCRT:[()=>SCRT,null],C:[()=>C,null],BTIER:[()=>playersState.BTIER,v=>{playersState.BTIER=v}],RL:[()=>RL,null],FGS:[()=>formationsState.FGS,v=>{formationsState.FGS=v}],FORCEF:[()=>formationsState.FORCEF,v=>{formationsState.FORCEF=v}],PUD:[()=>PUD,null],alertT:[()=>economyState.alertT,v=>{economyState.alertT=v}],farmT:[()=>economyState.farmT,v=>{economyState.farmT=v}],fowSeen:[()=>fowSeen,null],fowVis:[()=>fowVis,null],fowTex:[()=>fowTex,null],fowRA:[()=>fowRA,null],fowLo:[()=>fowLo,null],fowHi:[()=>fowHi,null],diffI:[()=>sessionState.diffI,v=>{sessionState.diffI=v}]};
 
 export const SVVER = 1;
+
+/* ---- compatibility across updates ----
+   Rules: (1) never reject a save for its version; (2) a format change adds a step to SVMIG (key = version it upgrades FROM, the function
+   edits the raw save S in place); (3) new fields must tolerate being absent (setters use defaults, see svFix); (4) removed or unknown
+   unit / structure types are dropped on load instead of crashing; (5) a save from a newer build loads as far as this build understands it. */
+const SVMIG = {/* 1: S=>{...upgrade to 2...} */};
+export function svMigrate(S){if(!S||typeof S!=='object'||!S.R||!Array.isArray(S.objs))throw new Error('Unknown save format');
+ let v=Number(S.v)||1;S.sv0=v;while(v<SVVER){const f=SVMIG[v];if(f)f(S);v++}if(v<=SVVER)S.v=SVVER;return S}
+
+/* after decoding: make the lists safe whatever build wrote them */
+export function svFix(D){const ok=a=>Array.isArray(a)?a:[];
+ if('units' in D){const U=ok(D.units).filter(u=>u&&typeof u==='object'&&T[u.type]);for(const u of U){if(!Number.isFinite(u.hp))u.hp=T[u.type].hp;if(!Number.isFinite(u.x)||!Number.isFinite(u.y)){u.x=0;u.y=0}if(u.buff==null)u.buff=1;if(u.cd==null)u.cd=0}D.units=U}
+ if('structs' in D){const Q=ok(D.structs).filter(q=>q&&typeof q==='object'&&(q.type in SH||q.type in C||q.type==='wall'||q.type==='gate'));for(const q of Q)if(!Number.isFinite(q.hp))q.hp=SH[q.type]||100;D.structs=Q;
+  if(D.units){const set=new Set(Q);for(const u of D.units)if(u.gar&&typeof u.gar==='object'&&!set.has(u.gar))u.gar=null}}
+ return D}
 const SVSKIP = new Set(['zf','zft','_tc','pfS']);
 
 const svX=v=>!!v&&typeof v==='object'&&typeof THREE!=='undefined'&&(v instanceof THREE.Object3D||v.isMaterial||v.isBufferGeometry||v.isTexture||v.isBufferAttribute);
@@ -59,13 +74,13 @@ export async function svEncode(){const ids=new Map(),objs=[],Q=[],big=[];
  for(const[o,u8]of big)o.z=b64e(await gzU8(u8));
  return {v:SVVER,gv:GVER,R,objs}}
 
-export async function svDecode(S){const O=S.objs,live=new Array(O.length);
+export async function svDecode(S){svMigrate(S);const O=S.objs,live=new Array(O.length);
  for(let i=0;i<O.length;i++){const o=O[i];if(o.$t){const T0=TACT[o.$t];const u8=o.z?await gzU8(b64d(o.z),true):b64d(o.d||'');live[i]=new T0(u8.buffer,0,o.n)}
   else if(o.$a)live[i]=[];else if(o.$m)live[i]=new Map();else if(o.$s)live[i]=new Set();else if(o.$g){const a=o.$g,G=mkG(a[0],a[1],a[2],a[3],!!a[5]);G.big=a[4];live[i]=G}else if(o.$x)live[i]=undefined;else live[i]={}}
  const val=x=>x===null||typeof x!=='object'?x:x.$r!==undefined?live[x.$r]:x.$n!==undefined?Number(x.$n):undefined;
  for(let i=0;i<O.length;i++){const o=O[i],L=live[i];if(o.$a){for(const x of o.$a)L.push(val(x))}else if(o.$m){for(const[a,b]of o.$m)L.set(val(a),val(b))}else if(o.$s){for(const x of o.$s)L.add(val(x))}
   else if(o.$o){for(const k in o.$o){const x=o.$o[k];if(x&&x.$u)continue;L[k]=val(x)}}}
- const out={};for(const k in S.R)out[k]=val(S.R[k]);return out}
+ const out={};for(const k in S.R)out[k]=val(S.R[k]);return svFix(out)}
 
 /* const bindings are refilled in place, let bindings reassigned */
 export function svAssign(k,v){const A=SAVA[k];if(!A)return;if(A[1]){A[1](v);return}const c=A[0]();

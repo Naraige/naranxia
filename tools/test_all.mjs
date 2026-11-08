@@ -14,6 +14,7 @@ const suite = {
   det: { args: ['tools/run.py', 'tests/det.js'], pass: /"same":true/ },
   tools: { args: ['tests/tools.py'], pass: /^RESULT OK/m },
   features: { args: ['tools/run.py', 'tests/features.js'], pass: /"ok":true/ },
+  compat: { args: ['tools/run.py', 'tests/compat.js'], pass: /"ok":true/ },
   bastion: { args: ['tools/run.py', 'tests/bastion.js'], pass: /"ok":true/ },
   mp8: { args: ['tests/mp8.py', 'naranxia_readable.html', '40'], pass: /^ERRS \[\] \[\]/m },
   mpk: { args: ['tests/mpk.py', 'naranxia_readable.html', '40'], pass: /^ERRS \[\] \[\]/m },
