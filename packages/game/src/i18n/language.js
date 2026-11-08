@@ -24,6 +24,10 @@ function tr0(s){const li=LANG-1;let e=TRX.get(s);if(e&&e[li])return e[li];
  const m=/^(\s*)([\s\S]*?)(\s*)$/.exec(s);if(m[2]!==s&&m[2]){e=TRX.get(m[2]);if(e&&e[li])return m[1]+e[li]+m[3]}
  for(const t of TRT){const mm=t.re.exec(s);if(!mm||!t.v[li])continue;const val={};t.ids.forEach((d,i)=>{val[d]=mm[i+1]});return t.v[li].replace(/\{(\d)\}/g,(x,d)=>{const v=val[+d];return v===undefined?'':(/^[\d.,%+\- ]*$/.test(v)?v:L(v))})}
  for(const sep of['  -  ',' - ',' | ','   ']){if(s.indexOf(sep)>0){const P=s.split(sep),T=P.map(L);if(T.some((x,i)=>x!==P[i]))return T.join(sep)}}
+ /* a key binding glued to a text ("Wooden wall [6]"): translate the text, keep the key */
+ const hk=/^([\s\S]+?)( \[[^\]]{1,3}\])$/.exec(s);if(hk){const b=L(hk[1]);if(b!==hk[1])return b+hk[2]}
+ /* names are often lowercased inside sentences ("Your tower is under attack!"): use the capitalised entry, lowercased except in German */
+ if(/^[a-z]/.test(s)){e=TRX.get(s[0].toUpperCase()+s.slice(1));if(e&&e[li])return li===2?e[li]:e[li][0].toLowerCase()+e[li].slice(1)}
  return s}
 
 function setLang(i){LANG=i;TRC.clear();TWM.clear();try{localStorage.setItem('dk_lang',i)}catch(e){}try{i18nDom()}catch(e){}titleSceneState.titleDirty=true}
@@ -95,7 +99,7 @@ export function initializeLanguage() {
 export function initializeTranslationLookup() {
   /* languages beyond the first six keep their texts in langs/*.js: slot them into the table at their index */
   EXTRA.forEach((e,n)=>{for(const k in e.tr){const v=e.tr[k];if(!v)continue;(TRD[k]||(TRD[k]=[]))[5+n]=v}});
-  for(const k in TRD){if(k.indexOf('{0}')<0){TRX.set(k,TRD[k]);continue}const ids=[];const re=k.replace(/[.*+?^$()|[\]\\]/g,'\\$&').replace(/\{(\d)\}/g,(m,d)=>{ids.push(+d);return '(.*?)'});if(new Set(ids).size!==ids.length)continue;
+  for(const k in TRD){if(k.indexOf('{0}')<0){TRX.set(k,TRD[k]);continue}const ids=[];const re=k.replace(/[.*+?^$()|[\]\\]/g,'\\$&').replace(/\{(\d)\}/g,(m,d,off,str)=>{ids.push(+d);return /(peasant|villager|sapling)$/.test(str.slice(0,off))?'([^\\s]{0,3})':'(.*?)'});if(new Set(ids).size!==ids.length)continue;
    TRT.push({re:new RegExp('^'+re+'$'),ids,v:TRD[k],w:k.replace(/\{\d\}/g,'').length})}
 
   TRT.sort((a,b)=>b.w-a.w);
