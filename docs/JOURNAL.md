@@ -5,6 +5,7 @@ Start of a session: read the top 2 entries and trust them (do not re-verify what
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
 ## 2026-11-07 · Design refresh: glass UI, Inter, cool light (v92, not released)
+- Buttons: glass look (translucent body, top gloss, light rim + dark hairline, soft shadow, base under tinted ones). Checked on Settings only.
 
 - The King chose on the review board: 1A glass buttons/frames, 2A top bar, 3A build tiles, 4A title, 5A Inter, 6C cool world light (rows in `dist/board/spec.json`).
 - `ui/drawing.js`: `frame()` now draws dark glass (soft shadow, 1 px light edge, cyan accent on hover/confirm, teal/red tints); slots, tooltips, chat/top bar restyled; `arcDeco` removed; selection ring cyan.
