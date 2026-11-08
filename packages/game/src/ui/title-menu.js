@@ -31,8 +31,9 @@ function menuCx(UW,pw){return UW/2}
 
 let TT0 = -1;
 let notesOpen = false;
+let chrOpen = false;
 let recOpen = false;
-export const titleDebug = { rec(v) { recOpen = v }, notes(v) { notesOpen = v } };
+export const titleDebug = { rec(v) { recOpen = v }, notes(v) { notesOpen = v }, chr(v) { chrOpen = v } };
 
 /* tip of the day: one of the tutorial lines, changing each day */
 const TIPS = ['Right-click a tree, a rock or gold: your peasants gather it', 'Build a house in the Town menu to raise your population limit', 'Train a knight in the Train bar: knights fight the zombies', 'Build walls or a tower in the Defense menu to hold the lanes', 'Try a spike trap in the Defense menu: zombies on it get hurt', 'Zombies follow the red lines: the top bar counts down to the wave', 'Research Stonemasonry in the castle menu to build in stone'];
@@ -48,6 +49,7 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
   if(languageState.langOpen){dirtBack(UW,UH);drawLang(UW,UH,cx);return}
  if(settingsState.setupOpen){dirtBack(UW,UH);drawSetup(UW,UH,cx,Math.min(UW-16,380),small);return}
  if(notesOpen){NAV.onEsc=()=>{notesOpen=false};navBegin(false);dirtBack(UW,UH);drawNotes(UW,UH,cx);return}
+ if(chrOpen){NAV.onEsc=()=>{chrOpen=false};navBegin(false);dirtBack(UW,UH);drawChronicle(UW,UH,cx);return}
  if(recOpen){NAV.onEsc=()=>{recOpen=false};navBegin(false);dirtBack(UW,UH);drawRecords(UW,UH,cx);return}
  NAV.onEsc=null;navBegin(!sessionState.inGame||!MP.on);navPoll();
  let y=Math.max(8,UH*(small?.05:.1));uiBtn(UW-30,6,24,20,BTN,BTNH,()=>{settingsState.settingsOpen=true},['Settings'],(x,yy,w,h)=>dIc(IC.gear,x+5,yy+3,14));
@@ -72,7 +74,7 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
  if(!ig){const r=lastRun();if(r&&UH-y>34){TC('Last game: wave '+r.w+'  -  '+r.k+' zombies slain',cx,y+2,'#c4a37a',.85);y+=13;{const wl=titleWeatherLabel(),ww=tw(wl,.85);arcDia(cx-ww/2-8,y+6,2.5,titleSeasonColor())}TC(titleWeatherLabel(),cx,y+2,titleSeasonColor(),.85);y+=15}
   if(sessionState.best.w>0&&UH-y>18){TC('Best: wave '+sessionState.best.w+'  -  '+sessionState.best.k+' zombies slain',cx,y+2,'#ffff55',.9);y+=16}}
  if(!ig&&UH-y>30&&UH>260){const t=TIPS[TIPN];let sc=.8;while(sc>.58&&tw(t,sc)>UW-40)sc-=.04;if(tw(t,sc)<=UW-40)TC(t,cx,Math.min(y+6,UH-40),'#9fd6e6',sc)}
- canvasesState.ctx.globalAlpha=ease(ent(1,1.6));if(UH>240)TC(NAV.active?(padOn()?'D-pad: move | A: select | B: back':'Up / Down: move | Enter: select | Esc: back'):'',cx,UH-27,'#9fb0c6',.72);const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);if(!ig&&GNOTES){const nw=Math.max(96,tw('What\'s new',.8)+22),nx=UW-nw-8,ny=UH-34,k=navAdd(()=>{notesOpen=true},hv(nx,ny,nw,18));pill(nx,ny,nw,18,'What\'s new',BTN,BTNH,()=>{notesOpen=true},null,.8,NAV.sel===k)}if(!ig){const rn=Math.max(70,tw('Records',.8)+22),k2=navAdd(()=>{recOpen=true},hv(8,UH-34,rn,18));pill(8,UH-34,rn,18,'Records',BTN,BTNH,()=>{recOpen=true},null,.8,NAV.sel===k2);const jn=Math.max(90,tw('Join a game',.8)+22),k3=navAdd(mpOpenJoin,hv(14+rn,UH-34,jn,18));pill(14+rn,UH-34,jn,18,'Join a game',BTN,BTNH,mpOpenJoin,null,.8,NAV.sel===k3)}navEnd();canvasesState.ctx.globalAlpha=1}
+ canvasesState.ctx.globalAlpha=ease(ent(1,1.6));if(UH>240)TC(NAV.active?(padOn()?'D-pad: move | A: select | B: back':'Up / Down: move | Enter: select | Esc: back'):'',cx,UH-27,'#9fb0c6',.72);const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);if(!ig&&GNOTES){const nw=Math.max(96,tw('What\'s new',.8)+22),nx=UW-nw-8,ny=UH-34,k=navAdd(()=>{notesOpen=true},hv(nx,ny,nw,18));pill(nx,ny,nw,18,'What\'s new',BTN,BTNH,()=>{notesOpen=true},null,.8,NAV.sel===k)}if(!ig){const rn=Math.max(70,tw('Records',.8)+22),k2=navAdd(()=>{recOpen=true},hv(8,UH-34,rn,18));pill(8,UH-34,rn,18,'Records',BTN,BTNH,()=>{recOpen=true},null,.8,NAV.sel===k2);const jn=Math.max(90,tw('Join a game',.8)+22),k3=navAdd(mpOpenJoin,hv(14+rn,UH-34,jn,18));pill(14+rn,UH-34,jn,18,'Join a game',BTN,BTNH,mpOpenJoin,null,.8,NAV.sel===k3);const cn=Math.max(80,tw('Chronicle',.8)+22),k4=navAdd(()=>{chrOpen=true},hv(20+rn+jn,UH-34,cn,18));pill(20+rn+jn,UH-34,cn,18,'Chronicle',BTN,BTNH,()=>{chrOpen=true},null,.8,NAV.sel===k4)}navEnd();canvasesState.ctx.globalAlpha=1}
 
 function drawRecords(UW,UH,cx){const W=Math.min(UW-12,420),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=8,H=UH-16;frame(X,Y,W,H,PAN,6);TTL('Records',X+10,Y+7,1.35);
  let y=Y+34;const b=sessionState.best,r=lastRun();
@@ -90,6 +92,15 @@ function drawNotes(UW,UH,cx){const W=Math.min(UW-12,480),X=Math.max(6,Math.min(U
  lines=wrap(sc);while(sc>.58&&lines.length*(10.5*sc/.82+1)>room){sc-=.04;lines=wrap(sc)}
  let y=top;const lh=Math.round(10.5*sc/.82+1);for(const[t,first]of lines){if(y>Y+H-34)break;if(first)arcDia(X+16,y+4,2,'#d8b060');T_(t,X+26,y,'#ead8ba',sc);y+=lh+(first&&false?0:0)}
  pill(X+W/2-40,Y+H-24,80,16,'Back',BTN,BTNH,()=>{notesOpen=false},null,.9)}
+
+const CHRON=['Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.','King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.','Around the bastion, other camps survive. They refused the King\'s rule: rebels, and neighbours. Some trade, some raid.','Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.'];
+
+function drawChronicle(UW,UH,cx){const W=Math.min(UW-12,480),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=8,H=UH-16;frame(X,Y,W,H,PAN,6);TTL('Chronicle',X+10,Y+7,1.35);
+ const maxW=W-36,top=Y+34,room=H-top+Y-34;let sc=.9,lines;
+ const wrap=sc=>{const out=[];for(const it of CHRON){let cur='';for(const w of L(it).split(' ')){const t=cur?cur+' '+w:w;if(cur&&tw(t,sc)>maxW){out.push(cur);cur=w}else cur=t}if(cur)out.push(cur);out.push('')}return out};
+ lines=wrap(sc);while(sc>.58&&lines.length*(10.5*sc/.82+1)>room){sc-=.04;lines=wrap(sc)}
+ let y=top;const lh=Math.round(10.5*sc/.82+1);for(const t of lines){if(y>Y+H-34)break;if(t)T_(t,X+18,y,'#ead8ba',sc);y+=t?lh:Math.round(lh*.6)}
+ pill(X+W/2-40,Y+H-24,80,16,'Back',BTN,BTNH,()=>{chrOpen=false},null,.9)}
 
 const MCSPL=['Survive the night!','Also try Co-op!','Hold the line!','100% blocky!','Mind the swarm!','Build towers!','Zombies hate walls!','Protect the castle!','Now with keeps!','Gold! Wood! Stone!','100x the swarm!','Ten thousand zombies!','Red eyes in the dark!','The last bastion of humanity','Rebel camps watch from afar','Hold the last light'];
 
