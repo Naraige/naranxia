@@ -1,0 +1,7 @@
+- Last bastion: ruins to explore and loot, rebel envoys (embassy) bringing tribute, a scout and an engineer, and new buildings (observatory, granary, bell, sanctuary, beacon, orchard, forge, embassy, war room, sappers' workshop, keep).
+- New events: wolf packs, eclipses, blood moons, caravans and meteor showers, with their own sounds, plus a preview of the next wave in the top bar.
+- Wave bosses have names, legends and special powers; the Chronicle keeps a realm journal and boss stories.
+- Market: barter wood, stone and food directly.
+- Look: unit health bars in 10 pixel segments, team tabards, gold rank stripes, redesigned scout, engineer and envoy, hit flash and construction scaffolds.
+- Comfort: colour-blind mode, one-time hints, a "Huge" world size, better saves that always load after an update.
+- 11 new sounds, and many texts fixed in all six languages.
