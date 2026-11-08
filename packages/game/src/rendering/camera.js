@@ -1,3 +1,4 @@
+import { rmotion } from '../core/prefs.js';
 import { HOMEC, LPL } from '../gameplay/players.js';
 import { TH, TS, TW } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
@@ -14,7 +15,7 @@ import { LAND } from '../world/terrain.js';
 export function updateCamera(dt){CAM.x=Math.max(2,Math.min(TW-2,CAM.x));CAM.z=Math.max(2,Math.min(TH-2,CAM.z));
  {const gy0=(gh(CAM.x,CAM.z)*2+gh(CAM.x+3,CAM.z)+gh(CAM.x-3,CAM.z)+gh(CAM.x,CAM.z+3)+gh(CAM.x,CAM.z-3))/6;CAM.y+=(gy0-CAM.y)*Math.min(1,dt*3)}const d=CAM.dist,cp=Math.cos(CAM.pitch);
  let px=CAM.x+d*Math.sin(CAM.yaw)*cp,py=CAM.y+d*Math.sin(CAM.pitch),pz=CAM.z+d*Math.cos(CAM.yaw)*cp;const gy=gh(px,pz)+2.5;if(py<gy)py=gy;
- if(effectsState.shakeT>0&&dt>0&&sessionState.started&&!sessionState.paused&&!sessionState.over){const k=Math.min(1,effectsState.shakeT)*.3;px+=(Math.random()-.5)*k;py+=(Math.random()-.5)*k;pz+=(Math.random()-.5)*k}camera.position.set(px,py,pz);camera.lookAt(CAM.x,CAM.y,CAM.z);
+ if(effectsState.shakeT>0&&!rmotion()&&dt>0&&sessionState.started&&!sessionState.paused&&!sessionState.over){const k=Math.min(1,effectsState.shakeT)*.3;px+=(Math.random()-.5)*k;py+=(Math.random()-.5)*k;pz+=(Math.random()-.5)*k}camera.position.set(px,py,pz);camera.lookAt(CAM.x,CAM.y,CAM.z);
  scene.fog.near=d*.55+6;scene.fog.far=d*1.9+38;
  if(SHADOWS){const e=Math.round(Math.min(70,Math.max(26,d*.95+14))),sc=sun.shadow.camera;if(sc.right!==e){sc.left=-e;sc.right=e;sc.top=e;sc.bottom=-e;sc.far=e*4+60;sc.updateProjectionMatrix()}}
  {/* shadow map snapped to its texel grid: no shadow crawling when the camera moves */

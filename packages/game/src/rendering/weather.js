@@ -1,3 +1,4 @@
+import { rmotion } from '../core/prefs.js';
 import { AC, nbuf, ns, SB, sndOn } from '../audio/sound.js';
 import { REALR } from '../core/random.js';
 import { sessionState } from '../gameplay/session.js';
@@ -54,7 +55,7 @@ export function weatherTick(dt){if(!sessionState.inGame||!sessionState.started){
  for(let i=0;i<4;i++){WX.w[i]+=((i===k?1:0)-WX.w[i])*a;WX.s[i]+=((i===s?1:0)-WX.s[i])*b}
  const rain=WX.w[1],fog=WX.w[2],snow=WX.w[3];let tr=0,tg=0,tb=0;for(let i=0;i<4;i++){tr+=SEAST[i][0]*WX.s[i];tg+=SEAST[i][1]*WX.s[i];tb+=SEAST[i][2]*WX.s[i]}
  /* thunder: a flash, then the rumble a second or two later */
- if(!sessionState.paused){WX.th-=dt;if(rain>.6&&WX.th<=0){WX.th=9+REALR()*20;WX.fl=1;if(AC&&sndOn&&SB)ns(2.2,.5,'lowpass',240,60,.7,.5+REALR()*1.6,SB)}}WX.fl=Math.max(0,WX.fl-dt*3.2);
+ if(!sessionState.paused){WX.th-=dt;if(rain>.6&&WX.th<=0){WX.th=9+REALR()*20;WX.fl=rmotion()?0:1;if(AC&&sndOn&&SB)ns(2.2,.5,'lowpass',240,60,.7,.5+REALR()*1.6,SB)}}WX.fl=Math.max(0,WX.fl-dt*3.2);
  /* light and sky: season tint, then the grey of the weather */
  const dk=1-.32*rain-.12*fog-.04*snow;hemi.color.setRGB(.863*tr,.925*tg,tb);hemi.intensity=hemi.intensity*dk+WX.fl*1.3;sun.intensity*=1-.5*rain-.3*fog;sun.color.r*=tr;sun.color.g*=tg;sun.color.b*=tb;LMU.value=hemi.intensity+sun.intensity;
  const wsum=rain+fog+snow;if(wsum>.001){_wg.setRGB((_wgR.r*rain+_wgF.r*fog+_wgS.r*snow)/wsum,(_wgR.g*rain+_wgF.g*fog+_wgS.g*snow)/wsum,(_wgR.b*rain+_wgF.b*fog+_wgS.b*snow)/wsum).multiplyScalar(.2+.8*dayK);
@@ -62,14 +63,14 @@ export function weatherTick(dt){if(!sessionState.inGame||!sessionState.started){
  scene.fog.color.copy(scene.background);const ff=1-.5*fog-.22*rain-.3*snow;scene.fog.near*=ff;scene.fog.far*=ff;
  /* particles in a box around the camera target */
  const R=Math.max(14,Math.min(30,CAM.dist*.85)),top=CAM.y+15,cx=CAM.x,cz=CAM.z;
- const nr=Math.floor(NRD*Math.min(1,rain)*(R/30+.3)),rp=WX.rp;rp.visible=nr>8;
+ const nr=rmotion()?0:Math.floor(NRD*Math.min(1,rain)*(R/30+.3)),rp=WX.rp;rp.visible=nr>8;
  if(rp.visible){const P=rp.geometry.attributes.position.array,X=WX.rx;for(let i=0;i<nr;i++){let x=cx+(X[i*3]-.5)*2*R,y=top-X[i*3+1]*15,z=cz+(X[i*3+2]-.5)*2*R;
    y-=22*dt;let gy=gh(x,z);if(y<gy){X[i*3]=REALR();X[i*3+2]=REALR();X[i*3+1]=REALR()*.15;y=top-X[i*3+1]*15}X[i*3+1]=(top-y)/15;
    const o=i*6;P[o]=x;P[o+1]=y;P[o+2]=z;P[o+3]=x-.07;P[o+4]=y+.6;P[o+5]=z}
   rp.geometry.setDrawRange(0,nr*2);rp.geometry.attributes.position.needsUpdate=true}
  /* snow flakes, and in the other cases the season's drift: petals (spring), pollen (summer), leaves (autumn) */
  let ns_=snow,sz=.17,col=0xffffff;if(snow<.25){const q=1-snow;if(s===0&&rain<.5){ns_=.12*q;col=0xffc2d6;sz=.2}else if(s===1&&rain<.5){ns_=.07*q;col=0xffe9a0;sz=.1}else if(s===2){ns_=.2*q;col=0xe0782c;sz=.24}}
- const nn=Math.floor(NSN*Math.min(1,ns_)*(R/30+.3)),sp=WX.sp;sp.visible=nn>6;
+ const nn=rmotion()?0:Math.floor(NSN*Math.min(1,ns_)*(R/30+.3)),sp=WX.sp;sp.visible=nn>6;
  if(sp.visible){WX.pc.lerp(_wg.setHex(col),Math.min(1,dt*2));sp.material.color.copy(WX.pc);sp.material.size=sz;const P=sp.geometry.attributes.position.array,X=WX.sx,fall=snow>.25?1.1:.8;
   for(let i=0;i<nn;i++){const o=i*4;X[o+3]+=dt*(1.2+X[o]);let x=cx+(X[o]-.5)*2*R+Math.sin(X[o+3])*.7,y=top-X[o+1]*15,z=cz+(X[o+2]-.5)*2*R+Math.cos(X[o+3]*.8)*.5;
    y-=fall*(.6+X[o]*.8)*dt;const gy=gh(x,z);if(y<gy+.05){X[o]=REALR();X[o+2]=REALR();X[o+1]=REALR()*.2;y=top-X[o+1]*15}X[o+1]=(top-y)/15;

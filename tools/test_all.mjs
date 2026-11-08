@@ -15,6 +15,7 @@ const suite = {
   tools: { args: ['tests/tools.py'], pass: /^RESULT OK/m },
   features: { args: ['tools/run.py', 'tests/features.js'], pass: /"ok":true/ },
   compat: { args: ['tools/run.py', 'tests/compat.js'], pass: /"ok":true/ },
+  bossabil: { args: ['tools/run.py', 'tests/bossabil.js'], pass: /"ok":true/ },
   envoy: { args: ['tools/run.py', 'tests/envoy.js'], pass: /"ok":true/ },
   ruins: { args: ['tools/run.py', 'tests/ruins.js'], pass: /"ok":true/ },
   bastion: { args: ['tools/run.py', 'tests/bastion.js'], pass: /"ok":true/ },

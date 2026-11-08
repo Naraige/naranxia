@@ -12,6 +12,7 @@ import { pill } from './minimap.js';
 export const saveMenuState = {
   saveOpen: false,
   svList: null,
+  delAsk: null,
   last: undefined,
 };
 
@@ -37,8 +38,8 @@ export function drawSaves(UW,UH,cx){const W=Math.min(UW-12,420),X=Math.max(6,Mat
  if(svBusy&&!(sessionState.inGame&&!MP.on)){TC(svBusy,X+W/2,y,'#ffd25a',.9);y+=18}
  if(!saveMenuState.svList.length)T_('No saved games yet',X+12,y+4,'#b59773',.85);
  const rows=Math.max(1,Math.floor((Y+H-58-y)/22));
- saveMenuState.svList.slice(0,rows).forEach((s,i)=>{const yy=y+i*22;const d=new Date(s.t||0);T_(String(s.name).slice(0,34),X+12,yy+4,'#ead8ba',.82);
-  pill(X+W-128,yy,62,18,'Load',BTN,BTNH,()=>{if(!svBusy)loadGame(s.name)},null,.8);pill(X+W-62,yy,52,18,'Delete',RDB,RDB,async()=>{await SVST.del(s.name);svRefresh()},null,.8)});
+ saveMenuState.svList.slice(0,rows).forEach((s,i)=>{const yy=y+i*22;const d=new Date(s.t||0);T_(String(s.name).slice(0,26),X+12,yy+4,'#ead8ba',.82);if(s.t)T_(d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),X+200,yy+5,'#b59773',.66);
+  pill(X+W-128,yy,62,18,'Load',BTN,BTNH,()=>{if(!svBusy)loadGame(s.name)},null,.8);pill(X+W-62,yy,52,18,saveMenuState.delAsk===s.name?'Sure?':'Delete',RDB,RDB,async()=>{if(saveMenuState.delAsk!==s.name){saveMenuState.delAsk=s.name;setTimeout(()=>{if(saveMenuState.delAsk===s.name)saveMenuState.delAsk=null},2500);return}saveMenuState.delAsk=null;await SVST.del(s.name);svRefresh()},null,.8)});
  if(window.NARX)pill(X+10,Y+H-24,120,16,'Open saves folder',BTN,BTNH,()=>NARX.openFolder(),null,.75);
  pill(X+W/2-40,Y+H-24,80,16,'Back',BTN,BTNH,()=>{saveMenuState.saveOpen=false},null,.9)}
 

@@ -46,7 +46,7 @@ export function animUnit(u,dt,anyDmg,frame){let g=u.m;if(g&&!u.ttl&&(u.mt!==u.t|
  const d=g.userData,ty=u.type,z=u.t===1,wl=u.walk>0,T=sessionState.clockT+u.ph0;d.frame=frame;
  if(u.atk>0)u.atk-=dt;if(u.hurt>0)u.hurt-=dt;
  const fast=ty==='runner',heavy=ty==='brute'||ty==='bomber',armored=ty==='knight'||ty==='captain'||ty==='king'||ty==='guard';
- if(u.rg&&u.cap&&wl&&u.cap.walk>0&&u.cap.m)u.ap=u.cap.ap;u.ap+=dt*(wl?(z?(fast?14:heavy?4.6:6.4):(armored?7.6:9.5)):0)*(u.ttl?1:1.25);u.dy+=((u.gar||u.onF?u.gz:gh(u.x/TS,u.y/TS))-u.dy)*Math.min(1,dt*(u.gar?6:12));
+ if(u.rg&&u.cap&&wl&&u.cap.walk>0&&u.cap.m)u.ap=u.cap.ap;u.ap+=dt*(wl?(z?(fast?14:heavy?4.6:6.4):(armored?7.6:9.5)):0)*(u.ttl?1:1.25)*(.94+(u.uid%7)*.02);u.dy+=((u.gar||u.onF?u.gz:gh(u.x/TS,u.y/TS))-u.dy)*Math.min(1,dt*(u.gar?6:12));
  u.fa+=angd(u.fa,u.face||0)*Math.min(1,dt*12);
  const k=Math.min(1,dt*16),sw=wl?Math.sin(u.ap)*(z?(fast?.95:.55):armored?.65:.85):0,ab=wl?Math.abs(Math.sin(u.ap)):0;
  /* attack / work phases */

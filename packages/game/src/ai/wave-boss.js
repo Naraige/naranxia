@@ -1,5 +1,7 @@
 import { snd } from '../audio/sound.js';
-import { dist } from '../core/math.js';
+import { dist, rnd } from '../core/math.js';
+import { zcount } from './zombie-lanes.js';
+import { solidAt } from '../world/traversal.js';
 import { target } from '../gameplay/combat.js';
 import { mkU } from '../gameplay/entities.js';
 import { T, TS } from '../gameplay/rules.js';
@@ -22,7 +24,17 @@ export function bossStomp(u){const R=TS*3.4,x=u.x,y=u.y;snd('boom',x,y);ring(x,y
  for(const s of sessionState.structs)if(s.hp>0&&s.t!==1&&s.prog>=1){const dd=Math.max(0,dist(s.x,s.y,x,y)-(s.rad||20));if(dd<R)s.hp-=(70+sessionState.waveN*5)*(1-dd/R*.6)*(s.type==='castle'||s.type==='keep'?.5:1)}
  for(const e of sessionState.units)if(e.t===0&&e.hp>0&&!e.gar&&!e.shel){const dd=Math.max(0,dist(e.x,e.y,x,y)-T[e.type].r);if(dd<R){e.hp-=(18+sessionState.waveN*1.2)*(1-dd/R*.6);e.hurt=.25}}}
 
-export function bossAI(u,dt){u.bt=(u.bt||3)-dt;if(u.bt>0)return;const[b]=target(u,TS*3,0);if(b){u.bt=6.5;bossStomp(u)}else u.bt=.4}
+/* each named boss has one more ability on its own timer `bs` (sim time, saved with the unit):
+   0 Hollow Warden regrows 4 % hp every 12 s, 1 Bell-Bearer calls 6 husks every 16 s, 2 Frost King chills troops within 6 tiles every 9 s,
+   3 Hive Queen lays 4 runners every 12 s. Summons use the same seeded rnd as the wave spawns, so both co-op machines agree. */
+function bossPower(u,dt){u.bs=(u.bs||8)-dt;if(u.bs>0)return;const n=u.bn|0,x=u.x,y=u.y,wn=sessionState.waveN;
+ if(n===0){u.bs=12;u.hp=Math.min(u.bmax||u.hp,u.hp+(u.bmax||0)*.04);ring(x,y,'#b9ffb0',14,220)}
+ else if(n===1||n===3){u.bs=n===1?16:12;const k=n===1?6:4,ty=n===1?'husk':'runner';snd('boom',x,y);ring(x,y,n===1?'#ffd070':'#e070ff',16,260);
+  for(let i=0;i<k;i++){const px=x+rnd(-TS*2.2,TS*2.2),py=y+rnd(-TS*2.2,TS*2.2);if(solidAt(px,py)||zcount()>=720)continue;const z=mkU(1,ty,px,py,null,u.lane);z.hp*=1+.05*wn;z.ph=u.ph;sessionState.units.push(z)}}
+ else{u.bs=9;ring(x,y,'#9ad8ff',20,320);puff(x,y,'#cfeaff',10,90,{T:.7,z:.3,vz:2.2,g:6,s:.14});const R=TS*6;
+  for(const e of sessionState.units)if(e.t===0&&e.hp>0&&!e.gar&&!e.shel&&dist(e.x,e.y,x,y)<R){e.hp-=8+wn*.8;e.hurt=.25}}}
+
+export function bossAI(u,dt){bossPower(u,dt);u.bt=(u.bt||3)-dt;if(u.bt>0)return;const[b]=target(u,TS*3,0);if(b){u.bt=6.5;bossStomp(u)}else u.bt=.4}
 
 export function bossBar(UW,y){let b=null;for(const u of sessionState.units)if(u.boss&&u.hp>0){b=u;break}if(!b)return 0;const bw=Math.min(240,UW-40),bx=Math.round((UW-bw)/2),by=y+11;
  TC(BOSSN[b.bn|0]||'BOSS',UW/2,y+1,'#e9b6ff',.85);canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(bx-1,by-1,bw+2,8);canvasesState.ctx.fillStyle='#2a0e3c';canvasesState.ctx.fillRect(bx,by,bw,6);const fw=Math.max(1,Math.round(bw*Math.max(0,Math.min(1,b.hp/(b.bmax||b.hp)))));
