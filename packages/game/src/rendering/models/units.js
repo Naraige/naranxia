@@ -8,6 +8,8 @@ import { pxBanner, pxCapes } from './unit-accessories.js';
 import { fin, mcHead, mcLimbs, mcTorso, NOWEAP, toolGeos, unitPartsState, vb, vx, VX } from './unit-parts.js';
 import { zombieKit, zombiesState } from './zombies.js';
 import { thd, thp, ths } from '../../ui/kingdom-theme.js';
+import { mvGet } from './model-variants.js';
+import { guardPavois, mvUnitKit } from './unit-variants.js';
 
 export const unitsState = {
   ALB: 0,
@@ -22,7 +24,10 @@ export const HA={st:'#a9b0be',st2:'#878e9d',st3:'#666c7a',sth:'#cfd5df',ml:'#7f8
 
 function hkPut(Gx,m){return(x,y,z,w,h,d,c)=>{const o=geometryState.BMAT;geometryState.BMAT=m;try{bxc(Gx,x*VX,y*VX,z*VX,w*VX,h*VX,d*VX,c)}finally{geometryState.BMAT=o}}}
 
-function humanKit(type,AL,P){
+/* Studio boards: window.__MV = 'scout:B,king:C...' picks a look variant (model-variants.js); no key = this production kit */
+function humanKit(type,AL,P){const v=mvGet(type);return v?mvUnitKit(type,v,P,AL,{hkPut,HA,base:()=>humanKit0(type,AL,P)}):humanKit0(type,AL,P)}
+
+function humanKit0(type,AL,P){
  const{G,HG,LA,LG,AG}=P,t=hkPut(G,0),tm=hkPut(G,4),tc=hkPut(G,7),tg=hkPut(G,5),hd=hkPut(HG,0),hm=hkPut(HG,4),hc=hkPut(HG,7),hg=hkPut(HG,5),k=hkPut(LG,0),km=hkPut(LG,4),
   A=(m,dx,y,z,w,h,d,c)=>{hkPut(AG,m)(dx,y,z,w,h,d,c);hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c)},AE=(m,dx,y,z,w,h,d,c)=>hkPut(AG,m)(dx,y,z,w,h,d,c),AW=(m,dx,y,z,w,h,d,c)=>hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c),
   L=(m,x,y,z,w,h,d,c)=>hkPut(LA,m)(x,y,z,w,h,d,c),P1=thp(),P2=ths(),PD=thd(),skin='#c68a5e';
@@ -184,7 +189,7 @@ function mcModel(type,z){
 
  }
  if(PXON)pxCapes(type,P0);
- const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X},{hip:5.5,sh:10.4,neck:11,lx:.95,ax:2.76,h,sc});r.tools=type==='peasant'?T:null;r.weap=NOWEAP||heraldryState.MVAR==='cine'?null:type==='knight'?'sword':type==='captain'?'gsword':type==='king'?'rsword':type==='guard'?'halberd':type==='archer'?'bow':null;r.shield=(type==='knight'||type==='captain'||type==='guard')&&heraldryState.MVAR!=='cine'?shieldGeo(type,unitsState.ALB):null;r.shp=[.2*VX,-5.0*VX,(PXON?SHZ:2.1)*VX];unitPartsState.RT=null;return r}
+ const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X},{hip:5.5,sh:10.4,neck:11,lx:.95,ax:2.76,h,sc});r.tools=type==='peasant'?T:null;r.weap=NOWEAP||heraldryState.MVAR==='cine'?null:type==='knight'?'sword':type==='captain'?'gsword':type==='king'?'rsword':type==='guard'?'halberd':type==='archer'?'bow':null;r.shield=(type==='knight'||type==='captain'||type==='guard')&&heraldryState.MVAR!=='cine'?(type==='guard'&&mvGet('guard')?guardPavois(mvGet('guard')):shieldGeo(type,unitsState.ALB)):null;r.shp=[.2*VX,-5.0*VX,(PXON?SHZ:2.1)*VX];unitPartsState.RT=null;return r}
 
 
 export function mkModel0(type,z){return mcModel(type,z)}
