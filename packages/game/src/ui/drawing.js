@@ -1,5 +1,6 @@
 import { hex } from '../core/math.js';
 import { rngf } from '../core/random.js';
+import { cbOn } from '../core/prefs.js';
 import { L } from '../i18n/language.js';
 import { canvasesState, cv, cvs } from './canvases.js';
 import { btnAdd, ink, inBtn, setF } from './typography.js';
@@ -12,6 +13,9 @@ const TABA = ['#1e6a74','#7fe6e6','#0a2a2e'];
 export const GRN = ['#1d6670','#79dede','#0a272b'];
 export const GRNH = ['#278692','#a8f6f6','#0e3a40'];
 export const RDB = ['#7a2630','#e0707a','#3a0e14'];
+/* colour-blind palette (Okabe-Ito based): red/green status frames become orange/blue; recoloured in place so every import follows */
+const CBP={GRN:['#1f4f8f','#8cc4ff','#0a1a33'],GRNH:['#2a68b8','#bcdcff','#10284a'],RDB:['#8a4a00','#ffb347','#3a1e00']},CB0={GRN:GRN.slice(),GRNH:GRNH.slice(),RDB:RDB.slice()};
+export function applyCB(){const on=cbOn(),T={GRN,GRNH,RDB};for(const k in T)for(let i=0;i<3;i++)T[k][i]=(on?CBP:CB0)[k][i]}
 
 export function rr(x,y,w,h,r){r=Math.max(0,Math.min(r,w/2,h/2));canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+r,y);canvasesState.ctx.arcTo(x+w,y,x+w,y+h,r);canvasesState.ctx.arcTo(x+w,y+h,x,y+h,r);canvasesState.ctx.arcTo(x,y+h,x,y,r);canvasesState.ctx.arcTo(x,y,x+w,y,r);canvasesState.ctx.closePath()}
 

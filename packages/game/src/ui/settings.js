@@ -1,4 +1,4 @@
-import { pref, setPref } from '../core/prefs.js';
+import { cbOn, cbSet, pref, setPref } from '../core/prefs.js';
 import { applyVol, saveVol, sndOn, soundState, toggleSound } from '../audio/sound.js';
 import { startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
@@ -8,7 +8,7 @@ import { saveTheme } from '../rendering/kingdom-banner.js';
 import { rs } from '../rendering/resolution.js';
 import { DRS, GQU, renderer, sceneState, SHADOWS, sun } from '../rendering/scene.js';
 import { HK, uiBtn } from './build-menu.js';
-import { BTN, BTNH, BTNX, frame, GRN, GRNH, PAN } from './drawing.js';
+import { applyCB, BTN, BTNH, BTNX, frame, GRN, GRNH, PAN } from './drawing.js';
 import { hudState, inR, U } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
 import { THEME } from './kingdom-theme.js';
@@ -68,7 +68,8 @@ export function drawSettings(UW,UH,cx){const W=Math.min(UW-12,setTab===3?560:340
   T_('Sound effects',X+10,y+1,'#ead8ba',.85);slider(X+96,y,W-96-34,soundState.vS,v=>{soundState.vS=v;applyVol();saveVol()});T_(Math.round(soundState.vS*100)+'',X+W-28,y+1,'#d9b27a',.8);y+=19;
   const bw3=Math.min(100,(W-30)/2);pill(X+10,y,bw3,16,'Sound: '+(sndOn?'on':'off'),BTN,BTNH,toggleSound,null,.85);y+=20}
  else if(setTab===1){T_('Graphics',X+10,y+3,'#ead8ba',.85);{const bw6=Math.min(70,(W-130)/2);[['Ultra HD',1],['Fast',0]].forEach(([n,v],i)=>pill(X+W-10-(bw6+4)*(2-i)+4,y,bw6,16,n,BTN,BTNH,()=>setGfx(v),null,.8,sceneState.GQ===v))}y+=24;
-  T_('Interface size',X+10,y+3,'#ead8ba',.85);{const bw4=Math.min(52,(W-130)/4);[['Small',.8],['Normal',1],['Large',1.25],['Huge',1.6]].forEach(([n,v],i)=>pill(X+W-10-(bw4+4)*(4-i)+4,y,bw4,16,n,BTN,BTNH,()=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch(e){}rs()},null,.8,Math.abs(uiMul-v)<.01))}y+=24}
+  T_('Interface size',X+10,y+3,'#ead8ba',.85);{const bw4=Math.min(52,(W-130)/4);[['Small',.8],['Normal',1],['Large',1.25],['Huge',1.6]].forEach(([n,v],i)=>pill(X+W-10-(bw4+4)*(4-i)+4,y,bw4,16,n,BTN,BTNH,()=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch(e){}rs()},null,.8,Math.abs(uiMul-v)<.01))}y+=24
+  T_('Colour-blind mode',X+10,y+3,'#ead8ba',.85);{const tb=Math.min(110,W-120),on=cbOn();pill(X+W-10-tb,y,tb,16,on?'On':'Off',on?GRN:BTN,on?GRNH:BTNH,()=>{cbSet(!on);applyCB()},null,.8)}y+=24}
  else{T_('Language',X+10,y+3,'#ead8ba',.85);{const lw=Math.min(150,W-120);langBtn(X+W-10-lw,y-2,lw,20,LANG,()=>{languageState.langOpen=true;settingsState.settingsOpen=false},false)}y+=26;
   T_('Tutorial',X+10,y+3,'#ead8ba',.85);{const tb=Math.min(110,W-120),on=tutOn();pill(X+W-10-tb,y,tb,16,on?'Tutorial: on':'Tutorial: off',on?GRN:BTN,on?GRNH:BTNH,()=>tutSet(!on),null,.8)}y+=26;
   {const prow=(lab,k,d,a,b)=>{T_(lab,X+10,y+3,'#ead8ba',.85);const tb=Math.min(110,W-120),on=pref(k,d);pill(X+W-10-tb,y,tb,16,on?a:b,on?GRN:BTN,on?GRNH:BTNH,()=>setPref(k,!on),null,.8);y+=26};
@@ -95,4 +96,5 @@ export function initializeSettings() {
   KB = {...KDEF};
   try{Object.assign(KB,JSON.parse(localStorage.getItem('dk_keys')||'{}'))}catch(e){}
   syncHK();
+  applyCB();
 }
