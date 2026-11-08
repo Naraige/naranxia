@@ -95,9 +95,11 @@ function drawNotes(UW,UH,cx){const W=Math.min(UW-12,480),X=Math.max(6,Math.min(U
 
 const CHRON=['Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.','King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.','Around the bastion, other camps survive. They refused the King\'s rule: rebels, and neighbours. Some trade, some raid.','Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.'];
 
+const CHFR=[[5,'Wave 5: The first rebel scouts are seen on the hills. They watch the walls, and they do not wave.'],[10,'Wave 10: A giant walks with the horde. The old records call such things Wardens, the fallen leaders of the old world.'],[20,'Wave 20: A rebel envoy leaves a message at the gate: the camps know the King\'s light cannot burn forever.'],[30,'Wave 30: Only the bastion still stands. If dawn comes again, Naranxia will be more than a refuge.']];
+
 function drawChronicle(UW,UH,cx){const W=Math.min(UW-12,480),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=8,H=UH-16;frame(X,Y,W,H,PAN,6);TTL('Chronicle',X+10,Y+7,1.35);
  const maxW=W-36,top=Y+34,room=H-top+Y-34;let sc=.9,lines;
- const wrap=sc=>{const out=[];for(const it of CHRON){let cur='';for(const w of L(it).split(' ')){const t=cur?cur+' '+w:w;if(cur&&tw(t,sc)>maxW){out.push(cur);cur=w}else cur=t}if(cur)out.push(cur);out.push('')}return out};
+ const wrap=sc=>{const out=[];const bw=(sessionState.best&&sessionState.best.w)|0,list=CHRON.concat(CHFR.filter(f=>bw>=f[0]).map(f=>f[1]),CHFR.some(f=>bw<f[0])?['Reach a higher wave to read more.']:[]);for(const it of list){let cur='';for(const w of L(it).split(' ')){const t=cur?cur+' '+w:w;if(cur&&tw(t,sc)>maxW){out.push(cur);cur=w}else cur=t}if(cur)out.push(cur);out.push('')}return out};
  lines=wrap(sc);while(sc>.58&&lines.length*(10.5*sc/.82+1)>room){sc-=.04;lines=wrap(sc)}
  let y=top;const lh=Math.round(10.5*sc/.82+1);for(const t of lines){if(y>Y+H-34)break;if(t)T_(t,X+18,y,'#ead8ba',sc);y+=t?lh:Math.round(lh*.6)}
  pill(X+W/2-40,Y+H-24,80,16,'Back',BTN,BTNH,()=>{chrOpen=false},null,.9)}
