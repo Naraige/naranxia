@@ -1,0 +1,106 @@
+{
+ "title": "Hammerdawn Studio - modeles 3D",
+ "intro": "Quatre problemes de lisibilite, trois variantes chacun (A, B, C) plus le modele actuel (X). Reponds par un code comme \"1A 2B 3C 4A\".",
+ "sections": [
+  {
+   "name": "1 - Eclaireur vs archer (capuche verte)",
+   "variants": [
+    {
+     "id": "X",
+     "img": "r1_0.png",
+     "note": "Modele actuel (reference, choisir X pour ne rien changer). Archer / eclaireur / archer / eclaireur, de face puis de dos."
+    },
+    {
+     "id": "A",
+     "img": "r1_A.png",
+     "note": "Manteau court beige, besace + sac roule, casquette plate a plume, longue-vue."
+    },
+    {
+     "id": "B",
+     "img": "r1_B.png",
+     "note": "Long manteau beige, grand sac a armature qui depasse la tete, lunettes relevees, bandana."
+    },
+    {
+     "id": "C",
+     "img": "r1_C.png",
+     "note": "Poncho beige, chapeau de paille a larges bords, longue-vue en bandouliere sur le dos."
+    }
+   ]
+  },
+  {
+   "name": "2 - Roi vs garde royal",
+   "variants": [
+    {
+     "id": "X",
+     "img": "r2_0.png",
+     "note": "Modele actuel (reference, choisir X pour ne rien changer). Garde / roi / garde / roi, de face puis de dos."
+    },
+    {
+     "id": "A",
+     "img": "r2_A.png",
+     "note": "Roi : couronne haute a 5 pointes. Garde : crete plate longue + pavois de planches rouge et or."
+    },
+    {
+     "id": "B",
+     "img": "r2_B.png",
+     "note": "Roi : couronne a arceaux et croix sur globe. Garde : crete plate en eventail + pavois bleu a creneaux dores."
+    },
+    {
+     "id": "C",
+     "img": "r2_C.png",
+     "note": "Roi : couronne a flèches et bonnet rouge tres hauts. Garde : crete plate dorée haute + pavois pointu orne."
+    }
+   ]
+  },
+  {
+   "name": "3 - Paysan / ingenieur / emissaire",
+   "variants": [
+    {
+     "id": "X",
+     "img": "r3_0.png",
+     "note": "Modele actuel (reference, choisir X pour ne rien changer). Paysan, ingenieur, emissaire, ingenieur, emissaire (de face puis de dos)."
+    },
+    {
+     "id": "A",
+     "img": "r3_A.png",
+     "note": "Ingenieur : tablier cuir, casque jaune, gros marteau tenu droit. Emissaire : echarpe rouge aux deux bouts devant, parchemin roule tendu."
+    },
+    {
+     "id": "B",
+     "img": "r3_B.png",
+     "note": "Ingenieur : tablier + ceinture d outils, marteau geant dans le dos. Emissaire : echarpe flottant dans le dos, grande feuille deroulee."
+    },
+    {
+     "id": "C",
+     "img": "r3_C.png",
+     "note": "Ingenieur : forgeron bras nus, bandana, roue dentee dans le dos. Emissaire : ceinture rouge en bandouliere, toque, parchemin scelle leve."
+    }
+   ]
+  },
+  {
+   "name": "4 - Batiments du bastion lisibles de loin",
+   "variants": [
+    {
+     "id": "X",
+     "img": "r4_0.png",
+     "note": "Modele actuel (reference, choisir X pour ne rien changer). Observatoire (defense, bleu), grenier (economie, vert), sanctuaire (ville, or), forge (guerre, rouge)."
+    },
+    {
+     "id": "A",
+     "img": "r4_A.png",
+     "note": "Toit de la couleur de la fonction + mat a fanion et symbole unique."
+    },
+    {
+     "id": "B",
+     "img": "r4_B.png",
+     "note": "Toit de la couleur de la fonction + haute banderole suspendue avec losange lumineux."
+    },
+    {
+     "id": "C",
+     "img": "r4_C.png",
+     "note": "Toit de la couleur de la fonction + pilier-lanterne lumineux, visible aussi la nuit."
+    }
+   ]
+  }
+ ]
+}
