@@ -17,7 +17,7 @@ import { hudState, U } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
 import { dIc, IC } from './icons.js';
 import { PAL, THEME } from './kingdom-theme.js';
-import { mc, NCX, NCY, terrainState } from '../world/terrain.js';
+import { mc, NCX, NCY, RUINS, terrainState } from '../world/terrain.js';
 
 export const minimapState = {
   mmT: -9,
@@ -48,6 +48,7 @@ export function drawWorld(x,y,w,h,big){
  canvasesState.ctx.restore();
  const cs=big?13:9;for(const c0 of CASTLES())dIc(IC.home,x+c0.x/TS*sx-cs/2,y+c0.y/TS*sy-cs/2-1,cs);
  for(const u of sessionState.units)if(u.cv&&u.hp>0)circ(canvasesState.ctx,x+u.x/TS*sx,y+u.y/TS*sy,big?3.4:2.4,u.cv.back?'#c9a060':'#ffd23c','#2a1a08',1);
+ for(const r of RUINS.values()){if(!fowSeenAt(r.x,r.y))continue;const X=x+r.x/TS*sx,Y=y+r.y/TS*sy,q=big?4.5:3;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(X,Y-q);canvasesState.ctx.lineTo(X+q,Y);canvasesState.ctx.lineTo(X,Y+q);canvasesState.ctx.lineTo(X-q,Y);canvasesState.ctx.closePath();canvasesState.ctx.fillStyle=r.done?'#8a8a8a':'#f0c040';canvasesState.ctx.fill();canvasesState.ctx.strokeStyle='#2a1a08';canvasesState.ctx.lineWidth=1;canvasesState.ctx.stroke()}
  terrainState.ROUTES.forEach((R,k)=>{if(!VL.has(k))return;const p=R.pts[0],X=x+p[0]*sx,Y=y+p[1]*sy,r=big?6:4;circ(canvasesState.ctx,X,Y,r,sessionState.nextL.includes(k)?'#c01f2f':'#6a1a22','#fff',1);if(big)dIc(IC.skull,X-5,Y-5.5,10);else{canvasesState.ctx.fillStyle='#fff';canvasesState.ctx.fillRect(X-1,Y-1,2,2)}})}
 
 function dwBase(x,y,w,h,big){const sx=w/TW,sy=h/TH;
