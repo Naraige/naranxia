@@ -43,6 +43,12 @@ function humanKit(type,AL,P){
   hd(0,11.7,1.9,3.8,.7,.1,'#2a2a30');hd(-.95,11.7,2.0,1.0,.5,.06,'#9ad8ff');hd(.95,11.7,2.0,1.0,.5,.06,'#9ad8ff');
   AE(0,0,-5.2,1.0,.56,.56,4.4,'#8a6a3a');AE(4,0,-5.5,2.9,1.2,1.2,1.0,'#9aa3b0');
   return{h:15.6}}
+ if(type==='envoy'){const RB='#d9d2c0',RBD='#b8b09c',SS='#a83232';
+  mcTorso(G,{shirt:'#e4dccb',belt:SS});mcLimbs(G,LG,AG,{pants:'#6a6254',sleeve:'#e4dccb',hand:skin,shoes:'#3a2a18'});mcHead(G,skin,'#6a4a2a');
+  t(0,5.5,0,3.9,4.3,2.0,RB);t(0,6.1,1.0,.12,3.4,.04,RBD);t(0,5.5,0,3.98,.42,2.08,SS);t(0,9.4,0,4.1,.8,2.2,SS);
+  hc(0,14.1,0,4.2,.5,4.2,RB);hc(0,14.6,0,3.4,.6,3.4,SS);
+  AE(0,0,-3.2,1.0,.5,7.0,.5,'#8a6a3a');AE(0,0,-1.4,1.0+1.5,.2,2.4,2.6,'#f4f0e6');AE(0,0,-1.4,1.0+1.5,.22,.7,2.62,SS);
+  return{h:16}}
  if(type==='peasant'){
   const pv=zombiesState.ZVAR&&zombiesState.ZVAR.hint==='p'?zombiesState.ZVAR.v%6:0,psh=['#8a5a32','#6e7a3e','#7c4a42','#55667a','#8a7a52','#6a4a6a'][pv],psk=['#c68a5e','#d8a07a','#a8704a','#c88a62','#b67e56','#dca888'][pv],phr=['#5a3a1a','#2a1a10','#8a6a3a','#1e1a18','#a0522d','#6a6a62'][pv],phat=[0,2,0,1,3,0][pv];
   mcTorso(G,{shirt:psh,belt:'#5a3a1a'});mcLimbs(G,LG,AG,{pants:['#5a4a30','#4a4038','#5e5240','#3e3a36','#5a4a30','#4e4234'][pv],sleeve:psh,hand:psk,shoes:'#3a2a18'});mcHead(G,psk,phr);

@@ -1,4 +1,4 @@
-import { inTerr } from '../ai/kingdoms.js';
+import { BASES, inTerr } from '../ai/kingdoms.js';
 import { bossStomp } from '../ai/wave-boss.js';
 import { RHAS, roleAdj0 } from '../ai/worker-roles.js';
 import { forester, SAPL } from '../ai/workplaces.js';
@@ -17,7 +17,7 @@ import { kingOf, kingSkill0, kingTick, kskLeft } from '../gameplay/king-skills.j
 import { setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
 import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
 import { reset } from '../gameplay/reset.js';
-import { LH, RS, RS2, RT2, rulesState, T, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
+import { C, LH, RS, RS2, RT2, rulesState, T, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
 import { selectionState } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { simulationState } from '../gameplay/simulation.js';
@@ -126,6 +126,8 @@ export function installBrowserConsole() {
     TS: { get: () => TS },
     TW: { get: () => TW },
     RUINS: { get: () => RUINS },
+    BASES: { get: () => BASES },
+    C: { get: () => C },
     ensureAround: { get: () => ensureAround },
     hudDisplayState: { get: () => hudDisplayState },
     UPC: { get: () => UPC },

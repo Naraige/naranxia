@@ -47,7 +47,7 @@ export function fowReset(){fowSeen.fill(0);fowTex.fill(0);fowVis.fill(0);fogStat
 function fowStamp(x,y,r){const cx=x/TS/FWC,cy=y/TS/FWC,rr=r/FWC,r2=rr*rr,r3=Math.max(0,rr-1.5)*Math.max(0,rr-1.5),x0=Math.max(0,Math.floor(cx-rr)),x1=Math.min(FW-1,Math.ceil(cx+rr)),y0=Math.max(0,Math.floor(cy-rr)),y1=Math.min(FH-1,Math.ceil(cy+rr));
  for(let j=y0;j<=y1;j++){fowRA[j]=8;if(x0<fowLo[j])fowLo[j]=x0;if(x1>fowHi[j])fowHi[j]=x1;const dy=j+.5-cy,dy2=dy*dy;for(let i=x0;i<=x1;i++){const dx=i+.5-cx,d=dx*dx+dy2;if(d>r2)continue;const k=j*FW+i,v=d<=r3?2:1;if(fowVis[k]<v)fowVis[k]=v}}}
 
-export const VRN = {cannon:13,peasant:9,knight:11,archer:14,bannerman:11,captain:13,king:14,guard:11,scout:26,engineer:10};
+export const VRN = {cannon:13,peasant:9,knight:11,archer:14,bannerman:11,captain:13,king:14,guard:11,scout:26,engineer:10,envoy:14};
 const VSN = {castle:28,tower:19,barracks:13,gate:8,wall:6,market:9,torch:8,ballista:19,trebuchet:33,forester:9,guild:9,observatory:30,granary:7,bell:7,sanctuary:8,beacon:20,orchard:6,forge:8,embassy:8,warroom:8,sappers:7};
 export const vsnOf=s=>s.weapon?Math.max(VSN[s.type]||6,VSN[s.weapon]||0):(VSN[s.type]||6);
 

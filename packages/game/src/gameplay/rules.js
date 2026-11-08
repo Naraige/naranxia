@@ -58,9 +58,9 @@ export function initializeRules() {
   Object.assign(SH,{forge:380,embassy:320,warroom:340,sappers:260});
 
   /* new units: scout (fast, far-seeing, trained at barracks), engineer (no weapon, repairs buildings fast) */
-  Object.assign(T,{scout:{r:5,hp:40,spd:155,dmg:5,rng:17,cdt:1.2,col:'#7fb0a0'},engineer:{r:5,hp:50,spd:110,dmg:2,rng:12,cdt:1.6,col:'#d8b04a'}});
-  Object.assign(C,{scout:{g:40,f:20},engineer:{g:70,w:40,s:20}});
-  Object.assign(TRAIN,{scout:10,engineer:14});
+  Object.assign(T,{scout:{r:5,hp:40,spd:155,dmg:5,rng:17,cdt:1.2,col:'#7fb0a0'},engineer:{r:5,hp:50,spd:110,dmg:2,rng:12,cdt:1.6,col:'#d8b04a'},envoy:{r:5,hp:45,spd:120,dmg:1,rng:10,cdt:2,col:'#d9d2c0'}});
+  Object.assign(C,{scout:{g:40,f:20},engineer:{g:70,w:40,s:20},envoy:{g:80,f:20}});
+  Object.assign(TRAIN,{scout:10,engineer:14,envoy:12});
 
   Object.assign(C,{movec:{g:100,w:150},rotate:{}});
   Object.assign(SZ,{keep:2});

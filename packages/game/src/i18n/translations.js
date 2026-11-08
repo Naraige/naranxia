@@ -856,6 +856,11 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Envoy":["Envoyé","Enviado","Gesandter","Inviato","Enviado"],
+"Envoys":["Envoyés","Enviados","Gesandte","Inviati","Enviados"],
+"Send to a rebel camp: tribute of gold and food, once per camp":["À envoyer dans un camp rebelle : tribut d'or et de nourriture, une fois par camp","Enviar a un campamento rebelde: tributo de oro y comida, una vez por campamento","In ein Rebellenlager schicken: Tribut aus Gold und Nahrung, einmal pro Lager","Da inviare a un campo ribelle: tributo di oro e cibo, una volta per campo","Enviar a um acampamento rebelde: tributo de ouro e comida, uma vez por acampamento"],
+"Needs an embassy":["Nécessite une ambassade","Requiere una embajada","Benötigt eine Botschaft","Richiede un'ambasciata","Requer uma embaixada"],
+"Rebel camp tribute: +{0} gold, +{1} food":["Tribut du camp rebelle : +{0} or, +{1} nourriture","Tributo del campamento rebelde: +{0} de oro, +{1} de comida","Tribut des Rebellenlagers: +{0} Gold, +{1} Nahrung","Tributo del campo ribelle: +{0} oro, +{1} cibo","Tributo do acampamento rebelde: +{0} de ouro, +{1} de comida"],
 "WOLF PACK - fast raiders from the wild!":["LOUPS - des pillards rapides venus des terres sauvages !","LOBOS - ¡rápidos saqueadores de lo salvaje!","WOLFSRUDEL - schnelle Plünderer aus der Wildnis!","BRANCO DI LUPI - rapidi predoni dalle terre selvagge!","MATILHA - saqueadores rápidos vindos da natureza!"],
 "WOLF PACK - fast raiders from the wild! {0}":["LOUPS - des pillards rapides venus des terres sauvages ! {0}","LOBOS - ¡rápidos saqueadores de lo salvaje! {0}","WOLFSRUDEL - schnelle Plünderer aus der Wildnis! {0}","BRANCO DI LUPI - rapidi predoni dalle terre selvagge! {0}","MATILHA - saqueadores rápidos vindos da natureza! {0}"],
 "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold. {1}":["ÉCLIPSE - les morts se renforcent, mais des reliques tombent : +{0} or. {1}","ECLIPSE - los muertos se fortalecen, pero caen reliquias: +{0} de oro. {1}","FINSTERNIS - die Toten werden stärker, doch Relikte fallen: +{0} Gold. {1}","ECLISSI - i morti si rafforzano, ma cadono reliquie: +{0} oro. {1}","ECLIPSE - os mortos ficam mais fortes, mas relíquias caem: +{0} de ouro. {1}"],

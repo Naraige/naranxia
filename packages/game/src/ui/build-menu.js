@@ -13,6 +13,7 @@ import {
   tradeCost,
   tradeGain,
   TRADEK,
+  bastionHas,
 } from '../gameplay/economy.js';
 import { setStance } from '../gameplay/formations.js';
 import { HOMEC, LPL, playersState, setTier, stoneOn } from '../gameplay/players.js';
@@ -58,7 +59,7 @@ knight:'Knight',
 archer:'Archer',
 bannerman:'Bannerman',
 scout:'Scout',
-engineer:'Engineer',
+engineer:'Engineer',envoy:'Envoy',
 captain:'Captain',
 wall:'Wall',
 gate:'Gate',
@@ -170,7 +171,7 @@ market:['Market [:]','2x2 trading post: select it to sell','wood, stone or food 
 forester:["Forester's hut [[]",'2x2 log cabin: its peasant plants saplings','around it; they grow into trees (wood)'],
 guild:["Builders' guild []]",'2x2 workshop: select it to choose how many','peasants build, repair and reshape the land'],
 scout:['Scout','Fast and fragile, sees very far','Trained at the barracks'],
-engineer:['Engineer','Repairs nearby buildings fast','Trained at the castle'],
+engineer:['Engineer','Repairs nearby buildings fast','Trained at the castle'],envoy:['Envoy','Send to a rebel camp: tribute of gold and food, once per camp','Needs an embassy'],
 observatory:['Observatory','2x2 tower with a telescope: you see','far over the land around it'],
 granary:['Granary','2x2 food store on stilts:','+4 population limit'],
 bell:['Alarm bell','2x2 bell frame: troops around it','attack 15% faster'],
@@ -252,7 +253,7 @@ function ctxGroups(){const S=sel();if(S.length){const sol=S.some(u=>u.type!=='pe
  if(t==='guild')return[['Builders',['rb-','rb+']],['Repairers',['rr-','rr+']],['Terraformers',['rt-','rt+']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
  if(t==='academy')return[['Research',['upgrade','iron','plate','steel','mail','drill','tools','harvest','fletch','fire','bastion','oil','era']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
  if(t==='barracks')return[['Train',['knight','archer','bannerman','captain','scout'].concat(RS.done?['cannon']:[])],['Command',upI(curB()).concat(['army','idle','rally','repair','demolish','rotate','form','mode'])]];
- return[['Train',['peasant','engineer'].concat(royalBtns())],...buildGroups(true),['Command',upI(HOMEC()).concat(['army','idle','rallyc','repair','rotate','movec','form','mode'])]].concat(MP.on&&sessionState.CS2?[['Co-op',['convoy']]]:[])}
+ return[['Train',['peasant','engineer'].concat(bastionHas(HOMEC().pl|0,'embassy')?['envoy']:[]).concat(royalBtns())],...buildGroups(true),['Command',upI(HOMEC()).concat(['army','idle','rallyc','repair','rotate','movec','form','mode'])]].concat(MP.on&&sessionState.CS2?[['Co-op',['convoy']]]:[])}
 
 export function menuItems(){CMP=cv.width/hudDisplayState.UIS<420;const L=[];ctxGroups().forEach(([n,ks0])=>{let ks=ks0;if(n==='Command'&&sel().length<2)ks=ks.filter(k=>k==='stoneup'||k==='rally'||k==='rallyc'||k==='rotate'||k==='movec'||k==='repair'||(k==='demolish'&&selectionState.selB&&sessionState.structs.includes(selectionState.selB)));if(n==='Siege'&&!RS.done)return;if(!ks.length)return;if(L.length)L.push({gap:7});ks.forEach((k,i)=>{const nc=Object.keys(C[k.startsWith('s:')?k.slice(2):k]||{}).length,it={k:(k in T||k in C)?'buy':k,id:k,grp:n,first:i===0,w:CMP?25:MW+(nc>2?(nc-2)*9:0),h:CMP?25:MH};
   if(n!=='Build'&&TIERK.has(k)&&buildMenuState.BCAT)it.tr=0;
