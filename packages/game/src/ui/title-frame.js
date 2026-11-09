@@ -1,8 +1,9 @@
-import { pref } from '../core/prefs.js';
+import { pref, rmotion } from '../core/prefs.js';
 import { L } from '../i18n/language.js';
 import { sessionState } from '../gameplay/session.js';
 import { SEAS } from '../rendering/weather.js';
-import { canvasesState } from './canvases.js';
+import { canvasesState, cvs } from './canvases.js';
+import { hudDisplayState } from './hud-state.js';
 import { lastRun } from './title-weather.js';
 import { FFP } from './typography.js';
 
@@ -56,36 +57,63 @@ export function titleEmbers(UW, UH) {
   g.restore();
 }
 
-/* --- logo: pixel font, gold gradient, dark outline; fitted into maxW x maxH centred on (cx, cy). Returns the text width. --- */
-export function titleLogoW(txt, maxW, maxH) {
-  const g = canvasesState.ctx; g.save(); g.font = '700 100px ' + FFP;
-  const w100 = g.measureText(txt).width || 1, S = Math.min(maxW / w100 * 100, maxH / .8); g.restore();
-  return w100 * S / 100;
-}
+/* --- logo: block letters drawn in code (5 x 7 cells each), gold at the top to orange at the bottom, hard drop shadow, light relief on every block.
+   Rendered once per size into an offscreen canvas (plus a white copy for the slow sheen), then blitted: no per-frame text or path work. --- */
+const LGF = {
+  N: ['X...X', 'XX..X', 'XX..X', 'X.X.X', 'X..XX', 'X..XX', 'X...X'],
+  A: ['.XXX.', 'X...X', 'X...X', 'XXXXX', 'X...X', 'X...X', 'X...X'],
+  R: ['XXXX.', 'X...X', 'X...X', 'XXXX.', 'X.X..', 'X..X.', 'X...X'],
+  X: ['X...X', 'X...X', '.X.X.', '..X..', '.X.X.', 'X...X', 'X...X'],
+  I: ['XXXXX', '..X..', '..X..', '..X..', '..X..', '..X..', 'XXXXX'],
+};
+const LGROW = ['#fff3ac', '#ffe27a', '#ffd04e', '#ffbb38', '#fba42c', '#f58c22', '#ec741a'];
+const logoCells = txt => txt.length * 5 + (txt.length - 1);
+const logoU = (txt, maxW, maxH) => { const k = hudDisplayState.UIS || 1; return Math.max(1 / k, Math.floor(Math.min(maxW / (logoCells(txt) + 1), maxH / 7.9) * k) / k) };
+export function titleLogoW(txt, maxW, maxH) { return logoCells(txt) * logoU(txt, maxW, maxH) }
 export function badgeW(text) {
   const g = canvasesState.ctx; g.save(); g.font = '700 9px ' + FFP; const w = Math.ceil(g.measureText(text).width) + 22; g.restore(); return w;
 }
+let LGC = null;
+function logoCanvas(txt, u) {
+  const k = hudDisplayState.UIS || 1, p = Math.round(u * k), key = txt + '|' + p;
+  if (LGC && LGC.key === key) return LGC;
+  const nc = logoCells(txt), sh = Math.max(1, Math.round(p * .55)), ol = Math.max(1, Math.round(p * .22)), pad = ol, w = nc * p + pad * 2 + sh, h = 7 * p + pad * 2 + sh,
+    c = cvs(w, h), g = c.getContext('2d'), m = cvs(w, h), gm = m.getContext('2d'), cells = [];
+  const at = (i, j) => { if (j < 0 || j > 6 || i < 0) return false; const li = Math.floor(i / 6), ci = i % 6; if (ci === 5 || li >= txt.length) return false; return LGF[txt[li]][j][ci] === 'X' };
+  for (let j = 0; j < 7; j++) for (let i = 0; i < nc; i++) if (at(i, j)) cells.push([i, j]);
+  /* hard drop shadow, then the dark keyline */
+  g.fillStyle = 'rgba(8,4,2,.78)'; for (const [i, j] of cells) g.fillRect(pad + i * p + sh - ol, pad + j * p + sh - ol, p + ol * 2, p + ol * 2);
+  g.fillStyle = '#2a1606'; for (const [i, j] of cells) g.fillRect(pad + i * p - ol, pad + j * p - ol, p + ol * 2, p + ol * 2);
+  const e = Math.max(1, Math.round(p * .2));
+  for (const [i, j] of cells) {
+    const x = pad + i * p, y = pad + j * p;
+    g.fillStyle = LGROW[j]; g.fillRect(x, y, p, p);
+    /* relief: lit top / left edges where the block is exposed, shaded bottom / right edges */
+    if (!at(i, j - 1)) { g.fillStyle = 'rgba(255,255,255,.6)'; g.fillRect(x, y, p, e) }
+    if (!at(i - 1, j)) { g.fillStyle = 'rgba(255,255,255,.28)'; g.fillRect(x, y, e, p) }
+    if (!at(i, j + 1)) { g.fillStyle = 'rgba(130,48,0,.6)'; g.fillRect(x, y + p - e, p, e) }
+    if (!at(i + 1, j)) { g.fillStyle = 'rgba(130,48,0,.34)'; g.fillRect(x + p - e, y, e, p) }
+    if (p >= 6) { g.fillStyle = 'rgba(120,56,0,.13)'; g.fillRect(x + p - 1, y, 1, p); g.fillRect(x, y + p - 1, p, 1) }
+    gm.fillStyle = '#fffbea'; gm.fillRect(x, y, p, p);
+  }
+  return LGC = { key, c, m, w: w / k, h: h / k, pad: pad / k, lw: nc * p / k, lh: 7 * p / k };
+}
+/* fitted into maxW x maxH, centred on (cx, cy); returns the logo width */
 export function titleLogo(txt, cx, cy, maxW, maxH) {
-  const g = canvasesState.ctx;
-  g.save(); g.textBaseline = 'middle'; g.textAlign = 'center'; g.lineJoin = 'round';
-  let S = 100; g.font = '700 ' + S + 'px ' + FFP; const w100 = g.measureText(txt).width || 1;
-  S = Math.min(maxW / w100 * 100, maxH / .8); g.font = '700 ' + Math.round(S) + 'px ' + FFP;
-  const w = g.measureText(txt).width, y = cy + S * .04;
-  g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = S * .12; g.shadowOffsetY = S * .08; g.fillStyle = '#1d1006'; g.fillText(txt, cx, y);
-  g.shadowBlur = 0; g.shadowColor = 'transparent'; g.shadowOffsetY = 0;
-  g.lineWidth = Math.max(2, S * .14); g.strokeStyle = '#2a1606'; g.strokeText(txt, cx, y);
-  const gr = g.createLinearGradient(0, cy - S * .4, 0, cy + S * .4); gr.addColorStop(0, '#ffe39a'); gr.addColorStop(.5, '#ffb844'); gr.addColorStop(1, '#e88a1e');
-  g.fillStyle = gr; g.fillText(txt, cx, y);
-  if (!pref('rm', false)) {
-    const sw = ((sessionState.clockT * .16) % 1.7) - .3;
-    if (sw > -.25 && sw < 1.25) {
-      const lw = w, x0 = cx - lw / 2, bx = x0 + sw * lw, w2 = S * .12;
-      g.save(); g.beginPath(); g.moveTo(bx - w2 + S * .15, cy - S); g.lineTo(bx + w2 + S * .15, cy - S); g.lineTo(bx + w2 - S * .15, cy + S); g.lineTo(bx - w2 - S * .15, cy + S); g.closePath(); g.clip();
-      g.globalAlpha = .55; g.fillStyle = '#fffbea'; g.fillText(txt, cx, y); g.restore();
+  const g = canvasesState.ctx, u = logoU(txt, maxW, maxH), L0 = logoCanvas(txt, u), x = Math.round(cx - L0.lw / 2) - L0.pad, y = Math.round(cy - L0.lh / 2) - L0.pad;
+  g.save(); g.imageSmoothingEnabled = false;
+  g.drawImage(L0.c, x, y, L0.w, L0.h);
+  if (!rmotion()) {
+    /* slow sheen: a slanted band of the white copy crosses the letters every 9 s */
+    const sw = ((performance.now() / 9000) % 1) * 2.4 - .5;
+    if (sw > -.2 && sw < 1.2) {
+      const bx = x + sw * L0.w, w2 = L0.lh * .5, sl = L0.lh * .35;
+      g.beginPath(); g.moveTo(bx - w2 + sl, y); g.lineTo(bx + w2 + sl, y); g.lineTo(bx + w2 - sl, y + L0.h); g.lineTo(bx - w2 - sl, y + L0.h); g.closePath(); g.clip();
+      g.globalAlpha *= .5; g.drawImage(L0.m, x, y, L0.w, L0.h);
     }
   }
   g.restore();
-  return w;
+  return L0.lw;
 }
 
 /* --- ornate corner: square volutes (9x9 pixel pattern), B = bright gold, G = gold --- */
