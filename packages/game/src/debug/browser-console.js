@@ -10,7 +10,7 @@ import { diagnosticsState, ERRLOG } from './diagnostics.js';
 import { bugReport, devAct, devToggle } from './tools.js';
 import { ach, ACH } from '../gameplay/achievements.js';
 import { build, constructionState, setBuildHandler, tilesFor, valid } from '../gameplay/construction.js';
-import { buy, PRICE, setTrainHandler, train } from '../gameplay/economy.js';
+import { buy, economyState, FAT, PBASE, PRICE, priceTick, setTrainHandler, train } from '../gameplay/economy.js';
 import { mkU, spawnPos } from '../gameplay/entities.js';
 import { wavePreview } from '../gameplay/wave-preview.js';
 import { formationsState, order, setOrderHandler } from '../gameplay/formations.js';
@@ -18,7 +18,7 @@ import { kingOf, kingSkill0, kingTick, kskLeft } from '../gameplay/king-skills.j
 import { setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
 import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
 import { reset } from '../gameplay/reset.js';
-import { C, LH, RS, RS2, RT2, rulesState, T, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
+import { C, LH, RS, RS2, RT2, rulesState, rxLock, T, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
 import { selectionState } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { simulationState } from '../gameplay/simulation.js';
@@ -108,6 +108,11 @@ export function installBrowserConsole() {
     MP: { get: () => MP },
     OBJ: { get: () => statisticsState.OBJ, set: value => { statisticsState.OBJ = value; } },
     PRICE: { get: () => PRICE },
+    FAT: { get: () => FAT },
+    PBASE: { get: () => PBASE },
+    priceTick: { get: () => priceTick },
+    economyState: { get: () => economyState },
+    rxLock: { get: () => rxLock },
     PUD: { get: () => PUD },
     RESP: { get: () => playersState.RESP, set: value => { playersState.RESP = value; } },
     RHAS: { get: () => RHAS },
