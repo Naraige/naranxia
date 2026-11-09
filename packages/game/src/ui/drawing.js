@@ -27,7 +27,7 @@ function lgc(k,y,h,a,b,c,d,e,f){k+='|'+y+'|'+h;let g=LGC.get(k);if(g===undefined
 export function arcDia(cx,cy,r,c){canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(cx,cy-r-1);canvasesState.ctx.lineTo(cx+r+1,cy);canvasesState.ctx.lineTo(cx,cy+r+1);canvasesState.ctx.lineTo(cx-r-1,cy);canvasesState.ctx.closePath();canvasesState.ctx.fillStyle='#07060b';canvasesState.ctx.fill();
  const g=canvasesState.ctx.createLinearGradient(0,cy-r,0,cy+r);g.addColorStop(0,shd(c,.5));g.addColorStop(.5,c);g.addColorStop(1,shd(c,-.5));canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(cx,cy-r);canvasesState.ctx.lineTo(cx+r,cy);canvasesState.ctx.lineTo(cx,cy+r);canvasesState.ctx.lineTo(cx-r,cy);canvasesState.ctx.closePath();canvasesState.ctx.fillStyle=g;canvasesState.ctx.fill()}
 
-export function frame(x,y,w,h,p,r){if(p===SLOT||p===SLOTH||p===SLOTX){mcSlot(x,y,w,h,p);return}if(p===TIPP){mcTip(x,y,w,h);return}
+export function frame(x,y,w,h,p,r){if(p===SLOT||p===SLOTH||p===SLOTX){mcSlot(x,y,w,h,p);return}if(p===TIPP){mcTip(x,y,w,h);return}if(MS.on&&menuFrame(x,y,w,h,p))return;
  x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);
  if(p===CHAT){canvasesState.ctx.fillStyle='rgba(12,17,26,.74)';canvasesState.ctx.fillRect(x,y,w,h);
   if(y<0&&w>200){const gl=canvasesState.ctx.createLinearGradient(x,0,x+w,0);gl.addColorStop(0,'rgba(120,210,255,0)');gl.addColorStop(.08,'rgba(120,210,255,.55)');gl.addColorStop(.92,'rgba(120,210,255,.55)');gl.addColorStop(1,'rgba(120,210,255,0)');canvasesState.ctx.fillStyle='rgba(5,4,8,.75)';canvasesState.ctx.fillRect(x,y+h,w,1);canvasesState.ctx.fillStyle=gl;canvasesState.ctx.fillRect(x,y+h-1,w,1)}return}
@@ -47,6 +47,45 @@ export function frame(x,y,w,h,p,r){if(p===SLOT||p===SLOTH||p===SLOTX){mcSlot(x,y
   g.fillStyle=big?UIT.shadeBig:UIT.shade;bev(x,y+(big?4:2),w,h,bs(w,h));g.fill();
   g.fillStyle=lgc('pg'+(big?1:0),y,h,0,'rgba(20,27,40,.80)',1,'rgba(10,14,22,.80)');bev(x,y,w,h,bs(w,h));g.fill();
   g.strokeStyle=UIT.gold;g.lineWidth=1;bev(x+.5,y+.5,w-1,h-1,bs(w,h));g.stroke()}
+
+
+/* ---- menu skin (lot A): while a menu screen is drawn, panels become double gold filets and buttons night-blue plates with a gold rim.
+   drawTitle switches it on for the whole title / settings / save / language / setup screens; HUD and in-game panels never see it. ---- */
+export const MS={on:false};
+export const menuSkin=v=>{MS.on=!!v};
+const MPLATE={rest:['#27385a','#18233b'],hv:['#37507c','#233657'],ok:['#1b5a66','#10404a'],okh:['#25808e','#165662'],bad:['#5c2231','#3a1521'],off:['#161b25','#10141b']};
+function menuFrame(x,y,w,h,p){const btn=p===BTN||p===BTNH||p===GRN||p===GRNH||p===RDB||p===BTNX||p===TABA;
+ if(p===PAN||p===INV){if(h<60||w<100)return false;menuPanel(Math.round(x),Math.round(y),Math.round(w),Math.round(h));return true}
+ if(!btn)return false;menuPlate(Math.round(x),Math.round(y),Math.round(w),Math.round(h),p);return true}
+
+export function menuPanel(x,y,w,h){const g=canvasesState.ctx,s=bs(w,h);
+ g.fillStyle='rgba(0,0,0,.3)';bev(x,y+3,w,h,s);g.fill();
+ g.fillStyle=lgc('mpn',y,h,0,'rgba(22,30,46,.92)',1,'rgba(9,13,21,.94)');bev(x,y,w,h,s);g.fill();
+ g.lineWidth=1;g.strokeStyle='rgba(184,149,76,.92)';bev(x+.5,y+.5,w-1,h-1,s);g.stroke();
+ const i=Math.min(5,Math.floor(Math.min(w,h)/8));g.strokeStyle='rgba(184,149,76,.42)';bev(x+i+.5,y+i+.5,w-2*i-1,h-2*i-1,s/2);g.stroke();
+ if(w>=140){for(const yy of[y+.5,y+h-.5]){msDia(x+w/2,yy,3.6,'#f0cd73');msDia(x+w/2,yy,1.5,'#0a0e16')}}}
+
+function msDia(cx,cy,r,c){const g=canvasesState.ctx;g.beginPath();g.moveTo(cx,cy-r);g.lineTo(cx+r,cy);g.lineTo(cx,cy+r);g.lineTo(cx-r,cy);g.closePath();g.fillStyle=c;g.fill()}
+
+export function menuPlate(x,y,w,h,p){const g=canvasesState.ctx,hv=p===BTNH||p===TABA,okk=p===GRN||p===GRNH,okh=p===GRNH,bad=p===RDB,off=p===BTNX,hot=hv||okh,s=Math.max(.5,Math.min(1.5,h/12,w/12)),
+  k=off?'off':bad?'bad':okh?'okh':okk?'ok':hv?'hv':'rest',c=MPLATE[k];
+ g.fillStyle='rgba(0,0,0,.28)';bev(x,y+(h>16?2:1),w,h,s);g.fill();
+ g.save();if(hot&&!off){g.shadowColor=okk?'rgba(121,222,222,.6)':'rgba(240,205,115,.6)';g.shadowBlur=h>16?10:6}
+ g.globalAlpha=off?.85:1;g.fillStyle=lgc('mp'+k,y,h,0,c[0],1,c[1]);bev(x,y,w,h,s);g.fill();g.restore();
+ if(!off){g.fillStyle='rgba(255,255,255,.08)';g.fillRect(x+s*2,y+1,Math.max(0,w-s*4),1)}
+ g.lineWidth=1;g.strokeStyle=off?'rgba(184,149,76,.32)':okk?(okh?'#a8f6f6':'#79dede'):bad?'#e0707a':hv?'#f0cd73':'rgba(201,162,79,.88)';bev(x+.5,y+.5,w-1,h-1,s);g.stroke();
+ if(hot&&!okk&&h>=16&&w>=110){msDia(x+h*.55,y+h/2,2.2,'#f0cd73');msDia(x+w-h*.55,y+h/2,2.2,'#f0cd73')}}
+
+/* padlock for disabled menu buttons (12 design units) */
+export function drawLock(cx,cy,sz,col){const g=canvasesState.ctx,u=sz/12;g.save();g.translate(cx-6*u,cy-6*u);g.fillStyle=col;g.strokeStyle=col;g.lineWidth=1.6*u;g.beginPath();g.arc(6*u,4.6*u,2.7*u,Math.PI,0);g.stroke();g.fillRect(1.8*u,5.2*u,8.4*u,6*u);g.fillStyle='rgba(10,14,22,.9)';g.fillRect(5.3*u,7*u,1.4*u,2.4*u);g.restore()}
+
+
+/* tab on the top edge of a panel: stair-cut upper corners, gold rim; the active one is lit and open at the bottom */
+export function tabPlate(x,y,w,h,on,hv){const g=canvasesState.ctx,s=1.2;x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);
+ g.beginPath();g.moveTo(x,y+h);g.lineTo(x,y+s*2);g.lineTo(x+s,y+s*2);g.lineTo(x+s,y+s);g.lineTo(x+s*2,y+s);g.lineTo(x+s*2,y);g.lineTo(x+w-s*2,y);g.lineTo(x+w-s*2,y+s);g.lineTo(x+w-s,y+s);g.lineTo(x+w-s,y+s*2);g.lineTo(x+w,y+s*2);g.lineTo(x+w,y+h);g.closePath();
+ g.fillStyle=lgc('tb'+(on?1:hv?2:0),y,h,0,on?'rgba(46,70,110,.96)':hv?'rgba(34,46,70,.95)':'rgba(16,22,34,.93)',1,on?'rgba(24,34,56,.97)':'rgba(12,16,26,.95)');g.fill();
+ g.lineWidth=1;g.strokeStyle=on?'#f0cd73':hv?'rgba(240,205,115,.8)':'rgba(184,149,76,.75)';g.stroke();
+ if(on){g.fillStyle='rgba(24,34,56,.98)';g.fillRect(x+1,y+h-1,w-2,3)}}
 
 /* shared UI tokens: corner radii, hairline border and soft shadows used by panels, slots, tooltips and the minimap frame */
 export const UIT={rad:{panel:6,small:5,tip:8},line:'rgba(255,255,255,.16)',gold:'rgba(184,149,76,.9)',goldDim:'rgba(184,149,76,.45)',shade:'rgba(0,0,0,.22)',shadeBig:'rgba(0,0,0,.34)'};

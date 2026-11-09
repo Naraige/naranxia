@@ -75,7 +75,9 @@ export function drawSettings(UW,UH,cx){const W=Math.min(UW-12,setTab===3?560:340
   {const prow=(lab,k,d,a,b)=>{T_(lab,X+10,y+3,'#ead8ba',.85);const tb=Math.min(110,W-120),on=pref(k,d);pill(X+W-10-tb,y,tb,16,on?a:b,on?GRN:BTN,on?GRNH:BTNH,()=>setPref(k,!on),null,.8);y+=26};
    prow('Pause when away','ap',true,'On','Off');prow('Autosave','as',true,'On','Off');prow('Reduce motion','rm',false,'On','Off');prow('Studio intro','qi',false,'First launch only','Every launch')}
   T_('Bug report',X+10,y+3,'#ead8ba',.85);{const tb=Math.min(110,W-120);pill(X+W-10-tb,y,tb,16,'Report a bug [F8]',BTN,BTNH,()=>{settingsState.settingsOpen=false;bugReport()},null,.8)}y+=26}
- pill(X+W/2-40,Y+H-22,80,16,'Back',BTN,BTNH,()=>{settingsState.settingsOpen=false;settingsState.rebind=null;setTab=0;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}},null,.9)}
+ pill(X+W/2-40,Y+H-22,80,16,'Back',BTN,BTNH,settingsBack,null,.9)}
+
+export function settingsBack(){settingsState.settingsOpen=false;settingsState.rebind=null;setTab=0;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}}
 
 export function initializeSettings() {
   nmI = document.createElement('input');

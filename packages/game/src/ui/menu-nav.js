@@ -5,10 +5,11 @@ import { inputState } from '../input/state.js';
 /* ================= TITLE MENU: keyboard and gamepad navigation, hover feedback =================
    The menu registers its buttons in drawing order every frame (navBegin / navAdd). Up / Down (or the pad's d-pad / left stick) move the
    selection, Enter / Space / pad A press it, Esc (pad B) runs the current "back" action. The mouse takes over when it moves. */
-export const NAV = { sel: -1, fns: [], active: false, onEsc: null, mx: -1, my: -1, pad: { up: 0, dn: 0, ok: 0, bk: 0 } };
+export const NAV = { sel: -1, fns: [], active: false, horiz: false, onEsc: null, mx: -1, my: -1, pad: { up: 0, dn: 0, ok: 0, bk: 0 } };
 
 export function navBegin(on) {
   NAV.fns = [];
+  NAV.horiz = false;
   NAV.active = !!on;
   if (!on) NAV.sel = -1;
 }
@@ -52,6 +53,8 @@ export function initializeMenuNav() {
     if (!NAV.active || modalOpen()) return;
     if (e.key === 'ArrowDown') { e.preventDefault(); move(1) }
     else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1) }
+    else if (NAV.horiz && e.key === 'ArrowRight') { e.preventDefault(); move(1) }
+    else if (NAV.horiz && e.key === 'ArrowLeft') { e.preventDefault(); move(-1) }
     else if (e.key === 'Enter' || (e.key === ' ' && !sessionState.inGame)) { e.preventDefault(); press() }
   });
 }
@@ -66,8 +69,8 @@ export function navPoll() {
   let g = null;
   try { const l = navigator.getGamepads ? navigator.getGamepads() : []; for (const p of l) if (p && p.connected) { g = p; break } } catch (e) { return }
   if (!g) return;
-  const b = i => !!(g.buttons[i] && g.buttons[i].pressed), ax = g.axes[1] || 0, P = NAV.pad;
-  const up = b(12) || ax < -.6, dn = b(13) || ax > .6, ok = b(0), bk = b(1);
+  const b = i => !!(g.buttons[i] && g.buttons[i].pressed), ax = g.axes[1] || 0, ax0 = NAV.horiz ? (g.axes[0] || 0) : 0, P = NAV.pad;
+  const up = b(12) || ax < -.6 || (NAV.horiz && (b(14) || ax0 < -.6)), dn = b(13) || ax > .6 || (NAV.horiz && (b(15) || ax0 > .6)), ok = b(0), bk = b(1);
   if (NAV.active && up && !P.up) move(-1);
   if (NAV.active && dn && !P.dn) move(1);
   if (NAV.active && ok && !P.ok) press();
