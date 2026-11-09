@@ -3,6 +3,7 @@ import { EXTRA } from './langs/index.js';
 import { titleSceneState } from '../rendering/title-scene.js';
 import { uiBtn } from '../ui/build-menu.js';
 import { canvasesState } from '../ui/canvases.js';
+import { kitScreen, listBegin, listEnd } from '../ui/menu-kit.js';
 import { BTN, BTNH, frame, GRN, GRNH, PAN } from '../ui/drawing.js';
 import { pill } from '../ui/minimap.js';
 import { FFP, fontOf, ink, inBtn, setF, TWM } from '../ui/typography.js';
@@ -41,7 +42,7 @@ export function i18nDom(){const roots=[...document.querySelectorAll('body > div,
  if(!I18NO&&typeof MutationObserver!=='undefined'){I18NO=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')fix(m.target);else for(const a of m.addedNodes)fix(a)}});for(const r of roots)I18NO.observe(r,{subtree:true,childList:true,characterData:true})}}
 
 /* little flags drawn in code */
-function drawFlag(code,x,y,w,h){canvasesState.ctx.save();canvasesState.ctx.beginPath();canvasesState.ctx.rect(x,y,w,h);canvasesState.ctx.clip();const R_=(c,a,b,cc,d)=>{canvasesState.ctx.fillStyle=c;canvasesState.ctx.fillRect(x+a*w,y+b*h,cc*w,d*h)};
+export function drawFlag(code,x,y,w,h){canvasesState.ctx.save();canvasesState.ctx.beginPath();canvasesState.ctx.rect(x,y,w,h);canvasesState.ctx.clip();const R_=(c,a,b,cc,d)=>{canvasesState.ctx.fillStyle=c;canvasesState.ctx.fillRect(x+a*w,y+b*h,cc*w,d*h)};
  if(code==='fr'){R_('#0055a4',0,0,1/3,1);R_('#fff',1/3,0,1/3,1);R_('#ef4135',2/3,0,1/3,1)}
  else if(code==='it'){R_('#009246',0,0,1/3,1);R_('#fff',1/3,0,1/3,1);R_('#ce2b37',2/3,0,1/3,1)}
  else if(code==='de'){R_('#000',0,0,1,1/3);R_('#dd0000',0,1/3,1,1/3);R_('#ffce00',0,2/3,1,1/3)}
@@ -62,9 +63,10 @@ function drawFlag(code,x,y,w,h){canvasesState.ctx.save();canvasesState.ctx.begin
 
 export function langBtn(x,y,w,h,i,fn,sel){uiBtn(x,y,w,h,sel?GRN:BTN,sel?GRNH:BTNH,fn,null,(X,Y,W2,H2)=>{const fh=Math.min(H2-6,13),fw=fh*1.5,ls=fitSc(LANGS[i][0],W2-fw-20,1);drawFlag(LANGS[i][1],X+6,Y+(H2-fh)/2,fw,fh);T_(LANGS[i][0],X+12+fw,Y+(H2-9*ls)/2+.5,'#fff',ls)})}
 
-export function drawLang(UW,UH,cx){const two=LANGS.length>8,rows=two?Math.ceil(LANGS.length/2):LANGS.length,W=Math.min(UW-12,two?500:360),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),H=Math.min(UH-16,62+rows*26+30),Y=Math.max(8,(UH-H)/2),cw=two?(W-30)/2:W-24;frame(X,Y,W,H,PAN,6);TTL(L('Choose your language'),X+10,Y+7,1.3);
- LANGS.forEach((l,i)=>langBtn(X+12+(two?(i%2)*(cw+6):0),Y+34+(two?(i/2|0):i)*26,cw,22,i,()=>{setLang(i);languageState.langOpen=false},LANG===i));
- pill(X+W/2-40,Y+H-24,80,16,'Back',BTN,BTNH,()=>{languageState.langOpen=false},null,.9)}
+export function drawLang(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'lng',title:'Language',close:back,fh,maxW:380}),l=listBegin('lng',b.x,b.y+2,b.w,b.h-2),g=canvasesState.ctx;
+ LANGS.forEach((x,i)=>l.row({label:x[0],raw:true,on:LANG===i,icw:1.45,ic:(X,Y,S)=>drawFlag(x[1],X+1,Y+1,S*1.45,S-2),fn:()=>{setLang(i);back()},
+  right:LANG===i?(rx,yy,h)=>{g.strokeStyle='#ffd86b';g.lineWidth=2;g.lineCap='butt';g.beginPath();g.moveTo(rx-11,yy+h/2);g.lineTo(rx-7,yy+h/2+4);g.lineTo(rx,yy+h/2-4);g.stroke();return 14}:null},22));
+ listEnd()}
 
 export const tw=(s,sc)=>{const f=fontOf(9*(sc||1));canvasesState.ctx.font=f;s=L(String(s));const k=f+'\u0001'+s;let v=TWM.get(k);if(v===undefined){v=canvasesState.ctx.measureText(s).width;if(TWM.size>3000)TWM.clear();TWM.set(k,v)}return v};
 

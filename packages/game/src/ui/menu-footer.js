@@ -60,6 +60,6 @@ export function menuFooter(UW, UH, items, o) {
   const pad = padOn(), sc = .85, gap = 12;
   const its = items.map(i => { const k = i[0], round = pad && !!PADK[k], c = k === '^v' ? (pad ? 'D-pad' : '^v') : pad && PADK[k] ? PADK[k] : L(k); return { c, t: i[1], round } });
   const ws = its.map(i => cap(0, 0, i.c, i.round, true) + 5 + tw(i.t, sc));
-  let x = Math.round(UW / 2 - (ws.reduce((a, b) => a + b, 0) + gap * (its.length - 1)) / 2);
+  let x = Math.round((o.cx != null ? o.cx : UW / 2) - (ws.reduce((a, b) => a + b, 0) + gap * (its.length - 1)) / 2);
   its.forEach((i, k) => { const w = cap(x, cy - CAPH / 2, i.c, i.round); T_(i.t, x + w + 5, cy - 4.5, '#eef2fa', sc); x += ws[k] + gap });
 }

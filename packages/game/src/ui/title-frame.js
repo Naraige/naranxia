@@ -17,7 +17,7 @@ export function titleBlur(on) {
   try {
     g3 = g3 || document.getElementById('g3');
     if (!g3) return;
-    g3.style.filter = on ? 'blur(2.2px) brightness(.78)' : '';
+    g3.style.filter = on ? 'blur(1.2px) brightness(.86)' : '';
     g3.style.transform = on ? 'scale(1.025)' : '';
   } catch (e) { }
 }
@@ -150,4 +150,37 @@ export function titleBadge(cx, cy, text, maxW) {
 export function seasonName() {
   const r = lastRun();
   return r ? L(SEAS[((r.w / 4) | 0) % 4]).toUpperCase() : '';
+}
+
+/* ================= lobby dressing (revamp): tip banner, hexagon counters, pixel glyphs. Original art, drawn in code. ================= */
+const GLY = {
+  crown: ['X..X..X', 'X..X..X', 'XX.X.XX', 'XXXXXXX', 'XXXXXXX', '.......', 'XXXXXXX'],
+  skull: ['.XXXXX.', 'XXXXXXX', 'X..X..X', 'X..X..X', 'XXXXXXX', '.XXXXX.', '.X.X.X.'],
+  glass: ['XXXXXXX', '.X...X.', '..X.X..', '...X...', '..X.X..', '.X...X.', 'XXXXXXX'],
+  bulb: ['..XXX..', '.X...X.', '.X.X.X.', '.X.X.X.', '..XXX..', '..XXX..', '...X...'],
+};
+export function glyph(name, x, y, u, col) {
+  const g = canvasesState.ctx, P = GLY[name]; g.fillStyle = col;
+  for (let j = 0; j < 7; j++) for (let i = 0; i < 7; i++) if (P[j][i] === 'X') g.fillRect(x + i * u, y + j * u, u, u);
+}
+/* flat-top hexagon badge with a glyph */
+export function hexBadge(cx, cy, r, name) {
+  const g = canvasesState.ctx, P = (rr, dy) => { g.beginPath(); for (let i = 0; i < 6; i++) { const a = Math.PI / 3 * i; g.lineTo(cx + Math.cos(a) * rr, cy + (dy || 0) + Math.sin(a) * rr) } g.closePath() };
+  g.fillStyle = 'rgba(0,0,0,.45)'; P(r + 1, 2); g.fill();
+  const gr = g.createLinearGradient(0, cy - r, 0, cy + r); gr.addColorStop(0, '#2c3a5e'); gr.addColorStop(1, '#141b30'); g.fillStyle = gr; P(r); g.fill();
+  g.lineWidth = 1.5; g.strokeStyle = '#f0cd73'; g.stroke(); g.lineWidth = 1; g.strokeStyle = 'rgba(10,8,4,.7)'; P(r + 1.2); g.stroke();
+  const u = Math.max(1, Math.round(r / 6)); glyph(name, Math.round(cx - 3.5 * u), Math.round(cy - 3.5 * u), u, '#ffe39a');
+}
+/* tip banner: dark strip, gold hairline, bulb icon; the text shrinks, then ends with an ellipsis. Returns its height. */
+export function tipBanner(UW, y, m, text, T_, tw) {
+  const g = canvasesState.ctx, h = 16, maxW = UW - 2 * m; let sc = .82, t = L(text);
+  while (sc > .64 && tw(t, sc) + 34 > maxW) sc -= .03;
+  if (tw(t, sc) + 34 > maxW) { while (t.length > 4 && tw(t + '\u2026', sc) + 34 > maxW) t = t.slice(0, -1); t += '\u2026' }
+  const w = Math.ceil(tw(t, sc)) + 34, x = Math.round(UW / 2 - w / 2);
+  g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(x + 1, y + 2, w, h);
+  g.fillStyle = 'rgba(8,10,18,.82)'; g.fillRect(x, y, w, h);
+  g.fillStyle = 'rgba(184,149,76,.75)'; g.fillRect(x, y, w, 1); g.fillRect(x, y + h - 1, w, 1); g.fillStyle = '#f0cd73'; g.fillRect(x, y, 2, h); g.fillRect(x + w - 2, y, 2, h);
+  glyph('bulb', x + 9, y + 4.5, 1, '#ffd86b');
+  T_(t, x + 23, y + (h - 9 * sc) / 2, '#e9e4d6', sc);
+  return h;
 }

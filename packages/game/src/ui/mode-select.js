@@ -2,13 +2,11 @@ import { L, T_, TC, TTL, tw } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { mpOpen, mpOpenJoin } from '../multiplayer/lobby.js';
 import { settingsState } from './settings.js';
-import { uiBtn } from './build-menu.js';
 import { canvasesState } from './canvases.js';
-import { BTN, BTNH, PAN, focusRing } from './drawing.js';
+import { focusRing } from './drawing.js';
 import { footH, menuFooter } from './menu-footer.js';
+import { bevelBtn, KC, kitEnd, kitHitAdd, kitScreen, kitTabs, pxText } from './menu-kit.js';
 import { NAV, navAdd, navBegin, navPoll } from './menu-nav.js';
-import { ornLine } from './title-frame.js';
-import { pill } from './minimap.js';
 import { inR, U } from './hud.js';
 
 /* ================= game mode choice (lot C): three cards with check / cross lines, keyboard and gamepad navigable =================
@@ -29,6 +27,17 @@ const CARDS = [
   { id: 'join', name: 'Join', sub: 'Enter a friend\'s room code', btn: 'Join', go: () => { modeState.open = false; mpOpenJoin() },
     rows: [[1, 'Enter the host\'s code'], [1, 'Same world as the host'], [1, 'Chat with your partner'], [0, 'Choose the world']] },
 ];
+
+/* the current mode: shown on the title band over the Play button, kept in localStorage (dk_mode). Picking a card selects it and returns to the title;
+   the button inside a card starts that mode at once. Never read by the simulation. */
+let MODE = null;
+export function curMode() {
+  if (MODE === null) { try { MODE = localStorage.getItem('dk_mode') } catch (e) { } if (!CARDS.some(c => c.id === MODE)) MODE = 'solo' }
+  return CARDS.find(c => c.id === MODE);
+}
+export function setMode(id) { MODE = id; try { localStorage.setItem('dk_mode', id) } catch (e) { } }
+export function playMode() { curMode().go() }
+export function modeIcon(id, cx, cy, u) { icon(id, cx, cy, u) }
 
 /* little pixel figures: 1 = solo, 2 = two players, 0 = a key-ring for the code */
 function icon(id, cx, cy, u) {
@@ -55,49 +64,52 @@ function mark(x, y, ok) {
 }
 
 export function drawModes(UW, UH, cx, back) {
-  const g = canvasesState.ctx, fh = footH(UH), small = UH < 300, narrow = UW < 520;
+  const g = canvasesState.ctx, fh = footH(UH), narrow = UW < 520;
   NAV.onEsc = back; navBegin(true); NAV.horiz = true; navPoll();
-  g.fillStyle = 'rgba(3,4,9,.38)'; g.fillRect(0, 0, UW, UH);
-  let y = Math.max(6, UH * (small ? .025 : .05));
-  TTL('Choose your game', cx, y, small ? 1.45 : 1.9, 'center'); y += small ? 22 : 31;
-  if (!small) { ornLine(cx, y, Math.min(UW - 40, 260)); y += 9 }
-  TC('Pick how you want to hold the night.', cx, y + 2, '#c9bfa8', .85); y += small ? 14 : 18;
-  const hv = (x, yy, w, h) => inR(inputState.mouse, U(x, yy, w, h)), bottom = UH - fh - 8;
+  const b = kitScreen(UW, UH, { key: 'mod', title: 'Choose your game', close: back, fh, maxW: 620 }), low = b.h < 220;
+  let y = b.y + 1;
+  T_('Pick how you want to hold the night.', b.x + 1, y, KC.dim, .85); y += low ? 13 : 17;
+  const hv = (x, yy, w, h) => inR(inputState.mouse, U(x, yy, w, h)), bottom = b.y + b.h, cur = curMode().id, pick = c => () => { setMode(c.id); back() };
   if (narrow) {
     /* one card at a time, three tabs on top (tap, or Left / Right) */
-    const tw3 = Math.min(96, (UW - 20) / 3 - 4), tx = Math.round(cx - (tw3 * 3 + 8) / 2), ks = [];
-    CARDS.forEach((c, i) => { ks.push(navAdd(c.go, hv(tx + i * (tw3 + 4), y, tw3, 16))) });
-    const tab = NAV.sel >= 0 && NAV.sel < 3 ? NAV.sel : 0;
-    CARDS.forEach((c, i) => pill(tx + i * (tw3 + 4), y, tw3, 16, c.name, BTN, BTNH, () => { NAV.sel = i }, null, .8, i === tab));
-    y += 22;
-    const W = Math.min(UW - 12, 260);
-    cardAt(CARDS[tab], true, Math.round(cx - W / 2), y, W, Math.max(100, bottom - y), small, true);
+    CARDS.forEach(c => navAdd(pick(c), false)); const tab = NAV.sel >= 0 && NAV.sel < 3 ? NAV.sel : Math.max(0, CARDS.findIndex(c => c.id === cur));
+    if (NAV.sel < 0) NAV.sel = tab;
+    y += 3; kitTabs(b.x, y, b.w, CARDS.map((c, i) => [c.name, () => { NAV.sel = i }]), tab, 18, false); y += 24;
+    const W = Math.min(b.w, 260);
+    cardAt(CARDS[tab], false, Math.round(cx - W / 2), y, W, Math.max(100, bottom - y), low, CARDS[tab].id === cur, pick(CARDS[tab]), false);
   } else {
-    const gap = 14, W = Math.min(190, Math.floor((UW - 24 - gap * 2) / 3)), x0 = Math.round(cx - (W * 3 + gap * 2) / 2), H = Math.min(small ? 190 : 240, bottom - y);
-    CARDS.forEach((c, i) => { const k = navAdd(c.go, hv(x0 + i * (W + gap), y, W, H)); cardAt(c, NAV.sel === k || (NAV.sel < 0 && i === 0), x0 + i * (W + gap), y, W, H, small, false) });
+    const gap = 12, W = Math.min(196, Math.floor((b.w - gap * 2) / 3)), x0 = Math.round(cx - (W * 3 + gap * 2) / 2), H = Math.min(low ? 190 : 236, bottom - y);
+    CARDS.forEach((c, i) => { const x = x0 + i * (W + gap), k = navAdd(pick(c), hv(x, y, W, H)); cardAt(c, NAV.sel === k, x, y, W, H, low, c.id === cur, pick(c), hv(x, y, W, H)) });
   }
+  kitEnd();
   menuFooter(UW, UH, [['Esc', 'Back', back], ['Enter', 'Select']]);
 }
 
-function cardAt(c, on, x, y, w, h, small, noRing) {
-  const g = canvasesState.ctx;
-  uiBtn(x, y, w, h, PAN, PAN, c.go, null, (X, Y, W, H) => {
-    const cx = X + W / 2, u = small ? 1.5 : 2, rowH = small ? 15 : 24, bh = small ? 18 : 22;
-    let yy = Y + (small ? 8 : 14);
-    icon(c.id, cx, yy + 8 * u, u); yy += 16 * u + 4;
-    TTL(c.name, cx, yy, small ? 1.25 : 1.6, 'center'); yy += small ? 15 : 22;
-    let sc = .85; while (sc > .5 && tw(c.sub, sc) > W - 14) sc -= .04;
-    TC(c.sub, cx, yy, '#b9ae96', sc); yy += small ? 13 : 17;
-    ornLine(cx, yy, W - 24); yy += 6;
-    const rows = Math.min(c.rows.length, Math.max(2, Math.floor((Y + H - bh - 12 - yy) / rowH)));
-    for (let r = 0; r < rows; r++) {
-      const [ok, t] = c.rows[r], ry = yy + r * rowH;
-      if (r % 2 === 0) { g.fillStyle = 'rgba(255,255,255,.04)'; g.fillRect(X + 6, ry, W - 12, rowH) }
-      mark(X + 12, ry + (rowH - 9) / 2, ok);
-      let s2 = .85; while (s2 > .5 && tw(t, s2) > W - 40) s2 -= .04;
-      T_(t, X + 28, ry + (rowH - 9 * s2) / 2 + .5, ok ? '#f0e8d6' : '#8b8678', s2);
-    }
-  }, false, false, false);
-  pill(x + 10, y + h - (small ? 24 : 30), w - 20, small ? 18 : 22, c.btn, BTN, BTNH, c.go, null, 1, on);
-  if (on && !noRing) focusRing(x - 2, y - 2, w + 4, h + 4);
+/* a mode card: dark slab, the current mode ringed in gold with a check badge; the bevelled button starts the mode at once */
+function cardAt(c, foc, x, y, w, h, small, cur, pick, hover) {
+  const g = canvasesState.ctx, lit = foc || hover;
+  g.fillStyle = 'rgba(0,0,0,.4)'; g.fillRect(x + 1, y + 3, w, h);
+  const gr = g.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, lit ? '#2c3040' : '#20232d'); gr.addColorStop(1, lit ? '#1c1f2a' : '#15171e'); g.fillStyle = gr; g.fillRect(x, y, w, h);
+  g.fillStyle = 'rgba(255,255,255,.07)'; g.fillRect(x, y, w, 1);
+  g.fillStyle = cur ? '#f0cd73' : lit ? 'rgba(240,205,115,.6)' : 'rgba(184,149,76,.35)';
+  { const t = cur ? 2 : 1; g.fillRect(x, y, w, t); g.fillRect(x, y + h - t, w, t); g.fillRect(x, y, t, h); g.fillRect(x + w - t, y, t, h) }
+  if (cur) { g.fillStyle = '#f0cd73'; g.fillRect(x + w - 17, y, 17, 15); g.strokeStyle = '#2a1804'; g.lineWidth = 2; g.lineCap = 'butt'; g.beginPath(); g.moveTo(x + w - 13, y + 7); g.lineTo(x + w - 10, y + 10); g.lineTo(x + w - 4.5, y + 3.5); g.stroke() }
+  const cx = x + w / 2, u = small ? 1.5 : 2, rowH = small ? 15 : 22, bh = small ? 20 : 26;
+  let yy = y + (small ? 7 : 12);
+  icon(c.id, cx, yy + 8 * u, u); yy += 16 * u + (small ? 3 : 6);
+  pxText(c.name, cx, yy + 8, small ? 14 : 18, '#ffd86b', { al: 'center', max: w - 16 }); yy += small ? 16 : 22;
+  let sc = .85; while (sc > .5 && tw(c.sub, sc) > w - 14) sc -= .04;
+  TC(c.sub, cx, yy, '#b9ae96', sc); yy += small ? 13 : 17;
+  g.fillStyle = 'rgba(184,149,76,.35)'; g.fillRect(x + 10, yy, w - 20, 1); yy += 5;
+  const rows = Math.min(c.rows.length, Math.max(2, Math.floor((y + h - bh - 14 - yy) / rowH)));
+  for (let r = 0; r < rows; r++) {
+    const [ok, t] = c.rows[r], ry = yy + r * rowH;
+    if (r % 2 === 0) { g.fillStyle = 'rgba(255,255,255,.04)'; g.fillRect(x + 6, ry, w - 12, rowH) }
+    mark(x + 12, ry + (rowH - 9) / 2, ok);
+    let s2 = .85; while (s2 > .5 && tw(t, s2) > w - 40) s2 -= .04;
+    T_(t, x + 28, ry + (rowH - 9 * s2) / 2 + .5, ok ? '#f0e8d6' : '#8b8678', s2);
+  }
+  bevelBtn(x + 10, y + h - bh - 9, w - 20, bh, c.btn, 'go', c.go, { nav: false });
+  if (foc) focusRing(x - 2, y - 2, w + 4, h + 4);
+  kitHitAdd(x, y, w, h, pick);
 }

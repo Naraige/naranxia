@@ -5,10 +5,12 @@ import { inputState } from '../input/state.js';
 /* ================= TITLE MENU: keyboard and gamepad navigation, hover feedback =================
    The menu registers its buttons in drawing order every frame (navBegin / navAdd). Up / Down (or the pad's d-pad / left stick) move the
    selection, Enter / Space / pad A press it, Esc (pad B) runs the current "back" action. The mouse takes over when it moves. */
-export const NAV = { sel: -1, fns: [], active: false, horiz: false, onEsc: null, mx: -1, my: -1, pad: { up: 0, dn: 0, ok: 0, bk: 0 } };
+export const NAV = { sel: -1, fns: [], active: false, horiz: false, onEsc: null, keys: null, kbT: 0, first: true, mx: -1, my: -1, pad: { up: 0, dn: 0, ok: 0, bk: 0 } };
 
 export function navBegin(on) {
   NAV.fns = [];
+  NAV.keys = null;
+  NAV.first = true;
   NAV.horiz = false;
   NAV.active = !!on;
   if (!on) NAV.sel = -1;
@@ -33,11 +35,14 @@ function move(d) {
   const n = NAV.fns.length;
   if (!n) return;
   NAV.sel = NAV.sel < 0 ? (d > 0 ? 0 : n - 1) : (NAV.sel + d + n) % n;
+  NAV.kbT = performance.now();
   snd('hover');
 }
 
 function press() {
   if (!NAV.fns.length) return;
+  /* list screens (NAV.first = false): the first Enter only puts the focus on the first row */
+  if (NAV.sel < 0 && !NAV.first) { NAV.sel = 0; NAV.kbT = performance.now(); snd('hover'); return }
   const f = NAV.fns[NAV.sel < 0 ? 0 : NAV.sel];
   snd('click');
   f();
@@ -56,6 +61,7 @@ export function initializeMenuNav() {
     else if (NAV.horiz && e.key === 'ArrowRight') { e.preventDefault(); move(1) }
     else if (NAV.horiz && e.key === 'ArrowLeft') { e.preventDefault(); move(-1) }
     else if (e.key === 'Enter' || (e.key === ' ' && !sessionState.inGame)) { e.preventDefault(); press() }
+    else if (NAV.keys && e.key.length === 1 && NAV.keys[e.key.toLowerCase()]) { e.preventDefault(); snd('click'); NAV.keys[e.key.toLowerCase()]() }
   });
 }
 
