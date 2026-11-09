@@ -56,6 +56,8 @@ import { seasonIdx, weatherTick, WX, wxKind, wxLabel } from '../rendering/weathe
 import { cv } from '../ui/canvases.js';
 import { convoyPanelState, CVA } from '../ui/convoy-panel.js';
 import { hudDisplayState } from '../ui/hud-state.js';
+import { inputState } from '../input/state.js';
+import { hudState } from '../ui/hud.js';
 import {
   buildPreview,
   confirmPick,
@@ -131,6 +133,8 @@ export function installBrowserConsole() {
     C: { get: () => C },
     ensureAround: { get: () => ensureAround },
     hudDisplayState: { get: () => hudDisplayState },
+    inputState: { get: () => inputState },
+    hudState: { get: () => hudState },
     UPC: { get: () => UPC },
     WX: { get: () => WX },
     ZNV: { get: () => ZNV },

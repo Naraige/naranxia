@@ -1,4 +1,5 @@
 import { hyp, rnd } from '../core/math.js';
+import { cbOn } from '../core/prefs.js';
 import { REALR } from '../core/random.js';
 import { lightSources } from '../gameplay/lighting.js';
 import { dpt, HOMEC, LPL } from '../gameplay/players.js';
@@ -120,7 +121,7 @@ export const rflagUpd=()=>{const pl=LPL(),ok0=b=>b&&b.t===0&&sessionState.struct
   selBar=ok0(selectionState.selB)&&selectionState.selB.type==='barracks'?selectionState.selB:null,anyBar=selBar||sessionState.structs.find(s=>ok0(s)&&s.type==='barracks')||null,
   act=[!!selBar||sessionState.mode==='rally',selectionState.castleSel||sessionState.mode==='rallyc'||(ok0(selectionState.selB)&&selectionState.selB.type==='castle')],src=[selBar||anyBar,ok0(selectionState.selB)&&selectionState.selB.type==='castle'?selectionState.selB:hc];
  let hov=null;if((sessionState.mode==='rally'||sessionState.mode==='rallyc')&&inputState.mouse.x>=0&&!hudState.uiRects.some(r=>inR(inputState.mouse,r))){const p=pickGround(inputState.mouse.x,inputState.mouse.y);if(p)hov={x:p.x*TS,y:p.z*TS}}
- RFLAG.forEach((g,i)=>{const b=src[i],set=b?b.rally:null,ph=hov&&sessionState.mode===(i?'rallyc':'rally');if(!i&&!act[0]){g.visible=g.userData.ln.visible=false;return}let w=ph?hov:set;
+ RFLAG.forEach((g,i)=>{if(!i){const cc=cbOn()?0x56b4e9:0x59ff8a,d=g.userData;if(d.cc!==cc){d.cc=cc;d.cl.material.color.setHex(cc);d.rg.material.color.setHex(cc);d.ln.material.color.setHex(cc)}}const b=src[i],set=b?b.rally:null,ph=hov&&sessionState.mode===(i?'rallyc':'rally');if(!i&&!act[0]){g.visible=g.userData.ln.visible=false;return}let w=ph?hov:set;
   if(!w&&act[i]&&b)w=b.type==='castle'?dpt(b):{x:b.x,y:b.y+b.rad+24};
   if(!w||!b){g.visible=g.userData.ln.visible=false;return}
   const tx=Math.floor(w.x/TS),ty=Math.floor(w.y/TS),y0=(gOK(tx,ty)?HT[ty*TW+tx]:LAND)+.1;g.visible=true;

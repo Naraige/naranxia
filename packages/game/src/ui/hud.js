@@ -13,7 +13,7 @@ import { kingBar } from '../gameplay/king-skills.js';
 import { newGame, openMenu } from '../gameplay/lifecycle.js';
 import { aliveC, LPL, playersState } from '../gameplay/players.js';
 import { GCAP, rulesState, T, TH, TS, TW } from '../gameplay/rules.js';
-import { curB, sel } from '../gameplay/selection.js';
+import { curB, sel, selectionState } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { simulationState } from '../gameplay/simulation.js';
 import { gstBest, statisticsState } from '../gameplay/statistics.js';
@@ -22,6 +22,7 @@ import { wavesState } from '../gameplay/waves.js';
 import { L, T_, TC, TTL, tw, twH } from '../i18n/language.js';
 import { camZoom } from '../input/desktop.js';
 import { inputState } from '../input/state.js';
+import { cb } from '../core/prefs.js';
 import { setPause } from '../multiplayer/lockstep.js';
 import { objBar } from '../multiplayer/objectives.js';
 import { MP } from '../multiplayer/session.js';
@@ -33,7 +34,7 @@ import { SEASC, seasonIdx, wxLabel } from '../rendering/weather.js';
 import { CMP, costParts, drawCost, drawItem, menuItems, NAMES, uiBtn } from './build-menu.js';
 import { canvasesState, cv } from './canvases.js';
 import { convoyPanelState, drawConvoy } from './convoy-panel.js';
-import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, SLOT, TIPP } from './drawing.js';
+import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, RDB, SLOT, TIPP } from './drawing.js';
 import { hudDisplayState } from './hud-state.js';
 import { dIc, IC } from './icons.js';
 import { THEME } from './kingdom-theme.js';
@@ -92,9 +93,12 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  tb(18,IC.menu,openMenu,['Main menu [Esc]']);tb(18,IC.army,()=>{troopPanelState.troopsOpen=!troopPanelState.troopsOpen;snd('click')},['Troops [F2]','Every unit and what it is doing'],troopPanelState.troopsOpen);tb(18,IC.gear,()=>{openMenu();settingsState.settingsOpen=true;settingsState.fromGame=true},['Settings']);tb(18,sessionState.paused?IC.play:IC.pause,()=>{setPause(!sessionState.paused)},['Pause [Space]'],sessionState.paused);tb(18,sndOn?IC.sound:IC.mute,toggleSound,['Sound on/off [O]']);
  rx-=21;uiBtn(rx,3,21,17,BTN,BTNH,()=>{if(!MP.on)sessionState.spd=sessionState.spd%3+1},['Game speed [F]'],(x,y,W2)=>TC('x'+sessionState.spd,x+W2/2,y+4,sessionState.spd>1?'#ffd23c':'#fff',.95),sessionState.spd>1);rx-=6;
  const wp=[['Wave '+sessionState.waveN,'#d9b8ff'],[wavesState.waveOn?(wavesState.nightLv>=.5?'Night':(wavesState.hordeD<5000?'Horde '+Math.round(wavesState.hordeD)+' tiles':'Horde')):'Next '+mmss(sessionState.waveT),wavesState.waveOn?(wavesState.nightLv>=.5?'#9fb4ff':'#ffb38a'):sessionState.waveT<10&&((sessionState.clockT*3)|0)%2?'#ff8a8a':'#ffffff'],[sessionState.nextL.map(L=>terrainState.ROUTES[L].dir).join(' '),'#ff7a7a'],[wxLabel(),SEASC[seasonIdx()]]];const WPV=wavePreview();if(WPV.ev.length)wp.push([WPV.ev[0],'#ffcf6a']);
- let wwid=0;wp.forEach(p=>wwid+=tw(p[0],.95)+10);if(UW<560||rx-wwid>UW*.42){let x=UW<560?6:rx-wwid;wp.forEach(p=>{T_(p[0],x,7,p[1],.95);x+=tw(p[0],.95)+10});if(UW>=560)rx-=wwid+4;hudState.uiHits.push({...U(UW<560?6:rx,3,wwid,17),tip:['Next wave','Zombies come along the red lines','Wave '+WPV.n+' brings:'].concat(WPV.kinds,WPV.ev.length?['Event:'].concat(WPV.ev,WPV.boss?[WPV.boss]:[]):[])})}
+ let wwid=0;wp.forEach(p=>wwid+=tw(p[0],.95)+10);
+ /* narrow screens (touch scale): when the wave texts would run under the buttons they get their own strip below them */
+ const wrap=UW<560&&wwid+(UW-rx)>UW-8,ex=wrap?14:0;if(wrap)frame(3,22,UW-6,15,CHAT,6);
+ if(UW<560||rx-wwid>UW*.42){let x=UW<560?6:rx-wwid;const wy=wrap?25:7;wp.forEach(p=>{const w0=tw(p[0],.95)+10;if(wrap&&x+w0>UW-6)return;T_(p[0],x,wy,p[1],.95);x+=w0});if(UW>=560)rx-=wwid+4;hudState.uiHits.push({...U(UW<560?6:rx,wrap?22:3,wrap?UW-12:wwid,wrap?15:17),tip:['Next wave','Zombies come along the red lines','Wave '+WPV.n+' brings:'].concat(WPV.kinds,WPV.ev.length?['Event:'].concat(WPV.ev,WPV.boss?[WPV.boss]:[]):[])})}
  let x=6;{const nmw=Math.min(90,tw(THEME.n,.9)+4);if(UW>=560){canvasesState.ctx.drawImage(BANNER,x,2,13,19.5);T_(THEME.n,x+17,7,'#fff',.9);hudState.uiHits.push({...U(x,2,17+nmw,20),tip:['Your kingdom','Banner on your castle, towers and gates']});x+=21+nmw}}
- const two=UW<560;settingsState.TOPH=two?46:28;let ry=3;if(two){frame(3,22,UW-6,19,CHAT,6);x=9;rx=UW-6;ry=23}
+ const two=UW<560;settingsState.TOPH=two?46+ex:28;let ry=3;if(two){hudState.uiRects.push(U(0,22,UW,19+ex));frame(3,22+ex,UW-6,19,CHAT,6);x=9;rx=UW-6;ry=23+ex}
  const item=(ic,s,col,tip)=>{const n=16+tw(s)+10;if(x+n>rx-4)return;dIc(ic,x,ry+2,13);T_(s,x+16,ry+3.5,col);hudState.uiHits.push({...U(x,ry,n-4,17),tip});x+=n};
  item(IC.coin,sessionState.res.g,'#ffd23c',['Gold']);item(IC.wood,sessionState.res.w,'#e8b27a',['Wood']);item(IC.stone,sessionState.res.s,'#d4dae6',['Stone']);item(IC.food,Math.floor(sessionState.res.f||0),'#f2c14e',['Food','Farms make it while a peasant works them','Every unit costs food to train']);
  {const hf=Math.max(0,sessionState.CS.hp+(sessionState.CS2?sessionState.CS2.hp:0))/(sessionState.CS.max+(sessionState.CS2?sessionState.CS2.max:0));if(x+86<rx-4){hearts(x,ry+4.5,hf,10);hudState.uiHits.push({...U(x,ry,80,17),tip:['Castle health','Do not let it fall']});x+=86}else if(x+60<rx-4){dIc(IC.heart,x,ry+2,13);bar(x+16,ry+4.5,38,hf,'#ff6a6a','#c01f2f');hudState.uiHits.push({...U(x,ry,56,17),tip:['Castle health','Do not let it fall']});x+=62}}
@@ -112,6 +116,10 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  uiBtn(mx2-3,ya,bw2,17,GRN,GRNH,home,['Back to base [H]','Centers the camera on your castle'],(x,y,w)=>{dIc(IC.compass,x+4,y+2.5,12);T_('Base',x+19,y+4,'#fff',.95)});
  uiBtn(mx2-3+bw2+3,ya,bw2,17,BTN,BTNH,()=>{sessionState.showMap=true},['World map [M]','See the whole world, spawns and routes'],(x,y,w)=>{dIc(IC.map,x+4,y+2.5,12);T_('Map',x+19,y+4,'#fff',.95)});
  const qw=(mw+6-9)/4,yb=ya-19;[[IC.zoomIn,()=>camZoom(-1),'Zoom in'],[IC.zoomOut,()=>camZoom(1),'Zoom out'],[IC.rotL,()=>{CAM.yaw+=.4},'Rotate left [Z]'],[IC.rotR,()=>{CAM.yaw-=.4},'Rotate right [X]']].forEach(([ic,fn,t],i)=>uiBtn(mx2-3+i*(qw+3),yb,qw,17,BTN,BTNH,fn,[t],(x,y,w)=>dIc(ic,x+(w-12)/2,y+2.5,12)));
+ /* touch: floating camera (one-finger pan on/off) and cancel (build mode, selection) buttons, 44 css px, left edge */
+ if(inputState.touch&&!sessionState.showMap&&!sessionState.over){const fz=Math.max(24,Math.ceil(44*inputState.DPR/hudDisplayState.UIS)),fy0=Math.round(UH*.36),can=!!(sessionState.mode||sel().length);
+  uiBtn(4,fy0,fz,fz,BTN,BTNH,()=>{inputState.panMode=!inputState.panMode;hudDisplayState.msgS=inputState.panMode?'Pan mode: drag moves the camera':'Select mode: drag draws a box';hudDisplayState.msgT=2},['Move camera','One finger drags the view'],(x,y,w,h)=>dIc(IC.pan,x+(w-14)/2,y+(h-14)/2,14),inputState.panMode);
+  if(can)uiBtn(4,fy0+fz+4,fz,fz,RDB,BTNH,()=>{sessionState.mode=null;for(const u of sessionState.units)u.sel=false;selectionState.selB=null;selectionState.castleSel=false;inputState.panMode=false},['Cancel','Clear build mode and selection'],(x,y,w,h)=>dIc(IC.close,x+(w-14)/2,y+(h-14)/2,14))}
  if(troopPanelState.troopsOpen)drawTroops(UW,UH);if(convoyPanelState.convoyOpen)drawConvoy(UW,UH);if(diagnosticsState.devOpen)drawDev(UW,UH);
  /* banners & hints */
  let bossY=0;if(wavesState.WAVEZ>0&&!sessionState.over){let rem=SW.n+swPending();for(const u of sessionState.units)if(u.t===1&&u.lane>=0)rem++;if(rem>0){const bw=Math.min(182,UW-40),bx=Math.round((UW-bw)/2),by=settingsState.TOPH+13;TC('Raid - Wave '+sessionState.waveN+'  ('+rem+' left)',UW/2,settingsState.TOPH+2,'#ffffff',.85);canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(bx-1,by-1,bw+2,7);canvasesState.ctx.fillStyle='#4a0e0e';canvasesState.ctx.fillRect(bx,by,bw,5);const fw=Math.max(1,Math.round(bw*Math.min(1,rem/wavesState.WAVEZ)));canvasesState.ctx.fillStyle='#d81e1e';canvasesState.ctx.fillRect(bx,by,fw,5);canvasesState.ctx.fillStyle='#ff6a6a';canvasesState.ctx.fillRect(bx,by,fw,1);canvasesState.ctx.fillStyle='rgba(0,0,0,.35)';for(let k=1;k<10;k++)canvasesState.ctx.fillRect(bx+Math.round(bw*k/10),by,1,5);bossY=22}else wavesState.WAVEZ=0;if(!sessionState.over)bossY+=bossBar(UW,settingsState.TOPH+bossY);bossY+=objBar(UW,settingsState.TOPH+bossY);bossY+=kingBar(UW,settingsState.TOPH+bossY);{const tb=tutBar(UW,settingsState.TOPH+bossY);bossY+=tb||hintBar(UW,settingsState.TOPH+bossY)}}
@@ -120,7 +128,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
   if(msg&&sessionState.bannerT<=0){canvasesState.ctx.globalAlpha=sessionState.mode||hudDisplayState.msgT>0?1:Math.min(1,(18-sessionState.time)/3);let ms=.95;while(ms>.55&&tw(msg,ms)+16>UW-6)ms-=.05;const w=tw(msg,ms)+16;frame((UW-w)/2,settingsState.TOPH+bossY,w,16,CHAT,8);TC(msg,UW/2,settingsState.TOPH+bossY+4,'#ffffff',ms);canvasesState.ctx.globalAlpha=1}
   if(sessionState.bannerT>0){canvasesState.ctx.globalAlpha=Math.min(1,sessionState.bannerT*1.2);let bs=3.4;while(bs>1.6&&tw(sessionState.bannerS,bs)>UW-20)bs-=.2;let b2=1.15;while(b2>.6&&tw(sessionState.bannerS2,b2)>UW-20)b2-=.05;const yb=Math.max(settingsState.TOPH+8,UH*.2);TC(sessionState.bannerS,UW/2,yb,'#ff5555',bs);TC(sessionState.bannerS2,UW/2,yb+9*bs+6,'#ffff55',b2);canvasesState.ctx.globalAlpha=1}
   if(sessionState.paused){canvasesState.ctx.fillStyle='rgba(0,0,0,.35)';canvasesState.ctx.fillRect(0,0,UW,UH);TC('Game Paused',UW/2,UH*.36,'#ffffff',2.2);TC(backgroundLoopState.autoPaused?'Click anywhere or press Space to resume':'Press Space to resume',UW/2,UH*.36+28,'#a0a0a0',.95)}}
- const hv=hudState.uiHits.find(h=>h.tip&&inR(inputState.mouse,h));
+ const hv=inputState.touch?(hudState.tipKey&&performance.now()<hudState.tipT?hudState.uiHits.find(h=>h.tip&&((h.x|0)+','+(h.y|0)+','+(h.w|0))===hudState.tipKey):null):hudState.uiHits.find(h=>h.tip&&inR(inputState.mouse,h));
  if(hv&&!sessionState.over&&!sessionState.showMap){const ln=hv.tip,cpp=hv.cost?costParts(hv.cost):null,cw0=cpp?cpp.reduce((q,p)=>q+tw(p[0],.9)+12,0):0,w=Math.max(cw0,...ln.map(s=>tw(s,.9)))+14,h=ln.length*11+8;let tx=Math.min(UW-w-2,Math.max(2,Math.round(hv.x/hudDisplayState.UIS))),ty=Math.round(hv.y/hudDisplayState.UIS)-h-4;if(ty<26)ty=Math.round((hv.y+hv.h)/hudDisplayState.UIS)+4;
   frame(tx,ty,w,h,TIPP,5);ln.forEach((s,i)=>{if(cpp&&i===ln.length-1){drawCost(cpp,tx+7,ty+5+i*11,w-14,.9,9)}else T_(s,tx+7,ty+5+i*11,i?'#aaaaaa':'#ffffff',.9)})}
  drawToasts(UW);
@@ -134,11 +142,11 @@ export function drawBars(){canvasesState.ctx.setTransform(1,0,0,1,0,0);const k=M
   cx.fillStyle='#000';cx.fillRect(x0-1,y0-1,w+2,h+2);cx.fillStyle='#2b2b2b';cx.fillRect(x0,y0,w,h);
   const ff=Math.max(0,Math.min(1,f)),n=ff<=0?0:Math.max(1,Math.ceil(ff*SEG-1e-6)),sw=(w-gap*(SEG-1))/SEG;
   for(let i=0;i<n;i++){const sx=Math.round(x0+i*(sw+gap)),ex=Math.round(x0+i*(sw+gap)+sw),cw=Math.max(1,ex-sx);cx.fillStyle=c;cx.fillRect(sx,y0,cw,h);cx.fillStyle='rgba(255,255,255,.38)';cx.fillRect(sx,y0,cw,Math.max(1,Math.round(k*.6)));cx.fillStyle='rgba(0,0,0,.32)';cx.fillRect(sx,y0+h-Math.max(1,Math.round(k*.6)),cw,Math.max(1,Math.round(k*.6)))}};
- for(const u of sessionState.units){const m=T[u.type].hp;if(u.hp>=m||u.hp<=0||u.shel)continue;const md=u.m&&u.m.userData.mdl,q=scr(u.x/TS,(u.dy||0)+(md?md.h*(md.sc||1.35)*UNITK:.8)+.1,u.y/TS);if(q.ok)bar2(q.x,q.y,(u.type==='brute'?26:16)*k,u.hp/m,u.t===1?'#c66bff':u.t===2?'#e8c040':'#6fdc6f')}
+ for(const u of sessionState.units){const m=T[u.type].hp;if(u.hp>=m||u.hp<=0||u.shel)continue;const md=u.m&&u.m.userData.mdl,q=scr(u.x/TS,(u.dy||0)+(md?md.h*(md.sc||1.35)*UNITK:.8)+.1,u.y/TS);if(q.ok)bar2(q.x,q.y,(u.type==='brute'?26:16)*k,u.hp/m,u.t===1?cb('#c66bff','#cc79a7'):u.t===2?cb('#e8c040','#f0e442'):cb('#6fdc6f','#56b4e9'))}
  {let n0=0;for(const u of sessionState.units)if(u.shel)n0++;if(n0)for(const c of aliveC()){let n=0;for(const u of sessionState.units)if(u.shel===c)n++;if(!n)continue;const q=scr(c.x/TS,(c.bh||LAND)+(c.tier!==0?6.7:5.7),c.y/TS);
   if(q.ok){drew=1;canvasesState.ctx.font=Math.round(9*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';const t=L(n+' inside');canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(t,q.x+1,q.y+1);canvasesState.ctx.fillStyle='#ffe08a';canvasesState.ctx.fillText(t,q.x,q.y)}}}
  if(!simulationState.shelOn)for(const s of sessionState.structs){if(s.t!==0||s.prog<1||s.hp<=0||!WKT.has(s.type)||(MP.on&&(s.pl|0)!==LPL())||wkOf(s))continue;const q=scr(s.x/TS,(s.bh||LAND)+1.4,s.y/TS);
   if(q.ok){drew=1;canvasesState.ctx.font=Math.round(8*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(L('no worker'),q.x+1,q.y+1);canvasesState.ctx.fillStyle='#ffb070';canvasesState.ctx.fillText(L('no worker'),q.x,q.y)}}
  for(const s of sessionState.structs){if(s.garr&&s.garr.length){const q=scr(s.x/TS,(s.bh||LAND)+(s.type==='tower'?4.9:2.7),s.y/TS);if(q.ok){drew=1;canvasesState.ctx.font=Math.round(9*k*1.75)+'px '+FF;canvasesState.ctx.textAlign='center';canvasesState.ctx.fillStyle='rgba(0,0,0,.65)';canvasesState.ctx.fillText(s.garr.length+'/'+GCAP[s.type],q.x+1,q.y+1);canvasesState.ctx.fillStyle='#9fe870';canvasesState.ctx.fillText(s.garr.length+'/'+GCAP[s.type],q.x,q.y)}}
   if(s.hp>=s.max&&s.prog>=1)continue;const q=scr(s.x/TS,(s.bh||LAND)+(({tower:4.9,wall:2.2,gate:2.6,ballista:1.6,trebuchet:3.6,house:3.3,barracks:3.2,storage:2.5,academy:3.6,market:2.7,forester:2.4,guild:3.2,observatory:3.5,granary:2.8,bell:2.8,sanctuary:2.8,beacon:3.6,orchard:2.6,forge:3.2,embassy:3.0,warroom:3.1,sappers:2.8,torch:1.9,farm:1.0,keep:5.2,castle:s.tier!==0?6.2:5.2})[s.type]||6.7),s.y/TS);if(!q.ok)continue;
-  if(s.prog<1)bar2(q.x,q.y,(s.sz>=3?44+(s.sz-3)*10:24)*k,s.prog,'#ffd23c');else bar2(q.x,q.y,(s.sz>=3?44+(s.sz-3)*10:24)*k,s.hp/s.max,'#6fdc6f')}return drew}
+  if(s.prog<1)bar2(q.x,q.y,(s.sz>=3?44+(s.sz-3)*10:24)*k,s.prog,'#ffd23c');else bar2(q.x,q.y,(s.sz>=3?44+(s.sz-3)*10:24)*k,s.hp/s.max,cb('#6fdc6f','#56b4e9'))}return drew}
