@@ -1,29 +1,23 @@
 import { diagnosticsState } from '../debug/diagnostics.js';
-import { RS } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { TUT } from '../gameplay/traps.js';
 import { popCap, popUsed } from '../gameplay/economy.js';
 import { LPL } from '../gameplay/players.js';
 import { wavesState } from '../gameplay/waves.js';
 import { T_, tw } from '../i18n/language.js';
-import { SPK } from '../multiplayer/objectives.js';
 import { MP } from '../multiplayer/session.js';
 import { BTN, BTNH, CHAT, frame } from './drawing.js';
 import { pill } from './minimap.js';
 
 /* ================= GUIDED TUTORIAL (#16) =================
-   A short list of steps (about five minutes) shown at the top of the screen in a solo game, the first time only (or until skipped).
+   A short list of steps (five steps) shown at the top of the screen in a solo game, the first time only (or until skipped).
    Each step completes by itself when the game state shows it was done; nothing here touches the simulation. Restart it from the Esc menu. */
 const TUTS=[
  ['Select your peasants: click one, or double-click to take them all',()=>sessionState.units.some(u=>u.t===0&&u.type==='peasant'&&u.sel)],
  ['Right-click a tree, a rock or gold: your peasants gather it',()=>sessionState.units.some(u=>u.t===0&&u.type==='peasant'&&(u.job||u.carry))],
  ['Build a house in the Town menu to raise your population limit',()=>sessionState.structs.some(s=>s.t===0&&s.type==='house')],
  ['Train a knight in the Train bar: knights fight the zombies',()=>sessionState.units.some(u=>u.t===0&&u.type==='knight')],
- ['Build walls or a tower in the Defense menu to hold the lanes',()=>sessionState.structs.some(s=>s.t===0&&(s.type==='wall'||s.type==='tower'))],
- ['Try a spike trap in the Defense menu: zombies on it get hurt',()=>SPK.size>0],
- ['Zombies follow the red lines: the top bar counts down to the wave',()=>sessionState.waveN>=1],
- ['Research Stonemasonry in the castle menu to build in stone',()=>RS.on||RS.done],
- ['Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!',()=>false]];
+ ['Build walls or a tower in the Defense menu: zombies follow the red lines. Good luck!',()=>false]];
 
 export function tutStart(force){let seen=false;try{seen=localStorage.getItem('dk_tut')==='1'}catch(e){}TUT.on=!!force||(!seen&&!MP.on&&!diagnosticsState.DEVU);TUT.i=0}
 

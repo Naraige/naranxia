@@ -3,8 +3,7 @@ import { AC, sndOn, toggleSound } from '../audio/sound.js';
 import { inputState } from '../input/state.js';
 import { GNOTES } from '../core/version.js';
 import { GVER } from '../core/version.js';
-import { bugReport } from '../debug/tools.js';
-import { newGame, quitGame, startGame } from '../gameplay/lifecycle.js';
+import { quitGame, startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
 import { BOSSN } from '../ai/wave-boss.js';
 import { drawLang, L, LANG, langBtn, LANGS, languageState, T_, TC, TTL, tw } from '../i18n/language.js';
@@ -24,7 +23,6 @@ import { pill } from './minimap.js';
 import { continueLast, drawSaves, saveMenuState, svPeek } from './save-menu.js';
 import { drawSettings, nmI, settingsState } from './settings.js';
 import { openPicker } from './site-picker.js';
-import { tutStart } from './tutorial.js';
 import { drawTitleWeather, lastRun, titleSeasonColor, titleWeatherLabel } from './title-weather.js';
 import { FFT } from './typography.js';
 
@@ -62,10 +60,10 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
   canvasesState.ctx.restore();y+=S+Math.round(small?6:cs*1.3)}
  }canvasesState.ctx.globalAlpha=ease(ent(.4,1.1));const ig=sessionState.inGame,bw=Math.min(UW-24,Math.max(200,Math.min(300,UW*.5))),gp=small?5:9,bx=Math.round(cx-bw/2),wide=bw>=250;
  if(!ig&&saveMenuState.last===undefined){saveMenuState.last=null;svPeek()}
- const nb=(ig?(MP.on?5:7):5)+(!ig&&saveMenuState.last?1:0)+(!ig&&window.NARX&&NARX.desktop?1:0)+(ig?0:1)+(wide||ig?0:1),bh=Math.max(16,Math.min(small?22:26,Math.floor((UH-(ig?20:60)-y)/nb)-gp));
+ const nb=(ig?(MP.on?3:4):5)+(!ig&&saveMenuState.last?1:0)+(!ig&&window.NARX&&NARX.desktop?1:0)+(ig?0:1)+(wide||ig?0:1),bh=Math.max(16,Math.min(small?22:26,Math.floor((UH-(ig?20:60)-y)/nb)-gp));
  const hv=(x,yy,w,h)=>inR(inputState.mouse,U(x,yy,w,h)),mb=(lab,fn,hl)=>{const k=navAdd(fn,hv(bx,y,bw,bh));pill(bx,y,bw,bh,lab,hl?GRN:BTN,hl?GRNH:BTNH,fn,null,1.15,k>=0&&NAV.sel===k);y+=bh+gp};
  const openLoad=()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null},openTut=()=>{try{localStorage.removeItem('dk_tut')}catch(e){}settingsState.setupOpen=true};
- if(ig){mb('Back to Game',startGame);if(!MP.on)mb('Save / Load',openLoad);mb('New game',newGame);mb('Quit game',quitGame);if(!MP.on)mb('Tutorial',()=>{tutStart(true);startGame()});mb('Report a bug [F8]',bugReport);mb('Multiplayer (Co-op)',mpOpen)}
+ if(ig){mb('Back to Game',startGame);if(!MP.on)mb('Save / Load',openLoad);mb('Quit to title',quitGame)}
  else{if(saveMenuState.last)mb('Continue',continueLast,1);mb('Singleplayer',()=>{settingsState.setupOpen=true});mb('Multiplayer (Co-op)',mpOpen);mb('Load game',openLoad);mb('Tutorial',openTut);if(window.NARX&&NARX.desktop)mb('Exit to desktop',()=>window.close())}
  {const sd=()=>{toggleSound()},lg=()=>{languageState.langOpen=true},op=()=>{settingsState.settingsOpen=true},sl=sndOn?'Sound: on':'Sound: off';
   const row=(x,w,lab,fn,lang)=>{const k=navAdd(fn,hv(x,y,w,bh)),on=k>=0&&NAV.sel===k;if(lang){langBtn(x,y,w,bh,LANG,fn,false);if(on)gold(x,y,w,bh)}else pill(x,y,w,bh,lab,BTN,BTNH,fn,null,wide&&!ig?1.05:1.15,on)};

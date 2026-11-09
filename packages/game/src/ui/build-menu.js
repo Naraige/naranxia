@@ -69,8 +69,8 @@ tower:'Tower',
 ballista:'Ballista',
 trebuchet:'Trebuchet',
 path:'Path',
-army:'Army',
-idle:'Idle',
+army:'Select army',
+idle:'Idle peasants',
 form:'Formation',
 mode:'Mode',
 raise:'Raise',
@@ -114,8 +114,8 @@ sappers:'Sappers\' workshop',
 'rt+':'+1',
 'rt-':'-1',
 torch:'Torch',
-rally:'Rally: barracks',
-rallyc:'Rally: castle'
+rally:'Rally',
+rallyc:'Rally'
 },HK={agg:'1',
 def:'2',
 hold:'3',
@@ -166,12 +166,12 @@ def:['Defensive [2]','Fight around their post, then walk back to it'],
 hold:['Halt [3]','Hold position: never move, only strike','enemies within weapon range'],
 stop:['Stop [4]','Cancel current orders and stay here'],
 work:['Gather','Send these peasants back to work now'],
-movec:['Move castle [,]','Relocate your castle up to 40 tiles away','Costs 100 gold, 150 wood'],
+movec:['Move castle','Relocate your castle up to 40 tiles away','Costs 100 gold, 150 wood'],
 rotate:['Rotate [R]','Turns the selected building 90 degrees','The castle door turns with it'],
-academy:['Academy [;]','2x2 school: all research is bought here.','Select it to open the research menu'],
-market:['Market [:]','2x2 trading post: select it to sell','wood, stone or food for gold, or buy them'],
-forester:["Forester's hut [[]",'2x2 log cabin: its peasant plants saplings','around it; they grow into trees (wood)'],
-guild:["Builders' guild []]",'2x2 workshop: select it to choose how many','peasants build, repair and reshape the land'],
+academy:['Academy','2x2 school: all research is bought here.','Select it to open the research menu'],
+market:['Market','2x2 trading post: select it to sell','wood, stone or food for gold, or buy them'],
+forester:["Forester's hut",'2x2 log cabin: its peasant plants saplings','around it; they grow into trees (wood)'],
+guild:["Builders' guild",'2x2 workshop: select it to choose how many','peasants build, repair and reshape the land'],
 scout:['Scout','Fast and fragile, sees very far','Trained at the barracks'],
 engineer:['Engineer','Repairs nearby buildings fast','Trained at the castle'],envoy:['Envoy','Send to a rebel camp: tribute of gold and food, once per camp','Needs an embassy'],
 observatory:['Observatory','2x2 tower with a telescope: you see','far over the land around it'],
@@ -184,10 +184,10 @@ forge:['Royal forge','2x2 smithy: all your troops','deal 8% more damage'],
 embassy:['Embassy','2x2 hall for rebel envoys: tribute','and caravans bring 50% more'],
 warroom:['War room','2x2 map hall: your barracks','train units 15% faster'],
 sappers:['Sappers\' workshop','2x2 workshop: buildings around it','slowly repair themselves'],
-torch:["Torch [']",'Cheap light: at night whatever stands','outside the light is hurt by the dark'],
-rallyc:['Castle rally [=]','Click the map: new peasants walk there;','on a tree, rock or gold they start working it'],
+torch:['Torch','Cheap light: at night whatever stands','outside the light is hurt by the dark'],
+rallyc:['Rally','Click the map: new peasants walk there;','on a tree, rock or gold they start working it'],
 house:['House [0]','2x2 cottage: +6 population','Your castle alone supports 18'],
-rally:['Barracks rally [-]','Click the map: new soldiers from','barracks walk there by themselves'],
+rally:['Rally','Click the map: new soldiers from','barracks walk there by themselves'],
 steel:['Steel weapons','Research (60 s): soldiers hit','another 20% harder','Needs Iron weapons'],
 mail:['Chain mail','Research (70 s): your side takes','another 15% less damage','Needs Plate armor'],
 tools:['Better tools','Research (30 s): peasants gather','33% faster'],
@@ -215,7 +215,7 @@ king:['King Naraige','Summoned at the castle with his 2 royal guards - one king 
 guard:['Royal guard','A new halberdier to escort the king (2 at most)','Long reach, sweeps several zombies at once'],
 stoneup:['Upgrade to stone','Rebuilds this building in stone:','twice the hit points','Needs Stonemasonry'],
 upgtool:['Stone upgrade tool','Click or drag over wooden buildings','to rebuild them in stone (walls...)'],
-cannon:['Cannon [/]','Field gun pushed by a crew of 2 (2 population)','Its cannonballs blast whole groups of zombies','Slow, and weak up close. Needs Stonemasonry'],
+cannon:['Cannon','Field gun pushed by a crew of 2 (2 population)','Its cannonballs blast whole groups of zombies','Slow, and weak up close. Needs Stonemasonry'],
 barracks:['Barracks [C]','2x2 building, click it to select','Units trained while it is selected','come out of it, 35% faster'],
 upgrade:['Stonemasonry [G]','Research (45 s): every wooden building,','castle included, becomes stone','New buildings are stone afterwards'],
 wall:['Wooden wall','Cheap and links to its neighbours','Upgrade it to stone later'],
@@ -231,6 +231,9 @@ path:['Path','Faster travel','Click or drag to paint'],
 
  army:['Select army [Q]','Selects all fighters'],'rb+':['Add a builder','A peasant who only builds new buildings','and demolishes; he waits at the guild'],'rb-':['Remove a builder','He goes back to gathering'],'rr+':['Add a repairer','Repairs damaged buildings by himself (uses','resources); stays out at night for the walls'],'rr-':['Remove a repairer','He goes back to gathering'],'rt+':['Add a terraformer','Digs, raises and builds the ramps you order;','the other peasants keep gathering'],'rt-':['Remove a terraformer','He goes back to gathering'],mode:['Mouse mode','Select: drag draws a box','Pan: drag moves the camera']};
 
+/* shortcut badges: only the main keys (digits, '.', Q) are drawn on the buttons; every key stays active and is listed in Settings > Controls */
+const hkShow=k=>HK[k]!==undefined&&/^[0-9.Q]$/.test(String(HK[k]));
+
 const RN={g:'gold',w:'wood',s:'stone',f:'food'};
 
 export let CMP = false;
@@ -245,9 +248,9 @@ function catKeys(c,siege){const a=catItems(c,siege);return a.concat(a.filter(k=>
 function buildGroups(siege){const sg=siege&&RS.done;if(buildMenuState.BCAT&&BCATS[buildMenuState.BCAT]&&(buildMenuState.BCAT!=='siege'||sg))return[[BCATS[buildMenuState.BCAT][0],['back'].concat(catKeys(buildMenuState.BCAT,siege))]];return[['Build',['cat:def','cat:eco','cat:town','cat:land'].concat(sg?['cat:siege']:[],RS.done?['upgtool']:[],['demolish'])]]}
 
 function ctxGroups(){const S=sel();if(S.length){const sol=S.some(u=>u.type!=='peasant'),pea=S.some(u=>u.type==='peasant'),G=[];
-  if(sol)G.push(['Behaviour',['agg','def','hold','stop']]);
+  if(sol)G.push(['Behaviour',['agg','def','hold']]);
   if(pea&&!sol)G.push(['Peasants',['work','stop']],['Tasks',['jw','js','jg','jf','jr']],...buildGroups(false));
-  G.push(['Group',(sol&&S.length>=2?['form']:[]).concat(['army','idle','mode'])]);return G}
+  G.push(['Group',(sol&&S.length>=2?['form']:[]).concat(['army','idle'],inputState.touch?['mode']:[])]);return G}
  const upI=b=>b&&b.tier===0&&UPC[b.type]?['stoneup']:[];
  if(selectionState.selB&&sessionState.structs.includes(selectionState.selB)&&selectionState.selB.prog>=1&&!TRB.has(selectionState.selB.type))return[['Command',upI(selBs().find(s=>s.tier===0)||selectionState.selB).concat(['repair','demolish'],ROTT.has(selectionState.selB.type)?['rotate']:[])]];
  const t=curB().type;
@@ -257,7 +260,7 @@ function ctxGroups(){const S=sel();if(S.length){const sol=S.some(u=>u.type!=='pe
  if(t==='barracks')return[['Train',['knight','archer','bannerman','captain','scout'].concat(RS.done?['cannon']:[])],['Command',upI(curB()).concat(['army','idle','rally','repair','demolish','rotate','form','mode'])]];
  return[['Train',['peasant','engineer'].concat(bastionHas(HOMEC().pl|0,'embassy')?['envoy']:[]).concat(royalBtns())],...buildGroups(true),['Command',upI(HOMEC()).concat(['army','idle','rallyc','repair','rotate','movec','form','mode'])]].concat(MP.on&&sessionState.CS2?[['Co-op',['convoy']]]:[])}
 
-export function menuItems(){CMP=cv.width/hudDisplayState.UIS<420;const L=[];ctxGroups().forEach(([n,ks0])=>{let ks=ks0;if(n==='Command'&&sel().length<2)ks=ks.filter(k=>k==='stoneup'||k==='rally'||k==='rallyc'||k==='rotate'||k==='movec'||k==='repair'||(k==='demolish'&&selectionState.selB&&sessionState.structs.includes(selectionState.selB)));if(n==='Siege'&&!RS.done)return;if(!ks.length)return;if(L.length)L.push({gap:7});ks.forEach((k,i)=>{const nc=Object.keys(C[k.startsWith('s:')?k.slice(2):k]||{}).length,it={k:(k in T||k in C)?'buy':k,id:k,grp:n,first:i===0,w:CMP?25:MW+(nc>2?(nc-2)*9:0),h:CMP?25:MH};
+export function menuItems(){CMP=cv.width/hudDisplayState.UIS<420;const L=[];ctxGroups().forEach(([n,ks0])=>{let ks=inputState.touch?ks0:ks0.filter(k=>k!=='mode');if(n==='Command'&&sel().length<2)ks=ks.filter(k=>k==='stoneup'||k==='rally'||k==='rallyc'||k==='rotate'||k==='movec'||k==='repair'||(k==='demolish'&&selectionState.selB&&sessionState.structs.includes(selectionState.selB)));if(n==='Siege'&&!RS.done)return;if(!ks.length)return;if(L.length)L.push({gap:7});ks.forEach((k,i)=>{const nc=Object.keys(C[k.startsWith('s:')?k.slice(2):k]||{}).length,it={k:(k in T||k in C)?'buy':k,id:k,grp:n,first:i===0,w:CMP?25:MW+(nc>2?(nc-2)*9:0),h:CMP?25:MH};
   if(n!=='Build'&&TIERK.has(k)&&buildMenuState.BCAT)it.tr=0;
   if(k.startsWith('s:')){it.k='buy';it.id=k.slice(2);it.tr=1;it.first=false;it.under=L.find(o=>o.id===it.id&&o.tr===0)||null}
   L.push(it)})});return L}
@@ -283,11 +286,11 @@ const STNK=new Set(['agg','def','hold','stop','work']);
 function stanceOn(k){const S=sel().filter(u=>u.type!=='peasant');return S.length>0&&S.every(u=>(u.stn||'agg')===k)}
 
 export function drawItem(it){const cat=it.k.startsWith('cat:')?it.k.slice(4):null,on=(it.k==='upgtool'&&sessionState.mode==='upgrade')||(cat&&catItems(cat,true).includes(sessionState.mode))||(it.k==='buy'&&sessionState.mode===it.id&&(it.tr===undefined||(it.tr?stoneOn():!stoneOn())))||(it.k==='mode'&&inputState.panMode)||(it.k==='form'&&constructionState.formType>0)||(STNK.has(it.k)&&it.k!=='stop'&&it.k!=='work'&&stanceOn(it.k)),dis=it.k==='buy'&&((it.tr===1&&!RS.done)||!ok(tierC(it)||{})||sessionState.over||(it.id==='upgrade'&&(RS.done||RS.on))||(((it.id in RT2)||it.id==='upgrade')&&!hasAcademy(LPL()))||((it.id in RT2)&&(RS2.done[it.id]||RS2.on||!rxPre(it.id)||rxLock(it.id)))||(it.id in T&&it.id!=='ballista'&&it.id!=='trebuchet'&&popUsed(LPL())+popOf(it.id)>popCap(LPL()))||(it.id==='cannon'&&!RS.done))||(it.k==='stoneup'&&(()=>{const b=upTarget(),c=b&&UPC[b.type];return !RS.done||!c||!ok(c)})());
- let tip=TIPS[it.id||it.k];if(it.k==='buy'&&C[it.id]&&!TRADEK.has(it.id))tip=[NAMES[it.id]].concat(TIPS[it.id].slice(1),['']);if(it.tr!==undefined)tip=[(it.tr?'Stone ':'Wooden ')+NAMES[it.id].toLowerCase()+(it.tr||HK[it.id]===undefined?'':' ['+HK[it.id]+']'),it.tr?'Much tougher: holds the horde far longer':'Cheap and quick to build'].concat(it.tr&&!RS.done?['Locked: research Masonry at the Academy']:[],['']);if(it.k==='buy'&&tip&&((it.id in RT2)||it.id==='upgrade')){const up=it.id==='upgrade',ex=[];if(up?RS.done:RS2.done[it.id])ex.push('Already researched');else if(up?RS.on:RS2.on===it.id)ex.push('In progress: '+Math.floor(up?RS.t/RT_TIME*100:RS2.t/RT2[it.id]*100)+'%');else if(!up&&rxLock(it.id))ex.push('Closed: you chose '+RN2[rxLock(it.id)]);else if(!up&&RS2.on)ex.push('Wait: '+RN2[RS2.on]+' first');if(!up&&rxPair(it.id)>=0&&!rxLock(it.id)&&!RS2.done[it.id]){const pr=RXOR[rxPair(it.id)];ex.push('Exclusive path: closes '+RN2[pr[0]===it.id?pr[1]:pr[0]])}if(!hasAcademy(LPL()))ex.push('Needs your own Academy');if(MP.on)ex.push('Shared: helps both players');if(ex.length)tip=tip.slice(0,-1).concat(ex,[tip[tip.length-1]])}
+ let tip=TIPS[it.id||it.k];if(it.k==='buy'&&C[it.id]&&!TRADEK.has(it.id))tip=[NAMES[it.id]].concat(TIPS[it.id].slice(1),['']);if(it.tr!==undefined)tip=[(it.tr?'Stone ':'Wooden ')+NAMES[it.id].toLowerCase()+(it.tr||!hkShow(it.id)?'':' ['+HK[it.id]+']'),it.tr?'Much tougher: holds the horde far longer':'Cheap and quick to build'].concat(it.tr&&!RS.done?['Locked: research Masonry at the Academy']:[],['']);if(it.k==='buy'&&tip&&((it.id in RT2)||it.id==='upgrade')){const up=it.id==='upgrade',ex=[];if(up?RS.done:RS2.done[it.id])ex.push('Already researched');else if(up?RS.on:RS2.on===it.id)ex.push('In progress: '+Math.floor(up?RS.t/RT_TIME*100:RS2.t/RT2[it.id]*100)+'%');else if(!up&&rxLock(it.id))ex.push('Closed: you chose '+RN2[rxLock(it.id)]);else if(!up&&RS2.on)ex.push('Wait: '+RN2[RS2.on]+' first');if(!up&&rxPair(it.id)>=0&&!rxLock(it.id)&&!RS2.done[it.id]){const pr=RXOR[rxPair(it.id)];ex.push('Exclusive path: closes '+RN2[pr[0]===it.id?pr[1]:pr[0]])}if(!hasAcademy(LPL()))ex.push('Needs your own Academy');if(MP.on)ex.push('Shared: helps both players');if(ex.length)tip=tip.slice(0,-1).concat(ex,[tip[tip.length-1]])}
  const ic=it.k==='stoneup'||it.k==='upgtool'?IC.upgrade:it.tr!==undefined?(ICT[it.tr][it.id]||IC[it.id]):cat?IC[BCI[cat]]:it.k==='back'?IC.back:ROLEK.has(it.k)?IC[({b:'wall',r:'repair',t:'raise'})[it.k[1]]]:STNK.has(it.k)?IC[it.k]:JOBK.has(it.k)?IC[JOBI[it.k]]:it.k==='convoy'?IC.convoy:it.k==='buy'?IC[it.id]:it.k==='army'?IC.army:it.k==='idle'?IC.idle:it.k==='form'?IC.group:inputState.panMode?IC.pan:IC.cursor;
  const nm=NAMES[it.id]||'',idleN=it.k==='idle'?idleP().length:0;
  if(it.lab&&!CMP)TN(it.grp,it.x+1,it.y-9.5,'#d6b46a',.72);
- uiBtn(it.x,it.y,it.w,it.h,SLOT,SLOTH,itemFn(it),tip,(x,y,w,h)=>{canvasesState.ctx.globalAlpha=dis?.45:1;if(CMP){dIc(ic,x+((w-17)>>1),y+((h-17)>>1)+1,17);canvasesState.ctx.globalAlpha=1;if(HK[it.id||it.k]!==undefined&&it.tr!==1)T_(HK[it.id||it.k],x+2,y+1.5,'#ffff55',.6);if(idleN)T_('!',x+w-5,y+1,'#ff6a6a',.7);return}dIc(ic,x+((w-16)>>1),y+4,16);
+ uiBtn(it.x,it.y,it.w,it.h,SLOT,SLOTH,itemFn(it),tip,(x,y,w,h)=>{canvasesState.ctx.globalAlpha=dis?.45:1;if(CMP){dIc(ic,x+((w-17)>>1),y+((h-17)>>1)+1,17);canvasesState.ctx.globalAlpha=1;if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+2,y+1.5,'#ffff55',.6);if(idleN)T_('!',x+w-5,y+1,'#ff6a6a',.7);return}dIc(ic,x+((w-16)>>1),y+4,16);
   TCf(nm,x+w/2,y+21.5,dis?'#b8b8b8':'#ffffff',.7,w-3,.42);canvasesState.ctx.globalAlpha=1;
   const rdn=it.k==='buy'&&((it.id==='upgrade'&&RS.done)||((it.id in RT2)&&RS2.done[it.id])),ron=it.k==='buy'&&((it.id==='upgrade'&&RS.on)||((it.id in RT2)&&RS2.on===it.id));
   if(rdn){canvasesState.ctx.globalAlpha=1;TCf('Done',x+w/2,y+29.5,'#6aff7a',.62,w-14,.4);canvasesState.ctx.strokeStyle='#0b0810';canvasesState.ctx.lineWidth=3.2;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-12,y+7);canvasesState.ctx.lineTo(x+w-8,y+11);canvasesState.ctx.lineTo(x+w-2.5,y+3.5);canvasesState.ctx.stroke();canvasesState.ctx.strokeStyle='#6aff7a';canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.stroke()}
@@ -299,10 +302,9 @@ export function drawItem(it){const cat=it.k.startsWith('cat:')?it.k.slice(4):nul
   else if(it.k==='back')T_('Esc',x+(w-tw('Esc',.62))/2,y+29.5,'#ffff55',.62);
   else if(it.k==='idle'){T_(idleN?idleN+' idle':'none',x+(w-tw(idleN?idleN+' idle':'none',.62))/2,y+29.5,idleN?'#ffff55':'#b0b0b0',.62)}
   else if(it.k==='mode')T_(inputState.panMode?'Pan':'Select',x+(w-tw(inputState.panMode?'Pan':'Select',.62))/2,y+29.5,'#e0e0e0',.62);
-  else if(it.k==='army')T_('fighters',x+(w-tw('fighters',.62))/2,y+29.5,'#e0e0e0',.62);
   else if(it.k==='form')T_(FORMS[constructionState.formType],x+(w-tw(FORMS[constructionState.formType],.62))/2,y+29.5,constructionState.formType?'#ffff55':'#e0e0e0',.62);
   else if(ROLEK.has(it.k)){const r=it.k[1],p=LPL(),s=RHAS[p][r]+' / '+ROLE[p][r];T_(s,x+(w-tw(s,.62))/2,y+29.5,ROLE[p][r]?'#ffff55':'#b0b0b0',.62)}
-  if(HK[it.id||it.k]!==undefined&&it.tr!==1)T_(HK[it.id||it.k],x+3,y+2.5,'#ffff55',.68);
+  if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+3,y+2.5,'#ffff55',.68);
   if(it.tr===1&&!RS.done){canvasesState.ctx.globalAlpha=1;const lx=x+w-10,ly=y+3;canvasesState.ctx.strokeStyle='#e8c070';canvasesState.ctx.lineWidth=1.2;canvasesState.ctx.beginPath();canvasesState.ctx.arc(lx+3.5,ly+3.5,2.2,Math.PI,0);canvasesState.ctx.stroke();canvasesState.ctx.fillStyle='#e8c070';canvasesState.ctx.fillRect(lx,ly+3.5,7,5.5);canvasesState.ctx.fillStyle='#3a2a10';canvasesState.ctx.fillRect(lx+3,ly+5.3,1,2)}
   if(idleN)T_('!',x+w-6,y+2,'#ff6a6a',.8);
   if(cat){canvasesState.ctx.fillStyle='#d6b46a';canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-2.5,y+2.5);canvasesState.ctx.lineTo(x+w-2.5,y+8.5);canvasesState.ctx.lineTo(x+w-8.5,y+2.5);canvasesState.ctx.closePath();canvasesState.ctx.fill()}},on,dis);
