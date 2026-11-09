@@ -4,6 +4,9 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-09 · look du Roi (1C 2C 3B 4B 5B) appliqué, non livré
+- Liseré doré + coins pixel, troupes en cartes par type, slots Build icône+coût, titres en Pixelify Sans (repli Inter), écran de fin en 3 niveaux. UI seulement. Vérifié: build, det, smoke, fitcheck 0. Reste: tests mp8 mpk mp_resync après fusion, police hors ligne réelle.
+
 ## 2026-11-09 · lots design / qualité / simplicité (non livrés, v92 en préparation)
 - Corrections qualité fusionnées; kit Discord (anglais) et `tools/announce.sh` (embed + images, dry-run seulement); images d'annonce v92 dans `announce/img/v92/` (minimap noire, barre du Roi absente sur 03).
 - Menus: Esc à 4 boutons, tutoriel 5 étapes, réglages 3 onglets, raccourcis ponctuation masqués, Build: niche masquée avant académie/vague 1, boutons maison/ferme/mur, `UIT` + `focusRing`.
