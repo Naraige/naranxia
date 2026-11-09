@@ -1,0 +1,166 @@
+{
+ "title": "Menus : cadres, boutons, modes de jeu, pied de page, fond, fiche, onglets, affiche",
+ "intro": "A = rendu actuel en vraie capture 1280x720 (polices hors ligne) ; B et C = maquettes Pillow dessinées sur ces captures (vraie scène 3D, vrais boutons et slots quand c'est possible). Style seulement : art original Naranxia (bleu nuit, or, Pixelify Sans). Réponds avec un code comme \"1B 2C 3C 4B 5B 6C 7C 8C\". Les textes des maquettes sont en anglais comme le jeu.",
+ "sections": [
+  {
+   "name": "Cadre et fond des panneaux de menu (Réglages pris en exemple)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r1A.png",
+     "note": "capture réelle : liseré doré 1 px, coins en escalier"
+    },
+    {
+     "id": "B",
+     "img": "r1B.png",
+     "note": "maquette : double filet doré (liseré extérieur plein, intérieur atténué), losanges au milieu"
+    },
+    {
+     "id": "C",
+     "img": "r1C.png",
+     "note": "maquette : coins ornés à volutes carrées + filet intérieur"
+    }
+   ]
+  },
+  {
+   "name": "Boutons du menu principal : repos, survol, désactivé",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r2A.png",
+     "note": "capture réelle des 3 états (le désactivé est un état forcé sur « Load game » : texte peu lisible)"
+    },
+    {
+     "id": "B",
+     "img": "r2B.png",
+     "note": "maquette : plaques bleu nuit à liseré doré, survol avec losanges et lueur, cadenas si désactivé"
+    },
+    {
+     "id": "C",
+     "img": "r2C.png",
+     "note": "maquette : bouton pierre biseauté style Minecraft, survol or + chevron, désactivé hachuré"
+    }
+   ]
+  },
+  {
+   "name": "Écran de choix du mode de jeu",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r3A.png",
+     "note": "capture réelle : aujourd'hui trois boutons du menu titre (Singleplayer / Multiplayer / Join a game)"
+    },
+    {
+     "id": "B",
+     "img": "r3B.png",
+     "note": "maquette : 2 cartes (Solo, Co-op) à lignes ✓/✗, fond flou, pied de page"
+    },
+    {
+     "id": "C",
+     "img": "r3C.png",
+     "note": "maquette : 3 cartes (Solo, Co-op hôte, Rejoindre avec code) à lignes ✓/✗"
+    }
+   ]
+  },
+  {
+   "name": "Pied de page de touches sur tous les menus (écran Nouveau royaume pris en exemple)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r4A.png",
+     "note": "capture réelle : rien"
+    },
+    {
+     "id": "B",
+     "img": "r4B.png",
+     "note": "maquette : Back [Esc] / Select [Entrée]"
+    },
+    {
+     "id": "C",
+     "img": "r4C.png",
+     "note": "maquette : clavier + manette + tactile"
+    }
+   ]
+  },
+  {
+   "name": "Fond du menu titre : flou + assombri + vignette",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r5A.png",
+     "note": "capture réelle : scène 3D nette (rien de plus)"
+    },
+    {
+     "id": "B",
+     "img": "r5B.png",
+     "note": "maquette : flou léger, 22 % sombre, vignette douce"
+    },
+    {
+     "id": "C",
+     "img": "r5C.png",
+     "note": "maquette : flou fort, 50 % sombre, vignette marquée"
+    }
+   ]
+  },
+  {
+   "name": "Panneau de détail d'une unité (le Chevalier ici ; même gabarit pour les bâtiments)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r6A.png",
+     "note": "capture réelle : aucune fiche, seulement Comportement / Groupe (les stats sont dans l'infobulle)"
+    },
+    {
+     "id": "B",
+     "img": "r6B.png",
+     "note": "maquette : titre pixel, étiquette de rôle, 5 lignes d'attributs à icône, texte d'ambiance (stats réelles du jeu)"
+    },
+    {
+     "id": "C",
+     "img": "r6C.png",
+     "note": "maquette : badge hexagonal de niveau, portrait, attributs, cadre « Upgrades » à titre sur le filet, slots vides à croix, coût, boutons"
+    }
+   ]
+  },
+  {
+   "name": "Menu de construction : onglets à icônes",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r7A.png",
+     "note": "capture réelle : trois blocs Train / Build / Command dans un seul panneau"
+    },
+    {
+     "id": "B",
+     "img": "r7B.png",
+     "note": "maquette : onglets Train / Build / Command, un seul contenu à la fois (vrais slots de la capture)"
+    },
+    {
+     "id": "C",
+     "img": "r7C.png",
+     "note": "maquette : onglets + pastilles « 2 nouveaux », étiquettes NEW sur les slots, touches Q / E pour changer d'onglet"
+    }
+   ]
+  },
+  {
+   "name": "Écran titre / affiche",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r8A.png",
+     "note": "capture réelle : logo + menu, sans cadre"
+    },
+    {
+     "id": "B",
+     "img": "r8B.png",
+     "note": "maquette : cadre doré à coins ornés, titre sur le filet du haut, braises dorées (animées en jeu, fixes ici), damier quasi invisible"
+    },
+    {
+     "id": "C",
+     "img": "r8C.png",
+     "note": "maquette : idem + badge doré « v91 · AUTUMN » sur le filet du bas (version + saison)"
+    }
+   ]
+  }
+ ]
+}
