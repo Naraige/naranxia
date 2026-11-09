@@ -1,5 +1,6 @@
 import { bastionHas } from './economy.js';
-import { BASES } from '../ai/kingdoms.js';
+import { baseTrait, BASES, campLabel } from '../ai/kingdoms.js';
+import { evPush } from './events.js';
 import { bossSpawn } from '../ai/wave-boss.js';
 import { WSPN, zcount } from '../ai/zombie-lanes.js';
 import { snd } from '../audio/sound.js';
@@ -36,12 +37,13 @@ let wmsg='';
 
 export function wave(){const L0=sessionState.nextL.slice();wave0();if(!MP.on&&sessionState.waveN>1)setTimeout(()=>saveGame('Autosave',true),400);const bm=sessionState.waveN%5===3&&sessionState.waveN>=3,mc=sessionState.waveN%4===2;
  if(bm){for(const L of L0){const an=spawnAnchor(L),p=an.p;let hk=0;for(let i=0,nE=Math.round((12+sessionState.waveN*5)*D_().zm*laneK(L,L0));i<nE;i++){if(i%3&&swarmState.SWF>0){hk++;continue}if(zcount()>=720)break;const x=(p[0]+rnd(-5,5))*TS,y=(p[1]+rnd(-5,5))*TS;if(solidAt(x,y))continue;const zu=mkU(1,i%3?'husk':'runner',x,y,null,L);zu.hp*=1+.05*sessionState.waveN;zu.ph=an.ph;sessionState.units.push(zu)}if(hk)swQueue(L,an,hk*swarmState.SWF)}snd('bloodmoon');sessionState.bannerS2='BLOOD MOON - a bigger, faster horde! '+sessionState.bannerS2}
- bossSpawn(L0);if(mc){const g=40+sessionState.waveN*10,w=30+sessionState.waveN*6,st=20+sessionState.waveN*5;for(let pi=0;pi<playersState.RESP.length;pi++){const R=playersState.RESP[pi],m=bastionHas(pi,'embassy')?1.5:1;R.g+=Math.round(g*m);R.w+=Math.round(w*m);R.s+=Math.round(st*m)}snd('caravan');const cm='A merchant caravan passes: +'+g+' gold, +'+w+' wood, +'+st+' stone';if(ZNEW[sessionState.waveN]){hudDisplayState.msgS+='  --  '+cm;hudDisplayState.msgT=12}else{hudDisplayState.msgS=cm;hudDisplayState.msgT=6}}
+ bossSpawn(L0);if(mc){const g=40+sessionState.waveN*10,w=30+sessionState.waveN*6,st=20+sessionState.waveN*5;evPush({k:'car',i:sessionState.waveN*4+1,a:{g,w,s:st}})}
  const wn=sessionState.waveN;
  if(wn>=7&&wn%9===7){for(const L of L0){const an=spawnAnchor(L),p=an.p;for(let i=0,nE=Math.round((6+wn*2)*D_().zm*laneK(L,L0));i<nE;i++){if(zcount()>=720)break;const x=(p[0]+rnd(-5,5))*TS,y=(p[1]+rnd(-5,5))*TS;if(solidAt(x,y))continue;const zu=mkU(1,'runner',x,y,null,L);zu.hp*=1+.03*wn;zu.ph=an.ph;sessionState.units.push(zu)}}snd('wolves');sessionState.bannerS2='WOLF PACK - fast raiders from the wild! '+sessionState.bannerS2}
  if(wn>=8&&wn%11===8){for(const u of sessionState.units)if(u.t===1&&u.lane>=0)u.hp*=1.15;const rg=40+wn*8;for(let pi=0;pi<playersState.RESP.length;pi++)playersState.RESP[pi].g+=Math.round(rg*(bastionHas(pi,'embassy')?1.5:1));snd('eclipse');sessionState.bannerS2='ECLIPSE - the dead grow stronger, but relics fall: +'+rg+' gold. '+sessionState.bannerS2}
- const EV=sessionState.waveN%6===4?['Rebel envoys bring tribute from a nearby camp',{g:30+sessionState.waveN*6,f:40+sessionState.waveN*5}]:sessionState.waveN%7===5?['A meteor shower: rare stone falls near the walls',{s:60+sessionState.waveN*8}]:null;
- if(EV){snd(sessionState.waveN%6===4?'envoy':'meteor');for(let pi=0;pi<playersState.RESP.length;pi++){const R=playersState.RESP[pi],m=bastionHas(pi,'embassy')?1.5:1;for(const k in EV[1])R[k]+=Math.round(EV[1][k]*m)}const em=EV[0]+': '+Object.entries(EV[1]).map(([k,v])=>'+'+v+' '+({g:'gold',w:'wood',s:'stone',f:'food'})[k]).join(', ');hudDisplayState.msgS=(hudDisplayState.msgT>0&&(mc||ZNEW[sessionState.waveN])?hudDisplayState.msgS+'  --  ':'')+em;hudDisplayState.msgT=Math.max(hudDisplayState.msgT,8)}
+ if(wn%6===4){const al=BASES.filter(b=>b.alive),cb=al.length?al[wn%al.length]:null;evPush({k:'env',i:wn*4+2,a:{g:30+wn*6,f:40+wn*5},cn:cb?campLabel(cb):'',mu:cb&&baseTrait(cb)==='merchant'?1.5:1})}
+ const EV=sessionState.waveN%6===4?null:sessionState.waveN%7===5?['A meteor shower: rare stone falls near the walls',{s:60+sessionState.waveN*8}]:null;
+ if(EV){snd('meteor');for(let pi=0;pi<playersState.RESP.length;pi++){const R=playersState.RESP[pi],m=bastionHas(pi,'embassy')?1.5:1;for(const k in EV[1])R[k]+=Math.round(EV[1][k]*m)}const em=EV[0]+': '+Object.entries(EV[1]).map(([k,v])=>'+'+v+' '+({g:'gold',w:'wood',s:'stone',f:'food'})[k]).join(', ');hudDisplayState.msgS=(hudDisplayState.msgT>0&&(mc||ZNEW[sessionState.waveN])?hudDisplayState.msgS+'  --  ':'')+em;hudDisplayState.msgT=Math.max(hudDisplayState.msgT,8)}
  if(wn===30||wn===50){const dm=wn===30?'The sky pales in the east. Dawn may still come: hold the bastion.':'Fifty waves. Even the rebels light fires in your honor.';hudDisplayState.msgS=(hudDisplayState.msgT>0?hudDisplayState.msgS+'  --  ':'')+dm;hudDisplayState.msgT=Math.max(hudDisplayState.msgT,10)}
  wavesState.WAVEZ=SW.n+swPending();for(const u of sessionState.units)if(u.t===1&&u.lane>=0)wavesState.WAVEZ++}
 
@@ -56,7 +58,7 @@ function wave0(){sessionState.waveN++;if(sessionState.waveN>1)kingWaveXp();wmsg=
   const add=(type,c,sp)=>{for(let i=0;i<c;i++){if(zcount()>=720)break;const x=(p[0]+rnd(-sp,sp))*TS,y=(p[1]+rnd(-sp,sp))*TS;if(solidAt(x,y))continue;const zu=mkU(1,type,x,y,null,L);zu.hp*=1+.05*sessionState.waveN;zu.ph=an.ph;sessionState.units.push(zu)}};
   const n0=sessionState.units.length;if(swarmState.SWF>0)swQueue(L,an,nh*swarmState.SWF);else add('husk',nh,4.5);add('zombie',nz,3);add('runner',nr,3);add('brute',nb,2);add('bomber',nbm,3);add('acid',nac,3);add('miner',nmi,2);
   let tbb=null,tci=0;if(BASES.length){const R=terrainState.ROUTES[L];let bd=1e9;for(const b of BASES)if(b.alive){let k=-1;for(let j=0;j<R.wps.length;j++)if(hyp(R.wps[j][0]-b.tx,R.wps[j][1]-b.ty)<44){k=j;break}if(k>=0&&k<bd){bd=k;tbb=b;tci=k}}}
-  if(tbb){for(let k=n0;k<sessionState.units.length;k++){sessionState.units[k].tb=tbb;sessionState.units[k].tcut=tci}wmsg='The horde turns on '+tbb.name}}
+  if(tbb){const wk=baseTrait(tbb)==='warlike'?1.25:1;for(let k=n0;k<sessionState.units.length;k++){const zk=sessionState.units[k];zk.tb=tbb;zk.tcut=tci;if(wk>1)zk.hp*=wk}wmsg='The horde turns on '+campLabel(tbb)}}
  snd('horn');sessionState.bannerT=5;sessionState.bannerS='WAVE '+sessionState.waveN;sessionState.bannerS2='Horde from '+sessionState.nextL.map(L=>terrainState.ROUTES[L].dir).join(' + ')+(sessionState.waveN%5===0?'  -  BRUTES!':'');const zn=ZNEW[sessionState.waveN];if(zn)sessionState.bannerS2='NEW ZOMBIES: '+zn[0]+'!  -  from '+sessionState.nextL.map(L=>terrainState.ROUTES[L].dir).join(' + ');
  sessionState.nextL=pickLanes();hudDisplayState.msgT=0;if(wmsg){hudDisplayState.msgS=wmsg;hudDisplayState.msgT=5}if(zn){hudDisplayState.msgS=zn[0]+': '+zn[1];hudDisplayState.msgT=10}}
 

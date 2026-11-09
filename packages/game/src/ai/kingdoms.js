@@ -51,6 +51,14 @@ const BNAMES=['Ironhold','Oakmere','Stonegate','Highwatch','Redfern','Duskmoor',
 
 const rI=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 
+/* ---- camp personalities (events-camps): every rebel camp has one trait, a pure hash of the world seed and the camp id (deterministic,
+   does not touch the RNG stream; a camp without the field, e.g. from an older save, gets the same trait lazily; settlements inherit it).
+   merchants: the envoy tribute is 50% richer; warlike: a horde sent against the camp is 25% tougher; wary: the first envoy is turned away. */
+export const TRAITS=['merchant','warlike','wary'];
+const TRNAME={merchant:'merchants',warlike:'warlike',wary:'wary'};
+export function baseTrait(b){if(!b.trait||TRAITS.indexOf(b.trait)<0){let h=Math.imul(((+terrainState.SEED||0)|0)^0x5bd1e995,0x9E3779B1)+Math.imul((b.id|0)+1,0x85EBCA6B)|0;h^=h>>>15;h=Math.imul(h,0xC2B2AE35);h^=h>>>13;b.trait=TRAITS[(h>>>0)%TRAITS.length]}return b.trait}
+export const campLabel=b=>b.name+' - '+TRNAME[baseTrait(b)];
+
 /* attack reach of a building in tiles (null if it does not shoot): shown by the selection ring and in the info line */
 export function rangeOf(s){if(!s||s.t!==0||s.prog<1)return null;if(s.type==='castle')return{r:CASTLE_RNG};if(s.type!=='tower')return null;if(s.weapon==='ballista')return{r:720/TS};if(s.weapon==='trebuchet')return{r:1300/TS,min:240/TS};return{r:TOWR+(s.tier!==0?60/TS:0)}}
 
@@ -83,7 +91,7 @@ function msgAI(s){if(hudDisplayState.msgT<=0||hudDisplayState.msgS.startsWith('T
 function addHorde(tx,ty,n){const dd=Math.min(hyp(tx-terrainState.CX,ty-terrainState.CY),sessionState.SITE2?hyp(tx-sessionState.SITE2.tx,ty-sessionState.SITE2.ty):1e9);HORDES.push({x:(tx+.5)*TS,y:(ty+.5)*TS,n:n||(5+rI(0,9)+Math.min(24,(dd/38)|0)),act:false,us:[],home:null,wx:undefined,wy:0,wait:0})}
 
 function addBase(tx,ty,lvl,pop,ci){const id=++kingdomsState.baseId;let c=ci;if(c===undefined){do c=rI(0,7);while(c===THEME.c)}
- const b={id,name:BNAMES[(id-1)%BNAMES.length]+(id>BNAMES.length?' '+Math.ceil(id/BNAMES.length):''),tx,ty,x:(tx+.5)*TS,y:(ty+.5)*TS,ci:c,pop,lvl,gold:0,alive:true,mat:false,ss:[],us:[],n0:0,flat:false,fail:0,tExp:70+Math.random()*80};BASES.push(b);return b}
+ const b={id,name:BNAMES[(id-1)%BNAMES.length]+(id>BNAMES.length?' '+Math.ceil(id/BNAMES.length):''),tx,ty,x:(tx+.5)*TS,y:(ty+.5)*TS,ci:c,pop,lvl,gold:0,alive:true,mat:false,ss:[],us:[],n0:0,flat:false,fail:0,tExp:70+Math.random()*80};BASES.push(b);baseTrait(b);return b}
 
 export function initAI(){HORDES.length=0;BASES.length=0;kingdomsState.baseId=0;kingdomsState.hdT=0;kingdomsState.spawnHT=10;aiInit()}
 
@@ -263,7 +271,7 @@ function aiTick(D){let nAI=0;for(const b of BASES)if(b.ai&&b.alive)nAI+=b.us.len
     if(hyp(tx-terrainState.CX,ty-terrainState.CY)<90||sessionState.SITE2&&hyp(tx-sessionState.SITE2.tx,ty-sessionState.SITE2.ty)<90||BASES.some(q=>q.alive&&hyp(q.tx-tx,q.ty-ty)<55))continue;const h=baseHW(tx,ty);if(_bwat||h>=ROCKH-3)continue;
     b.exS={tx,ty,k:0};break}}}
   if(b.exS){const E=b.exS,cx=(E.tx/CH)|0,cy=(E.ty/CH)|0;if(E.k<9){genChunk(cx+(E.k%3)-1,cy+((E.k/3)|0)-1);E.k++}else{b.exS=null;
-   const nb=addBase(E.tx,E.ty,0,6,b.ci);const rt=b.root||b.name;nb.root=rt;const sib=BASES.filter(q=>q.root===rt).length;nb.name=rt+' '+['March','Hollow','Ford','Rise','Vale','Watch','Moor','Crest'][sib%8];if(aiFound(nb)){b.kids=(b.kids||0)+1;b.res.w-=500;b.res.s-=250;b.res.g-=300;msgAI(b.name+' founds '+nb.name)}else{BASES.pop();kingdomsState.baseId--}}}
+   const nb=addBase(E.tx,E.ty,0,6,b.ci);const rt=b.root||b.name;nb.root=rt;nb.trait=baseTrait(b);const sib=BASES.filter(q=>q.root===rt).length;nb.name=rt+' '+['March','Hollow','Ford','Rise','Vale','Watch','Moor','Crest'][sib%8];if(aiFound(nb)){b.kids=(b.kids||0)+1;b.res.w-=500;b.res.s-=250;b.res.g-=300;msgAI(b.name+' founds '+nb.name)}else{BASES.pop();kingdomsState.baseId--}}}
   /* archers on the towers */
   for(const u of b.us)if(u.type==='archer'&&!u.gar)for(const s of b.ss)if(s.type==='tower'&&s.prog>=1&&(s.garr||[]).length<GCAP.tower){if(garrison(u,s))break}
   /* repairs, paid in wood */

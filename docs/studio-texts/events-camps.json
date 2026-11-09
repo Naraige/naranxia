@@ -1,0 +1,22 @@
+{
+"Merchant caravan": ["Caravane marchande", "Caravana de mercaderes", "Händlerkarawane", "Carovana di mercanti", "Caravana de mercadores"],
+"Envoys of {0}": ["Envoyés de {0}", "Enviados de {0}", "Gesandte von {0}", "Inviati di {0}", "Enviados de {0}"],
+"Take the goods now": ["Prendre la marchandise", "Tomar la mercancía ya", "Waren sofort nehmen", "Prendi subito la merce", "Ficar com a mercadoria já"],
+"Escort it to market": ["L'escorter au marché", "Escoltarla al mercado", "Zum Markt eskortieren", "Scortarla al mercato", "Escoltá-la até ao mercado"],
+"You receive {0} gold, {1} wood and {2} stone now": ["Vous recevez {0} or, {1} bois et {2} pierre tout de suite", "Recibes {0} de oro, {1} de madera y {2} de piedra ya", "Sofort: {0} Gold, {1} Holz und {2} Stein", "Ricevi subito {0} oro, {1} legno e {2} pietra", "Recebes já {0} de ouro, {1} de madeira e {2} de pedra"],
+"Chosen automatically when the time runs out": ["Choisi automatiquement à la fin du délai", "Se elige solo al acabar el tiempo", "Wird automatisch gewählt, wenn die Zeit abläuft", "Scelto in automatico allo scadere del tempo", "Escolhido automaticamente quando o tempo acaba"],
+"Pays {0} gold in {1} s, no wood or stone": ["Verse {0} or dans {1} s, sans bois ni pierre", "Paga {0} de oro en {1} s, sin madera ni piedra", "Zahlt {0} Gold in {1} s, kein Holz und kein Stein", "Paga {0} oro tra {1} s, senza legno né pietra", "Paga {0} de ouro em {1} s, sem madeira nem pedra"],
+"Accept the tribute": ["Accepter le tribut", "Aceptar el tributo", "Tribut annehmen", "Accetta il tributo", "Aceitar o tributo"],
+"Refuse and gain renown": ["Refuser et gagner du renom", "Rechazar y ganar renombre", "Ablehnen und Ansehen gewinnen", "Rifiuta e guadagna fama", "Recusar e ganhar renome"],
+"You receive {0} gold and {1} food": ["Vous recevez {0} or et {1} nourriture", "Recibes {0} de oro y {1} de comida", "Ihr erhaltet {0} Gold und {1} Nahrung", "Ricevi {0} oro e {1} cibo", "Recebes {0} de ouro e {1} de comida"],
+"Renown +1 (now {0}): rebel tributes pay {1}% more per point (max {2})": ["Renom +1 (maintenant {0}) : les tributs rebelles rapportent {1} % de plus par point (max {2})", "Renombre +1 (ahora {0}): los tributos rebeldes pagan un {1} % más por punto (máx. {2})", "Ansehen +1 (jetzt {0}): Rebellentribute zahlen {1} % mehr pro Punkt (max. {2})", "Fama +1 (ora {0}): i tributi ribelli rendono il {1}% in più per punto (max {2})", "Renome +1 (agora {0}): os tributos rebeldes pagam mais {1}% por ponto (máx. {2})"],
+"The caravan is escorted: it pays {0} gold in {1} s": ["La caravane est escortée : elle verse {0} or dans {1} s", "La caravana va escoltada: pagará {0} de oro en {1} s", "Die Karawane wird eskortiert: Sie zahlt {0} Gold in {1} s", "La carovana è scortata: pagherà {0} oro tra {1} s", "A caravana segue escoltada: paga {0} de ouro em {1} s"],
+"The caravan reaches the market: +{0} gold": ["La caravane atteint le marché : +{0} or", "La caravana llega al mercado: +{0} de oro", "Die Karawane erreicht den Markt: +{0} Gold", "La carovana raggiunge il mercato: +{0} oro", "A caravana chega ao mercado: +{0} de ouro"],
+"Tribute of {0}: +{1} gold, +{2} food": ["Tribut de {0} : +{1} or, +{2} nourriture", "Tributo de {0}: +{1} de oro, +{2} de comida", "Tribut von {0}: +{1} Gold, +{2} Nahrung", "Tributo di {0}: +{1} oro, +{2} cibo", "Tributo de {0}: +{1} de ouro, +{2} de comida"],
+"Tribute refused: renown {0}": ["Tribut refusé : renom {0}", "Tributo rechazado: renombre {0}", "Tribut abgelehnt: Ansehen {0}", "Tributo rifiutato: fama {0}", "Tributo recusado: renome {0}"],
+"The envoy is turned away by {0}: a wary camp needs a second visit": ["L'envoyé est éconduit par {0} : un camp méfiant exige une seconde visite", "El enviado es rechazado por {0}: un campamento receloso exige una segunda visita", "Der Gesandte wird von {0} abgewiesen: Ein misstrauisches Lager verlangt einen zweiten Besuch", "L'inviato è respinto da {0}: un accampamento diffidente vuole una seconda visita", "O enviado é recusado por {0}: um acampamento desconfiado exige uma segunda visita"],
+"merchants": ["marchands", "mercaderes", "Händler", "mercanti", "mercadores"],
+"warlike": ["belliqueux", "belicoso", "kriegerisch", "bellicoso", "belicoso"],
+"wary": ["méfiant", "receloso", "misstrauisch", "diffidente", "desconfiado"],
+"the rebel camps": ["les camps rebelles", "los campamentos rebeldes", "die Rebellenlager", "gli accampamenti ribelli", "os acampamentos rebeldes"]
+}
