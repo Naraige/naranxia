@@ -42,7 +42,7 @@ async()=>{let s=57;const RR=Math.random;Math.random=()=>{s=(s*16807)%2147483647;
  /* solo path: no command, applied at once */
  R.g=0;waveN=1;wave();evChoose(0);need(EVS.cur===null&&R.g===60,'solo click applies directly');
  /* ---- camp traits on the envoy unit ---- */
- const b=bs[0];const gain=(tr,wrf)=>{b.trait=tr;b.wrf=wrf;b.envT=0;const g0=R.g,u=mkU(0,'envoy',b.x+TS,b.y);units.push(u);for(let i=0;i<4;i++)update(.05);return{g:R.g-g0,dead:u.hp<=0,u}};
+ const b=bs[0];const gain=(tr,wrf)=>{b.trait=tr;b.wrf=wrf;b.envT=0;b.envN=0;b.envG=0;b.envF=0;const g0=R.g,u=mkU(0,'envoy',b.x+TS,b.y);units.push(u);for(let i=0;i<4;i++)update(.05);return{g:R.g-g0,dead:u.hp<=0,u}};
  const base=gain('warlike',0);const expect=Math.round((80+Math.min(waveN,20)*8)*renownMul(0));
  need(base.dead&&base.g===expect,'neutral camp pays the base tribute '+base.g+' vs '+expect);
  const mer=gain('merchant',0);need(mer.dead&&mer.g===Math.round((80+Math.min(waveN,20)*8)*1.5*renownMul(0)),'merchants pay 50% more '+mer.g);

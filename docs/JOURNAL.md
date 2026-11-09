@@ -8,6 +8,15 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Deleted refused variants + `window.__MV` (model-variants.js, unit-variants.js); units.js / bastion-buildings.js back to the pre-variant behaviour for king, guard, buildings. `pxScout`, `pxEngineer`, `pxEnvoy` added in royal-skins.js (B silhouettes). Visual only.
 - Verified: build, `det` PASS, showshot front/back of the 3 units; bbox tops sit under the bar height (scout h 16, engineer 16.4, envoy 16). Not run: smoke.
 
+## 2026-11-09 · Remaining workshops merged (v92, not released)
+- Research exclusive paths (Steel/Mail, Fire arrows/Boiling oil, Crop rotation/Better tools; `RS2.ch`, Iron age after either of Steel or Mail), market fatigue (`FAT` in SAVA, sell floor .80, barter .85), envoy tribute -25 % per visit with per-camp caps (700 gold, 350 food).
+- Events with a choice (caravan: take now or escort for x2.5 after 40 s; rebel envoys: accept or refuse for renown +10 %/point): `gameplay/events.js`, `ui/event-bar.js`, command `ev` in mpExec, state `EVT` in SAVA, first click decides in co-op, default after 30 s of sim time. Rebel camp traits (merchant x1.5 tribute, warlike +25 % horde hp, wary first envoy turned away) by pure hash of seed and camp id.
+- King XP and talents: state on the king unit (`kxp`, `kt`, `kdr`), levels 1-5, 8 talents in 2 branches, command `kt`.
+- Touch (44 px hit margin, long press tooltip, camera and cancel buttons) and colour-blind shapes/colours; animation LOD tried and dropped (gain below noise, see perf.md).
+- Conflicts in 6 files resolved by combining both sides; events test fixed (envoy decay reused on the same camp).
+- Verified: det events envoy research kingxp market features smoke compat save mp8 mpk mp_resync mp_kxp mp_events all PASS. fitcheck of the new texts started, touch/long-press and the colour-blind minimap shapes not tried by hand.
+- Left: release v92 when GitHub is back (drafts in docs/release-v92, to update with the new features), recolour selection rings and zombie eyes for colour-blind mode, a fatigue indicator on market buttons.
+
 ## 2026-11-08 (night) · King's board answers applied (v92, not released)
 - Answers "1A 2A 3B 4A 5A 6A 7A 8B 9A 10A 11B 12X 13B 14X" (X = keep current): palette, team colours and seasons unchanged; unit bars = 10 pixel segments with bevel (`drawBars` in ui/hud.js); knight plume red, archer/tower/barracks icons already match A; team skin = full tabard; rank stripes 0-3 (min(3, xp/4), knight and archer, player team, model rebuilt on rank change, `u.mrk`); scout, engineer, envoy use model variant B (`MV_DEFAULT` in rendering/models/model-variants.js); king, guard, bastion buildings unchanged.
 - `tools/run.py` now serves the fonts offline (fontroute), it hung on Google Fonts before.
