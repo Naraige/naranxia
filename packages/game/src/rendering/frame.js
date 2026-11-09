@@ -1,4 +1,4 @@
-import { rmotion } from '../core/prefs.js';
+import { cbOn, rmotion } from '../core/prefs.js';
 import { syncRuins } from './ruins.js';
 import { OWN, rangeOf, selH, TOWR } from '../ai/kingdoms.js';
 import { snd } from '../audio/sound.js';
@@ -126,7 +126,7 @@ export let render3D = function render3D(dt){frameState.frameN++;updateCamera(dt)
     if(sessionState.mode==='upgrade'){const o=occ.get(ty*TW+tx);if(o&&o.t===0&&UPC[o.type]&&o.tier===0){showG=false;good=o.prog>=1&&ok(UPC[o.type]);buildPreviewState.GHO={tier:1,rot:o.rot|0,gl:o.gl||2};try{ghostMake(GB1,o.type,o.tx,o.ty,o.ax|0,good,.62)}finally{buildPreviewState.GHO=null}}else good=false}
     if(sessionState.mode==='demolish'){const o=occ.get(ty*TW+tx);good=!!o&&o.t===0&&o.type!=='castle';if(!o&&stairs.has(ty*TW+tx)){good=true;showG=false;(stairs.get(ty*TW+tx).blk?[ty*TW+tx]:rampGroup(ty*TW+tx)).forEach((ii,bi)=>rampBox(bi,(ii%TW)+.5,HT[ii]+.14,((ii/TW)|0)+.5,1,.3,1,false))}else if(o){gx=o.sz*1.04;gz=o.sz*1.04;cx2=o.x/TS;cz2=o.y/TS;hh=2.4;yy=h0+hh/2}else showG=false;ghost.material.color.set(good?0xff9a3c:0xff5555)}
     if(sessionState.mode==='ramp'){showG=false;tgShow('ramp'+(constructionState.buildRot&3),tx,h0,ty,good)}
-    if(sessionState.mode==='movec')good=moveOK(tx,ty)&&ok(C.movec);ghost.material.color.set(good?0x66ff66:0xff5555);ghost.scale.set(gx,hh,gz);ghost.position.set(cx2,yy,cz2);ghost.visible=showG&&!GBM.has(sessionState.mode);if(GBM.has(sessionState.mode)){const a2=sessionState.mode==='gate'?gateAxAt(tx,ty):0,mc=sessionState.mode==='movec';ghostMake(GB1,mc?'castle':sessionState.mode,mc?tx-2:tx,mc?ty-2:ty,a2,good,.62)}
+    if(sessionState.mode==='movec')good=moveOK(tx,ty)&&ok(C.movec);ghost.material.color.set(good?(cbOn()?0x56b4e9:0x66ff66):(cbOn()?0xe69f00:0xff5555));ghost.scale.set(gx,hh,gz);ghost.position.set(cx2,yy,cz2);ghost.visible=showG&&!GBM.has(sessionState.mode);if(GBM.has(sessionState.mode)){const a2=sessionState.mode==='gate'?gateAxAt(tx,ty):0,mc=sessionState.mode==='movec';ghostMake(GB1,mc?'castle':sessionState.mode,mc?tx-2:tx,mc?ty-2:ty,a2,good,.62)}
    if(sessionState.mode==='tower'||sessionState.mode==='ballista'||sessionState.mode==='trebuchet'){const rr=sessionState.mode==='tower'?TOWR+(stoneOn()?1.5:0):sessionState.mode==='ballista'?18:32;rangeRing.scale.set(rr/7.5,1,rr/7.5);rangeRing.position.set(cx2,h0+.15,cz2);rangeRing.visible=true}}}}
  eyeFlush();glowFlush();scene.updateMatrixWorld();uiFlush();postRender(scene,camera,true)};
 

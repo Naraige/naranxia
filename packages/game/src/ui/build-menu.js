@@ -12,6 +12,7 @@ import {
   royalBtns,
   barterGet,
   tradeCost,
+  FAT,
   tradeGain,
   TRADEK,
   bastionHas,
@@ -308,7 +309,7 @@ export function drawItem(it){const cat=it.k.startsWith('cat:')?it.k.slice(4):nul
  if(it.k==='buy'){const hh=hudState.uiHits[hudState.uiHits.length-1];hh.price=true;hh.cost=it.id}}
 
 export function initializeBuildMenu() {
-  for(const k of['sellw','sells','buyw','buys','sellf','buyf']){const r=k[k.length-1],sl=k[0]==='s';Object.defineProperty(TIPS,k,{get:()=>sl?['Sell 50 '+RN[r],'You get '+tradeGain(r)+' gold','Each sale lowers the price for a while']:['Buy 50 '+RN[r],'Costs '+tradeCost(r)+' gold','Each purchase raises the price for a while'],enumerable:true,configurable:true});Object.defineProperty(NAMES,k,{get:()=>sl?'+'+tradeGain(r)+' gold':'+50 '+RN[r],enumerable:true,configurable:true})}
+  for(const k of['sellw','sells','buyw','buys','sellf','buyf']){const r=k[k.length-1],sl=k[0]==='s';Object.defineProperty(TIPS,k,{get:()=>sl?['Sell 50 '+RN[r],'You get '+tradeGain(r)+' gold',(FAT[r]||0)>=2?'The market is tired of this: sales pay less for a while':'Each sale lowers the price for a while']:['Buy 50 '+RN[r],'Costs '+tradeCost(r)+' gold','Each purchase raises the price for a while'],enumerable:true,configurable:true});Object.defineProperty(NAMES,k,{get:()=>sl?'+'+tradeGain(r)+' gold':'+50 '+RN[r],enumerable:true,configurable:true})}
   for(const k of['xws','xwf','xsw','xsf','xfw','xfs']){const a=k[1],b=k[2];Object.defineProperty(TIPS,k,{get:()=>['Swap 50 '+RN[a]+' for '+RN[b],'You get '+barterGet(a,b)+' '+RN[b],'Both prices shift a little'],enumerable:true,configurable:true});Object.defineProperty(NAMES,k,{get:()=>'+'+barterGet(a,b)+' '+RN[b],enumerable:true,configurable:true})}
   Object.defineProperty(NAMES,'tier',{get:()=>RS.done&&playersState.BTIER?'Stone':'Wood',enumerable:true,configurable:true});
 

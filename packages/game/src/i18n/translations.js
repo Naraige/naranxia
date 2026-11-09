@@ -856,6 +856,7 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"The market is tired of this: sales pay less for a while":["Le marché est saturé : les ventes rapportent moins pendant un moment","El mercado está saturado: las ventas pagan menos por un tiempo","Der Markt ist übersättigt: Verkäufe bringen eine Weile weniger","Il mercato è saturo: le vendite rendono meno per un po'","O mercado está saturado: as vendas pagam menos por um tempo"],
 "Merchant caravan":["Caravane marchande","Caravana de mercaderes","Händlerkarawane","Carovana di mercanti","Caravana de mercadores"],
 "Envoys of {0}":["Envoyés de {0}","Enviados de {0}","Gesandte von {0}","Inviati di {0}","Enviados de {0}"],
 "Take the goods now":["Prendre la marchandise","Tomar la mercancía ya","Waren sofort nehmen","Prendi subito la merce","Ficar com a mercadoria já"],
