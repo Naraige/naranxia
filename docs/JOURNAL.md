@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-09 · lots design / qualité / simplicité (non livrés, v92 en préparation)
+- Corrections qualité fusionnées; kit Discord (anglais) et `tools/announce.sh` (embed + images, dry-run seulement); images d'annonce v92 dans `announce/img/v92/` (minimap noire, barre du Roi absente sur 03).
+- Menus: Esc à 4 boutons, tutoriel 5 étapes, réglages 3 onglets, raccourcis ponctuation masqués, Build: niche masquée avant académie/vague 1, boutons maison/ferme/mur, `UIT` + `focusRing`.
+- Planche de look publiée (docs/studio-boards/look), en attente de la réponse du Roi. Aucun changement de look appliqué.
+- À vérifier: erreur « L2 is not a function » en sélectionnant le Roi; tests det smoke events mp8 mpk relancés après fusion (dist/merge_tests.txt).
+- Rien poussé (GitHub suspendu).
+
 ## 2026-11-09 · model variants cleaned, scout/engineer/envoy in pixel layer (local, not released)
 - Deleted refused variants + `window.__MV` (model-variants.js, unit-variants.js); units.js / bastion-buildings.js back to the pre-variant behaviour for king, guard, buildings. `pxScout`, `pxEngineer`, `pxEnvoy` added in royal-skins.js (B silhouettes). Visual only.
 - Verified: build, `det` PASS, showshot front/back of the 3 units; bbox tops sit under the bar height (scout h 16, engineer 16.4, envoy 16). Not run: smoke.
