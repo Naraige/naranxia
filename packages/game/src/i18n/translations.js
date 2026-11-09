@@ -856,6 +856,13 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Quit to title":["Quitter vers le titre","Salir al título","Zum Titel","Esci al titolo","Sair para o título"],
+"Display & sound":["Affichage et son","Pantalla y sonido","Anzeige & Ton","Schermo e audio","Ecrã e som"],
+"Bug report":["Rapport de bug","Informe de fallo","Fehlerbericht","Segnalazione bug","Relatório de erro"],
+"Build walls or a tower in the Defense menu: zombies follow the red lines. Good luck!":["Construisez des murs ou une tour dans le menu Défense : les zombies suivent les lignes rouges. Bonne chance !","Construye muros o una torre en el menú Defensa: los zombis siguen las líneas rojas. ¡Suerte!","Baut Mauern oder einen Turm im Verteidigungsmenü: Zombies folgen den roten Linien. Viel Glück!","Costruisci mura o una torre nel menu Difesa: gli zombie seguono le linee rosse. Buona fortuna!","Construa muros ou uma torre no menu Defesa: os zumbis seguem as linhas vermelhas. Boa sorte!"],
+"Rally":["Ralliement","Punto de reunión","Sammelpunkt","Punto di raduno","Ponto de encontro"],
+"Forester's hut":["Cabane du forestier","Cabaña del guardabosques","Försterhütte","Capanna del guardaboschi","Cabana do guarda-florestal"],
+"Builders' guild":["Guilde des bâtisseurs","Gremio de constructores","Baumeistergilde","Gilda dei costruttori","Guilda de construtores"],
 "The market is tired of this: sales pay less for a while":["Le marché est saturé : les ventes rapportent moins pendant un moment","El mercado está saturado: las ventas pagan menos por un tiempo","Der Markt ist übersättigt: Verkäufe bringen eine Weile weniger","Il mercato è saturo: le vendite rendono meno per un po'","O mercado está saturado: as vendas pagam menos por um tempo"],
 "Merchant caravan":["Caravane marchande","Caravana de mercaderes","Händlerkarawane","Carovana di mercanti","Caravana de mercadores"],
 "Envoys of {0}":["Envoyés de {0}","Enviados de {0}","Gesandte von {0}","Inviati di {0}","Enviados de {0}"],
