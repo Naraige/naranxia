@@ -30,7 +30,7 @@ import { MP } from '../multiplayer/session.js';
 import { ICT, TIERK } from '../rendering/model-icons.js';
 import { canvasesState, cv } from './canvases.js';
 import { convoyPanelState } from './convoy-panel.js';
-import { BTNX, circ, frame, gold, ICN, poly, rrg, SLOT, SLOTH, SLOTX, TN } from './drawing.js';
+import { BTNX, circ, focusRing, frame, gold, ICN, poly, rr, rrg, SLOT, SLOTH, SLOTX, TN } from './drawing.js';
 import { hudState, idleP, inR, selIdle, U } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
 import { dIc, IC } from './icons.js';
@@ -275,7 +275,8 @@ const upTarget=()=>selectionState.selB&&sessionState.structs.includes(selectionS
 function itemFn(it){return it.k==='convoy'?()=>{convoyPanelState.convoyOpen=!convoyPanelState.convoyOpen;snd('click')}:JOBK.has(it.k)?()=>assignJob(it.k[1]):it.k==='stoneup'?()=>{const L=selBs().filter(s=>s.tier===0&&UPC[s.type]);if(L.length){for(const s of L)build('upgrade',s.tx,s.ty);return}const b=upTarget();if(b)build('upgrade',b.tx,b.ty)}:it.k==='upgtool'?()=>{if(!RS.done){hudDisplayState.msgS='Needs Stonemasonry';hudDisplayState.msgT=2;snd('err');return}sessionState.units.forEach(u=>u.sel=false);sessionState.mode=sessionState.mode==='upgrade'?null:'upgrade';snd('click')}:it.k.startsWith('cat:')?()=>{buildMenuState.BCAT=it.k.slice(4);snd('click')}:it.k==='back'?()=>{buildMenuState.BCAT=null;snd('click')}:ROLEK.has(it.k)?()=>roleAdj(it.k[1],it.k[2]==='+'?1:-1):STNK.has(it.k)?()=>setStance(it.k):it.k==='form'?()=>{constructionState.formType=(constructionState.formType+1)%FORMS.length;hudDisplayState.msgS='Formation: '+FORMS[constructionState.formType];hudDisplayState.msgT=2}:it.k==='idle'?selIdle:it.k==='buy'?(it.tr!==undefined?()=>tierPick(it):()=>buy(it.id)):it.k==='army'?army:it.k==='group'?groupSel:it.k==='ungroup'?ungroupSel:it.k==='mode'?()=>{inputState.panMode=!inputState.panMode}:null}
 
 let hovK='';
-export function uiBtn(x,y,w,h,pal,palH,fn,tip,draw,on,dis){const hit=U(x,y,w,h),hv=inR(inputState.mouse,hit)&&!dis&&!!fn;{const k=x+','+y+','+w;if(hv&&hovK!==k){hovK=k;snd('hover')}else if(!hv&&hovK===k)hovK=''}frame(x,y,w,h,dis?(pal===SLOT?SLOTX:BTNX):hv?palH:pal);if(on)gold(x,y,w,h);if(draw){const c=canvasesState.ctx;c.save();c.beginPath();c.rect(x+1,y+1,w-2,h-2);c.clip();setClipBox([x,y,w,h]);draw(x,y,w,h,hv,dis);setClipBox(null);c.restore()}hudState.uiHits.push({...hit,fn:dis?null:fn,tip})}
+/* four states shared by slots and pills: rest, hover (blue), pressed (1 px down, darker, ~150 ms after the click), disabled (flat, fn off); foc = keyboard focus ring */
+export function uiBtn(x,y,w,h,pal,palH,fn,tip,draw,on,dis,foc){const hit=U(x,y,w,h),hv=inR(inputState.mouse,hit)&&!dis&&!!fn;{const k=x+','+y+','+w;if(hv&&hovK!==k){hovK=k;snd('hover')}else if(!hv&&hovK===k)hovK=''}const pr=hv&&performance.now()-inputState.uiDown<150;if(pr){canvasesState.ctx.save();canvasesState.ctx.translate(0,1)}frame(x,y,w,h,dis?(pal===SLOT?SLOTX:BTNX):hv?palH:pal);if(pr){canvasesState.ctx.fillStyle='rgba(10,20,40,.12)';rr(x,y,w,h,Math.max(2,Math.min(8,w/5,h/5)));canvasesState.ctx.fill()}if(on)gold(x,y,w,h);if(draw){const c=canvasesState.ctx;c.save();c.beginPath();c.rect(x+1,y+1,w-2,h-2);c.clip();setClipBox([x,y,w,h]);draw(x,y,w,h,hv,dis);setClipBox(null);c.restore()}if(pr)canvasesState.ctx.restore();if(foc)focusRing(x,y,w,h);hudState.uiHits.push({...hit,fn:dis?null:fn,tip})}
 
 const tierC=it=>it.tr===undefined?C[it.id]:(RS.done&&it.tr?CSTONE:CWOOD)[it.id];
 
@@ -295,21 +296,21 @@ export function drawItem(it){const cat=it.k.startsWith('cat:')?it.k.slice(4):nul
  const ic=it.k==='stoneup'||it.k==='upgtool'?IC.upgrade:it.tr!==undefined?(ICT[it.tr][it.id]||IC[it.id]):cat?IC[BCI[cat]]:it.k==='back'?IC.back:ROLEK.has(it.k)?IC[({b:'wall',r:'repair',t:'raise'})[it.k[1]]]:STNK.has(it.k)?IC[it.k]:JOBK.has(it.k)?IC[JOBI[it.k]]:it.k==='convoy'?IC.convoy:it.k==='buy'?IC[it.id]:it.k==='army'?IC.army:it.k==='idle'?IC.idle:it.k==='form'?IC.group:inputState.panMode?IC.pan:IC.cursor;
  const nm=NAMES[it.id]||'',idleN=it.k==='idle'?idleP().length:0;
  if(it.lab&&!CMP)TN(it.grp,it.x+1,it.y-9.5,'#d6b46a',.72);
- uiBtn(it.x,it.y,it.w,it.h,SLOT,SLOTH,itemFn(it),tip,(x,y,w,h)=>{canvasesState.ctx.globalAlpha=dis?.45:1;if(CMP){dIc(ic,x+((w-17)>>1),y+((h-17)>>1)+1,17);canvasesState.ctx.globalAlpha=1;if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+2,y+1.5,'#ffff55',.6);if(idleN)T_('!',x+w-5,y+1,'#ff6a6a',.7);return}dIc(ic,x+((w-16)>>1),y+4,16);
-  TCf(nm,x+w/2,y+21.5,dis?'#b8b8b8':'#ffffff',.7,w-3,.42);canvasesState.ctx.globalAlpha=1;
+ uiBtn(it.x,it.y,it.w,it.h,SLOT,SLOTH,itemFn(it),tip,(x,y,w,h)=>{canvasesState.ctx.globalAlpha=dis?.45:1;if(CMP){dIc(ic,x+((w-17)>>1),y+((h-17)>>1)+1,17);canvasesState.ctx.globalAlpha=1;if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+2,y+1.5,'#ffff55',.75);if(idleN)T_('!',x+w-5,y+1,'#ff6a6a',.7);return}dIc(ic,x+((w-16)>>1),y+4,16);
+  TCf(nm,x+w/2,y+21,dis?'#b8b8b8':'#ffffff',.76,w-3,.5);canvasesState.ctx.globalAlpha=1;
   const rdn=it.k==='buy'&&((it.id==='upgrade'&&RS.done)||((it.id in RT2)&&RS2.done[it.id])),ron=it.k==='buy'&&((it.id==='upgrade'&&RS.on)||((it.id in RT2)&&RS2.on===it.id));
-  if(rdn){canvasesState.ctx.globalAlpha=1;TCf('Done',x+w/2,y+29.5,'#6aff7a',.62,w-14,.4);canvasesState.ctx.strokeStyle='#0b0810';canvasesState.ctx.lineWidth=3.2;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-12,y+7);canvasesState.ctx.lineTo(x+w-8,y+11);canvasesState.ctx.lineTo(x+w-2.5,y+3.5);canvasesState.ctx.stroke();canvasesState.ctx.strokeStyle='#6aff7a';canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.stroke()}
-  else if(ron){const pc=Math.floor((it.id==='upgrade'?RS.t/RT_TIME:RS2.t/RT2[it.id])*100)+'%';T_(pc,x+(w-tw(pc,.62))/2,y+29.5,'#ffe066',.62);canvasesState.ctx.fillStyle='#ffe066';canvasesState.ctx.fillRect(x+3,y+h-3,(w-6)*Math.min(1,parseInt(pc)/100),1.5)}
-  else if(it.k==='buy'&&(it.id==='dig'||it.id==='raise'||it.id==='ramp'))TCf('Free',x+w/2,y+29.5,'#55ff55',.62,w-3,.4);else if(it.tr===1&&!RS.done){TCf('Locked',x+w/2,y+29.5,'#ff8a6a',.62,w-3,.4)}else if(it.k==='buy'){drawCost(costParts(it.id,tierC(it)),x,y+29.5,w,.62,7)}
-  else if(it.k==='stoneup'){const b=upTarget(),c=b&&UPC[b.type],n=Math.max(1,selBs().filter(s=>s.tier===0&&UPC[s.type]).length);if(!RS.done)TCf('Masonry',x+w/2,y+29.5,'#ff8a6a',.58,w-3,.4);else if(c)drawCost(Object.entries(c).map(([k,v])=>[String(v*n),sessionState.res[k]>=v*n?'#d4dae6':sessionState.res[k]>=v?'#f2c14e':'#ff6a6a',k]),x,y+29.5,w,.62,7)}
-  else if(it.k==='upgtool')T_('Paint',x+(w-tw('Paint',.62))/2,y+29.5,sessionState.mode==='upgrade'?'#ffff55':'#e0e0e0',.62);else if(it.k==='convoy')T_('Send',x+(w-tw('Send',.62))/2,y+29.5,convoyPanelState.convoyOpen?'#ffff55':'#e0e0e0',.62);else if(JOBK.has(it.k))T_(JOBL[it.k],x+(w-tw(JOBL[it.k],.62))/2,y+29.5,'#e0e0e0',.62);
-  else if(cat){const s=catItems(cat,true).length+' types';T_(s,x+(w-tw(s,.62))/2,y+29.5,'#d6b46a',.62)}
-  else if(it.k==='back')T_('Esc',x+(w-tw('Esc',.62))/2,y+29.5,'#ffff55',.62);
-  else if(it.k==='idle'){T_(idleN?idleN+' idle':'none',x+(w-tw(idleN?idleN+' idle':'none',.62))/2,y+29.5,idleN?'#ffff55':'#b0b0b0',.62)}
-  else if(it.k==='mode')T_(inputState.panMode?'Pan':'Select',x+(w-tw(inputState.panMode?'Pan':'Select',.62))/2,y+29.5,'#e0e0e0',.62);
-  else if(it.k==='form')T_(FORMS[constructionState.formType],x+(w-tw(FORMS[constructionState.formType],.62))/2,y+29.5,constructionState.formType?'#ffff55':'#e0e0e0',.62);
-  else if(ROLEK.has(it.k)){const r=it.k[1],p=LPL(),s=RHAS[p][r]+' / '+ROLE[p][r];T_(s,x+(w-tw(s,.62))/2,y+29.5,ROLE[p][r]?'#ffff55':'#b0b0b0',.62)}
-  if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+3,y+2.5,'#ffff55',.68);
+  if(rdn){canvasesState.ctx.globalAlpha=1;TCf('Done',x+w/2,y+29.5,'#6aff7a',.7,w-14,.5);canvasesState.ctx.strokeStyle='#0b0810';canvasesState.ctx.lineWidth=3.2;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-12,y+7);canvasesState.ctx.lineTo(x+w-8,y+11);canvasesState.ctx.lineTo(x+w-2.5,y+3.5);canvasesState.ctx.stroke();canvasesState.ctx.strokeStyle='#6aff7a';canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.stroke()}
+  else if(ron){const pc=Math.floor((it.id==='upgrade'?RS.t/RT_TIME:RS2.t/RT2[it.id])*100)+'%';T_(pc,x+(w-tw(pc,.7))/2,y+29.5,'#ffe066',.7);canvasesState.ctx.fillStyle='#ffe066';canvasesState.ctx.fillRect(x+3,y+h-3,(w-6)*Math.min(1,parseInt(pc)/100),1.5)}
+  else if(it.k==='buy'&&(it.id==='dig'||it.id==='raise'||it.id==='ramp'))TCf('Free',x+w/2,y+29.5,'#55ff55',.7,w-3,.5);else if(it.tr===1&&!RS.done){TCf('Locked',x+w/2,y+29.5,'#ff8a6a',.7,w-3,.5)}else if(it.k==='buy'){drawCost(costParts(it.id,tierC(it)),x,y+29.5,w,.7,7)}
+  else if(it.k==='stoneup'){const b=upTarget(),c=b&&UPC[b.type],n=Math.max(1,selBs().filter(s=>s.tier===0&&UPC[s.type]).length);if(!RS.done)TCf('Masonry',x+w/2,y+29.5,'#ff8a6a',.7,w-3,.5);else if(c)drawCost(Object.entries(c).map(([k,v])=>[String(v*n),sessionState.res[k]>=v*n?'#d4dae6':sessionState.res[k]>=v?'#f2c14e':'#ff6a6a',k]),x,y+29.5,w,.7,7)}
+  else if(it.k==='upgtool')T_('Paint',x+(w-tw('Paint',.7))/2,y+29.5,sessionState.mode==='upgrade'?'#ffff55':'#e0e0e0',.7);else if(it.k==='convoy')T_('Send',x+(w-tw('Send',.7))/2,y+29.5,convoyPanelState.convoyOpen?'#ffff55':'#e0e0e0',.7);else if(JOBK.has(it.k))T_(JOBL[it.k],x+(w-tw(JOBL[it.k],.7))/2,y+29.5,'#e0e0e0',.7);
+  else if(cat){const s=catItems(cat,true).length+' types';T_(s,x+(w-tw(s,.7))/2,y+29.5,'#d6b46a',.7)}
+  else if(it.k==='back')T_('Esc',x+(w-tw('Esc',.7))/2,y+29.5,'#ffff55',.7);
+  else if(it.k==='idle'){T_(idleN?idleN+' idle':'none',x+(w-tw(idleN?idleN+' idle':'none',.7))/2,y+29.5,idleN?'#ffff55':'#b0b0b0',.7)}
+  else if(it.k==='mode')T_(inputState.panMode?'Pan':'Select',x+(w-tw(inputState.panMode?'Pan':'Select',.7))/2,y+29.5,'#e0e0e0',.7);
+  else if(it.k==='form')T_(FORMS[constructionState.formType],x+(w-tw(FORMS[constructionState.formType],.7))/2,y+29.5,constructionState.formType?'#ffff55':'#e0e0e0',.7);
+  else if(ROLEK.has(it.k)){const r=it.k[1],p=LPL(),s=RHAS[p][r]+' / '+ROLE[p][r];T_(s,x+(w-tw(s,.7))/2,y+29.5,ROLE[p][r]?'#ffff55':'#b0b0b0',.7)}
+  if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+3,y+2.5,'#ffff55',.75);
   if(it.tr===1&&!RS.done){canvasesState.ctx.globalAlpha=1;const lx=x+w-10,ly=y+3;canvasesState.ctx.strokeStyle='#e8c070';canvasesState.ctx.lineWidth=1.2;canvasesState.ctx.beginPath();canvasesState.ctx.arc(lx+3.5,ly+3.5,2.2,Math.PI,0);canvasesState.ctx.stroke();canvasesState.ctx.fillStyle='#e8c070';canvasesState.ctx.fillRect(lx,ly+3.5,7,5.5);canvasesState.ctx.fillStyle='#3a2a10';canvasesState.ctx.fillRect(lx+3,ly+5.3,1,2)}
   if(idleN)T_('!',x+w-6,y+2,'#ff6a6a',.8);
   if(cat){canvasesState.ctx.fillStyle='#d6b46a';canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-2.5,y+2.5);canvasesState.ctx.lineTo(x+w-2.5,y+8.5);canvasesState.ctx.lineTo(x+w-8.5,y+2.5);canvasesState.ctx.closePath();canvasesState.ctx.fill()}},on,dis);

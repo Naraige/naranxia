@@ -26,8 +26,8 @@ function tutEnd(){TUT.on=false;try{localStorage.setItem('dk_tut','1')}catch(e){}
 export function tutBar(UW,y){if(!TUT.on||sessionState.over||MP.on||!sessionState.inGame||!sessionState.started)return 0;
  while(TUT.i<TUTS.length-1&&TUTS[TUT.i][1]())TUT.i++;
  const n=TUT.i+1,last=TUT.i===TUTS.length-1,head='Tutorial '+n+'/'+TUTS.length,txt=TUTS[TUT.i][0],sw=last?64:42,w=Math.min(UW-12,Math.max(tw(txt,.85),tw(head,.75))+sw+26),x=Math.round((UW-w)/2);
- frame(x,y,w,28,CHAT,8);T_(head,x+9,y+4,'#f2d48a',.72);T_(txt,x+9,y+15,'#ffffff',.85);
- pill(x+w-sw-6,y+6,sw,16,last?'Close':'Skip',BTN,BTNH,()=>{tutEnd()},null,.7);return 32}
+ frame(x,y,w,28,CHAT,8);T_(head,x+9,y+4,'#f2d48a',.75);T_(txt,x+9,y+15,'#ffffff',.85);
+ pill(x+w-sw-6,y+6,sw,16,last?'Close':'Skip',BTN,BTNH,()=>{tutEnd()},null,.75);return 32}
 
 
 /* ===== contextual first-game hints: one line under the top bar, never blocking, each shown once ever (dk_hint_<id>).
@@ -50,4 +50,4 @@ export function hintBar(UW,y){if(TUT.on||sessionState.over||MP.on||diagnosticsSt
  if(!hintCur)return 0;
  const txt=HINTS[hintCur][0],sw=52,w=Math.min(UW-12,tw(txt,.85)+sw+26),x=Math.round((UW-w)/2);
  frame(x,y,w,20,CHAT,8);T_(txt,x+9,y+6,'#ffffff',.85);
- pill(x+w-sw-6,y+2,sw,16,'Got it',BTN,BTNH,()=>{hintMark(hintCur);hintCur=null},null,.7);return 24}
+ pill(x+w-sw-6,y+2,sw,16,'Got it',BTN,BTNH,()=>{hintMark(hintCur);hintCur=null},null,.75);return 24}
