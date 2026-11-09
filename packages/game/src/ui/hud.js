@@ -73,7 +73,7 @@ function drawEnd(UW,UH){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH)
  {const G=rulesState.GST,y1=cy+9;TC('Earned: '+Math.round(G.g)+' gold    '+Math.round(G.w)+' wood    '+Math.round(G.s)+' stone    '+Math.round(G.f)+' food',cx,y1,'#f0dca8',.8);
   const bu=gstBest(),nm=bu?(bu[0]==='other'?'Towers and cannons':L(NAMES[bu[0]]||bu[0])):'-',a1='Best unit: ',c1=bu?'('+bu[1]+' kills)':'',w1=tw(a1,.8)+tw(nm,.8)+(c1?tw(c1,.8)+6:0)+4;let xx=cx-w1/2;
   T_(a1,xx,y1+13,'#c4a37a',.8);xx+=tw(a1,.8);T_(nm,xx,y1+13,'#ffffff',.8);xx+=tw(nm,.8)+4;if(c1)T_(c1,xx,y1+13,'#ffff55',.8);
-  TC('Units lost: '+G.lost,cx,y1+26,'#c4a37a',.8)}
+  TC('Units lost: '+G.lost+(G.kl>1?'   King Lv '+G.kl+'  Talents '+(G.kn|0):''),cx,y1+26,'#c4a37a',.8)}
  if(statisticsState.SBR){const y2=cy+48;TC((statisticsState.SBR.daily?'Daily map':'This map')+' - '+(statisticsState.SBR.rank===0?'NEW RECORD!':'Best runs'),cx,y2,statisticsState.SBR.rank===0?'#ffff55':'#f0dca8',.8);
   statisticsState.SBR.top.forEach((r,i)=>TC('#'+(i+1)+'   Wave '+r.w+'   '+r.k+' kills',cx,y2+12+i*11,i===statisticsState.SBR.rank?'#ffffff':'#c4a37a',.72))}
  pill(cx-pw/2,cy+100,pw,22,'Play again',BTN,BTNH,newGame,null,1.1);pill(cx-pw/2,cy+128,pw,22,'Title Screen',BTN,BTNH,()=>{sessionState.inGame=false;sessionState.over=false;sessionState.started=false;rollWorld()},null,1.1)}

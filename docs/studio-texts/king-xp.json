@@ -1,0 +1,107 @@
+{
+ "King Lv {0}  XP {1}/{2}": [
+  "Roi niv. {0}  XP {1}/{2}",
+  "Rey niv. {0}  XP {1}/{2}",
+  "König St. {0}  EP {1}/{2}",
+  "Re liv. {0}  XP {1}/{2}",
+  "Rei nív. {0}  XP {1}/{2}"
+ ],
+ "King Lv {0}  XP {1}/{2}  Talents {3}": [
+  "Roi niv. {0}  XP {1}/{2}  Talents {3}",
+  "Rey niv. {0}  XP {1}/{2}  Talentos {3}",
+  "König St. {0}  EP {1}/{2}  Talente {3}",
+  "Re liv. {0}  XP {1}/{2}  Talenti {3}",
+  "Rei nív. {0}  XP {1}/{2}  Talentos {3}"
+ ],
+ "King Lv {0}  MAX": [
+  "Roi niv. {0}  MAX",
+  "Rey niv. {0}  MÁX",
+  "König St. {0}  MAX",
+  "Re liv. {0}  MAX",
+  "Rei nív. {0}  MÁX"
+ ],
+ "King Lv {0}  MAX  Talents {1}": [
+  "Roi niv. {0}  MAX  Talents {1}",
+  "Rey niv. {0}  MÁX  Talentos {1}",
+  "König St. {0}  MAX  Talente {1}",
+  "Re liv. {0}  MAX  Talenti {1}",
+  "Rei nív. {0}  MÁX  Talentos {1}"
+ ],
+ "King Lv {0}  Talents {1}": [
+  "Roi niv. {0}  Talents {1}",
+  "Rey niv. {0}  Talentos {1}",
+  "König St. {0}  Talente {1}",
+  "Re liv. {0}  Talenti {1}",
+  "Rei nív. {0}  Talentos {1}"
+ ],
+ "King level {0}!": [
+  "Le Roi passe niveau {0} !",
+  "¡El Rey sube al nivel {0}!",
+  "König erreicht Stufe {0}!",
+  "Il Re sale al livello {0}!",
+  "O Rei sobe ao nível {0}!"
+ ],
+ "Talent: {0}": [
+  "Talent : {0}",
+  "Talento: {0}",
+  "Talent: {0}",
+  "Talento: {0}",
+  "Talento: {0}"
+ ],
+ "Long cry +4s": [
+  "Cri long +4 s",
+  "Grito largo +4 s",
+  "Langer Ruf +4 s",
+  "Grido lungo +4 s",
+  "Grito longo +4 s"
+ ],
+ "Wide cry +5": [
+  "Cri large +5",
+  "Grito amplio +5",
+  "Weiter Ruf +5",
+  "Grido ampio +5",
+  "Grito amplo +5"
+ ],
+ "Fierce cry +15%": [
+  "Cri féroce +15 %",
+  "Grito feroz +15 %",
+  "Wilder Ruf +15 %",
+  "Grido feroce +15 %",
+  "Grito feroz +15 %"
+ ],
+ "Warlord: cd -11s": [
+  "Chef de guerre : -11 s",
+  "Caudillo: -11 s",
+  "Kriegsherr: -11 s",
+  "Condottiero: -11 s",
+  "Senhor da guerra: -11 s"
+ ],
+ "Heavy charge": [
+  "Charge lourde",
+  "Carga pesada",
+  "Schwere Attacke",
+  "Carica pesante",
+  "Carga pesada"
+ ],
+ "Royal plate -20%": [
+  "Plate royale -20 %",
+  "Placa real -20 %",
+  "Königsplatte -20 %",
+  "Piastra reale -20 %",
+  "Placa real -20 %"
+ ],
+ "Long charge +2s": [
+  "Charge longue +2 s",
+  "Carga larga +2 s",
+  "Lange Attacke +2 s",
+  "Carica lunga +2 s",
+  "Carga longa +2 s"
+ ],
+ "Boss breaker": [
+  "Briseur de boss",
+  "Rompejefes",
+  "Bossbrecher",
+  "Spezza boss",
+  "Quebra-chefes"
+ ]
+}

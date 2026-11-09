@@ -6,6 +6,7 @@ import { snd } from '../audio/sound.js';
 import { hyp, rnd } from '../core/math.js';
 import { ach } from './achievements.js';
 import { mkU } from './entities.js';
+import { kingWaveXp } from './king-skills.js';
 import { aliveC, playersState } from './players.js';
 import { pickLanes } from './reset.js';
 import { TS } from './rules.js';
@@ -48,7 +49,7 @@ export function spawnAnchor(L){const R=terrainState.ROUTES[L],P=R.pts;let rem=0,
 
 const laneK=(L,Ls)=>{const n=Math.max(1,Ls.filter(q=>(q>=3)===(L>=3)).length),b=Math.min(2.2,1+.15*(sessionState.waveN-1));return b/n*(1+.15*(n-1))};
 
-function wave0(){sessionState.waveN++;wmsg='';if(sessionState.waveN===2)ach('w1');if(sessionState.waveN===6)ach('w5');if(sessionState.waveN===11)ach('w10');const df=D_();
+function wave0(){sessionState.waveN++;if(sessionState.waveN>1)kingWaveXp();wmsg='';if(sessionState.waveN===2)ach('w1');if(sessionState.waveN===6)ach('w5');if(sessionState.waveN===11)ach('w10');const df=D_();
  for(const L of sessionState.nextL){const an=spawnAnchor(L),p=an.p;
   const zf=(sessionState.SITE2?.8:1)*laneK(L,sessionState.nextL),nh=Math.min(260,Math.round((16+sessionState.waveN*10)*df.zm*zf)),nz=Math.round(sessionState.waveN*2.2*df.zm*zf),nr=sessionState.waveN>=3?Math.round(sessionState.waveN*.8*df.zm*zf):0,nb=sessionState.waveN%5===0?Math.ceil(sessionState.waveN/5*df.zm*zf):sessionState.waveN>=12?Math.round((sessionState.waveN-10)/8*df.zm*zf):0,
    nbm=sessionState.waveN>=5?Math.round((1.5+(sessionState.waveN-5)*.45)*df.zm*zf):0,nac=sessionState.waveN>=10?Math.round((2+(sessionState.waveN-10)*.5)*df.zm*zf):0,nmi=sessionState.waveN>=15?Math.round((1+(sessionState.waveN-15)*.3)*df.zm*zf):0;
