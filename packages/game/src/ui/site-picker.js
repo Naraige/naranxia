@@ -11,6 +11,7 @@ import { PK, pkFocus, pkInit } from '../rendering/site-picker.js';
 import { cvs } from './canvases.js';
 import { BTN, BTNH, frame, menuSkin, PAN } from './drawing.js';
 import { bevelBtn } from './menu-kit.js';
+import { fxTitleSeen } from './menu-fx.js';
 import { hudState, U } from './hud.js';
 import { dIc, IC } from './icons.js';
 import { pill } from './minimap.js';
@@ -57,7 +58,7 @@ export function openPicker(){sitePickerState.picking=true;PKL.on=true;sitePicker
 export let confirmPick = function confirmPick(){if(!sitePickerState.pickPos||!sitePickerState.pickPos.ok)return;terrainState.CX=sitePickerState.pickPos.tx;terrainState.CY=sitePickerState.pickPos.ty;sessionState.CROT=sessionState.PKROT&3;sitePickerState.picking=false;settingsState.setupOpen=false;reset();sessionState.inGame=false;startGame()};
 
 export function drawPicker(UW,UH){menuSkin(true);try{drawPickerIn(UW,UH)}finally{menuSkin(false)}}
-function drawPickerIn(UW,UH){settingsState.nameBox=null;if(sitePickerState.pvKey!==terrainState.SEED)buildPreview();hudState.uiHits=[];
+function drawPickerIn(UW,UH){if(!sessionState.inGame)fxTitleSeen();settingsState.nameBox=null;if(sitePickerState.pvKey!==terrainState.SEED)buildPreview();hudState.uiHits=[];
  const pw=Math.min(UW-12,600),px=(UW-pw)/2,ph=50,py=UH-ph-6;hudState.uiRects=[U(px,5,pw,22),U(px,py,pw,ph)];
  const rw=pw>=420?112:0;
  frame(px,5,pw,22,PAN,6);dIc(IC.home,px+8,8,15);{const s='Choose where to found your kingdom';let sc=1.12;while(sc>.7&&twH(s,sc)>pw-(pw>=300?132:34)-rw)sc-=.04;TTL(s,px+26,16-TTS(sc)/2,sc)}

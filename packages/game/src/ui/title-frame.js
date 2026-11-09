@@ -43,10 +43,10 @@ export function titleChecker(UW, UH) {
 const hs = n => { n = (n ^ 61) ^ (n >>> 16); n = (n + (n << 3)) | 0; n ^= n >>> 4; n = Math.imul(n, 0x27d4eb2d); n ^= n >>> 15; return (n >>> 0) / 4294967296 };
 const EMC = ['#ffce6e', '#ffaa46', '#ffe296', '#f08232'];
 export function titleEmbers(UW, UH) {
-  const g = canvasesState.ctx, n = UW < 420 ? 26 : 54, t = pref('rm', false) ? 0 : performance.now() / 1000;
+  const g = canvasesState.ctx, n = UW < 420 ? 26 : 60, t = rmotion() ? 0 : performance.now() / 1000;
   g.save();
   for (let i = 0; i < n; i++) {
-    const sp = .012 + hs(i * 7 + 1) * .028, ph = hs(i * 7 + 2), x0 = (.04 + hs(i * 7 + 3) * .92) * UW, s = hs(i * 7 + 4) < .5 ? 1.5 : hs(i * 7 + 4) < .85 ? 2.2 : 3,
+    const sp = .012 + hs(i * 7 + 1) * .028, ph = hs(i * 7 + 2), x0 = (i % 3 ? .04 + hs(i * 7 + 3) * .92 : .03 + hs(i * 7 + 3) * .4) * UW, s = hs(i * 7 + 4) < .5 ? 1.5 : hs(i * 7 + 4) < .85 ? 2.2 : 3,
       k = (ph + t * sp) % 1, y = UH * (1.03 - k * 1.08), x = x0 + Math.sin(t * .6 + i * 1.7) * 7 * (1 + hs(i * 7 + 5)),
       fade = Math.min(1, k * 6, (1 - k) * 3), tw2 = .6 + .4 * Math.sin(t * (1.5 + hs(i * 7 + 6) * 2) + i), a = Math.max(0, fade * tw2 * (.45 + hs(i * 7 + 6) * .5));
     if (a < .02) continue;
@@ -57,17 +57,18 @@ export function titleEmbers(UW, UH) {
   g.restore();
 }
 
-/* --- logo: block letters drawn in code (5 x 7 cells each), gold at the top to orange at the bottom, hard drop shadow, light relief on every block.
+/* --- logo: block letters drawn in code (6 x 7 cells each, two-cell stems), gold at the top to orange at the bottom, hard drop shadow, light relief on every block.
    Rendered once per size into an offscreen canvas (plus a white copy for the slow sheen), then blitted: no per-frame text or path work. --- */
 const LGF = {
-  N: ['X...X', 'XX..X', 'XX..X', 'X.X.X', 'X..XX', 'X..XX', 'X...X'],
-  A: ['.XXX.', 'X...X', 'X...X', 'XXXXX', 'X...X', 'X...X', 'X...X'],
-  R: ['XXXX.', 'X...X', 'X...X', 'XXXX.', 'X.X..', 'X..X.', 'X...X'],
-  X: ['X...X', 'X...X', '.X.X.', '..X..', '.X.X.', 'X...X', 'X...X'],
-  I: ['XXXXX', '..X..', '..X..', '..X..', '..X..', '..X..', 'XXXXX'],
+  N: ['XX..XX', 'XXX.XX', 'XXX.XX', 'XXXXXX', 'XX.XXX', 'XX.XXX', 'XX..XX'],
+  A: ['.XXXX.', 'XX..XX', 'XX..XX', 'XXXXXX', 'XX..XX', 'XX..XX', 'XX..XX'],
+  R: ['XXXXX.', 'XX..XX', 'XX..XX', 'XXXXX.', 'XX.XX.', 'XX..XX', 'XX..XX'],
+  X: ['XX..XX', 'XX..XX', '.XXXX.', '..XX..', '.XXXX.', 'XX..XX', 'XX..XX'],
+  I: ['XXXXXX', '..XX..', '..XX..', '..XX..', '..XX..', '..XX..', 'XXXXXX'],
 };
+const LGW = 6;
 const LGROW = ['#fff3ac', '#ffe27a', '#ffd04e', '#ffbb38', '#fba42c', '#f58c22', '#ec741a'];
-const logoCells = txt => txt.length * 5 + (txt.length - 1);
+const logoCells = txt => txt.length * LGW + (txt.length - 1);
 const logoU = (txt, maxW, maxH) => { const k = hudDisplayState.UIS || 1; return Math.max(1 / k, Math.floor(Math.min(maxW / (logoCells(txt) + 1), maxH / 7.9) * k) / k) };
 export function titleLogoW(txt, maxW, maxH) { return logoCells(txt) * logoU(txt, maxW, maxH) }
 export function badgeW(text) {
@@ -79,7 +80,7 @@ function logoCanvas(txt, u) {
   if (LGC && LGC.key === key) return LGC;
   const nc = logoCells(txt), sh = Math.max(1, Math.round(p * .55)), ol = Math.max(1, Math.round(p * .22)), pad = ol, w = nc * p + pad * 2 + sh, h = 7 * p + pad * 2 + sh,
     c = cvs(w, h), g = c.getContext('2d'), m = cvs(w, h), gm = m.getContext('2d'), cells = [];
-  const at = (i, j) => { if (j < 0 || j > 6 || i < 0) return false; const li = Math.floor(i / 6), ci = i % 6; if (ci === 5 || li >= txt.length) return false; return LGF[txt[li]][j][ci] === 'X' };
+  const at = (i, j) => { if (j < 0 || j > 6 || i < 0) return false; const li = Math.floor(i / (LGW + 1)), ci = i % (LGW + 1); if (ci === LGW || li >= txt.length) return false; return LGF[txt[li]][j][ci] === 'X' };
   for (let j = 0; j < 7; j++) for (let i = 0; i < nc; i++) if (at(i, j)) cells.push([i, j]);
   /* hard drop shadow, then the dark keyline */
   g.fillStyle = 'rgba(8,4,2,.78)'; for (const [i, j] of cells) g.fillRect(pad + i * p + sh - ol, pad + j * p + sh - ol, p + ol * 2, p + ol * 2);

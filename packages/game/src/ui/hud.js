@@ -45,6 +45,7 @@ import { drawPicker, sitePickerState } from './site-picker.js';
 import { drawTitle } from './title-menu.js';
 import { titleBlur } from './title-frame.js';
 import { bevelBtn, goldTitle, kitFrame } from './menu-kit.js';
+import { fxGameIn } from './menu-fx.js';
 import { drawUnitCard } from './unit-card.js';
 import { NAV, navBegin } from './menu-nav.js';
 import { drawTroops, PLUN, troopPanelState } from './troop-panel.js';
@@ -149,6 +150,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  if(hv&&!sessionState.over&&!sessionState.showMap){const ln=hv.tip,cpp=hv.cost?costParts(hv.cost):null,cw0=cpp?cpp.reduce((q,p)=>q+tw(p[0],.9)+12,0):0,w=Math.max(cw0,...ln.map(s=>tw(s,.9)))+14,h=ln.length*11+8;let tx=Math.min(UW-w-2,Math.max(2,Math.round(hv.x/hudDisplayState.UIS))),ty=Math.round(hv.y/hudDisplayState.UIS)-h-4;if(ty<26)ty=Math.round((hv.y+hv.h)/hudDisplayState.UIS)+4;
   frame(tx,ty,w,h,TIPP,UIT.rad.small);ln.forEach((s,i)=>{if(cpp&&i===ln.length-1){drawCost(cpp,tx+7,ty+5+i*11,w-14,.9,9)}else T_(s,tx+7,ty+5+i*11,i?'#aaaaaa':'#ffffff',.9)})}
  drawToasts(UW);
+ fxGameIn(UW,UH);
  if(sessionState.showMap)drawMapModal(UW,UH);
  if(sessionState.over)drawEnd(UW,UH);
  canvasesState.ctx.setTransform(1,0,0,1,0,0)}

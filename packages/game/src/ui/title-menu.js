@@ -25,6 +25,7 @@ import { drawTitleWeather, lastRun, titleSeasonColor, titleWeatherLabel } from '
 import { FFT } from './typography.js';
 import { curMode, drawModes, modeIcon, modeState, openModes, playMode } from './mode-select.js';
 import { footH, menuFooter } from './menu-footer.js';
+import { fireGlow, fxTitleSeen } from './menu-fx.js';
 import { bevelBtn, KC, kitCard, kitEnd, kitRow, kitScreen, listBegin, listEnd, newPill, pxText, pxW } from './menu-kit.js';
 import { hexBadge, tipBanner, titleBlur, titleEmbers, titleLogo, titleLogoW, titleVignette } from './title-frame.js';
 
@@ -50,7 +51,7 @@ function titleBack(UW,UH){const g=canvasesState.ctx,gr=g.createLinearGradient(0,
 /* every menu screen is drawn with the menu skin (night-blue plates for the few old-style buttons left) and ends with the key-hint footer */
 export function drawTitle(UW,UH){menuSkin(true);try{drawTitleScreen(UW,UH)}finally{kitEnd();menuSkin(false)}}
 
-function drawTitleScreen(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];
+function drawTitleScreen(UW,UH){if(!sessionState.inGame)fxTitleSeen();settingsState.nameBox=null;hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];
  const ig=sessionState.inGame,cx=UW/2,fh=footH(UH),g=canvasesState.ctx;
  const sub=settingsState.settingsOpen||saveMenuState.saveOpen||languageState.langOpen||settingsState.setupOpen||modeState.open||notesOpen||chrOpen||recOpen;
  titleBlur(!ig&&!sub);
@@ -70,7 +71,7 @@ function drawTitleScreen(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];hu
  if(recOpen){LS(()=>{recOpen=false},drawRecords,0);return}
  if(ig){drawGameMenu(UW,UH,fh);return}
  NAV.onEsc=null;navBegin(true);navPoll();
- titleBack(UW,UH);drawTitleWeather(UW,UH);
+ titleBack(UW,UH);drawTitleWeather(UW,UH);fireGlow(UW,UH);
  drawLobby(UW,UH);
  navEnd();g.globalAlpha=1}
 

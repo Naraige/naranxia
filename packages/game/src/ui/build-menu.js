@@ -32,6 +32,7 @@ import { canvasesState, cv } from './canvases.js';
 import { convoyPanelState } from './convoy-panel.js';
 import { BTNX, circ, focusRing, frame, gold, ICN, poly, rr, rrg, SLOT, SLOTH, SLOTX, tabPlate, TN } from './drawing.js';
 import { FFP } from './typography.js';
+import { rmotion } from '../core/prefs.js';
 import { hudState, idleP, inR, selIdle, U } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
 import { dIc, IC } from './icons.js';
@@ -303,8 +304,8 @@ export function drawTabs(px,py,pw){const g=canvasesState.ctx;let x=px+4;const y=
   x+=w+3}
  if(!inputState.touch&&!CMP&&tabState.ids.length>1){g.save();g.font='700 7px '+FFP;const kw=Math.ceil(g.measureText('PgDn').width)+8,kx=x+2,ky=y+3;g.fillStyle='rgba(0,0,0,.35)';rr(kx,ky+1,kw,11,2.5);g.fill();g.fillStyle='#303a52';rr(kx,ky,kw,11,2.5);g.fill();g.strokeStyle='#c9a24f';g.lineWidth=1;rr(kx+.5,ky+.5,kw-1,10,2.5);g.stroke();g.fillStyle='#f2e4c4';g.textBaseline='middle';g.textAlign='center';g.fillText('PgDn',kx+kw/2,ky+6);g.restore()}}
 /* NEW flag on a slot (a dot on small touch slots) */
-function newTag(x,y,w){const g=canvasesState.ctx;g.save();if(CMP){g.fillStyle='#0b0810';g.beginPath();g.arc(x+w-3,y+3,3.4,0,6.2832);g.fill();g.fillStyle='#ffc63c';g.beginPath();g.arc(x+w-3,y+3,2.5,0,6.2832);g.fill()}
- else{g.font='700 6px '+FFP;const nt=L('NEW'),tw2=Math.ceil(g.measureText(nt).width)+4;g.fillStyle='#0b0810';g.fillRect(x+w-tw2-.5,y-.5,tw2+1,8.5);g.fillStyle='#ffc63c';g.fillRect(x+w-tw2,y,tw2,7.5);g.fillStyle='#3a2400';g.textBaseline='middle';g.textAlign='center';g.fillText(nt,x+w-tw2/2,y+4.1)}g.restore()}
+function newTag(x,y,w){const g=canvasesState.ctx,pz=rmotion()?1:.5+.5*Math.sin(performance.now()/240),nc=pz>.5?'#ffd866':'#f2b02c';g.save();if(CMP){g.globalAlpha=.3*pz;g.fillStyle='#ffc63c';g.beginPath();g.arc(x+w-3,y+3,5.2,0,6.2832);g.fill();g.globalAlpha=1;g.fillStyle='#0b0810';g.beginPath();g.arc(x+w-3,y+3,3.4,0,6.2832);g.fill();g.fillStyle=nc;g.beginPath();g.arc(x+w-3,y+3,2.5,0,6.2832);g.fill()}
+ else{g.font='700 6px '+FFP;const nt=L('NEW'),tw2=Math.ceil(g.measureText(nt).width)+4;g.globalAlpha=.3*pz;g.fillStyle='#ffc63c';g.fillRect(x+w-tw2-2,y-2,tw2+4,11.5);g.globalAlpha=1;g.fillStyle='#0b0810';g.fillRect(x+w-tw2-.5,y-.5,tw2+1,8.5);g.fillStyle=nc;g.fillRect(x+w-tw2,y,tw2,7.5);g.fillStyle='#3a2400';g.textBaseline='middle';g.textAlign='center';g.fillText(nt,x+w-tw2/2,y+4.1)}g.restore()}
 
 export function menuItems(){CMP=cv.width/hudDisplayState.UIS<420;const L=[],G0=[];seedSeen();ctxGroups().forEach(([n,ks0])=>{let ks=inputState.touch?ks0:ks0.filter(k=>k!=='mode');if(n==='Command'&&sel().length<2)ks=ks.filter(k=>k==='stoneup'||k==='rally'||k==='rallyc'||k==='rotate'||k==='movec'||k==='repair'||(k==='demolish'&&selectionState.selB&&sessionState.structs.includes(selectionState.selB)));if(n==='Siege'&&!RS.done)return;if(!ks.length)return;G0.push([n,ks])});tabPick(G0).forEach(([n,ks])=>{if(L.length)L.push({gap:7});ks.forEach((k,i)=>{const nc=Object.keys(C[k.startsWith('s:')?k.slice(2):k]||{}).length,it={k:(k in T||k in C)?'buy':k,id:k,grp:n,first:i===0,w:CMP?25:MW+(nc>2?(nc-2)*9:0),h:CMP?25:MH};
   if(n!=='Build'&&TIERK.has(k)&&buildMenuState.BCAT)it.tr=0;

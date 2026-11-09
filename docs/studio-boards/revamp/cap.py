@@ -40,6 +40,11 @@ with sync_playwright() as p:
         pg.evaluate("()=>{%s%s}"%(CLOSE,js))
         if n=='saves' and PRE!='A':pg.wait_for_timeout(400);pg.mouse.click(W*.5,H*.253);pg.mouse.move(W*.75,H*.7)
         shot(n)
+        if n in('title','settings0'):
+            # cost of one frame of the loop with the 3D render stubbed (= the UI drawing): wraps requestAnimationFrame for 2 s
+            r=pg.evaluate("""()=>new Promise(R=>{const o=window.requestAnimationFrame;let acc=0,nf=0,mx=0;window.requestAnimationFrame=cb=>o(ts=>{const t=performance.now();cb(ts);const d=performance.now()-t;acc+=d;nf++;if(d>mx)mx=d});
+              setTimeout(()=>{window.requestAnimationFrame=o;R('frame cost '+(acc/Math.max(1,nf)).toFixed(2)+' ms avg, '+mx.toFixed(1)+' ms max, '+nf+' frames in 2 s')},2000)})""")
+            print(n,r,flush=True)
     if not ONLY or 'esc' in ONLY or 'end' in ONLY:
         pg.evaluate("()=>{%srollWorld();reset();startGame()}"%CLOSE);pg.wait_for_timeout(2500)
         if not ONLY or 'esc' in ONLY:
