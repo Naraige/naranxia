@@ -1,0 +1,19 @@
+{
+"Change": ["Changer", "Cambiar", "Ändern", "Cambia", "Mudar"],
+"Best wave": ["Meilleure vague", "Mejor oleada", "Beste Welle", "Ondata migliore", "Melhor onda"],
+"Last game": ["Dernière partie", "Última partida", "Letztes Spiel", "Ultima partita", "Último jogo"],
+"Best": ["Record", "Récord", "Bestwert", "Record", "Recorde"],
+"Best runs": ["Meilleures parties", "Mejores partidas", "Beste Partien", "Partite migliori", "Melhores partidas"],
+"Saved games": ["Sauvegardes", "Partidas guardadas", "Spielstände", "Salvataggi", "Jogos guardados"],
+"The last bastion": ["Le dernier bastion", "El último bastión", "Die letzte Bastion", "L'ultimo bastione", "O último bastião"],
+"Fragments": ["Fragments", "Fragmentos", "Fragmente", "Frammenti", "Fragmentos"],
+"Select a save, then Load or Delete.": ["Sélectionnez une sauvegarde, puis Charger ou Supprimer.", "Selecciona una partida y luego Cargar o Borrar.", "Wähle einen Spielstand, dann Laden oder Löschen.", "Seleziona un salvataggio, poi Carica o Elimina.", "Selecione um jogo e depois Carregar ou Apagar."],
+"The autosave keeps your latest game.": ["La sauvegarde automatique conserve votre dernière partie.", "El autoguardado conserva tu última partida.", "Die automatische Speicherung behält dein letztes Spiel.", "Il salvataggio automatico conserva la tua ultima partita.", "A gravação automática guarda o seu último jogo."],
+"Tutorial": ["Tutoriel", "Tutorial", "Tutorial", "Tutorial", "Tutorial"],
+"Exit to desktop": ["Quitter vers le bureau", "Salir al escritorio", "Zum Desktop beenden", "Esci al desktop", "Sair para o ambiente de trabalho"],
+"Accessibility": ["Accessibilité", "Accesibilidad", "Barrierefreiheit", "Accessibilità", "Acessibilidade"],
+"Help": ["Aide", "Ayuda", "Hilfe", "Aiuto", "Ajuda"],
+"Display": ["Affichage", "Pantalla", "Anzeige", "Schermo", "Ecrã"],
+"Session": ["Session", "Sesión", "Sitzung", "Sessione", "Sessão"],
+"Keyboard": ["Clavier", "Teclado", "Tastatur", "Tastiera", "Teclado"]
+}

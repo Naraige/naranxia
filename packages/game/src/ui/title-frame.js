@@ -1,8 +1,9 @@
-import { pref } from '../core/prefs.js';
+import { pref, rmotion } from '../core/prefs.js';
 import { L } from '../i18n/language.js';
 import { sessionState } from '../gameplay/session.js';
 import { SEAS } from '../rendering/weather.js';
-import { canvasesState } from './canvases.js';
+import { canvasesState, cvs } from './canvases.js';
+import { hudDisplayState } from './hud-state.js';
 import { lastRun } from './title-weather.js';
 import { FFP } from './typography.js';
 
@@ -17,7 +18,7 @@ export function titleBlur(on) {
   try {
     g3 = g3 || document.getElementById('g3');
     if (!g3) return;
-    g3.style.filter = on ? 'blur(2.2px) brightness(.78)' : '';
+    g3.style.filter = on ? 'blur(1.2px) brightness(.86)' : '';
     g3.style.transform = on ? 'scale(1.025)' : '';
   } catch (e) { }
 }
@@ -42,10 +43,10 @@ export function titleChecker(UW, UH) {
 const hs = n => { n = (n ^ 61) ^ (n >>> 16); n = (n + (n << 3)) | 0; n ^= n >>> 4; n = Math.imul(n, 0x27d4eb2d); n ^= n >>> 15; return (n >>> 0) / 4294967296 };
 const EMC = ['#ffce6e', '#ffaa46', '#ffe296', '#f08232'];
 export function titleEmbers(UW, UH) {
-  const g = canvasesState.ctx, n = UW < 420 ? 26 : 54, t = pref('rm', false) ? 0 : performance.now() / 1000;
+  const g = canvasesState.ctx, n = UW < 420 ? 26 : 60, t = rmotion() ? 0 : performance.now() / 1000;
   g.save();
   for (let i = 0; i < n; i++) {
-    const sp = .012 + hs(i * 7 + 1) * .028, ph = hs(i * 7 + 2), x0 = (.04 + hs(i * 7 + 3) * .92) * UW, s = hs(i * 7 + 4) < .5 ? 1.5 : hs(i * 7 + 4) < .85 ? 2.2 : 3,
+    const sp = .012 + hs(i * 7 + 1) * .028, ph = hs(i * 7 + 2), x0 = (i % 3 ? .04 + hs(i * 7 + 3) * .92 : .03 + hs(i * 7 + 3) * .4) * UW, s = hs(i * 7 + 4) < .5 ? 1.5 : hs(i * 7 + 4) < .85 ? 2.2 : 3,
       k = (ph + t * sp) % 1, y = UH * (1.03 - k * 1.08), x = x0 + Math.sin(t * .6 + i * 1.7) * 7 * (1 + hs(i * 7 + 5)),
       fade = Math.min(1, k * 6, (1 - k) * 3), tw2 = .6 + .4 * Math.sin(t * (1.5 + hs(i * 7 + 6) * 2) + i), a = Math.max(0, fade * tw2 * (.45 + hs(i * 7 + 6) * .5));
     if (a < .02) continue;
@@ -56,36 +57,64 @@ export function titleEmbers(UW, UH) {
   g.restore();
 }
 
-/* --- logo: pixel font, gold gradient, dark outline; fitted into maxW x maxH centred on (cx, cy). Returns the text width. --- */
-export function titleLogoW(txt, maxW, maxH) {
-  const g = canvasesState.ctx; g.save(); g.font = '700 100px ' + FFP;
-  const w100 = g.measureText(txt).width || 1, S = Math.min(maxW / w100 * 100, maxH / .8); g.restore();
-  return w100 * S / 100;
-}
+/* --- logo: block letters drawn in code (6 x 7 cells each, two-cell stems), gold at the top to orange at the bottom, hard drop shadow, light relief on every block.
+   Rendered once per size into an offscreen canvas (plus a white copy for the slow sheen), then blitted: no per-frame text or path work. --- */
+const LGF = {
+  N: ['XX..XX', 'XXX.XX', 'XXX.XX', 'XXXXXX', 'XX.XXX', 'XX.XXX', 'XX..XX'],
+  A: ['.XXXX.', 'XX..XX', 'XX..XX', 'XXXXXX', 'XX..XX', 'XX..XX', 'XX..XX'],
+  R: ['XXXXX.', 'XX..XX', 'XX..XX', 'XXXXX.', 'XX.XX.', 'XX..XX', 'XX..XX'],
+  X: ['XX..XX', 'XX..XX', '.XXXX.', '..XX..', '.XXXX.', 'XX..XX', 'XX..XX'],
+  I: ['XXXXXX', '..XX..', '..XX..', '..XX..', '..XX..', '..XX..', 'XXXXXX'],
+};
+const LGW = 6;
+const LGROW = ['#fff3ac', '#ffe27a', '#ffd04e', '#ffbb38', '#fba42c', '#f58c22', '#ec741a'];
+const logoCells = txt => txt.length * LGW + (txt.length - 1);
+const logoU = (txt, maxW, maxH) => { const k = hudDisplayState.UIS || 1; return Math.max(1 / k, Math.floor(Math.min(maxW / (logoCells(txt) + 1), maxH / 7.9) * k) / k) };
+export function titleLogoW(txt, maxW, maxH) { return logoCells(txt) * logoU(txt, maxW, maxH) }
 export function badgeW(text) {
   const g = canvasesState.ctx; g.save(); g.font = '700 9px ' + FFP; const w = Math.ceil(g.measureText(text).width) + 22; g.restore(); return w;
 }
+let LGC = null;
+function logoCanvas(txt, u) {
+  const k = hudDisplayState.UIS || 1, p = Math.round(u * k), key = txt + '|' + p;
+  if (LGC && LGC.key === key) return LGC;
+  const nc = logoCells(txt), sh = Math.max(1, Math.round(p * .55)), ol = Math.max(1, Math.round(p * .22)), pad = ol, w = nc * p + pad * 2 + sh, h = 7 * p + pad * 2 + sh,
+    c = cvs(w, h), g = c.getContext('2d'), m = cvs(w, h), gm = m.getContext('2d'), cells = [];
+  const at = (i, j) => { if (j < 0 || j > 6 || i < 0) return false; const li = Math.floor(i / (LGW + 1)), ci = i % (LGW + 1); if (ci === LGW || li >= txt.length) return false; return LGF[txt[li]][j][ci] === 'X' };
+  for (let j = 0; j < 7; j++) for (let i = 0; i < nc; i++) if (at(i, j)) cells.push([i, j]);
+  /* hard drop shadow, then the dark keyline */
+  g.fillStyle = 'rgba(8,4,2,.78)'; for (const [i, j] of cells) g.fillRect(pad + i * p + sh - ol, pad + j * p + sh - ol, p + ol * 2, p + ol * 2);
+  g.fillStyle = '#2a1606'; for (const [i, j] of cells) g.fillRect(pad + i * p - ol, pad + j * p - ol, p + ol * 2, p + ol * 2);
+  const e = Math.max(1, Math.round(p * .2));
+  for (const [i, j] of cells) {
+    const x = pad + i * p, y = pad + j * p;
+    g.fillStyle = LGROW[j]; g.fillRect(x, y, p, p);
+    /* relief: lit top / left edges where the block is exposed, shaded bottom / right edges */
+    if (!at(i, j - 1)) { g.fillStyle = 'rgba(255,255,255,.6)'; g.fillRect(x, y, p, e) }
+    if (!at(i - 1, j)) { g.fillStyle = 'rgba(255,255,255,.28)'; g.fillRect(x, y, e, p) }
+    if (!at(i, j + 1)) { g.fillStyle = 'rgba(130,48,0,.6)'; g.fillRect(x, y + p - e, p, e) }
+    if (!at(i + 1, j)) { g.fillStyle = 'rgba(130,48,0,.34)'; g.fillRect(x + p - e, y, e, p) }
+    if (p >= 6) { g.fillStyle = 'rgba(120,56,0,.13)'; g.fillRect(x + p - 1, y, 1, p); g.fillRect(x, y + p - 1, p, 1) }
+    gm.fillStyle = '#fffbea'; gm.fillRect(x, y, p, p);
+  }
+  return LGC = { key, c, m, w: w / k, h: h / k, pad: pad / k, lw: nc * p / k, lh: 7 * p / k };
+}
+/* fitted into maxW x maxH, centred on (cx, cy); returns the logo width */
 export function titleLogo(txt, cx, cy, maxW, maxH) {
-  const g = canvasesState.ctx;
-  g.save(); g.textBaseline = 'middle'; g.textAlign = 'center'; g.lineJoin = 'round';
-  let S = 100; g.font = '700 ' + S + 'px ' + FFP; const w100 = g.measureText(txt).width || 1;
-  S = Math.min(maxW / w100 * 100, maxH / .8); g.font = '700 ' + Math.round(S) + 'px ' + FFP;
-  const w = g.measureText(txt).width, y = cy + S * .04;
-  g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = S * .12; g.shadowOffsetY = S * .08; g.fillStyle = '#1d1006'; g.fillText(txt, cx, y);
-  g.shadowBlur = 0; g.shadowColor = 'transparent'; g.shadowOffsetY = 0;
-  g.lineWidth = Math.max(2, S * .14); g.strokeStyle = '#2a1606'; g.strokeText(txt, cx, y);
-  const gr = g.createLinearGradient(0, cy - S * .4, 0, cy + S * .4); gr.addColorStop(0, '#ffe39a'); gr.addColorStop(.5, '#ffb844'); gr.addColorStop(1, '#e88a1e');
-  g.fillStyle = gr; g.fillText(txt, cx, y);
-  if (!pref('rm', false)) {
-    const sw = ((sessionState.clockT * .16) % 1.7) - .3;
-    if (sw > -.25 && sw < 1.25) {
-      const lw = w, x0 = cx - lw / 2, bx = x0 + sw * lw, w2 = S * .12;
-      g.save(); g.beginPath(); g.moveTo(bx - w2 + S * .15, cy - S); g.lineTo(bx + w2 + S * .15, cy - S); g.lineTo(bx + w2 - S * .15, cy + S); g.lineTo(bx - w2 - S * .15, cy + S); g.closePath(); g.clip();
-      g.globalAlpha = .55; g.fillStyle = '#fffbea'; g.fillText(txt, cx, y); g.restore();
+  const g = canvasesState.ctx, u = logoU(txt, maxW, maxH), L0 = logoCanvas(txt, u), x = Math.round(cx - L0.lw / 2) - L0.pad, y = Math.round(cy - L0.lh / 2) - L0.pad;
+  g.save(); g.imageSmoothingEnabled = false;
+  g.drawImage(L0.c, x, y, L0.w, L0.h);
+  if (!rmotion()) {
+    /* slow sheen: a slanted band of the white copy crosses the letters every 9 s */
+    const sw = ((performance.now() / 9000) % 1) * 2.4 - .5;
+    if (sw > -.2 && sw < 1.2) {
+      const bx = x + sw * L0.w, w2 = L0.lh * .5, sl = L0.lh * .35;
+      g.beginPath(); g.moveTo(bx - w2 + sl, y); g.lineTo(bx + w2 + sl, y); g.lineTo(bx + w2 - sl, y + L0.h); g.lineTo(bx - w2 - sl, y + L0.h); g.closePath(); g.clip();
+      g.globalAlpha *= .5; g.drawImage(L0.m, x, y, L0.w, L0.h);
     }
   }
   g.restore();
-  return w;
+  return L0.lw;
 }
 
 /* --- ornate corner: square volutes (9x9 pixel pattern), B = bright gold, G = gold --- */
@@ -150,4 +179,37 @@ export function titleBadge(cx, cy, text, maxW) {
 export function seasonName() {
   const r = lastRun();
   return r ? L(SEAS[((r.w / 4) | 0) % 4]).toUpperCase() : '';
+}
+
+/* ================= lobby dressing (revamp): tip banner, hexagon counters, pixel glyphs. Original art, drawn in code. ================= */
+const GLY = {
+  crown: ['X..X..X', 'X..X..X', 'XX.X.XX', 'XXXXXXX', 'XXXXXXX', '.......', 'XXXXXXX'],
+  skull: ['.XXXXX.', 'XXXXXXX', 'X..X..X', 'X..X..X', 'XXXXXXX', '.XXXXX.', '.X.X.X.'],
+  glass: ['XXXXXXX', '.X...X.', '..X.X..', '...X...', '..X.X..', '.X...X.', 'XXXXXXX'],
+  bulb: ['..XXX..', '.X...X.', '.X.X.X.', '.X.X.X.', '..XXX..', '..XXX..', '...X...'],
+};
+export function glyph(name, x, y, u, col) {
+  const g = canvasesState.ctx, P = GLY[name]; g.fillStyle = col;
+  for (let j = 0; j < 7; j++) for (let i = 0; i < 7; i++) if (P[j][i] === 'X') g.fillRect(x + i * u, y + j * u, u, u);
+}
+/* flat-top hexagon badge with a glyph */
+export function hexBadge(cx, cy, r, name) {
+  const g = canvasesState.ctx, P = (rr, dy) => { g.beginPath(); for (let i = 0; i < 6; i++) { const a = Math.PI / 3 * i; g.lineTo(cx + Math.cos(a) * rr, cy + (dy || 0) + Math.sin(a) * rr) } g.closePath() };
+  g.fillStyle = 'rgba(0,0,0,.45)'; P(r + 1, 2); g.fill();
+  const gr = g.createLinearGradient(0, cy - r, 0, cy + r); gr.addColorStop(0, '#2c3a5e'); gr.addColorStop(1, '#141b30'); g.fillStyle = gr; P(r); g.fill();
+  g.lineWidth = 1.5; g.strokeStyle = '#f0cd73'; g.stroke(); g.lineWidth = 1; g.strokeStyle = 'rgba(10,8,4,.7)'; P(r + 1.2); g.stroke();
+  const u = Math.max(1, Math.round(r / 6)); glyph(name, Math.round(cx - 3.5 * u), Math.round(cy - 3.5 * u), u, '#ffe39a');
+}
+/* tip banner: dark strip, gold hairline, bulb icon; the text shrinks, then ends with an ellipsis. Returns its height. */
+export function tipBanner(UW, y, m, text, T_, tw) {
+  const g = canvasesState.ctx, h = 16, maxW = UW - 2 * m; let sc = .82, t = L(text);
+  while (sc > .64 && tw(t, sc) + 34 > maxW) sc -= .03;
+  if (tw(t, sc) + 34 > maxW) { while (t.length > 4 && tw(t + '\u2026', sc) + 34 > maxW) t = t.slice(0, -1); t += '\u2026' }
+  const w = Math.ceil(tw(t, sc)) + 34, x = Math.round(UW / 2 - w / 2);
+  g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(x + 1, y + 2, w, h);
+  g.fillStyle = 'rgba(8,10,18,.82)'; g.fillRect(x, y, w, h);
+  g.fillStyle = 'rgba(184,149,76,.75)'; g.fillRect(x, y, w, 1); g.fillRect(x, y + h - 1, w, 1); g.fillStyle = '#f0cd73'; g.fillRect(x, y, 2, h); g.fillRect(x + w - 2, y, 2, h);
+  glyph('bulb', x + 9, y + 4.5, 1, '#ffd86b');
+  T_(t, x + 23, y + (h - 9 * sc) / 2, '#e9e4d6', sc);
+  return h;
 }

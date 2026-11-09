@@ -2,19 +2,19 @@ import { cbOn, cbSet, pref, setPref } from '../core/prefs.js';
 import { applyVol, saveVol, sndOn, soundState, toggleSound } from '../audio/sound.js';
 import { startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
-import { LANG, langBtn, languageState, T_, TC, TTL, tw } from '../i18n/language.js';
+import { LANG, LANGS, languageState, T_, tw } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { saveTheme } from '../rendering/kingdom-banner.js';
 import { rs } from '../rendering/resolution.js';
 import { DRS, GQU, renderer, sceneState, SHADOWS, sun } from '../rendering/scene.js';
 import { bugReport } from '../debug/tools.js';
-import { HK, uiBtn } from './build-menu.js';
-import { applyCB, BTN, BTNH, BTNX, frame, GRN, GRNH, PAN } from './drawing.js';
-import { hudState, inR, U } from './hud.js';
+import { HK } from './build-menu.js';
+import { canvasesState } from './canvases.js';
+import { applyCB } from './drawing.js';
+import { bevelBtn, keyChip, kitRow, kitScreen, listBegin, listEnd } from './menu-kit.js';
 import { hudDisplayState } from './hud-state.js';
 import { THEME } from './kingdom-theme.js';
-import { pill } from './minimap.js';
-import { FF } from './typography.js';
+import { FF, FFP } from './typography.js';
 
 export const settingsState = {
   nameBox: null,
@@ -44,9 +44,6 @@ function syncHK(){for(const a of['cannon','peasant','knight','archer','bannerman
 
 export function saveKB(){try{localStorage.setItem('dk_keys',JSON.stringify(KB))}catch(e){}syncHK()}
 
-function slider(x,y,w,val,set){const v=Math.max(0,Math.min(1,val));frame(x-4,y-1,w+8,13,BTNX,0);frame(Math.round(x-4+(w)*v),y-2,8,15,inR(inputState.mouse,U(x-5,y-2,w+10,15))?BTNH:BTN,0);
- hudState.uiHits.push({...U(x-5,y-2,w+10,15),fn:()=>{settingsState.sliderDrag={x,w,set};set(Math.max(0,Math.min(1,(inputState.mouse.x/hudDisplayState.UIS-x)/w)))},tip:null})}
-
 function setGfx(v){sceneState.GQ=v?1:0;GQU.value=sceneState.GQ;try{localStorage.setItem('dk_gfx',sceneState.GQ)}catch(e){}DRS.lv=0;DRS.sum=DRS.cs=DRS.n=DRS.t=DRS.ok=DRS.chk=0;DRS.noDn=DRS.noUp=0;rs();if(SHADOWS){const ss=sceneState.GQ?2048:1024;sun.shadow.mapSize.set(ss,ss);if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null}renderer.shadowMap.needsUpdate=true}}
 
 let setTab=0;
@@ -56,26 +53,34 @@ export const settingsDebug = { tab(n) { setTab = n } };
 const tutOn=()=>{try{return localStorage.getItem('dk_tut')!=='1'}catch(e){return true}};
 const tutSet=on=>{try{if(on)localStorage.removeItem('dk_tut');else localStorage.setItem('dk_tut','1')}catch(e){}};
 
-/* tabs: 0 Game, 1 Graphics, 2 Sound, 3 Controls */
-export function drawSettings(UW,UH,cx){const W=Math.min(UW-12,setTab===3?560:340),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=6,H=UH-12;frame(X,Y,W,H,PAN,6);TTL('Settings',X+10,Y+7,1.35);
- {const tw0=Math.min(86,(W-96)/3-4),tb=setTab===2?1:setTab;[['Game',0],['Display & sound',1],['Controls',3]].forEach(([n,v],i)=>pill(X+W-10-(tw0+4)*(3-i)+4,Y+7,tw0,15,n,BTN,BTNH,()=>{setTab=v;settingsState.rebind=null},null,.7,tb===v))}
- let y=Y+28;
- if(setTab===3){T_('Click a key, then press the new one  (Esc cancels)',X+10,y+3,'#d9b27a',.75);pill(X+W-100,y,90,15,'Reset keys',BTN,BTNH,()=>{KB={...KDEF};saveKB()},null,.8);y+=21;
-  const acts=Object.keys(KDEF),avail=Y+H-30-y;let cols=Math.max(1,Math.min(4,Math.floor((W-20)/130)));while(cols<4&&avail/Math.ceil(acts.length/cols)<12&&(W-20)/(cols+1)>=96)cols++;
-  const rows=Math.ceil(acts.length/cols),cw=(W-20)/cols,rh=Math.min(16,avail/rows);
-  acts.forEach((a,i)=>{const c=(i/rows)|0,r=i%rows,x=X+10+c*cw,yy=y+r*rh;const lb=ACTL[a];let sc=.72;while(sc>.5&&tw(lb,sc)>cw-48)sc-=.04;T_(lb,x,yy+Math.max(1,(rh-10)/2),'#ead8ba',sc);
-   uiBtn(x+cw-44,yy,38,rh-2,settingsState.rebind===a?GRN:BTN,settingsState.rebind===a?GRNH:BTNH,()=>{settingsState.rebind=a},null,(bx,by,bw,bh)=>TC(settingsState.rebind===a?'...':kdisp(KB[a]),bx+bw/2,by+(bh-6)/2,'#fff',.7))})}
- else if(setTab===1||setTab===2){T_('Music',X+10,y+1,'#ead8ba',.85);slider(X+96,y,W-96-34,soundState.vM,v=>{soundState.vM=v;applyVol();saveVol()});T_(Math.round(soundState.vM*100)+'',X+W-28,y+1,'#d9b27a',.8);y+=17;
-  T_('Sound effects',X+10,y+1,'#ead8ba',.85);slider(X+96,y,W-96-34,soundState.vS,v=>{soundState.vS=v;applyVol();saveVol()});T_(Math.round(soundState.vS*100)+'',X+W-28,y+1,'#d9b27a',.8);y+=22;
-  T_('Graphics',X+10,y+3,'#ead8ba',.85);{const bw6=Math.min(70,(W-130)/2);[['Ultra HD',1],['Fast',0]].forEach(([n,v],i)=>pill(X+W-10-(bw6+4)*(2-i)+4,y,bw6,16,n,BTN,BTNH,()=>setGfx(v),null,.8,sceneState.GQ===v))}y+=24;
-  T_('Interface size',X+10,y+3,'#ead8ba',.85);{const bw4=Math.min(52,(W-130)/4);[['Small',.8],['Normal',1],['Large',1.25],['Huge',1.6]].forEach(([n,v],i)=>pill(X+W-10-(bw4+4)*(4-i)+4,y,bw4,16,n,BTN,BTNH,()=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch(e){}rs()},null,.8,Math.abs(uiMul-v)<.01))}y+=24
-  T_('Colour-blind mode',X+10,y+3,'#ead8ba',.85);{const tb=Math.min(110,W-120),on=cbOn();pill(X+W-10-tb,y,tb,16,on?'On':'Off',on?GRN:BTN,on?GRNH:BTNH,()=>{cbSet(!on);applyCB()},null,.8)}y+=24}
- else{T_('Language',X+10,y+3,'#ead8ba',.85);{const lw=Math.min(150,W-120);langBtn(X+W-10-lw,y-2,lw,20,LANG,()=>{languageState.langOpen=true;settingsState.settingsOpen=false},false)}y+=26;
-  T_('Tutorial',X+10,y+3,'#ead8ba',.85);{const tb=Math.min(110,W-120),on=tutOn();pill(X+W-10-tb,y,tb,16,on?'Tutorial: on':'Tutorial: off',on?GRN:BTN,on?GRNH:BTNH,()=>tutSet(!on),null,.8)}y+=26;
-  {const prow=(lab,k,d,a,b)=>{T_(lab,X+10,y+3,'#ead8ba',.85);const tb=Math.min(110,W-120),on=pref(k,d);pill(X+W-10-tb,y,tb,16,on?a:b,on?GRN:BTN,on?GRNH:BTNH,()=>setPref(k,!on),null,.8);y+=26};
-   prow('Pause when away','ap',true,'On','Off');prow('Autosave','as',true,'On','Off');prow('Reduce motion','rm',false,'On','Off');prow('Studio intro','qi',false,'First launch only','Every launch')}
-  T_('Bug report',X+10,y+3,'#ead8ba',.85);{const tb=Math.min(110,W-120);pill(X+W-10-tb,y,tb,16,'Report a bug [F8]',BTN,BTNH,()=>{settingsState.settingsOpen=false;bugReport()},null,.8)}y+=26}
- pill(X+W/2-40,Y+H-22,80,16,'Back',BTN,BTNH,settingsBack,null,.9)}
+/* tabs: 0 Game, 1 Display & sound (2 = its old Sound half), 3 Controls. Template: tabs as bevelled buttons, sections, full-width rows with the value on the right. */
+export function drawSettings(UW,UH,fh,back){const tb=setTab===2?1:setTab,TABS=[['Game',0],['Display & sound',1],['Controls',3]],ti=Math.max(0,TABS.findIndex(t=>t[1]===tb));
+ const b=kitScreen(UW,UH,{key:'set'+tb,title:'Settings',close:back,fh,maxW:tb===3?620:500,tabs:TABS.map(t=>[t[0],()=>{setTab=t[1];settingsState.rebind=null}]),tab:ti});
+ const tog=(l,lab,on,set)=>l.row({label:lab,opts:[['On',on,()=>set(true)],['Off',!on,()=>set(false)]],fn:()=>set(!on)}),prow=(l,lab,k,d)=>tog(l,lab,pref(k,d),v=>setPref(k,v));
+ if(tb===3){let y=b.y+1;{const t='Click a key, then press the new one  (Esc cancels)',rw=Math.min(110,b.w*.34);let sc=.78;while(sc>.6&&tw(t,sc)>b.w-rw-8)sc-=.03;T_(t,b.x+1,y+5,'#d9b27a',sc);bevelBtn(b.x+b.w-rw,y,rw,18,'Reset keys','dark',()=>{KB={...KDEF};saveKB()},{sc:.85})}y+=25;
+  const l=listBegin('set3',b.x,y,b.w,b.y+b.h-y),acts=Object.keys(KDEF),cols=Math.max(1,Math.min(3,Math.floor(b.w/170))),cw=(b.w-(cols-1)*5)/cols,g=canvasesState.ctx;
+  l.section('Keyboard');
+  for(let i=0;i<acts.length;i+=cols){for(let c=0;c<cols&&i+c<acts.length;c++){const a=acts[i+c],on=settingsState.rebind===a,t=on?'...':kdisp(KB[a]);
+    kitRow(b.x+c*(cw+5),l.y,cw,18,{label:ACTL[a],sc:.8,on,fn:()=>{settingsState.rebind=a},right:(rx,yy,h)=>{g.font='700 8px '+FFP;const w=Math.max(14,Math.ceil(g.measureText(t).width)+8);keyChip(rx-w+3,yy+(h-13)/2,t);return w}})}l.gap(21)}
+  listEnd();return}
+ const l=listBegin('set'+tb,b.x,b.y+1,b.w,b.h-1);
+ if(tb===1){l.section('Sound');
+  l.row({label:'Music',slider:{val:soundState.vM,set:v=>{soundState.vM=v;applyVol();saveVol()}}});
+  l.row({label:'Sound effects',slider:{val:soundState.vS,set:v=>{soundState.vS=v;applyVol();saveVol()}}});
+  l.section('Display');
+  l.row({label:'Graphics',opts:[['Ultra HD',1],['Fast',0]].map(([n,v])=>[n,sceneState.GQ===v,()=>setGfx(v)]),fn:()=>setGfx(sceneState.GQ?0:1)});
+  {const SZ=[['Small',.8],['Normal',1],['Large',1.25],['Huge',1.6]],set=v=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch(e){}rs()},ci=Math.max(0,SZ.findIndex(z=>Math.abs(uiMul-z[1])<.01));
+   l.row({label:'Interface size',opts:SZ.map(([n,v],i)=>[n,i===ci,()=>set(v)]),fn:()=>set(SZ[(ci+1)%SZ.length][1])})}
+  
+  tog(l,'Colour-blind mode',cbOn(),v=>{cbSet(v);applyCB()})}
+ else{l.section('General');
+  l.row({label:'Language',value:LANGS[LANG][0],raw:false,fn:()=>{languageState.langOpen=true;settingsState.settingsOpen=false}});
+  tog(l,'Tutorial',tutOn(),tutSet);prow(l,'Pause when away','ap',true);prow(l,'Autosave','as',true);
+  {const on=pref('qi',false);l.row({label:'Studio intro',opts:[['First launch only',on,()=>setPref('qi',true)],['Every launch',!on,()=>setPref('qi',false)]],fn:()=>setPref('qi',!on)})}
+  l.section('Accessibility');prow(l,'Reduce motion','rm',false);
+  l.section('Help');
+  l.row({label:'Report a bug [F8]',fn:()=>{settingsState.settingsOpen=false;bugReport()}})}
+ listEnd()}
 
 export function settingsBack(){settingsState.settingsOpen=false;settingsState.rebind=null;setTab=0;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}}
 

@@ -44,6 +44,8 @@ import { settingsState } from './settings.js';
 import { drawPicker, sitePickerState } from './site-picker.js';
 import { drawTitle } from './title-menu.js';
 import { titleBlur } from './title-frame.js';
+import { bevelBtn, goldTitle, kitFrame } from './menu-kit.js';
+import { fxGameIn } from './menu-fx.js';
 import { drawUnitCard } from './unit-card.js';
 import { NAV, navBegin } from './menu-nav.js';
 import { drawTroops, PLUN, troopPanelState } from './troop-panel.js';
@@ -70,12 +72,12 @@ export function selPeas(){const P=sessionState.units.filter(u=>u.t===0&&u.type==
 
 export function selIdle(){const I=idleP();if(!I.length){hudDisplayState.msgS='No idle peasants';hudDisplayState.msgT=2;return}sessionState.units.forEach(u=>u.sel=false);sessionState.mode=null;I.forEach(u=>u.sel=true);CAM.x=I[0].x/TS;CAM.z=I[0].y/TS;hudDisplayState.msgS=I.length+' idle peasant'+(I.length>1?'s':'')+' selected';hudDisplayState.msgT=3}
 
-function drawEnd(UW,UH){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH);g.addColorStop(0,'rgba(80,0,0,.45)');g.addColorStop(1,'rgba(170,16,16,.68)');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillRect(0,0,UW,UH);hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];const cx=UW/2,pw=Math.min(220,UW-16);
+function drawEnd(UW,UH){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH);g.addColorStop(0,'rgba(9,10,15,.8)');g.addColorStop(.5,'rgba(24,8,12,.8)');g.addColorStop(1,'rgba(120,20,24,.78)');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillRect(0,0,UW,UH);{const m=UW<420?4:10;kitFrame(m,m,UW-2*m,UH-2*m,UW>=420)}hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];const cx=UW/2,pw=Math.min(220,UW-16);
  /* look 5B, three tiers laid out from one cursor (no fixed offsets, so the lines never overlap): 1 title + score, 2 details, 3 actions */
  const G=rulesState.GST,SB=statisticsState.SBR,nr=SB?SB.top.length:0,sc1=1.6,H1=Math.round(9*3*1.25*.86)+11+11+8+Math.round(9*sc1*1.25*.88)+4,H2=10+4*12+(SB?12+nr*11+4:0),H3=10+22+6+22;
  let y=Math.max(6,Math.round((UH-(H1+H2+H3))/2)),ts=3;while(ts>1.3&&twH('Your kingdom fell!',ts)>UW-16)ts-=.2;
  /* tier 1: title, who fell, one line of ambience, then the score */
- TTL('Your kingdom fell!',cx,y,ts,'center');y+=TTS(ts)+4;TC(THEME.n+' has fallen to the horde',cx,y,'#e0e0e0',1);y+=13;
+ goldTitle('Your kingdom fell!',cx,y,TTS(ts),'center',UW-24);y+=TTS(ts)+4;TC(THEME.n+' has fallen to the horde',cx,y,'#e0e0e0',1);y+=13;
  TC(['The last light goes out. Only the walls remember.','The rebels will tell it: the bastion held until the end.','Dawn did not come. Not this time.','The horde walks on. The old world was lost twice.','The banner of King Naraige falls, but it can be raised again.','Rise again, King. The bastion needs you.'][sessionState.waveN%6],cx,y,'#c9b89a',.85);y+=16;
  {const a='Score: ',b=String(sessionState.waveN*100+sessionState.kills),w=tw(a,sc1)+tw(b,sc1);T_(a,cx-w/2,y,'#ffffff',sc1);T_(b,cx-w/2+tw(a,sc1),y,'#ffff55',sc1);y+=Math.round(9*sc1*1.25*.88)+8}
  /* tier 2: details */
@@ -89,7 +91,7 @@ function drawEnd(UW,UH){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH)
   SB.top.forEach((r,i)=>{TC('#'+(i+1)+'   Wave '+r.w+'   '+r.k+' kills',cx,y,i===SB.rank?'#ffffff':'#c4a37a',.78);y+=11});y+=4}
  /* tier 3: actions */
  canvasesState.ctx.fillStyle=UIT.gold;canvasesState.ctx.fillRect(Math.round(cx-60),Math.round(y),120,1);y+=9;
- pill(cx-pw/2,y,pw,22,'Play again',BTN,BTNH,newGame,null,1.1);pill(cx-pw/2,y+28,pw,22,'Title Screen',BTN,BTNH,()=>{sessionState.inGame=false;sessionState.over=false;sessionState.started=false;rollWorld()},null,1.1)}
+ bevelBtn(cx-pw/2,y,pw,24,'Play again','go',newGame,{nav:false,sc:.95});bevelBtn(cx-pw/2,y+30,pw,22,'Title Screen','dark',()=>{sessionState.inGame=false;sessionState.over=false;sessionState.started=false;rollWorld()},{nav:false,sc:.9})}
 
 function drawToasts(UW){for(let i=0;i<TOASTS.length;i++){const o=TOASTS[i];o.t+=UIDT;const T=o.t,sl=T<.35?1-T/.35:T>4.6?(T-4.6)/.35:0;if(T>4.95){TOASTS.splice(i,1);i--;continue}const d=ACHD[o.k],w=Math.max(150,Math.max(tw(d[0],.9),twH('Achievement',.95))+40),h=30,x=UW-w-4+sl*(w+8),y=settingsState.TOPH+4+i*(h+4);
   frame(x,y,w,h,PAN,4);
@@ -148,6 +150,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  if(hv&&!sessionState.over&&!sessionState.showMap){const ln=hv.tip,cpp=hv.cost?costParts(hv.cost):null,cw0=cpp?cpp.reduce((q,p)=>q+tw(p[0],.9)+12,0):0,w=Math.max(cw0,...ln.map(s=>tw(s,.9)))+14,h=ln.length*11+8;let tx=Math.min(UW-w-2,Math.max(2,Math.round(hv.x/hudDisplayState.UIS))),ty=Math.round(hv.y/hudDisplayState.UIS)-h-4;if(ty<26)ty=Math.round((hv.y+hv.h)/hudDisplayState.UIS)+4;
   frame(tx,ty,w,h,TIPP,UIT.rad.small);ln.forEach((s,i)=>{if(cpp&&i===ln.length-1){drawCost(cpp,tx+7,ty+5+i*11,w-14,.9,9)}else T_(s,tx+7,ty+5+i*11,i?'#aaaaaa':'#ffffff',.9)})}
  drawToasts(UW);
+ fxGameIn(UW,UH);
  if(sessionState.showMap)drawMapModal(UW,UH);
  if(sessionState.over)drawEnd(UW,UH);
  canvasesState.ctx.setTransform(1,0,0,1,0,0)}
