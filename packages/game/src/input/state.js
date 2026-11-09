@@ -1,5 +1,6 @@
 export const inputState = {
   ptr: null,
+  uiDown: 0,   /* time (ms) of the last press on a UI button: drives the pressed look only */
   box: null,
   panMode: false,
   mouse: {x:-1,y:-1},

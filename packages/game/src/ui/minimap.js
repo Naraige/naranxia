@@ -13,7 +13,7 @@ import { CAM } from '../rendering/scene.js';
 import { uiBtn } from './build-menu.js';
 import { canvasesState, cv, cvs } from './canvases.js';
 import { cb, cbOn } from '../core/prefs.js';
-import { circ, frame, PAN, RDB, rr } from './drawing.js';
+import { circ, frame, PAN, RDB, rr, UIT } from './drawing.js';
 import { hudState, U } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
 import { dIc, IC } from './icons.js';
@@ -70,16 +70,16 @@ function dwBase(x,y,w,h,big){const sx=w/TW,sy=h/TH;
  canvasesState.ctx.restore()}
 
 /* ---- overlays ---- */
-export function pill(x,y,w,h,label,pal,palH,fn,ic,sc,on,dis){uiBtn(x,y,w,h,pal,palH,fn,null,(X,Y,W2,H2)=>{const iw=ic?h*.62+4:0,s=fitSc(label,W2-iw-8,sc||1),tx=tw(label,s);let cx=X+(W2-tx-iw)/2;if(ic){dIc(ic,cx,Y+(H2-h*.62)/2,h*.62);cx+=iw}T_(label,cx,Y+(H2-9*s)/2+.5*s,dis?'#8a7660':'#fff',s)},on,dis)}
+export function pill(x,y,w,h,label,pal,palH,fn,ic,sc,on,dis,foc){uiBtn(x,y,w,h,pal,palH,fn,null,(X,Y,W2,H2)=>{const iw=ic?h*.62+4:0,s=fitSc(label,W2-iw-8,sc||1),tx=tw(label,s);let cx=X+(W2-tx-iw)/2;if(ic){dIc(ic,cx,Y+(H2-h*.62)/2,h*.62);cx+=iw}T_(label,cx,Y+(H2-9*s)/2+.5*s,dis?'#8a7660':'#fff',s)},on,dis,foc)}
 
 export function drawMapModal(UW,UH){canvasesState.ctx.fillStyle='rgba(5,8,16,.8)';canvasesState.ctx.fillRect(0,0,UW,UH);
  const aw=UW-20,ah=UH-68,mw=Math.min(aw,ah*TW/TH),mh=mw*TH/TW,pw=mw+16,ph=mh+50,px=(UW-pw)/2,py=(UH-ph)/2,mx=px+8,my=py+30;
- hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];frame(px,py,pw,ph,PAN,6);
+ hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];frame(px,py,pw,ph,PAN,UIT.rad.panel);
  dIc(IC.map,px+8,py+7,15);TTL('World map',px+26,py+8,1.22);
  let lx=px+pw-8-18-6;const leg=[['Your base',IC.home,null],['Spawn',IC.skull,null],['Next zombie route',null,cb('#ff3b3b','#ffb000')]];
  for(const[t,ic,col]of leg.slice().reverse()){const w=tw(t,.85)+(ic?12:14);lx-=w+8;if(lx<px+40+twH('World map',1.22))break;if(ic)dIc(ic,lx,py+9,10);else{canvasesState.ctx.fillStyle=col;canvasesState.ctx.fillRect(lx,py+13,10,2.4)}T_(t,lx+13,py+10.5,'#ead8ba',.85)}
  uiBtn(px+pw-8-18,py+6,18,18,RDB,RDB,()=>{sessionState.showMap=false},['Close [M]'],(x,y,w,h)=>dIc(IC.close,x+3,y+3,12));
- frame(mx-2,my-2,mw+4,mh+4,['#0b0f1a','#1a2236','#070a12'],4);
+ frame(mx-2,my-2,mw+4,mh+4,['#0b0f1a','#1a2236','#070a12'],UIT.rad.small);
  drawWorld(mx,my,mw,mh,true);
  hudState.uiHits.push({...U(mx,my,mw,mh),fn:()=>{CAM.x=Math.max(2,Math.min(TW-2,(inputState.mouse.x-mx*hudDisplayState.UIS)/(mw*hudDisplayState.UIS)*TW));CAM.z=Math.max(2,Math.min(TH-2,(inputState.mouse.y-my*hudDisplayState.UIS)/(mh*hudDisplayState.UIS)*TH));sessionState.showMap=false},tip:null});
  const pr=Math.round(terrainState.genN/(NCX*NCY)*100);T_('Map #'+((terrainState.SEED*1000)|0)+(pr<100?'   Generating '+pr+'%':'   '+TW+' x '+TH+' tiles')+'   Click to jump there',mx,my+mh+6,'#b59773',.85)}

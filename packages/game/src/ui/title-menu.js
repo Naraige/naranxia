@@ -3,8 +3,7 @@ import { AC, sndOn, toggleSound } from '../audio/sound.js';
 import { inputState } from '../input/state.js';
 import { GNOTES } from '../core/version.js';
 import { GVER } from '../core/version.js';
-import { bugReport } from '../debug/tools.js';
-import { newGame, quitGame, startGame } from '../gameplay/lifecycle.js';
+import { quitGame, startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
 import { BOSSN } from '../ai/wave-boss.js';
 import { drawLang, L, LANG, langBtn, LANGS, languageState, T_, TC, TTL, tw } from '../i18n/language.js';
@@ -15,7 +14,7 @@ import { BANNER, retheme } from '../rendering/structures.js';
 import { TFADE } from '../rendering/title-scene.js';
 import { uiBtn } from './build-menu.js';
 import { canvasesState } from './canvases.js';
-import { arcDia, BTN, BTNH, dirtBack, frame, gold, GRN, GRNH, PAN, rr } from './drawing.js';
+import { arcDia, BTN, BTNH, dirtBack, focusRing, frame, gold, GRN, GRNH, PAN, rr } from './drawing.js';
 import { hudState, inR, U } from './hud.js';
 import { NAV, navAdd, navBegin, navEnd, navPoll, padOn } from './menu-nav.js';
 import { dIc, IC } from './icons.js';
@@ -24,7 +23,6 @@ import { pill } from './minimap.js';
 import { continueLast, drawSaves, saveMenuState, svPeek } from './save-menu.js';
 import { drawSettings, nmI, settingsState } from './settings.js';
 import { openPicker } from './site-picker.js';
-import { tutStart } from './tutorial.js';
 import { drawTitleWeather, lastRun, titleSeasonColor, titleWeatherLabel } from './title-weather.js';
 import { FFT } from './typography.js';
 
@@ -62,20 +60,20 @@ export function drawTitle(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];h
   canvasesState.ctx.restore();y+=S+Math.round(small?6:cs*1.3)}
  }canvasesState.ctx.globalAlpha=ease(ent(.4,1.1));const ig=sessionState.inGame,bw=Math.min(UW-24,Math.max(200,Math.min(300,UW*.5))),gp=small?5:9,bx=Math.round(cx-bw/2),wide=bw>=250;
  if(!ig&&saveMenuState.last===undefined){saveMenuState.last=null;svPeek()}
- const nb=(ig?(MP.on?5:7):5)+(!ig&&saveMenuState.last?1:0)+(!ig&&window.NARX&&NARX.desktop?1:0)+(ig?0:1)+(wide||ig?0:1),bh=Math.max(16,Math.min(small?22:26,Math.floor((UH-(ig?20:60)-y)/nb)-gp));
- const hv=(x,yy,w,h)=>inR(inputState.mouse,U(x,yy,w,h)),mb=(lab,fn,hl)=>{const k=navAdd(fn,hv(bx,y,bw,bh));pill(bx,y,bw,bh,lab,hl?GRN:BTN,hl?GRNH:BTNH,fn,null,1.15,k>=0&&NAV.sel===k);y+=bh+gp};
+ const nb=(ig?(MP.on?3:4):5)+(!ig&&saveMenuState.last?1:0)+(!ig&&window.NARX&&NARX.desktop?1:0)+(ig?0:1)+(wide||ig?0:1),bh=Math.max(16,Math.min(small?22:26,Math.floor((UH-(ig?20:60)-y)/nb)-gp));
+ const hv=(x,yy,w,h)=>inR(inputState.mouse,U(x,yy,w,h)),mb=(lab,fn,hl)=>{const k=navAdd(fn,hv(bx,y,bw,bh));pill(bx,y,bw,bh,lab,hl?GRN:BTN,hl?GRNH:BTNH,fn,null,1.15,false,false,k>=0&&NAV.sel===k);y+=bh+gp};
  const openLoad=()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null},openTut=()=>{try{localStorage.removeItem('dk_tut')}catch(e){}settingsState.setupOpen=true};
- if(ig){mb('Back to Game',startGame);if(!MP.on)mb('Save / Load',openLoad);mb('New game',newGame);mb('Quit game',quitGame);if(!MP.on)mb('Tutorial',()=>{tutStart(true);startGame()});mb('Report a bug [F8]',bugReport);mb('Multiplayer (Co-op)',mpOpen)}
+ if(ig){mb('Back to Game',startGame);if(!MP.on)mb('Save / Load',openLoad);mb('Quit to title',quitGame)}
  else{if(saveMenuState.last)mb('Continue',continueLast,1);mb('Singleplayer',()=>{settingsState.setupOpen=true});mb('Multiplayer (Co-op)',mpOpen);mb('Load game',openLoad);mb('Tutorial',openTut);if(window.NARX&&NARX.desktop)mb('Exit to desktop',()=>window.close())}
  {const sd=()=>{toggleSound()},lg=()=>{languageState.langOpen=true},op=()=>{settingsState.settingsOpen=true},sl=sndOn?'Sound: on':'Sound: off';
-  const row=(x,w,lab,fn,lang)=>{const k=navAdd(fn,hv(x,y,w,bh)),on=k>=0&&NAV.sel===k;if(lang){langBtn(x,y,w,bh,LANG,fn,false);if(on)gold(x,y,w,bh)}else pill(x,y,w,bh,lab,BTN,BTNH,fn,null,wide&&!ig?1.05:1.15,on)};
+  const row=(x,w,lab,fn,lang)=>{const k=navAdd(fn,hv(x,y,w,bh)),on=k>=0&&NAV.sel===k;if(lang){langBtn(x,y,w,bh,LANG,fn,false);if(on)focusRing(x,y,w,bh)}else pill(x,y,w,bh,lab,BTN,BTNH,fn,null,wide&&!ig?1.05:1.15,false,false,on)};
   if(ig){const hw=Math.round((bw-gp)/2);row(bx,hw,'Options',op);row(bx+hw+gp,bw-hw-gp,sl,sd);y+=bh+gp}
   else if(wide){const lw=Math.max(96,Math.round(bw*.36)),hw=Math.round((bw-lw-2*gp)/2);row(bx,hw,'Options',op);row(bx+hw+gp,hw,sl,sd);row(bx+2*hw+2*gp,bw-2*hw-2*gp,'',lg,1);y+=bh+gp}
   else{const hw=Math.round((bw-gp)/2);row(bx,hw,'Options',op);row(bx+hw+gp,bw-hw-gp,sl,sd);y+=bh+gp;row(bx,bw,'',lg,1);y+=bh+gp}}
  if(!ig){const r=lastRun();if(r&&UH-y>34){TC('Last game: wave '+r.w+'  -  '+r.k+' zombies slain',cx,y+2,'#c4a37a',.85);y+=13;{const wl=titleWeatherLabel(),ww=tw(wl,.85);arcDia(cx-ww/2-8,y+6,2.5,titleSeasonColor())}TC(titleWeatherLabel(),cx,y+2,titleSeasonColor(),.85);y+=15}
   if(sessionState.best.w>0&&UH-y>18){TC('Best: wave '+sessionState.best.w+'  -  '+sessionState.best.k+' zombies slain',cx,y+2,'#ffff55',.9);y+=16}}
  if(!ig&&UH-y>30&&UH>260){const t=TIPS[TIPN];let sc=.8;while(sc>.58&&tw(t,sc)>UW-40)sc-=.04;if(tw(t,sc)<=UW-40)TC(t,cx,Math.min(y+6,UH-40),'#9fd6e6',sc)}
- canvasesState.ctx.globalAlpha=ease(ent(1,1.6));if(UH>240)TC(NAV.active?(padOn()?'D-pad: move | A: select | B: back':'Up / Down: move | Enter: select | Esc: back'):'',cx,UH-27,'#9fb0c6',.72);const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);if(!ig&&GNOTES){const nw=Math.max(96,tw('What\'s new',.8)+22),nx=UW-nw-8,ny=UH-34,k=navAdd(()=>{notesOpen=true},hv(nx,ny,nw,18));pill(nx,ny,nw,18,'What\'s new',BTN,BTNH,()=>{notesOpen=true},null,.8,NAV.sel===k)}if(!ig){const rn=Math.max(70,tw('Records',.8)+22),k2=navAdd(()=>{recOpen=true},hv(8,UH-34,rn,18));pill(8,UH-34,rn,18,'Records',BTN,BTNH,()=>{recOpen=true},null,.8,NAV.sel===k2);const jn=Math.max(90,tw('Join a game',.8)+22),k3=navAdd(mpOpenJoin,hv(14+rn,UH-34,jn,18));pill(14+rn,UH-34,jn,18,'Join a game',BTN,BTNH,mpOpenJoin,null,.8,NAV.sel===k3);const cn=Math.max(80,tw('Chronicle',.8)+22),k4=navAdd(()=>{chrOpen=true},hv(20+rn+jn,UH-34,cn,18));pill(20+rn+jn,UH-34,cn,18,'Chronicle',BTN,BTNH,()=>{chrOpen=true},null,.8,NAV.sel===k4)}navEnd();canvasesState.ctx.globalAlpha=1}
+ canvasesState.ctx.globalAlpha=ease(ent(1,1.6));if(UH>240)TC(NAV.active?(padOn()?'D-pad: move | A: select | B: back':'Up / Down: move | Enter: select | Esc: back'):'',cx,UH-27,'#9fb0c6',.72);const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');TC(ms,cx,UH-14,'#c8c8c8',.8);T_(GVER,UW-24,UH-12,'#c8c8c8',.75);if(!ig&&GNOTES){const nw=Math.max(96,tw('What\'s new',.8)+22),nx=UW-nw-8,ny=UH-34,k=navAdd(()=>{notesOpen=true},hv(nx,ny,nw,18));pill(nx,ny,nw,18,'What\'s new',BTN,BTNH,()=>{notesOpen=true},null,.8,false,false,NAV.sel===k)}if(!ig){const rn=Math.max(70,tw('Records',.8)+22),k2=navAdd(()=>{recOpen=true},hv(8,UH-34,rn,18));pill(8,UH-34,rn,18,'Records',BTN,BTNH,()=>{recOpen=true},null,.8,false,false,NAV.sel===k2);const jn=Math.max(90,tw('Join a game',.8)+22),k3=navAdd(mpOpenJoin,hv(14+rn,UH-34,jn,18));pill(14+rn,UH-34,jn,18,'Join a game',BTN,BTNH,mpOpenJoin,null,.8,false,false,NAV.sel===k3);const cn=Math.max(80,tw('Chronicle',.8)+22),k4=navAdd(()=>{chrOpen=true},hv(20+rn+jn,UH-34,cn,18));pill(20+rn+jn,UH-34,cn,18,'Chronicle',BTN,BTNH,()=>{chrOpen=true},null,.8,false,false,NAV.sel===k4)}navEnd();canvasesState.ctx.globalAlpha=1}
 
 function drawRecords(UW,UH,cx){const W=Math.min(UW-12,420),X=Math.max(6,Math.min(UW-W-6,cx-W/2)),Y=8,H=UH-16;frame(X,Y,W,H,PAN,6);TTL('Records',X+10,Y+7,1.35);
  let y=Y+34;const b=sessionState.best,r=lastRun();

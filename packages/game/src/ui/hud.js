@@ -35,7 +35,7 @@ import { SEASC, seasonIdx, wxLabel } from '../rendering/weather.js';
 import { CMP, costParts, drawCost, drawItem, menuItems, NAMES, uiBtn } from './build-menu.js';
 import { canvasesState, cv } from './canvases.js';
 import { convoyPanelState, drawConvoy } from './convoy-panel.js';
-import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, RDB, SLOT, TIPP } from './drawing.js';
+import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, RDB, SLOT, TIPP, UIT } from './drawing.js';
 import { hudDisplayState } from './hud-state.js';
 import { dIc, IC } from './icons.js';
 import { THEME } from './kingdom-theme.js';
@@ -76,7 +76,7 @@ function drawEnd(UW,UH){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH)
   T_(a1,xx,y1+13,'#c4a37a',.8);xx+=tw(a1,.8);T_(nm,xx,y1+13,'#ffffff',.8);xx+=tw(nm,.8)+4;if(c1)T_(c1,xx,y1+13,'#ffff55',.8);
   TC('Units lost: '+G.lost+(G.kl>1?'   King Lv '+G.kl+'  Talents '+(G.kn|0):''),cx,y1+26,'#c4a37a',.8)}
  if(statisticsState.SBR){const y2=cy+48;TC((statisticsState.SBR.daily?'Daily map':'This map')+' - '+(statisticsState.SBR.rank===0?'NEW RECORD!':'Best runs'),cx,y2,statisticsState.SBR.rank===0?'#ffff55':'#f0dca8',.8);
-  statisticsState.SBR.top.forEach((r,i)=>TC('#'+(i+1)+'   Wave '+r.w+'   '+r.k+' kills',cx,y2+12+i*11,i===statisticsState.SBR.rank?'#ffffff':'#c4a37a',.72))}
+  statisticsState.SBR.top.forEach((r,i)=>TC('#'+(i+1)+'   Wave '+r.w+'   '+r.k+' kills',cx,y2+12+i*11,i===statisticsState.SBR.rank?'#ffffff':'#c4a37a',.78))}
  pill(cx-pw/2,cy+100,pw,22,'Play again',BTN,BTNH,newGame,null,1.1);pill(cx-pw/2,cy+128,pw,22,'Title Screen',BTN,BTNH,()=>{sessionState.inGame=false;sessionState.over=false;sessionState.started=false;rollWorld()},null,1.1)}
 
 function drawToasts(UW){for(let i=0;i<TOASTS.length;i++){const o=TOASTS[i];o.t+=UIDT;const T=o.t,sl=T<.35?1-T/.35:T>4.6?(T-4.6)/.35:0;if(T>4.95){TOASTS.splice(i,1);i--;continue}const d=ACHD[o.k],w=Math.max(150,Math.max(tw(d[0],.9),twH('Achievement',.95))+40),h=30,x=UW-w-4+sl*(w+8),y=settingsState.TOPH+4+i*(h+4);
@@ -132,7 +132,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
   if(sessionState.paused){canvasesState.ctx.fillStyle='rgba(0,0,0,.35)';canvasesState.ctx.fillRect(0,0,UW,UH);TC('Game Paused',UW/2,UH*.36,'#ffffff',2.2);TC(backgroundLoopState.autoPaused?'Click anywhere or press Space to resume':'Press Space to resume',UW/2,UH*.36+28,'#a0a0a0',.95)}}
  const hv=inputState.touch?(hudState.tipKey&&performance.now()<hudState.tipT?hudState.uiHits.find(h=>h.tip&&((h.x|0)+','+(h.y|0)+','+(h.w|0))===hudState.tipKey):null):hudState.uiHits.find(h=>h.tip&&inR(inputState.mouse,h));
  if(hv&&!sessionState.over&&!sessionState.showMap){const ln=hv.tip,cpp=hv.cost?costParts(hv.cost):null,cw0=cpp?cpp.reduce((q,p)=>q+tw(p[0],.9)+12,0):0,w=Math.max(cw0,...ln.map(s=>tw(s,.9)))+14,h=ln.length*11+8;let tx=Math.min(UW-w-2,Math.max(2,Math.round(hv.x/hudDisplayState.UIS))),ty=Math.round(hv.y/hudDisplayState.UIS)-h-4;if(ty<26)ty=Math.round((hv.y+hv.h)/hudDisplayState.UIS)+4;
-  frame(tx,ty,w,h,TIPP,5);ln.forEach((s,i)=>{if(cpp&&i===ln.length-1){drawCost(cpp,tx+7,ty+5+i*11,w-14,.9,9)}else T_(s,tx+7,ty+5+i*11,i?'#aaaaaa':'#ffffff',.9)})}
+  frame(tx,ty,w,h,TIPP,UIT.rad.small);ln.forEach((s,i)=>{if(cpp&&i===ln.length-1){drawCost(cpp,tx+7,ty+5+i*11,w-14,.9,9)}else T_(s,tx+7,ty+5+i*11,i?'#aaaaaa':'#ffffff',.9)})}
  drawToasts(UW);
  if(sessionState.showMap)drawMapModal(UW,UH);
  if(sessionState.over)drawEnd(UW,UH);

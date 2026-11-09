@@ -44,9 +44,15 @@ export function frame(x,y,w,h,p,r){if(p===SLOT||p===SLOTH||p===SLOTX){mcSlot(x,y
    g.strokeStyle=off?'rgba(0,0,0,.14)':'rgba(8,14,26,.38)';g.lineWidth=1;rr(x-.5,y-.5,w+1,h+1,Rd+.5);g.stroke();
    g.strokeStyle=off?lgc('rf',y,h,0,'rgba(255,255,255,.4)',1,'rgba(255,255,255,.14)'):tint?'rgb('+tint+')':lgc('rm',y,h,0,'rgba(255,255,255,.95)',1,'rgba(255,255,255,.4)');g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke();
    if(tint&&!off){g.globalAlpha=.28;g.strokeStyle='rgb('+tint+')';g.lineWidth=3;rr(x-1.5,y-1.5,w+3,h+3,Rd+2);g.stroke();g.globalAlpha=1}return}
-  g.fillStyle=big?'rgba(0,0,0,.34)':'rgba(0,0,0,.22)';rr(x,y+(big?4:2),w,h,Rd+1);g.fill();
+  g.fillStyle=big?UIT.shadeBig:UIT.shade;rr(x,y+(big?4:2),w,h,Rd+1);g.fill();
   g.fillStyle=lgc('pg'+(big?1:0),y,h,0,'rgba(20,27,40,.80)',1,'rgba(10,14,22,.80)');rr(x,y,w,h,Rd);g.fill();
-  g.strokeStyle='rgba(255,255,255,.16)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke()}
+  g.strokeStyle=UIT.line;g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke()}
+
+/* shared UI tokens: corner radii, hairline border and soft shadows used by panels, slots, tooltips and the minimap frame */
+export const UIT={rad:{panel:6,small:5,tip:8},line:'rgba(255,255,255,.16)',shade:'rgba(0,0,0,.22)',shadeBig:'rgba(0,0,0,.34)'};
+
+/* the one keyboard / gamepad focus ring (slots, pills, rows): dark keyline, bright amber ring */
+export function focusRing(x,y,w,h){const g=canvasesState.ctx,Rd=Math.max(2,Math.min(7,w/4,h/4));g.save();g.lineWidth=3.4;g.strokeStyle='rgba(8,10,16,.8)';rr(x-.5,y-.5,w+1,h+1,Rd+1);g.stroke();g.lineWidth=1.8;g.strokeStyle='#ffd86b';rr(x-.5,y-.5,w+1,h+1,Rd+1);g.stroke();g.restore()}
 
 export function gold(x,y,w,h,r){const Rd=Math.max(1,Math.min(3.5,w/5,h/5));canvasesState.ctx.save();canvasesState.ctx.shadowColor='rgba(47,125,246,.6)';canvasesState.ctx.shadowBlur=7;canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.strokeStyle='#2f7df6';rr(x+.9,y+.9,w-1.8,h-1.8,Rd);canvasesState.ctx.stroke();canvasesState.ctx.restore()}
 
@@ -82,9 +88,9 @@ function mcSlot(x,y,w,h,p){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Mat
  g.save();if(H){g.shadowColor='rgba(47,125,246,.45)';g.shadowBlur=7}
  g.strokeStyle=X?'rgba(20,30,50,.1)':H?'#2f7df6':'rgba(20,30,50,.2)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke();g.restore()}
 
-function mcTip(x,y,w,h){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);const g=canvasesState.ctx,Rd=Math.min(8,h/3);
+function mcTip(x,y,w,h){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);const g=canvasesState.ctx,Rd=Math.min(UIT.rad.tip,h/3);
  g.fillStyle='rgba(0,0,0,.38)';rr(x+1,y+3,w,h,Rd+1);g.fill();g.fillStyle='rgba(12,17,26,.92)';rr(x,y,w,h,Rd);g.fill();
- g.strokeStyle='rgba(255,255,255,.2)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke()}
+ g.strokeStyle=UIT.line;g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke()}
 
 export function TN(s,x,y,col,sc){sc=sc||1;s=L(String(s));setF(9*sc);canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';canvasesState.ctx.fillStyle=inBtn(x+1,y+1)?ink(col||'#d6b46a'):(col||'#d6b46a');canvasesState.ctx.fillText(s,x,y)}
 
