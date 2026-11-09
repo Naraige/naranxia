@@ -18,6 +18,8 @@ const suite = {
   bossabil: { args: ['tools/run.py', 'tests/bossabil.js'], pass: /"ok":true/ },
   envoy: { args: ['tools/run.py', 'tests/envoy.js'], pass: /"ok":true/ },
   ruins: { args: ['tools/run.py', 'tests/ruins.js'], pass: /"ok":true/ },
+  events: { args: ['tools/run.py', 'tests/events.js'], pass: /"ok":true/ },
+  mp_events: { args: ['tests/mp_events.py', 'naranxia_readable.html', '90'], pass: /^RESULT OK/m },
   bastion: { args: ['tools/run.py', 'tests/bastion.js'], pass: /"ok":true/ },
   market: { args: ['tools/run.py', 'tests/market.js'], pass: /"ok":true/ },
   mp8: { args: ['tests/mp8.py', 'naranxia_readable.html', '40'], pass: /^ERRS \[\] \[\]/m },
@@ -26,7 +28,7 @@ const suite = {
   mp_convoy: { args: ['tests/mp_convoy.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   save: { args: ['tools/run.py', 'tests/save.js'], pass: /"same0":true/ },
 };
-const quick = ['smoke', 'det', 'tools', 'features', 'bastion', 'market', 'mp8', 'mpk', 'mp_resync', 'mp_convoy'];
+const quick = ['smoke', 'det', 'tools', 'features', 'bastion', 'market', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_convoy'];
 const args = process.argv.slice(2);
 const names = args.includes('--full')
   ? [...quick, 'save']

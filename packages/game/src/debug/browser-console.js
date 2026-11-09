@@ -1,4 +1,5 @@
-import { BASES, inTerr } from '../ai/kingdoms.js';
+import { baseTrait, BASES, campLabel, inTerr, TRAITS } from '../ai/kingdoms.js';
+import { evChoose, eventsState, eventsTick, evPush, renownMul, resolveEvent0 } from '../gameplay/events.js';
 import { bossStomp } from '../ai/wave-boss.js';
 import { RHAS, roleAdj0 } from '../ai/worker-roles.js';
 import { forester, SAPL } from '../ai/workplaces.js';
@@ -167,6 +168,15 @@ export function installBrowserConsole() {
     kingOf: { get: () => kingOf },
     kingSkill0: { get: () => kingSkill0 },
     kingTick: { get: () => kingTick },
+    EVS: { get: () => eventsState },
+    evChoose: { get: () => evChoose },
+    evPush: { get: () => evPush },
+    eventsTick: { get: () => eventsTick },
+    resolveEvent0: { get: () => resolveEvent0 },
+    renownMul: { get: () => renownMul },
+    baseTrait: { get: () => baseTrait },
+    campLabel: { get: () => campLabel },
+    TRAITS: { get: () => TRAITS },
     kskLeft: { get: () => kskLeft },
     matUI: { get: () => matUI },
     matV: { get: () => matV },

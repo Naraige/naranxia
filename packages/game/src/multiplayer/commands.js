@@ -20,6 +20,7 @@ import {
   setSetStanceHandler,
   setStance,
 } from '../gameplay/formations.js';
+import { evCur, resolveEvent0, setEvChooseHandler } from '../gameplay/events.js';
 import { kingSkill0, setKingSkillHandler } from '../gameplay/king-skills.js';
 import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
 import { RN2, RS, RS2 } from '../gameplay/rules.js';
@@ -69,7 +70,8 @@ export let mpExec = function mpExec(c,mine){const m0=hudDisplayState.msgS,mt0=hu
   case'st':withSel(new Set(c.i),()=>_N.setStance(c.s));break
   case'ks':kingSkill0(c.n);break;
   case'cq':cancelTrain0(c.b,c.i);break;
-  case'cv':sendConvoy0(c);break}}
+  case'cv':sendConvoy0(c);break;
+  case'ev':resolveEvent0(c.i|0,c.c|0);break}}
  finally{MP.ex=false;MP.rmt=false;setPl(LPL());selectionState.selB=sl;constructionState.formType=fm;constructionState.buildRot=br;if(!mine){hudDisplayState.msgS=m0;hudDisplayState.msgT=mt0;if(MP.note){hudDisplayState.msgS=MP.note;hudDisplayState.msgT=4;MP.note=null}}}};
 
 export function setMpExecHandler(handler) {
@@ -98,6 +100,8 @@ export function initializeCommands() {
   setCallWaveHandler(function(){if(gated()){mpPush({k:'w'});return}return _N.callWave()});
 
   setTradeHandler(function(k){if(gated()){mpPush({k:'tr',n:k});return}return _N.trade(k)});
+
+  setEvChooseHandler(function(c){const e=evCur();if(!e)return;if(gated()){mpPush({k:'ev',i:e.i,c:c|0});return}return resolveEvent0(e.i,c)});
 
   setKingSkillHandler(function(n){if(gated()){mpPush({k:'ks',n});return}return kingSkill0(n)});
 
