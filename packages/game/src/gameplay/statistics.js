@@ -22,7 +22,7 @@ export function gstReset(){rulesState.GST={k:{},g:0,w:0,s:0,f:0,lost:0}}
 
 export function gstKill(z){const t=LH.get(z)||'other';rulesState.GST.k[t]=(rulesState.GST.k[t]|0)+1}
 
-export let update = function update(dt){const R=playersState.RESP[playersState.CURPL|0],g=R.g,w=R.w,s=R.s,f=R.f||0;update0(dt);objTick();kingTick();trapTick(dt);eraTick(dt);
+export let update = function update(dt){const R=playersState.RESP[playersState.CURPL|0],g=R.g,w=R.w,s=R.s,f=R.f||0;update0(dt);objTick();kingTick(dt);trapTick(dt);eraTick(dt);
  const G=rulesState.GST;G.g+=Math.max(0,R.g-g);G.w+=Math.max(0,R.w-w);G.s+=Math.max(0,R.s-s);G.f+=Math.max(0,(R.f||0)-f)};
 
 export function gstBest(){let b=null,n=0;for(const k in rulesState.GST.k)if(rulesState.GST.k[k]>n){n=rulesState.GST.k[k];b=k}return b?[b,n]:null}

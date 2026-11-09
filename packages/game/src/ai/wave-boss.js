@@ -27,7 +27,7 @@ export function bossSpawn(L0){if(sessionState.waveN%10||sessionState.waveN<10||!
 
 export function bossStomp(u){const R=TS*3.4,x=u.x,y=u.y;snd('boom',x,y);ring(x,y,'#d8c090',22,300);puff(x,y,'#8a7058',14,100,{T:.8,z:.3,vz:3.4,g:9,s:.15});shake(.4);
  for(const s of sessionState.structs)if(s.hp>0&&s.t!==1&&s.prog>=1){const dd=Math.max(0,dist(s.x,s.y,x,y)-(s.rad||20));if(dd<R)s.hp-=(70+sessionState.waveN*5)*(1-dd/R*.6)*(s.type==='castle'||s.type==='keep'?.5:1)}
- for(const e of sessionState.units)if(e.t===0&&e.hp>0&&!e.gar&&!e.shel){const dd=Math.max(0,dist(e.x,e.y,x,y)-T[e.type].r);if(dd<R){e.hp-=(18+sessionState.waveN*1.2)*(1-dd/R*.6);e.hurt=.25}}}
+ for(const e of sessionState.units)if(e.t===0&&e.hp>0&&!e.gar&&!e.shel){const dd=Math.max(0,dist(e.x,e.y,x,y)-T[e.type].r);if(dd<R){e.hp-=(18+sessionState.waveN*1.2)*(1-dd/R*.6)*(e.wcT>sessionState.time?e.wcP||1:1);e.hurt=.25}}}
 
 /* each named boss has one more ability on its own timer `bs` (sim time, saved with the unit):
    0 Hollow Warden regrows 4 % hp every 12 s, 1 Bell-Bearer calls 6 husks every 16 s, 2 Frost King chills troops within 6 tiles every 9 s,
@@ -37,7 +37,7 @@ function bossPower(u,dt){u.bs=(u.bs||8)-dt;if(u.bs>0)return;const n=u.bn|0,x=u.x
  else if(n===1||n===3){u.bs=n===1?16:12;const k=n===1?6:4,ty=n===1?'husk':'runner';snd('boom',x,y);ring(x,y,n===1?'#ffd070':'#e070ff',16,260);
   for(let i=0;i<k;i++){const px=x+rnd(-TS*2.2,TS*2.2),py=y+rnd(-TS*2.2,TS*2.2);if(solidAt(px,py)||zcount()>=720)continue;const z=mkU(1,ty,px,py,null,u.lane);z.hp*=1+.05*wn;z.ph=u.ph;sessionState.units.push(z)}}
  else{u.bs=9;ring(x,y,'#9ad8ff',20,320);puff(x,y,'#cfeaff',10,90,{T:.7,z:.3,vz:2.2,g:6,s:.14});const R=TS*6;
-  for(const e of sessionState.units)if(e.t===0&&e.hp>0&&!e.gar&&!e.shel&&dist(e.x,e.y,x,y)<R){e.hp-=8+wn*.8;e.hurt=.25}}}
+  for(const e of sessionState.units)if(e.t===0&&e.hp>0&&!e.gar&&!e.shel&&dist(e.x,e.y,x,y)<R){e.hp-=(8+wn*.8)*(e.wcT>sessionState.time?e.wcP||1:1);e.hurt=.25}}}
 
 export function bossAI(u,dt){bossPower(u,dt);u.bt=(u.bt||3)-dt;if(u.bt>0)return;const[b]=target(u,TS*3,0);if(b){u.bt=6.5;bossStomp(u)}else u.bt=.4}
 

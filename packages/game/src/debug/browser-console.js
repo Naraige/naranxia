@@ -14,7 +14,7 @@ import { buy, PRICE, setTrainHandler, train } from '../gameplay/economy.js';
 import { mkU, spawnPos } from '../gameplay/entities.js';
 import { wavePreview } from '../gameplay/wave-preview.js';
 import { formationsState, order, setOrderHandler } from '../gameplay/formations.js';
-import { kingOf, kingSkill0, kingTick, kskLeft } from '../gameplay/king-skills.js';
+import { kingOf, kingSkill, kingTalent, kingSkill0, kingTick, kskLeft, kingXp, kingTalent0, kxLevel, kPoints, kHas, KXL } from '../gameplay/king-skills.js';
 import { setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
 import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
 import { reset } from '../gameplay/reset.js';
@@ -167,6 +167,14 @@ export function installBrowserConsole() {
     kingOf: { get: () => kingOf },
     kingSkill0: { get: () => kingSkill0 },
     kingTick: { get: () => kingTick },
+    kingXp: { get: () => kingXp },
+    kingSkill: { get: () => kingSkill },
+    kingTalent: { get: () => kingTalent },
+    kingTalent0: { get: () => kingTalent0 },
+    kxLevel: { get: () => kxLevel },
+    kPoints: { get: () => kPoints },
+    kHas: { get: () => kHas },
+    KXL: { get: () => KXL },
     kskLeft: { get: () => kskLeft },
     matUI: { get: () => matUI },
     matV: { get: () => matV },
