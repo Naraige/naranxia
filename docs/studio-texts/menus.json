@@ -1,0 +1,443 @@
+{
+"Move": [
+"Déplacer",
+"Mover",
+"Bewegen",
+"Muovi",
+"Mover"
+],
+"Choose your game": [
+"Choisissez votre partie",
+"Elige tu partida",
+"Wähle dein Spiel",
+"Scegli la tua partita",
+"Escolha o seu jogo"
+],
+"Pick how you want to hold the night.": [
+"Choisissez comment tenir la nuit.",
+"Elige cómo resistir la noche.",
+"Wähle, wie du die Nacht überstehst.",
+"Scegli come resistere alla notte.",
+"Escolha como aguentar a noite."
+],
+"Solo": [
+"Solo",
+"Solo",
+"Solo",
+"Solo",
+"Solo"
+],
+"Co-op": [
+"Coop",
+"Cooperativo",
+"Koop",
+"Co-op",
+"Cooperativo"
+],
+"You alone against the horde": [
+"Vous seul contre la horde",
+"Tú solo contra la horda",
+"Du allein gegen die Horde",
+"Tu solo contro l'orda",
+"Sozinho contra a horda"
+],
+"Host a room for a friend": [
+"Hébergez une salle pour un ami",
+"Crea una sala para un amigo",
+"Eröffne einen Raum für einen Freund",
+"Ospita una stanza per un amico",
+"Crie uma sala para um amigo"
+],
+"Enter a friend's room code": [
+"Entrez le code de la salle d'un ami",
+"Introduce el código de sala de un amigo",
+"Gib den Raumcode eines Freundes ein",
+"Inserisci il codice stanza di un amico",
+"Introduza o código da sala de um amigo"
+],
+"Pause and game speed": [
+"Pause et vitesse de jeu",
+"Pausa y velocidad de juego",
+"Pause und Spielgeschwindigkeit",
+"Pausa e velocità di gioco",
+"Pausa e velocidade de jogo"
+],
+"Save and load": [
+"Sauvegarde et chargement",
+"Guardar y cargar",
+"Speichern und Laden",
+"Salva e carica",
+"Guardar e carregar"
+],
+"Records and achievements": [
+"Records et succès",
+"Récords y logros",
+"Rekorde und Erfolge",
+"Record e obiettivi",
+"Recordes e conquistas"
+],
+"Second player": [
+"Deuxième joueur",
+"Segundo jugador",
+"Zweiter Spieler",
+"Secondo giocatore",
+"Segundo jogador"
+],
+"2 players, one world": [
+"2 joueurs, un seul monde",
+"2 jugadores, un mundo",
+"2 Spieler, eine Welt",
+"2 giocatori, un mondo",
+"2 jogadores, um mundo"
+],
+"Chat with your partner": [
+"Discutez avec votre partenaire",
+"Chatea con tu compañero",
+"Chatte mit deinem Partner",
+"Chatta con il tuo partner",
+"Converse com o seu parceiro"
+],
+"Automatic resync": [
+"Resynchronisation automatique",
+"Resincronización automática",
+"Automatische Neusynchronisierung",
+"Risincronizzazione automatica",
+"Ressincronização automática"
+],
+"Enter the host's code": [
+"Saisissez le code de l'hôte",
+"Introduce el código del anfitrión",
+"Gib den Code des Hosts ein",
+"Inserisci il codice dell'host",
+"Introduza o código do anfitrião"
+],
+"Same world as the host": [
+"Même monde que l'hôte",
+"El mismo mundo que el anfitrión",
+"Dieselbe Welt wie der Host",
+"Stesso mondo dell'host",
+"O mesmo mundo do anfitrião"
+],
+"Choose the world": [
+"Choisir le monde",
+"Elegir el mundo",
+"Welt wählen",
+"Scegliere il mondo",
+"Escolher o mundo"
+],
+"Front line": [
+"Première ligne",
+"Primera línea",
+"Frontlinie",
+"Prima linea",
+"Linha da frente"
+],
+"Ranged": [
+"À distance",
+"A distancia",
+"Fernkampf",
+"A distanza",
+"À distância"
+],
+"Worker": [
+"Ouvrier",
+"Obrero",
+"Arbeiter",
+"Lavoratore",
+"Trabalhador"
+],
+"Support": [
+"Soutien",
+"Apoyo",
+"Unterstützung",
+"Supporto",
+"Apoio"
+],
+"Commander": [
+"Commandant",
+"Comandante",
+"Kommandant",
+"Comandante",
+"Comandante"
+],
+"Royal": [
+"Royal",
+"Real",
+"Königlich",
+"Reale",
+"Real"
+],
+"Stronghold": [
+"Forteresse",
+"Fortaleza",
+"Festung",
+"Fortezza",
+"Fortaleza"
+],
+"Troops": [
+"Troupes",
+"Tropas",
+"Truppen",
+"Truppe",
+"Tropas"
+],
+"Housing": [
+"Logement",
+"Alojamiento",
+"Wohnraum",
+"Alloggi",
+"Alojamento"
+],
+"Supplies": [
+"Provisions",
+"Suministros",
+"Vorräte",
+"Rifornimenti",
+"Provisões"
+],
+"Workers": [
+"Ouvriers",
+"Trabajadores",
+"Arbeiter",
+"Lavoratori",
+"Trabalhadores"
+],
+"Health": [
+"Vie",
+"Salud",
+"Gesundheit",
+"Salute",
+"Vida"
+],
+"Damage": [
+"Dégâts",
+"Daño",
+"Schaden",
+"Danni",
+"Dano"
+],
+"Range": [
+"Portée",
+"Alcance",
+"Reichweite",
+"Gittata",
+"Alcance"
+],
+"Speed": [
+"Vitesse",
+"Velocidad",
+"Geschwindigkeit",
+"Velocità",
+"Velocidade"
+],
+"Training": [
+"Formation",
+"Entrenamiento",
+"Ausbildung",
+"Addestramento",
+"Treino"
+],
+"Cost": [
+"Coût",
+"Coste",
+"Kosten",
+"Costo",
+"Custo"
+],
+"Garrison": [
+"Garnison",
+"Guarnición",
+"Besatzung",
+"Guarnigione",
+"Guarnição"
+],
+"Build time": [
+"Construction",
+"Construcción",
+"Bauzeit",
+"Costruzione",
+"Construção"
+],
+"{0} (every {1} s)": [
+"{0} (toutes les {1} s)",
+"{0} (cada {1} s)",
+"{0} (alle {1} s)",
+"{0} (ogni {1} s)",
+"{0} (a cada {1} s)"
+],
+"{0} (melee)": [
+"{0} (mêlée)",
+"{0} (cuerpo a cuerpo)",
+"{0} (Nahkampf)",
+"{0} (mischia)",
+"{0} (corpo a corpo)"
+],
+"{0} (ranged)": [
+"{0} (distance)",
+"{0} (a distancia)",
+"{0} (Fernkampf)",
+"{0} (a distanza)",
+"{0} (à distância)"
+],
+"{0} archers": [
+"{0} archers",
+"{0} arqueros",
+"{0} Bogenschützen",
+"{0} arcieri",
+"{0} arqueiros"
+],
+"{0} tiles": [
+"{0} cases",
+"{0} casillas",
+"{0} Felder",
+"{0} caselle",
+"{0} casas"
+],
+"NEW": [
+"NOUV.",
+"NUEVO",
+"NEU",
+"NUOVO",
+"NOVO"
+],
+"He holds the wall so the others do not have to.": [
+"Il tient le mur pour que les autres n'aient pas à le faire.",
+"Él sostiene el muro para que los demás no tengan que hacerlo.",
+"Er hält die Mauer, damit die anderen es nicht müssen.",
+"Tiene il muro così gli altri non devono farlo.",
+"Ele segura a muralha para que os outros não tenham de o fazer."
+],
+"Patient eyes and a steady hand: the horde never reaches the wall twice.": [
+"Œil patient et main sûre : la horde n'atteint jamais le mur deux fois.",
+"Ojo paciente y pulso firme: la horda nunca llega dos veces al muro.",
+"Geduldiges Auge, ruhige Hand: die Horde erreicht die Mauer nie zweimal.",
+"Occhio paziente e mano ferma: l'orda non raggiunge mai il muro due volte.",
+"Olhar paciente e mão firme: a horda nunca chega à muralha duas vezes."
+],
+"Without his axe and his plough the bastion would starve before dawn.": [
+"Sans sa hache et sa charrue, le bastion mourrait de faim avant l'aube.",
+"Sin su hacha y su arado, el bastión pasaría hambre antes del alba.",
+"Ohne seine Axt und seinen Pflug würde das Bollwerk vor dem Morgengrauen verhungern.",
+"Senza la sua ascia e il suo aratro il bastione morirebbe di fame prima dell'alba.",
+"Sem o seu machado e o seu arado, o bastião passaria fome antes do amanhecer."
+],
+"Where his banner stands, the line remembers it is not alone.": [
+"Là où se dresse sa bannière, la ligne se souvient qu'elle n'est pas seule.",
+"Donde ondea su estandarte, la línea recuerda que no está sola.",
+"Wo sein Banner steht, erinnert sich die Linie, dass sie nicht allein ist.",
+"Dove sta il suo stendardo, la linea ricorda di non essere sola.",
+"Onde o seu estandarte se ergue, a linha lembra-se de que não está sozinha."
+],
+"Soldiers fight harder when someone is shouting orders.": [
+"Les soldats se battent mieux quand quelqu'un hurle des ordres.",
+"Los soldados luchan con más ganas cuando alguien grita órdenes.",
+"Soldaten kämpfen härter, wenn jemand Befehle brüllt.",
+"I soldati combattono con più forza quando qualcuno urla ordini.",
+"Os soldados lutam com mais força quando alguém grita ordens."
+],
+"Slow and loud. The horde hears it coming too late.": [
+"Lent et bruyant. La horde l'entend venir trop tard.",
+"Lento y ruidoso. La horda lo oye llegar demasiado tarde.",
+"Langsam und laut. Die Horde hört es zu spät kommen.",
+"Lento e rumoroso. L'orda lo sente arrivare troppo tardi.",
+"Lento e ruidoso. A horda ouve-o chegar tarde demais."
+],
+"The last light of Naranxia walks at the front.": [
+"La dernière lumière de Naranxia marche en première ligne.",
+"La última luz de Naranxia camina al frente.",
+"Das letzte Licht von Naranxia geht an der Spitze.",
+"L'ultima luce di Naranxia cammina in prima fila.",
+"A última luz de Naranxia caminha na frente."
+],
+"A halberd, a vow, and no plans to retreat.": [
+"Une hallebarde, un serment, et aucune intention de reculer.",
+"Una alabarda, un juramento y ningún plan de retirada.",
+"Eine Hellebarde, ein Schwur und kein Gedanke an Rückzug.",
+"Un'alabarda, un giuramento e nessuna intenzione di ritirarsi.",
+"Uma alabarda, um juramento e nenhum plano de recuar."
+],
+"The last light of humanity. If it falls, the night wins.": [
+"La dernière lumière de l'humanité. S'il tombe, la nuit gagne.",
+"La última luz de la humanidad. Si cae, gana la noche.",
+"Das letzte Licht der Menschheit. Fällt es, gewinnt die Nacht.",
+"L'ultima luce dell'umanità. Se cade, vince la notte.",
+"A última luz da humanidade. Se cair, a noite vence."
+],
+"The drills never stop here, day or night.": [
+"Ici, les exercices ne s'arrêtent jamais, de jour comme de nuit.",
+"Aquí los ejercicios no paran nunca, de día ni de noche.",
+"Hier hören die Übungen nie auf, Tag und Nacht.",
+"Qui le esercitazioni non si fermano mai, di giorno e di notte.",
+"Aqui os treinos nunca param, de dia ou de noite."
+],
+"It sees the horde long before the horde sees it.": [
+"Elle voit la horde bien avant que la horde ne la voie.",
+"Ve a la horda mucho antes de que la horda la vea.",
+"Sie sieht die Horde lange, bevor die Horde sie sieht.",
+"Vede l'orda molto prima che l'orda veda lei.",
+"Vê a horda muito antes de a horda a ver."
+],
+"Cheap, ugly, and it works.": [
+"Pas cher, pas beau, et ça marche.",
+"Barato, feo, y funciona.",
+"Billig, hässlich, und es funktioniert.",
+"Economico, brutto, e funziona.",
+"Barata, feia, e funciona."
+],
+"A door that only opens for the living.": [
+"Une porte qui ne s'ouvre que pour les vivants.",
+"Una puerta que solo se abre para los vivos.",
+"Ein Tor, das sich nur für die Lebenden öffnet.",
+"Una porta che si apre solo per i vivi.",
+"Uma porta que só se abre para os vivos."
+],
+"Every new roof is six more reasons to hold.": [
+"Chaque nouveau toit, ce sont six raisons de plus de tenir.",
+"Cada nuevo techo son seis razones más para resistir.",
+"Jedes neue Dach sind sechs Gründe mehr durchzuhalten.",
+"Ogni nuovo tetto sono sei motivi in più per resistere.",
+"Cada novo telhado são mais seis razões para resistir."
+],
+"Bread is a weapon too.": [
+"Le pain aussi est une arme.",
+"El pan también es un arma.",
+"Auch Brot ist eine Waffe.",
+"Anche il pane è un'arma.",
+"O pão também é uma arma."
+],
+"Full barrels hold better than empty hopes.": [
+"Des tonneaux pleins tiennent mieux que de vains espoirs.",
+"Los barriles llenos resisten mejor que las esperanzas vacías.",
+"Volle Fässer halten besser als leere Hoffnungen.",
+"I barili pieni reggono meglio delle speranze vuote.",
+"Barris cheios aguentam melhor do que esperanças vazias."
+],
+"Everything has a price, even at the end of the world.": [
+"Tout a un prix, même à la fin du monde.",
+"Todo tiene un precio, incluso al final del mundo.",
+"Alles hat seinen Preis, selbst am Ende der Welt.",
+"Tutto ha un prezzo, anche alla fine del mondo.",
+"Tudo tem um preço, mesmo no fim do mundo."
+],
+"Scholars who still believe in tomorrow.": [
+"Des érudits qui croient encore en demain.",
+"Eruditos que aún creen en el mañana.",
+"Gelehrte, die noch an das Morgen glauben.",
+"Studiosi che credono ancora nel domani.",
+"Eruditos que ainda acreditam no amanhã."
+],
+"Hands for every task nobody else wants.": [
+"Des mains pour toutes les tâches dont personne ne veut.",
+"Manos para todas las tareas que nadie quiere.",
+"Hände für jede Aufgabe, die sonst keiner will.",
+"Mani per ogni compito che nessun altro vuole.",
+"Mãos para todas as tarefas que mais ninguém quer."
+],
+"He plants for a dawn he may not see.": [
+"Il plante pour une aube qu'il ne verra peut-être pas.",
+"Planta para un amanecer que quizá no vea.",
+"Er pflanzt für eine Morgendämmerung, die er vielleicht nicht sieht.",
+"Pianta per un'alba che forse non vedrà.",
+"Planta para uma alvorada que talvez não veja."
+]
+}
