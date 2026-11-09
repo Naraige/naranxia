@@ -13,6 +13,9 @@ import {
   RN2,
   ROTT,
   RPRE,
+  rxLock,
+  rxPair,
+  rxPre,
   RS,
   RS2,
   RT2,
@@ -39,7 +42,9 @@ export const economyState = {
 };
 
 /* ================= MARKET: sell wood / stone for gold, buy them back; prices move with every trade and drift back ================= */
-export const PBASE={w:1,s:1.3,f:.8},PRICE={w:1,s:1.3,f:.8},TRADEK=new Set(['sellw','sells','buyw','buys','sellf','buyf','xws','xwf','xsw','xsf','xfw','xfs']);
+export const PBASE={w:1,s:1.3,f:.8},PRICE={w:1,s:1.3,f:.8},
+/* market fatigue: selling or bartering away the same resource in a row stacks (FAT 0..8), each step cuts the price harder and slows its recovery; FAT fades 0.1 per 5 s. In SAVA, absent in old saves = 0. */
+FAT={w:0,s:0,f:0},FATMAX=8,fatSell=r=>Math.max(.8,.95-.012*(FAT[r]||0)),fatBarter=r=>Math.max(.85,.97-.008*(FAT[r]||0)),fatUp=r=>{FAT[r]=Math.min(FATMAX,(FAT[r]||0)+1)},TRADEK=new Set(['sellw','sells','buyw','buys','sellf','buyf','xws','xwf','xsw','xsf','xfw','xfs']);
 /* barter: 50 of one resource for another straight at the price ratio (90 %), better than selling then buying back (64 %); both prices move */
 export const barterGet=(a,b)=>Math.max(1,Math.floor(50*PRICE[a]/PRICE[b]*.9));
 
@@ -50,12 +55,12 @@ export function syncTradeC(){C.sellw={w:50};C.sells={s:50};C.sellf={f:50};C.buyw
 function hasMarket(p){p|=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='market'&&s.prog>=1&&s.hp>0&&(s.pl|0)===p)return true;return false}
 
 export let trade = function trade(k){if(sessionState.over||!TRADEK.has(k))return;if(!hasMarket(playersState.CURPL)){hudDisplayState.msgS='Build a Market to trade';hudDisplayState.msgT=3;snd('err');return}const r=k[k.length-1],nm=r==='w'?'wood':r==='f'?'food':'stone';
- if(k[0]==='x'){const a=k[1],b=k[2],na=a==='w'?'wood':a==='f'?'food':'stone',nb=b==='w'?'wood':b==='f'?'food':'stone';if(sessionState.res[a]<50){hudDisplayState.msgS='You need 50 '+na+' to sell';hudDisplayState.msgT=2.5;snd('err');return}const n=barterGet(a,b);sessionState.res[a]-=50;sessionState.res[b]+=n;PRICE[a]=Math.max(.3,PRICE[a]*.97);PRICE[b]=Math.min(4,PRICE[b]*1.03);hudDisplayState.msgS='Swapped 50 '+na+' for '+n+' '+nb;hudDisplayState.msgT=2.5;snd('coin');syncTradeC();return}
- if(k[0]==='s'){if(sessionState.res[r]<50){hudDisplayState.msgS='You need 50 '+nm+' to sell';hudDisplayState.msgT=2.5;snd('err');return}const g=tradeGain(r);sessionState.res[r]-=50;sessionState.res.g+=g;PRICE[r]=Math.max(.3,PRICE[r]*.95);hudDisplayState.msgS='Sold 50 '+nm+' for '+g+' gold'}
+ if(k[0]==='x'){const a=k[1],b=k[2],na=a==='w'?'wood':a==='f'?'food':'stone',nb=b==='w'?'wood':b==='f'?'food':'stone';if(sessionState.res[a]<50){hudDisplayState.msgS='You need 50 '+na+' to sell';hudDisplayState.msgT=2.5;snd('err');return}const n=barterGet(a,b);sessionState.res[a]-=50;sessionState.res[b]+=n;PRICE[a]=Math.max(.3,PRICE[a]*fatBarter(a));fatUp(a);PRICE[b]=Math.min(4,PRICE[b]*1.03);hudDisplayState.msgS='Swapped 50 '+na+' for '+n+' '+nb;hudDisplayState.msgT=2.5;snd('coin');syncTradeC();return}
+ if(k[0]==='s'){if(sessionState.res[r]<50){hudDisplayState.msgS='You need 50 '+nm+' to sell';hudDisplayState.msgT=2.5;snd('err');return}const g=tradeGain(r);sessionState.res[r]-=50;sessionState.res.g+=g;PRICE[r]=Math.max(.3,PRICE[r]*fatSell(r));fatUp(r);hudDisplayState.msgS='Sold 50 '+nm+' for '+g+' gold'}
  else{const c=tradeCost(r);if(sessionState.res.g<c){hudDisplayState.msgS='You need '+c+' gold to buy 50 '+nm;hudDisplayState.msgT=2.5;snd('err');return}sessionState.res.g-=c;sessionState.res[r]+=50;PRICE[r]=Math.min(4,PRICE[r]*1.05);hudDisplayState.msgS='Bought 50 '+nm+' for '+c+' gold'}
  hudDisplayState.msgT=2.5;snd('coin');syncTradeC()};
 
-export function priceTick(dt){economyState.priceT-=dt;if(economyState.priceT>0)return;economyState.priceT=5;let ch=0;for(const k in PBASE){const d=PBASE[k]-PRICE[k];if(Math.abs(d)>.002){PRICE[k]+=d*.12;ch=1}}if(ch)syncTradeC()}
+export function priceTick(dt){economyState.priceT-=dt;if(economyState.priceT>0)return;economyState.priceT=5;let ch=0;for(const k in PBASE){const d=PBASE[k]-PRICE[k],fa=FAT[k]||0;if(Math.abs(d)>.002){PRICE[k]+=d*.12/(1+.5*fa);ch=1}if(fa>0)FAT[k]=Math.max(0,fa-.1)}if(ch)syncTradeC()}
 
 export function hasAcademy(p){p|=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='academy'&&s.prog>=1&&s.hp>0&&(s.pl|0)===p)return true;return false}
 
@@ -83,7 +88,7 @@ export function cancelTrain0(sid,i){const b=sessionState.structs.find(s=>s.sid==
 export const ok=c=>Object.entries(c).every(([k,v])=>sessionState.res[k]>=v),pay=c=>Object.entries(c).forEach(([k,v])=>sessionState.res[k]-=v);
 export const ALERTS=[];
 
-export let startResearch2 = function startResearch2(k){if(sessionState.over||RS2.done[k])return;if(RS2.on){hudDisplayState.msgS='One research at a time: '+RN2[RS2.on]+' is in progress';hudDisplayState.msgT=3;snd('err');return}if(!hasAcademy(playersState.CURPL)){hudDisplayState.msgS='Build an Academy to research';hudDisplayState.msgT=3;snd('err');return}if(RPRE[k]&&!(RPRE[k]==='masonry'?RS.done:RS2.done[RPRE[k]])){hudDisplayState.msgS=RN2[k]+' needs '+(RPRE[k]==='masonry'?'Stonemasonry':RN2[RPRE[k]]);hudDisplayState.msgT=3;snd('err');return}if(!ok(C[k])){hudDisplayState.msgS=RN2[k]+' is too expensive';hudDisplayState.msgT=3;snd('err');return}pay(C[k]);RS2.on=k;RS2.t=0;snd('build');hudDisplayState.msgS='Researching '+RN2[k]+'...';hudDisplayState.msgT=3};
+export let startResearch2 = function startResearch2(k){if(sessionState.over||RS2.done[k])return;if(RS2.on){hudDisplayState.msgS='One research at a time: '+RN2[RS2.on]+' is in progress';hudDisplayState.msgT=3;snd('err');return}if(!hasAcademy(playersState.CURPL)){hudDisplayState.msgS='Build an Academy to research';hudDisplayState.msgT=3;snd('err');return}if(!rxPre(k)){hudDisplayState.msgS=RN2[k]+' needs '+(RPRE[k]==='masonry'?'Stonemasonry':RN2[RPRE[k]]);hudDisplayState.msgT=3;snd('err');return}const lk=rxLock(k);if(lk){hudDisplayState.msgS=RN2[k]+' is closed: you chose '+RN2[lk];hudDisplayState.msgT=3;snd('err');return}if(!ok(C[k])){hudDisplayState.msgS=RN2[k]+' is too expensive';hudDisplayState.msgT=3;snd('err');return}pay(C[k]);RS2.on=k;RS2.t=0;{const xi=rxPair(k);if(xi>=0){if(!RS2.ch)RS2.ch={};RS2.ch[xi]=k}}snd('build');hudDisplayState.msgS='Researching '+RN2[k]+'...';hudDisplayState.msgT=3};
 
 function farmCount(p){let n=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='farm'&&s.prog>=1&&(p===undefined||(s.pl|0)===p))n++;return n}
 

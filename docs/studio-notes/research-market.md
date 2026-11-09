@@ -1,0 +1,6 @@
+# research-market (hd-gameplay), 2026-11-09, branch release-v84, not released
+
+- Exclusive research paths (rules.js `RXOR`, `rxLock`, `rxPre`): Steel weapons / Chain mail, Fire arrows / Boiling oil, Crop rotation / Better tools. Choice stored in `RS2.ch[pairIndex]` (SAVA via RS2, absent in old saves: lock is also derived from `RS2.done`, a save with both done stays valid). Goes through the existing `r2` lockstep command (`startResearch2`). Iron age now opens after Steel OR Chain mail (`RALT`), so neither branch is dead-ended. UI: build-menu button greyed, tooltip "Closed: you chose X" / "Exclusive path: closes X".
+- Market fatigue (economy.js `FAT`, SAVA key `FAT`, reset in reset.js): each sale/barter-out of the same resource stacks (0..8): sale factor .95 -> floor .80 (-1.2 % per step), barter .97 -> floor .85; price recovery divided by (1 + .5*FAT); FAT fades .1 per 5 s tick. Buying adds no fatigue.
+- Envoy tribute (simulation.js): per rebel camp, each visit pays 25 % less (floor 25 %), camp total capped at 700 gold / 350 food (`b.envN/envG/envF`, camp objects are saved whole, absent = 0). Exhausted camp keeps the envoy alive.
+- Texts: docs/studio-texts/research-market.json (5 keys; the Iron age tooltip line changed). Test: tests/research.js (quick suite, `npm test -- research`). Lead must run: det mp8 mpk mp_resync save market research compat.

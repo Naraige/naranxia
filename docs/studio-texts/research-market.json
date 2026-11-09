@@ -1,0 +1,7 @@
+{
+ "{0} is closed: you chose {1}": ["{0} est fermé : vous avez choisi {1}", "{0} está cerrado: has elegido {1}", "{0} ist gesperrt: Sie haben {1} gewählt", "{0} è chiuso: hai scelto {1}", "{0} está fechado: escolheu {1}"],
+ "Closed: you chose {0}": ["Fermé : vous avez choisi {0}", "Cerrado: has elegido {0}", "Gesperrt: Sie haben {0} gewählt", "Chiuso: hai scelto {0}", "Fechado: escolheu {0}"],
+ "Exclusive path: closes {0}": ["Voie exclusive : ferme {0}", "Vía exclusiva: cierra {0}", "Exklusiver Pfad: sperrt {0}", "Via esclusiva: chiude {0}", "Caminho exclusivo: fecha {0}"],
+ "This rebel camp has nothing left to give": ["Ce camp rebelle n'a plus rien à donner", "Este campamento rebelde ya no tiene nada que dar", "Dieses Rebellenlager hat nichts mehr zu geben", "Questo accampamento ribelle non ha più nulla da dare", "Este acampamento rebelde já não tem nada para dar"],
+ "Research (70 s, after Steel weapons or Chain mail): your units": ["Recherche (70 s, après Armes en acier ou Cotte de mailles) : vos unités", "Investigación (70 s, tras Armas de acero o Cota de malla): tus unidades", "Forschung (70 s, nach Stahlwaffen oder Kettenhemd): Ihre Einheiten", "Ricerca (70 s, dopo Armi d'acciaio o Cotta di maglia): le tue unità", "Pesquisa (70 s, após Armas de aço ou Cota de malha): as suas unidades"]
+}
