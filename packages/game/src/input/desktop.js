@@ -1,3 +1,4 @@
+import { NAV } from '../ui/menu-nav.js';
 import { rangeOf } from '../ai/kingdoms.js';
 import { SAPL, wkOf, WKT } from '../ai/workplaces.js';
 import { aInit, snd, toggleSound } from '../audio/sound.js';
@@ -24,7 +25,7 @@ import { rs } from '../rendering/resolution.js';
 import { CAM, camera } from '../rendering/scene.js';
 import { PK, pkSet, PKU } from '../rendering/site-picker.js';
 import { pickStruct } from '../rendering/structures.js';
-import { buildMenuState, NAMES } from '../ui/build-menu.js';
+import { buildMenuState, cycleTab, NAMES } from '../ui/build-menu.js';
 import { cv } from '../ui/canvases.js';
 import { hudState, inR, mmRect, selIdle, selPeas } from '../ui/hud.js';
 import { hudDisplayState } from '../ui/hud-state.js';
@@ -94,8 +95,9 @@ export function initializeDesktopInput() {
   addEventListener('keydown',e=>{aInit();if(document.activeElement===nmI)return;const k=e.key.toLowerCase();
    if(settingsState.rebind){e.preventDefault();if(k==='escape'){settingsState.rebind=null;return}const old=KB[settingsState.rebind];for(const a in KB)if(a!==settingsState.rebind&&KB[a]===k)KB[a]=old;KB[settingsState.rebind]=k;settingsState.rebind=null;saveKB();return}
    keys[k]=true;
-   if(!sessionState.started){if(k==='escape'){if(settingsState.settingsOpen){settingsState.settingsOpen=false;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}}else if(sitePickerState.picking){sitePickerState.picking=false;if(MP.conn)lobbyShow()}else if(settingsState.setupOpen)settingsState.setupOpen=false}else if(k==='enter'&&!settingsState.settingsOpen){e.preventDefault();if(sitePickerState.picking)confirmPick();else if(settingsState.setupOpen)openPicker();else if(sessionState.inGame)startGame();else settingsState.setupOpen=true}else if(sitePickerState.picking&&k===KB.rotate&&!settingsState.settingsOpen)pkRotate();return}
+   if(!sessionState.started){if(k==='escape'){if(settingsState.settingsOpen){settingsState.settingsOpen=false;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}}else if(sitePickerState.picking){sitePickerState.picking=false;if(MP.conn)lobbyShow()}else if(settingsState.setupOpen)settingsState.setupOpen=false}else if(k==='enter'&&!settingsState.settingsOpen){e.preventDefault();if(NAV.active&&!sitePickerState.picking)return;if(sitePickerState.picking)confirmPick();else if(settingsState.setupOpen)openPicker();else if(sessionState.inGame)startGame();else settingsState.setupOpen=true}else if(sitePickerState.picking&&k===KB.rotate&&!settingsState.settingsOpen)pkRotate();return}
    if(sessionState.over)return;
+   if((k==='pagedown'||k==='pageup')&&!e.ctrlKey&&!e.altKey&&!e.metaKey){if(cycleTab(k==='pagedown'?1:-1))e.preventDefault();return}
    if(k==='escape'){if(sessionState.showMap)sessionState.showMap=false;else if(sessionState.mode||sel().length){sessionState.mode=null;sessionState.units.forEach(u=>u.sel=false)}else if(buildMenuState.BCAT)buildMenuState.BCAT=null;else openMenu();return}
    if(!e.ctrlKey&&!e.shiftKey&&!e.metaKey&&['1','2','3','4'].includes(k)&&sel().some(u=>u.type!=='peasant')){setStance(['agg','def','hold','stop'][+k-1]);return}
    const a=Object.keys(KB).find(x=>KB[x]===k);if(!a)return;if(k.length===1&&!/[a-z0-9]/.test(k))e.preventDefault();

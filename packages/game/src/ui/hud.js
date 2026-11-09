@@ -32,7 +32,7 @@ import { CAM } from '../rendering/scene.js';
 import { BANNER } from '../rendering/structures.js';
 import { UNITK } from '../rendering/unit-animation.js';
 import { SEASC, seasonIdx, wxLabel } from '../rendering/weather.js';
-import { CMP, costParts, drawCost, drawItem, menuItems, NAMES, uiBtn } from './build-menu.js';
+import { CMP, costParts, drawCost, drawItem, drawTabs, menuItems, NAMES, TABH, tabsWidth, tabState, uiBtn } from './build-menu.js';
 import { canvasesState, cv } from './canvases.js';
 import { convoyPanelState, drawConvoy } from './convoy-panel.js';
 import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, RDB, SLOT, TIPP, UIT } from './drawing.js';
@@ -43,6 +43,9 @@ import { bar, drawMapModal, drawWorld, mmss, pill } from './minimap.js';
 import { settingsState } from './settings.js';
 import { drawPicker, sitePickerState } from './site-picker.js';
 import { drawTitle } from './title-menu.js';
+import { titleBlur } from './title-frame.js';
+import { drawUnitCard } from './unit-card.js';
+import { NAV, navBegin } from './menu-nav.js';
 import { drawTroops, PLUN, troopPanelState } from './troop-panel.js';
 import { hintBar, tutBar } from './tutorial.js';
 import { FF } from './typography.js';
@@ -59,7 +62,7 @@ export let mmRect = {x:0,y:0,w:0,h:0};
 
 export const U=(x,y,w,h)=>({x:x*hudDisplayState.UIS,y:y*hudDisplayState.UIS,w:w*hudDisplayState.UIS,h:h*hudDisplayState.UIS}),inR=(p,r)=>p.x>=r.x&&p.x<r.x+r.w&&p.y>=r.y&&p.y<r.y+r.h;
 
-function flow(L,x0,y0,w){let x=x0,y=y0+(CMP?0:9),rh=0,mx=0,rowStart=true;for(const it of L){if(it.under){it.x=it.under.x;it.y=it.under.y+it.under.h+3;it.lab=false;rh=Math.max(rh,it.y+it.h-y);continue}if(it.br){x=x0+9999}if(it.gap!==undefined){x+=it.gap;continue}if(x+it.w>x0+w&&x>x0){x=x0;y+=rh+(CMP?3:12);rh=0;rowStart=true}it.x=x;it.y=y;it.lab=it.first;rowStart=false;x+=it.w+3;rh=Math.max(rh,it.h);mx=Math.max(mx,x-3)}return{h:y+rh-y0,w:mx-x0}}
+function flow(L,x0,y0,w,noLab){let x=x0,y=y0+(CMP||noLab?0:9),rh=0,mx=0,rowStart=true;for(const it of L){if(it.under){it.x=it.under.x;it.y=it.under.y+it.under.h+3;it.lab=false;rh=Math.max(rh,it.y+it.h-y);continue}if(it.br){x=x0+9999}if(it.gap!==undefined){x+=it.gap;continue}if(x+it.w>x0+w&&x>x0){x=x0;y+=rh+(CMP?3:12);rh=0;rowStart=true}it.x=x;it.y=y;it.lab=it.first&&!noLab;rowStart=false;x+=it.w+3;rh=Math.max(rh,it.h);mx=Math.max(mx,x-3)}return{h:y+rh-y0,w:mx-x0}}
 
 export const idleP=()=>sessionState.units.filter(u=>u.t===0&&(!MP.on||(u.pl|0)===playersState.CURPL)&&u.type==='peasant'&&!u.job&&!u.o&&!u.carry&&u.hp>0&&!u.shel);
 
@@ -96,7 +99,8 @@ function drawToasts(UW){for(let i=0;i<TOASTS.length;i++){const o=TOASTS[i];o.t+=
 /* ---- main HUD ---- */
 export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,hudDisplayState.UIS,0,0);canvasesState.ctx.imageSmoothingEnabled=true;hudState.uiHits=[];hudState.uiRects=[];
  const UW=Math.floor(cv.width/hudDisplayState.UIS),UH=Math.floor(cv.height/hudDisplayState.UIS);
- if(!sessionState.started){if(sitePickerState.picking)drawPicker(UW,UH);else drawTitle(UW,UH);canvasesState.ctx.setTransform(1,0,0,1,0,0);return}
+ if(!sessionState.started){if(sitePickerState.picking){titleBlur(false);if(NAV.active)navBegin(false);NAV.onEsc=null;drawPicker(UW,UH)}else drawTitle(UW,UH);canvasesState.ctx.setTransform(1,0,0,1,0,0);return}
+ titleBlur(false);if(NAV.active){navBegin(false);NAV.onEsc=null}
  frame(-3,-3,UW+6,27,CHAT,0);hudState.uiRects.push(U(0,0,UW,24));
  /* right cluster: menu / pause / speed */
  let rx=UW-5;const tb=(w,ic,fn,tip,on)=>{rx-=w;uiBtn(rx,3,w,17,BTN,BTNH,fn,tip,(x,y,W2,H2)=>dIc(ic,x+(W2-12)/2,y+2.5,12),on);rx-=3};
@@ -114,11 +118,11 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  {const hf=Math.max(0,sessionState.CS.hp+(sessionState.CS2?sessionState.CS2.hp:0))/(sessionState.CS.max+(sessionState.CS2?sessionState.CS2.max:0));if(x+86<rx-4){hearts(x,ry+4.5,hf,10);hudState.uiHits.push({...U(x,ry,80,17),tip:['Castle health','Do not let it fall']});x+=86}else if(x+60<rx-4){dIc(IC.heart,x,ry+2,13);bar(x+16,ry+4.5,38,hf,'#ff6a6a','#c01f2f');hudState.uiHits.push({...U(x,ry,56,17),tip:['Castle health','Do not let it fall']});x+=62}}
  {const pu=popUsed(LPL()),pc=popCap(LPL());item(IC.bed,pu+'/'+pc,pu>=pc?'#ff8a7a':'#f2e2c0',['Population','Houses raise the limit (+6 each)','and every new unit costs food'])}item(IC.skull,sessionState.units.filter(u=>u.t===1).length+SW.n,'#c4ee98',['Zombies alive']);item(IC.sword,sessionState.kills,'#fbf0dc',['Zombies slain']);
  /* build menu */
- const L=menuItems(),narrow=UW<340,mw=narrow?100:150,mh=Math.round(mw*TH/TW),availW=narrow?UW-8:UW-mw-30,f0=flow(L,0,0,availW-8),ph=f0.h+10,py=UH-ph-6,pw=f0.w+10,px=narrow?4:Math.max(4,((UW-mw-18-pw)>>1));
- flow(L,px+5,py+5,availW-8);frame(px,py,pw,ph,INV,6);hudState.uiRects.push(U(px,py,pw,ph));for(const it of L)if(it.gap===undefined)drawItem(it);
- const S2=sel();let sy=py-4;const QB=sessionState.queue.filter(q=>q.b===curB());if(QB.length)sy-=22;if(narrow){const yb0=py-mh-9-3-19-19;sy=Math.min(sy,yb0-3)}
+ const ML=menuItems(),tbo=tabState.on,narrow=UW<340,mw=narrow?100:150,mh=Math.round(mw*TH/TW),availW=narrow?UW-8:UW-mw-30,f0=flow(ML,0,0,availW-8,tbo),ph=f0.h+10,py=UH-ph-6,pw=Math.max(f0.w+10,tbo?tabsWidth()+10:0),px=narrow?4:Math.max(4,((UW-mw-18-pw)>>1));
+ flow(ML,px+5,py+5,availW-8,tbo);frame(px,py,pw,ph,INV,6);hudState.uiRects.push(U(px,py,pw,ph));if(tbo)drawTabs(px,py,pw);for(const it of ML)if(it.gap===undefined)drawItem(it);
+ const S2=sel(),tbh=tbo?TABH:0;let sy=py-4-tbh;const QB=sessionState.queue.filter(q=>q.b===curB());if(QB.length)sy-=22;if(narrow){const yb0=py-mh-9-3-19-19;sy=Math.min(sy,yb0-3)}
  if(S2.length&&!sessionState.over){const cnt={};S2.forEach(u=>cnt[u.type]=(cnt[u.type]||0)+1);const txt=Object.entries(cnt).map(([k,v])=>v+' '+L(v>1?(PLUN[k]||NAMES[k]):NAMES[k])).join(', '),hint=S2.some(u=>u.type==='archer')?'Right-click a wall, gate or tower to garrison':S2.some(u=>u.type==='peasant')?'Right-click a resource to harvest, a building to repair':S2.some(u=>u.type==='captain')?'[G] group nearby soldiers behind the captain':'Right-click to move or attack',w=Math.max(tw(txt,.9),tw(hint,.78))+14;frame(px,sy-26,w,26,CHAT,5);T_(txt,px+7,sy-22,'#ffff55',.9);T_(hint,px+7,sy-11,'#e0e0e0',.78);hudState.uiRects.push(U(px,sy-26,w,26))}
- if(QB.length)QB.forEach((q,i)=>{const bx=px+i*20,by=py-23;frame(bx,by,18,18,SLOT,4);dIc(IC[q.type],bx+2,by+1.5,14);canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(bx+2,by+14,14,3);if(i===0){canvasesState.ctx.fillStyle='#55ff55';canvasesState.ctx.fillRect(bx+2,by+14,Math.max(1,Math.round(14*(1-q.left/q.tot))),2)}hudState.uiHits.push({...U(bx,by,18,18),fn:()=>{},rfn:()=>cancelTrain(q.b.sid,i),tip:['Right-click to cancel','Refunds the full cost']})});
+ if(QB.length)QB.forEach((q,i)=>{const bx=px+i*20,by=py-23-tbh;frame(bx,by,18,18,SLOT,4);dIc(IC[q.type],bx+2,by+1.5,14);canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(bx+2,by+14,14,3);if(i===0){canvasesState.ctx.fillStyle='#55ff55';canvasesState.ctx.fillRect(bx+2,by+14,Math.max(1,Math.round(14*(1-q.left/q.tot))),2)}hudState.uiHits.push({...U(bx,by,18,18),fn:()=>{},rfn:()=>cancelTrain(q.b.sid,i),tip:['Right-click to cancel','Refunds the full cost']})});
  /* minimap = world map */
  const mx2=UW-mw-9,my2=narrow?py-mh-9:UH-mh-9;
  frame(mx2-4,my2-4,mw+8,mh+8,MAPF,5);drawWorld(mx2,my2,mw,mh,false);mmRect=U(mx2,my2,mw,mh);hudState.uiRects.push(U(mx2-3,my2-3,mw+6,mh+6));
@@ -126,6 +130,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  uiBtn(mx2-3,ya,bw2,17,GRN,GRNH,home,['Back to base [H]','Centers the camera on your castle'],(x,y,w)=>{dIc(IC.compass,x+4,y+2.5,12);T_('Base',x+19,y+4,'#fff',.95)});
  uiBtn(mx2-3+bw2+3,ya,bw2,17,BTN,BTNH,()=>{sessionState.showMap=true},['World map [M]','See the whole world, spawns and routes'],(x,y,w)=>{dIc(IC.map,x+4,y+2.5,12);T_('Map',x+19,y+4,'#fff',.95)});
  const qw=(mw+6-9)/4,yb=ya-19;[[IC.zoomIn,()=>camZoom(-1),'Zoom in'],[IC.zoomOut,()=>camZoom(1),'Zoom out'],[IC.rotL,()=>{CAM.yaw+=.4},'Rotate left [Z]'],[IC.rotR,()=>{CAM.yaw-=.4},'Rotate right [X]']].forEach(([ic,fn,t],i)=>uiBtn(mx2-3+i*(qw+3),yb,qw,17,BTN,BTNH,fn,[t],(x,y,w)=>dIc(ic,x+(w-12)/2,y+2.5,12)));
+ if(!narrow)drawUnitCard(UW,UH,settingsState.TOPH+18,yb-8);
  /* touch: floating camera (one-finger pan on/off) and cancel (build mode, selection) buttons, 44 css px, left edge */
  if(inputState.touch&&!sessionState.showMap&&!sessionState.over){const fz=Math.max(24,Math.ceil(44*inputState.DPR/hudDisplayState.UIS)),fy0=Math.round(UH*.36),can=!!(sessionState.mode||sel().length);
   uiBtn(4,fy0,fz,fz,BTN,BTNH,()=>{inputState.panMode=!inputState.panMode;hudDisplayState.msgS=inputState.panMode?'Pan mode: drag moves the camera':'Select mode: drag draws a box';hudDisplayState.msgT=2},['Move camera','One finger drags the view'],(x,y,w,h)=>dIc(IC.pan,x+(w-14)/2,y+(h-14)/2,14),inputState.panMode);

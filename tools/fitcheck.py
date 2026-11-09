@@ -33,11 +33,20 @@ with sync_playwright() as p:
         shot('title', "()=>{}")
         shot('records', "()=>{titleDebug.rec(true)}"); shot('', "()=>{titleDebug.rec(false);titleDebug.notes(true)}"); shot('', "()=>{titleDebug.notes(false)}")
         shot('lang', "()=>{languageState.langOpen=true}"); shot('', "()=>{languageState.langOpen=false}")
+        # lot A-C screens: game mode cards, new kingdom, load game, chronicle
+        shot('', "()=>{titleDebug.modes(true)}"); shot('', "()=>{titleDebug.modes(false);settingsState.setupOpen=true}"); shot('', "()=>{settingsState.setupOpen=false;saveMenuState.saveOpen=true}")
+        shot('', "()=>{saveMenuState.saveOpen=false;titleDebug.chr(true)}"); shot('', "()=>{titleDebug.chr(false)}")
         for t in range(4):
             shot('settings%d' % t, "()=>{settingsState.settingsOpen=true;settingsDebug.tab(%d)}" % t)
         shot('', "()=>{settingsState.settingsOpen=false;settingsDebug.tab(0)}")
         # in game: hud, build menu, pause menu, troop panel (F2), test mode (F10)
         pg.evaluate("()=>{rollWorld();reset();startGame()}"); time.sleep(3); frames(pg, 6)
+        # lot D: castle tabs + detail card, a selected unit card
+        pg.evaluate("()=>{selB=structs.find(s=>s.type==='castle'&&s.t===0)||null}"); frames(pg, 4)
+        for k in ['PageDown', 'PageDown', 'PageDown']:
+            pg.keyboard.press(k); time.sleep(.3); frames(pg, 3)
+        pg.evaluate("()=>{selB=null;const u=units.find(u=>u.t===0);if(u)u.sel=true}"); frames(pg, 4)
+        pg.evaluate("()=>{for(const u of units)u.sel=false}"); frames(pg, 2)
         for k in ['Escape', 'Escape', 'F2', 'F2', 'F10', 'F10', 'm', 'm']:
             pg.keyboard.press(k); time.sleep(.3); frames(pg, 3)
         ovf = pg.evaluate("()=>[...new Set(window.__ovf||[])]")

@@ -4,7 +4,7 @@ import { CASTLES } from '../gameplay/players.js';
 import { TH, TS, TW } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { SW } from '../gameplay/swarm.js';
-import { fitSc, T_, TTL, tw, twH } from '../i18n/language.js';
+import { fitSc, L, T_, TTL, tw, twH } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { pickGround } from '../rendering/camera.js';
 import { FOWC, fowSeenAt, fowVisAt } from '../rendering/fog.js';
@@ -13,11 +13,12 @@ import { CAM } from '../rendering/scene.js';
 import { uiBtn } from './build-menu.js';
 import { canvasesState, cv, cvs } from './canvases.js';
 import { cb, cbOn } from '../core/prefs.js';
-import { circ, frame, PAN, RDB, rr, UIT } from './drawing.js';
+import { circ, drawLock, frame, MS, PAN, RDB, rr, UIT } from './drawing.js';
 import { hudState, U } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
 import { dIc, IC } from './icons.js';
 import { PAL, THEME } from './kingdom-theme.js';
+import { FFP } from './typography.js';
 import { mc, NCX, NCY, RUINS, terrainState } from '../world/terrain.js';
 
 export const minimapState = {
@@ -70,7 +71,15 @@ function dwBase(x,y,w,h,big){const sx=w/TW,sy=h/TH;
  canvasesState.ctx.restore()}
 
 /* ---- overlays ---- */
-export function pill(x,y,w,h,label,pal,palH,fn,ic,sc,on,dis,foc){uiBtn(x,y,w,h,pal,palH,fn,null,(X,Y,W2,H2)=>{const iw=ic?h*.62+4:0,s=fitSc(label,W2-iw-8,sc||1),tx=tw(label,s);let cx=X+(W2-tx-iw)/2;if(ic){dIc(ic,cx,Y+(H2-h*.62)/2,h*.62);cx+=iw}T_(label,cx,Y+(H2-9*s)/2+.5*s,dis?'#8a7660':'#fff',s)},on,dis,foc)}
+export function pill(x,y,w,h,label,pal,palH,fn,ic,sc,on,dis,foc){uiBtn(x,y,w,h,pal,palH,fn,null,(X,Y,W2,H2,hv,ds)=>{const lk=MS.on&&ds&&H2>=14,iw=(ic?h*.62+4:0)+(lk?H2*.5:0);
+ if(MS.on&&H2>=18){menuLabel(L(String(label)),X,Y,W2,H2,iw,(sc||1),hv,ds,lk,ic);return}
+ const s=fitSc(label,W2-iw-8,sc||1),tx=tw(label,s);let cx=X+(W2-tx-iw)/2;if(lk){drawLock(cx+H2*.2,Y+H2/2,H2*.46,'#9aa3b4');cx+=H2*.5}if(ic){dIc(ic,cx,Y+(H2-h*.62)/2,h*.62);cx+=iw-(lk?H2*.5:0)}T_(label,cx,Y+(H2-9*s)/2+.5*s,MS.on?(ds?'#9aa3b4':hv?'#ffe08a':'#eef2fa'):ds?'#8a7660':'#fff',s)},on,dis,foc)}
+
+/* menu plates (title, settings, saves...): label in the pixel font, light ink, gold when hovered, padlock when disabled */
+function menuLabel(t,X,Y,W2,H2,iw,sc,hv,ds,lk,ic){const g=canvasesState.ctx;let S=Math.round(Math.min(15,Math.max(8,H2*.5*sc)));g.save();g.font='600 '+S+'px '+FFP;const room=W2-iw-12;let w=g.measureText(t).width;while(S>7&&w>room){S--;g.font='600 '+S+'px '+FFP;w=g.measureText(t).width}
+ if(w>room+.5){const o=window.__ovf||(window.__ovf=[]);if(o.length<400)o.push(t+' @btn'+Math.round(W2))}
+ let cx=X+(W2-w-iw)/2;const my=Y+H2/2;if(lk){drawLock(cx+H2*.2,my,H2*.46,'#9aa3b4');cx+=H2*.5}if(ic){dIc(ic,cx,my-H2*.31,H2*.62);cx+=iw-(lk?H2*.5:0)}
+ g.textBaseline='middle';g.textAlign='left';g.fillStyle='rgba(0,0,0,.55)';g.fillText(t,cx+.5,my+1.1);g.fillStyle=ds?'#8d96a8':hv?'#ffe08a':'#eef2fa';g.fillText(t,cx,my+.4);g.restore()}
 
 export function drawMapModal(UW,UH){canvasesState.ctx.fillStyle='rgba(5,8,16,.8)';canvasesState.ctx.fillRect(0,0,UW,UH);
  const aw=UW-20,ah=UH-68,mw=Math.min(aw,ah*TW/TH),mh=mw*TH/TW,pw=mw+16,ph=mh+50,px=(UW-pw)/2,py=(UH-ph)/2,mx=px+8,my=py+30;
