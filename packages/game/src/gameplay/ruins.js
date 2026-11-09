@@ -27,7 +27,7 @@ export function updateRuins(dt) {
       if (dx * dx + dy * dy > (2.5 * TS) * (2.5 * TS)) continue;
       r.done = true;
       const K = KINDS[r.v % KINDS.length], base = 40 + r.d * .8, R = playersState.RESP[u.pl | 0] || playersState.RESP[0], got = [];
-      for (const k in K[1]) { const n = Math.round(base * K[1][k]); R[k] += n; got.push('+' + n + ' ' + NAME[k]) }
+      for (const k in K[1]) { const n = Math.round(base * K[1][k]); R[k] = (R[k] || 0) + n; got.push('+' + n + ' ' + NAME[k]) }
       snd('ruin', r.x, r.y); hudDisplayState.msgS = 'Ruins explored: ' + K[0] + ' (' + got.join(', ') + ')'; hudDisplayState.msgT = 8;
       break;
     }

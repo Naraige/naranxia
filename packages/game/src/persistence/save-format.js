@@ -45,6 +45,12 @@ export function svFix(D){const ok=a=>Array.isArray(a)?a:[];
  if('units' in D){const U=ok(D.units).filter(u=>u&&typeof u==='object'&&T[u.type]);for(const u of U){if(!Number.isFinite(u.hp))u.hp=T[u.type].hp;if(!Number.isFinite(u.x)||!Number.isFinite(u.y)){u.x=0;u.y=0}if(u.buff==null)u.buff=1;if(u.cd==null)u.cd=0}D.units=U}
  if('structs' in D){const Q=ok(D.structs).filter(q=>q&&typeof q==='object'&&(q.type in SH||q.type in C||q.type==='wall'||q.type==='gate'));for(const q of Q)if(!Number.isFinite(q.hp))q.hp=SH[q.type]||100;D.structs=Q;
   if(D.units){const set=new Set(Q);for(const u of D.units)if(u.gar&&typeof u.gar==='object'&&!set.has(u.gar))u.gar=null}}
+ /* references to units / structures that no longer exist (type unknown to this build, or dropped above): squad members, captain, base and camp lists */
+ if(D.units){const us=new Set(D.units),ss=D.structs?new Set(D.structs):null;
+  for(const u of D.units){if(Array.isArray(u.sq))u.sq=u.sq.filter(f=>us.has(f));else if(u.sq)u.sq=null;if(u.cap&&typeof u.cap==='object'&&!us.has(u.cap))u.cap=null}
+  const cl=o=>{if(!o||typeof o!=='object')return;if(Array.isArray(o.us))o.us=o.us.filter(f=>us.has(f));if(ss&&Array.isArray(o.ss))o.ss=o.ss.filter(f=>ss.has(f))};
+  for(const k of['BASES','HORDES'])if(Array.isArray(D[k]))D[k].forEach(cl);
+  if(D.CAMPS)for(const c of(D.CAMPS instanceof Map?D.CAMPS.values():Array.isArray(D.CAMPS)?D.CAMPS:[]))cl(Array.isArray(c)?c[1]:c)}
  return D}
 const SVSKIP = new Set(['zf','zft','_tc','pfS']);
 

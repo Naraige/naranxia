@@ -37,3 +37,9 @@ persistence/save-format.js (svMigrate / svFix), rendering/ruins.js, plus the dif
 - waves.js:41 eclipse multiplies hp by 1.15 after bossSpawn, so a boss spawned the same wave gets hp above `bmax` (bar clamps). Gameplay only.
 
 Lead should run: mp8, mpk, mp_resync, save, and tests/ruins.js (loot still fires within 1 s of sim).
+
+## Quality fixes (audit quality.md)
+- traps.js: spike/oil/era timers derived from sessionState.time (`edge(dt,per)`, as ruins), no module accumulators; tests/traps.js (phase independent of history). Oil no longer carries the unused `step`.
+- `ev` command: resolveEvent0 uses `bastionHasNow` (no cache). mpHash now also covers events (q, pay, cur), PRICE/FAT, RESP ren, king kxp/kt, ruins done count, base envN/envG/envF (stable order, order-independent counts).
+- mpResApply zeroes SAVA keys absent from the snapshot (as restore.js); svFix drops dangling sq/cap/us/ss refs (units, BASES, HORDES, CAMPS); `R.f`/`R[k]` tolerate absent; rendering/ruins.js no per-frame Set; unit-animation disposes the old mesh material.
+- CI quick: traps compat ruins envoy bossabil added. mp_events stays out of quick unless timings allow (see lead).

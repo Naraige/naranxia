@@ -19,13 +19,16 @@ function mk(r) {
   const m = new THREE.Mesh(toGeo(G), matV); m.castShadow = SHADOWS; m.receiveShadow = SHADOWS; scene.add(m); return m;
 }
 
+let stamp = 0;
 export function syncRuins() {
   if (!RUINS.size && !M.size) return;
-  const live = new Set(RUINS.values());
-  for (const [r, e] of M) if (!live.has(r)) { scene.remove(e.m); e.m.geometry.dispose(); M.delete(r) }
+  /* no per-frame allocation: every live ruin is stamped, the meshes left unstamped belong to ruins that are gone */
+  stamp++;
   for (const r of RUINS.values()) {
     let e = M.get(r);
     if (e && e.done !== r.done) { scene.remove(e.m); e.m.geometry.dispose(); M.delete(r); e = null }
-    if (!e) M.set(r, { m: mk(r), done: r.done });
+    if (!e) { e = { m: mk(r), done: r.done, s: 0 }; M.set(r, e) }
+    e.s = stamp;
   }
+  for (const [r, e] of M) if (e.s !== stamp) { scene.remove(e.m); e.m.geometry.dispose(); M.delete(r) }
 }

@@ -1,5 +1,5 @@
 import { snd } from '../audio/sound.js';
-import { bastionHas } from './economy.js';
+import { bastionHas, bastionHasNow } from './economy.js';
 import { playersState } from './players.js';
 import { sessionState } from './session.js';
 import { MP } from '../multiplayer/session.js';
@@ -92,7 +92,7 @@ export function resolveEvent0(id, c) {
     const a = e.a;
     if (c === 0) {
       for (let pi = 0; pi < R.length; pi++) {
-        const m = bastionHas(pi, 'embassy') ? 1.5 : 1;
+        const m = bastionHasNow(pi, 'embassy') ? 1.5 : 1;
         R[pi].g += Math.round(a.g * m);
         R[pi].w += Math.round(a.w * m);
         R[pi].s += Math.round(a.s * m);
@@ -108,7 +108,7 @@ export function resolveEvent0(id, c) {
     if (c === 0) {
       let gs = 0, fs = 0;
       for (let pi = 0; pi < R.length; pi++) {
-        const m = (bastionHas(pi, 'embassy') ? 1.5 : 1) * (e.mu || 1) * renownMul(pi);
+        const m = (bastionHasNow(pi, 'embassy') ? 1.5 : 1) * (e.mu || 1) * renownMul(pi);
         const g = Math.round(e.a.g * m), f = Math.round(e.a.f * m);
         R[pi].g += g;
         R[pi].f = (R[pi].f || 0) + f;
