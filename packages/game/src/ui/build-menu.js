@@ -23,14 +23,15 @@ import { C, CSTONE, CWOOD, RN2, ROTT, RPRE, RS, RS2, RT_TIME, RT2, rxLock, rxPai
 import { curB, sel, selBs, selectionState, TRB } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { groupSel, ungroupSel } from '../gameplay/squads.js';
-import { setClipBox, T_, TC, TCf, tw } from '../i18n/language.js';
+import { L, setClipBox, T_, TC, TCf, tw } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { roleAdj, ROLEK } from '../multiplayer/commands.js';
 import { MP } from '../multiplayer/session.js';
 import { ICT, TIERK } from '../rendering/model-icons.js';
 import { canvasesState, cv } from './canvases.js';
 import { convoyPanelState } from './convoy-panel.js';
-import { BTNX, circ, focusRing, frame, gold, ICN, poly, rr, rrg, SLOT, SLOTH, SLOTX, TN } from './drawing.js';
+import { BTNX, circ, focusRing, frame, gold, ICN, poly, rr, rrg, SLOT, SLOTH, SLOTX, tabPlate, TN } from './drawing.js';
+import { FFP } from './typography.js';
 import { hudState, idleP, inR, selIdle, U } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
 import { dIc, IC } from './icons.js';
@@ -265,7 +266,47 @@ function ctxGroups(){const S=sel();if(S.length){const sol=S.some(u=>u.type!=='pe
  if(t==='barracks')return[['Train',['knight','archer','bannerman','captain','scout'].concat(RS.done?['cannon']:[])],['Command',upI(curB()).concat(['army','idle','rally','repair','demolish','rotate','form','mode'])]];
  return[['Train',['peasant','engineer'].concat(bastionHas(HOMEC().pl|0,'embassy')?['envoy']:[]).concat(royalBtns())],...buildGroups(true),['Command',upI(HOMEC()).concat(['army','idle','rallyc','repair','rotate','movec','form','mode'])]].concat(MP.on&&sessionState.CS2?[['Co-op',['convoy']]]:[])}
 
-export function menuItems(){CMP=cv.width/hudDisplayState.UIS<420;const L=[];ctxGroups().forEach(([n,ks0])=>{let ks=inputState.touch?ks0:ks0.filter(k=>k!=='mode');if(n==='Command'&&sel().length<2)ks=ks.filter(k=>k==='stoneup'||k==='rally'||k==='rallyc'||k==='rotate'||k==='movec'||k==='repair'||(k==='demolish'&&selectionState.selB&&sessionState.structs.includes(selectionState.selB)));if(n==='Siege'&&!RS.done)return;if(!ks.length)return;if(L.length)L.push({gap:7});ks.forEach((k,i)=>{const nc=Object.keys(C[k.startsWith('s:')?k.slice(2):k]||{}).length,it={k:(k in T||k in C)?'buy':k,id:k,grp:n,first:i===0,w:CMP?25:MW+(nc>2?(nc-2)*9:0),h:CMP?25:MH};
+/* ================= tabs and NEW tags (lot D, visual only) =================
+   Castle / barracks / market... menus show one group at a time (Train / Build / Command ...) behind tabs; a tab carries the number of newly unlocked slots,
+   and those slots get a NEW tag until they are hovered or used. "Seen" lives in localStorage key dk_newslots (absent = fresh profile: everything
+   already available is seeded as seen). Nothing here is read by the simulation or written to a save. */
+export const tabState={on:false,ids:[],cur:'',badge:{},sel:''};
+const BCATN=new Set(Object.values(BCATS).map(v=>v[0])),tabId=n=>BCATN.has(n)?'Build':n;
+const TABIC={Train:()=>IC.knight,Build:()=>IC.home,Command:()=>IC.hammer,Research:()=>IC.upgrade,Trade:()=>IC.coin,Barter:()=>IC.coin,Builders:()=>IC.hammer,Repairers:()=>IC.hammer,Terraformers:()=>IC.hammer,'Co-op':()=>IC.convoy};
+let SEEN=null;
+function seenLoad(){if(SEEN)return SEEN;SEEN=new Set();let raw=null;try{raw=localStorage.getItem('dk_newslots')}catch(e){}if(raw){try{const a=JSON.parse(raw);if(Array.isArray(a))a.forEach(k=>SEEN.add(String(k)))}catch(e){}}else SEEN.fresh=true;return SEEN}
+const seenSave=()=>{try{localStorage.setItem('dk_newslots',JSON.stringify([...SEEN]))}catch(e){}};
+export function markSeen(id){const S=seenLoad();if(id&&!S.has(id)){S.add(id);seenSave()}}
+const lockedNow=id=>(id==='cannon'&&!RS.done)||((id in RT2||id==='upgrade')&&!hasAcademy(LPL()))||((id in RT2)&&(!rxPre(id)||!!rxLock(id)));
+const newKey=id=>(id in C||id in T||(id in RT2&&id in RPRE))&&!['raise','dig','ramp','demolish','tier','upgrade'].includes(id);
+const baseNew=id=>newKey(id)&&!lockedNow(id)&&!(id in RT2&&RS2.done[id])&&!seenLoad().has(id);
+const newIn=k=>k.startsWith('cat:')?catItems(k.slice(4),true).filter(baseNew).length:k.startsWith('s:')?0:(baseNew(k)?1:0);
+const newItem=it=>it.tr!==undefined?false:it.k.startsWith('cat:')?newIn(it.k)>0:baseNew(it.id);
+const nwFn=(it,nw,f)=>nw&&!it.k.startsWith('cat:')?()=>{markSeen(it.id);f()}:f;
+function seedSeen(){const S=seenLoad();if(!S.fresh||!sessionState.started)return;S.fresh=false;for(const k of new Set([...Object.keys(C),...Object.keys(T),...Object.keys(RT2)])){if(NICHE.has(k)&&!nicheOn())continue;if(lockedNow(k))continue;S.add(k)}seenSave()}
+function tabPick(G){tabState.on=false;if(sel().length||G.length<2)return G;const ids=G.map(g=>tabId(g[0]));tabState.on=true;tabState.ids=ids;tabState.cur=ids.includes(tabState.sel)?tabState.sel:ids[0];tabState.badge={};G.forEach(g=>{tabState.badge[tabId(g[0])]=g[1].reduce((a,k)=>a+newIn(k),0)});return G.filter(g=>tabId(g[0])===tabState.cur)}
+export function setTab(id){tabState.sel=id;tabState.cur=id;snd('click')}
+export function cycleTab(d){if(!tabState.on||tabState.ids.length<2)return false;const i=tabState.ids.indexOf(tabState.cur);setTab(tabState.ids[(i+d+tabState.ids.length)%tabState.ids.length]);return true}
+export const TABH=17;
+const tabTw=id=>{const g=canvasesState.ctx;g.save();g.font='600 9.5px '+FFP;const w=g.measureText(L(id)).width;g.restore();return w};
+const tabW=id=>CMP?24:Math.ceil(tabTw(id))+30;
+export const tabsWidth=()=>tabState.ids.reduce((a,id)=>a+tabW(id)+3,-3)+(inputState.touch||CMP?0:30);
+/* the tab strip sits on the panel's top edge; the active tab opens into the panel */
+export function drawTabs(px,py,pw){const g=canvasesState.ctx;let x=px+4;const y=py-TABH+1;hudState.uiRects.push(U(px,py-TABH,Math.max(pw,tabsWidth()+8),TABH));
+ for(const id of tabState.ids){const w=tabW(id),on=id===tabState.cur,n=tabState.badge[id]|0,ic=TABIC[id]&&TABIC[id]();
+  const hr=U(x,y,w,TABH),hvr=inR(inputState.mouse,hr);hudState.uiHits.push({...hr,fn:()=>setTab(id),tip:null});
+  g.save();tabPlate(x,y,w,TABH+1,on,hvr);
+  if(ic){g.globalAlpha=on?1:.7;dIc(ic,x+5,y+3,11)}
+  if(!CMP){g.font='600 9.5px '+FFP;g.textBaseline='middle';g.textAlign='left';g.fillStyle='rgba(0,0,0,.55)';g.fillText(L(id),x+19,y+TABH/2+1.4);g.fillStyle=on?'#ffe9a8':'#b9b3a2';g.fillText(L(id),x+19,y+TABH/2+.6)}
+  g.restore();
+  if(n>0){const bx=x+w-5,by=y+1;g.fillStyle='#0b0810';g.beginPath();g.arc(bx,by,5.4,0,6.2832);g.fill();g.fillStyle='#ff9a2e';g.beginPath();g.arc(bx,by,4.4,0,6.2832);g.fill();g.fillStyle='#1b0c00';g.font='700 6.5px '+FFP;g.textAlign='center';g.textBaseline='middle';g.fillText(String(Math.min(9,n)),bx,by+.5);g.textAlign='left'}
+  x+=w+3}
+ if(!inputState.touch&&!CMP&&tabState.ids.length>1){g.save();g.font='700 7px '+FFP;const kw=Math.ceil(g.measureText('PgDn').width)+8,kx=x+2,ky=y+3;g.fillStyle='rgba(0,0,0,.35)';rr(kx,ky+1,kw,11,2.5);g.fill();g.fillStyle='#303a52';rr(kx,ky,kw,11,2.5);g.fill();g.strokeStyle='#c9a24f';g.lineWidth=1;rr(kx+.5,ky+.5,kw-1,10,2.5);g.stroke();g.fillStyle='#f2e4c4';g.textBaseline='middle';g.textAlign='center';g.fillText('PgDn',kx+kw/2,ky+6);g.restore()}}
+/* NEW flag on a slot (a dot on small touch slots) */
+function newTag(x,y,w){const g=canvasesState.ctx;g.save();if(CMP){g.fillStyle='#0b0810';g.beginPath();g.arc(x+w-3,y+3,3.4,0,6.2832);g.fill();g.fillStyle='#ffc63c';g.beginPath();g.arc(x+w-3,y+3,2.5,0,6.2832);g.fill()}
+ else{g.font='700 6px '+FFP;const nt=L('NEW'),tw2=Math.ceil(g.measureText(nt).width)+4;g.fillStyle='#0b0810';g.fillRect(x+w-tw2-.5,y-.5,tw2+1,8.5);g.fillStyle='#ffc63c';g.fillRect(x+w-tw2,y,tw2,7.5);g.fillStyle='#3a2400';g.textBaseline='middle';g.textAlign='center';g.fillText(nt,x+w-tw2/2,y+4.1)}g.restore()}
+
+export function menuItems(){CMP=cv.width/hudDisplayState.UIS<420;const L=[],G0=[];seedSeen();ctxGroups().forEach(([n,ks0])=>{let ks=inputState.touch?ks0:ks0.filter(k=>k!=='mode');if(n==='Command'&&sel().length<2)ks=ks.filter(k=>k==='stoneup'||k==='rally'||k==='rallyc'||k==='rotate'||k==='movec'||k==='repair'||(k==='demolish'&&selectionState.selB&&sessionState.structs.includes(selectionState.selB)));if(n==='Siege'&&!RS.done)return;if(!ks.length)return;G0.push([n,ks])});tabPick(G0).forEach(([n,ks])=>{if(L.length)L.push({gap:7});ks.forEach((k,i)=>{const nc=Object.keys(C[k.startsWith('s:')?k.slice(2):k]||{}).length,it={k:(k in T||k in C)?'buy':k,id:k,grp:n,first:i===0,w:CMP?25:MW+(nc>2?(nc-2)*9:0),h:CMP?25:MH};
   if(n!=='Build'&&TIERK.has(k)&&buildMenuState.BCAT)it.tr=0;
   if(k.startsWith('s:')){it.k='buy';it.id=k.slice(2);it.tr=1;it.first=false;it.under=L.find(o=>o.id===it.id&&o.tr===0)||null}
   L.push(it)})});return L}
@@ -291,12 +332,12 @@ export function drawCost(cp,x,y,w,sc,is){const fit=q=>cp.reduce((a,p)=>a+tw(p[0]
 const STNK=new Set(['agg','def','hold','stop','work']);
 function stanceOn(k){const S=sel().filter(u=>u.type!=='peasant');return S.length>0&&S.every(u=>(u.stn||'agg')===k)}
 
-export function drawItem(it){const cat=it.k.startsWith('cat:')?it.k.slice(4):null,on=(it.k==='upgtool'&&sessionState.mode==='upgrade')||(cat&&BCATS[cat][1].includes(sessionState.mode))||(it.k==='buy'&&sessionState.mode===it.id&&(it.tr===undefined||(it.tr?stoneOn():!stoneOn())))||(it.k==='mode'&&inputState.panMode)||(it.k==='form'&&constructionState.formType>0)||(STNK.has(it.k)&&it.k!=='stop'&&it.k!=='work'&&stanceOn(it.k)),dis=it.k==='buy'&&((it.tr===1&&!RS.done)||!ok(tierC(it)||{})||sessionState.over||(it.id==='upgrade'&&(RS.done||RS.on))||(((it.id in RT2)||it.id==='upgrade')&&!hasAcademy(LPL()))||((it.id in RT2)&&(RS2.done[it.id]||RS2.on||!rxPre(it.id)||rxLock(it.id)))||(it.id in T&&it.id!=='ballista'&&it.id!=='trebuchet'&&popUsed(LPL())+popOf(it.id)>popCap(LPL()))||(it.id==='cannon'&&!RS.done))||(it.k==='stoneup'&&(()=>{const b=upTarget(),c=b&&UPC[b.type];return !RS.done||!c||!ok(c)})());
+export function drawItem(it){const nw=newItem(it),cat=it.k.startsWith('cat:')?it.k.slice(4):null,on=(it.k==='upgtool'&&sessionState.mode==='upgrade')||(cat&&BCATS[cat][1].includes(sessionState.mode))||(it.k==='buy'&&sessionState.mode===it.id&&(it.tr===undefined||(it.tr?stoneOn():!stoneOn())))||(it.k==='mode'&&inputState.panMode)||(it.k==='form'&&constructionState.formType>0)||(STNK.has(it.k)&&it.k!=='stop'&&it.k!=='work'&&stanceOn(it.k)),dis=it.k==='buy'&&((it.tr===1&&!RS.done)||!ok(tierC(it)||{})||sessionState.over||(it.id==='upgrade'&&(RS.done||RS.on))||(((it.id in RT2)||it.id==='upgrade')&&!hasAcademy(LPL()))||((it.id in RT2)&&(RS2.done[it.id]||RS2.on||!rxPre(it.id)||rxLock(it.id)))||(it.id in T&&it.id!=='ballista'&&it.id!=='trebuchet'&&popUsed(LPL())+popOf(it.id)>popCap(LPL()))||(it.id==='cannon'&&!RS.done))||(it.k==='stoneup'&&(()=>{const b=upTarget(),c=b&&UPC[b.type];return !RS.done||!c||!ok(c)})());
  let tip=TIPS[it.id||it.k];if(it.k==='buy'&&C[it.id]&&!TRADEK.has(it.id))tip=[NAMES[it.id]].concat(TIPS[it.id].slice(1),['']);if(it.tr!==undefined)tip=[(it.tr?'Stone ':'Wooden ')+NAMES[it.id].toLowerCase()+(it.tr||!hkShow(it.id)?'':' ['+HK[it.id]+']'),it.tr?'Much tougher: holds the horde far longer':'Cheap and quick to build'].concat(it.tr&&!RS.done?['Locked: research Masonry at the Academy']:[],['']);if(it.k==='buy'&&tip&&((it.id in RT2)||it.id==='upgrade')){const up=it.id==='upgrade',ex=[];if(up?RS.done:RS2.done[it.id])ex.push('Already researched');else if(up?RS.on:RS2.on===it.id)ex.push('In progress: '+Math.floor(up?RS.t/RT_TIME*100:RS2.t/RT2[it.id]*100)+'%');else if(!up&&rxLock(it.id))ex.push('Closed: you chose '+RN2[rxLock(it.id)]);else if(!up&&RS2.on)ex.push('Wait: '+RN2[RS2.on]+' first');if(!up&&rxPair(it.id)>=0&&!rxLock(it.id)&&!RS2.done[it.id]){const pr=RXOR[rxPair(it.id)];ex.push('Exclusive path: closes '+RN2[pr[0]===it.id?pr[1]:pr[0]])}if(!hasAcademy(LPL()))ex.push('Needs your own Academy');if(MP.on)ex.push('Shared: helps both players');if(ex.length)tip=tip.slice(0,-1).concat(ex,[tip[tip.length-1]])}
  const ic=it.k==='stoneup'||it.k==='upgtool'?IC.upgrade:it.tr!==undefined?(ICT[it.tr][it.id]||IC[it.id]):cat?IC[BCI[cat]]:it.k==='back'?IC.back:ROLEK.has(it.k)?IC[({b:'wall',r:'repair',t:'raise'})[it.k[1]]]:STNK.has(it.k)?IC[it.k]:JOBK.has(it.k)?IC[JOBI[it.k]]:it.k==='convoy'?IC.convoy:it.k==='buy'?IC[it.id]:it.k==='army'?IC.army:it.k==='idle'?IC.idle:it.k==='form'?IC.group:inputState.panMode?IC.pan:IC.cursor;
  const nm=NAMES[it.id]||'',idleN=it.k==='idle'?idleP().length:0;
  if(it.lab&&!CMP)TN(it.grp,it.x+1,it.y-9.5,'#d6b46a',.72);
- uiBtn(it.x,it.y,it.w,it.h,SLOT,SLOTH,itemFn(it),tip,(x,y,w,h)=>{canvasesState.ctx.globalAlpha=dis?.45:1;if(CMP){dIc(ic,x+((w-17)>>1),y+((h-17)>>1)+1,17);canvasesState.ctx.globalAlpha=1;if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+2,y+1.5,'#ffff55',.75);if(idleN)T_('!',x+w-5,y+1,'#ff6a6a',.7);return}/* look 3B: icon + cost (or state); the name is in the tooltip (touch has no hover, so it keeps the name) */
+ uiBtn(it.x,it.y,it.w,it.h,SLOT,SLOTH,nwFn(it,nw,itemFn(it)),tip,(x,y,w,h,hv)=>{if(nw&&hv&&!cat)markSeen(it.id);canvasesState.ctx.globalAlpha=dis?.45:1;if(CMP){dIc(ic,x+((w-17)>>1),y+((h-17)>>1)+1,17);canvasesState.ctx.globalAlpha=1;if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+2,y+1.5,'#ffff55',.75);if(idleN)T_('!',x+w-5,y+1,'#ff6a6a',.7);return}/* look 3B: icon + cost (or state); the name is in the tooltip (touch has no hover, so it keeps the name) */
   if(inputState.touch){dIc(ic,x+((w-16)>>1),y+4,16);TCf(nm,x+w/2,y+21,dis?'#b8b8b8':'#ffffff',.76,w-3,.5)}else dIc(ic,x+((w-18)>>1),y+6,18);canvasesState.ctx.globalAlpha=1;
   const rdn=it.k==='buy'&&((it.id==='upgrade'&&RS.done)||((it.id in RT2)&&RS2.done[it.id])),ron=it.k==='buy'&&((it.id==='upgrade'&&RS.on)||((it.id in RT2)&&RS2.on===it.id));
   if(rdn){canvasesState.ctx.globalAlpha=1;TCf('Done',x+w/2,y+29.5,'#6aff7a',.7,w-14,.5);canvasesState.ctx.strokeStyle='#0b0810';canvasesState.ctx.lineWidth=3.2;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-12,y+7);canvasesState.ctx.lineTo(x+w-8,y+11);canvasesState.ctx.lineTo(x+w-2.5,y+3.5);canvasesState.ctx.stroke();canvasesState.ctx.strokeStyle='#6aff7a';canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.stroke()}
@@ -314,6 +355,7 @@ export function drawItem(it){const cat=it.k.startsWith('cat:')?it.k.slice(4):nul
   if(it.tr===1&&!RS.done){canvasesState.ctx.globalAlpha=1;const lx=x+w-10,ly=y+3;canvasesState.ctx.strokeStyle='#e8c070';canvasesState.ctx.lineWidth=1.2;canvasesState.ctx.beginPath();canvasesState.ctx.arc(lx+3.5,ly+3.5,2.2,Math.PI,0);canvasesState.ctx.stroke();canvasesState.ctx.fillStyle='#e8c070';canvasesState.ctx.fillRect(lx,ly+3.5,7,5.5);canvasesState.ctx.fillStyle='#3a2a10';canvasesState.ctx.fillRect(lx+3,ly+5.3,1,2)}
   if(idleN)T_('!',x+w-6,y+2,'#ff6a6a',.8);
   if(cat){canvasesState.ctx.fillStyle='#d6b46a';canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-2.5,y+2.5);canvasesState.ctx.lineTo(x+w-2.5,y+8.5);canvasesState.ctx.lineTo(x+w-8.5,y+2.5);canvasesState.ctx.closePath();canvasesState.ctx.fill()}},on,dis);
+ if(nw)newTag(it.x,it.y,it.w);
  if(it.k==='buy'){const hh=hudState.uiHits[hudState.uiHits.length-1];hh.price=true;hh.cost=it.id}}
 
 export function initializeBuildMenu() {
