@@ -83,6 +83,8 @@ export let train = function train(type){const b=curB();if(b.type==='academy'||b.
 /* does this player own a finished building of this type? cached per sim tick (and per structs array) */
 let bhc={tk:-1,arr:null,n:-1,h:[{},{}]};
 export function bastionHas(p,type){const tk=sessionState.time,sa=sessionState.structs;if(bhc.tk!==tk||bhc.arr!==sa||bhc.n!==sa.length){bhc={tk,arr:sa,n:sa.length,h:[{},{}]};for(const s of sa)if(s.t===0&&s.prog>=1&&s.hp>0)(bhc.h[s.pl|0]||(bhc.h[s.pl|0]={}))[s.type]=1}const o=bhc.h[p|0];return !!(o&&o[type])}
+/* same answer without the cache: for code run from mpExec (player commands), where the cache of the previous tick may or may not have been refilled by the UI on this machine */
+export function bastionHasNow(p,type){for(const s of sessionState.structs)if(s.t===0&&s.prog>=1&&s.hp>0&&(s.pl|0)===(p|0)&&s.type===type)return true;return false}
 /* cancel the i-th queued unit of building sid (this player's): full refund */
 export function cancelTrain0(sid,i){const b=sessionState.structs.find(s=>s.sid===sid&&(s.pl|0)===playersState.CURPL);if(!b)return;let n=-1,qi=-1;sessionState.queue.forEach((q,j)=>{if(q.b===b&&++n===i)qi=j});if(qi<0)return;const q=sessionState.queue[qi];for(const[k,v]of Object.entries(C[q.type]))sessionState.res[k]+=v;sessionState.queue.splice(qi,1)}
 export const ok=c=>Object.entries(c).every(([k,v])=>sessionState.res[k]>=v),pay=c=>Object.entries(c).forEach(([k,v])=>sessionState.res[k]-=v);

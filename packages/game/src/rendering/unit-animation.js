@@ -45,7 +45,7 @@ export const sat = t=>Math.max(0,Math.min(1,t));
 export const easeO = t=>1-(1-t)*(1-t);
 const CHOPC = {t:'#9d7a50',w:'#8b5a2b',s:'#cfd6e2',g:'#ffd23c',f:'#8a6a3a',p:'#6a5a3a'};
 
-export function animUnit(u,dt,anyDmg,frame){let g=u.m;if(g&&!u.ttl&&(u.mt!==u.t||(u.t===0&&u.mal!==alv())||u.mrk!==rkOf(u))){scene.remove(g);unitG.delete(u);g=null}if(!g)g=mkUnit(u);
+export function animUnit(u,dt,anyDmg,frame){let g=u.m;if(g&&!u.ttl&&(u.mt!==u.t||(u.t===0&&u.mal!==alv())||u.mrk!==rkOf(u))){scene.remove(g);if(g.userData.mat)g.userData.mat.dispose();unitG.delete(u);g=null}if(!g)g=mkUnit(u);
  const d=g.userData,ty=u.type,z=u.t===1,wl=u.walk>0,T=sessionState.clockT+u.ph0;d.frame=frame;
  if(u.atk>0)u.atk-=dt;if(u.hurt>0)u.hurt-=dt;
  const fast=ty==='runner',heavy=ty==='brute'||ty==='bomber',armored=ty==='knight'||ty==='captain'||ty==='king'||ty==='guard';

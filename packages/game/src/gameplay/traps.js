@@ -33,15 +33,17 @@ export function placeSpike(tx,ty){if(sessionState.over)return;const i=ty*TW+tx;
  if(!ok(SPKC)){if(!MP.on||playersState.CURPL===LPL()){hudDisplayState.msgS='Not enough resources';hudDisplayState.msgT=2;snd('err')}return}
  pay(SPKC);SPK.set(i,120);objectivesState.SPKV++;snd('build',(tx+.5)*TS,(ty+.5)*TS);puff((tx+.5)*TS,(ty+.5)*TS,'#8a7058',6,40,{T:.5,z:.1,vz:.8,g:2,s:.1})}
 
-let SPKA=0,OILA=0;
+/* Periodic ticks are decided from sessionState.time alone (like ruins): module-level accumulators were outside SAVA and reset(),
+   so each co-op machine (and every resync or load) started at a different phase. true when a multiple of `per` was crossed this tick. */
+function edge(dt,per){return Math.floor(sessionState.time/per)!==Math.floor((sessionState.time-dt)/per)}
 
 export function trapTick(dt){
- if(SPK.size){SPKA+=dt;if(SPKA>=.5){SPKA-=.5;const dm=(14+.5*sessionState.waveN)*.5,dead=[];
+ if(SPK.size){if(edge(dt,.5)){const dm=(14+.5*sessionState.waveN)*.5,dead=[];
   for(const[i,hp]of SPK){const x=((i%TW)+.5)*TS,y=(((i/TW)|0)+.5)*TS;let n=0;const Q=ugNear(1,x,y,TS*.62);
    for(let q=0;q<Q.length;q++){const z=UGU[Q[q]];if(z.t===1&&z.hp>0&&dist(z.x,z.y,x,y)<TS*.62){z.hp-=dm;z.hurt=.25;n++}}
    n+=swSplash(x,y,TS*.6,dm,40)||0;if(n){puff(x,y,'#c8ccd4',3,30,{T:.3,z:.2,vz:1,g:-.4,s:.08});const nh=hp-n*7;if(nh<=0)dead.push(i);else SPK.set(i,nh)}}
   if(dead.length){for(const i of dead)SPK.delete(i);objectivesState.SPKV++}}}
- if(RS2.done.oil&&(wavesState.waveOn||SW.n)){OILA+=dt;if(OILA>=.25){const step=OILA;OILA=0;const dm=12+.5*sessionState.waveN;
+ if(RS2.done.oil&&(wavesState.waveOn||SW.n)){if(edge(dt,.25)){const dm=12+.5*sessionState.waveN;
   for(const s of sessionState.structs){if(s.t!==0||s.prog<1||s.hp<=0||!(s.type==='wall'||s.type==='gate'||s.type==='tower'))continue;if((s.ot||0)>sessionState.time)continue;s.ot=sessionState.time+1.5+((s.sid|0)%8)*.04;
    const Q=ugNear(1,s.x,s.y,TS*1.3);let n=0;for(let q=0;q<Q.length;q++){const z=UGU[Q[q]];if(z.t===1&&z.hp>0&&dist(z.x,z.y,s.x,s.y)<TS*1.3+(s.rad||0)){z.hp-=dm;z.hurt=.25;n++}}
    n+=swSplash(s.x,s.y,TS*1.3,dm,40)||0;if(n){puff(s.x,s.y,'#ffb040',4,40,{T:.4,z:.8,vz:1.2,g:3,s:.1});if(REALR()<.4)snd('sizzle',s.x,s.y)}}}}}
@@ -57,9 +59,7 @@ export function spkSync(){if(!SPK.size&&!SPKM)return;if(SPKS===objectivesState.S
   for(const[a,b]of offs){o.position.set(x+a,h+.17,z+b);o.updateMatrix();SPKM.setMatrixAt(n++,o.matrix)}}
  SPKM.count=n;SPKP.count=p;SPKM.instanceMatrix.needsUpdate=true;SPKP.instanceMatrix.needsUpdate=true}
 
-let ERAA=0;
-
-export function eraTick(dt){if(!RS2.done.era)return;ERAA+=dt;if(ERAA<2)return;ERAA-=2;for(const s of sessionState.structs)if(s.t===0&&s.prog>=1&&s.hp>0&&s.hp<s.max)s.hp=Math.min(s.max,s.hp+s.max*.01)}
+export function eraTick(dt){if(!RS2.done.era)return;if(!edge(dt,2))return;for(const s of sessionState.structs)if(s.t===0&&s.prog>=1&&s.hp>0&&s.hp<s.max)s.hp=Math.min(s.max,s.hp+s.max*.01)}
 
 export function initializeTraps() {
   IC.era=IC.steel||IC.iron;

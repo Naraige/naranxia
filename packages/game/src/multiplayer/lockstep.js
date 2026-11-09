@@ -5,6 +5,10 @@ import { GVER } from '../core/version.js';
 import { startGame } from '../gameplay/lifecycle.js';
 import { LPL, playersState, setPl } from '../gameplay/players.js';
 import { reset } from '../gameplay/reset.js';
+import { FAT, PBASE, PRICE } from '../gameplay/economy.js';
+import { eventsState } from '../gameplay/events.js';
+import { BASES } from '../ai/kingdoms.js';
+import { RUINS } from '../world/terrain.js';
 import { sessionState } from '../gameplay/session.js';
 import { update } from '../gameplay/statistics.js';
 import { SW, swarmState } from '../gameplay/swarm.js';
@@ -27,7 +31,17 @@ export function setPause(v){sessionState.paused=v;backgroundLoopState.autoPaused
 export function mpSend(o){try{if(MP.dc&&MP.dc.readyState==='open')MP.dc.send(JSON.stringify(o))}catch(e){}}
 
 export function mpHash(){let h=(sessionState.units.length*7+sessionState.structs.length*13+sessionState.queue.length*3+playersState.RESP.reduce((a,R,i)=>Math.imul(a,131)+Math.round(R.g)*3+Math.round(R.w)*5+Math.round(R.s)*11+Math.round(R.f||0)*17+i,0))|0;
- for(const u of sessionState.units)h=(Math.imul(h,31)+((u.x*8)|0)+Math.imul((u.y*8)|0,7)+(u.hp|0))|0;h=(Math.imul(h,31)+SW.n)|0;for(let i=0;i<SW.n;i+=17)h=(Math.imul(h,31)+((SW.x[i]*8)|0)+Math.imul((SW.y[i]*8)|0,7))|0;return h}
+ for(const u of sessionState.units)h=(Math.imul(h,31)+((u.x*8)|0)+Math.imul((u.y*8)|0,7)+(u.hp|0)+(u.kxp|0)*3+(u.kt|0)*5)|0;h=(Math.imul(h,31)+SW.n)|0;for(let i=0;i<SW.n;i+=17)h=(Math.imul(h,31)+((SW.x[i]*8)|0)+Math.imul((SW.y[i]*8)|0,7))|0;return mpHashX(h)}
+
+/* state of the newer systems (events, market fatigue and prices, renown, ruins, envoy tribute), in a stable order so that a divergence shows at the next check, not at the next payment */
+function mpHashX(h){const E=eventsState,m=(a)=>{h=(Math.imul(h,31)+(a|0))|0};
+ m(E.q?E.q.length:0);m(E.pay?E.pay.length:0);if(E.cur){m(E.cur.i);m(Math.round((E.cur.exp||0)*8))}
+ if(E.pay)for(const p of E.pay){m(p.g);m(Math.round((p.t||0)*8))}
+ for(const k in PBASE){m(Math.round((PRICE[k]||0)*1000));m(Math.round((FAT[k]||0)*1000))}
+ for(const R of playersState.RESP)m(R.ren);
+ let d=0;for(const r of RUINS.values())if(r.done)d++;m(d);
+ for(const b of BASES){m(b.envN);m(b.envG);m(b.envF)}
+ return h}
 
 function mpChk(t){if(MP.hs[t]!==undefined&&MP.hr[t]!==undefined){const hl=MP.hl||(MP.hl=[]);hl.push([t,MP.hs[t],MP.hr[t]]);if(hl.length>60)hl.shift();if(MP.hs[t]!==MP.hr[t]){MP.desync=true;MP.dsN=(MP.dsN|0)+1;if(MP.host)mpResync();else mpSend({k:'rsq',e:MP.ep})}delete MP.hs[t];delete MP.hr[t]}}
 

@@ -21,6 +21,7 @@ const suite = {
   envoy: { args: ['tools/run.py', 'tests/envoy.js'], pass: /"ok":true/ },
   ruins: { args: ['tools/run.py', 'tests/ruins.js'], pass: /"ok":true/ },
   events: { args: ['tools/run.py', 'tests/events.js'], pass: /"ok":true/ },
+  traps: { args: ['tools/run.py', 'tests/traps.js'], pass: /"ok":true/ },
   mp_events: { args: ['tests/mp_events.py', 'naranxia_readable.html', '90'], pass: /^RESULT OK/m },
   bastion: { args: ['tools/run.py', 'tests/bastion.js'], pass: /"ok":true/ },
   research: { args: ['tools/run.py', 'tests/research.js'], pass: /"ok":true/ },
@@ -31,7 +32,7 @@ const suite = {
   mp_convoy: { args: ['tests/mp_convoy.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   save: { args: ['tools/run.py', 'tests/save.js'], pass: /"same0":true/ },
 };
-const quick = ['smoke', 'det', 'tools', 'features', 'kingxp', 'bastion', 'market', 'research', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy'];
+const quick = ['smoke', 'det', 'tools', 'features', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy'];
 const args = process.argv.slice(2);
 const names = args.includes('--full')
   ? [...quick, 'save']
