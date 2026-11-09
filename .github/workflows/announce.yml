@@ -18,7 +18,6 @@ jobs:
           while read -r V; do
             [ -n "$V" ] || continue
             F="announce/$V.md"; [ -f "$F" ] || continue
-            MSG=$(cat "$F")
-            jq -n --arg c "${MSG:0:1990}" '{username:"Naranxia",content:$c}' | curl -fsS -H 'Content-Type: application/json' -d @- "$HOOK"
+            bash tools/announce.sh "$V" "$F"
             sleep 3
           done < announce/QUEUE

@@ -41,6 +41,5 @@ jobs:
         if: env.HOOK != '' && steps.rel.outputs.new == '1'
         run: |
           V=$(tr -d '[:space:]' < game/VERSION)
-          NOTES=$(cat game/NOTES.md 2>/dev/null || echo "")
-          MSG=$(printf '**Naranxia %s is out!** The game updates itself at next launch.\n\n%s' "$V" "$NOTES")
-          jq -n --arg c "${MSG:0:1990}" '{username:"Naranxia",content:$c}' | curl -sS -H 'Content-Type: application/json' -d @- "$HOOK"
+          # embed with the release notes and the screenshots of announce/img/$V/ (tools/announce.sh)
+          bash tools/announce.sh "$V" game/NOTES.md
