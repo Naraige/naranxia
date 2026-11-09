@@ -4,6 +4,11 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-10 · refonte fenêtres de lancement, menus, logos, animations (non livrée)
+- `ui/menu-kit.js` (gabarit plein écran), `menu-fx.js`; titre en lobby (Play + mode, pastilles L/T/O, carte version/saison), tous les écrans de lancement, Réglages, Esc, fin au gabarit; logo NARANXIA en blocs, carte Hammerdawn, favicon; animations sur horloge murale, coupées par Reduce motion.
+- Vérifié (branche agent): build, det tools smoke, fitcheck TOTAL 1 (connu). Arbre fusionné d'avant la refonte: det smoke events mp8 mpk mp_resync ALL PASS. Après refonte: tests relancés (dist/merge_tests4.txt), fitcheck à refaire avec les 17 nouvelles clés.
+- Planche avant/après publiée (docs/studio-boards/revamp). Non testé: tactile réel, manette, launcher, Esc en co-op. Icônes desktop .ico/.icns non refaites.
+
 ## 2026-11-09 · menus du Roi (1B 2B 3C 4B 5B 6B 7C 8C) appliqués, non livrés
 - Double filet doré, boutons plaques, pied de page Back/Select, titre en cadre avec braises, choix du mode en 3 cartes, fiche de détail unité/bâtiment, onglets à icônes + NEW (`dk_newslots`, jamais dans la sim ni la sauvegarde), onglets en PageUp/PageDown (Q/E déjà pris).
 - Bug corrigé: `hud.js` `const L=menuItems()` masquait `L()` (« L is not a function » à la sélection d'une unité).
