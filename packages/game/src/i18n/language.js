@@ -5,7 +5,7 @@ import { uiBtn } from '../ui/build-menu.js';
 import { canvasesState } from '../ui/canvases.js';
 import { BTN, BTNH, frame, GRN, GRNH, PAN } from '../ui/drawing.js';
 import { pill } from '../ui/minimap.js';
-import { FFT, fontOf, ink, inBtn, setF, TWM } from '../ui/typography.js';
+import { FFP, fontOf, ink, inBtn, setF, TWM } from '../ui/typography.js';
 
 export const languageState = {
   langOpen: false,
@@ -84,10 +84,10 @@ export function TC(s,cx,y,col,sc){T_(s,cx-tw(s,sc)/2,y,col,sc)}
 
 export const TTS=sc=>Math.round(9*sc*1.25*.86);
 
-export function TTL(s,x,y,sc,al){s=L(String(s));const S=TTS(sc);canvasesState.ctx.font='700 '+S+'px '+FFT;canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign=al||'left';canvasesState.ctx.fillStyle='rgba(4,3,8,.82)';canvasesState.ctx.fillText(s,x+Math.max(1,S*.05),y+Math.max(1,S*.08));
+export function TTL(s,x,y,sc,al){s=L(String(s));const S=TTS(sc);canvasesState.ctx.font='700 '+S+'px '+FFP;canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign=al||'left';canvasesState.ctx.fillStyle='rgba(4,3,8,.82)';canvasesState.ctx.fillText(s,x+Math.max(1,S*.05),y+Math.max(1,S*.08));
  const g=canvasesState.ctx.createLinearGradient(0,y,0,y+S);g.addColorStop(0,'#fff5d2');g.addColorStop(.47,'#f2c862');g.addColorStop(.53,'#dca23e');g.addColorStop(1,'#a8721f');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillText(s,x,y);canvasesState.ctx.textAlign='left'}
 
-export function twH(s,sc){canvasesState.ctx.font='700 '+TTS(sc)+'px '+FFT;return canvasesState.ctx.measureText(L(String(s))).width}
+export function twH(s,sc){canvasesState.ctx.font='700 '+TTS(sc)+'px '+FFP;return canvasesState.ctx.measureText(L(String(s))).width}
 
 export function initializeLanguage() {
   let saved=null;try{saved=localStorage.getItem('dk_lang')}catch(e){}

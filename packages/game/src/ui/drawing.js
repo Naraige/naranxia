@@ -3,7 +3,7 @@ import { rngf } from '../core/random.js';
 import { cbOn } from '../core/prefs.js';
 import { L } from '../i18n/language.js';
 import { canvasesState, cv, cvs } from './canvases.js';
-import { btnAdd, ink, inBtn, setF } from './typography.js';
+import { btnAdd, FFP, ink, inBtn } from './typography.js';
 
 export const PAN = ['#1d2530','#b8954c','#0a0d12'];
 export const BTN = ['#263242','#c9a24f','#0b0f14'];
@@ -44,12 +44,20 @@ export function frame(x,y,w,h,p,r){if(p===SLOT||p===SLOTH||p===SLOTX){mcSlot(x,y
    g.strokeStyle=off?'rgba(0,0,0,.14)':'rgba(8,14,26,.38)';g.lineWidth=1;rr(x-.5,y-.5,w+1,h+1,Rd+.5);g.stroke();
    g.strokeStyle=off?lgc('rf',y,h,0,'rgba(255,255,255,.4)',1,'rgba(255,255,255,.14)'):tint?'rgb('+tint+')':lgc('rm',y,h,0,'rgba(255,255,255,.95)',1,'rgba(255,255,255,.4)');g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke();
    if(tint&&!off){g.globalAlpha=.28;g.strokeStyle='rgb('+tint+')';g.lineWidth=3;rr(x-1.5,y-1.5,w+3,h+3,Rd+2);g.stroke();g.globalAlpha=1}return}
-  g.fillStyle=big?UIT.shadeBig:UIT.shade;rr(x,y+(big?4:2),w,h,Rd+1);g.fill();
-  g.fillStyle=lgc('pg'+(big?1:0),y,h,0,'rgba(20,27,40,.80)',1,'rgba(10,14,22,.80)');rr(x,y,w,h,Rd);g.fill();
-  g.strokeStyle=UIT.line;g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke()}
+  g.fillStyle=big?UIT.shadeBig:UIT.shade;bev(x,y+(big?4:2),w,h,bs(w,h));g.fill();
+  g.fillStyle=lgc('pg'+(big?1:0),y,h,0,'rgba(20,27,40,.80)',1,'rgba(10,14,22,.80)');bev(x,y,w,h,bs(w,h));g.fill();
+  g.strokeStyle=UIT.gold;g.lineWidth=1;bev(x+.5,y+.5,w-1,h-1,bs(w,h));g.stroke()}
 
 /* shared UI tokens: corner radii, hairline border and soft shadows used by panels, slots, tooltips and the minimap frame */
-export const UIT={rad:{panel:6,small:5,tip:8},line:'rgba(255,255,255,.16)',shade:'rgba(0,0,0,.22)',shadeBig:'rgba(0,0,0,.34)'};
+export const UIT={rad:{panel:6,small:5,tip:8},line:'rgba(255,255,255,.16)',gold:'rgba(184,149,76,.9)',goldDim:'rgba(184,149,76,.45)',shade:'rgba(0,0,0,.22)',shadeBig:'rgba(0,0,0,.34)'};
+
+/* pixel-bevelled outline: each corner is cut in two 1-step stairs (gold 1 px line on panels and glass slots) */
+const bs=(w,h)=>Math.max(.5,Math.min(2,w/14,h/14));
+function bev(x,y,w,h,s){const g=canvasesState.ctx,t=s*2;g.beginPath();
+ g.moveTo(x+t,y);g.lineTo(x+w-t,y);g.lineTo(x+w-t,y+s);g.lineTo(x+w-s,y+s);g.lineTo(x+w-s,y+t);g.lineTo(x+w,y+t);
+ g.lineTo(x+w,y+h-t);g.lineTo(x+w-s,y+h-t);g.lineTo(x+w-s,y+h-s);g.lineTo(x+w-t,y+h-s);g.lineTo(x+w-t,y+h);
+ g.lineTo(x+t,y+h);g.lineTo(x+t,y+h-s);g.lineTo(x+s,y+h-s);g.lineTo(x+s,y+h-t);g.lineTo(x,y+h-t);
+ g.lineTo(x,y+t);g.lineTo(x+s,y+t);g.lineTo(x+s,y+s);g.lineTo(x+t,y+s);g.closePath()}
 
 /* the one keyboard / gamepad focus ring (slots, pills, rows): dark keyline, bright amber ring */
 export function focusRing(x,y,w,h){const g=canvasesState.ctx,Rd=Math.max(2,Math.min(7,w/4,h/4));g.save();g.lineWidth=3.4;g.strokeStyle='rgba(8,10,16,.8)';rr(x-.5,y-.5,w+1,h+1,Rd+1);g.stroke();g.lineWidth=1.8;g.strokeStyle='#ffd86b';rr(x-.5,y-.5,w+1,h+1,Rd+1);g.stroke();g.restore()}
@@ -83,16 +91,16 @@ export function epx(src){const w=src.width,h=src.height,d=src.getContext('2d').g
 
 
 function mcSlot(x,y,w,h,p){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);const g=canvasesState.ctx,X=p===SLOTX,H=p===SLOTH,Rd=Math.max(2,Math.min(8,w/5,h/5));
- g.fillStyle='rgba(20,35,60,.12)';rr(x,y+2,w,h,Rd+1);g.fill();
- btnAdd(x,y,w,h);g.fillStyle=X?'rgba(235,239,245,.62)':H?lgc('slh',y,h,0,'rgba(47,125,246,.22)',1,'rgba(47,125,246,.12)'):lgc('sl',y,h,0,'rgba(255,255,255,.7)',1,'rgba(240,244,250,.5)');rr(x,y,w,h,Rd);g.fill();
+ g.fillStyle='rgba(20,35,60,.12)';bev(x,y+2,w,h,bs(w,h));g.fill();
+ btnAdd(x,y,w,h);g.fillStyle=X?'rgba(235,239,245,.62)':H?lgc('slh',y,h,0,'rgba(47,125,246,.22)',1,'rgba(47,125,246,.12)'):lgc('sl',y,h,0,'rgba(255,255,255,.7)',1,'rgba(240,244,250,.5)');bev(x,y,w,h,bs(w,h));g.fill();
  g.save();if(H){g.shadowColor='rgba(47,125,246,.45)';g.shadowBlur=7}
- g.strokeStyle=X?'rgba(20,30,50,.1)':H?'#2f7df6':'rgba(20,30,50,.2)';g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke();g.restore()}
+ g.strokeStyle=X?UIT.goldDim:H?'#2f7df6':UIT.gold;g.lineWidth=1;bev(x+.5,y+.5,w-1,h-1,bs(w,h));g.stroke();g.restore()}
 
 function mcTip(x,y,w,h){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);const g=canvasesState.ctx,Rd=Math.min(UIT.rad.tip,h/3);
  g.fillStyle='rgba(0,0,0,.38)';rr(x+1,y+3,w,h,Rd+1);g.fill();g.fillStyle='rgba(12,17,26,.92)';rr(x,y,w,h,Rd);g.fill();
  g.strokeStyle=UIT.line;g.lineWidth=1;rr(x+.5,y+.5,w-1,h-1,Rd);g.stroke()}
 
-export function TN(s,x,y,col,sc){sc=sc||1;s=L(String(s));setF(9*sc);canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';canvasesState.ctx.fillStyle=inBtn(x+1,y+1)?ink(col||'#d6b46a'):(col||'#d6b46a');canvasesState.ctx.fillText(s,x,y)}
+export function TN(s,x,y,col,sc){sc=sc||1;s=L(String(s));canvasesState.ctx.font='500 '+Math.max(9,Math.round(9*sc*1.25*.88)+2)+'px '+FFP;canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';canvasesState.ctx.fillStyle=inBtn(x+1,y+1)?ink(col||'#d6b46a'):(col||'#d6b46a');canvasesState.ctx.fillText(s,x,y)}
 
 const HRT=['.KKK.KKK.','KRRWKRRRK','KRWRRRRRK','KRRRRRRRK','.KRRRRRK.','..KRRRK..','...KRK...','....K....'];
 
