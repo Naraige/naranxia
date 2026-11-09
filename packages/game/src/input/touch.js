@@ -5,6 +5,7 @@ import { sessionState } from '../gameplay/session.js';
 import { panCam, pickUnit } from './desktop.js';
 import { inputState } from './state.js';
 import { wpos } from '../rendering/camera.js';
+import { rs } from '../rendering/resolution.js';
 import { puff } from '../rendering/effects.js';
 import { CAM } from '../rendering/scene.js';
 import { pickStruct } from '../rendering/structures.js';
@@ -28,7 +29,7 @@ const tchUp=e=>{if(e.pointerType!=='touch')return;const swallow=TG||TGEND;TCH.de
   if(!pickUnit(inputState.mouse)&&!pickStruct(inputState.mouse)&&!occ.get(Math.floor(w.y/TS)*TW+Math.floor(w.x/TS))){order(w);puff(w.x,w.y,'#ffe14a',8,40);inputState.ptr=null;inputState.box=null;e.stopImmediatePropagation()}}};
 
 export function initializeTouch() {
-  addEventListener('pointerdown',e=>{if(e.pointerType!=='touch'||e.target!==cv)return;TCHON=true;TCH.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  addEventListener('pointerdown',e=>{if(e.pointerType!=='touch'||e.target!==cv)return;TCHON=true;if(!inputState.touch){inputState.touch=true;rs()}TCH.set(e.pointerId,{x:e.clientX,y:e.clientY});
    if(TCH.size===2){inputState.ptr=null;inputState.box=null;hudState.mmDrag=false;const[a,b]=[...TCH.values()];TG={d:Math.hypot(a.x-b.x,a.y-b.y),cx:(a.x+b.x)/2,cy:(a.y+b.y)/2};TGEND=true}
    if(TCH.size>=2){e.stopImmediatePropagation();e.preventDefault()}},true);
 

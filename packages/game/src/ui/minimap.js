@@ -12,7 +12,7 @@ import { LANE_REAR, visLanes } from '../rendering/routes.js';
 import { CAM } from '../rendering/scene.js';
 import { uiBtn } from './build-menu.js';
 import { canvasesState, cv, cvs } from './canvases.js';
-import { cb } from '../core/prefs.js';
+import { cb, cbOn } from '../core/prefs.js';
 import { circ, frame, PAN, RDB, rr } from './drawing.js';
 import { hudState, U } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
@@ -52,18 +52,21 @@ export function drawWorld(x,y,w,h,big){
  for(const r of RUINS.values()){if(!fowSeenAt(r.x,r.y))continue;const X=x+r.x/TS*sx,Y=y+r.y/TS*sy,q=big?4.5:3;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(X,Y-q);canvasesState.ctx.lineTo(X+q,Y);canvasesState.ctx.lineTo(X,Y+q);canvasesState.ctx.lineTo(X-q,Y);canvasesState.ctx.closePath();canvasesState.ctx.fillStyle=r.done?'#8a8a8a':'#f0c040';canvasesState.ctx.fill();canvasesState.ctx.strokeStyle='#2a1a08';canvasesState.ctx.lineWidth=1;canvasesState.ctx.stroke()}
  terrainState.ROUTES.forEach((R,k)=>{if(!VL.has(k))return;const p=R.pts[0],X=x+p[0]*sx,Y=y+p[1]*sy,r=big?6:4;circ(canvasesState.ctx,X,Y,r,sessionState.nextL.includes(k)?cb('#c01f2f','#e69f00'):cb('#6a1a22','#7a5200'),'#fff',1);if(big)dIc(IC.skull,X-5,Y-5.5,10);else{canvasesState.ctx.fillStyle='#fff';canvasesState.ctx.fillRect(X-1,Y-1,2,2)}})}
 
+/* colour-blind mode: camps differ by shape too (own = circle, zombies = diamond, rival kingdoms = square); k: 'c' | 'd' | else square */
+function shp(k,X,Y,z){const c=canvasesState.ctx;if(k==='c'){c.beginPath();c.arc(X,Y,z*.62,0,6.283);c.fill()}else if(k==='d'){const q=z*.75;c.beginPath();c.moveTo(X,Y-q);c.lineTo(X+q,Y);c.lineTo(X,Y+q);c.lineTo(X-q,Y);c.closePath();c.fill()}else c.fillRect(X-z/2,Y-z/2,z,z)}
+
 function dwBase(x,y,w,h,big){const sx=w/TW,sy=h/TH;
  canvasesState.ctx.save();canvasesState.ctx.beginPath();canvasesState.ctx.rect(x,y,w,h);canvasesState.ctx.clip();canvasesState.ctx.imageSmoothingEnabled=false;canvasesState.ctx.drawImage(big?mc:mm2,x,y,w,h);canvasesState.ctx.drawImage(FOWC,x,y,w,h);
  const VL=visLanes();terrainState.ROUTES.forEach((R,k)=>{if(!VL.has(k))return;const nx=sessionState.nextL.includes(k),r0=Math.max(0,(LANE_REAR[k]|0)-2);canvasesState.ctx.beginPath();R.pts.forEach((p,i)=>{if(i<r0)return;i>r0?canvasesState.ctx.lineTo(x+p[0]*sx,y+p[1]*sy):canvasesState.ctx.moveTo(x+p[0]*sx,y+p[1]*sy)});canvasesState.ctx.lineJoin='round';
   canvasesState.ctx.strokeStyle='rgba(30,0,0,.7)';canvasesState.ctx.lineWidth=(big?4:2.8)*(nx?1.15:1);canvasesState.ctx.stroke();canvasesState.ctx.strokeStyle=nx?cb('#ff3b3b','#ffb000'):cb('rgba(214,60,60,.72)','rgba(230,159,0,.75)');canvasesState.ctx.lineWidth=(big?2.2:1.4)*(nx?1.2:1);canvasesState.ctx.stroke()});
- for(const s of sessionState.structs){canvasesState.ctx.fillStyle=s.type==='castle'?'#ffd23c':cb('#7fb2ff','#56b4e9');const z=s.type==='castle'?(big?4:3):(big?2:1.4);canvasesState.ctx.fillRect(x+s.x/TS*sx-z/2,y+s.y/TS*sy-z/2,z,z)}
+ for(const s of sessionState.structs){canvasesState.ctx.fillStyle=s.type==='castle'?'#ffd23c':cb('#7fb2ff','#56b4e9');const z=s.type==='castle'?(big?4:3):(big?2:1.4);if(cbOn())shp('c',x+s.x/TS*sx,y+s.y/TS*sy,Math.max(2.4,z));else canvasesState.ctx.fillRect(x+s.x/TS*sx-z/2,y+s.y/TS*sy-z/2,z,z)}
  canvasesState.ctx.lineWidth=big?1.4:1;for(const b of BASES){if(!b.alive||!fowSeenAt(b.x,b.y))continue;const r=aiR(b)*sx,X=x+b.x/TS*sx,Y=y+b.y/TS*sy;canvasesState.ctx.beginPath();canvasesState.ctx.rect(X-r,Y-aiR(b)*sy,2*r,2*aiR(b)*sy);canvasesState.ctx.fillStyle=PAL[b.ci][1]+'26';canvasesState.ctx.fill();canvasesState.ctx.strokeStyle=PAL[b.ci][1]+'cc';canvasesState.ctx.stroke()}
  {canvasesState.ctx.save();canvasesState.ctx.beginPath();for(const k of OWN){const i=k&4095,j=k>>12,x0=x+i*2*sx,y0=y+j*2*sy,w2=2*sx,h2=2*sy;if(!OWN.has(k-1)){canvasesState.ctx.moveTo(x0,y0);canvasesState.ctx.lineTo(x0,y0+h2)}if(!OWN.has(k+1)){canvasesState.ctx.moveTo(x0+w2,y0);canvasesState.ctx.lineTo(x0+w2,y0+h2)}if(!OWN.has(k-4096)){canvasesState.ctx.moveTo(x0,y0);canvasesState.ctx.lineTo(x0+w2,y0)}if(!OWN.has(k+4096)){canvasesState.ctx.moveTo(x0,y0+h2);canvasesState.ctx.lineTo(x0+w2,y0+h2)}}canvasesState.ctx.strokeStyle=PAL[THEME.c][1];canvasesState.ctx.lineWidth=big?2:1.4;canvasesState.ctx.stroke();canvasesState.ctx.restore()}
 {for(const c0 of CASTLES()){const X=x+c0.x/TS*sx,Y=y+c0.y/TS*sy;canvasesState.ctx.beginPath();canvasesState.ctx.rect(X-TR_CASTLE*sx,Y-TR_CASTLE*sy,2*TR_CASTLE*sx,2*TR_CASTLE*sy);canvasesState.ctx.fillStyle=PAL[THEME.c][1]+'2a';canvasesState.ctx.fill();canvasesState.ctx.strokeStyle=PAL[THEME.c][1];canvasesState.ctx.stroke()}for(const s of sessionState.structs)if(s.t===0&&s.type==='tower'&&s.prog>=1){canvasesState.ctx.beginPath();canvasesState.ctx.rect(x+s.x/TS*sx-TR_TOWER*sx,y+s.y/TS*sy-TR_TOWER*sy,2*TR_TOWER*sx,2*TR_TOWER*sy);canvasesState.ctx.fillStyle=PAL[THEME.c][1]+'22';canvasesState.ctx.fill()}}
- for(const h of HORDES){if(h.act||!fowVisAt(h.x,h.y))continue;const z=(big?2.2:1.5)+Math.min(2,h.n/30);canvasesState.ctx.fillStyle=cb('rgba(255,70,70,.85)','rgba(240,160,0,.9)');canvasesState.ctx.fillRect(x+h.x/TS*sx-z/2,y+h.y/TS*sy-z/2,z,z)}
+ for(const h of HORDES){if(h.act||!fowVisAt(h.x,h.y))continue;const z=(big?2.2:1.5)+Math.min(2,h.n/30);canvasesState.ctx.fillStyle=cb('rgba(255,70,70,.85)','rgba(240,160,0,.9)');if(cbOn())shp('d',x+h.x/TS*sx,y+h.y/TS*sy,Math.max(3,z));else canvasesState.ctx.fillRect(x+h.x/TS*sx-z/2,y+h.y/TS*sy-z/2,z,z)}
  for(const b of BASES){if(!b.alive||!fowSeenAt(b.x,b.y))continue;const z=(big?4:2.6)+b.lvl*.35,col=PAL[b.ci][1];canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(x+b.x/TS*sx-z/2-1,y+b.y/TS*sy-z/2-1,z+2,z+2);canvasesState.ctx.fillStyle=col;canvasesState.ctx.fillRect(x+b.x/TS*sx-z/2,y+b.y/TS*sy-z/2,z,z)}
  {const st=Math.max(1,Math.ceil(SW.n/2500)),z=big?1.6:1.1;canvasesState.ctx.fillStyle=cb('#ff5bff','#f0e442');for(let i=0;i<SW.n;i+=st){const x0=SW.x[i],y0=SW.y[i];if(!fowVisAt(x0,y0))continue;canvasesState.ctx.fillRect(x+x0/TS*sx-z/2,y+y0/TS*sy-z/2,z,z)}}
- for(const u of sessionState.units){if(u.t===2||u.shel||(u.t&&!fowVisAt(u.x,u.y)))continue;canvasesState.ctx.fillStyle=u.t?cb('#ff5bff','#f0e442'):'#ffffff';const z=u.type==='brute'?3:big?1.8:1.2;canvasesState.ctx.fillRect(x+u.x/TS*sx-z/2,y+u.y/TS*sy-z/2,z,z)}
+ for(const u of sessionState.units){if(u.t===2||u.shel||(u.t&&!fowVisAt(u.x,u.y)))continue;canvasesState.ctx.fillStyle=u.t?cb('#ff5bff','#f0e442'):'#ffffff';const z=u.type==='brute'?3:big?1.8:1.2;if(cbOn())shp(u.t?'d':'c',x+u.x/TS*sx,y+u.y/TS*sy,Math.max(u.t?2.8:2.2,z));else canvasesState.ctx.fillRect(x+u.x/TS*sx-z/2,y+u.y/TS*sy-z/2,z,z)}
  canvasesState.ctx.restore()}
 
 /* ---- overlays ---- */

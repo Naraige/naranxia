@@ -7,7 +7,7 @@ import { hudDisplayState } from '../ui/hud-state.js';
 import { uiMul } from '../ui/settings.js';
 
 export function rs(){inputState.DPR=Math.min(window.devicePixelRatio||1,2);const w=window.innerWidth,h=window.innerHeight;cv.width=Math.floor(w*inputState.DPR);cv.height=Math.floor(h*inputState.DPR);
- hudDisplayState.UIS=Math.max(1.5,Math.round(inputState.DPR*(w<600?1.5:w>=1600?2.5:2)*uiMul*2)/2);cw.width=cv.width;cw.height=cv.height;frameLoopState.CWD=1;frameLoopState.UIT=-1;renderer.setPixelRatio(Math.min(inputState.DPR,sceneState.GQ?2:1)*DRSL[DRS.lv]);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
+ hudDisplayState.UIS=Math.max(1.5,Math.round(inputState.DPR*(inputState.touch?(w<600?2:w>=1600?3:2.6):w<600?1.5:w>=1600?2.5:2)*uiMul*2)/2);cw.width=cv.width;cw.height=cv.height;frameLoopState.CWD=1;frameLoopState.UIT=-1;renderer.setPixelRatio(Math.min(inputState.DPR,sceneState.GQ?2:1)*DRSL[DRS.lv]);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
 
 function drsApply(){renderer.setPixelRatio(Math.min(inputState.DPR,sceneState.GQ?2:1)*DRSL[DRS.lv]);renderer.setSize(window.innerWidth,window.innerHeight)}
 
