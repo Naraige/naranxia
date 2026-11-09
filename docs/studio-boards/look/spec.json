@@ -1,0 +1,106 @@
+{
+ "title": "Look: liseré, troupes, construction, titres, écran de fin",
+ "intro": "Ligne par ligne, A = rendu actuel du jeu (capture réelle 1280x720, v91 branche v84) ; B et C = maquettes dessinées sur ces captures. Réponds avec un code comme \"1A 2B 3C 4A 5B\".",
+ "sections": [
+  {
+   "name": "Liseré doré sur panneaux et slots verre",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r1A.png",
+     "note": "rien (capture réelle)"
+    },
+    {
+     "id": "B",
+     "img": "r1B.png",
+     "note": "liseré doré 1 px (maquette sur capture)"
+    },
+    {
+     "id": "C",
+     "img": "r1C.png",
+     "note": "liseré doré + coins biseautés pixel (maquette sur capture)"
+    }
+   ]
+  },
+  {
+   "name": "Panneau des troupes",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r2A.png",
+     "note": "actuel (capture réelle)"
+    },
+    {
+     "id": "B",
+     "img": "r2B.png",
+     "note": "liste compacte icône + PV + barre (maquette; PV d'exemple, le jeu n'a pas ce champ affiché)"
+    },
+    {
+     "id": "C",
+     "img": "r2C.png",
+     "note": "cartes par type avec compteur (maquette)"
+    }
+   ]
+  },
+  {
+   "name": "Slots du menu de construction",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r3A.png",
+     "note": "actuel (capture réelle)"
+    },
+    {
+     "id": "B",
+     "img": "r3B.png",
+     "note": "icône + coût, nom en infobulle (maquette, vraies icônes et coûts)"
+    },
+    {
+     "id": "C",
+     "img": "r3C.png",
+     "note": "icône seule, coût au survol (maquette)"
+    }
+   ]
+  },
+  {
+   "name": "Police des titres",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r4A.png",
+     "note": "actuelle: Inter (capture réelle)"
+    },
+    {
+     "id": "B",
+     "img": "r4B.png",
+     "note": "Pixelify Sans pour les titres seulement, corps inchangé (maquette, vraie police)"
+    },
+    {
+     "id": "C",
+     "img": "r4C.png",
+     "note": "police actuelle en capitales espacées (maquette)"
+    }
+   ]
+  },
+  {
+   "name": "Écran de fin",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r5A.png",
+     "note": "actuel (capture réelle; chiffres de test)"
+    },
+    {
+     "id": "B",
+     "img": "r5B.png",
+     "note": "3 niveaux: score, détails, actions (maquette)"
+    },
+    {
+     "id": "C",
+     "img": "r5C.png",
+     "note": "carte verre centrale (maquette)"
+    }
+   ]
+  }
+ ]
+}
