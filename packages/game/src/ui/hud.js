@@ -20,7 +20,7 @@ import { simulationState } from '../gameplay/simulation.js';
 import { gstBest, statisticsState } from '../gameplay/statistics.js';
 import { SW, swPending } from '../gameplay/swarm.js';
 import { wavesState } from '../gameplay/waves.js';
-import { L, T_, TC, TTL, tw, twH } from '../i18n/language.js';
+import { L, T_, TC, TTL, TTS, tw, twH } from '../i18n/language.js';
 import { camZoom } from '../input/desktop.js';
 import { inputState } from '../input/state.js';
 import { cb } from '../core/prefs.js';
@@ -67,17 +67,26 @@ export function selPeas(){const P=sessionState.units.filter(u=>u.t===0&&u.type==
 
 export function selIdle(){const I=idleP();if(!I.length){hudDisplayState.msgS='No idle peasants';hudDisplayState.msgT=2;return}sessionState.units.forEach(u=>u.sel=false);sessionState.mode=null;I.forEach(u=>u.sel=true);CAM.x=I[0].x/TS;CAM.z=I[0].y/TS;hudDisplayState.msgS=I.length+' idle peasant'+(I.length>1?'s':'')+' selected';hudDisplayState.msgT=3}
 
-function drawEnd(UW,UH){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH);g.addColorStop(0,'rgba(80,0,0,.45)');g.addColorStop(1,'rgba(170,16,16,.68)');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillRect(0,0,UW,UH);hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];const cx=UW/2,cy=UH/2,pw=Math.min(220,UW-16);
- let ts=3;while(ts>1.3&&twH('Your kingdom fell!',ts)>UW-16)ts-=.2;TTL('Your kingdom fell!',cx,cy-78,ts,'center');TC(THEME.n+' has fallen to the horde',cx,cy-78+9*ts+8,'#e0e0e0',1);TC(['The last light goes out. Only the walls remember.','The rebels will tell it: the bastion held until the end.','Dawn did not come. Not this time.','The horde walks on. The old world was lost twice.','The banner of King Naraige falls, but it can be raised again.','Rise again, King. The bastion needs you.'][sessionState.waveN%6],cx,cy-78+9*ts+24,'#c9b89a',.85);
- {const a='Score: ',b=String(sessionState.waveN*100+sessionState.kills),w=tw(a,1.1)+tw(b,1.1);T_(a,cx-w/2,cy-22,'#ffffff',1.1);T_(b,cx-w/2+tw(a,1.1),cy-22,'#ffff55',1.1)}
- TC('Waves survived: '+sessionState.waveN+'    Zombies slain: '+sessionState.kills+'    Best: wave '+sessionState.best.w,cx,cy-6,'#e0e0e0',.85);
- {const G=rulesState.GST,y1=cy+9;TC('Earned: '+Math.round(G.g)+' gold    '+Math.round(G.w)+' wood    '+Math.round(G.s)+' stone    '+Math.round(G.f)+' food',cx,y1,'#f0dca8',.8);
-  const bu=gstBest(),nm=bu?(bu[0]==='other'?'Towers and cannons':L(NAMES[bu[0]]||bu[0])):'-',a1='Best unit: ',c1=bu?'('+bu[1]+' kills)':'',w1=tw(a1,.8)+tw(nm,.8)+(c1?tw(c1,.8)+6:0)+4;let xx=cx-w1/2;
-  T_(a1,xx,y1+13,'#c4a37a',.8);xx+=tw(a1,.8);T_(nm,xx,y1+13,'#ffffff',.8);xx+=tw(nm,.8)+4;if(c1)T_(c1,xx,y1+13,'#ffff55',.8);
-  TC('Units lost: '+G.lost+(G.kl>1?'   King Lv '+G.kl+'  Talents '+(G.kn|0):''),cx,y1+26,'#c4a37a',.8)}
- if(statisticsState.SBR){const y2=cy+48;TC((statisticsState.SBR.daily?'Daily map':'This map')+' - '+(statisticsState.SBR.rank===0?'NEW RECORD!':'Best runs'),cx,y2,statisticsState.SBR.rank===0?'#ffff55':'#f0dca8',.8);
-  statisticsState.SBR.top.forEach((r,i)=>TC('#'+(i+1)+'   Wave '+r.w+'   '+r.k+' kills',cx,y2+12+i*11,i===statisticsState.SBR.rank?'#ffffff':'#c4a37a',.78))}
- pill(cx-pw/2,cy+100,pw,22,'Play again',BTN,BTNH,newGame,null,1.1);pill(cx-pw/2,cy+128,pw,22,'Title Screen',BTN,BTNH,()=>{sessionState.inGame=false;sessionState.over=false;sessionState.started=false;rollWorld()},null,1.1)}
+function drawEnd(UW,UH){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH);g.addColorStop(0,'rgba(80,0,0,.45)');g.addColorStop(1,'rgba(170,16,16,.68)');canvasesState.ctx.fillStyle=g;canvasesState.ctx.fillRect(0,0,UW,UH);hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];const cx=UW/2,pw=Math.min(220,UW-16);
+ /* look 5B, three tiers laid out from one cursor (no fixed offsets, so the lines never overlap): 1 title + score, 2 details, 3 actions */
+ const G=rulesState.GST,SB=statisticsState.SBR,nr=SB?SB.top.length:0,sc1=1.6,H1=Math.round(9*3*1.25*.86)+11+11+8+Math.round(9*sc1*1.25*.88)+4,H2=10+4*12+(SB?12+nr*11+4:0),H3=10+22+6+22;
+ let y=Math.max(6,Math.round((UH-(H1+H2+H3))/2)),ts=3;while(ts>1.3&&twH('Your kingdom fell!',ts)>UW-16)ts-=.2;
+ /* tier 1: title, who fell, one line of ambience, then the score */
+ TTL('Your kingdom fell!',cx,y,ts,'center');y+=TTS(ts)+4;TC(THEME.n+' has fallen to the horde',cx,y,'#e0e0e0',1);y+=13;
+ TC(['The last light goes out. Only the walls remember.','The rebels will tell it: the bastion held until the end.','Dawn did not come. Not this time.','The horde walks on. The old world was lost twice.','The banner of King Naraige falls, but it can be raised again.','Rise again, King. The bastion needs you.'][sessionState.waveN%6],cx,y,'#c9b89a',.85);y+=16;
+ {const a='Score: ',b=String(sessionState.waveN*100+sessionState.kills),w=tw(a,sc1)+tw(b,sc1);T_(a,cx-w/2,y,'#ffffff',sc1);T_(b,cx-w/2+tw(a,sc1),y,'#ffff55',sc1);y+=Math.round(9*sc1*1.25*.88)+8}
+ /* tier 2: details */
+ canvasesState.ctx.fillStyle=UIT.gold;canvasesState.ctx.fillRect(Math.round(cx-60),Math.round(y),120,1);y+=7;
+ TC('Waves survived: '+sessionState.waveN+'    Zombies slain: '+sessionState.kills+'    Best: wave '+sessionState.best.w,cx,y,'#e0e0e0',.85);y+=12;
+ TC('Earned: '+Math.round(G.g)+' gold    '+Math.round(G.w)+' wood    '+Math.round(G.s)+' stone    '+Math.round(G.f)+' food',cx,y,'#f0dca8',.8);y+=12;
+ {const bu=gstBest(),nm=bu?(bu[0]==='other'?'Towers and cannons':L(NAMES[bu[0]]||bu[0])):'-',a1='Best unit: ',c1=bu?'('+bu[1]+' kills)':'',w1=tw(a1,.8)+tw(nm,.8)+(c1?tw(c1,.8)+6:0)+4;let xx=cx-w1/2;
+  T_(a1,xx,y,'#c4a37a',.8);xx+=tw(a1,.8);T_(nm,xx,y,'#ffffff',.8);xx+=tw(nm,.8)+4;if(c1)T_(c1,xx,y,'#ffff55',.8);y+=12;
+  TC('Units lost: '+G.lost+(G.kl>1?'   King Lv '+G.kl+'  Talents '+(G.kn|0):''),cx,y,'#c4a37a',.8);y+=12}
+ if(SB){y+=2;TC((SB.daily?'Daily map':'This map')+' - '+(SB.rank===0?'NEW RECORD!':'Best runs'),cx,y,SB.rank===0?'#ffff55':'#f0dca8',.8);y+=12;
+  SB.top.forEach((r,i)=>{TC('#'+(i+1)+'   Wave '+r.w+'   '+r.k+' kills',cx,y,i===SB.rank?'#ffffff':'#c4a37a',.78);y+=11});y+=4}
+ /* tier 3: actions */
+ canvasesState.ctx.fillStyle=UIT.gold;canvasesState.ctx.fillRect(Math.round(cx-60),Math.round(y),120,1);y+=9;
+ pill(cx-pw/2,y,pw,22,'Play again',BTN,BTNH,newGame,null,1.1);pill(cx-pw/2,y+28,pw,22,'Title Screen',BTN,BTNH,()=>{sessionState.inGame=false;sessionState.over=false;sessionState.started=false;rollWorld()},null,1.1)}
 
 function drawToasts(UW){for(let i=0;i<TOASTS.length;i++){const o=TOASTS[i];o.t+=UIDT;const T=o.t,sl=T<.35?1-T/.35:T>4.6?(T-4.6)/.35:0;if(T>4.95){TOASTS.splice(i,1);i--;continue}const d=ACHD[o.k],w=Math.max(150,Math.max(tw(d[0],.9),twH('Achievement',.95))+40),h=30,x=UW-w-4+sl*(w+8),y=settingsState.TOPH+4+i*(h+4);
   frame(x,y,w,h,PAN,4);
