@@ -10,5 +10,10 @@
 "Select a save, then Load or Delete.": ["Sélectionnez une sauvegarde, puis Charger ou Supprimer.", "Selecciona una partida y luego Cargar o Borrar.", "Wähle einen Spielstand, dann Laden oder Löschen.", "Seleziona un salvataggio, poi Carica o Elimina.", "Selecione um jogo e depois Carregar ou Apagar."],
 "The autosave keeps your latest game.": ["La sauvegarde automatique conserve votre dernière partie.", "El autoguardado conserva tu última partida.", "Die automatische Speicherung behält dein letztes Spiel.", "Il salvataggio automatico conserva la tua ultima partita.", "A gravação automática guarda o seu último jogo."],
 "Tutorial": ["Tutoriel", "Tutorial", "Tutorial", "Tutorial", "Tutorial"],
-"Exit to desktop": ["Quitter vers le bureau", "Salir al escritorio", "Zum Desktop beenden", "Esci al desktop", "Sair para o ambiente de trabalho"]
+"Exit to desktop": ["Quitter vers le bureau", "Salir al escritorio", "Zum Desktop beenden", "Esci al desktop", "Sair para o ambiente de trabalho"],
+"Accessibility": ["Accessibilité", "Accesibilidad", "Barrierefreiheit", "Accessibilità", "Acessibilidade"],
+"Help": ["Aide", "Ayuda", "Hilfe", "Aiuto", "Ajuda"],
+"Display": ["Affichage", "Pantalla", "Anzeige", "Schermo", "Ecrã"],
+"Session": ["Session", "Sesión", "Sitzung", "Sessione", "Sessão"],
+"Keyboard": ["Clavier", "Teclado", "Tastatur", "Tastiera", "Teclado"]
 }

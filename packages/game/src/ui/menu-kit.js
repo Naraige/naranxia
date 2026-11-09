@@ -209,18 +209,20 @@ export const kitHitAdd = kitHit;
    Returns { hv, k, sel }. */
 export function kitRow(x, y, w, h, o) {
   x = Math.round(x); y = Math.round(y); w = Math.round(w);
+  /* option chips that do not fit beside the label go on a second line */
+  let stack = 0; if (o.opts && o.label != null) { let cs = 0; for (const p of o.opts) cs += Math.max(26, Math.ceil(tw(p[0], .78)) + 12) + 3; if (tw(o.label, .9) + cs + 30 > w) { stack = 15; h += stack } }
   const g = ctx(), vis = !LIST || (y + h > LIST.y0 && y < LIST.y0 + LIST.h), dis = !!o.dis, inl = !LIST || (inputState.mouse.y >= LIST.y0 * hudDisplayState.UIS && inputState.mouse.y < (LIST.y0 + LIST.h) * hudDisplayState.UIS),
     hv = vis && inl && !dis && !!o.fn && hov(x, y, w, h), k = o.fn && !dis && o.nav !== false ? navAdd(o.fn, hv) : -1, sel = k >= 0 && NAV.sel === k;
   if (LIST && sel && NAV.kbT > LIST.s.kb) { const s = LIST.s; if (y < LIST.y0 + 2) s.to = Math.max(0, s.to - (LIST.y0 + 2 - y)); else if (y + h > LIST.y0 + LIST.h - 2) s.to += y + h - (LIST.y0 + LIST.h - 2) }
-  if (!vis) return { hv: false, k, sel };
+  if (!vis) return { hv: false, k, sel, h };
   const pr = pressed(hv), lit = hv || sel || o.on, oy = pr ? 1 : 0;
   g.fillStyle = 'rgba(0,0,0,.3)'; g.fillRect(x, y + 1, w, h + 1);
   const gr = g.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, dis ? '#1f2128' : lit ? '#3c404d' : '#2b2e38'); gr.addColorStop(1, dis ? '#1b1d23' : lit ? '#30343f' : '#24272f');
   g.fillStyle = gr; g.fillRect(x, y + oy, w, h);
   g.fillStyle = 'rgba(255,255,255,' + (lit ? .13 : .07) + ')'; g.fillRect(x, y + oy, w, 1); g.fillStyle = 'rgba(0,0,0,.4)'; g.fillRect(x, y + oy + h - 1, w, 1);
-  if (lit && !dis) { g.fillStyle = o.on ? '#ffd86b' : KC.gold; g.fillRect(x, y + oy, 2, h) }
+  if (lit && !dis) { g.fillStyle = o.danger ? '#e0605a' : o.on ? '#ffd86b' : KC.gold; g.fillRect(x, y + oy, 2, h) }
   /* right side */
-  let rx = x + w - 8; const cy = y + oy + h / 2;
+  let rx = x + w - 8; const cy = y + oy + (stack ? h - 10 : h / 2), ly = stack ? y + oy + 9 : cy;
   if (o.opts) {
     const ch = Math.min(15, h - 5), S = .78;
     for (let i = o.opts.length - 1; i >= 0; i--) {
@@ -230,6 +232,7 @@ export function kitRow(x, y, w, h, o) {
       const lw = tw(lab, S); T0(lab, bx + (cw2 - lw) / 2, by + (ch - 9 * S) / 2 + .5, act ? '#2a1804' : hv2 ? '#ffe9a8' : '#c9c3b4', S, act);
       kitHit(bx, by, cw2, ch, f); rx = bx - 3;
     }
+    if (stack) rx = x + w - 8;
   } else if (o.slider) {
     const sw = Math.max(50, Math.min(170, w * .42)), sx = rx - sw - 26, v = Math.max(0, Math.min(1, o.slider.val)), ty = Math.round(cy - 2);
     T_(Math.round(v * 100) + '', rx - tw(Math.round(v * 100) + '', .8), cy - 4, KC.gold, .8);
@@ -246,12 +249,12 @@ export function kitRow(x, y, w, h, o) {
     const room = rx - lx - 2; let S = o.sc || .9; const lab = o.raw ? String(o.label) : L(String(o.label));
     while (S > .6 && tw(lab, S) > room) S = Math.round((S - .03) * 100) / 100;
     if (tw(lab, S) > room + .5) ovf(lab, room);
-    T_(lab, lx, cy - 9 * S / 2 - (o.sub ? 5 : 0), dis ? '#7c7f8a' : lit ? '#ffffff' : KC.txt, S);
+    T_(lab, lx, ly - 9 * S / 2 - (o.sub ? 5 : 0), dis ? '#7c7f8a' : o.danger ? '#ffb4a4' : lit ? '#ffffff' : KC.txt, S);
     if (o.sub) { let s2 = .72; const sb = L(String(o.sub)); while (s2 > .55 && tw(sb, s2) > room) s2 -= .03; T_(sb, lx, cy + 2, KC.dim, s2) }
   }
   if (sel) focusRing(x, y, w, h);
   if (o.fn || o.block) kitHit(x, y, w, h, dis ? null : o.fn);
-  return { hv, k, sel };
+  return { hv, k, sel, h };
 }
 /* body text in a chip: plain fill, no shadow on bright chips */
 function T0(s, x, y, col, sc, flat) { if (!flat) { T_(s, x, y, col, sc); return } const g = ctx(); s = L(String(s)); tw(s, sc); g.textBaseline = 'top'; g.textAlign = 'left'; g.fillStyle = col; g.fillText(s, x, y) }
@@ -276,7 +279,7 @@ export function listBegin(key, x, y, w, h) {
   g.save(); g.beginPath(); g.rect(x - 3, y, w + 6, h); g.clip();
   const l = LIST = { s, x, w, y0: y, h, y: y - Math.round(s.off) };
   l.section = t => { if (l.y > y - Math.round(s.off)) l.y += 5; if (l.y + 14 > l.y0 && l.y < l.y0 + l.h) kitSection(x, l.y, w, t); l.y += 14 };
-  l.row = (o, rh) => { rh = rh || 20; const r = kitRow(x, l.y, w, rh, o); l.y += rh + 3; return r };
+  l.row = (o, rh) => { rh = rh || 20; const r = kitRow(x, l.y, w, rh, o); l.y += (r.h || rh) + 3; return r };
   l.gap = n => { l.y += n };
   l.vis = hh => l.y + hh > l.y0 && l.y < l.y0 + l.h;
   /* wrapped paragraph (body font); bullet = gold diamond */

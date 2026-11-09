@@ -9,7 +9,8 @@ import { MP } from '../multiplayer/session.js';
 import { PKL, pkLiveFocus } from '../rendering/live-site-preview.js';
 import { PK, pkFocus, pkInit } from '../rendering/site-picker.js';
 import { cvs } from './canvases.js';
-import { BTN, BTNH, frame, GRN, GRNH, PAN } from './drawing.js';
+import { BTN, BTNH, frame, menuSkin, PAN } from './drawing.js';
+import { bevelBtn } from './menu-kit.js';
 import { hudState, U } from './hud.js';
 import { dIc, IC } from './icons.js';
 import { pill } from './minimap.js';
@@ -55,7 +56,8 @@ export function openPicker(){sitePickerState.picking=true;PKL.on=true;sitePicker
 
 export let confirmPick = function confirmPick(){if(!sitePickerState.pickPos||!sitePickerState.pickPos.ok)return;terrainState.CX=sitePickerState.pickPos.tx;terrainState.CY=sitePickerState.pickPos.ty;sessionState.CROT=sessionState.PKROT&3;sitePickerState.picking=false;settingsState.setupOpen=false;reset();sessionState.inGame=false;startGame()};
 
-export function drawPicker(UW,UH){settingsState.nameBox=null;if(sitePickerState.pvKey!==terrainState.SEED)buildPreview();hudState.uiHits=[];
+export function drawPicker(UW,UH){menuSkin(true);try{drawPickerIn(UW,UH)}finally{menuSkin(false)}}
+function drawPickerIn(UW,UH){settingsState.nameBox=null;if(sitePickerState.pvKey!==terrainState.SEED)buildPreview();hudState.uiHits=[];
  const pw=Math.min(UW-12,600),px=(UW-pw)/2,ph=50,py=UH-ph-6;hudState.uiRects=[U(px,5,pw,22),U(px,py,pw,ph)];
  const rw=pw>=420?112:0;
  frame(px,5,pw,22,PAN,6);dIc(IC.home,px+8,8,15);{const s='Choose where to found your kingdom';let sc=1.12;while(sc>.7&&twH(s,sc)>pw-(pw>=300?132:34)-rw)sc-=.04;TTL(s,px+26,16-TTS(sc)/2,sc)}
@@ -66,7 +68,7 @@ export function drawPicker(UW,UH){settingsState.nameBox=null;if(sitePickerState.
  if(!(MP.conn&&!MP.host))pill(px+8+bw+5,by,bw,18,'New map',BTN,BTNH,()=>{rollWorld();randomSite();pkFocus();sitePickerState.pickMsg=''},IC.map,.85);
  pill(px+8+(bw+5)*2,by,bw,18,'Back',BTN,BTNH,()=>{sitePickerState.picking=false;if(MP.conn)lobbyShow()},null,.85);
  if(pw>=560&&!(MP.conn&&!MP.host))pill(px+8+(bw+5)*3,by,bw,18,'Daily map',BTN,BTNH,()=>{dailyMap();randomSite();pkFocus();sitePickerState.pickMsg=''},IC.map,.85);
- const sw=Math.max(44,Math.min(140,pw-16-(bw+5)*(pw>=560?4:3)));pill(px+pw-8-sw,by,sw,18,MP.conn?'Place my castle':'Found kingdom',GRN,GRNH,confirmPick,IC.play,.9,false,!(sitePickerState.pickPos&&sitePickerState.pickPos.ok));
+ const sw=Math.max(44,Math.min(140,pw-16-(bw+5)*(pw>=560?4:3)));bevelBtn(px+pw-8-sw,by-1,sw,20,MP.conn?'Place my castle':'Found kingdom','go',confirmPick,{nav:false,sc:.9,dis:!(sitePickerState.pickPos&&sitePickerState.pickPos.ok)});
  const hv=PKL.on?PKL.hit:PK&&PK.hit;T_(sitePickerState.pickMsg||(hv?(hv.ok?'Good site - click to place your castle here':'Not suitable: needs dry, gentle land away from the edge'):'Map #'+((terrainState.SEED*1000)|0)),px+8,py+31,sitePickerState.pickMsg?'#ff9a9a':hv&&hv.ok?'#9ff0b0':'#b59773',.8);
  T_(PKL.on?'Click to place the castle  -  drag / WASD: move   Right drag: rotate   Wheel: zoom':'Left drag: move   Right drag: rotate   Wheel: zoom',px+8,py+40,'#b59773',.7)}
 

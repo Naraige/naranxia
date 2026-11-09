@@ -18,6 +18,7 @@ export function navBegin(on) {
 
 /* register a button: returns its index; hover moves the selection (and ticks) only when the mouse really moved */
 export function navAdd(fn, hovered) {
+  if (!NAV.active) return -1;
   const i = NAV.fns.length;
   NAV.fns.push(fn);
   const m = inputState.mouse, moved = m && (m.x !== NAV.mx || m.y !== NAV.my);

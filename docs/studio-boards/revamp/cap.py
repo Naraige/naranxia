@@ -37,7 +37,9 @@ with sync_playwright() as p:
         pg.wait_for_timeout(500);d=pg.evaluate(GRAB);(D/('%s_%s.png'%(PRE,n))).write_bytes(base64.b64decode(d.split(',')[1]));print(n,round(time.time()-T0),errs[:2],flush=True)
     for n,js in SCR:
         if ONLY and n not in ONLY:continue
-        pg.evaluate("()=>{%s%s}"%(CLOSE,js));shot(n)
+        pg.evaluate("()=>{%s%s}"%(CLOSE,js))
+        if n=='saves' and PRE!='A':pg.wait_for_timeout(400);pg.mouse.click(W*.5,H*.253);pg.mouse.move(W*.75,H*.7)
+        shot(n)
     if not ONLY or 'esc' in ONLY or 'end' in ONLY:
         pg.evaluate("()=>{%srollWorld();reset();startGame()}"%CLOSE);pg.wait_for_timeout(2500)
         if not ONLY or 'esc' in ONLY:

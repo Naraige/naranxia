@@ -5,7 +5,7 @@ import { GVER } from '../core/version.js';
 import { quitGame, startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
 import { BOSSN } from '../ai/wave-boss.js';
-import { drawFlag, drawLang, L, LANG, LANGS, languageState, T_, TC, TTL, tw } from '../i18n/language.js';
+import { drawFlag, drawLang, L, LANG, LANGS, languageState, T_, TC, tw } from '../i18n/language.js';
 import { MP } from '../multiplayer/session.js';
 import { bannerPattern, drawEmblemR, EMB, gemSwatch, saveTheme, shieldTile } from '../rendering/kingdom-banner.js';
 import { BANNER, retheme } from '../rendering/structures.js';
@@ -13,12 +13,11 @@ import { TFADE } from '../rendering/title-scene.js';
 import { SEAS, SEASC } from '../rendering/weather.js';
 import { uiBtn } from './build-menu.js';
 import { canvasesState } from './canvases.js';
-import { BTN, BTNH, dirtBack, focusRing, gold, menuSkin } from './drawing.js';
+import { BTN, BTNH, focusRing, gold, menuSkin } from './drawing.js';
 import { hudState, inR, U } from './hud.js';
 import { NAV, navAdd, navBegin, navEnd, navPoll } from './menu-nav.js';
 import { dIc, IC } from './icons.js';
 import { KNAMES, PAL, THEME } from './kingdom-theme.js';
-import { pill } from './minimap.js';
 import { continueLast, drawSaves, saveMenuState, svPeek } from './save-menu.js';
 import { drawSettings, nmI, settingsBack, settingsState } from './settings.js';
 import { openPicker } from './site-picker.js';
@@ -52,7 +51,7 @@ function titleBack(UW,UH){const g=canvasesState.ctx,gr=g.createLinearGradient(0,
 export function drawTitle(UW,UH){menuSkin(true);try{drawTitleScreen(UW,UH)}finally{kitEnd();menuSkin(false)}}
 
 function drawTitleScreen(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];
- const ig=sessionState.inGame,cx=UW/2,small=UH<330,fh=footH(UH),g=canvasesState.ctx;
+ const ig=sessionState.inGame,cx=UW/2,fh=footH(UH),g=canvasesState.ctx;
  const sub=settingsState.settingsOpen||saveMenuState.saveOpen||languageState.langOpen||settingsState.setupOpen||modeState.open||notesOpen||chrOpen||recOpen;
  titleBlur(!ig&&!sub);
  if(!ig&&TFADE>.003&&!window.__cam){g.fillStyle='rgba(4,3,8,'+(TFADE*.92).toFixed(3)+')';g.fillRect(0,0,UW,UH)}
@@ -61,7 +60,7 @@ function drawTitleScreen(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];hu
  const FT=(back,sel)=>menuFooter(UW,UH,sel?[['Esc','Back',back],['Enter','Select']]:[['Esc','Back',back]]);
  /* list screens: rows take the keyboard / pad focus, the first Enter only shows it */
  const LS=(back,draw,sel)=>{NAV.onEsc=back;navBegin(true);NAV.first=false;navPoll();draw(UW,UH,fh,back);kitEnd();FT(back,sel!==0);navEnd()};
- if(settingsState.settingsOpen){NAV.onEsc=null;navBegin(false);dirtBack(UW,UH);drawSettings(UW,UH-fh,cx);FT(settingsBack);return}
+ if(settingsState.settingsOpen){NAV.onEsc=null;navBegin(!settingsState.rebind);NAV.first=false;navPoll();drawSettings(UW,UH,fh,settingsBack);kitEnd();FT(settingsBack,1);navEnd();return}
  if(saveMenuState.saveOpen){LS(()=>{saveMenuState.saveOpen=false},drawSaves);return}
  if(languageState.langOpen){LS(()=>{languageState.langOpen=false},drawLang);return}
  if(settingsState.setupOpen){const b=()=>{settingsState.setupOpen=false};NAV.onEsc=null;navBegin(true);navPoll();drawSetup(UW,UH,fh,b);kitEnd();FT(b,1);navEnd();return}
@@ -69,7 +68,7 @@ function drawTitleScreen(UW,UH){settingsState.nameBox=null;hudState.uiHits=[];hu
  if(notesOpen){LS(()=>{notesOpen=false},drawNotes,0);return}
  if(chrOpen){LS(()=>{chrOpen=false},drawChronicle,0);return}
  if(recOpen){LS(()=>{recOpen=false},drawRecords,0);return}
- if(ig){drawGameMenu(UW,UH,cx,small,fh);return}
+ if(ig){drawGameMenu(UW,UH,fh);return}
  NAV.onEsc=null;navBegin(true);navPoll();
  titleBack(UW,UH);drawTitleWeather(UW,UH);
  drawLobby(UW,UH);
@@ -138,16 +137,22 @@ function drawLobby(UW,UH){const g=canvasesState.ctx,nar=UW<480,low=UH<300,m=nar?
  if(!nar&&!inputState.touch&&NAV.active&&kLeft-(px+pw)>190)menuFooter(UW,UH,[['^v','Move'],['Enter','Select']],{cy:UH-m-4-kh/2,cx:(px+pw+kLeft)/2,band:false});
  g.globalAlpha=1}
 
-/* in-game menu (Esc) */
-function drawGameMenu(UW,UH,cx,small,fh){const g=canvasesState.ctx;titleBack(UW,UH);NAV.onEsc=null;navBegin(!MP.on);navPoll();
- uiBtn(UW-30,6,24,20,BTN,BTNH,()=>{settingsState.settingsOpen=true},['Settings'],(x,yy,w,h)=>dIc(IC.gear,x+5,yy+3,14));
- g.fillStyle='rgba(0,0,0,.45)';g.fillRect(0,0,UW,UH);let y=Math.max(12,UH*.16);TTL('Game Menu',cx,y,1.75,'center');y+=34;
- const bw=Math.min(UW-24,Math.max(200,Math.min(300,UW*.5))),gp=small?5:9,bx=Math.round(cx-bw/2),nb=MP.on?3:4,bh=Math.max(16,Math.min(small?22:26,Math.floor((UH-(20+fh)-y)/nb)-gp));
- const hv=(x,yy,w,h)=>inR(inputState.mouse,U(x,yy,w,h)),mb=(lab,fn)=>{const k=navAdd(fn,hv(bx,y,bw,bh));pill(bx,y,bw,bh,lab,BTN,BTNH,fn,null,1.15,false,false,k>=0&&NAV.sel===k);y+=bh+gp};
- mb('Back to Game',startGame);if(!MP.on)mb('Save / Load',()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null});mb('Quit to title',quitGame);
- {const hw=Math.round((bw-gp)/2),row=(x,w,lab,fn)=>{const k=navAdd(fn,hv(x,y,w,bh));pill(x,y,w,bh,lab,BTN,BTNH,fn,null,1.15,false,false,k>=0&&NAV.sel===k)};row(bx,hw,'Options',()=>{settingsState.settingsOpen=true});row(bx+hw+gp,bw-hw-gp,sndOn?'Sound: on':'Sound: off',()=>{toggleSound()})}
+/* ================= in-game menu (Esc): same template, the game stays visible behind a dark veil ================= */
+function drawGameMenu(UW,UH,fh){NAV.onEsc=startGame;navBegin(!MP.on);NAV.first=false;navPoll();
+ const b=kitScreen(UW,UH,{key:'gm',title:'Game Menu',close:startGame,fh,maxW:420,veil:'rgba(9,10,15,.88)'}),l=listBegin('gm',b.x,b.y+1,b.w,b.h-14);
+ l.section('Game');
+ l.row({label:'Back to Game',fn:startGame},22);
+ if(!MP.on)l.row({label:'Save / Load',fn:()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null}},22);
+ l.row({label:'Options',fn:()=>{settingsState.settingsOpen=true}},22);
+ l.section('Sound');
+ l.row({label:'Sound',opts:[['On',sndOn,()=>{if(!sndOn)toggleSound()}],['Off',!sndOn,()=>{if(sndOn)toggleSound()}]],fn:()=>{toggleSound()}},22);
+ l.section('Session');
+ l.row({label:'Quit to title',danger:1,fn:quitGame},22);
+ listEnd();
  const ms=AC&&AC.state==='running'&&sndOn?'':(sndOn?'Press any key or click for the music':'Sound is off');
- TC(ms,cx,UH-fh-12,'#c8c8c8',.8);T_(GVER,UW-24,UH-fh-12,'#c8c8c8',.75);menuFooter(UW,UH,NAV.active?[['^v','Move'],['Enter','Select'],['Esc','Back to Game',startGame]]:[['Esc','Back to Game',startGame]]);
+ if(ms)T_(ms,b.x+1,b.y+b.h-9,'#948e80',.75);
+ kitEnd();
+ menuFooter(UW,UH,NAV.active?[['^v','Move'],['Enter','Select'],['Esc','Back to Game',startGame]]:[['Esc','Back to Game',startGame]]);
  navEnd()}
 
 /* ================= Records ================= */
