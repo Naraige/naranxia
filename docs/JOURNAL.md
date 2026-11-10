@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · armes et outils look B fusionné et allumé (réponse du Roi « 1B … 15B »), non livré
+- Le Roi a répondu 1B à 15B (planche armes, 12 lignes + 3 vues d'armée): branche fusionnée, `GEAR2_ON='all'` (`rendering/models/gear-style.js`).
+- Conflit de fusion dans `rendering/unit-instances.js` (clé de cache: mutants `m` + `gearSig()`), résolu à la main.
+- Tests après fusion: voir `dist/merge_tests9.txt`. Détail et reste à faire: `docs/studio-notes/gear.md` (projectiles, armes des morts-vivants, baliste, trébuchet, icônes non refaits).
+- Planche blocs toujours en attente du code du Roi (non fusionnée).
+
 ## 2026-11-10 · mutants look B fusionné et allumé (réponse du Roi « 1B … 8B »), non livré
 - Le Roi a répondu « 1B 2B 3B 4B 5B 6B 7B 8B »: branche fusionnée, `MUT2_ON='all'`, `npm run build:release` fait.
 - Tests après fusion: smoke det mp8 mpk ALL PASS (`dist/merge_tests8.txt`). Build de test republié (artifact de test).
@@ -20,6 +26,12 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Planche `docs/studio-boards/hds/` (gen.py): le Roi a répondu « 1c » (soleil uni + 4 rayons + marteau droit). Appliqué aux calques de la carte d'intro (`packages/game/index.html`), animations inchangées. Ligne 2 (écriture du nom) sans réponse: nom laissé tel quel.
 - Vérifié: build:release, une capture de l'intro. Tests non relancés (HTML de l'intro seul). Icônes desktop et favicon non changés.
 - Agent hd-model en cours: revamp armes/outils, planche `docs/studio-boards/gear/`, interrupteur par défaut éteint, rien à fusionner avant la réponse du Roi.
+## 2026-11-10 · armes et outils look B derrière un interrupteur (planche gear, non fusionné, non livré)
+- Demande du Roi: « revamp tout les armes / outils pour harmoniser le tout ». Interrupteur `GEAR2_ON` (`rendering/models/gear-style.js`), '' par défaut: rien ne change en jeu tant que le Roi n'a pas répondu.
+- Look B (`rendering/models/gear2.js`): une palette commune, épées (chevalier par niveau de recherche, capitaine, Roi), hallebarde, arc, 3 boucliers, 4 outils du paysan, charges portées, hampe d'étendard, canon. Détail et non-traités: `docs/studio-notes/gear.md`.
+- Planche: `docs/studio-boards/gear/board.html` (12 lignes + armée A/B), `rows.json` (ligne -> clés).
+- Vérifié (interrupteur éteint): `npm test -- det smoke` ALL PASS; les 8 hashes de `det` identiques à `release-v84` (base reconstruite à part). Scène de 157 unités: 348 draw calls en A et en B, 494 688 -> 494 420 triangles.
+- Non vérifié: temps de frame sur vraie carte graphique, `det` avec B activé (rendu seul), écran titre et icônes avec B, co-op. Non traités: projectiles (cubes instanciés), objets cuits dans les skins B des unités, armes des morts-vivants.
 
 ## 2026-11-10 · retours du Roi sur le build de test: son, intro, classement (non livré)
 - « Plus de son »: non reproduit en headless (musique mesurée ~-25 dBFS sur le titre, rendu neutralisé). Cause probable: ancien `dk_vol` bas ou `dk_snd=0` + nouvelle courbe au carré + -11 dB. Correctif: `TRIM` .285 -> .45 (+4 dB), remise à zéro unique de `dk_vol`/`dk_snd` (clé `dk_aud=2`). À confirmer par le Roi.

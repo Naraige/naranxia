@@ -3,6 +3,8 @@ import { PD, PDP, pxBox, pxScene, PXV, teamPal } from './pixel-geometry.js';
 import { VX } from './unit-parts.js';
 import { pBev, RDS, RWD } from './weapons.js';
 import { thp } from '../../ui/kingdom-theme.js';
+import { gear2 } from './gear-style.js';
+import { g2Cannon } from './gear2.js';
 
 /* ================= ROUND 3: capes, the bannerman's banner, the cannon, the swarm's skin tone ================= */
 export const pxZg=h=>{const A=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)),B=[0x4f,0x8a,0x44];return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*.32).toString(16).padStart(2,'0')).join('')};
@@ -33,7 +35,7 @@ export function pxBanner(X){const s=1/PXV,Tm=teamPal(thp()),G=PDP(['#9a6e1e','#d
   pxBox(X[k],-BW/2*s,-(g0-g1)*s,-.25*s,BW*s,(g0-g1)*s,.55*s,(f,u,v)=>{if(f==='T'||f==='D')return f==='T'&&i===0?G[1]:null;const r=r0+(nr-1-v);return px(f==='B'?W-1-u:u,r)},{mat:0,grid:[W,nr,1],ao:false})})}
 
 /* the cannon: bronze barrel with reinforcing rings and a cascabel, plank carriage, spoked wheels with iron tyres */
-export function pxCannon(){const G=newG(),BZ=PDP(['#5a3a10','#8a5a1e','#b8822e','#dca84a','#f2cc6a']),k=1/(PXV*VX);
+export function pxCannon(){if(gear2('cannon'))return g2Cannon();const G=newG(),BZ=PDP(['#5a3a10','#8a5a1e','#b8822e','#dca84a','#f2cc6a']),k=1/(PXV*VX);
  const wood=(f,u,v)=>((u+v)%5===0?RWD[1]:(f==='T'?RWD[3]:RWD[2])),iron=(f)=>f==='T'?RDS[3]:RDS[1];
  pxScene(()=>{
   for(const sx of[-1,1]){const x=sx*11.8,y=7.4,z=15.7,X0=sx>0?x:x-2.2;

@@ -1,0 +1,231 @@
+{
+ "title": "Armes et outils : A actuel, B nouveau",
+ "intro": "Chaque ligne : A = objet actuel, B = proposition (une seule palette pour tous les objets : acier, fer, or, bois, cuir, étoffe, en 3 à 4 tons comme les nouvelles unités ; armes en voxels sur la grille de pixels des unités). À gauche l'objet seul, à droite l'unité qui le tient, en bas la taille en jeu. Répondez par un code du type « 1B 2B 3A ». Rien n'est appliqué tant que vous n'avez pas répondu.",
+ "sections": [
+  {
+   "name": "Épée du chevalier (de gauche à droite : sans recherche, mailles, plates, rebelle)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r01_A.jpg",
+     "note": "Lame fine en demi-pixels, garde d'acier, la même épée à tous les niveaux."
+    },
+    {
+     "id": "B",
+     "img": "r01_B.jpg",
+     "note": "Lame large sur la grille de pixels des unités, 4 tons d'acier, gouttière sombre ; garde de fer, puis d'acier à pommeau de laiton, puis dorée avec les recherches ; émail du pommeau à la couleur du royaume (rebelles : la leur)."
+    }
+   ]
+  },
+  {
+   "name": "Épée du capitaine",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r02_A.jpg",
+     "note": "Lame fine, garde à bouts dorés."
+    },
+    {
+     "id": "B",
+     "img": "r02_B.jpg",
+     "note": "Lame plus longue à gouttière incrustée d'or, garde dorée aux bouts tournés vers la lame, bagues d'or, pierre lumineuse à la couleur du royaume."
+    }
+   ]
+  },
+  {
+   "name": "Épée du Roi",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r03_A.jpg",
+     "note": "Lame fine à points d'or, garde dorée, rubis."
+    },
+    {
+     "id": "B",
+     "img": "r03_B.jpg",
+     "note": "Lame large à gouttière d'or, lourde garde dorée avec un rubis sur chaque face, fusée rouge baguée d'or, pommeau à rubis."
+    }
+   ]
+  },
+  {
+   "name": "Hallebarde du garde royal",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r04_A.jpg",
+     "note": "Fer en croissant, crochet, gland bleu."
+    },
+    {
+     "id": "B",
+     "img": "r04_B.jpg",
+     "note": "Fer plus grand à deux encoches et tranchant clair, bec, pointe de lance, douille d'acier, collier d'or, gland à la couleur du royaume, hampe claire."
+    }
+   ]
+  },
+  {
+   "name": "Arc de l'archer",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r05_A.jpg",
+     "note": "Branches en segments inclinés, anneaux de laiton."
+    },
+    {
+     "id": "B",
+     "img": "r05_B.jpg",
+     "note": "Arc en voxels : branches en escalier (ventre clair, dos sombre), bagues d'or, pointes de corne, poignée de cuir à bande du royaume."
+    }
+   ]
+  },
+  {
+   "name": "Bouclier du chevalier (sans recherche, mailles, plates, rebelle, dos)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r06_A.jpg",
+     "note": "Bouclier Minecraft 12x22x1 : planches, bord de fer, rivets, poignée."
+    },
+    {
+     "id": "B",
+     "img": "r06_B.jpg",
+     "note": "Même construction ; palette commune, bord de fer sombre puis d'acier puis d'or avec les recherches, bord éclairé à gauche et ombré à droite, peinture éclairée en haut et ombrée en bas."
+    }
+   ]
+  },
+  {
+   "name": "Bouclier du capitaine",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r07_A.jpg",
+     "note": "Soleil d'or, chevron, bord de fer."
+    },
+    {
+     "id": "B",
+     "img": "r07_B.jpg",
+     "note": "Mêmes armes, bord toujours doré, peinture ombrée en 3 tons."
+    }
+   ]
+  },
+  {
+   "name": "Bouclier du garde royal",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r08_A.jpg",
+     "note": "Pal rouge, couronne et soleil."
+    },
+    {
+     "id": "B",
+     "img": "r08_B.jpg",
+     "note": "Mêmes armes, bord de la palette commune (fer, acier, or selon la recherche), peinture ombrée."
+    }
+   ]
+  },
+  {
+   "name": "Outils du paysan : hache, pioche, houe, marteau",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r09_A.jpg",
+     "note": "Cubes unis : manche orange, fer gris clair."
+    },
+    {
+     "id": "B",
+     "img": "r09_B.jpg",
+     "note": "Manche à veines en 3 tons, poignée de cuir, têtes de fer sombre à tranchant clair, dessinées pixel par pixel."
+    }
+   ]
+  },
+  {
+   "name": "Charges portées : bois, or, pierre",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r10_A.jpg",
+     "note": "Cubes unis."
+    },
+    {
+     "id": "B",
+     "img": "r10_B.jpg",
+     "note": "Rondins à écorce et bois de bout sous une sangle de cuir ; coffret cerclé de fer avec son or ; blocs de pierre taillée en 3 tons."
+    }
+   ]
+  },
+  {
+   "name": "Hampe de l'étendard",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r11_A.jpg",
+     "note": "Hampe unie, viroles et pointe en cubes unis."
+    },
+    {
+     "id": "B",
+     "img": "r11_B.jpg",
+     "note": "Hampe à veines, poignée de cuir, viroles et embouts d'or ombrés, pointe de lance d'acier en gradins. L'étoffe ne change pas."
+    }
+   ]
+  },
+  {
+   "name": "Canon",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r12_A.jpg",
+     "note": "Fût de bronze, affût de planches, roues à rayons."
+    },
+    {
+     "id": "B",
+     "img": "r12_B.jpg",
+     "note": "Même construction, repeinte : fût éclairé dessus et sombre dessous, bouche cerclée, planches veinées à ferrures, boulets à reflet."
+    }
+   ]
+  },
+  {
+   "name": "Armée en jeu, distance de jeu (pour comparer, pas de choix à faire)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "army_A.png",
+     "note": "Objets actuels : 157 unités à l’écran."
+    },
+    {
+     "id": "B",
+     "img": "army_B.png",
+     "note": "Tous les objets en B : mêmes unités, même caméra."
+    }
+   ]
+  },
+  {
+   "name": "Armée vue de face, caméra plus proche (pour comparer)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "armyf_A.png",
+     "note": "Objets actuels."
+    },
+    {
+     "id": "B",
+     "img": "armyf_B.png",
+     "note": "Objets B."
+    }
+   ]
+  },
+  {
+   "name": "Vue de face, agrandie x2 (pixels du jeu)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "army_A_x2.png",
+     "note": "Objets actuels."
+    },
+    {
+     "id": "B",
+     "img": "army_B_x2.png",
+     "note": "Objets B."
+    }
+   ]
+  }
+ ]
+}
