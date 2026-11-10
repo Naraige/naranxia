@@ -7,6 +7,7 @@ import { FOWH, FOWU, fowVisAt, LITN, litTex } from './fog.js';
 import { nightK } from './lighting.js';
 import { GLN, LMU } from './materials.js';
 import { swGeoV, SWV, swVar } from './models/swarm.js';
+import { mut2, MUT2_EYE } from './models/mutant-style.js';
 import { zSpec } from './models/zombies.js';
 import { CAM, scene } from './scene.js';
 import { gh } from './terrain.js';
@@ -78,7 +79,7 @@ const EYO0=[.642,.1],EYO={brute:[.577,.12],acid:[.594,.135],bomber:[.596,.09],mi
 
 const ZSC={zombie:1.35,husk:1.0,runner:1.2,brute:2.15,bomber:1.5,acid:1.3,miner:1.35};
 
-export function zEyes(u,a,vis){if(swarmRenderingState.ZEYN>=200||a<.03)return;swarmRenderingState.ZEYN++;const s=(ZSC[u.type]||1.35)*(u.sv||1)*UNITK,X=u.x/TS,Z=u.y/TS;const eo=EYO[u.type]||EYO0;eyePair(X,Z,(vis&&u.dy!=null?u.dy:gh(X,Z))+eo[0]*s,vis&&u.fa!==undefined?u.fa:u.face||0,.051*s,eo[1]*s,.045+.035*s,a*(.72+.28*Math.sin(sessionState.clockT*1.7+((u.uid|0)&255))))}
+export function zEyes(u,a,vis){if(swarmRenderingState.ZEYN>=200||a<.03)return;swarmRenderingState.ZEYN++;const s=(ZSC[u.type]||1.35)*(u.sv||1)*UNITK,X=u.x/TS,Z=u.y/TS;const eo=(mut2(u.type)&&!u.boss&&MUT2_EYE[u.type])||EYO[u.type]||EYO0;eyePair(X,Z,(vis&&u.dy!=null?u.dy:gh(X,Z))+eo[0]*s,vis&&u.fa!==undefined?u.fa:u.face||0,.051*s,eo[1]*s,.045+.035*s,a*(.72+.28*Math.sin(sessionState.clockT*1.7+((u.uid|0)&255))))}
 
 export function swRender(dt){if(!SWR.meshes)swInitR();const M=SWR.meshes,cnt=SWR.cnt||(SWR.cnt=new Int32Array(M.length));cnt.fill(0);SWU.value=sessionState.clockT;SWN8.value=nightK;
  if(SW.n){const R=(CAM.dist*1.7+26)*TS,cx=CAM.x*TS,cy=CAM.z*TS,al=Math.min(1,SW.acc/SWDT),k=Math.min(1,dt*9);let ng=0;

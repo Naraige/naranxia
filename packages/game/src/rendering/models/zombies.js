@@ -3,6 +3,8 @@ import { lighten } from '../kingdom-banner.js';
 import { VX } from './unit-parts.js';
 import { PXON } from './units.js';
 import { pxZombie } from './zombie-skins.js';
+import { mut2 } from './mutant-style.js';
+import { pxMutant } from './mutants.js';
 import { thp } from '../../ui/kingdom-theme.js';
 
 export const zombiesState = {
@@ -217,7 +219,7 @@ export function zBuild(S,E){const LD=!!S.lod,r=zRand(S.seed^1540483477),[SK,SKD,
   for(const x of[-1.45,0,1.45])b('AL',x-.55,-16.6,-.9,x+.55,-11.4,.9,BN2)}}
 
 /* unit models (Minecraft-style groups; 1 px = .46 vb) */
-export function zombieKit(type,ZV,P){if(PXON&&!window.__ZOLD){pxZombie(type,ZV,P);return}const{G,HG,LA,LG,AG}=P,k=.46,S=zSpec(type,ZV?ZV.v:0,ZV?ZV.hint:null);
+export function zombieKit(type,ZV,P){if(PXON&&!window.__ZOLD){const mk=ZV&&ZV.hint==='boss'?'boss':type;if(mut2(mk))pxMutant(mk,type,ZV,P);else pxZombie(type,ZV,P);return}const{G,HG,LA,LG,AG}=P,k=.46,S=zSpec(type,ZV?ZV.v:0,ZV?ZV.hint:null);
 /* fixed tiny epsilon (bxc's counter-based one could swallow sub-pixel details such as eyes) */
  const put=(Gx,m,yo,x0,y0,z0,x1,y1,z1,c)=>{const o=geometryState.BMAT;geometryState.BMAT=m;try{const e=.00012,q=k*VX;addBox(Gx,x0*q-e,(yo+y0*k)*VX-e,z0*q-e,x1*q+e,(yo+y1*k)*VX+e,z1*q+e,rgb(c))}finally{geometryState.BMAT=o}};
  zBuild(S,(R,x0,y0,z0,x1,y1,z1,c,m)=>{
