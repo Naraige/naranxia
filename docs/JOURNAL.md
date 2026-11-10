@@ -7,7 +7,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 ## 2026-11-11 · armes et outils look B fusionné et allumé (réponse du Roi « 1B … 15B »), non livré
 - Le Roi a répondu 1B à 15B (planche armes, 12 lignes + 3 vues d'armée): branche fusionnée, `GEAR2_ON='all'` (`rendering/models/gear-style.js`).
 - Conflit de fusion dans `rendering/unit-instances.js` (clé de cache: mutants `m` + `gearSig()`), résolu à la main.
-- Tests après fusion: voir `dist/merge_tests9.txt`. Détail et reste à faire: `docs/studio-notes/gear.md` (projectiles, armes des morts-vivants, baliste, trébuchet, icônes non refaits).
+- Tests après fusion: smoke det mp8 mpk mp_resync, résultat dans `dist/merge_tests9.txt`; build de test republié. Détail et reste à faire: `docs/studio-notes/gear.md` (projectiles, armes des morts-vivants, baliste, trébuchet, icônes non refaits).
 - Planche blocs toujours en attente du code du Roi (non fusionnée).
 
 ## 2026-11-10 · mutants look B fusionné et allumé (réponse du Roi « 1B … 8B »), non livré
