@@ -21,7 +21,9 @@ if(zlib.gunzipSync(gz).toString('utf8')!==min)throw new Error('gzip round trip f
 const b64=gz.toString('base64');
 const loader="(()=>{const e=document.getElementById('nxz'),f=m=>document.body.insertAdjacentHTML('beforeend','<div style=\"position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;background:#141018;color:#f0e6d0;font:16px Georgia,serif;padding:24px;text-align:center\">'+m+'</div>');"+
  "if(!window.DecompressionStream||!window.Blob||!Blob.prototype.stream){f('This browser is too old to unpack the game. Please update it, or open Naranxia_"+V+"_source.html.');return}"+
- "try{const b=Uint8Array.from(atob(e.textContent.trim()),c=>c.charCodeAt(0));new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('gzip'))).text().then(t=>{e.remove();const s=document.createElement('script');s.textContent=t;document.body.appendChild(s)}).catch(x=>f('Could not unpack the game: '+x))}catch(x){f('Could not unpack the game: '+x)}})();";
+ "let d=0;const u=()=>{if(d)return;d=1;try{const b=Uint8Array.from(atob(e.textContent.trim()),c=>c.charCodeAt(0));new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('gzip'))).text().then(t=>{e.remove();const s=document.createElement('script');s.textContent=t;document.body.appendChild(s)}).catch(x=>f('Could not unpack the game: '+x))}catch(x){f('Could not unpack the game: '+x)}};"+
+ // unpack only once the launch splash has been painted (two animation frames), so the intro starts before the heavy work; a hidden tab gets no frame: timer fallback; the headless tests unpack at once, as before
+ "if(navigator.webdriver&&!window.__nxBootReal)u();else{requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(u,0)));setTimeout(u,700)}})();";
 const headPack=head.replace('<html lang="en">','<html lang="en"><!-- Naranxia '+V+' - compressed build (the game code is gzip+base64 below and unpacks itself at load). Readable source: Naranxia_'+V+'_source.html -->');
 fs.writeFileSync('dist/naranxia.html',headPack+'<script type="text/plain" id="nxz">'+b64+'</script>\n<script>'+loader+'</script></body></html>\n');
 const sz=f=>fs.statSync(f).size;

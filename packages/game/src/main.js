@@ -3,7 +3,7 @@ import { initializeWorkplaces } from './ai/workplaces.js';
 import { initializeZombieLanes } from './ai/zombie-lanes.js';
 import { initializeSound } from './audio/sound.js';
 import { initializeBackgroundLoop } from './core/background-loop.js';
-import { initializeFrameLoop } from './core/frame-loop.js';
+import { initializeFrameLoop, startFrameLoop, warmFrame } from './core/frame-loop.js';
 import { initializeRandom } from './core/random.js';
 import { installBrowserConsole } from './debug/browser-console.js';
 import { initializeDiagnostics } from './debug/diagnostics.js';
@@ -52,7 +52,7 @@ import { initializeStructures } from './rendering/structures.js';
 import { initializeSwarmRendering } from './rendering/swarm.js';
 import { initializeTerrainRendering } from './rendering/terrain.js';
 import { initializeTerrainProps } from './rendering/terrain-props.js';
-import { initializeTitleScene } from './rendering/title-scene.js';
+import { initializeTitleScene, prepTitle } from './rendering/title-scene.js';
 import { initializeUnitInstances } from './rendering/unit-instances.js';
 import { initializeWeather } from './rendering/weather.js';
 import { initializeBuildMenu } from './ui/build-menu.js';
@@ -60,7 +60,7 @@ import { initializeCanvases } from './ui/canvases.js';
 import { initializeAdditionalIcons, initializeBuildingIcons, initializeIcons } from './ui/icons.js';
 import { initializeKingdomTheme } from './ui/kingdom-theme.js';
 import { initializeMinimapDisplay } from './ui/minimap.js';
-import { initializeClaudeIntro } from './ui/intro-claude.js';
+import { initializeClaudeIntro, playClaudeIntro } from './ui/intro-claude.js';
 import { initializeSaveMenu } from './ui/save-menu.js';
 import { initializeSettings } from './ui/settings.js';
 import { initializeMenuNav } from './ui/menu-nav.js';
@@ -68,89 +68,30 @@ import { initializeSitePickerMenu } from './ui/site-picker.js';
 import { initializeTypography } from './ui/typography.js';
 import { initializeTerrain } from './world/terrain.js';
 
-// Set up the canvas and simulation data before building any scenes.
-initializeRandom();
-initializeDiagnostics();
-initializeCanvases();
-initializeRules();
-initializeTerrain();
-initializeSessionPreferences();
-initializeKingdomTheme();
-initializeConstruction();
-initializeEconomy();
-initializeSpatialIndex();
-initializeWorkplaces();
-initializeZombieLanes();
-initializeSwarm();
+import { runBoot } from './core/boot.js';
 
-// Materials and models share the scene's geometry and shader setup.
-initializeScene();
-initializeMaterials();
-initializeTerrainRendering();
-initializeTerrainProps();
-initializeFog();
-initializeTerrainMaterial();
-initializeFogOverlay();
-initializePixelGeometry();
-initializeSoldierSkins();
-initializeWeapons();
-initializeRoyalSkins();
-initializeUnits();
-initializeSwarmModels();
-initializeUnitInstances();
-initializeStructureModels();
-initializeStructures();
-initializeBuildingParts();
-initializeEffects();
-initializeCamera();
-initializeBuildPreview();
-initializeWorldEffects();
-initializeSwarmRendering();
-initializeRoutes();
-initializeSceneLighting();
-initializePostProcessing();
-
-// Prepare the title, menus, and input, then build the initial world.
-initializeSound();
-initializeTitleScene();
-initializeSitePicker();
-initializeTypography();
-initializeLanguage();
-initializeTranslations();
-initializeTranslationLookup();
-initializeIcons();
-initializeKingdomBanner();
-initializeMinimapDisplay();
-initializeBuildMenu();
-initializeSitePickerMenu();
-initializeSettings();
-initializeMenuNav();
-initializeDesktopInput();
-initializeFrameLoop();
-
-// The first animation callback runs after these synchronous registrations.
-initializeLockstep();
-initializeCommands();
-initializeResync();
-initializeMultiplayerFrame();
-initializeLobbyState();
-initializeConnection();
-initializeLobby();
-initializeAdditionalIcons();
-initializeControlGroups();
-initializeShortcuts();
-initializeChat();
-initializePings();
-initializeAutosave();
-initializeChatMessages();
-initializeSitePreview();
-initializeBuildingIcons();
-initializeBackgroundLoop();
-initializeBuildShortcuts();
-initializePixelIcons();
-initializeClaudeIntro();
-initializeSaveMenu();
-initializeWeather();
-initializeTraps();
-initializeTouch();
-installBrowserConsole();
+// Start-up steps, in order: canvas and simulation data, then materials and models, then title, menus and input,
+// then the registrations the first animation callback needs. core/boot.js runs them in slices so the launch
+// cards (index.html, styles/boot.css) keep animating, and starts the frame loop when the intro is over.
+runBoot([
+  initializeRandom, initializeDiagnostics, initializeCanvases, initializeRules,
+  initializeTerrain, initializeSessionPreferences, initializeKingdomTheme, initializeConstruction,
+  initializeEconomy, initializeSpatialIndex, initializeWorkplaces, initializeZombieLanes,
+  initializeSwarm, initializeScene, initializeMaterials, initializeTerrainRendering,
+  initializeTerrainProps, initializeFog, initializeTerrainMaterial, initializeFogOverlay,
+  initializePixelGeometry, initializeSoldierSkins, initializeWeapons, initializeRoyalSkins,
+  initializeUnits, initializeSwarmModels, initializeUnitInstances, initializeStructureModels,
+  initializeStructures, initializeBuildingParts, initializeEffects, initializeCamera,
+  initializeBuildPreview, initializeWorldEffects, initializeSwarmRendering, initializeRoutes,
+  initializeSceneLighting, initializePostProcessing, initializeSound, initializeTitleScene,
+  initializeSitePicker, initializeTypography, initializeLanguage, initializeTranslations,
+  initializeTranslationLookup, initializeIcons, initializeKingdomBanner, initializeMinimapDisplay,
+  initializeBuildMenu, initializeSitePickerMenu, initializeSettings, initializeMenuNav,
+  initializeDesktopInput, initializeFrameLoop, initializeLockstep, initializeCommands,
+  initializeResync, initializeMultiplayerFrame, initializeLobbyState, initializeConnection,
+  initializeLobby, initializeAdditionalIcons, initializeControlGroups, initializeShortcuts,
+  initializeChat, initializePings, initializeAutosave, initializeChatMessages,
+  initializeSitePreview, initializeBuildingIcons, initializeBackgroundLoop, initializeBuildShortcuts,
+  initializePixelIcons, initializeClaudeIntro, initializeSaveMenu, initializeWeather,
+  initializeTraps, initializeTouch, installBrowserConsole,
+], { firstGl: initializeScene, prepTitle, warmFrame, startFrameLoop, playClaude: playClaudeIntro });

@@ -121,6 +121,9 @@ const TSHOTS=[
 function titleEyes(){const N=THORDE.reduce((a,H)=>a+H.arr.length,0),pos=new Float32Array(N*6),gm=new THREE.BufferGeometry();gm.setAttribute('position',new THREE.BufferAttribute(pos,3));
  TEYE=new THREE.Points(gm,new THREE.PointsMaterial({color:0xff3a22,size:.26,transparent:true,opacity:.95,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}));TEYE.frustumCulled=false;TS3.add(TEYE)}
 
+/* start-up: build the title scene ahead of its first frame */
+export function prepTitle(){if(!titleInit)initTitle()}
+
 export function renderTitle(dt){if(!titleInit)initTitle();if(titleSceneState.titleDirty){buildArmy();titleSceneState.titleDirty=false}TT+=dt;
  /* camera: slow dolly with sway, scene shifted right on wide screens so the menu sits left */
  const wide=cv.width/cv.height>1.25,sh=0,t=TT;
