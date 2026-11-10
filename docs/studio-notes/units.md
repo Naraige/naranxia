@@ -29,8 +29,11 @@
 Non traité: le canon lui-même (machine, `pxCannon`), les armes et boucliers (`weapons.js`, `heraldry.js`), la nuée instanciée (`rendering/swarm.js`, géométrie LOD `zBuild`, inchangée: au loin la horde garde l'ancien aspect), l'armée de l'écran titre (prend automatiquement le look choisi pour knight).
 
 ### Coût (mesuré)
-- Triangles par modèle (A -> B), mêmes nombres de meshes par unité: voir `docs/studio-boards/units/tri.json`. Les unités en plates baissent (chevalier 5098 -> 3580, garde 5314 -> 3802, capitaine 5298 -> 4288) parce que les cubes de base entièrement couverts ne sont plus dessinés; les unités en tissu montent (paysan 1154 -> ~2300, archer 1910 -> ~3200, éclaireur 990 -> ~2100).
-- Scène chargée (157 unités, `_src/army.py`): voir les chiffres finaux plus bas.
+- Triangles par modèle (A -> B), même nombre de meshes par unité (vérifié pour les 28 modèles rendus): `docs/studio-boards/units/tri.json`. Les unités en plates baissent (chevalier 5098 -> 3580, garde 5314 -> 3802, capitaine 5298 -> 4288) parce que les cubes de base entièrement couverts ne sont plus dessinés; les unités en tissu montent (paysan 1154 -> 2212, archer 1910 -> 2880, éclaireur 990 -> 1510, équipe du canon 4382 -> 5774); morts-vivants +2 à +30 %.
+- Scène chargée (`_src/army.py`, 157 unités: toute la liste en rangs + 63 morts-vivants + un boss, 1280x720, distance 20): A 338 draw calls, 476 498 triangles; B 343 draw calls (+5: le modèle propre du boss), 493 202 triangles (+3,5 %).
+- Temps de frame de `render3D` (GL logiciel, machine partagée à charge 12-19, 12 frames): A médiane 10,5 ms / min 6,8 ms; B médiane 15,4 ms / min 5,2 ms. Passages précédents: A 16,5 / 9,3 et B 18,2 / 9,0; A 16,3 / 11,4 et B 19,7 / 14,7 (autre cadrage). La médiane de B est plus haute aux 3 passages (+10 à +45 %) alors que les minimums se valent et que B a toujours été mesuré en second; l'écart entre passages dépasse l'écart A/B. Non concluant: à mesurer sur une vraie carte graphique avant de livrer.
+- Tests sur la branche (look par défaut = A): `npm test -- det smoke` ALL PASS. Les 8 hashes de `det` sont identiques à ceux de `release-v84` (base reconstruite à part et rejouée).
+- Non fait: `det` avec le look B activé (le look n'est lu que par le rendu), essai sur vraie carte graphique, écran titre et icônes d'unités (`pixel-icons.js` prend la tête du modèle) regardés avec le look B, co-op.
 
 ### Planche
 - `docs/studio-boards/units/board.html` (autonome, format `tools/board.py`), cartes `rNN_{A,B}.jpg`, `spec.json`, `rows.json` (numéro de ligne -> types), captures d'armée `army_A.png` / `army_B.png`.
