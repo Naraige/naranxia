@@ -4,6 +4,7 @@ import { GLN, LMU, matV } from './materials.js';
 import { heraldryState } from './models/heraldry.js';
 import { HANDY, mkModel, toolGeos, UM, VX } from './models/unit-parts.js';
 import { uv2 } from './models/unit-style.js';
+import { mut2 } from './models/mutant-style.js';
 import { alv, unitsState } from './models/units.js';
 import { zombiesState } from './models/zombies.js';
 import { scene, SHADOWS } from './scene.js';
@@ -41,7 +42,7 @@ export let CARRYG;
 
 const RS3={king:.52,guard:.46,gunner:.3,gunner2:.3,cannon:.56,husk:.26,peasant:.3,knight:.4,archer:.34,bannerman:.34,captain:.45,zombie:.32,runner:.3,brute:.5,bomber:.4,acid:.32,miner:.34,scout:.3,engineer:.3,envoy:.3};
 
-export function buildUnitGroup(type,t,zv,rk){unitsState.ALB=t===0?alv():0;rk=rk|0;const k=type+t+'a'+unitsState.ALB+heraldryState.MVAR+(zv?'v'+zv.v+(zv.hint||''):'')+(rk?'k'+rk:'')+(uv2(type)?'n':''),mdl=UM[k]||(UM[k]=(()=>{const zo=zombiesState.ZVAR;zombiesState.ZVAR=zv||null;unitsState.RKB=rk;try{return mkModel(type,t)}finally{zombiesState.ZVAR=zo;unitsState.RKB=0}})()),g=new THREE.Group();
+export function buildUnitGroup(type,t,zv,rk){unitsState.ALB=t===0?alv():0;rk=rk|0;const k=type+t+'a'+unitsState.ALB+heraldryState.MVAR+(zv?'v'+zv.v+(zv.hint||''):'')+(rk?'k'+rk:'')+(uv2(type)?'n':'')+(mut2(zv&&zv.hint==='boss'?'boss':type)?'m':''),mdl=UM[k]||(UM[k]=(()=>{const zo=zombiesState.ZVAR;zombiesState.ZVAR=zv||null;unitsState.RKB=rk;try{return mkModel(type,t)}finally{zombiesState.ZVAR=zo;unitsState.RKB=0}})()),g=new THREE.Group();
  const mat=matV.clone();mat.onBeforeCompile=UNITSH;mat.emissive=new THREE.Color(0,0,0);
  const mesh=geo=>{const m=new THREE.Mesh(geo,mat);m.castShadow=SHADOWS&&type!=='husk';return m};
  const body=new THREE.Group();body.position.y=mdl.hip;const tor=mesh(mdl.torso);tor.position.y=-mdl.hip;body.add(tor);

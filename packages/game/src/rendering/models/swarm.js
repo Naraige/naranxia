@@ -1,6 +1,7 @@
 import { addBox, newG, rgb } from '../geometry.js';
 import { pxZg } from './unit-accessories.js';
 import { uv2 } from './unit-style.js';
+import { mut2 } from './mutant-style.js';
 import { PXON } from './units.js';
 import { zBuild, ZNV } from './zombies.js';
 import { SWPX } from '../swarm.js';
@@ -21,7 +22,7 @@ export const SWV=[];
 
 export const swVar=sd=>((sd>>3)^(sd>>9))&15;
 
-export const zKeyOf=u=>{const n=ZNV[u.type];if(!n||u.t!==1)return null;if(u.boss&&uv2('boss'))return{v:(u.bn|0)%6,hint:'boss'};const h=(u.uid*2654435761)>>>0;return u.zk&&u.zk!=='zombie'?{v:h%6,hint:u.zk}:{v:h%n,hint:null}};
+export const zKeyOf=u=>{const n=ZNV[u.type];if(!n||u.t!==1)return null;if(u.boss&&(uv2('boss')||mut2('boss')))return{v:(u.bn|0)%6,hint:'boss'};const h=(u.uid*2654435761)>>>0;return u.zk&&u.zk!=='zombie'?{v:h%6,hint:u.zk}:{v:h%n,hint:null}};
 
 export function initializeSwarmModels() {
   for(let v=0;v<16;v++)SWV.push(v<10?['zombie',100+v]:v<13?['husk',100+v]:['runner',100+v]);

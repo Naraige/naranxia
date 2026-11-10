@@ -1,0 +1,11 @@
+{
+ "note": "triangles and meshes per model, one variant per type (docs/studio-boards/mutants/_src/render.py)",
+ "husk": {"A": {"triangles": 2604, "meshes": 6}, "B": {"triangles": 1992, "meshes": 6}},
+ "runner": {"A": {"triangles": 1862, "meshes": 6}, "B": {"triangles": 1420, "meshes": 6}},
+ "brute": {"A": {"triangles": 1826, "meshes": 6}, "B": {"triangles": 2806, "meshes": 6}},
+ "bomber": {"A": {"triangles": 2050, "meshes": 6}, "B": {"triangles": 2744, "meshes": 6}},
+ "acid": {"A": {"triangles": 1926, "meshes": 6}, "B": {"triangles": 2542, "meshes": 6}},
+ "miner": {"A": {"triangles": 2106, "meshes": 6}, "B": {"triangles": 2972, "meshes": 6}},
+ "boss": {"A": {"triangles": 2420, "meshes": 6}, "B": {"triangles": 4174, "meshes": 6}},
+ "horde_scene": {"A": {"calls": 191, "triangles": 292906}, "B": {"calls": 191, "triangles": 307788}}
+}
