@@ -1,96 +1,73 @@
 import { hex } from '../core/math.js';
-import { THREE } from './three.js';
-import { EMBART, EMBG, EMBNAME } from './emblem-art.js';
 import { BANNER, bannerTex } from './structures.js';
 import { canvasesState, cvs } from '../ui/canvases.js';
-import { circ, ICN, ln, poly } from '../ui/drawing.js';
+import { circ, ICN, ln, poly, rrg } from '../ui/drawing.js';
 import { IC, thIcons } from '../ui/icons.js';
 import { PAL, THEME } from '../ui/kingdom-theme.js';
 
-/* ---- kingdom banner & emblems: pixel art, drawn on a grid and blitted at a whole number of screen pixels per art pixel ----
-   Visual only (THEME lives in localStorage, never in a save or a co-op message). The emblem index is what THEME.e stores: the art list is append only. */
-export const EMB=EMBART;
-export { EMBNAME };
+/* ---- kingdom banner & emblems ---- */
+export const EMB=[
+ g=>{rrg(g,6,1.5,4,13,1,g.fillStyle,'rgba(0,0,0,.5)',.5);rrg(g,2,5.5,12,4,1,g.fillStyle,'rgba(0,0,0,.5)',.5)},
+ g=>{const p=[];for(let i=0;i<10;i++){const r=i%2?3.2:7.2,a=-Math.PI/2+i*Math.PI/5;p.push([8+Math.cos(a)*r,8.4+Math.sin(a)*r])}poly(g,p,g.fillStyle,'rgba(0,0,0,.5)',.5)},
+ g=>{poly(g,[[1.5,12.5],[1,4.5],[4.8,8],[8,2.5],[11.2,8],[15,4.5],[14.5,12.5]],g.fillStyle,'rgba(0,0,0,.5)',.5);rrg(g,1.5,11.6,13,2.4,.8,g.fillStyle,'rgba(0,0,0,.5)',.5)},
+ g=>{const f=g.fillStyle;ln(g,3,13,13,3,'rgba(0,0,0,.5)',3);ln(g,13,13,3,3,'rgba(0,0,0,.5)',3);ln(g,3,13,13,3,f,1.8);ln(g,13,13,3,3,f,1.8);ln(g,2.6,9.6,6.4,13.4,f,1.6);ln(g,13.4,9.6,9.6,13.4,f,1.6)},
+ g=>{rrg(g,4.2,6,7.6,8.6,.6,g.fillStyle,'rgba(0,0,0,.5)',.5);rrg(g,3,4.4,10,2.2,.4,g.fillStyle,'rgba(0,0,0,.5)',.5);[3,6.9,10.8].forEach(x=>rrg(g,x,2.4,2.2,2.2,.3,g.fillStyle,'rgba(0,0,0,.5)',.5))},
+ g=>{const f=g.fillStyle;circ(g,8,8,3.4,f,'rgba(0,0,0,.5)',.5);for(let i=0;i<8;i++){const a=i*Math.PI/4;ln(g,8+Math.cos(a)*4.8,8+Math.sin(a)*4.8,8+Math.cos(a)*7,8+Math.sin(a)*7,f,1.5)}},
+ g=>{poly(g,[[8,1.5],[13,7],[3,7]],g.fillStyle,'rgba(0,0,0,.5)',.5);poly(g,[[8,4.5],[13.6,10.5],[2.4,10.5]],g.fillStyle,'rgba(0,0,0,.5)',.5);rrg(g,7,10,2,4.5,.4,g.fillStyle,'rgba(0,0,0,.5)',.5)},
+ g=>{poly(g,[[9.2,1],[3,9],[7.4,9],[6,15],[13,6.4],[8.6,6.4]],g.fillStyle,'rgba(0,0,0,.5)',.5)},
+ g=>{const f=g.fillStyle;g.beginPath();g.arc(8,8,6.6,Math.PI*.28,Math.PI*1.72,false);g.arc(10.6,8,5.1,Math.PI*1.62,Math.PI*.38,true);g.closePath();g.fillStyle=f;g.fill();g.lineWidth=.5;g.strokeStyle='rgba(0,0,0,.5)';g.stroke();const p=[];for(let i=0;i<10;i++){const r=i%2?.9:2.1,a=-Math.PI/2+i*Math.PI/5;p.push([12.2+Math.cos(a)*r,4.4+Math.sin(a)*r])}poly(g,p,f,null)},
+ g=>{const f=g.fillStyle;circ(g,8,3,1.7,null,'rgba(0,0,0,.5)',2.4);circ(g,8,3,1.7,null,f,1.4);rrg(g,7.2,4.4,1.6,9.2,.4,f,'rgba(0,0,0,.5)',.5);rrg(g,4,6,8,1.5,.5,f,'rgba(0,0,0,.5)',.5);g.beginPath();g.arc(8,9,5,Math.PI*.12,Math.PI*.88,false);g.lineWidth=2.6;g.strokeStyle='rgba(0,0,0,.5)';g.stroke();g.lineWidth=1.6;g.strokeStyle=f;g.stroke();poly(g,[[1.8,9.6],[3.6,8.4],[3.8,11]],f,null);poly(g,[[14.2,9.6],[12.4,8.4],[12.2,11]],f,null)},
+ g=>{const f=g.fillStyle;circ(g,5,5,3.2,null,'rgba(0,0,0,.5)',2.8);circ(g,5,5,3.2,null,f,1.8);ln(g,7.2,7.2,14,14,'rgba(0,0,0,.5)',2.8);ln(g,7.2,7.2,14,14,f,1.8);ln(g,11.4,11.4,9.6,13.2,f,1.6);ln(g,13,13,11.4,14.6,f,1.6)},
+ g=>{const f=g.fillStyle;ln(g,4,14.5,11.5,3,'rgba(0,0,0,.5)',2.4);ln(g,4,14.5,11.5,3,'#c8a070',1.4);poly(g,[[9.4,2.2],[14.6,4.6],[14,9.8],[11.4,6.6]],f,'rgba(0,0,0,.5)',.5)},
+ g=>{const f=g.fillStyle,S='rgba(0,0,0,.5)';poly(g,[[8,1.5],[10,5],[9.2,9.5],[8,10.5],[6.8,9.5],[6,5]],f,S,.5);poly(g,[[6.6,9],[3.6,7.6],[2,4.6],[3.2,3.2],[4.6,5.4],[6.4,6.6]],f,S,.5);poly(g,[[9.4,9],[12.4,7.6],[14,4.6],[12.8,3.2],[11.4,5.4],[9.6,6.6]],f,S,.5);rrg(g,4.6,10,6.8,1.8,.5,f,S,.5);poly(g,[[7,11.8],[9,11.8],[9.6,14.6],[6.4,14.6]],f,S,.5)},
+ g=>{const f=g.fillStyle,S='rgba(0,0,0,.5)';poly(g,[[8,4.6],[11,6.2],[15,4.2],[13.6,7.4],[10.6,9],[9.6,12],[8,14.4],[6.4,12],[5.4,9],[2.4,7.4],[1,4.2],[5,6.2]],f,S,.5);circ(g,8,3.4,1.5,f,S,.5)},
+ g=>{const f=g.fillStyle,S='rgba(0,0,0,.5)';poly(g,[[8,1.2],[11.4,6.4],[12.4,10],[10.8,13.4],[8,14.8],[5.2,13.4],[3.6,10],[4.6,6.4],[6.4,8.6]],f,S,.5);poly(g,[[8,7.4],[9.8,10.4],[8,13.2],[6.2,10.4]],'rgba(0,0,0,.25)',null)},
+ g=>{const f=g.fillStyle,S='rgba(0,0,0,.5)';poly(g,[[2.4,2],[13.6,2],[13.6,8],[8,14.6],[2.4,8]],f,S,.5);poly(g,[[2.4,9],[8,4.6],[13.6,9],[13.6,11],[8,6.8],[2.4,11]],'rgba(0,0,0,.28)',null)}];
 
 export const lighten=(c,k)=>{const h=hex(c);return '#'+h.map(v=>Math.round(v+(255-v)*k).toString(16).padStart(2,'0')).join('')};
-/* tone: k > 0 towards white, k < 0 towards black */
-export const tone=(c,k)=>k>=0?lighten(c,k):'#'+hex(c).map(v=>Math.round(v*(1+k)).toString(16).padStart(2,'0')).join('');
 
-const METAL={g:{o:'#3a2406',h:'#fff6c4',l:'#ffd860',m:'#e8b030',d:'#a8701a',w:'#c79a62',u:'#a37645',v:'#70502c'},
- s:{o:'#1c2232',h:'#ffffff',l:'#e4e9f2',m:'#b8c2d2',d:'#7c879c',w:'#c79a62',u:'#a37645',v:'#70502c'}};
-const embMetal=c=>c===3||c===10||c===11?'s':'g';
+export function bannerPattern(g,W,H,p,c2){g.fillStyle=c2;g.beginPath();
+ if(p===1)g.rect(W/2,0,W/2,H);else if(p===2){g.moveTo(0,H*.62);g.lineTo(W/2,H*.3);g.lineTo(W,H*.62);g.lineTo(W,H*.8);g.lineTo(W/2,H*.48);g.lineTo(0,H*.8)}
+ else if(p===3){g.moveTo(0,H*.08);g.lineTo(W*.3,0);g.lineTo(W,H*.62);g.lineTo(W,H*.84)}else if(p===4){g.rect(0,0,W/2,H*.38);g.rect(W/2,H*.38,W/2,H)}
+ else if(p===5)g.rect(0,H*.3,W,H*.2);else if(p===6){g.rect(0,0,W,H);g.rect(W*.16,H*.08,W*.68,H*.86)}else if(p===7){g.moveTo(0,0);g.lineTo(W*.18,0);g.lineTo(W,H*.72);g.lineTo(W,H*.88);g.closePath();g.moveTo(W,0);g.lineTo(W*.82,0);g.lineTo(0,H*.72);g.lineTo(0,H*.88);g.closePath()}
+ if(p)g.fill(p===6?'evenodd':'nonzero')}
 
-/* sprites: paint(put) draws on a gw x gh grid, put(x, y, colour, w, h); one canvas per key and scale k */
-const SPR=new Map();
-function sprite(key,gw,gh,k,paint){const id=key+'@'+k;let c=SPR.get(id);if(c)return c;if(SPR.size>600)SPR.clear();
- c=cvs(gw*k,gh*k);const q=c.getContext('2d');paint((x,y,col,w,h)=>{q.fillStyle=col;q.fillRect(x*k,y*k,(w||1)*k,(h||1)*k)});SPR.set(id,c);return c}
-/* draws a sprite centred in the box (x, y, w, h) of the current canvas, as large as a whole scale allows (crisp pixels); smaller than the grid: smooth downscale */
-function drawPx(key,gw,gh,paint,x,y,w,h){const g=canvasesState.ctx,t=g.getTransform(),k=Math.floor(Math.min(w*t.a/gw,h*t.d/gh)+1e-4);
- if(k<1){const im=sprite(key,gw,gh,4,paint),sc=Math.min(w/gw,h/gh);g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(im,x+(w-gw*sc)/2,y+(h-gh*sc)/2,gw*sc,gh*sc);return}
- const im=sprite(key,gw,gh,k,paint);g.save();g.setTransform(1,0,0,1,0,0);g.imageSmoothingEnabled=false;g.drawImage(im,Math.round(t.e+(x+w/2)*t.a-im.width/2),Math.round(t.f+(y+h/2)*t.d-im.height/2));g.restore()}
-/* device-pixel rectangle of a box of the current canvas, and u = the size of one "UI pixel" (at least 1 screen pixel) */
-function devBox(x,y,w,h){const t=canvasesState.ctx.getTransform(),X=Math.round(t.e+x*t.a),Y=Math.round(t.f+y*t.d);return{X,Y,W:Math.round(t.e+(x+w)*t.a)-X,H:Math.round(t.f+(y+h)*t.d)-Y,u:Math.max(1,Math.round(t.a/2))}}
-
-const embPaint=(e,m,ox,oy)=>put=>{const r=EMBART[e]||EMBART[0],P=METAL[m];for(let y=0;y<EMBG;y++)for(let x=0;x<EMBG;x++){const c=r[y][x];if(c!=='.')put(x+(ox|0),y+(oy|0),P[c])}};
-export function drawEmblemR(x,y,s,e,c){const m=embMetal(c==null?THEME.c:c);drawPx('e'+e+m,EMBG,EMBG,embPaint(e,m),x,y,s,s)}
-
-/* field patterns, in banner units (32 x 48, u v = pixel centres, d = distance to the edge of the cloth); slopes are 1:1 so the steps stay regular */
-const patAt=(p,u,v,d)=>p===1?u>=16:p===2?v>=14+Math.abs(u-16)&&v<22+Math.abs(u-16):p===3?v-u>=-8&&v-u<4:p===4?(u<16)===(v<18):p===5?v>=13&&v<23:p===6?d<=5:p===7?Math.abs(v-1-u)<3.2||Math.abs(v-33+u)<3.2:false;
-
-/* cloth: mask(x, y) on a gw x gh grid -> distance map (1 = edge pixel), 0 outside */
-function clothDist(gw,gh,mask){const D=new Uint8Array(gw*gh),at=(x,y)=>x>=0&&y>=0&&x<gw&&y<gh&&mask(x,y);let q=[];
- for(let y=0;y<gh;y++)for(let x=0;x<gw;x++)if(at(x,y)&&!(at(x-1,y)&&at(x+1,y)&&at(x,y-1)&&at(x,y+1))){D[y*gw+x]=1;q.push(x,y)}
- for(let n=2;q.length;n++){const nq=[];for(let i=0;i<q.length;i+=2)for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]]){const x=q[i]+a,y=q[i+1]+b;if(at(x,y)&&!D[y*gw+x]){D[y*gw+x]=n;nq.push(x,y)}}q=nq}
- return D}
-
-/* the banner: 32 x 42 art pixels. Gold rod with finials, swallow-tailed cloth (dark edge, light trim, field in 3 stepped tones, pattern in the 2nd colour),
-   the emblem with a hard shadow. */
-const BW=32,BH=42,bMask=(x,y)=>x>=1&&x<=30&&y>=3&&y<=33+Math.floor(Math.abs(x-15.5)/2);
-let BDIST=null;
-const bannerPaint=(T)=>put=>{const p=PAL[T.c][1],s=PAL[T.c][2],c2=PAL[T.c2|0][1],pt=T.p|0,D=BDIST||(BDIST=clothDist(BW,BH,bMask)),edge=tone(p,-.6);
- const sh=y=>y<11?.14:y<27?0:y<34?-.14:-.26;
- for(let y=0;y<BH;y++)for(let x=0;x<BW;x++){const d=D[y*BW+x];if(!d)continue;
-  put(x,y,d===1?edge:d===2?tone(s,Math.min(0,sh(y))):tone(pt&&patAt(pt,x+.5,y+.5,d-2)?c2:p,sh(y)))}
- for(let x=2;x<=29;x++)put(x,4,'rgba(0,0,0,.28)');
- const e=T.e|0,r=EMBART[e]||EMBART[0];for(let y=0;y<EMBG;y++)for(let x=0;x<EMBG;x++)if(r[y][x]!=='.'&&D[(y+7)*BW+x+5]>1)put(x+5,y+7,'rgba(0,0,0,.3)');
- embPaint(e,embMetal(T.c),4,6)(put);
- put(0,0,'#3a2406',BW,4);put(1,1,'#ffe07a',BW-2,1);put(1,2,'#c8922a',BW-2,1);
- for(const fx of[0,BW-3]){put(fx,0,'#3a2406',3,5);put(fx+1,1,'#fff6c4');put(fx+1,2,'#e8b030');put(fx+1,3,'#a8701a')}};
-const themeKey=T=>'b'+T.c+'.'+(T.c2|0)+'.'+(T.p|0)+'.'+(T.e|0);
-
-/* the texture used on buildings, in the HUD and in the save list: 128 x 192, 4 screen pixels per art pixel */
-export function drawBanner(){const g=BANNER.getContext('2d');g.clearRect(0,0,BANNER.width,BANNER.height);g.imageSmoothingEnabled=false;g.drawImage(sprite(themeKey(THEME),BW,BH,4,bannerPaint(THEME)),0,0)}
-/* the same banner, crisp, as large as the box allows (New kingdom preview) */
-export function drawBannerPx(x,y,w,h){drawPx(themeKey(THEME),BW,BH,bannerPaint(THEME),x,y,w,h)}
+export function drawBanner(){const g=BANNER.getContext('2d'),W=128,H=192,p=PAL[THEME.c][1],s=PAL[THEME.c][2];g.clearRect(0,0,W,H);g.lineJoin='round';
+ const path=()=>{g.beginPath();g.moveTo(8,4);g.lineTo(W-8,4);g.lineTo(W-8,H-30);g.lineTo(W/2,H-58);g.lineTo(8,H-30);g.closePath()};
+ path();const q=g.createLinearGradient(0,0,0,H);q.addColorStop(0,lighten(p,.22));q.addColorStop(1,p);g.fillStyle=q;g.fill();g.save();path();g.clip();bannerPattern(g,W,H,THEME.p|0,PAL[THEME.c2|0][1]);const sh=g.createLinearGradient(0,0,W,0);sh.addColorStop(0,'rgba(255,255,255,.12)');sh.addColorStop(.5,'rgba(255,255,255,0)');sh.addColorStop(1,'rgba(0,0,0,.18)');g.fillStyle=sh;g.fillRect(0,0,W,H);g.restore();path();g.lineWidth=11;g.strokeStyle=s;g.stroke();g.lineWidth=2;g.strokeStyle='rgba(0,0,0,.4)';g.stroke();
+ {const im=embImg(THEME.e|0,embMetal(THEME.c));g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(im,W/2-55,31,110,110)}
+ {const rg=g.createLinearGradient(0,0,0,9);rg.addColorStop(0,'#fff1b0');rg.addColorStop(.5,'#c8922a');rg.addColorStop(1,'#7a5410');g.fillStyle=rg;g.fillRect(2,1,W-4,7);g.strokeStyle='#3a2406';g.lineWidth=1;g.strokeRect(2.5,1.5,W-5,6);
+  for(const fx of[4,W-4]){const fg=g.createRadialGradient(fx-1.5,3,1,fx,4.5,5);fg.addColorStop(0,'#fff6c8');fg.addColorStop(1,'#a8741a');g.beginPath();g.arc(fx,4.5,4.6,0,6.283);g.fillStyle=fg;g.fill();g.stroke()}}}
 
 export function saveTheme(){try{localStorage.setItem('dk_theme',JSON.stringify(THEME))}catch(e){}}
 
-/* pattern tile: a small heater shield (20 x 22) showing the top of the banner field */
-const SW=20,SH=22,sHW=[10,10,10,10,10,10,10,10,10,10,10,10,10,9,9,8,7,6,5,4,3,1],sMask=(x,y)=>Math.abs(x-9.5)<sHW[y];
-let SDIST=null;
-export function patternTile(x,y,s,pt){const p=PAL[THEME.c][1],c2=PAL[THEME.c2|0][1];
- drawPx('p'+pt+'.'+THEME.c+'.'+(THEME.c2|0),SW,SH,put=>{const D=SDIST||(SDIST=clothDist(SW,SH,sMask)),edge=tone(p,-.62);
-  for(let yy=0;yy<SH;yy++)for(let xx=0;xx<SW;xx++){const d=D[yy*SW+xx];if(!d)continue;
-   put(xx,yy,d===1?edge:tone(pt&&patAt(pt,(xx+.5)*1.6,(yy+.5)*1.6+2,(d-1)*1.6)?c2:p,yy<5?.14:yy<14?0:-.14))}},x,y,s,s)}
+function drawEmblem(x,y,s,e,col){canvasesState.ctx.save();canvasesState.ctx.translate(x,y);canvasesState.ctx.scale(s/16,s/16);canvasesState.ctx.fillStyle=col;EMB[e](canvasesState.ctx);canvasesState.ctx.restore()}
 
-/* option slot: dark inset square with a 1 px bevel, filled with col */
-export function slotBox(x,y,s,col){const g=canvasesState.ctx,{X,Y,W,H,u}=devBox(x,y,s,s);g.save();g.setTransform(1,0,0,1,0,0);
- g.fillStyle='#05060a';g.fillRect(X,Y,W,H);g.fillStyle=col;g.fillRect(X+u,Y+u,W-2*u,H-2*u);
- g.fillStyle='rgba(255,255,255,.2)';g.fillRect(X+u,Y+u,W-2*u,u);g.fillRect(X+u,Y+u,u,H-2*u);g.fillStyle='rgba(0,0,0,.34)';g.fillRect(X+u,Y+H-2*u,W-2*u,u);g.fillRect(X+W-2*u,Y+u,u,H-2*u);g.restore()}
-/* selected option: a gold pixel ring (light top and left, deep gold bottom and right, dark outline, bright corner studs) */
-export function selRing(x,y,w,h){const g=canvasesState.ctx,{X,Y,W,H,u}=devBox(x,y,w,h),o=3*u,fr=(a,b,ww,hh,t,c1,c2)=>{g.fillStyle=c1;g.fillRect(a,b,ww,t);g.fillRect(a,b,t,hh);g.fillStyle=c2;g.fillRect(a,b+hh-t,ww,t);g.fillRect(a+ww-t,b,t,hh)};
- g.save();g.setTransform(1,0,0,1,0,0);fr(X-o,Y-o,W+2*o,H+2*o,u,'#1a1204','#1a1204');fr(X-2*u,Y-2*u,W+4*u,H+4*u,2*u,'#ffe07a','#c8922a');
- g.fillStyle='#fff6c4';for(const[a,b]of[[X-2*u,Y-2*u],[X+W,Y-2*u],[X-2*u,Y+H],[X+W,Y+H]])g.fillRect(a,b,2*u,2*u);g.restore()}
+const EMBC={};
+const embMetal=c=>c===3||c===10||c===11?'s':'g';
 
-/* colour swatch: a cut gem, 12 x 12; left = colour of the left half (2nd colour row: the main colour) */
-const GEM=['...oooooo...','..ollllllo..','.olhhlllmmo.','olhhllmmmmdo','olhllmmmmmdo','ollmmmmmmddo','olmmmmmmmddo','olmmmmmmdddo','ommmmmmddddo','.ommmddddeo.','..oddddeeo..','...oooooo...'];
-const gemPal=c=>({o:tone(c,-.68),h:lighten(c,.72),l:lighten(c,.34),m:c,d:tone(c,-.26),e:tone(c,-.42)});
-export function gemSwatch(x,y,s,col,left){drawPx('g'+col+(left||''),12,12,put=>{const A=gemPal(col),B=left?gemPal(left):A;
- for(let yy=0;yy<12;yy++)for(let xx=0;xx<12;xx++){const c=GEM[yy][xx];if(c!=='.')put(xx,yy,(xx<6?B:A)[c])}},x,y,s,s)}
+function embImg(e,m){const k=e+m;if(EMBC[k])return EMBC[k];const N=128,c=cvs(N,N),q=c.getContext('2d');q.scale(N/20,N/20);q.translate(2,2);
+ const gr=q.createLinearGradient(0,1,0,15);if(m==='s'){gr.addColorStop(0,'#ffffff');gr.addColorStop(.45,'#d6dce8');gr.addColorStop(.55,'#9aa4b8');gr.addColorStop(1,'#eef2f8')}else{gr.addColorStop(0,'#fff6c4');gr.addColorStop(.42,'#f2c64a');gr.addColorStop(.58,'#b8801a');gr.addColorStop(1,'#ffd860')}
+ q.fillStyle=gr;q.lineJoin='round';EMB[e](q);
+ const o=cvs(N,N),p=o.getContext('2d');p.drawImage(c,0,0);p.globalCompositeOperation='source-in';p.fillStyle=m==='s'?'#1c2232':'#3a2406';p.fillRect(0,0,N,N);
+ const f=cvs(N,N),h=f.getContext('2d');h.shadowColor='rgba(0,0,0,.7)';h.shadowBlur=5;h.shadowOffsetY=4;for(const[dx,dy]of[[-2.5,0],[2.5,0],[0,-2.5],[0,2.5],[-1.8,-1.8],[1.8,1.8],[-1.8,1.8],[1.8,-1.8]])h.drawImage(o,dx,dy);h.shadowColor='transparent';h.drawImage(c,0,0);
+ const hi=cvs(N,N),j=hi.getContext('2d');j.drawImage(c,0,-2.5);j.globalCompositeOperation='source-in';j.fillStyle='rgba(255,255,255,.55)';j.fillRect(0,0,N,N);j.globalCompositeOperation='destination-out';j.drawImage(c,0,1);
+ h.globalCompositeOperation='source-atop';h.drawImage(hi,0,0);return EMBC[k]=f}
+
+export function drawEmblemR(x,y,s,e,c){const im=embImg(e,embMetal(c==null?THEME.c:c)),p=s*.125;canvasesState.ctx.imageSmoothingEnabled=true;canvasesState.ctx.imageSmoothingQuality='high';canvasesState.ctx.drawImage(im,x-p,y-p,s+2*p,s+2*p)}
+
+function shieldPath(x,y,w,h){canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x,y);canvasesState.ctx.lineTo(x+w,y);canvasesState.ctx.lineTo(x+w,y+h*.52);canvasesState.ctx.quadraticCurveTo(x+w,y+h*.86,x+w/2,y+h);canvasesState.ctx.quadraticCurveTo(x,y+h*.86,x,y+h*.52);canvasesState.ctx.closePath()}
+
+export function shieldTile(x,y,s,inner){const w=s,h=s*1.12,y0=y-s*.06;canvasesState.ctx.save();canvasesState.ctx.shadowColor='rgba(0,0,0,.55)';canvasesState.ctx.shadowBlur=2;canvasesState.ctx.shadowOffsetY=1;shieldPath(x,y0,w,h);const c=PAL[THEME.c][1],q=canvasesState.ctx.createLinearGradient(x,y0,x+w,y0+h);q.addColorStop(0,lighten(c,.28));q.addColorStop(1,c);canvasesState.ctx.fillStyle=q;canvasesState.ctx.fill();canvasesState.ctx.restore();
+ canvasesState.ctx.save();shieldPath(x,y0,w,h);canvasesState.ctx.clip();inner(x,y0,w,h);const sh=canvasesState.ctx.createLinearGradient(x,y0,x+w,y0);sh.addColorStop(0,'rgba(255,255,255,.16)');sh.addColorStop(.5,'rgba(255,255,255,0)');sh.addColorStop(1,'rgba(0,0,0,.2)');canvasesState.ctx.fillStyle=sh;canvasesState.ctx.fillRect(x,y0,w,h);canvasesState.ctx.restore();
+ shieldPath(x+.6,y0+.6,w-1.2,h-1.2);const gr=canvasesState.ctx.createLinearGradient(0,y0,0,y0+h);gr.addColorStop(0,'#fff1b0');gr.addColorStop(.5,'#c89a2e');gr.addColorStop(1,'#f6d878');canvasesState.ctx.lineWidth=1.2;canvasesState.ctx.strokeStyle=gr;canvasesState.ctx.stroke();shieldPath(x,y0,w,h);canvasesState.ctx.lineWidth=.5;canvasesState.ctx.strokeStyle='rgba(20,12,0,.8)';canvasesState.ctx.stroke()}
+
+export function gemSwatch(x,y,s,col){canvasesState.ctx.save();canvasesState.ctx.shadowColor='rgba(0,0,0,.5)';canvasesState.ctx.shadowBlur=1.5;canvasesState.ctx.shadowOffsetY=.8;canvasesState.ctx.beginPath();canvasesState.ctx.arc(x+s/2,y+s/2,s/2-.3,0,6.283);const q=canvasesState.ctx.createRadialGradient(x+s*.36,y+s*.3,s*.05,x+s/2,y+s/2,s*.62);q.addColorStop(0,lighten(col,.6));q.addColorStop(.45,col);q.addColorStop(1,lighten(col,-.0)&&'#00000000'===''?col:col);canvasesState.ctx.fillStyle=q;canvasesState.ctx.fill();canvasesState.ctx.restore();
+ canvasesState.ctx.beginPath();canvasesState.ctx.arc(x+s/2,y+s/2,s/2-.3,0,6.283);const d=canvasesState.ctx.createRadialGradient(x+s/2,y+s/2,s*.25,x+s/2,y+s/2,s*.52);d.addColorStop(0,'rgba(0,0,0,0)');d.addColorStop(1,'rgba(0,0,0,.38)');canvasesState.ctx.fillStyle=d;canvasesState.ctx.fill();
+ canvasesState.ctx.lineWidth=.9;canvasesState.ctx.strokeStyle='#c99a3a';canvasesState.ctx.stroke();canvasesState.ctx.beginPath();canvasesState.ctx.ellipse(x+s*.38,y+s*.3,s*.15,s*.09,-.6,0,6.283);canvasesState.ctx.fillStyle='rgba(255,255,255,.6)';canvasesState.ctx.fill()}
 
 export function initializeKingdomBanner() {
   thIcons();
-  bannerTex.magFilter=THREE.NearestFilter;
   drawBanner();
   bannerTex.needsUpdate=true;
 
