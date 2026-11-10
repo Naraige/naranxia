@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-10 · intro de lancement dégelée, emblèmes annulés, build de test (non livré)
+- Intro: le démarrage était une seule tâche synchrone et l'intro comptait en horloge murale, donc finie avant d'être vue. `core/boot.js` découpe `main.js` en tranches de 30 ms; cartes en `transform`/`opacity`, lancées à la première image peinte; rideau ouvert quand le titre dessine. Détail: `docs/studio-notes/boot.md`.
+- Sous `navigator.webdriver` le démarrage reste synchrone (les tests ne couvrent pas le vrai chemin; `tools/bootprobe.py` le force).
+- Vérifié (branche agent): build, build:release, det PASS (hashes inchangés). NON vérifié: smoke et tools (dépassement, machine chargée) à relancer; vrai GPU, iframe claude.ai, launcher.
+- Refonte des emblèmes et propositions de logo refusées par le Roi (1A..5A): commits annulés, logo actuel gardé. En attente: ce qui manquait.
+- Build de test: artifact FibK3cKvLVe3mSuJDUb49d (séparé du jeu officiel). `cap_boot.py` du board revamp ne capture plus la carte (classe `go` requise).
+- En cours (agents): audio, unités (planche), bâtiments (planche). Les planches ne se fusionnent pas avant la réponse du Roi.
+
 ## 2026-11-10 · refonte fenêtres de lancement, menus, logos, animations (non livrée)
 - `ui/menu-kit.js` (gabarit plein écran), `menu-fx.js`; titre en lobby (Play + mode, pastilles L/T/O, carte version/saison), tous les écrans de lancement, Réglages, Esc, fin au gabarit; logo NARANXIA en blocs, carte Hammerdawn, favicon; animations sur horloge murale, coupées par Reduce motion.
 - Vérifié (branche agent): build, det tools smoke, fitcheck TOTAL 1 (connu). Arbre fusionné d'avant la refonte: det smoke events mp8 mpk mp_resync ALL PASS. Après refonte: tests relancés (dist/merge_tests4.txt), fitcheck à refaire avec les 17 nouvelles clés.
