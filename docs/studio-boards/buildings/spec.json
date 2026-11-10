@@ -1,0 +1,441 @@
+{
+ "title": "Bâtiments : avant / après",
+ "intro": "Chaque ligne montre un bâtiment : A = actuel (v84), B = nouveau. De gauche à droite : niveau pierre, niveau bois, puis de nuit quand c’est utile. Rien n’est fusionné : réponds par un code (ex. 1B 2A 3B) ou « tout B ». Emprise au sol, collisions et simulation inchangées.",
+ "sections": [
+  {
+   "name": "Château (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r01_A.jpg",
+     "note": "actuel · 11558 / 9276 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r01_B.jpg",
+     "note": "puits couvert, charrette de foin et cheminée qui fume dans la cour · 12506 / 10224 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Donjon (pierre, bois)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r02_A.jpg",
+     "note": "actuel · 3444 / 1824 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r02_B.jpg",
+     "note": "mêmes volumes, nouvelles textures · 3444 / 1824 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Maison (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r03_A.jpg",
+     "note": "actuel · 3420 / 3420 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r03_B.jpg",
+     "note": "lucarne, tas de bûches, tonneau, rives de toit, fenêtres éclairées la nuit · 3996 / 3996 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Ferme",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r04_A.jpg",
+     "note": "actuel · 2052 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r04_B.jpg",
+     "note": "mêmes volumes, nouvelles textures · 2052 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Entrepôt (pierre, bois)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r05_A.jpg",
+     "note": "actuel · 2304 / 2304 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r05_B.jpg",
+     "note": "rives de toit, chaume et soubassement en pierre au niveau bois · 2496 / 2496 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Caserne (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r06_A.jpg",
+     "note": "actuel · 2496 / 2820 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r06_B.jpg",
+     "note": "mannequin de paille dans la cour · 2748 / 3072 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Académie (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r07_A.jpg",
+     "note": "actuel · 2712 / 2712 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r07_B.jpg",
+     "note": "mêmes volumes, tuiles de cuivre texturées · 2712 / 2712 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Marché (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r08_A.jpg",
+     "note": "actuel · 1680 / 1680 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r08_B.jpg",
+     "note": "mêmes volumes, nouvelles textures · 1680 / 1680 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Cabane de forestier",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r09_A.jpg",
+     "note": "actuel · 2028 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r09_B.jpg",
+     "note": "mêmes volumes, nouvelles textures · 2220 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Guilde des bâtisseurs (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r10_A.jpg",
+     "note": "actuel · 2892 / 2892 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r10_B.jpg",
+     "note": "mêmes volumes, nouvelles textures · 3084 / 3084 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Mur (pierre, bois)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r11_A.jpg",
+     "note": "actuel · 1560 / 2160 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r11_B.jpg",
+     "note": "mêmes volumes (chemin de ronde inchangé), briques à 4 tons · 1560 / 2160 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Porte (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r12_A.jpg",
+     "note": "actuel · 2804 / 1800 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r12_B.jpg",
+     "note": "mêmes volumes, nouvelles textures · 2804 / 1800 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Tour 2x2 (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r13_A.jpg",
+     "note": "actuel · 4484 / 1188 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r13_B.jpg",
+     "note": "mêmes volumes, nouvelles textures · 4484 / 1188 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Tour 1x1 et tour à baliste (pierre, bois)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r14_A.jpg",
+     "note": "actuel · 1268 / 1080 / 3512 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r14_B.jpg",
+     "note": "mêmes volumes, nouvelles textures · 1268 / 1080 / 3512 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Torche, baliste, trébuchet",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r15_A.jpg",
+     "note": "actuel · 168 / 540 / 756 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r15_B.jpg",
+     "note": "inchangés (hors textures de la torche) · 168 / 540 / 756 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Observatoire (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r16_A.jpg",
+     "note": "actuel · 564 / 564 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r16_B.jpg",
+     "note": "tour ronde, galerie en bois, dôme d’ardoise bleue fendu, télescope en laiton, étude, sphère armillaire · 1632 / 1632 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Grenier (pierre, bois)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r17_A.jpg",
+     "note": "actuel · 1092 / 1092 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r17_B.jpg",
+     "note": "grange sur pilotis de pierre, potence et sac hissé, rampe, sacs, gerbes de blé · 1560 / 1560 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Cloche d’alarme (pierre, bois)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r18_A.jpg",
+     "note": "actuel · 504 / 504 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r18_B.jpg",
+     "note": "beffroi : socle de pierre, charpente ouverte, grande cloche de bronze, flèche d’ardoise, corde · 1116 / 1116 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Sanctuaire (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r19_A.jpg",
+     "note": "actuel · 888 / 888 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r19_B.jpg",
+     "note": "chapelle à contreforts, toit doré, clocheton, rosace solaire lumineuse, abside · 1992 / 1992 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Balise (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r20_A.jpg",
+     "note": "actuel · 552 / 552 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r20_B.jpg",
+     "note": "tour effilée, couronne en encorbellement, panier de fer et flammes, échelle, bannière, bûcher · 1500 / 1500 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Verger",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r21_A.jpg",
+     "note": "actuel · 636 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r21_B.jpg",
+     "note": "pommiers à étages chargés de fruits, échelle, paniers, ruche, brouette · 1896 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Forge (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r22_A.jpg",
+     "note": "actuel · 828 / 828 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r22_B.jpg",
+     "note": "grande cheminée de brique, appentis ouvert sur le foyer rougeoyant, enclume, soufflet, meule, lames · 2052 / 2052 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Ambassade (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r23_A.jpg",
+     "note": "actuel · 792 / 792 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r23_B.jpg",
+     "note": "deux étages, toit à quatre pans, porche à piliers et balcon, tapis, bannières et drapeaux du royaume · 2748 / 2748 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Salle de guerre (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r24_A.jpg",
+     "note": "actuel · 924 / 924 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r24_B.jpg",
+     "note": "tourelle à drapeau, tente de commandement rayée sur la table des cartes, râtelier de lances, tambour (en A, la version pierre affiche le modèle bois : bug de cache corrigé) · 2496 / 2496 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Sapeurs (pierre, bois, nuit)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r25_A.jpg",
+     "note": "actuel · 924 / 924 triangles"
+    },
+    {
+     "id": "B",
+     "img": "r25_B.jpg",
+     "note": "atelier, entrée de mine étayée dans un tertre, rails et wagonnet, barils de poudre, roue dentée · 2256 / 2256 triangles"
+    }
+   ]
+  },
+  {
+   "name": "Ruines anciennes",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r26_A.jpg",
+     "note": "actuel"
+    },
+    {
+     "id": "B",
+     "img": "r26_B.jpg",
+     "note": "souche de tour en assises de brique, couronne brisée, lierre, colonne tombée, coffre ferré"
+    }
+   ]
+  },
+  {
+   "name": "Chantier (échafaudage inchangé)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r27_A.jpg",
+     "note": "actuel"
+    },
+    {
+     "id": "B",
+     "img": "r27_B.jpg",
+     "note": "même échafaudage, nouveau bâtiment dessous"
+    }
+   ]
+  },
+  {
+   "name": "Ville complète, de jour",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r28_A.jpg",
+     "note": "actuel · 183 appels de dessin, 408668 triangles à l’écran"
+    },
+    {
+     "id": "B",
+     "img": "r28_B.jpg",
+     "note": "toutes les matières retexturées, fumée des cheminées · 183 appels de dessin, 429212 triangles à l’écran"
+    }
+   ]
+  },
+  {
+   "name": "Ville complète, de nuit",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r29_A.jpg",
+     "note": "actuel"
+    },
+    {
+     "id": "B",
+     "img": "r29_B.jpg",
+     "note": "fenêtres éclairées à la tombée de la nuit"
+    }
+   ]
+  }
+ ]
+}

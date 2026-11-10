@@ -59,7 +59,7 @@ let GLW;
 const SMKMAX = 700;
 let SMK;
 
-function smk(x,y,z,s,r,g,b,a,rot){const G=SMK;if(G.n>=SMKMAX||a<=.004)return;const k=G.n++;G.P[k*4]=x;G.P[k*4+1]=y;G.P[k*4+2]=z;G.P[k*4+3]=s;G.C[k*4]=r;G.C[k*4+1]=g;G.C[k*4+2]=b;G.C[k*4+3]=a;G.Rr[k]=rot||0}
+export function smk(x,y,z,s,r,g,b,a,rot){const G=SMK;if(G.n>=SMKMAX||a<=.004)return;const k=G.n++;G.P[k*4]=x;G.P[k*4+1]=y;G.P[k*4+2]=z;G.P[k*4+3]=s;G.C[k*4]=r;G.C[k*4+1]=g;G.C[k*4+2]=b;G.C[k*4+3]=a;G.Rr[k]=rot||0}
 
 export function smkFlush(){const G=SMK;G.g.instanceCount=G.n;G.mesh.visible=G.n>0;if(G.n){for(const a of[G.ip,G.ic,G.ir]){a.updateRange.offset=0;a.updateRange.count=G.n*a.itemSize;a.needsUpdate=true}}G.n=0}
 

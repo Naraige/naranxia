@@ -18,6 +18,8 @@ vec3 bumpN(vec3 n,vec3 vp,float h,float k){vec3 dpx=dFdx(vp),dpy=dFdy(vp);float 
 `;
 
 export const LMU={value:1.4};
+/* 0 by day, 1 at night: lights the window glass (material 8) of every building */
+export const NGU={value:0};
 
 /* ink: an anti-aliased line of constant screen width along an iso-contour of a value */
 const GLINK=`
@@ -37,8 +39,9 @@ export let matT;
 export function initializeMaterials() {
   matV = new THREE.MeshPhongMaterial({vertexColors:true,shininess:9,specular:0x0a0a0a});
 
-  matV.onBeforeCompile=sh=>{sh.uniforms.uHQ=GQU;sh.uniforms.uLMax=LMU;sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;attribute float mat;varying float vMat;').replace('#include <begin_vertex>','#include <begin_vertex>\nvMat=mat;\n#ifdef USE_INSTANCING\nvWP=(modelMatrix*instanceMatrix*vec4(transformed,1.0)).xyz;\n#else\nvWP=(modelMatrix*vec4(transformed,1.0)).xyz;\n#endif');
-   sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;varying float vMat;uniform float uHQ;uniform float uLMax;'+GLN+GLBUMP+GLINK).replace('#include <color_fragment>',`#include <color_fragment>
+  matV.userData.NGU=NGU;
+  matV.onBeforeCompile=sh=>{sh.uniforms.uHQ=GQU;sh.uniforms.uLMax=LMU;sh.uniforms.uNight=NGU;sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;attribute float mat;varying float vMat;').replace('#include <begin_vertex>','#include <begin_vertex>\nvMat=mat;\n#ifdef USE_INSTANCING\nvWP=(modelMatrix*instanceMatrix*vec4(transformed,1.0)).xyz;\n#else\nvWP=(modelMatrix*vec4(transformed,1.0)).xyz;\n#endif');
+   sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;varying float vMat;uniform float uHQ;uniform float uLMax;uniform float uNight;'+GLN+GLBUMP+GLINK).replace('#include <color_fragment>',`#include <color_fragment>
  vec3 wN=normalize(cross(dFdx(vWP),dFdy(vWP)));vec3 aN=abs(wN);vec3 wq=vWP-wN*.002;
  vec2 uv=aN.y>.5?wq.xz:(aN.x>.5?wq.zy:wq.xy);
  float fw=max(length(dFdx(uv)),length(dFdy(uv)));
@@ -55,7 +58,7 @@ export function initializeMaterials() {
  float kS=clamp(1.-sat*9.,0.,1.)*(1.-smoothstep(.78,.9,lum));
  float kD=clamp((bc.r-bc.b)*4.-.4,0.,1.)*(1.-kG)*(1.-smoothstep(.6,.74,lum));
  float kN=clamp((bc.r-bc.b)*3.,0.,1.)*smoothstep(.6,.72,lum)*(1.-kG);
- float mId=floor(vMat+.5);if(mId>.5&&mId<8.5){kG=0.;kT=0.;kS=mId==1.?.55:0.;kD=mId==2.?1.:0.;kN=0.;}
+ float mId=floor(vMat+.5);if(mId>.5&&mId<9.5){kG=0.;kT=0.;kS=mId==1.?.55:0.;kD=mId==2.?1.:0.;kN=0.;}
  float macro=vn3(wq*.15);
  bool hz=kD>.5&&aN.y<.5;vec2 rA=hz?uv:vec2(dot(uv,vec2(.866,.5)),dot(uv,vec2(-.5,.866))),rB=hz?uv:vec2(dot(uv,vec2(-.342,.94)),dot(uv,vec2(-.94,-.342)));
  float mk=hz?0.:smoothstep(.35,.65,vn3(wq*.21+11.));
@@ -111,6 +114,23 @@ export function initializeMaterials() {
   float prow=floor(pc.y/4.),pe=mod(pc.x+prow*5.,16.)<.5?1.:0.,pli=(mod(pc.y,4.)<.5||pe>.5)?1.:0.;
   if(aN.y>.5){mor=(mod(pc.x,8.)<.5||mod(pc.y,8.)<.5)?1.:0.;pli=mod(pc.x,4.)<.5?1.:0.;}
   vec3 cS=c0*(.9+.2*pn)*mix(1.,.64,mor),cW=c0*(.86+.2*pn)*mix(1.,.68,pli),cO=c0*(.93+.14*pn);
+  /* building materials, the block-game way: every brick, plank and roof tile gets one of 3-4 tones, shaded by pixels
+     (ids 1 stone, 2 wood, 3 plaster, 6 tiles, 8 window glass, 9 thatch; units only use 0, 4, 5 and 7) */
+  if(mId>.5){float pz=aN.y>.5?7.3:(aN.x>.5?3.1:5.7),pf=1.-.75*smoothstep(.6,1.7,fw*PXS),ry=mod(pc.y,4.);bool up=aN.y>.5;
+   if(mId==1.){vec2 bid=up?floor(pc/8.):vec2(floor((pc.x+mod(row,2.)*4.)/8.),row);float bt=hn3(vec3(bid,pz+1.));
+    float tn=bt<.22?.86:(bt<.58?.96:(bt<.86?1.04:1.13)),bv=up?1.:(ry>2.5?1.07:(ry<1.5?.93:1.));
+    cS=c0*mix(1.,tn*bv,pf)*(.95+.1*pn)*mix(1.,.6,mor);if(bt>.93&&pn>.5)cS*=mix(vec3(1.),vec3(.8,.96,.74),pf);cO=cS;}
+   else if(mId==2.){vec2 kid=up?vec2(floor(pc.x/4.),floor((pc.y+floor(pc.x/4.)*5.)/16.)):vec2(floor((pc.x+prow*5.)/16.),prow);float kt=hn3(vec3(kid,pz+2.));
+    float tn=kt<.3?.88:(kt<.72?1.:1.09),gr=hn3(up?vec3(pc.x,floor(pc.y/3.),pz):vec3(floor(pc.x/3.),pc.y,pz))>.74?.9:1.;
+    cW=c0*mix(1.,tn*gr,pf)*(.96+.08*pn)*mix(1.,.66,pli);}
+   else if(mId==3.){float b=hn3(vec3(floor(pc/2.),pz));cO=c0*mix(1.,b<.1?.9:(b>.92?1.06:1.),pf)*(.97+.06*pn);}
+   else if(mId==6.){float tr=floor(pc.y/4.),sx=pc.x+mod(tr,2.)*2.,tt=hn3(vec3(floor(sx/4.),tr,pz+3.));
+    float ln=(ry<.5||mod(sx,4.)<.5)?1.:0.,tn=tt<.3?.87:(tt<.7?1.:1.11),lip=(!up&&ry>2.5)?1.08:1.;
+    cO=c0*mix(1.,tn*lip,pf)*(.96+.08*pn)*mix(1.,.68,ln*max(pf,.4));}
+   else if(mId==9.){float jt=floor(hn3(vec3(pc.x,1.,pz))*5.),sg=floor((pc.y+jt)/5.),st=hn3(vec3(pc.x,sg,pz+4.));
+    float tn=st<.28?.82:(st<.7?1.:1.13),ed=mod(pc.y+jt,5.)<.5?.8:1.;cO=c0*mix(1.,tn*ed,pf)*(.97+.06*pn);}
+   else if(mId==8.){float dg=mod(pc.x+pc.y,7.);cO=c0*(dg<1.?1.3:(dg<2.?1.12:.94));}
+  }
   float wS=clamp(kS*1.6,0.,1.),wW=clamp(kD*1.4,0.,1.)*(1.-wS);
   diffuseColor.rgb=mix(mix(cO,cW,wW),cS,wS);}
 #endif
@@ -125,10 +145,13 @@ export function initializeMaterials() {
   vec3 nI=irr/max(li,1e-4)*bd*uLMax*tnt;
   float h1=0.;if(r<.5){float hl=fract((uv.x+uv.y)*4.+vn3(vec3(uv*2.,1.))*.7);h1=(1.-smoothstep(.06,.17,hl))*(1.-smoothstep(.28,.5,r));
    if(r<.34){float hl2=fract((uv.x-uv.y)*4.+vn3(vec3(uv*2.,2.))*.7);h1=max(h1,(1.-smoothstep(.06,.17,hl2))*(1.-smoothstep(.18,.34,r)));}h1*=FA(4.);}
-  nI*=1.-h1*.42*(1.-.55*kT)*(vMat>4.5&&vMat<5.5?0.:1.);
+  nI*=1.-h1*.42*(1.-.55*kT)*(vMat>4.5&&vMat<5.5?0.:1.)*((vMat>.5&&vMat<3.5)||(vMat>5.5&&vMat<6.5)||vMat>7.5?.3:1.);
   if(vMat>3.5&&vMat<4.5){vec3 Vv=normalize(vViewPosition);float fr=pow(1.-clamp(dot(normal,Vv),0.,1.),2.2);nI=nI*1.08+vec3(1.,.86,.56)*fr*.75*uLMax+vec3(1.,.95,.8)*smoothstep(.62,.9,r)*.35*uLMax;}
   reflectedLight.directDiffuse=alb*nI;reflectedLight.indirectDiffuse=vec3(0.);
-  if(vMat>4.5&&vMat<5.5){reflectedLight.directDiffuse=alb*.3*uLMax;totalEmissiveRadiance+=alb*1.35;}}`).replace('#include <dithering_fragment>','#include <dithering_fragment>\n{gl_FragColor.rgb*=vec3(1.02,1.,.97);}');};
+  if(vMat>4.5&&vMat<5.5){reflectedLight.directDiffuse=alb*.3*uLMax;totalEmissiveRadiance+=alb*1.35;}
+  /* window glass: candle-lit after dusk (a few houses stay dark) */
+  if(vMat>7.5&&vMat<8.5&&uNight>.01){float lt=smoothstep(.22,.4,vn3(vWP*.8+3.))*uNight;vec3 wm=vec3(1.,.72,.34)*(.8+.4*vn3(vWP*9.));
+   reflectedLight.directDiffuse=mix(reflectedLight.directDiffuse,wm*.25*uLMax,lt);totalEmissiveRadiance+=wm*lt*1.15;}}`).replace('#include <dithering_fragment>','#include <dithering_fragment>\n{gl_FragColor.rgb*=vec3(1.02,1.,.97);}');};
   matWater = new THREE.MeshPhongMaterial({vertexColors:true,transparent:true,opacity:.84,depthWrite:true,shininess:140,specular:0xa0b0bc});
 
   matWater.onBeforeCompile=sh=>{sh.uniforms.uT=WUT;sh.uniforms.uHQ=GQU;sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;uniform float uT;').replace('#include <begin_vertex>','#include <begin_vertex>\nvec3 wp0=(modelMatrix*vec4(position,1.0)).xyz;transformed.y+=(sin(wp0.x*1.3+uT*1.4)+sin(wp0.z*1.7+uT*1.1))*.025;vWP=(modelMatrix*vec4(transformed,1.0)).xyz;');

@@ -49,6 +49,7 @@ export let bM;
 export let bL;
 export let bR;
 export let bC;
+export let bG;
 
 export const QS = ['#d6c196','#cbb58a','#dfcba2','#c4ad82'];
 export const QSD = '#9b8565';
@@ -84,7 +85,7 @@ export function qCornice(G,x,y,z,w,d,h){bS(G,x,y,z,w,h||.07,d,QTR)}
 
 export function qQuoin(G,x0,z0,x1,z1,y0,h){const n=Math.max(1,Math.round(h/.22)),q=h/n;for(let k=0;k<n;k+=2)for(const[x,z]of[[x0,z0],[x1,z0],[x0,z1],[x1,z1]])bS(G,x,y0+k*q,z,.13,q,.13,QTR)}
 
-export function qWin(G,x,y,z,ax,n,o){o=o||{};const W=o.w||.2,H=o.h||.3,P=qP(G,x,y,z,ax,n),mf=o.wood?bW:bS,fr=o.wood?QW2:QTR,gc=o.glow?'#ffd98c':QGL,gf=o.glow?bL:bP;
+export function qWin(G,x,y,z,ax,n,o){o=o||{};const W=o.w||.2,H=o.h||.3,P=qP(G,x,y,z,ax,n),mf=o.wood?bW:bS,fr=o.wood?QW2:QTR,gc=o.glow?'#ffd98c':QGL,gf=o.glow?bL:bG;
  P(gf,0,0,0,W,H,.03,gc);P(gf,0,H,0,W*.56,.05,.03,gc);
  P(mf,0,-.05,.012,W+.1,.05,.06,fr);P(mf,-W/2-.03,0,.012,.05,H,.05,fr);P(mf,W/2+.03,0,.012,.05,H,.05,fr);
  P(mf,-W*.36,H,.012,W*.3,.05,.05,fr);P(mf,W*.36,H,.012,W*.3,.05,.05,fr);P(mf,0,H+.05,.012,W*.62,.05,.05,fr);if(!o.wood)P(bS,0,H+.08,.018,.07,.07,.06,QTR);
@@ -127,7 +128,8 @@ export function qRoof(G,cx,cz,len,span,y0,cols,alongX,o){o=o||{};const rise=o.ri
  let half=span/2+(o.side==null?.1:o.side),k=0;
  for(;half>run*1.05;k++,half-=run){const y=y0+k*rise,c=cols[k%cols.length];put(bR,ca,half-run/2,y,L,run+.012,rise,c);put(bR,ca,-(half-run/2),y,L,run+.012,rise,c);
   put(bR,ca,half-.012,y-.012,L,.035,.035,lighten(c,.14));put(bR,ca,-(half-.012),y-.012,L,.035,.035,lighten(c,.14));
-  const inner=2*(half-run);if(inner>.02){if(g0)put(gf,-len/2+.05,0,y,.08,inner,rise,FL);if(g1)put(gf,len/2-.05,0,y,.08,inner,rise,FL)}}
+  const inner=2*(half-run);if(inner>.02){if(g0)put(gf,-len/2+.05,0,y,.08,inner,rise,FL);if(g1)put(gf,len/2-.05,0,y,.08,inner,rise,FL)}
+  if(!o.stone&&!o.nobarge){const F=o.frame||QW2;for(const sd of[-1,1]){if(g0)put(bW,-len/2-ov0+.018,sd*(half-run/2),y+rise*.3,.05,run+.05,rise*.8,F);if(g1)put(bW,len/2+ov1-.018,sd*(half-run/2),y+rise*.3,.05,run+.05,rise*.8,F)}}}
  const yt=y0+k*rise,rw=Math.max(.12,2*half);put(bR,ca,0,yt,L,rw+.012,rise*.6,cols[k%cols.length]);put(bM,ca,0,yt+rise*.6,L+.02,.08,.06,o.ridge||QBR);
  if(o.fin){if(g0)put(bM,-len/2-ov0+.05,0,yt+rise*.6+.06,.06,.06,.18,QBR2);if(g1)put(bM,len/2+ov1-.05,0,yt+rise*.6+.06,.06,.06,.18,QBR2)}
  if(!o.stone){const F=o.frame||QW2;if(g0)put(bW,-len/2+.03,0,y0,.05,span,.06,F);if(g1)put(bW,len/2-.03,0,y0,.05,span,.06,F)}
@@ -141,11 +143,36 @@ export function qTimber(G,x0,z0,x1,z1,y0,y1,o){o=o||{};const cx=(x0+x1)/2,cz=(z0
     for(let s=0;s<st;s++){const aa=a0+s*bw+bw/2,yy=y0+t+(i%4<2?s:(st-1-s))*bh;bW(G,ax?fx+aa:fx,yy,ax?fz:fz+aa,ax?bw+.012:p,bh,ax?p:bw+.012,F)}}}};
  face('N',cx,z0-p/2,w+2*p,true);face('S',cx,z1+p/2,w+2*p,true);face('W',x0-p/2,cz,d+2*p,false);face('E',x1+p/2,cz,d+2*p,false)}
 
-export function qChim(G,x,z,y0,h){const n=Math.max(1,Math.round(h/.18));for(let k=0;k<n;k++)bS(G,x,y0+k*h/n,z,.24,h/n,.24,QBK[k%2]);bS(G,x,y0+h,z,.29,.05,.29,QTR);bP(G,x,y0+h+.05,z,.13,.05,.13,'#262222')}
+export function qChim(G,x,z,y0,h){(G.chim||(G.chim=[])).push([x,y0+h+.12,z]);const n=Math.max(1,Math.round(h/.18));for(let k=0;k<n;k++)bS(G,x,y0+k*h/n,z,.24,h/n,.24,QBK[k%2]);bS(G,x,y0+h,z,.29,.05,.29,QTR);bP(G,x,y0+h+.05,z,.13,.05,.13,'#262222')}
 
 export function qBarrel(G,x,z,y){y=y||0;bW(G,x,y,z,.26,.34,.26,'#8a6038');bP(G,x,y+.06,z,.275,.035,.275,QIR);bP(G,x,y+.26,z,.275,.035,.275,QIR);bW(G,x,y+.34,z,.22,.012,.22,'#6a4a2a')}
 
 export function qCrate(G,x,z,y,s){bW(G,x,y,z,s,s,s,'#a87e4c');bW(G,x,y,z,s+.012,.035,s+.012,QW2);bW(G,x,y+s-.035,z,s+.012,.035,s+.012,QW2);bW(G,x,y,z,s*.18,s,s+.012,QW2)}
+
+/* ---- small props that tell what a building is for ---- */
+export function qSack(G,x,z,y,c){bC(G,x,y||0,z,.19,.14,.15,c||'#d9c9a0');bC(G,x,(y||0)+.14,z,.08,.04,.07,'#b8a678')}
+
+export function qAnvil(G,x,z,y){bW(G,x,y,z,.2,.15,.2,QLOG);bW(G,x,y+.15,z,.16,.012,.16,QLOGT);bP(G,x,y+.162,z,.1,.07,.09,'#34343c');bM(G,x,y+.23,z,.28,.07,.12,'#565662');bM(G,x+.18,y+.25,z,.1,.04,.07,'#565662')}
+
+export function qGrind(G,x,z,y){for(const s of[-1,1])bW(G,x+s*.1,y,z,.04,.24,.22,QW2);bS(G,x,y+.1,z,.09,.3,.2,'#a3a3a3');bS(G,x,y+.15,z,.09,.2,.3,'#a3a3a3');bP(G,x,y+.23,z,.26,.04,.04,QIR)}
+
+export function qLadder(G,x,z,y0,h,ax){const w=.2;for(const s of[-1,1])ax?bW(G,x+s*w/2,y0,z,.035,h,.035,QW3):bW(G,x,y0,z+s*w/2,.035,h,.035,QW3);for(let y=y0+.1;y<y0+h-.04;y+=.14)ax?bW(G,x,y,z,w,.03,.03,QW1):bW(G,x,y,z,.03,.03,w,QW1)}
+
+export function qFire(G,x,y,z,s){s=s||1;bL(G,x,y,z,.34*s,.16*s,.34*s,'#ff7a1a');bL(G,x,y+.16*s,z,.24*s,.2*s,.24*s,'#ffa62a');bL(G,x+.03*s,y+.36*s,z-.02*s,.15*s,.18*s,.15*s,'#ffd25a');bL(G,x-.02*s,y+.54*s,z+.03*s,.07*s,.14*s,.07*s,'#fff0b0')}
+
+/* a board hanging from a bracket, with a two-colour pixel icon: ic = [[dx,dy,w,h,colour]..] in board units */
+export function qSign(G,x,y,z,ax,n,ic,o){o=o||{};const P=qP(G,x,y,z,ax,n),w=o.w||.3,h=o.h||.26;P(bW,0,0,.12,.045,.045,.24,QW2);P(bP,-w*.3,-.07,.18,.015,.07,.015,QIR);P(bP,w*.3,-.07,.18,.015,.07,.015,QIR);
+ P(bW,0,-.07-h,.18,w,h,.035,o.c||QW1);P(bM,0,-.07-h,.18,w+.03,.025,.045,QBR);P(bM,0,-.095,.18,w+.03,.025,.045,QBR);
+ for(const[dx,dy,iw,ih,c]of ic||[])for(const sg of[1,-1])P(c===QBR2||c===QBR?bM:bP,dx*w,-.07-h+dy*h,.18+sg*.02,iw*w,ih*h,.012,c)}
+
+/* a wheel standing in the x-y plane (ax) or the z-y plane */
+export function qWheel(G,x,y,z,r,ax,c){const n=12;for(let k=0;k<n;k++){const a=k/n*6.2832,u=Math.cos(a)*r,v=Math.sin(a)*r,t=r*.34;ax?bW(G,x+u,y+v-t/2,z,t,t,.05,c||(k%2?QW1:QW3)):bW(G,x,y+v-t/2,z+u,.05,t,t,c||(k%2?QW1:QW3))}
+ ax?bW(G,x,y-.02,z,r*1.7,.04,.03,QW2):bW(G,x,y-.02,z,.03,.04,r*1.7,QW2);ax?bW(G,x,y-r*.85,z,.04,r*1.7,.03,QW2):bW(G,x,y-r*.85,z,.03,r*1.7,.04,QW2);bP(G,x,y-.035,z,ax?.07:.07,.07,ax?.07:.07,QIR)}
+
+/* a small leafy tree: trunk and three stepped tiers of leaves */
+export function qTree(G,x,z,y,h,o){o=o||{};const A=o.a||'#4f9a3c',B=o.b||'#5fa845',D=o.d||'#3f8232',s=o.s||1;bW(G,x,y,z,.12*s,h,.12*s,QLOG);bW(G,x,y,z,.18*s,.06,.18*s,'#5d3f25');
+ bC(G,x,y+h-.06,z,.62*s,.2,.62*s,D);bC(G,x,y+h+.14,z,.74*s,.22,.5*s,A);bC(G,x,y+h+.14,z,.5*s,.22,.74*s,A);bC(G,x,y+h+.36,z,.52*s,.18,.52*s,B);bC(G,x+.03,y+h+.54,z-.02,.28*s,.14,.28*s,B);
+ for(const[dx,dz,dy]of o.fruit||[])bM(G,x+dx*s,y+h+dy,z+dz*s,.075,.075,.075,o.fc||'#d8402a')}
 
 export const mBits=m=>({N:m&1,E:m&2,S:m&4,W:m&8,sk:((m&1)?'N':'')+((m&2)?'E':'')+((m&4)?'S':'')+((m&8)?'W':''),nw:!(m&1)&&!(m&8)&&!!(m&6)});
 
@@ -157,4 +184,5 @@ export function initializeBuildingParts() {
   bL = bxm(5);
   bR = bxm(6);
   bC = bxm(7);
+  bG = bxm(8);
 }
