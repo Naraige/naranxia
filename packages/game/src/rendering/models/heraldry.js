@@ -4,6 +4,8 @@ import { vb, VX } from './unit-parts.js';
 import { HA, PXON } from './units.js';
 import { pxCaptainShield, pxGuardShield, pxShield } from './weapons.js';
 import { thd, thp, ths } from '../../ui/kingdom-theme.js';
+import { gear2 } from './gear-style.js';
+import { g2Pole } from './gear2.js';
 
 export const heraldryState = {
   MVAR: '',
@@ -85,10 +87,12 @@ export function bannerKit(G){const X={ban:newG(),ban2:newG(),ban3:newG(),pen:new
   g=(m,x,y,z,w,h,d,c)=>{const o=geometryState.BMAT;geometryState.BMAT=m;try{vb(G,x,y,z,w,h,d,c)}finally{geometryState.BMAT=o}},
   q=(k,m,x,y,z,w,h,d,c)=>{const o=geometryState.BMAT;geometryState.BMAT=m;try{bxc(X[k],x*VX,y*VX,z*VX,w*VX,h*VX,d*VX,c)}finally{geometryState.BMAT=o}};
  const Z=-3.0,ZC=-3.95,ZB=-3.42,TB=31.6,BW=11.2,SH=5.6,TH=.5;
+ /* gear board, look B (gear-style.js): the pole, its ferrules, crossbar and spear point in the shared gear palette */
+ if(gear2('banner'))g2Pole(G);else{
  g(2,0,2,Z,.8,34.4,.8,WD);for(const y of[12.2,21.4,28.8])g(4,0,y,Z,1.02,.42,1.02,HA.gd);
  g(2,0,TB,ZB,12.4,.7,.7,WD2);for(const s of[-1,1]){g(4,s*6.55,TB-.17,ZB,1.0,1.04,1.0,HA.gd);g(4,s*6.55,TB+.87,ZB,.46,.46,.46,HA.gd2)}
  g(4,0,36.3,Z,1.3,1.1,1.3,HA.gd);g(4,0,37.35,Z,.8,.5,.8,HA.gd2);g(4,0,37.85,Z,1.1,1.2,.42,HA.sth);g(4,0,39.0,Z,.72,1.1,.36,HA.sth);g(4,0,40.05,Z,.36,.9,.3,'#ffffff');
- g(0,0,9,-2.3,.8,.8,1.2,WD2);
+ g(0,0,9,-2.3,.8,.8,1.2,WD2);}
  const LIM=[0,-SH,-2*SH,-99],KEYS=['ban','ban2','ban3'];
  const cb=(m,x,y0,w,h,c,d)=>{const a=y0,b=y0+h;for(let i=0;i<3;i++){const lo=Math.max(a,LIM[i+1]),hi=Math.min(b,LIM[i]);if(hi-lo>1e-4)q(KEYS[i],m,x,lo+SH*i,0,w,hi-lo,d||TH,c)}};
  cb(7,0,-12.6,BW,12.6,F);

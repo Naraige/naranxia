@@ -37,7 +37,7 @@ function soldierGeo(kind){const ty=kind==='pike'?'knight':kind,ab=unitsState.ALB
  const o=new THREE.Object3D(),M=(x,y,z,rx,ry,rz)=>{o.position.set(x,y,z);o.rotation.set(rx||0,ry||0,rz||0);o.updateMatrix();return o.matrix.clone()};
  const Q={knight:{ar:-1.0,arz:-.28,wr:-1.38,al:-.3,alz:0},pike:{ar:-.62,arz:-.05,wr:0,al:-.3,alz:0},archer:{ar:-.45,arz:0,wr:0,al:-1.28,alz:0}}[kind];
  const P=[[mdl.torso,M(0,0,0)],[mdl.head,M(0,mdl.neck,0,.05)],[mdl.leg,M(-mdl.lx,mdl.hip,0)],[mdl.leg,M(mdl.lx,mdl.hip,0)]];
- const A=M(mdl.ax,mdl.sh,0,Q.ar,0,Q.arz);P.push([mdl.arm,A]);const T2=toolGeos();
+ const A=M(mdl.ax,mdl.sh,0,Q.ar,0,Q.arz);P.push([mdl.arm,A]);const T2=mdl.T||toolGeos();
  if(kind==='knight')P.push([T2.sword,A.clone().multiply(M(0,HANDY*VX,.15*VX,Q.wr))]);
  if(kind==='pike'){const h=new THREE.Vector3(0,HANDY*VX,.15*VX).applyMatrix4(A);P.push([pikeGeo(),M(h.x,h.y,h.z)])}
  if(mdl.armL){const B=M(-mdl.ax,mdl.sh,0,Q.al,0,Q.alz);P.push([mdl.armL,B]);

@@ -190,7 +190,7 @@ function mcModel(type,z){
 
  }
  if(PXON)pxCapes(type,P0);
- const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X},{hip:5.5,sh:10.4,neck:11,lx:.95,ax:2.76,h,sc});r.tools=type==='peasant'?T:null;r.weap=NOWEAP||heraldryState.MVAR==='cine'?null:type==='knight'?'sword':type==='captain'?'gsword':type==='king'?'rsword':type==='guard'?'halberd':type==='archer'?'bow':null;r.shield=(type==='knight'||type==='captain'||type==='guard')&&heraldryState.MVAR!=='cine'?shieldGeo(type,unitsState.ALB):null;r.shp=[.2*VX,-5.0*VX,(PXON?SHZ:2.1)*VX];unitPartsState.RT=null;return r}
+ const T=toolGeos(),r=fin({G,HG,LA,LG,AG,parts:parts,X:P0.X},{hip:5.5,sh:10.4,neck:11,lx:.95,ax:2.76,h,sc});r.tools=type==='peasant'?T:null;r.T=T;r.weap=NOWEAP||heraldryState.MVAR==='cine'?null:type==='knight'?'sword':type==='captain'?'gsword':type==='king'?'rsword':type==='guard'?'halberd':type==='archer'?'bow':null;r.shield=(type==='knight'||type==='captain'||type==='guard')&&heraldryState.MVAR!=='cine'?shieldGeo(type,unitsState.ALB):null;r.shp=[.2*VX,-5.0*VX,(PXON?SHZ:2.1)*VX];unitPartsState.RT=null;return r}
 
 
 export function mkModel0(type,z){return mcModel(type,z)}

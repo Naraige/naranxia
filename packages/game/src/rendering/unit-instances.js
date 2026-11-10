@@ -4,6 +4,8 @@ import { GLN, LMU, matV } from './materials.js';
 import { heraldryState } from './models/heraldry.js';
 import { HANDY, mkModel, toolGeos, UM, VX } from './models/unit-parts.js';
 import { uv2 } from './models/unit-style.js';
+import { gear2, gearSig } from './models/gear-style.js';
+import { g2Carry } from './models/gear2.js';
 import { alv, unitsState } from './models/units.js';
 import { zombiesState } from './models/zombies.js';
 import { scene, SHADOWS } from './scene.js';
@@ -41,7 +43,7 @@ export let CARRYG;
 
 const RS3={king:.52,guard:.46,gunner:.3,gunner2:.3,cannon:.56,husk:.26,peasant:.3,knight:.4,archer:.34,bannerman:.34,captain:.45,zombie:.32,runner:.3,brute:.5,bomber:.4,acid:.32,miner:.34,scout:.3,engineer:.3,envoy:.3};
 
-export function buildUnitGroup(type,t,zv,rk){unitsState.ALB=t===0?alv():0;rk=rk|0;const k=type+t+'a'+unitsState.ALB+heraldryState.MVAR+(zv?'v'+zv.v+(zv.hint||''):'')+(rk?'k'+rk:'')+(uv2(type)?'n':''),mdl=UM[k]||(UM[k]=(()=>{const zo=zombiesState.ZVAR;zombiesState.ZVAR=zv||null;unitsState.RKB=rk;try{return mkModel(type,t)}finally{zombiesState.ZVAR=zo;unitsState.RKB=0}})()),g=new THREE.Group();
+export function buildUnitGroup(type,t,zv,rk){unitsState.ALB=t===0?alv():0;rk=rk|0;const k=type+t+'a'+unitsState.ALB+heraldryState.MVAR+(zv?'v'+zv.v+(zv.hint||''):'')+(rk?'k'+rk:'')+(uv2(type)?'n':'')+gearSig(),mdl=UM[k]||(UM[k]=(()=>{const zo=zombiesState.ZVAR;zombiesState.ZVAR=zv||null;unitsState.RKB=rk;try{return mkModel(type,t)}finally{zombiesState.ZVAR=zo;unitsState.RKB=0}})()),g=new THREE.Group();
  const mat=matV.clone();mat.onBeforeCompile=UNITSH;mat.emissive=new THREE.Color(0,0,0);
  const mesh=geo=>{const m=new THREE.Mesh(geo,mat);m.castShadow=SHADOWS&&type!=='husk';return m};
  const body=new THREE.Group();body.position.y=mdl.hip;const tor=mesh(mdl.torso);tor.position.y=-mdl.hip;body.add(tor);
@@ -51,7 +53,7 @@ export function buildUnitGroup(type,t,zv,rk){unitsState.ALB=t===0?alv():0;rk=rk|
  const lL=mesh(mdl.leg),lR=mesh(mdl.leg);lL.position.set(-mdl.lx,mdl.hip,0);lR.position.set(mdl.lx,mdl.hip,0);g.add(lL,lR,body);
  const ex={};if(mdl.parts)for(const p of mdl.parts){const m=mesh(p.geo);m.position.set(p.x,p.y,p.z);(p.par?ex[p.par]:tor).add(m);ex[p.k]=m}
  const tools={};if(mdl.tools)for(const k2 of['axe','pick','hammer','hoe']){const m=mesh(mdl.tools[k2]);m.visible=false;m.position.set(0,HANDY*VX,.15*VX);arm.add(m);tools[k2]=m}
- let weap=null;if(mdl.weap){const T2=toolGeos(),m=mesh(T2[mdl.weap]);if(mdl.weap==='bow'){if(armL){m.position.set(0,HANDY*VX,.1*VX);armL.add(m);weap=m}}else{m.position.set(0,HANDY*VX,.15*VX);arm.add(m);weap=m}}
+ let weap=null;if(mdl.weap){const T2=mdl.T||toolGeos(),m=mesh(T2[mdl.weap]);if(mdl.weap==='bow'){if(armL){m.position.set(0,HANDY*VX,.1*VX);armL.add(m);weap=m}}else{m.position.set(0,HANDY*VX,.15*VX);arm.add(m);weap=m}}
  const ring=new THREE.Mesh(ringGeo(RS3[type]),ringMat);ring.position.y=.04;ring.visible=false;g.add(ring);
  const carry=new THREE.Mesh(CARRYG.w,mat);carry.position.set(0,mdl.sh*.55,-.26);carry.visible=false;tor.add(carry);
  g.userData={ex,body,tor,head,lL,lR,arm,armL,shd,tools,weap,ring,carry,mdl,mat,z:t,wr:0};return g}
@@ -98,10 +100,13 @@ export function initializeUnitInstances() {
   matUI = (()=>{const m=matV.clone();m.onBeforeCompile=UNITSH;return m})();
   cubeG = new THREE.BoxGeometry(1,1,1);
   ringMat = new THREE.MeshBasicMaterial({vertexColors:true});
-  CARRYG = (()=>{const mk=f=>{const G=newG();f(G);return toGeo(G)};return{
+  const CARRY0 = (()=>{const mk=f=>{const G=newG();f(G);return toGeo(G)};return{
    w:mk(G=>{[[0,0,.0],[.01,.11,.1],[.01,.11,-.1]].forEach(([x,y,z],k)=>bxc(G,x,y,z,.46,.12,.12,k?'#a8723a':'#8a5a2a'));bxc(G,0,.05,0,.1,.2,.36,'#5a3a1a')}),
    g:mk(G=>{bxc(G,0,0,0,.3,.32,.22,'#c8a060');bxc(G,0,.3,0,.2,.06,.16,'#b08848');bxc(G,0,.14,.12,.18,.1,.04,'#ffd23c');bxc(G,0,.34,0,.14,.08,.1,'#ffd23c')}),
    s:mk(G=>{bxc(G,0,0,0,.32,.24,.26,'#b8bec8');bxc(G,.05,.2,0,.2,.16,.2,'#d4dae4');bxc(G,-.1,0,.14,.14,.12,.1,'#8e95a2')})}})();
+  /* gear board, look B (gear-style.js): the loads follow the switch; built on first use */
+  const CARRY2 = {}, carry = k => gear2('carry') ? (CARRY2[k] || (CARRY2[k] = g2Carry(k))) : CARRY0[k];
+  CARRYG = { get w() { return carry('w'); }, get g() { return carry('g'); }, get s() { return carry('s'); } };
   _uPV = new THREE.Matrix4();
   _uFr = new THREE.Frustum();
   _uSp = new THREE.Sphere(new THREE.Vector3(),3.2);

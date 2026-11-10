@@ -9,6 +9,7 @@ import { sprites, vsp } from './models/unit-parts.js';
 import { renderer, scene } from './scene.js';
 import { unitG } from './terrain.js';
 import { THREE } from './three.js';
+import { gearSig } from './models/gear-style.js';
 import { animUnit, cannonG } from './unit-animation.js';
 import { cvs } from '../ui/canvases.js';
 import { arcIcon, ICO_N, ICO_RT } from '../ui/drawing.js';
@@ -35,7 +36,7 @@ function icoObj(k){
  switch(k){
  case 'peasant':case 'idle':return icoUnit('peasant');case 'knight':return icoUnit('knight');case 'archer':return icoUnit('archer');case 'bannerman':return icoUnit('bannerman');case 'captain':return icoUnit('captain');case 'scout':return icoUnit('scout');case 'engineer':return icoUnit('engineer');case 'envoy':return icoUnit('envoy');
  case 'skull':return icoUnit('zombie',1);
- case 'cannon':{const w=new THREE.Group(),m=new THREE.Mesh(GEO.cannonU||(GEO.cannonU=cannonG()),matV);m.rotation.y=-.5;w.add(m);return w}
+ case 'cannon':{const w=new THREE.Group(),m=new THREE.Mesh(GEO['cannonU'+gearSig()]||(GEO['cannonU'+gearSig()]=cannonG()),matV);m.rotation.y=-.5;w.add(m);return w}
  case 'wall':return icoStruct('wall',10,ICOT<0?(RS.done?1:0):ICOT);case 'tower':return icoStruct('tower',0,ICOT<0?(RS.done?1:0):ICOT);case 'barracks':return icoStruct('barracks',0,ICOT<0?(RS.done?1:0):ICOT);case 'farm':return icoStruct('farm',0,1);
  case 'gate':return icoStruct('gate',0,ICOT<0?(RS.done?1:0):ICOT,w=>{const d=new THREE.Mesh(GEO.door||(GEO.door=doorGeo()),matV);d.position.set(0,1.32,0);w.add(d)});
  case 'home':case 'castle':{const w=icoStruct('castle',0,RS.done?1:0);return w}

@@ -1,9 +1,11 @@
 import { hex } from '../../core/math.js';
 import { bxc, newG, toGeo } from '../geometry.js';
 import { lighten } from '../kingdom-banner.js';
-import { mkModel0, PXON } from './units.js';
+import { mkModel0, PXON, unitsState } from './units.js';
+import { gear2, gearSig } from './gear-style.js';
+import { g2Axe, g2Bow, g2CapSword, g2Hammer, g2Halberd, g2Hoe, g2Pick, g2RoyalSword, g2Sword } from './gear2.js';
 import { pxBow, pxCapSword, pxHalberd, pxRoyalSword, pxSword } from './weapons.js';
-import { THEME } from '../../ui/kingdom-theme.js';
+import { THEME, thp } from '../../ui/kingdom-theme.js';
 
 export const unitPartsState = {
   RT: null,
@@ -40,13 +42,19 @@ export function vsp(G,rows,x,oy,oz,p,th){for(let r=0;r<16;r++)for(let c=0;c<16;c
 
 /* tools in the grip frame (voxel units): origin = centre of the fist, handle along +z, the striking edge faces -y (down at the end of a swing) */
 const TOOLG={};
+/* gear board, look B (gear-style.js): one tool set per switch value, kingdom colour and armour research; items left on the current
+   look, and the new tools that carry no kingdom colour, are shared by every set (same geometry, same draw call) */
+const TOOLS2={},G2SH={},G2MK={axe:g2Axe,pick:g2Pick,hoe:g2Hoe,hammer:g2Hammer,rsword:g2RoyalSword,sword:()=>g2Sword(unitsState.ALB),gsword:g2CapSword,halberd:g2Halberd,bow:g2Bow},G2TEAM={sword:1,gsword:1,halberd:1,bow:1};
 export const HANDY=-4.5;
 
 export function tb(G,x,y,z,w,h,d,c){bxc(G,x*VX,(y-h/2)*VX,z*VX,w*VX,h*VX,d*VX,c)}
 
 function handleG(G,L,wood,wrap){tb(G,0,0,(L-1.6)/2,.62,.62,L+1.6,wood);tb(G,0,0,0,.82,.82,1.8,wrap||'#4a2e16');tb(G,0,0,-1.55,.78,.78,.5,'#2e1c0e');tb(G,0,0,L-.25,.72,.72,.5,lighten(wood,-.2))}
 
-export function toolGeos(){if(TOOLG.axe)return TOOLG;const mk=f=>{const G=newG();f(G);return toGeo(G)},WD='#9a6a34',IR='#b9c0cc',ID='#7c8492',IL='#eef2f8';
+export function toolGeos(){const sg=gearSig();if(!sg)return toolGeos0();const k=sg+'|'+thp()+'|'+unitsState.ALB;if(TOOLS2[k])return TOOLS2[k];const T=Object.assign({},toolGeos0()),sh=G2SH[sg]||(G2SH[sg]={});
+ for(const key in G2MK)if(gear2(key))T[key]=G2TEAM[key]?G2MK[key]():(sh[key]||(sh[key]=G2MK[key]()));return TOOLS2[k]=T}
+
+function toolGeos0(){if(TOOLG.axe)return TOOLG;const mk=f=>{const G=newG();f(G);return toGeo(G)},WD='#9a6a34',IR='#b9c0cc',ID='#7c8492',IL='#eef2f8';
  TOOLG.axe=mk(G=>{handleG(G,8.6,WD);tb(G,0,-.1,7.5,.7,1.1,1.5,ID);tb(G,0,-1.25,7.55,.42,1.5,1.9,IR);tb(G,0,-2.2,7.6,.4,.7,2.35,IR);tb(G,0,-2.62,7.6,.44,.32,2.5,IL);tb(G,0,.75,7.45,.62,.7,1.1,ID)});
  TOOLG.pick=mk(G=>{handleG(G,8.6,WD);tb(G,0,0,7.7,.85,1.2,1.3,ID);[[.95,7.55],[1.8,7.2],[2.55,6.75],[3.15,6.25]].forEach(([y,z],k)=>{tb(G,0,y,z,.55-.06*k,.8,.95,k===3?IL:IR);tb(G,0,-y,z,.55-.06*k,.8,.95,k===3?IL:IR)})});
  TOOLG.hoe=mk(G=>{handleG(G,9.4,WD);tb(G,0,-.55,9.05,.45,1.3,.5,ID);tb(G,0,-1.55,9.1,1.5,.75,.42,IR);tb(G,0,-1.98,9.1,1.56,.22,.46,IL)});

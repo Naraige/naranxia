@@ -1,6 +1,8 @@
 import { newG, toGeo } from '../geometry.js';
 import { PD, PDP, pxBox, pxN, pxRot, pxScene, shadeHex, teamPal } from './pixel-geometry.js';
 import { thp } from '../../ui/kingdom-theme.js';
+import { gear2 } from './gear-style.js';
+import { g2ShieldPal } from './gear2.js';
 
 /* ================= GEAR: Naranxia arms, in the Blockbench item manner =================
    our own designs (steel, leather, wood, team colours, a little brass) built the Blockbench way: chunky bevelled 3D parts
@@ -57,26 +59,28 @@ export function pxSword(){const G=newG(),S=RSV;
    wide standing a little proud of the wood, eight rivets in two columns with a shadow pixel under each (small raised studs
    on the front), the same planks and rivets on the back, and an iron bracket handle with a leather-wrapped grip.
    Our heraldry is painted on the front planks, so the plank lines still show through the paint. */
-let SHW;
-let SHI;
+let SHW0;
+let SHI0;
 let SHG;
-let SHK;
+let SHK0;
 
 const SH_RIV=[[2,3],[9,3],[2,8],[9,8],[2,13],[9,13],[2,18],[9,18]];
 
-function pxMcShield(art,pal,AL){const G=newG(),IR=AL>=2?SHG:SHI;
+function pxMcShield(art,pal,AL,g2){const G=newG(),IR=g2?g2.R:(AL>=2?SHG:SHI0),SHW=g2?g2.W:SHW0,SHI=g2?g2.I:SHI0,SHK=g2?g2.K:SHK0,GLE=g2?g2.LE:RLE;
  const riv=(u,r)=>{for(const q of SH_RIV)if(q[0]===u&&q[1]===r)return true;return false};
  const wood=(u,r,f)=>{const x=u-1,lf=(x&1)===0,n=pxN('W',x,Math.floor((r+x*3)/3),7),k=pxN(f,u,r,9);
   if(r===1)return lf?SHW[4]:SHW[3];if(r===20)return lf?SHW[2]:SHW[1];
   if(lf)return n>.8?SHW[4]:(k<.06?SHW[2]:SHW[3]);return n<.15?SHW[1]:(k>.95?SHW[3]:SHW[2])};
  const chAt=(u,r,front)=>front&&art?((art[r-1]||'')[u-1]||'.'):'.';
  const isField=c=>c==='.'||c==='T'||c==='R';
- const base=(u,r,f,front)=>{const c=chAt(u,r,front);if(c!=='.'&&pal[c]){const lf=((u-1)&1)===0;return r===1?pal[c][0]:(lf?pal[c][0]:pal[c][1])}return wood(u,r,f)};
+ const base=(u,r,f,front)=>{const c=chAt(u,r,front);if(c!=='.'&&pal[c]){const lf=((u-1)&1)===0,q=r===1?pal[c][0]:(lf?pal[c][0]:pal[c][1]);
+   /* look B: lit chief, shaded base, a few worn pixels in the paint */
+   return g2?shadeHex(q,r<=2?1.1:(r>=19?.8:(r>=17?.9:(pxN('H',u,r,3)<.07?.88:1)))):q}return wood(u,r,f)};
  /* u 1..10 across, r 1..20 down; the rivet, its shadow below and a darker pixel to its right */
  const face=(u,r,f,front)=>{const c=chAt(u,r,front),b=base(u,r,f,front);if(!isField(c))return b;
   if(riv(u,r))return front?SHI[3]:SHI[2];if(riv(u,r-1)&&isField(chAt(u,r-1,front)))return shadeHex(b,.62);if(riv(u-1,r)&&isField(chAt(u-1,r,front)))return shadeHex(b,.84);return b};
  const rim=side=>(f,u,v,W,H)=>{if(f==='T')return IR[3];if(f==='D')return IR[0];
-  if(f==='F'||f==='B'){if(side==='t')return (u===0||u===W-1)?IR[4]:IR[3];if(side==='b')return (u===0||u===W-1)?IR[2]:IR[1];return IR[2]}
+  if(f==='F'||f==='B'){if(side==='t')return (u===0||u===W-1)?IR[4]:IR[3];if(side==='b')return (u===0||u===W-1)?IR[2]:IR[1];return g2&&side==='l'?IR[3]:IR[2]}
   return IR[2]};
  pxScene(()=>{
   /* planks: front painted, back bare */
@@ -90,7 +94,7 @@ function pxMcShield(art,pal,AL){const G=newG(),IR=AL>=2?SHG:SHI;
   /* bracket handle: two iron arms out of the back and a grip bar wrapped in leather */
   const pK=(f,u,v,W,H)=>f==='T'?SHK[3]:(f==='D'?SHK[0]:(v===H-1?SHK[3]:SHK[2]));
   gx(G,-2,2,-5.2,4,1.4,4.7,pK,{grid:[4,1,4]});gx(G,-2,-3.4,-5.2,4,1.4,4.7,pK,{grid:[4,1,4]});
-  gx(G,-2,-3.4,-6.6,4,6.8,1.4,pK,{grid:[4,6,1]});gx(G,-2.15,-1.7,-6.75,4.3,3.4,1.7,pWrap(RLE),{mat:0,grid:[4,4,2]});
+  gx(G,-2,-3.4,-6.6,4,6.8,1.4,pK,{grid:[4,6,1]});gx(G,-2.15,-1.7,-6.75,4.3,3.4,1.7,pWrap(GLE),{mat:0,grid:[4,4,2]});
  });return G}
 
 /* heraldry, 10 x 20 inside the rim (top row first); '.' leaves the wood bare, T is the team colour, H its light edge */
@@ -123,9 +127,9 @@ const shPal=()=>{const T=teamPal(thp());return{T:[T[2],shadeHex(T[2],.84)],H:[T[
  R:PDP(['#b42c38','#98222d'])}};
 
 /* variants: default = full banner field (knight: pale cross; royal guard: red pale with crown and sun) */
-export function pxShield(AL,vr){const art=vr==='0'?null:(vr==='A'?ART_KNIGHT_A:ART_KNIGHT_B);return gScale(toGeo(pxMcShield(art,shPal(),AL)),.95)}
+export function pxShield(AL,vr){const art=vr==='0'?null:(vr==='A'?ART_KNIGHT_A:ART_KNIGHT_B);return gScale(toGeo(pxMcShield(art,shPal(),AL,gear2('shield')?g2ShieldPal(AL):null)),.95)}
 
-export function pxGuardShield(AL,vr){const art=vr==='0'?null:(({A:ART_GUARD_A,B:ART_GUARD_B,R2:ART_GUARD_R2,R3:ART_GUARD_R3})[vr]||ART_GUARD_R1);return gScale(toGeo(pxMcShield(art,shPal(),AL)),.98)}
+export function pxGuardShield(AL,vr){const art=vr==='0'?null:(({A:ART_GUARD_A,B:ART_GUARD_B,R2:ART_GUARD_R2,R3:ART_GUARD_R3})[vr]||ART_GUARD_R1);return gScale(toGeo(pxMcShield(art,shPal(),AL,gear2('gshield')?g2ShieldPal(AL):null)),.98)}
 
 /* ---------------- halberd ----------------
    a Blockbench voxel weapon: every pixel is a cube one shaft-thickness wide. A spear point with two lugs, a crescent axe
@@ -199,7 +203,7 @@ export function pxCapSword(){const G=newG(),S=RSV;
 const ART_CAPTAIN=['TTTTTTTTTT','TTTTggTTTT','TTTgGGgTTT','TTgGYYGgTT','TTTgGGgTTT','TTTTggTTTT','TTTTTTTTTT',
  'TTTTGGTTTT','TTTGggGTTT','TTGgRRgGTT','TGgRRRRgGT','GgRRRRRRgG','gRRRRRRRRg','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR','RRRRRRRRRR'];
 
-export function pxCaptainShield(AL,vr){return gScale(toGeo(pxMcShield(vr==='0'?null:ART_CAPTAIN,shPal(),AL)),.95)}
+export function pxCaptainShield(AL,vr){return gScale(toGeo(pxMcShield(vr==='0'?null:ART_CAPTAIN,shPal(),AL,gear2('cshield')?g2ShieldPal(Math.max(AL,2)):null)),.95)}
 
 export function initializeWeapons() {
   RGO = PDP(['#7a4a10','#b07a22','#d9a83a','#f2cc66','#fff0b0']);
@@ -209,10 +213,10 @@ export function initializeWeapons() {
   RLE = PDP(['#2e1c0e','#4a2e16','#6b4423','#8a5a32','#a87244']);
   RWD = PDP(['#3a2414','#57361e','#74492a','#8f5e36','#a8743f']);
   pGo = pBev(RGO);
-  SHW = PDP(['#463724','#5b4a33','#705c41','#87704f','#9b835e']);
-  SHI = PDP(['#3a3f47','#596069','#7f8792','#a3aab4','#c8ced6']);
+  SHW0 = PDP(['#463724','#5b4a33','#705c41','#87704f','#9b835e']);
+  SHI0 = PDP(['#3a3f47','#596069','#7f8792','#a3aab4','#c8ced6']);
   SHG = PDP(['#6e4a0e','#a8741e','#d7a83c','#f6d27a','#fff0b8']);
-  SHK = PDP(['#262a31','#363c46','#4c5560','#66707c']);
+  SHK0 = PDP(['#262a31','#363c46','#4c5560','#66707c']);
   ART_GUARD_A = ART_CROWN.concat(['TTTTTTTTTT','YYYYYYYYYY','..........','..........','..........','..........','..........','..........','..........','..........','..........','..........']);
   ART_GUARD_B = ART_CROWN.concat(['TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','YYYYYYYYYY','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT']);
   RST = RSV;

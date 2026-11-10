@@ -9,6 +9,7 @@ import { shdPose } from './models/heraldry.js';
 import { GEO } from './models/structures.js';
 import { zKeyOf } from './models/swarm.js';
 import { pxCannon } from './models/unit-accessories.js';
+import { gearSig } from './models/gear-style.js';
 import { alv, PXON } from './models/units.js';
 import { scene, SHADOWS } from './scene.js';
 import { gh, unitG } from './terrain.js';
@@ -29,7 +30,7 @@ export function cannonG(){if(PXON)return pxCannon();const G=newG(),WD='#5e4026',
 /* visual only: gold sleeve stripes (0..3) from the promotion rank, soldiers of the player team */
 const rkOf=u=>u.t===0&&(u.type==='knight'||u.type==='archer')?Math.min(3,(u.xp||0)/4|0):0;
 export function mkUnit(u){const g=buildUnitGroup(u.type==='cannon'?'gunner':u.type,u.t===2?20+(u.ci||0):u.t,zKeyOf(u)||(u.type==='peasant'&&u.t!==1?{v:((u.uid|0)*2654435761>>>0)%6,hint:'p'}:null),rkOf(u)),mdl=g.userData.mdl,mat=g.userData.mat;
- if(u.type==='cannon'){const s0=(mdl.sc||1.35)*UNITK,cn=new THREE.Mesh(GEO.cannonU||(GEO.cannonU=cannonG()),mat);cn.castShadow=SHADOWS;cn.scale.setScalar(.8/s0);cn.position.z=.26/s0;g.add(cn);g.userData.cn=cn;g.userData.cnz=.26/s0;
+ if(u.type==='cannon'){const s0=(mdl.sc||1.35)*UNITK,cn=new THREE.Mesh(GEO['cannonU'+gearSig()]||(GEO['cannonU'+gearSig()]=cannonG()),mat);cn.castShadow=SHADOWS;cn.scale.setScalar(.8/s0);cn.position.z=.26/s0;g.add(cn);g.userData.cn=cn;g.userData.cnz=.26/s0;
   const c2=buildUnitGroup('gunner2',u.t,null),e2=c2.userData;c2.remove(e2.ring);c2.traverse(o=>{if(o.isMesh)o.material=mat});c2.position.set(.36/s0,0,.34/s0);c2.rotation.y=-.35;g.add(c2);g.userData.c2=c2}
  if(u.type==='bannerman'){const au=new THREE.Mesh(GEO.auB||(GEO.auB=new THREE.RingGeometry(HEAL_R/TS/1.35/UNITK-.12,HEAL_R/TS/1.35/UNITK,64)),new THREE.MeshBasicMaterial({color:0x7dffa0,transparent:true,opacity:.4,side:THREE.DoubleSide,depthWrite:false}));au.rotation.x=-Math.PI/2;au.position.y=.22;au.renderOrder=1;g.add(au);const fill=new THREE.Mesh(GEO.auBf||(GEO.auBf=new THREE.CircleGeometry(HEAL_R/TS/1.35/UNITK,48)),new THREE.MeshBasicMaterial({color:0x7dffa0,transparent:true,opacity:.09,depthWrite:false}));fill.rotation.x=-Math.PI/2;fill.position.y=.2;g.add(fill);g.userData.aura=au}
  if(u.type==='king'){const R=10/1.72/UNITK,au=new THREE.Mesh(GEO.auK||(GEO.auK=new THREE.RingGeometry(R-.14,R,72)),new THREE.MeshBasicMaterial({color:0xffd23c,transparent:true,opacity:.38,side:THREE.DoubleSide,depthWrite:false}));au.rotation.x=-Math.PI/2;au.position.y=.22;au.renderOrder=1;g.add(au);const fill=new THREE.Mesh(GEO.auKf||(GEO.auKf=new THREE.CircleGeometry(R,56)),new THREE.MeshBasicMaterial({color:0xffd23c,transparent:true,opacity:.06,depthWrite:false}));fill.rotation.x=-Math.PI/2;fill.position.y=.2;g.add(fill);g.userData.aura=au}
