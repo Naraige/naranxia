@@ -16,7 +16,7 @@ if(l){var p=b.querySelector('.st1 .sp'),c=b.querySelector('.mw');if(p&&c){p.text
 var g=function(k){try{return localStorage.getItem('dk_'+k)==='1'}catch(e){return false}};
 I.doSkip=function(){if(!I.skip){I.skip=true;b.classList.add('skip');if(I.onSkip)I.onSkip()}};
 if(g('rm')||g('qi')&&g('seen'))I.doSkip();
-I.ev=function(){I.doSkip()};try{addEventListener('pointerdown',I.ev,true);addEventListener('keydown',I.ev,true)}catch(e){}
+I.ev=function(e){if(e&&e.type==='keydown'){if(e.key==='Escape'||e.key==='Enter'||e.key===' ')I.doSkip()}else if((I.n=(I.n|0)+1)>1)I.doSkip()};try{addEventListener('pointerdown',I.ev,true);addEventListener('keydown',I.ev,true)}catch(e){}
 var go=function(){if(!I.t0){I.t0=performance.now();b.classList.add('go');if(I.onGo)I.onGo()}};
 requestAnimationFrame(function(){requestAnimationFrame(go)});setTimeout(function(){if(document.hidden)go()},600)})()</script>
   <canvas id="g3"></canvas>

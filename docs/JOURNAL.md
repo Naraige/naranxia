@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-10 · retours du Roi sur le build de test: son, intro, classement (non livré)
+- « Plus de son »: non reproduit en headless (musique mesurée ~-25 dBFS sur le titre, rendu neutralisé). Cause probable: ancien `dk_vol` bas ou `dk_snd=0` + nouvelle courbe au carré + -11 dB. Correctif: `TRIM` .285 -> .45 (+4 dB), remise à zéro unique de `dk_vol`/`dk_snd` (clé `dk_aud=2`). À confirmer par le Roi.
+- Carte Claude: jouée dans la sonde (`tools/bootprobe.py`); un clic pendant l'intro la sautait. Maintenant un clic ne saute plus, 2e clic ou Échap/Entrée/Espace saute.
+- Son sans clic: impossible dans un navigateur; launcher Electron: `autoplay-policy=no-user-gesture-required` (non testé).
+- Records -> Leaderboard: top 10 local en premier, nom du royaume enregistré dans `dk_sb` (`n`). Pas de classement en ligne (pas de serveur).
+- Note: le build compressé charge three.js depuis un CDN; les sondes doivent le router en local (comme `bootprobe.py`).
+
 ## 2026-11-10 · bâtiments et unités look B fusionnés (Roi: tout B), non livré
 - Bâtiments: textures 3-4 tons, fenêtres éclairées la nuit, niveau bois distinct, fumée, 10 bâtiments refaits (`docs/studio-notes/buildings.md`). Unités: `UV2_ON='all'` dans `rendering/models/unit-style.js` (`docs/studio-notes/units.md`).
 - Vérifié sur l'arbre fusionné: smoke det tools features mp8 mpk mp_resync ALL PASS (`dist/merge_tests6.txt`). Build de test republié.

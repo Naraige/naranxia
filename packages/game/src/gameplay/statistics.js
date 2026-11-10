@@ -1,3 +1,4 @@
+import { THEME } from '../ui/kingdom-theme.js';
 import { rngf } from '../core/random.js';
 import { diagnosticsState } from '../debug/diagnostics.js';
 import { kingTick } from './king-skills.js';
@@ -34,7 +35,7 @@ const sbLoad=()=>{try{return JSON.parse(localStorage.getItem('dk_sb')||'{}')}cat
 
 function sbDaily(){try{const d=Math.floor(Date.now()/864e5);return Math.abs(rngf(d*2654435761%4294967296)()*500-terrainState.SEED)<1e-6}catch(e){return false}}
 
-export function sbRec(){statisticsState.SBR=null;try{const all=sbLoad(),k=sbKey(),a=all[k]||[],sc=sessionState.waveN*100+sessionState.kills,r={w:sessionState.waveN,k:sessionState.kills,s:sc,d:Date.now()};a.push(r);a.sort((x,y)=>y.s-x.s||x.d-y.d);const top=a.slice(0,3);all[k]=top;
+export function sbRec(){statisticsState.SBR=null;try{const all=sbLoad(),k=sbKey(),a=all[k]||[],sc=sessionState.waveN*100+sessionState.kills,r={w:sessionState.waveN,k:sessionState.kills,s:sc,d:Date.now(),n:String(THEME&&THEME.n||'').slice(0,24)};a.push(r);a.sort((x,y)=>y.s-x.s||x.d-y.d);const top=a.slice(0,3);all[k]=top;
   const ks=Object.keys(all);if(ks.length>60){ks.sort((x,y)=>all[y][0].d-all[x][0].d);for(const q of ks.slice(60))delete all[q]}
   localStorage.setItem('dk_sb',JSON.stringify(all));statisticsState.SBR={top,rank:top.indexOf(r),daily:sbDaily()}}catch(e){}}
 

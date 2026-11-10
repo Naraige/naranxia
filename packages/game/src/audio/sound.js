@@ -20,7 +20,7 @@ export const soundState = {
   vS: .55,
 };
 /* bus gains at slider = 1 and the trim after the limiter; set from the offline measurements in docs/studio-notes/audio.md */
-const MUSK=1.7,SFXK=.85,TRIM=.285,FADE=1.6;
+const MUSK=1.7,SFXK=.85,TRIM=.45,FADE=1.6;
 
 /* every random draw of the audio code: the real generator, never the seeded one of the simulation */
 const R=()=>(REALR||Math.random)(),ri=n=>(R()*n)|0;
@@ -226,6 +226,8 @@ export async function audioBench(sc,sec){const keep=[AC,MG,SB,MB,MF,FXB,UIB,RV,n
  const db=x=>(20*Math.log10(Math.max(1e-9,x))).toFixed(1);return sc+' '+sec+'s: peak '+db(pk)+' dBFS, RMS '+db(Math.sqrt(ss/n))+', RMS first 3s '+db(Math.sqrt(s3/n3))+', loudest 0.4s RMS '+db(Math.sqrt(mx/wn))}
 
 export function initializeSound() {
+  /* the levels and the slider curve changed: old saved volumes and an old mute are dropped once */
+  try{if(localStorage.getItem('dk_aud')!=='2'){localStorage.removeItem('dk_vol');localStorage.removeItem('dk_snd');localStorage.setItem('dk_aud','2')}}catch(e){}
   try{const v=JSON.parse(localStorage.getItem('dk_vol')||'{}');if(typeof v.m==='number')soundState.vM=Math.max(0,Math.min(1,v.m));if(typeof v.s==='number')soundState.vS=Math.max(0,Math.min(1,v.s))}catch(e){}
 
   try{sndOn=localStorage.getItem('dk_snd')!=='0'}catch(e){}

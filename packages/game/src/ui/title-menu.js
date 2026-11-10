@@ -95,7 +95,7 @@ function drawLobby(UW,UH){const g=canvasesState.ctx,nar=UW<480,low=UH<300,m=nar?
  if(!nar&&!low&&best&&best.w>0){let x=lx+2;const cnt=(ic,val,lab)=>{hexBadge(x+10,y+11,10,ic);const w1=pxText(val,x+25,y+7,13,'#ffe39a',{raw:true}),w2=tw(lab,.72);T_(lab,x+25,y+14,'#b8c4d8',.72);x+=25+Math.max(w1,w2)+14};
   cnt('crown',String(best.w),'Best wave');cnt('skull',String(best.k),'Zombies slain');if(run)cnt('glass',String(run.w),'Last game')}
  /* --- season card: version, season of the last game, What's new / Records / Chronicle --- */
- const items=[['Records',()=>{recOpen=true}],['Chronicle',()=>{chrOpen=true}]];if(GNOTES)items.unshift(['What\'s new',openNotes,notesNew()]);
+ const items=[['Leaderboard',()=>{recOpen=true}],['Chronicle',()=>{chrOpen=true}]];if(GNOTES)items.unshift(['What\'s new',openNotes,notesNew()]);
  const cw=nar?UW-2*m:Math.min(184,UW*.3),cx0=nar?m:UW-m-cw,cy0=nar?y+2:30,rh=nar||low?16:18,ch=31+items.length*(rh+2)+5;
  /* --- bottom left: Continue, mode band, Play --- */
  const pw=nar?UW-2*m:Math.min(214,Math.max(170,UW*.33)),px=nar?m:m+6,ph=low?30:nar?34:40,
@@ -157,13 +157,12 @@ function drawGameMenu(UW,UH,fh){NAV.onEsc=startGame;navBegin(!MP.on);NAV.first=f
  navEnd()}
 
 /* ================= Records ================= */
-function drawRecords(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'rec',title:'Records',close:back,fh,maxW:460}),l=listBegin('rec',b.x,b.y,b.w,b.h),bs=sessionState.best,r=lastRun();
+function drawRecords(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'rec',title:'Leaderboard',close:back,fh,maxW:460}),l=listBegin('rec',b.x,b.y,b.w,b.h),bs=sessionState.best,r=lastRun();
  let runs=[];try{const all=JSON.parse(localStorage.getItem('dk_sb')||'{}');for(const k in all)for(const e of all[k])if(e&&e.w>=0)runs.push(e)}catch(e){}
  runs.sort((a,b2)=>b2.s-a.s);runs=runs.slice(0,10);
  if(!(bs&&bs.w>0)&&!r&&!runs.length){l.gap(6);l.para('No record yet','#c4a37a',.9)}
- if(bs&&bs.w>0){l.section('Best');l.row({label:'Best: wave '+bs.w+'  -  '+bs.k+' zombies slain',ic:(x,y,s)=>hexBadge(x+s/2,y+s/2,s/2-1,'crown'),block:1},22)}
+ if(runs.length){l.section('Top 10 kingdoms');runs.forEach((e,i)=>l.row({label:'Wave '+e.w+'   '+e.k+' kills',value:e.n||'',vcol:i?'#c4a37a':'#e9b93c',vsc:.8,tag:['#'+(i+1),i?'#8f96a6':'#e9b93c'],block:1},18))}
  if(r){l.section('Last game');l.row({label:'Last game: wave '+r.w+'  -  '+r.k+' zombies slain',value:titleWeatherLabel(),vcol:titleSeasonColor(),vsc:.78,ic:(x,y,s)=>hexBadge(x+s/2,y+s/2,s/2-1,'glass'),block:1},22)}
- if(runs.length){l.section('Best runs');runs.forEach((e,i)=>l.row({label:'Wave '+e.w+'   '+e.k+' kills',tag:['#'+(i+1),i?'#8f96a6':'#e9b93c'],block:1},18))}
  listEnd()}
 
 /* ================= What's new ================= */

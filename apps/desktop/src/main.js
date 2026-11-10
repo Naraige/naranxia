@@ -103,5 +103,7 @@ ipcMain.handle('save:del', (e, name) => { try { fs.unlinkSync(slotFile(name)); }
 ipcMain.handle('save:folder', () => { fs.mkdirSync(SDIR(), { recursive: true }); shell.openPath(SDIR()); return true; });
 ipcMain.handle('app:info', () => ({ version: (readInstalled() || {}).version, launcher: app.getVersion(), platform: process.platform }));
 
+/* the launcher may play the title music without waiting for a click (a browser never allows it) */
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 app.whenReady().then(createWindow);
 app.on('window-all-closed', () => app.quit());
