@@ -3,6 +3,6 @@
    the types the King picked, e.g. 'peasant,archer,knight'. Types: peasant archer knight captain bannerman gunner gunner2 guard king
    scout engineer envoy zombie husk runner brute bomber acid miner boss.
    window.__UV2 (same format) overrides it for previews only (docs/studio-boards/units/_src/render.py). Visual only: never read by the simulation. */
-export const UV2_ON='';
+export const UV2_ON='all';
 
 export const uv2=type=>{const s=typeof window!=='undefined'&&window.__UV2!==undefined?window.__UV2:UV2_ON;return s==='all'||(s!==''&&(','+s+',').indexOf(','+type+',')>=0)};
