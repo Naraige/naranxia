@@ -1,6 +1,6 @@
 import { newG } from '../geometry.js';
 import { pxArms, pxBox, pxCat, pxScene } from './pixel-geometry.js';
-import { pxMap, pxPaint, pxSkin, pxSkinArms } from './soldier-skins.js';
+import { pxHead2, pxMap, pxPaint, pxSkin, pxSkinArms, skinV2 } from './soldier-skins.js';
 import { pxSpriteF } from './weapons.js';
 import { thp } from '../../ui/kingdom-theme.js';
 
@@ -18,7 +18,7 @@ const rep2=(r,n)=>Array(n).fill(r);
 let CH4;
 let CH8;
 
-const FACE2=(mid,low,R)=>({F:['hhhhhhhh','hhhhhhhh','hssssssh','srrssrrs','swessews','sssSSsss',mid||'sssmmsss',low||'ssssssss'],
+const FACE2=(mid,low,R)=>skinV2.on&&!R?pxHead2({plain:1,mid,low}):({F:['hhhhhhhh','hhhhhhhh','hssssssh','srrssrrs','swessews','sssSSsss',mid||'sssmmsss',low||'ssssssss'],
  R:R||['hhhhhhhh','hhhhhhhh','sssshhhh','sssshhhh','ssSshhhh','sssshhhh','ssssshhh','ssssssss'],L:'~R',B:rep2('hhhhhhhh',7).concat(['ssssssss']),T:rep2('hhhhhhhh',8),D:rep2('ssssssss',8)});
 
 /* a pixel cut-out wall of a crown: rows top first, '.' = gap; plane xy (front / back) or yz (sides) */

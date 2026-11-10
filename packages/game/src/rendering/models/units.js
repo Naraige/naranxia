@@ -3,7 +3,9 @@ import { bxc, geometryState, newG } from '../geometry.js';
 import { lighten } from '../kingdom-banner.js';
 import { bannerKit, heraldryState, shieldGeo } from './heraldry.js';
 import { pxBannerman, pxCaptain, pxEngineer, pxEnvoy, pxGunner, pxKing, pxScout } from './royal-skins.js';
-import { pxArcher, pxGuard, pxKnight, pxPeasant } from './soldier-skins.js';
+import { pxArcher, pxGuard, pxKnight, pxPeasant, skinV2 } from './soldier-skins.js';
+import { PX2 } from './unit-skins-v2.js';
+import { uv2 } from './unit-style.js';
 import { pxBanner, pxCapes } from './unit-accessories.js';
 import { fin, mcHead, mcLimbs, mcTorso, NOWEAP, toolGeos, unitPartsState, vb, vx, VX } from './unit-parts.js';
 import { zombieKit, zombiesState } from './zombies.js';
@@ -27,6 +29,8 @@ function humanKit(type,AL,P){
  const{G,HG,LA,LG,AG}=P,t=hkPut(G,0),tm=hkPut(G,4),tc=hkPut(G,7),tg=hkPut(G,5),hd=hkPut(HG,0),hm=hkPut(HG,4),hc=hkPut(HG,7),hg=hkPut(HG,5),k=hkPut(LG,0),km=hkPut(LG,4),
   A=(m,dx,y,z,w,h,d,c)=>{hkPut(AG,m)(dx,y,z,w,h,d,c);hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c)},AE=(m,dx,y,z,w,h,d,c)=>hkPut(AG,m)(dx,y,z,w,h,d,c),AW=(m,dx,y,z,w,h,d,c)=>hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c),
   L=(m,x,y,z,w,h,d,c)=>hkPut(LA,m)(x,y,z,w,h,d,c),P1=thp(),P2=ths(),PD=thd(),skin='#c68a5e';
+ /* units board, look B (unit-style.js): new skins, same parts and anchors */
+ if(PXON&&uv2(type)&&PX2[type]){skinV2.on=1;try{PX2[type](P,AL)}finally{skinV2.on=0}if(type==='gunner2'){AE(0,0,-4.65,1.6,.3,.3,7.4,'#8a6a3a');AE(0,0,-4.85,5.5,.68,.68,1.0,'#4a3a2a');AE(0,0,-4.75,-2.3,.4,.4,.4,'#5a4428')}return null}
  if(PXON&&(type==='king'||type==='captain'||type==='bannerman')){({king:pxKing,captain:pxCaptain,bannerman:pxBannerman})[type](P,AL);return null}
  if(PXON&&(type==='gunner'||type==='gunner2')){pxGunner(P,AL);if(type==='gunner2'){AE(0,0,-4.65,1.6,.3,.3,7.4,'#8a6a3a');AE(0,0,-4.85,5.5,.68,.68,1.0,'#4a3a2a');AE(0,0,-4.75,-2.3,.4,.4,.4,'#5a4428')}return{h:15.6}}
  if(PXON&&(type==='peasant'||type==='archer'||type==='guard')){({peasant:pxPeasant,archer:pxArcher,guard:pxGuard})[type](P,AL);return{h:type==='guard'?21:15.6}}

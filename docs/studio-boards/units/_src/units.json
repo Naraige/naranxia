@@ -1,0 +1,6 @@
+[["peasant","peasant",0],["peasant2","peasant",1],["peasant3","peasant",3],["peasant4","peasant",4],
+ ["archer","archer"],["knight","knight",null,null,0],["knight_plate","knight",null,null,2,3],
+ ["captain","captain"],["bannerman","bannerman"],["cannon","cannon"],
+ ["guard","guard"],["king","king"],["scout","scout"],["engineer","engineer"],["envoy","envoy"],
+ ["zombie","zombie",0],["zombie2","zombie",5],["zombie3","zombie",11],["zombie4","zombie",17],
+ ["husk","husk",1],["runner","runner",2],["brute","brute",0],["bomber","bomber",0],["acid","acid",0],["miner","miner",0],["boss","brute",0,"boss"],["zknight","zombie",2,"knight"],["rebel","knight",null,"rebel"]]

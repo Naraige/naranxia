@@ -1,4 +1,4 @@
-import { PD, PDP, pxArms, pxBox, PXDK, PXLE, pxRot, pxScene, teamPal } from './pixel-geometry.js';
+import { PD, PDP, pxArms, pxBox, PXDK, PXLE, pxN, pxRot, pxScene, shadeHex, teamPal } from './pixel-geometry.js';
 import { zombiesState } from './zombies.js';
 import { unitsState } from './units.js';
 import { thp } from '../../ui/kingdom-theme.js';
@@ -37,19 +37,35 @@ const pE=(u,v,W,H)=>Math.min(u,v,W-1-u,H-1-v);
 export function pxPaint(spec,map){return(f,u,v,W,H)=>{let s=spec&&spec[f];if(!s)return null;let mir=false;if(typeof s==='string'){mir=s[0]==='~';s=spec[mir?s.slice(1):s]}
  if(typeof s==='function')return s(u,v,W,H);const row=s[H-1-v];if(!row)return null;const c=row[mir?W-1-u:u];if(c===undefined||c==='.')return null;const col=map[c];return col===undefined?null:col}}
 
-export function pxSkin(P,K,map,o){o=o||{};const B=(Gx,x,y,z,w,h,d,spec,g,m,ao)=>{if(spec)pxBox(Gx,x,y,z,w,h,d,pxPaint(spec,map),{mat:m||0,grid:g,ao:ao!==false})};
- B(P.HG,-4,24,-4,8,8,8,K.head,null,0);B(P.HG,-4.5,23.5,-4.5,9,9,9,K.hat,[8,8,8],K.hatMat||0,false);
- B(P.G,-4,12,-2,8,12,4,K.body,null,0);B(P.G,-4.25,11.75,-2.25,8.5,12.5,4.5,K.jacket,[8,12,4],K.jacketMat||0,false);
- B(P.LG,-2,-12,-2,4,12,4,K.leg,null,0);B(P.LG,-2.25,-12.25,-2.25,4.5,12.5,4.5,K.pants,[4,12,4],K.pantsMat||0,false);
+/* ---- units board, look B: per-pixel shading on top of the drawn letters (3 to 4 tones per colour): dark hem rows, lit shoulder rows, a few worn pixels.
+   kind 1 = cloth / leather, 2 = metal (no wear, dark foot row only). skinV2.on is set by the new-look dispatch in units.js (humanKit) and is 0 on the current look ---- */
+export const skinV2={on:0};
+const TNC=new Map(),tnC=(c,k)=>{if(k===1)return c;const q=c+k;let r=TNC.get(q);if(!r){r=shadeHex(c,k);TNC.set(q,r)}return r};
+export const pxTone=(paint,kind,sd)=>!kind?paint:(f,u,v,W,H)=>{const c=paint(f,u,v,W,H);if(!c||f==='T')return c;if(f==='D')return tnC(c,.82);
+ if(kind===2)return v===0&&H>=8?tnC(c,.88):c;let k=1;if(H>=8){if(v<=1)k=.87;else if(v>=H-2)k=1.06}const n=pxN(f,u,v,sd||0);if(n<.06)k*=.92;return tnC(c,Math.round(k*100)/100)};
+const tk=(m,on)=>on?(m===4?2:1):0;
+
+export function pxSkin(P,K,map,o){o=o||{};const V=skinV2.on,B=(Gx,x,y,z,w,h,d,spec,g,m,ao,kd)=>{if(spec)pxBox(Gx,x,y,z,w,h,d,pxTone(pxPaint(spec,map),kd,7),{mat:m||0,grid:g,ao:ao!==false});else if(spec===0)pxBox(Gx,x,y,z,w,h,d,()=>null,{only:true})};
+ B(P.HG,-4,24,-4,8,8,8,K.head,null,0);B(P.HG,-4.5,23.5,-4.5,9,9,9,K.hat,[8,8,8],K.hatMat||0,false,tk(K.hatMat,V));
+ B(P.G,-4,12,-2,8,12,4,K.body,null,0,true,tk(K.bodyMat,V));B(P.G,-4.25,11.75,-2.25,8.5,12.5,4.5,K.jacket,[8,12,4],K.jacketMat||0,false,tk(K.jacketMat,V));
+ B(P.LG,-2,-12,-2,4,12,4,K.leg,null,0,true,tk(K.legMat,V));B(P.LG,-2.25,-12.25,-2.25,4.5,12.5,4.5,K.pants,[4,12,4],K.pantsMat||0,false,tk(K.pantsMat,V));
  pxBox(P.LG,-30,-40,-30,60,28,60,()=>null,{only:true})}
 
-export function pxSkinArms(T,K,map){if(K.arm)pxBox(T,-2,-12,-2,4,12,4,pxPaint(K.arm,map),{mat:0});if(K.sleeve)pxBox(T,-2.25,-12.25,-2.25,4.5,12.5,4.5,pxPaint(K.sleeve,map),{mat:K.sleeveMat||0,grid:[4,12,4],ao:false})}
+export function pxSkinArms(T,K,map){const V=skinV2.on;if(K.arm)pxBox(T,-2,-12,-2,4,12,4,pxTone(pxPaint(K.arm,map),tk(K.armMat,V),3),{mat:0});else if(K.arm===0)pxBox(T,-2,-12,-2,4,12,4,()=>null,{only:true});if(K.sleeve)pxBox(T,-2.25,-12.25,-2.25,4.5,12.5,4.5,pxTone(pxPaint(K.sleeve,map),tk(K.sleeveMat,V),5),{mat:K.sleeveMat||0,grid:[4,12,4],ao:false})}
+
+/* look B face: lit hair, brows, eyes with whites, cheek light, jaw shadow, ears and sideburns on the sides. o.beard 0 none, 1 stubble, 2 full; o.mid / o.low replace the
+   mouth and chin rows; o.plain keeps to the letters every map has (h r s S w e m) */
+export function pxHead2(o){o=o||{};const p=o.plain,q=r=>p?r.replace(/H/g,'h').replace(/K/g,'s'):r,b=o.beard|0;
+ return{F:['hhHhhhhh','hHhhhhHh','hhsKKshh','SrrssrrS','swessews','sKsSSsKs',o.mid||(b===2?'rhhmmhhr':b===1?'sSSmmSSs':'ssSmmSss'),o.low||(b===2?'rrhhhhrr':b===1?'SSSSSSSS':'SssssssS')].map(q),
+  R:['hhhhHhhh','hHhhhhhh','sshhhhhh','sSshHhhh','ssSshhhr','ssshhhrr',b===2?'hhsshrrr':'sssshrrr',b===2?'rhhsssss':'Ssssssss'].map(q),L:'~R',
+  B:['hhHhhhhh','hhhhHhhh','hHhhhhhh','hhhhhhHh','hhhHhhhh','hrhhhhrh','rrhhhhrr','rrrssrrr'].map(q),
+  T:['hhhhhhhh','hHhhhHhh','hhhhhhhh','hhHhhhHh','hhhhhhhh','hHhhhhhh','hhhhHhhh','hhhhhhhh'].map(q),D:Array(8).fill('ssssssss')}}
 
 /* colour maps: letters to display colours, turned into albedo once */
 export const pxMap=(o,tm)=>{const m={};for(const k in o)m[k]=PD(o[k]);if(tm){const T=teamPal(tm);m.V=T[0];m.t=T[1];m.T=T[2];m.U=T[3];m.Y=T[4]}return m};
 
 /* ---- rank galons (King's board choice, rank row A): rank 0..3 = 0..3 gold bands on both sleeves (row numbers count from the top of the arm piece, c = gold colour letter) ---- */
-function pxRankK(K,part,rows,faces,c){const rk=unitsState.RKB|0;if(!rk)return K;const o=Object.assign({},K),q=Object.assign({},K[part]);
+export function pxRankK(K,part,rows,faces,c){const rk=unitsState.RKB|0;if(!rk)return K;const o=Object.assign({},K),q=Object.assign({},K[part]);
  for(const f of faces)if(Array.isArray(q[f])){q[f]=q[f].slice();for(const j of rows.slice(0,rk))q[f][j]=c+c+c+c}
  o[part]=q;return o}
 
