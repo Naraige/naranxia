@@ -2,7 +2,7 @@
    MUT2_ON is the single switch: '' = every mutant keeps the current look (A), 'all' = every mutant on the new look, or a comma list of
    the types the King picked, e.g. 'brute,boss,acid'. Types: husk runner brute bomber acid miner boss (boss = the giant brute of waves 10, 20...).
    window.__MUT2 (same format) overrides it for previews only (docs/studio-boards/mutants/_src). Visual only: never read by the simulation. */
-export const MUT2_ON='';
+export const MUT2_ON='all';
 
 export const MUT2_TYPES={husk:1,runner:1,brute:1,bomber:1,acid:1,miner:1,boss:1};
 

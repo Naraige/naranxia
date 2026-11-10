@@ -4,7 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
-## 2026-11-10 · mutants en monstruosités: planche A/B, interrupteur éteint (non fusionné, non livré)
+## 2026-11-10 · mutants look B fusionné et allumé (réponse du Roi « 1B … 8B »), non livré
+- Le Roi a répondu « 1B 2B 3B 4B 5B 6B 7B 8B »: branche fusionnée, `MUT2_ON='all'`, `npm run build:release` fait.
+- Tests après fusion: voir `dist/merge_tests8.txt` (smoke det mp8 mpk lancés). Build de test republié une fois les tests verts.
+- Reste: nuée lointaine (ancien aspect pour momie et coureur), yeux/lueurs de nuit non regardés, cadavres, brute +54 % et boss +72 % de triangles, vrai GPU.
+- Planches armes/outils (`gear`) et blocs (`blocks`) prêtes dans leurs worktrees, non fusionnées, en attente des codes du Roi.
+
+## 2026-11-10 · mutants en monstruosités: planche A/B, interrupteur éteint (historique)
 - Demande du Roi: « améliore les mutants pour ressembler à des monstruosités ». Branche de worktree hd-model, rien dans `game/`, rien poussé.
 - Look B des 6 mutants + boss dans `rendering/models/mutants.js`, interrupteur `MUT2_ON` (`mutant-style.js`, défaut '' = rien ne change). Détail, coûts, reste à faire: `docs/studio-notes/mutants.md`.
 - Planche: `docs/studio-boards/mutants/board.html` (8 lignes: brute, coureur, artificier, cracheur, mineur, momie, boss, horde), `rows.json`. En attente du code du Roi (« 1B 2A ... »).
