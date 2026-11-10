@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-10 · audio refait, planches bâtiments et unités publiées (non livré)
+- Audio fusionné: lancement -11 dB (compresseurs sans rattrapage, limiteur, fondus, défauts 0,55), 7 thèmes variés, effets à hauteur/timbre variables, plafonds de voix, sons de menu; son d'onglet branché dans `kitTabs`. Détail: `docs/studio-notes/audio.md`. Aucune écoute humaine.
+- Vérifié sur l'arbre fusionné (intro + audio): smoke det mp8 mpk mp_resync, voir `dist/merge_tests5.txt`. `tools` non relancé depuis le correctif d'intro.
+- Build de test republié (artifact FibK3cKvLVe3mSuJDUb49d).
+- Planches publiées (index + batiments.html + unites.html sur l'artifact des planches), NON fusionnées: branches `worktree-agent-a67e365d50939b80a` (bâtiments) et `worktree-agent-adc00a47b23dd80ba` (unités, types choisis à mettre dans `UV2_ON`, `docs/studio-boards/units/rows.json`).
+- À trancher par le Roi: niveau sonore, remise des curseurs au nouveau défaut, thème triomphe et silences; codes des deux planches.
+
 ## 2026-11-10 · intro de lancement dégelée, emblèmes annulés, build de test (non livré)
 - Intro: le démarrage était une seule tâche synchrone et l'intro comptait en horloge murale, donc finie avant d'être vue. `core/boot.js` découpe `main.js` en tranches de 30 ms; cartes en `transform`/`opacity`, lancées à la première image peinte; rideau ouvert quand le titre dessine. Détail: `docs/studio-notes/boot.md`.
 - Sous `navigator.webdriver` le démarrage reste synchrone (les tests ne couvrent pas le vrai chemin; `tools/bootprobe.py` le force).
