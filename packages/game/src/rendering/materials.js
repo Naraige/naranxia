@@ -1,3 +1,4 @@
+import { BLKU, BLKV, BPXU, BSEAS, GLBLK } from './blocks.js';
 import { GQU } from './scene.js';
 import { THREE } from './three.js';
 
@@ -40,8 +41,8 @@ export function initializeMaterials() {
   matV = new THREE.MeshPhongMaterial({vertexColors:true,shininess:9,specular:0x0a0a0a});
 
   matV.userData.NGU=NGU;
-  matV.onBeforeCompile=sh=>{sh.uniforms.uHQ=GQU;sh.uniforms.uLMax=LMU;sh.uniforms.uNight=NGU;sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;attribute float mat;varying float vMat;').replace('#include <begin_vertex>','#include <begin_vertex>\nvMat=mat;\n#ifdef USE_INSTANCING\nvWP=(modelMatrix*instanceMatrix*vec4(transformed,1.0)).xyz;\n#else\nvWP=(modelMatrix*vec4(transformed,1.0)).xyz;\n#endif');
-   sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;varying float vMat;uniform float uHQ;uniform float uLMax;uniform float uNight;'+GLN+GLBUMP+GLINK).replace('#include <color_fragment>',`#include <color_fragment>
+  matV.onBeforeCompile=sh=>{sh.uniforms.uHQ=GQU;sh.uniforms.uLMax=LMU;sh.uniforms.uNight=NGU;sh.uniforms.uBlk=BLKV;sh.uniforms.uBpx=BPXU;sh.uniforms.uSeas=BSEAS;sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;attribute float mat;varying float vMat;').replace('#include <begin_vertex>','#include <begin_vertex>\nvMat=mat;\n#ifdef USE_INSTANCING\nvWP=(modelMatrix*instanceMatrix*vec4(transformed,1.0)).xyz;\n#else\nvWP=(modelMatrix*vec4(transformed,1.0)).xyz;\n#endif');
+   sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;varying float vMat;uniform float uHQ;uniform float uLMax;uniform float uNight;'+GLN+GLBUMP+GLINK+GLBLK).replace('#include <color_fragment>',`#include <color_fragment>
  vec3 wN=normalize(cross(dFdx(vWP),dFdy(vWP)));vec3 aN=abs(wN);vec3 wq=vWP-wN*.002;
  vec2 uv=aN.y>.5?wq.xz:(aN.x>.5?wq.zy:wq.xy);
  float fw=max(length(dFdx(uv)),length(dFdy(uv)));
@@ -59,6 +60,8 @@ export function initializeMaterials() {
  float kD=clamp((bc.r-bc.b)*4.-.4,0.,1.)*(1.-kG)*(1.-smoothstep(.6,.74,lum));
  float kN=clamp((bc.r-bc.b)*3.,0.,1.)*smoothstep(.6,.72,lum)*(1.-kG);
  float mId=floor(vMat+.5);if(mId>.5&&mId<9.5){kG=0.;kT=0.;kS=mId==1.?.55:0.;kD=mId==2.?1.:0.;kN=0.;}
+ /* block world (switch): kinds 20+ get their own pixel texture below */
+ bool BL=uBlk>.5&&mId>19.5;if(BL){kG=0.;kT=0.;kS=0.;kD=0.;kN=0.;}
  float macro=vn3(wq*.15);
  bool hz=kD>.5&&aN.y<.5;vec2 rA=hz?uv:vec2(dot(uv,vec2(.866,.5)),dot(uv,vec2(-.5,.866))),rB=hz?uv:vec2(dot(uv,vec2(-.342,.94)),dot(uv,vec2(-.94,-.342)));
  float mk=hz?0.:smoothstep(.35,.65,vn3(wq*.21+11.));
@@ -109,7 +112,7 @@ export function initializeMaterials() {
  bc*=mix(tw*(.9+.2*macro),vec3(1.),kT*.9);if(aN.y<.5)bc*=.94;
  diffuseColor.rgb=mix(bc,bc*vec3(.1,.085,.12),ink*.3);
 #ifndef TERR
- {float PXS=18.;vec2 pc=floor(uv*PXS+.001);float pn=hn3(vec3(pc,aN.y>.5?7.3:(aN.x>.5?3.1:5.7)));vec3 c0=diffuseColor.rgb;
+ {float PXS=uBpx>.5?uBpx:18.;vec2 pc=floor(uv*PXS+.001);float pn=hn3(vec3(pc,aN.y>.5?7.3:(aN.x>.5?3.1:5.7)));vec3 c0=diffuseColor.rgb;
   float row=floor(pc.y/4.),bx=mod(pc.x+mod(row,2.)*4.,8.),mor=(mod(pc.y,4.)<.5||bx<.5)?1.:0.;
   float prow=floor(pc.y/4.),pe=mod(pc.x+prow*5.,16.)<.5?1.:0.,pli=(mod(pc.y,4.)<.5||pe>.5)?1.:0.;
   if(aN.y>.5){mor=(mod(pc.x,8.)<.5||mod(pc.y,8.)<.5)?1.:0.;pli=mod(pc.x,4.)<.5?1.:0.;}
@@ -137,7 +140,14 @@ export function initializeMaterials() {
 #ifdef TERR
  if(vWP.y<11.9&&vMat<8.5){float dw=clamp((11.92-vWP.y)*.32+.25,0.,1.);diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.09,.24,.3),dw*.85);}
 #endif
- float hB=stroke*.6*fS;`).replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>').replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+ if(BL){float bm=mod(mId,20.),bq=uBlk*16.,px1=fw*bq,fzb=aN.y>.5?7.3:(aN.x>.5?3.1:5.7);vec2 pb=floor(uv*bq+.001);vec3 cb=vColor.rgb;
+  if(bm==8.){float ry=floor((ceil(vWP.y-.004)-vWP.y)*bq);if(ry>=2.+floor(hn3(vec3(pb.x,3.,fzb))*3.)){bm=2.;cb=vec3(.53,.38,.26)*(wN.x>.5?.9:(wN.x<-.5?.8:(wN.z>.5?.95:.75)));}}
+  diffuseColor.rgb=blkTex(bm,cb,pb,fzb,aN.y>.5,1.-smoothstep(.45,1.4,px1),1.-smoothstep(.7,2.4,px1),wq);
+#ifdef TERR
+  if(mId>39.5&&vWP.y<11.9){float yq=(floor(vWP.y*bq)+.5)/bq,dw=clamp((11.92-yq)*.32+.25,0.,1.);diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.09,.24,.3),dw*.85);}
+#endif
+ }
+ float hB=BL?0.:stroke*.6*fS;`).replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>').replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
  {vec3 alb=max(diffuseColor.rgb,vec3(.004));vec3 irr=(reflectedLight.directDiffuse+reflectedLight.indirectDiffuse)/alb;float li=dot(irr,vec3(.299,.587,.114));
   float r=li/max(uLMax,.05);
   float bd=.4+.3*smoothstep(.24,.36,r)+.3*smoothstep(.52,.64,r)+.16*smoothstep(1.,1.25,r);
@@ -145,7 +155,7 @@ export function initializeMaterials() {
   vec3 nI=irr/max(li,1e-4)*bd*uLMax*tnt;
   float h1=0.;if(r<.5){float hl=fract((uv.x+uv.y)*4.+vn3(vec3(uv*2.,1.))*.7);h1=(1.-smoothstep(.06,.17,hl))*(1.-smoothstep(.28,.5,r));
    if(r<.34){float hl2=fract((uv.x-uv.y)*4.+vn3(vec3(uv*2.,2.))*.7);h1=max(h1,(1.-smoothstep(.06,.17,hl2))*(1.-smoothstep(.18,.34,r)));}h1*=FA(4.);}
-  nI*=1.-h1*.42*(1.-.55*kT)*(vMat>4.5&&vMat<5.5?0.:1.)*((vMat>.5&&vMat<3.5)||(vMat>5.5&&vMat<6.5)||vMat>7.5?.3:1.);
+  nI*=1.-(BL?0.:h1)*.42*(1.-.55*kT)*(vMat>4.5&&vMat<5.5?0.:1.)*((vMat>.5&&vMat<3.5)||(vMat>5.5&&vMat<6.5)||vMat>7.5?.3:1.);
   if(vMat>3.5&&vMat<4.5){vec3 Vv=normalize(vViewPosition);float fr=pow(1.-clamp(dot(normal,Vv),0.,1.),2.2);nI=nI*1.08+vec3(1.,.86,.56)*fr*.75*uLMax+vec3(1.,.95,.8)*smoothstep(.62,.9,r)*.35*uLMax;}
   reflectedLight.directDiffuse=alb*nI;reflectedLight.indirectDiffuse=vec3(0.);
   if(vMat>4.5&&vMat<5.5){reflectedLight.directDiffuse=alb*.3*uLMax;totalEmissiveRadiance+=alb*1.35;}
@@ -154,13 +164,14 @@ export function initializeMaterials() {
    reflectedLight.directDiffuse=mix(reflectedLight.directDiffuse,wm*.25*uLMax,lt);totalEmissiveRadiance+=wm*lt*1.15;}}`).replace('#include <dithering_fragment>','#include <dithering_fragment>\n{gl_FragColor.rgb*=vec3(1.02,1.,.97);}');};
   matWater = new THREE.MeshPhongMaterial({vertexColors:true,transparent:true,opacity:.84,depthWrite:true,shininess:140,specular:0xa0b0bc});
 
-  matWater.onBeforeCompile=sh=>{sh.uniforms.uT=WUT;sh.uniforms.uHQ=GQU;sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;uniform float uT;').replace('#include <begin_vertex>','#include <begin_vertex>\nvec3 wp0=(modelMatrix*vec4(position,1.0)).xyz;transformed.y+=(sin(wp0.x*1.3+uT*1.4)+sin(wp0.z*1.7+uT*1.1))*.025;vWP=(modelMatrix*vec4(transformed,1.0)).xyz;');
-   sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;uniform float uT;uniform float uHQ;'+GLN+GLBUMP).replace('#include <color_fragment>',`#include <color_fragment>
- float w1=vn3(vec3(vWP.xz*1.25+vec2(uT*.33,uT*.21),uT*.14)),w2=vn3(vec3(vWP.xz*3.2-vec2(uT*.47,-uT*.29),uT*.25+7.)),w3=vn3(vec3(vWP.xz*8.5+vec2(uT*.9,uT*.6),uT*.4+3.));
+  matWater.onBeforeCompile=sh=>{sh.uniforms.uT=WUT;sh.uniforms.uHQ=GQU;sh.uniforms.uBlk=BLKU;sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;uniform float uT;').replace('#include <begin_vertex>','#include <begin_vertex>\nvec3 wp0=(modelMatrix*vec4(position,1.0)).xyz;transformed.y+=(sin(wp0.x*1.3+uT*1.4)+sin(wp0.z*1.7+uT*1.1))*.025;vWP=(modelMatrix*vec4(transformed,1.0)).xyz;');
+   sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;uniform float uT;uniform float uHQ;uniform float uBlk;'+GLN+GLBUMP).replace('#include <color_fragment>',`#include <color_fragment>
+ vec2 wXZ=uBlk>.5?(floor(vWP.xz*uBlk*16.)+.5)/(uBlk*16.):vWP.xz;float uTq=uBlk>.5?floor(uT*5.)/5.:uT;
+ float w1=vn3(vec3(wXZ*1.25+vec2(uTq*.33,uTq*.21),uTq*.14)),w2=vn3(vec3(wXZ*3.2-vec2(uTq*.47,-uTq*.29),uTq*.25+7.)),w3=vn3(vec3(wXZ*8.5+vec2(uTq*.9,uTq*.6),uTq*.4+3.));
  float fwW=length(fwidth(vWP.xz));float hW=w1*.55+w2*.3*(1.-smoothstep(.07,.16,3.2*fwW))+w3*.15*(1.-smoothstep(.22,.5,8.5*fwW));
  float shf=smoothstep(.3,.8,vColor.r);vec3 wc=mix(vec3(.08,.34,.58),vec3(.16,.58,.64),smoothstep(.2,.3,vColor.r));
- float fp=smoothstep(.5,.78,vn3(vec3(vWP.xz*2.7+vec2(uT*.22,-uT*.17),uT*.45)))*shf+smoothstep(.85,1.,shf)*.35;fp=min(fp,1.);
- diffuseColor.rgb=mix(wc*(.9+.2*w1),vec3(.9,.96,1.),fp*.85);diffuseColor.a=mix(mix(.88,.68,smoothstep(.2,.32,vColor.r)),.95,fp);hW+=fp*.6;float fwF=max(fwidth(fp),1e-4);diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*.25,(1.-smoothstep(fwF*.6,fwF*1.8,abs(fp-.42)))*.6*step(.05,shf));`).replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\nnormal=bumpN(normal,-vViewPosition,hW,uHQ>.5?.17:.08);').replace('#include <tonemapping_fragment>',`{vec3 Vw=normalize(vViewPosition);float fr=pow(1.-clamp(dot(normal,Vw),0.,1.),4.);
+ float fp=smoothstep(.5,.78,vn3(vec3(wXZ*2.7+vec2(uTq*.22,-uTq*.17),uTq*.45)))*shf+smoothstep(.85,1.,shf)*.35;fp=min(fp,1.);
+ diffuseColor.rgb=mix(wc*(.9+.2*w1),vec3(.9,.96,1.),fp*.85);diffuseColor.a=mix(mix(.88,.68,smoothstep(.2,.32,vColor.r)),.95,fp);hW+=fp*.6;float fwF=max(fwidth(fp),1e-4);diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*.25,(1.-smoothstep(fwF*.6,fwF*1.8,abs(fp-.42)))*.6*step(.05,shf));`).replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\nnormal=bumpN(normal,-vViewPosition,hW,uBlk>.5?0.:(uHQ>.5?.17:.08));').replace('#include <tonemapping_fragment>',`{vec3 Vw=normalize(vViewPosition);float fr=pow(1.-clamp(dot(normal,Vw),0.,1.),4.);
  #ifdef USE_FOG
  gl_FragColor.rgb=mix(gl_FragColor.rgb,fogColor*1.02,fr*.25);
  #endif
@@ -170,6 +181,7 @@ export function initializeMaterials() {
 
 export function initializeTerrainMaterial() {
   matT = matV.clone();
-  matT.onBeforeCompile=matV.onBeforeCompile;
+  /* same shader, its own block-size uniform (the terrain and the decor can use different block sizes) */
+  matT.onBeforeCompile=function terrainShader(sh){matV.onBeforeCompile(sh);sh.uniforms.uBlk=BLKU};
   matT.defines={TERR:''};
 }

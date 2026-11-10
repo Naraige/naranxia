@@ -34,6 +34,7 @@ import { initializeEffects, initializeWorldEffects } from './rendering/effects.j
 import { initializeFog, initializeFogOverlay } from './rendering/fog.js';
 import { initializeKingdomBanner } from './rendering/kingdom-banner.js';
 import { initializeSceneLighting } from './rendering/lighting.js';
+import { initializeBlocks } from './rendering/blocks.js';
 import { initializeMaterials, initializeTerrainMaterial } from './rendering/materials.js';
 import { initializeBuildingParts } from './rendering/models/building-parts.js';
 import { initializePixelGeometry } from './rendering/models/pixel-geometry.js';
@@ -77,7 +78,7 @@ runBoot([
   initializeRandom, initializeDiagnostics, initializeCanvases, initializeRules,
   initializeTerrain, initializeSessionPreferences, initializeKingdomTheme, initializeConstruction,
   initializeEconomy, initializeSpatialIndex, initializeWorkplaces, initializeZombieLanes,
-  initializeSwarm, initializeScene, initializeMaterials, initializeTerrainRendering,
+  initializeSwarm, initializeScene, initializeBlocks, initializeMaterials, initializeTerrainRendering,
   initializeTerrainProps, initializeFog, initializeTerrainMaterial, initializeFogOverlay,
   initializePixelGeometry, initializeSoldierSkins, initializeWeapons, initializeRoyalSkins,
   initializeUnits, initializeSwarmModels, initializeUnitInstances, initializeStructureModels,

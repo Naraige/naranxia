@@ -1,0 +1,16 @@
+{
+ "switch": "packages/game/src/rendering/blocks.js: blocksState (default on:false). To apply the King's code, set the defaults there: on:true, then the fields named below. For a test without editing: localStorage dk_blocks = '1' (everything, blocks of 0.5) or a JSON object such as {\"on\":true,\"DBLK\":0.3333333333333333}, or in the console setBlocks(true,{...}).",
+ "variants": {"A": "current look, the part stays off", "B": "blocks of 0.5 world unit (2 per tile)", "C": "blocks of 1/3 world unit (3 per tile), only where the row shows a C; row 8 C is the autumn picture of B"},
+ "rows": {
+  "1": {"what": "terrain close-up: block textures on grass, dirt, stone, sand, snow, gravel; dirt path and cobble path as whole blocks", "B": {"terrain": true, "BLK": 0.5}, "C": {"terrain": true, "BLK": 0.3333333333333333}, "A": {"terrain": false}},
+  "2": {"what": "cliffs and water edge: stone / dirt / sand block sides, pixel grass lip on the top block, pixel water. Same part as row 1 (terrain); if 1 and 2 differ, ask the King", "B": {"terrain": true}, "A": {"terrain": false}},
+  "3": {"what": "trees on the block grid (oak, birch, pine; trunk 1 block wide; canopies merged per chunk)", "B": {"decor": true, "DBLK": 0.5}, "C": {"decor": true, "DBLK": 0.3333333333333333}, "A": {"decor": false}},
+  "4": {"what": "rocks, gold ore, bushes, stumps as blocks; flowers, tufts, mushrooms, reeds on the pixel grid. Same part as row 3 (decor) and same block size DBLK; if 3 and 4 differ, row 3 decides the size and the difference goes back to the King", "B": {"decor": true, "DBLK": 0.5}, "C": {"decor": true, "DBLK": 0.3333333333333333}, "A": {"decor": false}},
+  "5": {"what": "building textures at 16 pixels per block (bricks, planks, tiles, thatch); the models are unchanged", "B": {"build": true}, "A": {"build": false}},
+  "6": {"what": "village at game distance: no part of its own, it shows rows 1 to 5 together. A = keep everything off, B / C = confirms the block size of rows 1 and 3", "B": {}, "C": {}, "A": {"on": false}},
+  "7": {"what": "full map view: no part of its own (cost check: same draw calls, about 40 % fewer triangles)", "B": {}, "A": {"on": false}},
+  "8": {"what": "seasons drawn on the blocks: snow on grass, canopies and rocks in winter; yellow grass and orange / red leaves in autumn", "B": {"seasons": true}, "C": {"seasons": true}, "A": {"seasons": false}},
+  "9": {"what": "night: no part of its own (check only)", "B": {}, "A": {}}
+ },
+ "example": "1B 2B 3C 4C 5B 8B  ->  blocksState defaults: on:true, terrain:true, BLK:0.5, decor:true, DBLK:1/3, build:true, seasons:true"
+}

@@ -2,6 +2,7 @@ import { SCRT } from '../ai/zombies.js';
 import { fb, hs } from '../core/math.js';
 import { TH, TW } from '../gameplay/rules.js';
 import { MP } from '../multiplayer/session.js';
+import { BK, blocksState } from './blocks.js';
 import { geometryState, newG, quad, shade, toGeo, tri } from './geometry.js';
 import { matT, matWater } from './materials.js';
 import { CAM, scene, SHADOWS } from './scene.js';
@@ -38,7 +39,9 @@ export const keyOf=(cx,cy)=>cy*NCX+cx;
 
 export function markT(tx,ty){const cx=(tx/CH)|0,cy=(ty/CH)|0;dirtyT.add(keyOf(cx,cy));const ex=tx%CH,ey=ty%CH;if(ex===0&&cx>0)dirtyT.add(keyOf(cx-1,cy));if(ex===CH-1&&cx<NCX-1)dirtyT.add(keyOf(cx+1,cy));if(ey===0&&cy>0)dirtyT.add(keyOf(cx,cy-1));if(ey===CH-1&&cy<NCY-1)dirtyT.add(keyOf(cx,cy+1))}
 
-export function markP(tx,ty){dirtyP.add(keyOf((tx/CH)|0,(ty/CH)|0))}
+/* block world: canopies reach half a tile into the neighbours, so a prop change next to a chunk border also rebuilds the neighbour */
+export function markP(tx,ty){const cx=(tx/CH)|0,cy=(ty/CH)|0;dirtyP.add(keyOf(cx,cy));if(!blocksState.D)return;const ex=tx%CH,ey=ty%CH,ax=ex===0&&cx>0?-1:ex===CH-1&&cx<NCX-1?1:0,ay=ey===0&&cy>0?-1:ey===CH-1&&cy<NCY-1?1:0;
+ if(ax)dirtyP.add(keyOf(cx+ax,cy));if(ay)dirtyP.add(keyOf(cx,cy+ay));if(ax&&ay)dirtyP.add(keyOf(cx+ax,cy+ay))}
 
 export const DIRT = [.53,.38,.26];
 export const GRASS = [.37,.6,.25];
@@ -61,6 +64,10 @@ function sideCol(i,k,x,y){let b;if(k+1>=SNOW)b=[.9,.92,.95];else if(ter[i]===5||
  if(k<=BED)b=[.2,.2,.23];return shade(b,(((k>>1)&1)?.98:1)*(.94+.12*hs(x*3+k,y*5,k)))}
 
 const OB = (a,b)=>a<0||b<0||a>=TW||b>=TH;
+
+/* block world: the block kind of a terrain colour (grass, dirt, stone, sand, snow, gravel) */
+export function kindOf(c){const r=c[0],g=c[1],b=c[2],mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=r*.3+g*.59+b*.11;
+ if(g-Math.max(r,b)>.025)return BK.grass;if(l>.8&&mx-mn<.12)return BK.snow;if(mx-mn<.05)return l<.3?BK.gravel:BK.stone;if(r-b>.2&&l>.66)return BK.sand;if(r-b>.1)return BK.dirt;return BK.gravel}
 let SKB;
 
 /* ---- v79 paths: a real trail on the grass - the path is drawn as a band joining its neighbours (no more square tiles),
@@ -113,7 +120,7 @@ const wetT=(x,y)=>{for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++)if(gOK(x+i,y+j)&&
 
 function buildChunk0(cx,cy){const G=newG(),WG=newG(),x0=cx*CH,y0=cy*CH,x1=Math.min(TW,x0+CH),y1=Math.min(TH,y0+CH);
  const nh=(x,y,h)=>gOK(x,y)?HT[y*TW+x]:h;
- for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){const i=y*TW+x,h=HT[i],c=topCol(i,x,y);geometryState.BMAT=wetT(x,y)?0:9;
+ for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){const i=y*TW+x,h=HT[i],c=topCol(i,x,y),BL=blocksState.T,WM=BL?(wetT(x,y)?40:20):0,isP=pth[i]&&ter[i]===0&&!occ.has(i);geometryState.BMAT=BL?WM+(isP?(pth[i]===2?BK.cobble:BK.path):kindOf(c)):wetT(x,y)?0:9;
   const rs=stairs.size?stairs.get(i):null;
   if(rs&&rs.nat){const hl=rs.lo,hh2=rs.hi,sg=rs.sg>0,ax=rs.ax,ns=Math.max(2,Math.round((hh2-hl)*2)),st=(hh2-hl)/ns,rc=shade(DIRT,.8*(.9+.2*hs(x,y,5))),gc=shade(c,.88);
    for(let k=0;k<ns;k++){const u0=k/ns,u1=(k+1)/ns,yt=hl+(k+1)*st,yb=yt-st,p0=sg?u0:1-u1,p1=sg?u1:1-u0,ck=shade(c,.96+.04*(k&1));
@@ -130,7 +137,7 @@ const hl=rs.lo,hh2=rs.hi,sg=rs.sg>0,a0=sg?hl:hh2,a1=sg?hh2:hl,nn=rs.ax===0?[-(a1
    const sc=shade(DIRT,.85*(.9+.2*hs(x,y,5)));
    for(const sd of[0,1]){if(rs.ax===0){const z=y+sd,nb=nh(x,y+(sd?1:-1),h);if(nb>=hh2)continue;const xl=sg?x:x+1,xh=sg?x+1:x,nz=sd?1:-1;tri(G,[xl,h,z],[xh,h,z],[xh,hh2,z],[0,0,nz],sc)}
     else{const xx=x+sd,nb=nh(x+(sd?1:-1),y,h);if(nb>=hh2)continue;const zl=sg?y:y+1,zh=sg?y+1:y,nx=sd?1:-1;tri(G,[xx,h,zl],[xx,h,zh],[xx,hh2,zh],[nx,0,0],sc)}}}}
-  else if(pth[i]&&ter[i]===0&&!occ.has(i))pathTop(G,i,x,y,h,topCol(i,x,y,1));
+  else if(isP&&!BL)pathTop(G,i,x,y,h,topCol(i,x,y,1));
   else{const oc=(xx,yy)=>gOK(xx,yy)&&HT[yy*TW+xx]>h?1:0,av=(a,b,cn)=>a&&b?3:a+b+cn,L=oc(x-1,y),Rr=oc(x+1,y),U=oc(x,y-1),D=oc(x,y+1),a0=av(L,U,oc(x-1,y-1)),a1=av(L,D,oc(x-1,y+1)),a2=av(Rr,D,oc(x+1,y+1)),a3=av(Rr,U,oc(x+1,y-1));
    if(a0|a1|a2|a3){const c0=shade(c,AOK[a0]),c1=shade(c,AOK[a1]),c2=shade(c,AOK[a2]),c3=shade(c,AOK[a3]);if(a0+a2>a1+a3)quad(G,[x,h,y+1],[x+1,h,y+1],[x+1,h,y],[x,h,y],[0,1,0],c1,c2,c3,c0);else quad(G,[x,h,y],[x,h,y+1],[x+1,h,y+1],[x+1,h,y],[0,1,0],c0,c1,c2,c3)}
    else quad(G,[x,h,y],[x,h,y+1],[x+1,h,y+1],[x+1,h,y],[0,1,0],c,c,c,c)}
@@ -141,6 +148,14 @@ const hl=rs.lo,hh2=rs.hi,sg=rs.sg>0,a0=sg?hl:hh2,a1=sg?hh2:hl,nn=rs.ax===0?[-(a1
     else if(q===1)quad(G,[x,b,y+1],[x,t,y+1],[x,t,y],[x,b,y],[-1,0,0],sb,s,s,sb);
     else if(q===2)quad(G,[x+1,b,y+1],[x+1,t,y+1],[x,t,y+1],[x,b,y+1],[0,0,1],sb,s,s,sb);
     else quad(G,[x,b,y],[x,t,y],[x+1,t,y],[x+1,b,y],[0,0,-1],sb,s,s,sb)};
+   if(BL){/* one quad per run of the same block kind; the top block of a grass column wears a grass lip (kind cap) */
+    let b0=e,k0=-1,s0=null;const flush=b1=>{if(k0<0||b1<=b0)return;geometryState.BMAT=WM+k0;face(b0,b1,s0,b0===e&&ter[(y+dy)*TW+x+dx]!==1?shade(s0,b1-b0>1?.8:.7):s0)};
+    for(let b=e;b<h;b++){const t=b+1,dep=h-t;let s=sideCol(i,b,x,y),kk;
+     if(ter[i]!==5&&h-LAND<9&&dep>=3&&h-LAND<15)s=[.5,.5,.5];
+     if(t<=WLV&&!OB(x+dx,y+dy)&&ter[(y+dy)*TW+x+dx]===1){const dd=Math.max(0,Math.min(1,(WLV-t)/4));s=[.36-.14*dd,.32-.1*dd,.24-.04*dd]}
+     if(t===h&&capOK){kk=BK.cap;s=shade(c,k*.92)}else{kk=kindOf(s);s=shade(s,k)}
+     if(kk!==k0||kk===BK.cap){flush(b);b0=b;k0=kk;s0=s}}
+    flush(h);continue}
    for(let b=e;b<h;b++){const t=b+1,dep=h-t;let s=shade(sideCol(i,b,x,y),k);
     if(ter[i]!==5&&h-LAND<9&&t<WLV+99){if(dep>=3&&dep>=0&&h-LAND<15)s=shade([.5,.5,.5],k*(.9+.2*hs(x*3+b,y*5,b)))}
     if(t<=WLV&&ter[(y+dy)*TW+x+dx]===1){const dd=Math.max(0,Math.min(1,(WLV-t)/4));s=shade([.36-.14*dd,.32-.1*dd,.24-.04*dd],k)}
@@ -161,4 +176,6 @@ export function updateChunks(ms){const t0=performance.now(),cx0=(CAM.x/CH)|0,cy0
 
 export function initializeTerrainRendering() {
   SKB = BED-4;
+  /* block world switch flipped: every loaded chunk is drawn again (terrain and props) */
+  blocksState.onChange=()=>{for(const k of CHK.keys()){dirtyT.add(k);dirtyP.add(k)}};
 }

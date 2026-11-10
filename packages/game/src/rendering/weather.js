@@ -3,6 +3,7 @@ import { AC, nbuf, ns, SB, sndOn } from '../audio/sound.js';
 import { REALR } from '../core/random.js';
 import { sessionState } from '../gameplay/session.js';
 import { dayK } from './lighting.js';
+import { setSeasons } from './blocks.js';
 import { LMU } from './materials.js';
 import { CAM, hemi, scene, sun } from './scene.js';
 import { gh } from './terrain.js';
@@ -56,6 +57,7 @@ export function weatherTick(dt){if(!sessionState.inGame||!sessionState.started){
  const rain=WX.w[1],fog=WX.w[2],snow=WX.w[3];let tr=0,tg=0,tb=0;for(let i=0;i<4;i++){tr+=SEAST[i][0]*WX.s[i];tg+=SEAST[i][1]*WX.s[i];tb+=SEAST[i][2]*WX.s[i]}
  /* thunder: a flash, then the rumble a second or two later */
  if(!sessionState.paused){WX.th-=dt;if(rain>.6&&WX.th<=0){WX.th=9+REALR()*20;WX.fl=rmotion()?0:1;if(AC&&sndOn&&SB)ns(2.2,.5,'lowpass',240,60,.7,.5+REALR()*1.6,SB)}}WX.fl=Math.max(0,WX.fl-dt*3.2);
+ setSeasons(WX.s);
  /* light and sky: season tint, then the grey of the weather */
  const dk=1-.32*rain-.12*fog-.04*snow;hemi.color.setRGB(.863*tr,.925*tg,tb);hemi.intensity=hemi.intensity*dk+WX.fl*1.3;sun.intensity*=1-.5*rain-.3*fog;sun.color.r*=tr;sun.color.g*=tg;sun.color.b*=tb;LMU.value=hemi.intensity+sun.intensity;
  const wsum=rain+fog+snow;if(wsum>.001){_wg.setRGB((_wgR.r*rain+_wgF.r*fog+_wgS.r*snow)/wsum,(_wgR.g*rain+_wgF.g*fog+_wgS.g*snow)/wsum,(_wgR.b*rain+_wgF.b*fog+_wgS.b*snow)/wsum).multiplyScalar(.2+.8*dayK);

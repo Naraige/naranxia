@@ -5,6 +5,9 @@ import { RHAS, roleAdj0 } from '../ai/worker-roles.js';
 import { forester, SAPL } from '../ai/workplaces.js';
 import { PUD, SCRT } from '../ai/zombies.js';
 import { dist } from '../core/math.js';
+import { CHK as BCHK, buildChunk as bBuildChunk, updateChunks as bUpdateChunks } from '../rendering/terrain.js';
+import { buildProps as bBuildProps } from '../rendering/terrain-props.js';
+import { blocksState, BSEAS, setBlocks, setSeasons } from '../rendering/blocks.js';
 import { rngf } from '../core/random.js';
 import { GVER } from '../core/version.js';
 import { diagnosticsState, ERRLOG } from './diagnostics.js';
@@ -259,6 +262,11 @@ export function installBrowserConsole() {
     svPeek: { get: () => svPeek },
     continueLast: { get: () => continueLast },
     ter: { get: () => ter },
+    setBlocks: { get: () => setBlocks },
+    blkChunks: { get: () => ({ CHK: BCHK, buildChunk: bBuildChunk, buildProps: bBuildProps, updateChunks: bUpdateChunks }) },
+    blocksState: { get: () => blocksState },
+    BSEAS: { get: () => BSEAS },
+    setSeasons: { get: () => setSeasons },
     tilesFor: { get: () => tilesFor },
     time: { get: () => sessionState.time, set: value => { sessionState.time = value; } },
     toolGeos: { get: () => toolGeos },
