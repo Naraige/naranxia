@@ -1,0 +1,135 @@
+{
+ "Cross": [
+  "Croix",
+  "Cruz",
+  "Kreuz",
+  "Croce",
+  "Cruz"
+ ],
+ "Star": [
+  "Étoile",
+  "Estrella",
+  "Stern",
+  "Stella",
+  "Estrela"
+ ],
+ "Crown": [
+  "Couronne",
+  "Corona",
+  "Krone",
+  "Corona",
+  "Coroa"
+ ],
+ "Swords": [
+  "Épées",
+  "Espadas",
+  "Schwerter",
+  "Spade",
+  "Espadas"
+ ],
+ "Sun": [
+  "Soleil",
+  "Sol",
+  "Sonne",
+  "Sole",
+  "Sol"
+ ],
+ "Tree": [
+  "Arbre",
+  "Árbol",
+  "Baum",
+  "Albero",
+  "Árvore"
+ ],
+ "Lightning": [
+  "Éclair",
+  "Rayo",
+  "Blitz",
+  "Fulmine",
+  "Raio"
+ ],
+ "Moon": [
+  "Lune",
+  "Luna",
+  "Mond",
+  "Luna",
+  "Lua"
+ ],
+ "Anchor": [
+  "Ancre",
+  "Ancla",
+  "Anker",
+  "Ancora",
+  "Âncora"
+ ],
+ "Key": [
+  "Clé",
+  "Llave",
+  "Schlüssel",
+  "Chiave",
+  "Chave"
+ ],
+ "Axe": [
+  "Hache",
+  "Hacha",
+  "Axt",
+  "Ascia",
+  "Machado"
+ ],
+ "Lily": [
+  "Lys",
+  "Lis",
+  "Lilie",
+  "Giglio",
+  "Lis"
+ ],
+ "Eagle": [
+  "Aigle",
+  "Águila",
+  "Adler",
+  "Aquila",
+  "Águia"
+ ],
+ "Flame": [
+  "Flamme",
+  "Llama",
+  "Flamme",
+  "Fiamma",
+  "Chama"
+ ],
+ "Shield": [
+  "Écu",
+  "Escudo",
+  "Schild",
+  "Scudo",
+  "Escudo"
+ ],
+ "Hammer": [
+  "Marteau",
+  "Martillo",
+  "Hammer",
+  "Martello",
+  "Martelo"
+ ],
+ "Mountain": [
+  "Montagne",
+  "Montaña",
+  "Berg",
+  "Montagna",
+  "Montanha"
+ ],
+ "Chalice": [
+  "Calice",
+  "Cáliz",
+  "Kelch",
+  "Calice",
+  "Cálice"
+ ],
+ "Skull": [
+  "Crâne",
+  "Calavera",
+  "Schädel",
+  "Teschio",
+  "Caveira"
+ ]
+}
