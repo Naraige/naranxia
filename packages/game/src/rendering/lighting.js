@@ -2,8 +2,9 @@ import { hyp } from '../core/math.js';
 import { nightSim } from '../gameplay/lighting.js';
 import { DIR4, TS } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
-import { _o, glow } from './effects.js';
-import { LMU } from './materials.js';
+import { rmotion } from '../core/prefs.js';
+import { _o, glow, smk } from './effects.js';
+import { LMU, NGU } from './materials.js';
 import { CAM, hemi, scene, sun } from './scene.js';
 import { THREE } from './three.js';
 
@@ -44,8 +45,21 @@ function applyLamps(){const N=nightK;if(N<.02){LAMPM.count=0;HALOM.count=0;LP.fo
  LAMPM.count=n;HALOM.count=0;LAMPM.instanceMatrix.needsUpdate=true;
  near.sort((a,b)=>a[0]-b[0]);for(let i=0;i<6;i++){const l=LP[i],q=near[i];if(q){l.position.set(q[1][0]/TS,q[1][2]+.4,q[1][1]/TS);l.intensity=(q[1][3]>1?.58:.4)*N*(1+.1*Math.sin(sessionState.clockT*8+i*2))}else l.intensity=0}}
 
-export function applyDay(dt){const tg=nightTarget();nightK+=(tg-nightK)*Math.min(1,(dt||.016)*1.4);const N=nightK,sm=1-N,dusk=Math.pow(Math.sin(N*Math.PI),2);
- _sk.copy(SKYN).lerp(SKYD,sm).lerp(SKYU,dusk*.45);scene.background.copy(_sk);scene.fog.color.copy(_sk);hemi.intensity=(.3+.32*sm)*1.06;sun.intensity=(.12+.66*sm)*1.19;LMU.value=hemi.intensity+sun.intensity;sun.color.copy(SUND).lerp(SUNU,dusk*.7);dayK=sm;applyLamps()}
+/* chimney smoke (visual only, stateless: no particle is stored, the puffs are a function of the clock): finished buildings of the
+   local kingdom near the camera smoke from the chimneys their model declares (geometry.userData.chim) */
+let chimT=-1;
+let CHIM=[];
+const _cv=new THREE.Vector3();
+
+function chimneySmoke(){if(!sessionState.inGame||!sessionState.started||rmotion())return;const T=sessionState.clockT;
+ if(T-chimT>.7||T<chimT){chimT=T;CHIM=[];const cx=CAM.x*TS,cy=CAM.z*TS,R=(CAM.dist*1.3+14)*TS;
+  for(const s of sessionState.structs){if(CHIM.length>=90)break;if(s.t!==0||s.prog<1||s.hp<=0||!s.o3||Math.abs(s.x-cx)>R||Math.abs(s.y-cy)>R)continue;let me=s.o3.children[0];if(me&&!me.isMesh)me=me.children[0];const ch=me&&me.geometry&&me.geometry.userData.chim;if(!ch)continue;
+   for(const c of ch){_cv.set(c[0],c[1],c[2]);me.localToWorld(_cv);CHIM.push([_cv.x,_cv.y,_cv.z])}}}
+ const g=.78-.4*nightK;
+ for(let i=0;i<CHIM.length;i++){const c=CHIM[i],ph=c[0]*1.7+c[2]*2.3;for(let k=0;k<3;k++){const t=(T*.22+ph+k/3)%1;smk(c[0]+t*.34+Math.sin(ph+t*5)*.05,c[1]+t*1.25,c[2]+Math.cos(ph*3+t*4)*.05,.13+t*.34,g,g,g*1.03,(1-t)*.42*Math.min(1,t*6),ph+t)}}}
+
+export function applyDay(dt){chimneySmoke();const tg=nightTarget();nightK+=(tg-nightK)*Math.min(1,(dt||.016)*1.4);const N=nightK,sm=1-N,dusk=Math.pow(Math.sin(N*Math.PI),2);
+ _sk.copy(SKYN).lerp(SKYD,sm).lerp(SKYU,dusk*.45);scene.background.copy(_sk);scene.fog.color.copy(_sk);hemi.intensity=(.3+.32*sm)*1.06;sun.intensity=(.12+.66*sm)*1.19;LMU.value=hemi.intensity+sun.intensity;NGU.value=N;sun.color.copy(SUND).lerp(SUNU,dusk*.7);dayK=sm;applyLamps()}
 
 export let dayK=1;
 

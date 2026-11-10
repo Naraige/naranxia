@@ -45,6 +45,7 @@ import {
   QW2,
   QW3,
   qWin,
+  qWheel,
 } from './building-parts.js';
 import { structureModelsState } from './structures.js';
 import { PXON } from './units.js';
@@ -94,6 +95,10 @@ function pxCastleA(wood){PXCW=!!wood;const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);
  const gz0=4.15,gz1=5.05,GH=3.0,gzc=(gz0+gz1)/2;pSt(G,2.5,.2,gzc,1.9,gz1-gz0,GH-.2,{moss:1,ph:2});pQu(G,1.55,gz0,3.45,gz1,.2,GH-.2);
  pS(G,2.5,GH,gzc,2.06,.12,gz1-gz0+.12,QTR);pxCastleMer(G,1.5,gz0-.02,3.5,gz1+.04,GH+.12,.26);pxCastleGate(G,gz1);qBan(G,2.5,1.75,gz1+.04,true,1,.4,.75);
  qBarrel(G,3.3,3.2,.22);qBarrel(G,3.5,3.0,.22);qCrate(G,1.6,3.0,.22,.26);for(const[x,z]of[[1.6,3.9],[3.4,3.9]])qPost(G,x,.22,z,.55,true);
+ /* courtyard life: a covered well, a hay cart; the keep's chimney smokes */
+ {const wx=1.25,wz=3.5;qRound(G,wx,wz,.22,.26,.5);bP(G,wx,.46,wz,.3,.02,.3,'#2a4a7a');for(const s of[-1,1])bW(G,wx+s*.22,.22,wz,.05,.72,.05,QW2);bW(G,wx,.86,wz,.5,.05,.06,QW2);qPyr(G,wx,wz,.92,.62,.44,PXCW?QSH:QSL,.09,.09);bP(G,wx,.6,wz,.012,.26,.012,'#d9c28a');bW(G,wx,.52,wz,.08,.08,.08,QW1)}
+ {const hx=3.7,hz=3.6;bW(G,hx,.36,hz,.5,.05,.34,QW1);bC(G,hx,.41,hz,.44,.2,.3,'#d8b23a');qWheel(G,hx-.12,.34,hz+.19,.12,true);qWheel(G,hx-.12,.34,hz-.19,.12,true);bW(G,hx+.36,.36,hz,.3,.03,.04,QW3)}
+ qChim(G,kx+.72,kz+.34,KH+.1,1.25);
  return toGeo(G)}
 
 function pxCastleB(){const G=newG();qPlinth(G,2.5,0,2.5,5,5,.2);

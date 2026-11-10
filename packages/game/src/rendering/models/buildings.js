@@ -63,7 +63,9 @@ export function houseGeo(m){m=m||0;const G=newG(),{N,E,S,W,sk}=mBits(m),alongX=!
  let top;if(alongX)top=qRoof(G,(jx0+jx1)/2,(jz0+jz1)/2,jx1-jx0,jz1-jz0,1.6,QTC,true,{ov0:W?0:.12,ov1:E?0:.12,g0:!W,g1:!E,side:(N||S)?0:.1,fill:FL});
  else top=qRoof(G,(jx0+jx1)/2,(jz0+jz1)/2,jz1-jz0,jx1-jx0,1.6,QTC,false,{ov0:N?0:.12,ov1:S?0:.12,g0:!N,g1:!S,side:(E||W)?0:.1,fill:FL});
  if(alongX&&!E)qChim(G,x1-.24,(z0+z1)/2-.4,1.0,top-.85);else if(!alongX&&!S)qChim(G,(x0+x1)/2+.4,z1-.24,1.0,top-.85);
- if(m&&alongX&&!S){const dz=jz1-.3,dy=1.66;bP(G,1,dy,dz,.38,.32,.36,FL);bW(G,1,dy,dz+.18,.42,.05,.02,QW2);qWin(G,1,dy+.06,dz+.185,true,1,{wood:1,w:.16,h:.18});qPyr(G,1,dz,dy+.32,.5,.48,QTC,.1,.1)}
+ if(alongX&&!S){const dz=jz1-.3,dy=1.66;bP(G,1,dy,dz,.38,.32,.36,FL);bW(G,1,dy,dz+.18,.42,.05,.02,QW2);qWin(G,1,dy+.06,dz+.185,true,1,{wood:1,w:.16,h:.18});qPyr(G,1,dz,dy+.32,.5,.48,QTC,.1,.1)}
+ if(!E&&alongX){for(let k=0;k<3;k++)for(let j=0;j<2-(k>1?1:0);j++){bW(G,x1+.1,.16+k*.1,.62+j*.34+(k%2)*.06,.11,.1,.3,k%2?'#5d3f25':QLOG);bW(G,x1+.1,.17+k*.1,.772+j*.34+(k%2)*.06,.08,.08,.012,QLOGT)}}
+ if(!S&&!E)qBarrel(G,1.84,1.86,.16);
  return toGeo(G)}
 
 /* ---- farm: crop rows, fences on the outer sides, scarecrow, hay; a merged field gets a windmill ---- */
@@ -108,6 +110,7 @@ function mdBarracks(stone,m){m=m||0;const G=newG(),{N,E,S,W,sk,nw}=mBits(m);
  if(!S){qDoor(G,1,z1+.016,true,1,{w:.42,h:.64,y:.18,wood:!stone});if(stone)qGem(G,1,1.0,z1+.02,true,1,.09);qBan(G,.42,1.04,z1,true,1);qBan(G,1.58,1.04,z1,true,1);qLamp(G,.72,.98,z1+.07,stone);qLamp(G,1.28,.98,z1+.07,stone);
   qWin(G,.55,1.32,z1+.086,true,1,{wood:1});qWin(G,1.45,1.32,z1+.086,true,1,{wood:1});
   for(const x of[.22,.72])bW(G,x,.14,1.8,.06,.56,.06,QW2);bW(G,.47,.6,1.8,.56,.05,.06,QW2);[.32,.47,.62].forEach(x=>{bM(G,x,.26,1.84,.035,.3,.02,'#dadde4');bM(G,x,.52,1.84,.1,.03,.03,QBR);bW(G,x,.55,1.84,.03,.07,.03,QW1)});
+  bW(G,1.16,.14,1.84,.05,.52,.05,QW2);bC(G,1.16,.34,1.84,.2,.24,.12,HAYC);bW(G,1.16,.5,1.84,.36,.04,.04,QW2);bC(G,1.16,.62,1.84,.14,.13,.13,'#e0c060');bM(G,1.16,.74,1.84,.16,.05,.15,'#8a8f9a');
   bC(G,.88,.14,1.84,.08,.3,.24,structureModelsState.BLU);bM(G,.925,.2,1.84,.01,.18,.06,QBR2);
   bW(G,1.55,.14,1.82,.06,.3,.06,QW2);bC(G,1.55,.32,1.82,.36,.36,.14,HAYC);bC(G,1.55,.34,1.893,.3,.3,.01,'#f0f0f0');bC(G,1.55,.39,1.896,.2,.2,.01,'#c8282a');bC(G,1.55,.44,1.899,.1,.1,.01,'#f0f0f0');bC(G,1.55,.47,1.902,.04,.04,.01,'#c8282a')}
  if(!N){qWin(G,.55,1.32,z0-.086,true,-1,{wood:1});qWin(G,1.45,1.32,z0-.086,true,-1,{wood:1});if(stone){qSlit(G,.45,.55,z0-.016,true);qSlit(G,1.55,.55,z0-.016,true)}}
