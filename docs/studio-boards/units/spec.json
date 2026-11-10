@@ -1,0 +1,321 @@
+{
+ "title": "Unités : A actuel, B nouveau",
+ "intro": "Chaque ligne : A = modèle actuel, B = proposition (ombrage 3-4 tons par matière, visages refaits, 2 à 4 cubes d'identité). Grande vue de 3/4, dos en haut à droite, et en bas à gauche l'unité à la taille du jeu. Réponds par un code du type « 1B 2B 3A ». Rien n'est appliqué tant que tu n'as pas répondu.",
+ "sections": [
+  {
+   "name": "Paysan (6 variantes)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r01_A.jpg",
+     "note": "Tunique unie, tablier, chapeau."
+    },
+    {
+     "id": "B",
+     "img": "r01_B.jpg",
+     "note": "Tunique 3 tons, bretelles et tablier, ceinture de corde, bourse, manches roulées, hotte en osier dans le dos."
+    }
+   ]
+  },
+  {
+   "name": "Archer",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r02_A.jpg",
+     "note": "Capuche verte, jaque de cuir, carquois."
+    },
+    {
+     "id": "B",
+     "img": "r02_B.jpg",
+     "note": "Capuche profonde à pointe, camail à liseré aux couleurs du royaume, jaque lacée, brassards, bourse, carquois empenné."
+    }
+   ]
+  },
+  {
+   "name": "Chevalier (à droite : plates + rang 3, puis rebelle)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r03_A.jpg",
+     "note": "Heaume, mailles, tabard."
+    },
+    {
+     "id": "B",
+     "img": "r03_B.jpg",
+     "note": "Grand heaume à croix dorée et cimier, tabard à croix, doubles épaulières, braconnière (jupe de plates), liserés dorés avec la recherche."
+    }
+   ]
+  },
+  {
+   "name": "Capitaine",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r04_A.jpg",
+     "note": "Bassinet ouvert, cuirasse dorée, écharpe."
+    },
+    {
+     "id": "B",
+     "img": "r04_B.jpg",
+     "note": "Casque ailé de champion, cuirasse dorée ombrée, écharpe rouge, jupe du royaume, doubles épaulières dorées."
+    }
+   ]
+  },
+  {
+   "name": "Porte-étendard",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r05_A.jpg",
+     "note": "Chapel de fer, gambison, tabard."
+    },
+    {
+     "id": "B",
+     "img": "r05_B.jpg",
+     "note": "Chapel de fer, gambison matelassé, camail du royaume à liseré doré, gants de cuir, cor à la hanche."
+    }
+   ]
+  },
+  {
+   "name": "Canonniers (équipe du canon)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r06_A.jpg",
+     "note": "Pourpoint, bonnet à plume."
+    },
+    {
+     "id": "B",
+     "img": "r06_B.jpg",
+     "note": "Pourpoint à boutons de laiton, feutre à large bord et plume, bandoulière, tablier, corne à poudre."
+    }
+   ]
+  },
+  {
+   "name": "Garde royal",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r07_A.jpg",
+     "note": "Plates du royaume, tabard au soleil."
+    },
+    {
+     "id": "B",
+     "img": "r07_B.jpg",
+     "note": "Heaume fermé à bandeau doré et haut cimier, doubles épaulières, braconnière, tabard cramoisi au soleil."
+    }
+   ]
+  },
+  {
+   "name": "Roi Naraige",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r08_A.jpg",
+     "note": "Couronne, heaume, hermine (modèle validé)."
+    },
+    {
+     "id": "B",
+     "img": "r08_B.jpg",
+     "note": "Même modèle validé, ombré en 3-4 tons, braconnière dorée et lame sous chaque épaulière."
+    }
+   ]
+  },
+  {
+   "name": "Éclaireur",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r09_A.jpg",
+     "note": "Modèle validé hier."
+    },
+    {
+     "id": "B",
+     "img": "r09_B.jpg",
+     "note": "Même silhouette, visage et étoffes ombrés en 3-4 tons."
+    }
+   ]
+  },
+  {
+   "name": "Ingénieur",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r10_A.jpg",
+     "note": "Modèle validé hier."
+    },
+    {
+     "id": "B",
+     "img": "r10_B.jpg",
+     "note": "Même silhouette, visage et étoffes ombrés en 3-4 tons."
+    }
+   ]
+  },
+  {
+   "name": "Émissaire",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r11_A.jpg",
+     "note": "Modèle validé hier."
+    },
+    {
+     "id": "B",
+     "img": "r11_B.jpg",
+     "note": "Même silhouette, visage et étoffes ombrés en 3-4 tons."
+    }
+   ]
+  },
+  {
+   "name": "Zombie (24 variantes ; à droite : squelettes, noble, chevalier tombé)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r12_A.jpg",
+     "note": "Mort-vivant aléatoire."
+    },
+    {
+     "id": "B",
+     "img": "r12_B.jpg",
+     "note": "Ombrage par pixels, accessoire selon la graine (corde au cou, épée fichée, cape en lambeaux), épaulière cabossée pour les soldats tombés."
+    }
+   ]
+  },
+  {
+   "name": "Momie / desséché",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r13_A.jpg",
+     "note": "Petit mort desséché."
+    },
+    {
+     "id": "B",
+     "img": "r13_B.jpg",
+     "note": "Ombrage, bandelettes qui pendent derrière la tête."
+    }
+   ]
+  },
+  {
+   "name": "Coureur",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r14_A.jpg",
+     "note": "Mort rapide et maigre."
+    },
+    {
+     "id": "B",
+     "img": "r14_B.jpg",
+     "note": "Bandeau de couleur à pans flottants, griffes d'os."
+    }
+   ]
+  },
+  {
+   "name": "Brute",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r15_A.jpg",
+     "note": "Bras énorme, chaîne."
+    },
+    {
+     "id": "B",
+     "img": "r15_B.jpg",
+     "note": "Collier de fer, épaulière rouillée à pointe, épines d'os dans le dos."
+    }
+   ]
+  },
+  {
+   "name": "Artificier",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r16_A.jpg",
+     "note": "Baril de poudre dans le dos."
+    },
+    {
+     "id": "B",
+     "img": "r16_B.jpg",
+     "note": "Deux bombes de fer à mèche allumée à la ceinture."
+    }
+   ]
+  },
+  {
+   "name": "Cracheur d'acide",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r17_A.jpg",
+     "note": "Poches luisantes."
+    },
+    {
+     "id": "B",
+     "img": "r17_B.jpg",
+     "note": "Bave luisante, deux poches de plus aux épaules."
+    }
+   ]
+  },
+  {
+   "name": "Mineur",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r18_A.jpg",
+     "note": "Casque à lampe, pioche."
+    },
+    {
+     "id": "B",
+     "img": "r18_B.jpg",
+     "note": "Sac de minerai dans le dos, rouleau de corde à l'épaule."
+    }
+   ]
+  },
+  {
+   "name": "Boss de vague (brute géante)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r19_A.jpg",
+     "note": "Aujourd'hui : une brute agrandie."
+    },
+    {
+     "id": "B",
+     "img": "r19_B.jpg",
+     "note": "Cornes, mâchoire de fer, épaulière, étendard déchiré dans le dos (couleur selon le boss)."
+    }
+   ]
+  },
+  {
+   "name": "Armée en jeu, distance de jeu (pour comparer, pas de choix à faire)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "army_A.png",
+     "note": "Look actuel : 157 unités à l’écran."
+    },
+    {
+     "id": "B",
+     "img": "army_B.png",
+     "note": "Look B partout : mêmes unités, même caméra."
+    }
+   ]
+  },
+  {
+   "name": "Même capture, agrandie x2 (pixels du jeu)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "army_A_x2.png",
+     "note": "Look actuel."
+    },
+    {
+     "id": "B",
+     "img": "army_B_x2.png",
+     "note": "Look B."
+    }
+   ]
+  }
+ ]
+}

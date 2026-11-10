@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Builds the cards and the spec of the units board from the renders of render.py.
 usage: python3 docs/studio-boards/units/_src/compose.py renders_dir [game_px=46]
-Each card (900x560): 3/4 front close-up, 3/4 back, the other variants of the row, and the unit at game size (1:1 and 2:1) on a grass tile.
+Each card (900x690): 3/4 front close-up, 3/4 back, the other variants of the row, and the unit at game size (1:1 and 2:1) on a grass tile.
 Writes docs/studio-boards/units/rNN_{A,B}.jpg and spec.json; then: python3 tools/board.py docs/studio-boards/units/spec.json docs/studio-boards/units/board.html"""
 import sys,json,os
 from pathlib import Path
@@ -21,7 +21,7 @@ ROWS=[
  ('Éclaireur','scout',[],'Modèle validé hier.','Même silhouette, visage et étoffes ombrés en 3-4 tons.','scout'),
  ('Ingénieur','engineer',[],'Modèle validé hier.','Même silhouette, visage et étoffes ombrés en 3-4 tons.','engineer'),
  ('Émissaire','envoy',[],'Modèle validé hier.','Même silhouette, visage et étoffes ombrés en 3-4 tons.','envoy'),
- ('Zombie (24 variantes ; à droite : squelette, paysan, noble, chevalier tombé)','zombie',['zombie2','zombie3','zombie4','zknight'],'Mort-vivant aléatoire.','Ombrage par pixels, accessoire selon la graine (corde au cou, épée fichée, cape en lambeaux), épaulière cabossée pour les soldats tombés.','zombie'),
+ ('Zombie (24 variantes ; à droite : squelettes, noble, chevalier tombé)','zombie3',['zombie','zombie2','zombie4','zknight'],'Mort-vivant aléatoire.','Ombrage par pixels, accessoire selon la graine (corde au cou, épée fichée, cape en lambeaux), épaulière cabossée pour les soldats tombés.','zombie'),
  ('Momie / desséché','husk',[],'Petit mort desséché.','Ombrage, bandelettes qui pendent derrière la tête.','husk'),
  ('Coureur','runner',[],'Mort rapide et maigre.','Bandeau de couleur à pans flottants, griffes d\'os.','runner'),
  ('Brute','brute',[],'Bras énorme, chaîne.','Collier de fer, épaulière rouillée à pointe, épines d\'os dans le dos.','brute'),
@@ -34,9 +34,9 @@ def im(n,m,v,size):
     p=src/f'{n}_{m}_{v}.png'
     return Image.open(p).convert('RGB').resize((size,size),Image.LANCZOS) if p.exists() else None
 def card(row,m):
-    name,main,extra=row[0],row[1],row[2];C=Image.new('RGB',(900,560),BG);d=ImageDraw.Draw(C)
+    name,main,extra=row[0],row[1],row[2];C=Image.new('RGB',(900,690),BG);d=ImageDraw.Draw(C)
     f=im(main,m,'f',540)
-    if f:C.paste(f,(0,10))
+    if f:C.paste(f,(0,0))
     b=im(main,m,'b',300)
     if b:C.paste(b,(560,0))
     n=len(extra);sz,per=(175,2) if n<=2 else (118,3)
@@ -45,15 +45,15 @@ def card(row,m):
         if x:C.paste(x,(545+(i%per)*sz,305+(i//per)*sz))
     # game size: the close-up scaled so the unit is GP px tall (close-up frames 1.2 x the model height)
     if f:
-        s=round(GP*1.2*(1.9 if main=='bannerman' else 1.6 if main=='boss' else 1));g=im(main,m,'f',s);T=Image.new('RGB',(s+16,s+16),GR)
+        s=round(GP*1.2*(1.6 if main=='boss' else 1));g=im(main,m,'f',s);T=Image.new('RGB',(s+12,s+12),GR)
         px=g.load();bg=px[1,1]
         mask=Image.new('L',(s,s),0);mp=mask.load()
         for y in range(s):
             for x in range(s):
                 r,gg,bb=px[x,y];mp[x,y]=0 if abs(r-bg[0])+abs(gg-bg[1])+abs(bb-bg[2])<14 else 255
-        T.paste(g,(8,8),mask);y0=560-T.height-8
-        C.paste(T,(8,y0));T2=T.resize((T.width*2,T.height*2),Image.NEAREST);C.paste(T2,(8+T.width+8,560-T2.height-8))
-        d.text((10,y0-14),'taille en jeu  x1   x2',fill=(230,220,190))
+        T.paste(g,(6,6),mask);T2=T.resize((T.width*2,T.height*2),Image.NEAREST)
+        d.text((12,620),'Taille en jeu (x1, x2)',fill=(230,220,190))
+        C.paste(T,(170,688-T.height));C.paste(T2,(180+T.width,688-T2.height))
     return C
 spec={'title':'Unités : A actuel, B nouveau','intro':"Chaque ligne : A = modèle actuel, B = proposition (ombrage 3-4 tons par matière, visages refaits, 2 à 4 cubes d'identité). Grande vue de 3/4, dos en haut à droite, et en bas à gauche l'unité à la taille du jeu. Réponds par un code du type « 1B 2B 3A ». Rien n'est appliqué tant que tu n'as pas répondu.",'sections':[]}
 for i,row in enumerate(ROWS,1):
@@ -61,6 +61,9 @@ for i,row in enumerate(ROWS,1):
     for m,note in(('A',row[3]),('B',row[4])):
         fn=f'r{i:02d}_{m}.jpg';card(row,m).save(OUT/fn,quality=88);vs.append({'id':m,'img':fn,'note':note})
     spec['sections'].append({'name':row[0],'variants':vs})
+if (OUT/'army_A.png').exists():
+    spec['sections'].append({'name':'Armée en jeu, distance de jeu (pour comparer, pas de choix à faire)','variants':[{'id':'A','img':'army_A.png','note':'Look actuel : 157 unités à l’écran.'},{'id':'B','img':'army_B.png','note':'Look B partout : mêmes unités, même caméra.'}]})
+    spec['sections'].append({'name':'Même capture, agrandie x2 (pixels du jeu)','variants':[{'id':'A','img':'army_A_x2.png','note':'Look actuel.'},{'id':'B','img':'army_B_x2.png','note':'Look B.'}]})
 json.dump(spec,open(OUT/'spec.json','w',encoding='utf-8'),ensure_ascii=False,indent=1)
 json.dump({str(i):r[5] for i,r in enumerate(ROWS,1)},open(OUT/'rows.json','w'),indent=1)
 print(len(ROWS),'rows')

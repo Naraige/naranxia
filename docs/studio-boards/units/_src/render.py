@@ -15,7 +15,7 @@ with sync_playwright() as p:
     pg.on('pageerror',lambda e:errs.append(str(e.stack)[:400]))
     pg.route('**/three.min.js',lambda r:r.fulfill(path=str(ROOT/'node_modules/three/build/three.min.js'),content_type='application/javascript'))
     pg.route('**/fonts.googleapis.com/**',lambda r:r.abort())
-    pg.goto((ROOT/'dist/naranxia_readable.html').resolve().as_uri(),timeout=180000);pg.wait_for_timeout(2500)
+    pg.goto((ROOT/'dist/naranxia_readable.html').resolve().as_uri(),timeout=900000);pg.wait_for_timeout(2500)
     pg.evaluate('window.__CFG='+json.dumps(cfg))
     d=json.loads(pg.evaluate((HERE/'shots.js').read_text()))
     for k,v in d.items():

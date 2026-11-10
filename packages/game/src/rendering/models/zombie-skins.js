@@ -107,7 +107,7 @@ export function pxZombie(type,ZV,P){
    pxBox(P.G,-.3,yk+8,zB-2.8,.6,2,.6,()=>C('#3a2a1a'),{mat:0,grid:[1,2,1],ao:false});pxBox(P.G,-.45,yk+10,zB-2.95,.9,.9,.9,()=>C('#ffb02a'),{mat:5,grid:[1,1,1],ao:false})}
   if(type==='acid')for(const[sx,sy,sz,s]of[[-2.6,19,0,3.4],[1.4,16,-.6,2.8],[-.4,21.2,-.2,2.4]])pxBox(P.G,sx,sy*tT[1]+(1-tT[1])*12,zB-s*.75+sz,s,s,s,(f,u,v)=>((u+v)%2?C('#9ae030'):C('#c8ff60')),{mat:5,grid:[2,2,2],ao:false});
   if(V2){const IR=PDP(['#2a2422','#4a403a','#6e625a','#8e8278']),RP=[C('#a08a5a'),C('#7a6840')],bone2=(f,u,v,W,H)=>f==='T'||v===H-1?BN:(v===0?BND:BN2),sold=hint==='knight'||hint==='captain'||hint==='bannerman'||hint==='king'||hint==='guard';
-   if(type==='zombie'&&!sold){const pr=sd%4;
+   if(type==='zombie'&&!sold){const pr=sd%3+1;
     if(pr===1){zb('T',P.G,-3.1,22.8,-2.7,6.2,1.5,5.4,(f,u,v)=>RP[(u+v)%2],{mat:0,grid:[6,1,5]});zb('T',P.G,1.1,18,2.3,1.1,5,.9,(f,u,v)=>RP[v%2],{mat:0,grid:[1,5,1],ao:false})}
     if(pr===2){zb('T',P.G,-1.6,17.2,-6.4,1,1.7,11.4,(f,u,v,W,H)=>f==='F'?ST[3]:(u%4===3?RU:ST[2]),{mat:4,grid:[1,1,8]});zb('T',P.G,-3.4,16.6,-5.4,4.6,2.9,.9,()=>RU,{mat:0,grid:[4,1,1]})}
     if(pr===3)zb('T',P.G,-5,16.6,-3.5,10,7.6,1.1,(f,u,v,W,H)=>(v<2&&nz('ck',u,v)<.5)||(v<4&&nz('cl',u,v)<.2)?null:(v===H-1?T2:nz('cm',u,v)<.2?T2D:T2),{mat:0,grid:[10,8,1],ao:false})}
