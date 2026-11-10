@@ -62,7 +62,8 @@ function miHead(type,t){const mdl=mkModel(type,t),g=new THREE.Group();g.add(new 
  if(mdl.parts)for(const p of mdl.parts)if(p.k==='plume'){const m=new THREE.Mesh(p.geo,matUI);m.position.set(p.x,p.y-mdl.neck,p.z);g.add(m)}
  return icoShot(g,.66,.4)}
 
-function mcIcons(){if(!ICR)icoInit();const SW=sprites(),IC2={};
+/* a generator: the start-up (core/boot.js) runs it in slices (a `yield` after each line of renders), mcIcons() runs it in one go */
+function* mcIconsSteps(){if(!ICR)icoInit();const SW=sprites(),IC2={};
  /* ---------- items ---------- */
  IC2.coin=pc16(({R,P})=>{R(5,5,8,1,'#fff3a8');R(4,6,8,1,'#ffe060');P(12,6,'#d8a018');R(3,7,8,3,'#f0b820');R(11,7,1,3,'#c08a14');P(12,7,'#b07a10');P(12,8,'#a87410');R(3,9,8,1,'#d09a18');P(6,5,'#ffffff');P(7,5,'#ffffff');R(4,8,3,1,'#ffd45a')});
  IC2.heart=pc16(({Gd})=>Gd(["..rrr...rrr..",".rwwrr.rrrrr.","rrwrrrrrrrrrr","rrrrrrrrrrrrr","rrrrrrrrrrrrd",".rrrrrrrrrrd.","..rrrrrrrrd..","...rrrrrrd...","....rrrrd....",".....rrd.....","......d......"],{r:'#e81c1c',w:'#ffb0b0',d:'#a00e0e'},1,2));
@@ -112,33 +113,34 @@ IC2.agg=pc16(({Gd,P})=>{Gd(SW.sword,{...SPAL,w:'#ffe0e0',i:'#ff7a6a',d:'#c03a2a'
  IC2.work=IC2.tools;
  IC2.bed=pc16(({R})=>{R(1,7,4,3,'#f4f4f4');R(1,7,4,1,'#ffffff');R(5,6,10,4,'#c8282a');R(5,6,10,1,'#e04848');R(5,9,10,1,'#9a1a1a');R(1,10,14,2,'#a98450');R(1,10,14,1,'#c8a060');R(1,12,2,2,'#6b4a2a');R(13,12,2,2,'#6b4a2a')});
  /* ---------- blocks (isometric) ---------- */
- IC2.wood=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,1,1,'#6b5030');for(const[x,w]of[[.18,.07],[.47,.05],[.78,.08]]){bxc(G,x,.06,1.0,w,.88,.006,'#4f3a22');bxc(G,1.0,.06,x,.006,.88,w,'#4f3a22')}bxc(G,.5,1.0,.5,.98,.006,.98,'#b8945f');bxc(G,.5,1.004,.5,.7,.006,.7,'#9a7a48');bxc(G,.5,1.008,.5,.42,.006,.42,'#b8945f');bxc(G,.5,1.012,.5,.14,.006,.14,'#9a7a48')}));
+ IC2.wood=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,1,1,'#6b5030');for(const[x,w]of[[.18,.07],[.47,.05],[.78,.08]]){bxc(G,x,.06,1.0,w,.88,.006,'#4f3a22');bxc(G,1.0,.06,x,.006,.88,w,'#4f3a22')}bxc(G,.5,1.0,.5,.98,.006,.98,'#b8945f');bxc(G,.5,1.004,.5,.7,.006,.7,'#9a7a48');bxc(G,.5,1.008,.5,.42,.006,.42,'#b8945f');bxc(G,.5,1.012,.5,.14,.006,.14,'#9a7a48')}));yield;
  const cob=(G,base,sd)=>{const R=rngf(sd||91);bxc(G,.5,0,.5,1,1,1,base||'#7f7f7f');for(let k=0;k<21;k++){const a=.12+R()*.76,b=.12+R()*.76,w=.12+R()*.18,h=.1+R()*.14,c=R()<.5?'#9c9c9c':'#5c5c5c',f=k%3;if(f===0)bxc(G,a,b-h/2,1.0,w,h,.006,c);else if(f===1)bxc(G,1.0,b-h/2,a,.006,h,w,c);else bxc(G,a,1.0,b,w,.006,h,c)}};
- IC2.stone=miShot(miBlock(G=>cob(G)));
- IC2.upgrade=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,1,1,'#8f8f8f');const m='#5e5e5e';for(const f of[0,1]){const F=(a,y,w,h)=>f?bxc(G,1.0,y,a,.006,h,w,m):bxc(G,a,y,1.0,w,h,.006,m);F(.5,.48,1,.04);F(.5,.96,1,.04);F(.5,.5,.04,.48);F(.25,0,.04,.48);F(.75,0,.04,.48)}bxc(G,.5,1.0,.5,1,.006,.04,m);bxc(G,.5,1.0,.5,.04,.006,1,m);bxc(G,.25,1.0,.25,.3,.008,.3,'#a0a0a0')}));IC2.hammer=IC2.upgrade;
+ IC2.stone=miShot(miBlock(G=>cob(G)));yield;
+ IC2.upgrade=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,1,1,'#8f8f8f');const m='#5e5e5e';for(const f of[0,1]){const F=(a,y,w,h)=>f?bxc(G,1.0,y,a,.006,h,w,m):bxc(G,a,y,1.0,w,h,.006,m);F(.5,.48,1,.04);F(.5,.96,1,.04);F(.5,.5,.04,.48);F(.25,0,.04,.48);F(.75,0,.04,.48)}bxc(G,.5,1.0,.5,1,.006,.04,m);bxc(G,.5,1.0,.5,.04,.006,1,m);bxc(G,.25,1.0,.25,.3,.008,.3,'#a0a0a0')}));IC2.hammer=IC2.upgrade;yield;
  IC2.raise=miOverlay(miShot(miBlock(G=>{bxc(G,.5,0,.5,1,1,1,'#866043');bxc(G,.5,1.0,.5,1,.006,1,'#5aa036');bxc(G,.5,.8,.5,1.006,.2,1.006,'#5aa036');for(const x of[.15,.42,.7,.9]){bxc(G,x,.7,1.003,.08,.12,.006,'#5aa036');bxc(G,1.003,.7,x,.006,.1,.08,'#5aa036')}})),
   ["..K..",".KgK.","KgggK","KKgKK",".KgK.",".KKK."],{K:'#102010',g:'#55ff55'},14,0);
- IC2.path=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,.94,1,'#866043');bxc(G,.5,.94,.5,1,.006,1,'#9b7a46');const R=rngf(7);for(let k=0;k<12;k++)bxc(G,.08+R()*.84,.946,.08+R()*.84,.08,.006,.08,R()<.5?'#b0905a':'#7a5a34')}));
- IC2.ramp=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,.5,1,'#7f7f7f');bxc(G,.5,.5,.25,1,.5,.5,'#8a8a8a')}));
- IC2.demolish=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,1,1,'#c8282a');for(const x of[.2,.6])bxc(G,x,.08,1.0,.04,.84,.006,'#a01818');bxc(G,.5,.33,1.0,1.002,.34,.008,'#f0f0f0');bxc(G,1.0,.33,.5,.008,.34,1.002,'#f0f0f0');for(const x of[.22,.5,.78]){bxc(G,x,.39,1.004,.16,.22,.008,'#2a2a2a');bxc(G,1.004,.39,x,.008,.22,.16,'#2a2a2a')}bxc(G,.5,1.0,.5,1,.006,1,'#d6d6d6');bxc(G,.5,1.004,.5,.34,.006,.34,'#5a5a5a');bxc(G,.5,1.0,.5,.06,.12,.06,'#3a3a3a')}));
- IC2.movec=miShot(miBlock(G=>{cob(G,'#7a7a7a',33);bxc(G,.5,.72,.5,1.004,.28,1.004,'#b8945f');bxc(G,.5,1.0,.5,1,.008,1,'#c8a46a');bxc(G,.5,1.006,.5,.36,.008,.36,'#9a9aa2');for(const x of[.25,.5,.75]){bxc(G,x,.72,1.004,.02,.28,.008,'#8a6a3a');bxc(G,1.004,.72,x,.008,.28,.02,'#8a6a3a')}}));
+ IC2.path=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,.94,1,'#866043');bxc(G,.5,.94,.5,1,.006,1,'#9b7a46');const R=rngf(7);for(let k=0;k<12;k++)bxc(G,.08+R()*.84,.946,.08+R()*.84,.08,.006,.08,R()<.5?'#b0905a':'#7a5a34')}));yield;
+ IC2.ramp=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,.5,1,'#7f7f7f');bxc(G,.5,.5,.25,1,.5,.5,'#8a8a8a')}));yield;
+ IC2.demolish=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,1,1,'#c8282a');for(const x of[.2,.6])bxc(G,x,.08,1.0,.04,.84,.006,'#a01818');bxc(G,.5,.33,1.0,1.002,.34,.008,'#f0f0f0');bxc(G,1.0,.33,.5,.008,.34,1.002,'#f0f0f0');for(const x of[.22,.5,.78]){bxc(G,x,.39,1.004,.16,.22,.008,'#2a2a2a');bxc(G,1.004,.39,x,.008,.22,.16,'#2a2a2a')}bxc(G,.5,1.0,.5,1,.006,1,'#d6d6d6');bxc(G,.5,1.004,.5,.34,.006,.34,'#5a5a5a');bxc(G,.5,1.0,.5,.06,.12,.06,'#3a3a3a')}));yield;
+ IC2.movec=miShot(miBlock(G=>{cob(G,'#7a7a7a',33);bxc(G,.5,.72,.5,1.004,.28,1.004,'#b8945f');bxc(G,.5,1.0,.5,1,.008,1,'#c8a46a');bxc(G,.5,1.006,.5,.36,.008,.36,'#9a9aa2');for(const x of[.25,.5,.75]){bxc(G,x,.72,1.004,.02,.28,.008,'#8a6a3a');bxc(G,1.004,.72,x,.008,.28,.02,'#8a6a3a')}}));yield;
  /* ---------- heads ---------- */
- IC2.peasant=miHead('peasant',0);IC2.knight=miHead('knight',0);IC2.archer=miHead('archer',0);IC2.captain=miHead('captain',0);IC2.bannerman=miHead('bannerman',0);IC2.scout=miHead('scout',0);IC2.engineer=miHead('engineer',0);IC2.envoy=miHead('envoy',0);IC2.king=miHead('king',0);IC2.guard=miHead('guard',0);
- IC2.skull=miHead('zombie',1);IC2.brute=miHead('brute',1);IC2.runner=miHead('runner',1);
- IC2.idle=miOverlay(miHead('peasant',0),["KKKKK","KzzzK","KKzKK","KzKKK","KzzzK","KKKKK"],{K:'#101018',z:'#ffffff'},14,0);
+ IC2.peasant=miHead('peasant',0);yield;IC2.knight=miHead('knight',0);yield;IC2.archer=miHead('archer',0);yield;IC2.captain=miHead('captain',0);yield;IC2.bannerman=miHead('bannerman',0);yield;IC2.scout=miHead('scout',0);yield;IC2.engineer=miHead('engineer',0);yield;IC2.envoy=miHead('envoy',0);yield;IC2.king=miHead('king',0);yield;IC2.guard=miHead('guard',0);yield;
+ IC2.skull=miHead('zombie',1);yield;IC2.brute=miHead('brute',1);yield;IC2.runner=miHead('runner',1);yield;
+ IC2.idle=miOverlay(miHead('peasant',0),["KKKKK","KzzzK","KKzKK","KzKKK","KzzzK","KKKKK"],{K:'#101018',z:'#ffffff'},14,0);yield;
  /* ---------- buildings: renders of the medieval models ---------- */
  const tr=RS.done?1:0,SZI={tower:2,castle:5},st=(t,m,tier,ex)=>{const s={type:t,t:0,tier:tier==null?1:tier,sz:SZI[t]||1,gl:t==='gate'?3:0,tiles:[]},w=new THREE.Group();w.add(new THREE.Mesh(sGeo(s,m||0),matV));if(ex)ex(w);return w};
- const yaw=.62,pit=.36,B=(o,p,n)=>miShotB(o,yaw,p==null?pit:p,n);
- IC2.wall=B(st('wall',10,tr),.3,22);IC2.tower=B(st('tower',0,tr),.3,26);
- IC2.gate=B(st('gate',0,tr,w=>{const d=new THREE.Mesh(tr?(GEO.door||(GEO.door=doorGeo())):(GEO.doorw||(GEO.doorw=doorGeoW())),matV);d.position.set(0,1.32,0);w.add(d)}),.3,24);
- IC2.barracks=B(st('barracks',0,tr));IC2.farm=B(st('farm',0,1),.62);IC2.house=B(st('house',0,0));IC2.storage=B(st('storage',0,0));IC2.academy=B(st('academy',0,0));IC2.market=B(st('market',0,0));IC2.forester=B(st('forester',0,0));IC2.guild=B(st('guild',0,0));IC2.observatory=B(st('observatory',0,0));IC2.granary=B(st('granary',0,0));IC2.bell=B(st('bell',0,0));IC2.sanctuary=B(st('sanctuary',0,0));IC2.beacon=B(st('beacon',0,0));IC2.orchard=B(st('orchard',0,0));IC2.forge=B(st('forge',0,0));IC2.embassy=B(st('embassy',0,0));IC2.warroom=B(st('warroom',0,0));IC2.sappers=B(st('sappers',0,0));IC2.torch=B(st('torch',0,1),.3,22);
- IC2.home=B(st('castle',0,tr),.42);IC2.castle=IC2.home;IC2.keep=B(st('keep',0,tr));
- IC2.ballista=B(st('ballista',0,1,w=>{const h=new THREE.Mesh(GEO.bh||(GEO.bh=ballHead()),matV);h.position.set(0,.6,0);h.rotation.y=.5;w.add(h)}),.45,24);
- IC2.trebuchet=B(st('trebuchet',0,1,w=>{const a=new THREE.Mesh(GEO.ta||(GEO.ta=trebArm()),matV);a.position.set(1,1.78,1);a.rotation.y=.4;w.add(a)}),.4,24);
+ const yaw=.62,pit=.36,B=(o,p,n)=>miShotB(o,yaw,p==null?pit:p,n);yield;
+ IC2.wall=B(st('wall',10,tr),.3,22);IC2.tower=B(st('tower',0,tr),.3,26);yield;
+ IC2.gate=B(st('gate',0,tr,w=>{const d=new THREE.Mesh(tr?(GEO.door||(GEO.door=doorGeo())):(GEO.doorw||(GEO.doorw=doorGeoW())),matV);d.position.set(0,1.32,0);w.add(d)}),.3,24);yield;
+ IC2.barracks=B(st('barracks',0,tr));yield;IC2.farm=B(st('farm',0,1),.62);yield;IC2.house=B(st('house',0,0));yield;IC2.storage=B(st('storage',0,0));yield;IC2.academy=B(st('academy',0,0));yield;IC2.market=B(st('market',0,0));yield;IC2.forester=B(st('forester',0,0));yield;IC2.guild=B(st('guild',0,0));yield;IC2.observatory=B(st('observatory',0,0));yield;IC2.granary=B(st('granary',0,0));yield;IC2.bell=B(st('bell',0,0));yield;IC2.sanctuary=B(st('sanctuary',0,0));yield;IC2.beacon=B(st('beacon',0,0));yield;IC2.orchard=B(st('orchard',0,0));yield;IC2.forge=B(st('forge',0,0));yield;IC2.embassy=B(st('embassy',0,0));yield;IC2.warroom=B(st('warroom',0,0));yield;IC2.sappers=B(st('sappers',0,0));yield;IC2.torch=B(st('torch',0,1),.3,22);yield;
+ IC2.home=B(st('castle',0,tr),.42);IC2.castle=IC2.home;IC2.keep=B(st('keep',0,tr));yield;
+ IC2.ballista=B(st('ballista',0,1,w=>{const h=new THREE.Mesh(GEO.bh||(GEO.bh=ballHead()),matV);h.position.set(0,.6,0);h.rotation.y=.5;w.add(h)}),.45,24);yield;
+ IC2.trebuchet=B(st('trebuchet',0,1,w=>{const a=new THREE.Mesh(GEO.ta||(GEO.ta=trebArm()),matV);a.position.set(1,1.78,1);a.rotation.y=.4;w.add(a)}),.4,24);yield;
  const door=t=>w=>{const d=new THREE.Mesh(t?(GEO.door||(GEO.door=doorGeo())):(GEO.doorw||(GEO.doorw=doorGeoW())),matV);d.position.set(0,1.32,0);w.add(d)};
- for(const t of[0,1]){ICT[t].wall=B(st('wall',10,t),.3,22);ICT[t].tower=B(st('tower',0,t),.3,26);ICT[t].gate=B(st('gate',0,t,door(t)),.3,24);ICT[t].barracks=B(st('barracks',0,t))}
- ICT[0].path=IC2.path;ICT[1].path=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,.9,1,'#7a7468');const R=rngf(11);for(let i=0;i<3;i++)for(let j=0;j<3;j++){const c=['#a9abb3','#8e9098','#b8bac2','#9a9ca4'][(i+j*2)%4];bxc(G,.18+i*.32,.9,.18+j*.32,.28,.06+R()*.03,.28,c)}}));
+ for(const t of[0,1]){ICT[t].wall=B(st('wall',10,t),.3,22);yield;ICT[t].tower=B(st('tower',0,t),.3,26);yield;ICT[t].gate=B(st('gate',0,t,door(t)),.3,24);yield;ICT[t].barracks=B(st('barracks',0,t));yield}
+ ICT[0].path=IC2.path;ICT[1].path=miShot(miBlock(G=>{bxc(G,.5,0,.5,1,.9,1,'#7a7468');const R=rngf(11);for(let i=0;i<3;i++)for(let j=0;j<3;j++){const c=['#a9abb3','#8e9098','#b8bac2','#9a9ca4'][(i+j*2)%4];bxc(G,.18+i*.32,.9,.18+j*.32,.28,.06+R()*.03,.28,c)}}));yield;
  for(const k in IC2){if(IC2[k].__px&&IC[k]&&(IC[k].__vec||IC[k].__hd))continue;IC[k]=IC2[k]}}
+function mcIcons(){for(const _ of mcIconsSteps());}
 
 /* a research only changes a few icons: redraw just those (tier: the stone-able buildings, units: the soldier heads) */
 export let icoPart = function icoPart(kind,i){if(!ICR)icoInit();i=i|0;const set=(k,v)=>{if(v)IC[k]=v};let J;
@@ -153,13 +155,13 @@ export function setIcoPartHandler(handler) {
   icoPart = handler;
 }
 
-export function initializePixelIcons() {
+export function* initializePixelIcons() {
   MI_ISO = [Math.PI/4,.58];
 
   /* every later 3D-icon refresh (research done, new kingdom colour) re-applies the Minecraft set */
   {const _i3=icons3D;setIcons3DHandler(function(){try{_i3()}catch(e){}try{mcIcons()}catch(e){console.error('mcIcons',e)}})}
 
-  try{mcIcons()}catch(e){console.error('mcIcons',e)}
+  try{yield* mcIconsSteps()}catch(e){console.error('mcIcons',e)}
 
   /* three.js draws every object's UUID from Math.random: whatever builds meshes must use the real random, never the shared co-op stream
      (otherwise a cached geometry on one machine and a fresh one on the other would split the two simulations) */

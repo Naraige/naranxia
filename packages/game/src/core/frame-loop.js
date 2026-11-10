@@ -1,4 +1,4 @@
-import { pref, setPref } from './prefs.js';
+import { bootFrame } from './boot.js';
 import { aInit } from '../audio/sound.js';
 import { diagnosticsState } from '../debug/diagnostics.js';
 import { bugCapture } from '../debug/tools.js';
@@ -18,7 +18,7 @@ import { FOWU } from '../rendering/fog.js';
 import { render3D } from '../rendering/frame.js';
 import { nightK } from '../rendering/lighting.js';
 import { PKL, renderPickLive } from '../rendering/live-site-preview.js';
-import { icons3D } from '../rendering/model-icons.js';
+import { icons3DSteps } from '../rendering/model-icons.js';
 import { POST } from '../rendering/post-processing.js';
 import { drsTick, rs } from '../rendering/resolution.js';
 import { CAM, DRS, renderer, SHADOWS } from '../rendering/scene.js';
@@ -38,7 +38,9 @@ export const frameLoopState = {
   UIT: -1,
 };
 
-function loop(ts){const lt0=performance.now(),dt=Math.min(.05,(ts-(sessionState.last||ts))/1000);sessionState.last=ts;sessionState.clockT+=dt;
+function loop(ts){frame(ts);requestAnimationFrame(loop)}
+/* one frame; warm = the hidden start-up frame that compiles the title shaders behind the launch splash */
+function frame(ts,warm){const lt0=performance.now(),dt=Math.min(.05,(ts-(sessionState.last||ts))/1000);sessionState.last=ts;sessionState.clockT+=dt;
  if(sessionState.started){const sp=CAM.dist*.9*dt,s=Math.sin(CAM.yaw),c=Math.cos(CAM.yaw);let fx_=0,fz=0;
   if(!sessionState.showMap){if(keys[KB.up]||keys.arrowup)fz-=1;if(keys[KB.down]||keys.arrowdown)fz+=1;if(keys[KB.left]||keys.arrowleft)fx_-=1;if(keys[KB.right]||keys.arrowright)fx_+=1;
    CAM.x+=(fx_*c+fz*s)*sp;CAM.z+=(-fx_*s+fz*c)*sp;if(keys[KB.rotL])CAM.yaw-=dt*1.5;if(keys[KB.rotR])CAM.yaw+=dt*1.5}
@@ -54,14 +56,8 @@ function loop(ts){const lt0=performance.now(),dt=Math.min(.05,(ts-(sessionState.
   if(inputState.box){frameLoopState.CWD=1;canvasesState.ctx.strokeStyle='#ffe14a';canvasesState.ctx.lineWidth=Math.max(1,inputState.DPR);canvasesState.ctx.fillStyle='rgba(255,225,74,.15)';const x=Math.min(inputState.box.x1,inputState.box.x2),y=Math.min(inputState.box.y1,inputState.box.y2),w=Math.abs(inputState.box.x2-inputState.box.x1),h=Math.abs(inputState.box.y2-inputState.box.y1);canvasesState.ctx.fillRect(x,y,w,h);canvasesState.ctx.strokeRect(x+.5,y+.5,w,h)}
   if(PINGS.length){frameLoopState.CWD=1;drawPings()}}}finally{canvasesState.ctx=hc}}
  if(!sessionState.started||frameLoopState.UIT<0||ts-frameLoopState.UIT>=22||ts<frameLoopState.UIT){UIDT=frameLoopState.UIT>=0&&ts>frameLoopState.UIT?Math.min(.1,(ts-frameLoopState.UIT)/1000):dt;frameLoopState.UIT=ts;canvasesState.ctx.setTransform(1,0,0,1,0,0);canvasesState.ctx.clearRect(0,0,cv.width,cv.height);drawUI()}
- placeInput();{const cu=sessionState.started&&sessionState.mode?'crosshair':sessionState.started&&inputState.panMode?'grab':'default';if(cu!==CUR0){CUR0=cu;cv.style.cursor=cu}}drsTick(ts,lt0);if(diagnosticsState.BUGQ)bugCapture();hideBoot();requestAnimationFrame(loop)}
+ placeInput();{const cu=sessionState.started&&sessionState.mode?'crosshair':sessionState.started&&inputState.panMode?'grab':'default';if(cu!==CUR0){CUR0=cu;cv.style.cursor=cu}}if(!warm)drsTick(ts,lt0);if(diagnosticsState.BUGQ)bugCapture();if(!warm)bootFrame(performance.now()-lt0)}
 
-/* the launch splash (index.html) fades out once a few frames of the title scene are on screen */
-let bootFrames = 0;
-let bootSkip=false;function skipBoot(){if(bootSkip)return;bootSkip=true;const b=document.getElementById('boot');if(b)b.classList.add('skip')}
-if(pref('rm',false)||pref('qi',false)&&pref('seen',false))skipBoot();
-try{for(const ev of['pointerdown','keydown'])addEventListener(ev,skipBoot,{once:true,passive:true})}catch(e){}
-function hideBoot(){if(bootFrames>=0&&++bootFrames>=4&&(bootSkip||performance.now()>4900)){bootFrames=-1;setPref('seen',true);const b=document.getElementById('boot');if(b){b.classList.add('done');setTimeout(()=>b.remove(),1300)}}}
 export let UIDT = 1/60;
 let CUR0 = '';
 let SHF = 0;
@@ -69,11 +65,19 @@ let BGI = 0;
 
 function bgIdle(d){BGI=0;if(MP.on||!sessionState.started)return;const t0=performance.now();while(terrainState.GI<terrainState.GORD.length&&(d.didTimeout?performance.now()-t0<2.5:d.timeRemaining()>4)){const k=terrainState.GORD[terrainState.GI++];if(!genF[k])genChunk(k%NCX,(k/NCX)|0)}}
 
-export function initializeFrameLoop() {
+/* start-up steps (core/boot.js): world and first icons, then the hidden warm-up frame, then the loop itself */
+export function* initializeFrameLoop() {
   rs();
   rollWorld();
+  yield;
   reset();
-  icons3D();
+  yield;
+  yield* icons3DSteps();
   aInit();
-  requestAnimationFrame(loop);
 }
+export function warmFrame() {
+  frame(performance.now(), true);
+  /* WebGL queues its work: read one pixel back so the shader compilation is really over before the cards move on */
+  try { const gl = renderer.getContext(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4)) } catch (e) { /* context lost */ }
+}
+export function startFrameLoop() { requestAnimationFrame(loop) }
