@@ -7,13 +7,13 @@ import { sessionState } from '../gameplay/session.js';
 import { BOSSN } from '../ai/wave-boss.js';
 import { drawFlag, drawLang, L, LANG, LANGS, languageState, T_, TC, tw } from '../i18n/language.js';
 import { MP } from '../multiplayer/session.js';
-import { bannerPattern, drawEmblemR, EMB, gemSwatch, saveTheme, shieldTile } from '../rendering/kingdom-banner.js';
-import { BANNER, retheme } from '../rendering/structures.js';
+import { drawBannerPx, drawEmblemR, EMB, EMBNAME, gemSwatch, patternTile, saveTheme, selRing, slotBox, tone } from '../rendering/kingdom-banner.js';
+import { retheme } from '../rendering/structures.js';
 import { TFADE } from '../rendering/title-scene.js';
 import { SEAS, SEASC } from '../rendering/weather.js';
 import { uiBtn } from './build-menu.js';
 import { canvasesState } from './canvases.js';
-import { BTN, BTNH, focusRing, gold, menuSkin } from './drawing.js';
+import { BTN, BTNH, focusRing, menuSkin } from './drawing.js';
 import { hudState, inR, U } from './hud.js';
 import { NAV, navAdd, navBegin, navEnd, navPoll } from './menu-nav.js';
 import { dIc, IC } from './icons.js';
@@ -188,16 +188,23 @@ function drawChronicle(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'chr',title:'
 const MCSPL=['Survive the night!','Also try Co-op!','Hold the line!','100% blocky!','Mind the swarm!','Build towers!','Zombies hate walls!','Protect the castle!','Now with keeps!','Gold! Wood! Stone!','100x the swarm!','Ten thousand zombies!','Red eyes in the dark!','The last bastion of humanity','Rebel camps watch from afar','Hold the last light'];
 
 /* ================= New kingdom ================= */
-function drawSetup(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'new',title:'New kingdom',close:back,fh,maxW:440}),small=b.h<190,pw=b.w,cx=b.x+pw/2;let y=b.y+2;
- const eh=small?86:138;kitCard(b.x,y,pw,eh);const bnx=b.x+10,bnh=eh-14,bnw=bnh*2/3;canvasesState.ctx.imageSmoothingEnabled=true;canvasesState.ctx.drawImage(BANNER,bnx,y+7,bnw,bnh);
- const ex=bnx+bnw+10,ew=b.x+pw-10-ex;T_('Your kingdom',ex,y+5,'#c4a37a',.8);
+function drawSetup(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'new',title:'New kingdom',close:back,fh,maxW:480}),pw=b.w,cx=b.x+pw/2,G=2.8;let y=b.y+2;
+ /* layout: banner preview on the left, name + option rows on the right. The full card needs ~235 px of height; below that the compact one (colour + emblem) is used */
+ const lay=small=>{const bnw=small?52:pw<400?64:96,ex=b.x+10+bnw+10,ew=b.x+pw-10-ex,LW=small||pw<400?0:58,rw=ew-LW,sw=Math.max(8,Math.min(18,(rw+3)/PAL.length-3)),ss=Math.max(14,Math.min(27,small?19:(rw+G)/10-G)),
+   rh=(n,sz,gp)=>Math.ceil(n/Math.max(1,Math.floor((rw+gp)/(sz+gp))))*(sz+3);
+  return{small,bnw,ex,ew,LW,rw,sw,ss,eh:41+rh(PAL.length,sw,3)+(small?0:rh(PAL.length,sw,3)+rh(8,ss,G))+rh(EMB.length,ss,G)}};
+ let Y=lay(false);if(b.h<Y.eh+60)Y=lay(true);const{small,bnw,ex,ew,LW,rw,sw,ss,eh}=Y,rx=ex+LW;
+ kitCard(b.x,y,pw,eh);{const bh=Math.min(eh-14,bnw*1.4);drawBannerPx(b.x+10,y+(eh-bh)/2,bnw,bh)}
+ T_('Your kingdom',ex,y+5,'#c4a37a',.8);
  const fy=y+15;settingsState.nameBox={x:ex,y:fy,w:ew-24,h:15};uiBtn(ex+ew-22,fy,22,15,BTN,BTNH,()=>{THEME.n=KNAMES[(Math.random()*KNAMES.length)|0];nmI.value=THEME.n;saveTheme()},['Random name'],(x,yy,w)=>dIc(IC.dice,x+4,yy+1.5,12));
- const LW=small?0:58,rx=ex+LW,rw=ew-LW,row=(lab,n,yy,sz,draw,sel,pick,tip)=>{if(LW)T_(lab,ex,yy+(sz-9*.72)/2,'#c4a37a',.72);const per=Math.max(1,Math.floor((rw+2.5)/(sz+2.5)));for(let i=0;i<n;i++){const sx2=rx+(i%per)*(sz+2.5),sy=yy+((i/per)|0)*(sz+3);draw(sx2,sy,sz,i);if(i===sel)gold(sx2-1,sy-1,sz+2,sz+2,4);hudState.uiHits.push({...U(sx2,sy,sz,sz),fn:()=>{pick(i);saveTheme();retheme()},tip:tip(i)})}return Math.ceil(n/per)*(sz+3)};
- let ry=fy+20;const sw=Math.max(8,Math.min(15,(rw+2.5)/PAL.length-2.5));
- ry+=row('Colour',PAL.length,ry,sw,(x,yy,sz,i)=>gemSwatch(x,yy,sz,PAL[i][1]),THEME.c,i=>{THEME.c=i},i=>[PAL[i][0]+' colours']);
- if(!small)ry+=row('2nd colour',PAL.length,ry,sw,(x,yy,sz,i)=>{gemSwatch(x,yy,sz,PAL[i][1]);canvasesState.ctx.save();canvasesState.ctx.beginPath();canvasesState.ctx.arc(x+sz/2,yy+sz/2,sz/2-.3,0,6.283);canvasesState.ctx.clip();canvasesState.ctx.fillStyle=PAL[THEME.c][1];canvasesState.ctx.fillRect(x,yy,sz/2,sz);canvasesState.ctx.restore();canvasesState.ctx.beginPath();canvasesState.ctx.arc(x+sz/2,yy+sz/2,sz/2-.3,0,6.283);canvasesState.ctx.lineWidth=.9;canvasesState.ctx.strokeStyle='#c99a3a';canvasesState.ctx.stroke()},THEME.c2,i=>{THEME.c2=i},i=>['Pattern colour: '+PAL[i][0]]);
- if(!small)ry+=row('Pattern',8,ry,sw+3,(x,yy,sz,i)=>shieldTile(x,yy,sz,(X,Y,W,H)=>{canvasesState.ctx.translate(X,Y);bannerPattern(canvasesState.ctx,W,H,i,PAL[THEME.c2][1])}),THEME.p|0,i=>{THEME.p=i},i=>[['Plain','Per pale','Chevron','Bend','Quarterly','Fess','Bordure','Saltire'][i]]);
- ry+=row('Emblem',EMB.length,ry,sw+3,(x,yy,sz,i)=>shieldTile(x,yy,sz,(X,Y,W,H)=>drawEmblemR(X+W*.14,Y+H*.1,W*.72,i)),THEME.e,i=>{THEME.e=i},()=>['Emblem']);
+ const row=(lab,n,yy,sz,gp,draw,sel,pick,tip)=>{if(LW)T_(lab,ex,yy+(sz-9*.72)/2,'#c4a37a',.72);const per=Math.max(1,Math.floor((rw+gp)/(sz+gp)));let ring=null;
+  for(let i=0;i<n;i++){const sx2=rx+(i%per)*(sz+gp),sy=yy+((i/per)|0)*(sz+3);draw(sx2,sy,sz,i);if(i===sel)ring=[sx2,sy];hudState.uiHits.push({...U(sx2,sy,sz,sz),fn:()=>{pick(i);saveTheme();retheme()},tip:tip(i)})}
+  if(ring)selRing(ring[0],ring[1],sz,sz);return Math.ceil(n/per)*(sz+3)};
+ let ry=fy+21;const pad=Math.max(1,ss*.055),slotC=tone(PAL[THEME.c][1],-.22);
+ ry+=row('Colour',PAL.length,ry,sw,3,(x,yy,sz,i)=>gemSwatch(x,yy,sz,PAL[i][1]),THEME.c,i=>{THEME.c=i},i=>[PAL[i][0]+' colours']);
+ if(!small)ry+=row('2nd colour',PAL.length,ry,sw,3,(x,yy,sz,i)=>gemSwatch(x,yy,sz,PAL[i][1],PAL[THEME.c][1]),THEME.c2,i=>{THEME.c2=i},i=>['Pattern colour: '+PAL[i][0]]);
+ if(!small)ry+=row('Pattern',8,ry,ss,G,(x,yy,sz,i)=>{slotBox(x,yy,sz,'#161a26');patternTile(x+pad,yy+pad,sz-2*pad,i)},THEME.p|0,i=>{THEME.p=i},i=>[['Plain','Per pale','Chevron','Bend','Quarterly','Fess','Bordure','Saltire'][i]]);
+ ry+=row('Emblem',EMB.length,ry,ss,G,(x,yy,sz,i)=>{slotBox(x,yy,sz,slotC);drawEmblemR(x+pad,yy+pad,sz-2*pad,i)},THEME.e,i=>{THEME.e=i},i=>[EMBNAME[i]]);
  y+=eh+8;
  {const s='Long calm between waves, then a slow swarm. It grows stronger each wave.';let sc=.85;while(sc>.64&&tw(s,sc)>pw)sc-=.03;if(tw(s,sc)<=pw){TC(s,cx,y+2,'#c4a37a',sc);y+=18}else{const q=s.split('. ');TC(q[0]+'.',cx,y,'#c4a37a',.8);TC(q[1],cx,y+11,'#c4a37a',.8);y+=26}}
  const bh=small?22:28,byy=Math.min(b.y+b.h-bh-2,y+4),bw1=Math.round(pw*.3),bw2=pw-bw1-8;
