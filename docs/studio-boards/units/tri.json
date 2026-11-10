@@ -1,0 +1,282 @@
+{
+ "peasant": {
+  "A": {
+   "triangles": 1154,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 2212,
+   "meshes": 6
+  }
+ },
+ "peasant2": {
+  "A": {
+   "triangles": 1026,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1954,
+   "meshes": 6
+  }
+ },
+ "peasant3": {
+  "A": {
+   "triangles": 966,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1932,
+   "meshes": 6
+  }
+ },
+ "peasant4": {
+  "A": {
+   "triangles": 918,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1882,
+   "meshes": 6
+  }
+ },
+ "archer": {
+  "A": {
+   "triangles": 1910,
+   "meshes": 7
+  },
+  "B": {
+   "triangles": 2880,
+   "meshes": 7
+  }
+ },
+ "knight": {
+  "A": {
+   "triangles": 5098,
+   "meshes": 8
+  },
+  "B": {
+   "triangles": 3580,
+   "meshes": 8
+  }
+ },
+ "knight_plate": {
+  "A": {
+   "triangles": 5130,
+   "meshes": 8
+  },
+  "B": {
+   "triangles": 3632,
+   "meshes": 8
+  }
+ },
+ "captain": {
+  "A": {
+   "triangles": 5298,
+   "meshes": 10
+  },
+  "B": {
+   "triangles": 4288,
+   "meshes": 10
+  }
+ },
+ "bannerman": {
+  "A": {
+   "triangles": 2620,
+   "meshes": 12
+  },
+  "B": {
+   "triangles": 3298,
+   "meshes": 12
+  }
+ },
+ "cannon": {
+  "A": {
+   "triangles": 4382,
+   "meshes": 13
+  },
+  "B": {
+   "triangles": 5774,
+   "meshes": 13
+  }
+ },
+ "guard": {
+  "A": {
+   "triangles": 5314,
+   "meshes": 9
+  },
+  "B": {
+   "triangles": 3802,
+   "meshes": 9
+  }
+ },
+ "king": {
+  "A": {
+   "triangles": 6162,
+   "meshes": 9
+  },
+  "B": {
+   "triangles": 6384,
+   "meshes": 9
+  }
+ },
+ "scout": {
+  "A": {
+   "triangles": 990,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1510,
+   "meshes": 6
+  }
+ },
+ "engineer": {
+  "A": {
+   "triangles": 866,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1310,
+   "meshes": 6
+  }
+ },
+ "envoy": {
+  "A": {
+   "triangles": 966,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1496,
+   "meshes": 6
+  }
+ },
+ "zombie": {
+  "A": {
+   "triangles": 1036,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1234,
+   "meshes": 6
+  }
+ },
+ "zombie2": {
+  "A": {
+   "triangles": 1002,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1310,
+   "meshes": 6
+  }
+ },
+ "zombie3": {
+  "A": {
+   "triangles": 2020,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 2166,
+   "meshes": 6
+  }
+ },
+ "zombie4": {
+  "A": {
+   "triangles": 1694,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1722,
+   "meshes": 6
+  }
+ },
+ "husk": {
+  "A": {
+   "triangles": 2458,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 2604,
+   "meshes": 6
+  }
+ },
+ "runner": {
+  "A": {
+   "triangles": 1592,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1862,
+   "meshes": 6
+  }
+ },
+ "brute": {
+  "A": {
+   "triangles": 1508,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1826,
+   "meshes": 6
+  }
+ },
+ "bomber": {
+  "A": {
+   "triangles": 1884,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 2050,
+   "meshes": 6
+  }
+ },
+ "acid": {
+  "A": {
+   "triangles": 1742,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 1926,
+   "meshes": 6
+  }
+ },
+ "miner": {
+  "A": {
+   "triangles": 1794,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 2106,
+   "meshes": 6
+  }
+ },
+ "boss": {
+  "A": {
+   "triangles": 1688,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 2420,
+   "meshes": 6
+  }
+ },
+ "zknight": {
+  "A": {
+   "triangles": 2256,
+   "meshes": 6
+  },
+  "B": {
+   "triangles": 2386,
+   "meshes": 6
+  }
+ },
+ "rebel": {
+  "A": {
+   "triangles": 5098,
+   "meshes": 8
+  },
+  "B": {
+   "triangles": 3580,
+   "meshes": 8
+  }
+ }
+}
