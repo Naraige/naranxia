@@ -1,5 +1,6 @@
 # boot timeline of a built game: long tasks, frame gaps, when each intro card shows, when the splash leaves
 # BP_STUB=1 makes renderer.render a no-op (checks the card sequence quickly; packed build only); BP_RM=1 emulates prefers-reduced-motion
+# BP_AUTO=1 keeps the automation path (synchronous start-up, no cards); BP_EVAL=file.js evaluates a test function at the end
 # BP_VIEW=480x270 shrinks the page (software WebGL is slow in headless runs); BP_DIST=dir reads another dist folder
 # usage: python3 tools/bootprobe.py [html in dist/, default naranxia.html] [outdir for 0.5 s screenshots|-] [seconds] [cpu throttle] [prefs like qi=1,seen=1] [iframe]
 import sys,os,json,time,threading,http.server,functools
@@ -13,14 +14,17 @@ secs=float(A[3]) if len(A)>3 else 9
 thr=float(A[4]) if len(A)>4 else 1
 prefs=A[5] if len(A)>5 and A[5]!='-' else ''
 frame=len(A)>6
-INIT="""(()=>{if(document.documentElement&&location.pathname.indexOf('__frame')>=0)return;window.__nxBootReal=1;const P=window.__bp={lt:[],fr:[],ev:[],n:0};
+INIT="""(()=>{if(document.documentElement&&location.pathname.indexOf('__frame')>=0)return;if(!window.__bpAuto)window.__nxBootReal=1;
+if(window.__bpStub){let V;const wrap=()=>{if(V&&V.WebGLRenderer&&!V.__w){V.__w=1;const O=V.WebGLRenderer;V.WebGLRenderer=function(p){const r=new O(p);r.render=function(){};return r}}return V};
+ try{Object.defineProperty(window,'THREE',{configurable:true,get:wrap,set(v){V=v}})}catch(e){}}
+const P=window.__bp={lt:[],fr:[],ev:[],n:0};
 try{new PerformanceObserver(l=>{for(const e of l.getEntries())P.lt.push([Math.round(e.startTime),Math.round(e.duration)])}).observe({type:'longtask',buffered:true})}catch(e){}
 let last=0;const seen={};const mark=(k,t)=>{if(!(k in seen)){seen[k]=1;P.ev.push([k,Math.round(t)])}};
 const vis=e=>{if(!e)return false;const s=getComputedStyle(e);return +s.opacity>.5&&s.display!=='none'&&s.visibility!=='hidden'};
 function f(t){const b=document.getElementById('boot');if(last&&t-last>50)P.fr.push([Math.round(last),Math.round(t-last)]);last=t;P.n++;
  if(b){if(!b.classList.contains('skip')&&!b.classList.contains('done')){if(vis(b.querySelector('.st:not(.st2)')))mark('card1',t);if(vis(b.querySelector('.st2')))mark('card2',t)}
   if(b.classList.contains('done'))mark('splashDone',t);if(b.classList.contains('skip'))mark('skip',t)}else if(document.body)mark('splashRemoved',t);
- if(window.THREE){mark('three',t);if(window.__bpStub&&!P.stub){P.stub=1;const O=THREE.WebGLRenderer;THREE.WebGLRenderer=function(p){const r=new O(p);r.render=function(){};return r}}}if(document.body&&document.readyState!=='loading'&&!document.getElementById('nxz')&&document.getElementById('c')&&document.getElementById('c').width!==300)mark('gameRunning',t);
+ if(window.THREE)mark('three',t);if(document.body&&document.readyState!=='loading'&&!document.getElementById('nxz')&&document.getElementById('c')&&document.getElementById('c').width!==300)mark('gameRunning',t);
  requestAnimationFrame(f)}
 requestAnimationFrame(f)})()"""
 class Q(http.server.SimpleHTTPRequestHandler):
@@ -41,6 +45,7 @@ with sync_playwright() as p:
     import fontroute;fontroute.setup(cx)
     if prefs: cx.add_init_script("try{%s}catch(e){}"%''.join("localStorage.setItem('dk_%s','%s');"%tuple(kv.split('=')) for kv in prefs.split(',')))
     if os.environ.get('BP_STUB'): cx.add_init_script('window.__bpStub=1')
+    if os.environ.get('BP_AUTO'): cx.add_init_script('window.__bpAuto=1')
     if os.environ.get('BP_RM'): pg.emulate_media(reduced_motion='reduce')
     cx.add_init_script(INIT)
     if thr>1:
@@ -71,4 +76,7 @@ with sync_playwright() as p:
     if out:
         nb=int(secs*2);cnt=[sum(1 for c in casts if int(c*2)==k) for k in range(nb)]
         print('presented frames per 0.5 s',cnt,'| saved',sorted(saved.items()))
+    if os.environ.get('BP_EVAL'):
+        try: print('EVAL',str(fr.evaluate(Path(os.environ['BP_EVAL']).read_text(encoding='utf-8')))[:900])
+        except Exception as e: print('EVAL EXC',str(e)[:600])
     print('ERRS',errs[:4]);b.close()
