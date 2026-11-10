@@ -1,5 +1,5 @@
 import { cbOn, cbSet, pref, setPref } from '../core/prefs.js';
-import { applyVol, saveVol, sndOn, soundState, toggleSound } from '../audio/sound.js';
+import { applyVol, saveVol, snd, sndOn, soundState, toggleSound } from '../audio/sound.js';
 import { startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
 import { LANG, LANGS, languageState, T_, tw } from '../i18n/language.js';
@@ -66,7 +66,7 @@ export function drawSettings(UW,UH,fh,back){const tb=setTab===2?1:setTab,TABS=[[
  const l=listBegin('set'+tb,b.x,b.y+1,b.w,b.h-1);
  if(tb===1){l.section('Sound');
   l.row({label:'Music',slider:{val:soundState.vM,set:v=>{soundState.vM=v;applyVol();saveVol()}}});
-  l.row({label:'Sound effects',slider:{val:soundState.vS,set:v=>{soundState.vS=v;applyVol();saveVol()}}});
+  l.row({label:'Sound effects',slider:{val:soundState.vS,set:v=>{soundState.vS=v;applyVol();saveVol();snd('tick')}}});
   l.section('Display');
   l.row({label:'Graphics',opts:[['Ultra HD',1],['Fast',0]].map(([n,v])=>[n,sceneState.GQ===v,()=>setGfx(v)]),fn:()=>setGfx(sceneState.GQ?0:1)});
   {const SZ=[['Small',.8],['Normal',1],['Large',1.25],['Huge',1.6]],set=v=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch(e){}rs()},ci=Math.max(0,SZ.findIndex(z=>Math.abs(uiMul-z[1])<.01));
