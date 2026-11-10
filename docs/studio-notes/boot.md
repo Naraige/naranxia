@@ -33,4 +33,10 @@ Captures toutes les 0,5 s : `dist/boot/after/fNN.jpg` (planches `dist/boot/sheet
 - L'intro dure ~1 s de plus qu'avant sur machine rapide (le WebGL attend la fin de l'entrée de la carte 1). Constante `C1_ANIM` dans `core/boot.js` si le Roi préfère charger pendant l'animation.
 - `docs/studio-boards/revamp/cap_boot.py` capture la carte sans script : il faut maintenant ajouter la classe `go` à `#boot` (et sa regex de fin `</div></div></div>` ne correspond plus).
 - Le texte de la carte est `HAMMERDAWNSTUDIO` sans espace dans `index.html` (déjà ainsi avant) : à confirmer.
-- Tests : `npm test -- det smoke tools` (voir rapport) ; hashes inchangés attendus (rien dans la simulation).
+
+## Tests (machine partagée, charge 15 à 25 sur 2 coeurs, 4 à 5 Chromium d'autres agents)
+- `det` : PASS (895 s au lieu de ~115 s), les 8 hashes identiques à ceux du journal du lead (`/home/claude/naranxia/dist/test-logs/det.log`, release-v84).
+- `smoke` et `tools` : dépassement des 20 min du lanceur (journaux vides, aucune erreur ; à cette charge smoke demanderait ~45 min). À RELANCER par le lead machine calme.
+- Substitut passé : même corps de test, rendu `renderer.render` neutralisé, chemin d'automatisation : `BP_AUTO=1 BP_STUB=1 BP_EVAL=tests/smoke.js python3 tools/bootprobe.py naranxia.html - 45` -> résultat normal de smoke, `ERRS []` ; corps JS de `tests/tools.py` sur le build readable -> toutes les conditions de RESULT OK vraies, `ERRS []`.
+- Séquence réelle vérifiée de bout en bout (rendu neutralisé pour aller vite) : normale (carte 1 > chargement > carte Claude > rideau > titre), intro sautée (`qi=1,seen=1`), `prefers-reduced-motion` : `splashDone` atteint, aucune erreur.
+- Non vérifié : build readable sur le vrai chemin avec rendu réel jusqu'au titre (trop lent ici), vrai GPU, iframe claude.ai, launcher Electron.
