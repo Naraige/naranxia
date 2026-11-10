@@ -147,7 +147,7 @@ export function keyChip(x, y, t) {
 /* tabs: a row of bevelled buttons, the active one green and 3 px taller. tabs = [[label, fn], ...]; returns the row height */
 export function kitTabs(x, y, w, tabs, sel, h, nav) {
   h = h || 20; const gap = 4, n = tabs.length, tw1 = Math.min(150, Math.floor((w - gap * (n - 1)) / n));
-  tabs.forEach((t, i) => { const on = i === sel; bevelBtn(x + i * (tw1 + gap), y - (on ? 3 : 0), tw1, h + (on ? 3 : 0), t[0], on ? 'go' : 'dark', t[1], { sc: on ? .95 : .9, nav }) });
+  tabs.forEach((t, i) => { const on = i === sel; bevelBtn(x + i * (tw1 + gap), y - (on ? 3 : 0), tw1, h + (on ? 3 : 0), t[0], on ? 'go' : 'dark', on ? t[1] : () => { snd('tab'); t[1]() }, { sc: on ? .95 : .9, nav }) });
   return h;
 }
 
