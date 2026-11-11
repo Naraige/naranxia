@@ -3,7 +3,7 @@ import { bxc, newG, toGeo } from '../geometry.js';
 import { lighten } from '../kingdom-banner.js';
 import { mkModel0, PXON, unitsState } from './units.js';
 import { gear2, gearSig } from './gear-style.js';
-import { g2Axe, g2Bow, g2CapSword, g2Hammer, g2Halberd, g2Hoe, g2Pick, g2RoyalSword, g2Sword } from './gear2.js';
+import { g2Axe, g2Bow, g2CapSword, g2Hammer, g2Halberd, g2Hoe, g2Pick, g2RoyalSword, g2Spear, g2Sword } from './gear2.js';
 import { pxBow, pxCapSword, pxHalberd, pxRoyalSword, pxSword } from './weapons.js';
 import { THEME, thp } from '../../ui/kingdom-theme.js';
 
@@ -44,7 +44,7 @@ export function vsp(G,rows,x,oy,oz,p,th){for(let r=0;r<16;r++)for(let c=0;c<16;c
 const TOOLG={};
 /* gear board, look B (gear-style.js): one tool set per switch value, kingdom colour and armour research; items left on the current
    look, and the new tools that carry no kingdom colour, are shared by every set (same geometry, same draw call) */
-const TOOLS2={},G2SH={},G2MK={axe:g2Axe,pick:g2Pick,hoe:g2Hoe,hammer:g2Hammer,rsword:g2RoyalSword,sword:()=>g2Sword(unitsState.ALB),gsword:g2CapSword,halberd:g2Halberd,bow:g2Bow},G2TEAM={sword:1,gsword:1,halberd:1,bow:1};
+const TOOLS2={},G2SH={},G2MK={axe:g2Axe,pick:g2Pick,hoe:g2Hoe,hammer:g2Hammer,rsword:g2RoyalSword,sword:()=>g2Sword(unitsState.ALB),gsword:g2CapSword,halberd:g2Halberd,spear:g2Spear,bow:g2Bow},G2TEAM={sword:1,gsword:1,halberd:1,spear:1,bow:1};
 export const HANDY=-4.5;
 
 export function tb(G,x,y,z,w,h,d,c){bxc(G,x*VX,(y-h/2)*VX,z*VX,w*VX,h*VX,d*VX,c)}
@@ -78,6 +78,8 @@ function toolGeos0(){if(TOOLG.axe)return TOOLG;const mk=f=>{const G=newG();f(G);
   tb(G,0,-3.36,H-2.55,.26,.42,.5,ST);tb(G,0,-3.36,H+2.55,.26,.42,.5,ST);tb(G,0,-1.95,H,.38,.62,.62,GDc);tb(G,0,-1.95,H,.42,.28,.28,'#c42a36');
   tb(G,0,.85,H+.1,.3,1.0,.7,SD);tb(G,0,1.7,H-.1,.26,.8,.55,ST);tb(G,0,2.35,H-.4,.22,.6,.45,ST);tb(G,0,2.8,H-.75,.18,.4,.4,SL);
   tb(G,0,0,H-2.6,1.0,1.0,.16,GDc);tb(G,0,0,H-3.1,.96,.96,.8,'#a3202a');tb(G,0,0,H-3.8,.8,.8,.7,'#86161f');tb(G,0,0,H-4.35,.6,.6,.45,'#6a1018')});
+ /* spear: one design only (gear2.js), also when the gear switch is off */
+ TOOLG.spear=g2Spear();
  /* bow: grip in the fist, limbs along z, bent toward the archer (+y), string on the archer side */
  TOOLG.bow=PXON?pxBow():mk(G=>{tb(G,0,0,0,.8,.95,1.5,'#4a2e16');for(let k=0;k<6;k++){const z=1.05+k*1.08,y=.07*k*k;[1,-1].forEach(sg=>tb(G,0,y,sg*z,.55-.04*k,.75,1.2,k===5?'#5a3a1a':'#8a5a2a'))}[1,-1].forEach(sg=>tb(G,0,2.6,sg*6.75,.5,.5,.5,'#d9b13a'));
   tb(G,0,2.72,0,.14,.14,13.5,'#efe9d6')});

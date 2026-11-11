@@ -23,6 +23,8 @@ export const ROTT=new Set(['barracks','farm','storage','house','academy','market
 
 export const FOOD0=150,FARMT=6,FARMY=6,POPBASE=18,POPHOUSE=6,POPMAX=120,RALLY=[null,null],RALLYC=[null,null],RANKN=['','Veteran','Elite','Champion'];
 export const LH=new WeakMap();
+/* damage multiplier of a spearman against big targets (brute, wave boss) */
+export const SPEAR_BIG=1.6;
 
 export function initializeRules() {
   /* cinematic state (declared early: reset() touches it) */
@@ -65,6 +67,8 @@ export function initializeRules() {
 
   /* new units: scout (fast, far-seeing, trained at barracks), engineer (no weapon, repairs buildings fast) */
   Object.assign(T,{scout:{r:5,hp:40,spd:155,dmg:5,rng:17,cdt:1.2,col:'#7fb0a0'},engineer:{r:5,hp:50,spd:110,dmg:2,rng:12,cdt:1.6,col:'#d8b04a'},envoy:{r:5,hp:45,spd:120,dmg:1,rng:10,cdt:2,col:'#d9d2c0'}});
+  /* spearman: cheap line holder (barracks, from the start). Reach 36 against the knight's 14: he strikes over a front rank; SPEAR_BIG against brutes and bosses; no stone in his cost */
+  Object.assign(T,{spearman:{r:7,hp:85,spd:108,dmg:11,rng:36,cdt:1,col:'#5a8fd0'}});Object.assign(C,{spearman:{g:90,w:30,f:25}});Object.assign(TRAIN,{spearman:15});
   Object.assign(C,{scout:{g:40,f:20},engineer:{g:70,w:40,s:20},envoy:{g:80,f:20}});
   Object.assign(TRAIN,{scout:10,engineer:14,envoy:12});
 

@@ -61,6 +61,7 @@ movec:'Move castle',
 rotate:'Rotate',
 peasant:'Peasant',
 knight:'Knight',
+spearman:'Spearman',
 archer:'Archer',
 bannerman:'Bannerman',
 scout:'Scout',
@@ -211,6 +212,7 @@ plate:['Plate armor','Research (50 s): your side takes','22% less damage'],
 drill:['Drill training','Research (35 s): units are trained','25% faster, at the castle or barracks'],
 peasant:['Peasant','Select, then right-click a tree, rock','or gold to harvest it. Click a building to repair'],
 knight:['Knight','Tough melee fighter'],
+spearman:['Spearman','Cheap line holder with a long spear','Strikes over the front rank','Hits brutes and bosses 60% harder'],
 archer:['Archer','Ranged attacker','Right-click a wall, gate or tower','to garrison it for more range'],
 bannerman:['Bannerman','Heals nearby allies in a wide area','and speeds up their attacks','Keep him behind the line'],
 captain:['Captain','Allies within 8 tiles hit 25% harder','and take 20% less damage'],
@@ -265,7 +267,7 @@ function ctxGroups(){const S=sel();if(S.length){const sol=S.some(u=>u.type!=='pe
  if(t==='market')return[['Trade',['sellw','sells','sellf','buyw','buys','buyf']],['Barter',['xws','xwf','xsw','xsf','xfw','xfs']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
  if(t==='guild')return[['Builders',['rb-','rb+']],['Repairers',['rr-','rr+']],['Terraformers',['rt-','rt+']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
  if(t==='academy')return[['Research',['upgrade','iron','plate','steel','mail','drill','tools','harvest','fletch','fire','bastion','oil','era']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
- if(t==='barracks')return[['Train',['knight','archer','bannerman','captain','scout'].concat(RS.done?['cannon']:[])],['Command',upI(curB()).concat(['army','idle','rally','repair','demolish','rotate','form','mode'])]];
+ if(t==='barracks')return[['Train',['knight','spearman','archer','bannerman','captain','scout'].concat(RS.done?['cannon']:[])],['Command',upI(curB()).concat(['army','idle','rally','repair','demolish','rotate','form','mode'])]];
  return[['Train',['peasant','engineer'].concat(bastionHas(HOMEC().pl|0,'embassy')?['envoy']:[]).concat(royalBtns())],...buildGroups(true),['Command',upI(HOMEC()).concat(['army','idle','rallyc','repair','rotate','movec','form','mode'])]].concat(MP.on&&sessionState.CS2?[['Co-op',['convoy']]]:[])}
 
 /* ================= tabs and NEW tags (lot D, visual only) =================

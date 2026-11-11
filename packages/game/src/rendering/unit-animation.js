@@ -69,8 +69,8 @@ export function animUnit(u,dt,anyDmg,frame){let g=u.m;if(g&&!u.ttl&&(u.mt!==u.t|
   else{const wu=p<.25,st=p>=.25&&p<.5,t=wu?easeO(p/.25):st?(p-.25)/.25:1-(p-.5)/.5;
    ar=wu?-.2-2.3*t:st?-2.5+3.0*t:.5*(1-(p-.5)/.5)*(1);al=wu?-.5*t:st?-.5+.7*t:0;wr=wu?.55*t:st?.55-1.05*t:-.5*(1-(p-.5)/.5);twist=wu?.35*t:st?.35-.8*t:-.45*(1-(p-.5)/.5);lean=wu?-.12*t:st?-.12+.5*t:.38*(1-(p-.5)/.5);lunge=st?.14*t:p>=.5?.14*(1-(p-.5)/.5):0;headX=st?.2:0}}
  if(ty==='cannon'){ar=-1.15+(wl?Math.sin(u.ap)*.05:0);al=ar;lean=wl?.28:.1;twist=0;lunge=0;headX=0}
- if(ty==='guard'){if(wl)d.wasW=1;else if(d.wasW){d.wasW=0;d.pst=sessionState.clockT}
-  if(atk<0){if(wl){ar=-.3+Math.sin(u.ap*.9)*.05;u.gwr=-1.12}else{ar=-.14+Math.sin(T*1.2)*.01;u.gwr=-1.43;headX=-.03;headY=0;lean=-.02;const pk=sessionState.clockT-(d.pst||-9);if(pk<.55){const e=Math.sin(Math.min(1,pk/.55)*Math.PI);ar-=.26*e;u.gwr-=.06*e}}}else{const p=atk,wu=p<.3,th=p>=.3&&p<.55,t=wu?easeO(p/.3):th?(p-.3)/.25:1-(p-.55)/.45;
+ if(ty==='guard'||ty==='spearman'){if(wl)d.wasW=1;else if(d.wasW){d.wasW=0;d.pst=sessionState.clockT}
+  if(atk<0){if(wl){ar=-.3+Math.sin(u.ap*.9)*.05;u.gwr=ty==='guard'?-1.12:-1.58}else{ar=-.14+Math.sin(T*1.2)*.01;u.gwr=-1.43;headX=-.03;headY=0;lean=-.02;const pk=sessionState.clockT-(d.pst||-9);if(pk<.55){const e=Math.sin(Math.min(1,pk/.55)*Math.PI);ar-=.26*e;u.gwr-=.06*e}}}else{const p=atk,wu=p<.3,th=p>=.3&&p<.55,t=wu?easeO(p/.3):th?(p-.3)/.25:1-(p-.55)/.45;
   if(wu){ar=-.36-.24*t;u.gwr=-1.28+1.53*t;lunge=0;lean=0}else if(th){ar=-.6-.95*t;u.gwr=.25+1.25*t;lunge=.16*t;lean=.14*t}else{ar=-.36-1.19*t;u.gwr=-1.28+2.78*t;lunge=.16*t;lean=.14*t}twist=0}}
  let arz=0,alz=0,wy=0;
  if(ty==='king'){if(atk>=0)d.kcb=sessionState.clockT;const rest=!wl&&atk<0&&sessionState.clockT-(d.kcb||-99)>2.2;
@@ -99,7 +99,7 @@ export function animUnit(u,dt,anyDmg,frame){let g=u.m;if(g&&!u.ttl&&(u.mt!==u.t|
  if(ty==='king'){const kz=Math.min(1,dt*7);d.arm.rotation.z+=(arz-d.arm.rotation.z)*kz;if(d.armL)d.armL.rotation.z+=(alz-d.armL.rotation.z)*kz;if(d.weap)d.weap.rotation.y+=(wy-d.weap.rotation.y)*kz}else if(d.arm.rotation.z!==0)d.arm.rotation.z*=.8;
  d.ring.visible=!!u.sel;
  for(const kk in d.tools)d.tools[kk].visible=tool===kk;
- if(ty==='archer'&&atk>=0)wr=0;else if(ty==='guard')wr=u.gwr;else if(ty==='king'&&u.kwr!=null)wr=u.kwr;else if(armored&&atk<0)wr=.18+(wl?Math.sin(u.ap*.9)*.06:0);
+ if(ty==='archer'&&atk>=0)wr=0;else if(ty==='guard'||ty==='spearman')wr=u.gwr;else if(ty==='king'&&u.kwr!=null)wr=u.kwr;else if(armored&&atk<0)wr=.18+(wl?Math.sin(u.ap*.9)*.06:0);
  d.wr+=(wr-d.wr)*Math.min(1,dt*(ty==='king'&&atk<0?7:20));if(tool&&d.tools[tool])d.tools[tool].rotation.x=d.wr;if(d.weap&&ty!=='archer')d.weap.rotation.x=d.wr;
  if(u.carry&&u.cj){d.carry.visible=true;if(d.carry.geometry!==CARRYG[u.cj])d.carry.geometry=CARRYG[u.cj]}else d.carry.visible=false;
  const X=d.ex;if(X.cape)X.cape.rotation.x=.1+(wl?.22+.22*Math.abs(Math.sin(u.ap)):0)+Math.sin(T*1.5)*.04+(atk>=0?.35:0);if(X.cape2)X.cape2.rotation.x=-.07+(wl?.12+.16*Math.abs(Math.sin(u.ap+.7)):0)+Math.sin(T*1.5-.9)*.05+(atk>=0?.2:0);

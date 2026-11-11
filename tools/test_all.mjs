@@ -14,6 +14,7 @@ const suite = {
   det: { args: ['tools/run.py', 'tests/det.js'], pass: /"same":true/ },
   tools: { args: ['tests/tools.py'], pass: /^RESULT OK/m },
   features: { args: ['tools/run.py', 'tests/features.js'], pass: /"ok":true/ },
+  spearman: { args: ['tools/run.py', 'tests/spearman.js'], pass: /"ok":true/ },
   kingxp: { args: ['tools/run.py', 'tests/kingxp.js'], pass: /"ok":true/ },
   mp_kxp: { args: ['tests/mp_kxp.py', 'naranxia_readable.html', '30'], pass: /^RESULT OK/m },
   compat: { args: ['tools/run.py', 'tests/compat.js'], pass: /"ok":true/ },
@@ -33,7 +34,7 @@ const suite = {
   mp_convoy: { args: ['tests/mp_convoy.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   save: { args: ['tools/run.py', 'tests/save.js'], pass: /"same0":true/ },
 };
-const quick = ['smoke', 'det', 'tools', 'features', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy'];
+const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy'];
 const args = process.argv.slice(2);
 const names = args.includes('--full')
   ? [...quick, 'save']

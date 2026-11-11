@@ -54,7 +54,7 @@ export function garTarget(s,u){for(let r=1;r<=5;r++){let b=null,bd=1e12;for(cons
 
 export function garrison(u,s){u.fg=null;u.fpos=null;if(u.gar===s)return true;s.garr=s.garr||[];if(s.garr.length>=GCAP[s.type])return false;ungar(u);leaveSquad(u);u.o=null;u.gar=s;s.garr.push(u);u.gz=(s.bh||0)+gtopOf(s);return true}
 
-const FPRI={king:0,guard:1,knight:0,captain:0,archer:1,bannerman:2,cannon:3,peasant:4,scout:1,engineer:4,envoy:4};
+const FPRI={king:0,guard:1,knight:0,spearman:.5,captain:0,archer:1,bannerman:2,cannon:3,peasant:4,scout:1,engineer:4,envoy:4};
 
 export function formSlots(U,w,fm){const n=U.length,f=[Math.sin(fm),Math.cos(fm)],p=[f[1],-f[0]],pos=[];const SP=26;
  const add=(row,col)=>pos.push({row,col,x:w.x-f[0]*row*SP+p[0]*col*SP,y:w.y-f[1]*row*SP+p[1]*col*SP});

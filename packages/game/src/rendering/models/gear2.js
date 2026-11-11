@@ -112,6 +112,28 @@ export function g2Halberd(){const m=gearPal(),S=m.BL,G=newG(),V=1.4,Tm=teamPal(t
   bx(G,-V,-V,zc(16)-V/2,2*V,2*V,V,g2Tone(m.GO,3),4,[2,2,1]);
  });return fin(G,1)}
 
+/* ---------------- spear (spearman, and the pike blocks of the title screen) ----------------
+   same family as the halberd, thinner (1.2 px cubes): a leaf blade with a lit edge, a steel socket, a gold collar, a pennant in the colour
+   of the kingdom under the head (on the -y side: it hangs down in a thrust), an ash haft, a leather grip, an iron foot.
+   Rows top first, the haft is column 7; the grip is row SPG (48 px of spear above the fist, 11 below). */
+const SPEAR2=[
+ '.......H.......','.......H.......','......HLD......','......HLD......','.....HLLMD.....','.....HLMMD.....','.....HLMMD.....','......LMD......',
+ '......LMD......','.......M.......','.......S.......','.......S.......','.......S.......','.......G.......','tTTTTTTW.......','.tUUUTTw.......',
+ '..tUUTTW.......','...tTTTw.......','....tTTW.......','.....ttw.......'];
+
+export function g2Spear(){const m=gearPal(),S=m.BL,G=newG(),V=1.2,Tm=teamPal(thp()),N=50,G0=40,
+ C={H:S[4],L:S[3],M:S[2],D:S[1],K:m.IR[1],W:m.WL[2],w:m.WL[1],V:m.WL[3],T:Tm[3],t:Tm[1],U:Tm[4],B:m.LE[1],b:m.LE[3]};
+ const rows=[];
+ for(let r=0;r<N;r++){if(r<SPEAR2.length){rows.push(SPEAR2[r]);continue}
+  let ch=(r>=37&&r<=42)?(r%2?'B':'b'):(['W','w','V'][Math.floor(pxN('P',r,0,6)*3)]);if(r===48)ch='K';if(r===49)ch='D';
+  rows.push('.......'+ch+'.......')}
+ const zc=r=>(G0-r)*V;
+ pxScene(()=>{
+  pxSpriteF(G,N,15,(u,v)=>{const ch=rows[N-1-u][v];return (ch==='.'||ch==='S'||ch==='G')?null:C[ch]},{plane:'yz',x:0,y:-7.5*V,z:zc(N-1)-V/2,ps:V,d:V});
+  bx(G,-.9*V,-.8*V,zc(12)-V/2,1.8*V,1.6*V,3*V,g2Tone(m.ST,2),4,[2,2,3]);
+  bx(G,-V,-V,zc(13)-V/2,2*V,2*V,V,g2Tone(m.GO,3),4,[2,2,1]);
+ });return fin(G,1)}
+
 /* ---------------- bow ----------------
    a voxel recurve bow: stepped limbs two pixels deep (lit belly, darker back), gold bands, horn tips, a wrapped grip with a band in
    the colour of the kingdom, a steel arrow rest, the string on the archer's side (+y) */

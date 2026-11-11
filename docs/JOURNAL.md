@@ -4,6 +4,19 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · lancier (spearman): nouvelle unité jouable, allumée, non fusionnée, non livrée
+- Demande du Roi: « oui tu peux creer le lancier » (les piquiers de l'écran titre n'existaient pas en jeu). Branche de worktree hd-gameplay, rien dans `game/`, rien poussé. Détail, tableau et mesures: `docs/studio-notes/spearman.md`.
+- Unité `spearman`, caserne, dès le début: 85 PV, 11 dégâts / 1 s, portée 36 (chevalier 14: frappe par-dessus le premier rang), x1,6 contre brute et boss (`SPEAR_BIG`), 90 or 30 bois 25 nourriture, 15 s, 1 population. Pas de bouclier, pas de règle spéciale contre l'acide (moins de PV suffit).
+- Courbe: par ressource contre les zombies ordinaires il vaut moins que le chevalier (13,2 contre 11,0 par DPS), par tête il vaut moins contre tout; meilleur seulement par ressource contre les brutes. Duels mesurés dans les notes.
+- Câblage: règles, `hit()`, rang de formation, menu caserne, infobulle, panneau des troupes, carte d'unité, raccourci `\` réassignable, icônes, brouillard, zombie converti. Entraînement par la commande `buy` existante (co-op sans nouvelle commande); unités sauvées entières, rien dans `SAVA`.
+- Look: `px2Spearman` (chapel de fer, jaque matelassée à la couleur du royaume, col, baudrier, couverture roulée) et lance `g2Spear` (palette gear2, pennon à la couleur du royaume); animation du hallebardier (estoc, lance droite au repos, inclinée en marche). Écran titre: les blocs de piques sont ces lanciers avec cette lance (`pikeGeo()` supprimé).
+- IA et camps rebelles inchangés exprès: aucune lance dans la partie par défaut, hachages `det` identiques à la base.
+- Textes: 8 clés en 6 langues (`docs/studio-texts/spearman.json`). Nouveau test `spearman` (`tests/spearman.js`, ajouté à la suite rapide).
+- Vérifié avant fusion (branche seule): `det` (8 hachages identiques à la base d'avant quêtes), `features`, `mp8`, `mpk` (2e passage; le 1er a expiré au chargement, machine chargée), `save` (same0 vrai), `spearman` PASS; 3 captures 1280x720 (combat, menu caserne, carte d'unité).
+- Vérifié après fusion de `release-v84` (quêtes, 3 conflits: journal, traductions, `tools/test_all.mjs`, les deux côtés gardés): `npm run build`; `det features spearman quests mp8 mpk` (résultats: `dist/spear/tests4.txt`); hachages `det` identiques à ceux de `release-v84` avec quêtes (ils ne diffèrent de l'ancienne base que par l'état des quêtes, pas par le lancier); une capture du combat.
+- Non vérifié: `save` après fusion (SAVA non touché), `smoke` (build compressé), `mp_resync`, fitcheck, vrai GPU, mobile, lanciers en co-op à l'œil (aucun test co-op n'en forme), écran titre non regardé (piquiers changés de modèle), NL/PL/TR en anglais pour les 8 textes.
+- Au Roi: bonus x1,6 contre les brutes (ou 1,4), touche `\` par défaut, lanciers chez les rebelles / royaumes IA (changerait les hachages `det`), galons de grade, prix.
+
 ## 2026-11-11 · quests lot 3 merged: button marker, mp8 test fixed (not released)
 
 - Merged `worktree-agent-a42328e0c65a6fedd` (50f526a): `ui/quest-marker.js`, render only (gold pulse + arrow on the button of the active quest, or on what opens it). Agent's entry below.
