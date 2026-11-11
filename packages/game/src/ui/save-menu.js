@@ -5,7 +5,7 @@ import { MP } from '../multiplayer/session.js';
 import { svApply } from '../persistence/restore.js';
 import { svPack } from '../persistence/save-format.js';
 import { SVST } from '../persistence/save-storage.js';
-import { BANNER } from '../rendering/structures.js';
+import { bannerIcon } from '../rendering/banner-icon.js';
 import { canvasesState } from './canvases.js';
 import { hudDisplayState } from './hud-state.js';
 import { bevelBtn, kitScreen, listBegin, listEnd } from './menu-kit.js';
@@ -43,7 +43,7 @@ export function drawSaves(UW,UH,fh,back){const ig=sessionState.inGame&&!MP.on,b=
  if(!list.length)l.para('No saved games yet','#b59773',.88);
  list.forEach(s=>{const on=svSel===s.name,wv=/^Wave (\d+)/.exec(String(s.name)),d=new Date(s.t||0);
   l.row({label:String(s.name).slice(0,30),raw:true,tag:wv?['Wave '+wv[1],'#e9b93c']:null,value:s.t?d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'',vcol:'#b9b2a2',vsc:.72,on,
-   ic:(x,yy,sz)=>{g.imageSmoothingEnabled=true;g.drawImage(BANNER,x+2,yy,sz*2/3,sz)},fn:()=>{svSel=on?-1:s.name;saveMenuState.delAsk=null}},24);
+   ic:(x,yy,sz)=>{g.imageSmoothingEnabled=true;g.drawImage(bannerIcon(),x+2,yy,sz*2/3,sz)},fn:()=>{svSel=on?-1:s.name;saveMenuState.delAsk=null}},24);
   if(on){const w2=Math.min(150,(b.w-30)/2),yy=l.y-1;g.fillStyle='rgba(240,205,115,.5)';g.fillRect(b.x,yy-2,2,26);
    bevelBtn(b.x+12,yy,w2,21,'Load','go',()=>{if(!svBusy)loadGame(s.name)},{sc:.9});
    bevelBtn(b.x+18+w2,yy,w2,21,saveMenuState.delAsk===s.name?'Sure?':'Delete','red',async()=>{if(saveMenuState.delAsk!==s.name){saveMenuState.delAsk=s.name;setTimeout(()=>{if(saveMenuState.delAsk===s.name)saveMenuState.delAsk=null},2500);return}saveMenuState.delAsk=null;svSel=-1;await SVST.del(s.name);svRefresh()},{sc:.9});l.gap(28)}});

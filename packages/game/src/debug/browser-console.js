@@ -38,6 +38,9 @@ import { MP } from '../multiplayer/session.js';
 import { svApply } from '../persistence/restore.js';
 import { SAVA, svAssign, svPack } from '../persistence/save-format.js';
 import { continueLast, saveMenuState, svPeek } from '../ui/save-menu.js';
+import { bannerIcon } from '../rendering/banner-icon.js';
+import { drawBanner } from '../rendering/kingdom-banner.js';
+import { THEME } from '../ui/kingdom-theme.js';
 import { NAV } from '../ui/menu-nav.js';
 import { settingsDebug, settingsState } from '../ui/settings.js';
 import { titleDebug } from '../ui/title-menu.js';
@@ -257,6 +260,9 @@ export function installBrowserConsole() {
     NAV: { get: () => NAV },
     settingsDebug: { get: () => settingsDebug },
     settingsState: { get: () => settingsState },
+    THEME: { get: () => THEME },
+    drawBanner: { get: () => drawBanner },
+    bannerIcon: { get: () => bannerIcon },
     titleDebug: { get: () => titleDebug },
     languageState: { get: () => languageState },
     svPeek: { get: () => svPeek },

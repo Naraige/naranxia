@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · icône de bannière façon porte-étendard: planche A/B/C/D, interrupteur éteint (non fusionné, non livré)
+- Demande du Roi: « i'm still not happy about the icon for banner rework the banner maybe something more like the bannerman ». Branche de worktree hd-design, rien dans `game/`, rien poussé.
+- `rendering/banner-icon.js` (nouveau): `BANNER2=''` (défaut = image actuelle), 'B' étendard du porte-étendard, 'C' gonfanon sur mât, 'D' bannière murale; sprites 24x36 qui suivent couleur, 2e couleur, motif et emblème (16 emblèmes redessinés en 11x11). Deux lettres = petite puis grande image ('DB'). HUD, liste des sauvegardes et carte Nouveau royaume passent par `bannerIcon()`.
+- Planche `docs/studio-boards/banner/board.html` (3 lignes + référence du porte-étendard en jeu), `rows.json`; détail et constat: `docs/studio-notes/banner.md`. En attente du code du Roi.
+- Vérifié: `npm run build`; 24 captures du jeu sans erreur (4 variantes x 3 royaumes sur Nouveau royaume, sauvegardes, HUD, 16 et 32 px); feuille des 16 emblèmes x 3 variantes regardée une fois. Interrupteur éteint: `bannerIcon()` rend le canevas `BANNER` lui-même, mêmes rectangles.
+- Non vérifié: `npm test` (aucun fichier de simulation touché), vrai GPU, mobile, co-op. Non traité: texture 3D des bannières de pierre (reste A), pastilles d'emblème du menu (vectorielles), emblème or sur motif or peu contrasté.
+
 ## 2026-11-11 · monde en blocs look B fusionné et allumé (réponse du Roi « 1B … 9B »), non livré
 - Le Roi a répondu 1B à 9B (planche blocs): branche fusionnée, `blocksState.on=true` par défaut (`rendering/blocks.js`), BLK=DBLK=0,5, terrain, décor, textures bâtiments et saisons allumés.
 - Rendu seulement, simulation intacte. Tests après fusion: smoke det tools mp8 mpk ALL PASS (`dist/merge_tests10.txt`); une capture du village avec mutants, armes et blocs allumés, sans erreur; build de test republié.

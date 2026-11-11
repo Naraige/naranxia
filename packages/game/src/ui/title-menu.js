@@ -8,7 +8,8 @@ import { BOSSN } from '../ai/wave-boss.js';
 import { drawFlag, drawLang, L, LANG, LANGS, languageState, T_, TC, tw } from '../i18n/language.js';
 import { MP } from '../multiplayer/session.js';
 import { bannerPattern, drawEmblemR, EMB, gemSwatch, saveTheme, shieldTile } from '../rendering/kingdom-banner.js';
-import { BANNER, retheme } from '../rendering/structures.js';
+import { bannerIcon } from '../rendering/banner-icon.js';
+import { retheme } from '../rendering/structures.js';
 import { TFADE } from '../rendering/title-scene.js';
 import { SEAS, SEASC } from '../rendering/weather.js';
 import { uiBtn } from './build-menu.js';
@@ -199,7 +200,7 @@ const MCSPL=['Survive the night!','Also try Co-op!','Hold the line!','100% block
 
 /* ================= New kingdom ================= */
 function drawSetup(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'new',title:'New kingdom',close:back,fh,maxW:440}),small=b.h<190,pw=b.w,cx=b.x+pw/2;let y=b.y+2;
- const eh=small?86:138;kitCard(b.x,y,pw,eh);const bnx=b.x+10,bnh=eh-14,bnw=bnh*2/3;canvasesState.ctx.imageSmoothingEnabled=true;canvasesState.ctx.drawImage(BANNER,bnx,y+7,bnw,bnh);
+ const eh=small?86:138;kitCard(b.x,y,pw,eh);const bnx=b.x+10,bnh=eh-14,bnw=bnh*2/3;canvasesState.ctx.imageSmoothingEnabled=true;canvasesState.ctx.drawImage(bannerIcon(1),bnx,y+7,bnw,bnh);
  const ex=bnx+bnw+10,ew=b.x+pw-10-ex;T_('Your kingdom',ex,y+5,'#c4a37a',.8);
  const fy=y+15;settingsState.nameBox={x:ex,y:fy,w:ew-24,h:15};uiBtn(ex+ew-22,fy,22,15,BTN,BTNH,()=>{THEME.n=KNAMES[(Math.random()*KNAMES.length)|0];nmI.value=THEME.n;saveTheme()},['Random name'],(x,yy,w)=>dIc(IC.dice,x+4,yy+1.5,12));
  const LW=small?0:58,rx=ex+LW,rw=ew-LW,row=(lab,n,yy,sz,draw,sel,pick,tip)=>{if(LW)T_(lab,ex,yy+(sz-9*.72)/2,'#c4a37a',.72);const per=Math.max(1,Math.floor((rw+2.5)/(sz+2.5)));for(let i=0;i<n;i++){const sx2=rx+(i%per)*(sz+2.5),sy=yy+((i/per)|0)*(sz+3);draw(sx2,sy,sz,i);if(i===sel)gold(sx2-1,sy-1,sz+2,sz+2,4);hudState.uiHits.push({...U(sx2,sy,sz,sz),fn:()=>{pick(i);saveTheme();retheme()},tip:tip(i)})}return Math.ceil(n/per)*(sz+3)};
