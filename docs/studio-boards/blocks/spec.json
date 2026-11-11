@@ -1,0 +1,166 @@
+{
+ "title": "Monde en blocs : terrain, décor et bâtiments sur une seule grille",
+ "intro": "Vous avez demandé un monde construit en blocs d'une seule taille, comme dans Minecraft. A = le jeu actuel, B = blocs de 0,5 case (une unité mesure 1,7 bloc, une case fait 2 blocs), C = blocs de 1/3 de case quand la ligne en propose un. Choisissez une variante par ligne, puis copiez le code en bas (ex : 1B 2B 3C). Rien ne change dans le jeu avant votre réponse : tout est derrière un interrupteur éteint, et la simulation n'est pas touchée.",
+ "sections": [
+  {
+   "name": "Terrain de près : herbe, chemin de terre, pavés",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r1_A.jpg",
+     "note": "Actuel (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "r1_B.jpg",
+     "note": "Blocs de 0,5 : 2 blocs par case, 16 pixels par bloc, herbe et chemins en pixels à 3-4 tons"
+    },
+    {
+     "id": "C",
+     "img": "r1_C.jpg",
+     "note": "Blocs de 1/3 : 3 blocs par case, pixels plus fins"
+    }
+   ]
+  },
+  {
+   "name": "Falaises et bord de l'eau",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r2_A.jpg",
+     "note": "Actuel (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "r2_B.jpg",
+     "note": "Pierre, terre et sable en blocs, liseré d'herbe en pixels en haut des talus, eau en pixels"
+    }
+   ]
+  },
+  {
+   "name": "Arbres et forêt",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r3_A.jpg",
+     "note": "Actuel (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "r3_B.jpg",
+     "note": "Blocs de 0,5 : tronc d'un bloc, feuillage en blocs, chênes, bouleaux et sapins (les arbres sont plus grands)"
+    },
+    {
+     "id": "C",
+     "img": "r3_C.jpg",
+     "note": "Blocs de 1/3 : même construction, taille proche de l'actuelle"
+    }
+   ]
+  },
+  {
+   "name": "Rochers, buissons, minerai d'or, fleurs, souches",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r4_A.jpg",
+     "note": "Actuel (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "r4_B.jpg",
+     "note": "Blocs de 0,5 : rochers et minerai en blocs entiers, buisson = un bloc de feuilles, fleurs sur la grille de pixels"
+    },
+    {
+     "id": "C",
+     "img": "r4_C.jpg",
+     "note": "Blocs de 1/3"
+    }
+   ]
+  },
+  {
+   "name": "Un bâtiment sur le terrain avec des unités à côté",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r5_A.jpg",
+     "note": "Actuel (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "r5_B.jpg",
+     "note": "Même modèle, briques et planches à 16 pixels par bloc (une brique = la tête d'une unité, comme dans Minecraft)"
+    }
+   ]
+  },
+  {
+   "name": "Un village à la distance de jeu",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r6_A.jpg",
+     "note": "Actuel (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "r6_B.jpg",
+     "note": "Blocs de 0,5"
+    },
+    {
+     "id": "C",
+     "img": "r6_C.jpg",
+     "note": "Blocs de 1/3"
+    }
+   ]
+  },
+  {
+   "name": "Vue de la carte entière (zoom arrière maximum)",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r7_A.jpg",
+     "note": "Actuel (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "r7_B.jpg",
+     "note": "Blocs de 0,5 : deux fois moins de triangles pour le terrain et le décor"
+    }
+   ]
+  },
+  {
+   "name": "Saisons",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r8_A.jpg",
+     "note": "Actuel en hiver : seule la lumière change"
+    },
+    {
+     "id": "B",
+     "img": "r8_B.jpg",
+     "note": "Blocs en hiver : neige posée sur l'herbe, les feuillages et les rochers"
+    },
+    {
+     "id": "C",
+     "img": "r8_C.jpg",
+     "note": "Blocs en automne : herbe jaunie, feuillus orange et rouges, sapins verts"
+    }
+   ]
+  },
+  {
+   "name": "Nuit",
+   "variants": [
+    {
+     "id": "A",
+     "img": "r9_A.jpg",
+     "note": "Actuel (rien ne change)"
+    },
+    {
+     "id": "B",
+     "img": "r9_B.jpg",
+     "note": "Blocs de 0,5"
+    }
+   ]
+  }
+ ]
+}

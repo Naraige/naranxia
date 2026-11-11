@@ -4,6 +4,11 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · monde en blocs look B fusionné et allumé (réponse du Roi « 1B … 9B »), non livré
+- Le Roi a répondu 1B à 9B (planche blocs): branche fusionnée, `blocksState.on=true` par défaut (`rendering/blocks.js`), BLK=DBLK=0,5, terrain, décor, textures bâtiments et saisons allumés.
+- Rendu seulement, simulation intacte. Tests après fusion: voir `dist/merge_tests10.txt`.
+- Reste (`docs/studio-notes/blocks.md`): géométrie des bâtiments non reconstruite en blocs (gros lot), arbres B plus grands (cachent plus les unités), écran titre et choix du site non regardés, vrai GPU, traits d'herbe sèche coupés depuis le lot bâtiments (correctif d'une ligne décrit, non fait).
+
 ## 2026-11-11 · armes et outils look B fusionné et allumé (réponse du Roi « 1B … 15B »), non livré
 - Le Roi a répondu 1B à 15B (planche armes, 12 lignes + 3 vues d'armée): branche fusionnée, `GEAR2_ON='all'` (`rendering/models/gear-style.js`).
 - Conflit de fusion dans `rendering/unit-instances.js` (clé de cache: mutants `m` + `gearSig()`), résolu à la main.
@@ -21,6 +26,12 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Look B des 6 mutants + boss dans `rendering/models/mutants.js`, interrupteur `MUT2_ON` (`mutant-style.js`, défaut '' = rien ne change). Détail, coûts, reste à faire: `docs/studio-notes/mutants.md`.
 - Planche: `docs/studio-boards/mutants/board.html` (8 lignes: brute, coureur, artificier, cracheur, mineur, momie, boss, horde), `rows.json`. En attente du code du Roi (« 1B 2A ... »).
 - Vérifié: poses repos/marche/attaque, triangles (6 mutants +17 %, scène horde +5,1 %, draw calls identiques), `npm test -- det smoke` (voir notes). Non traité: nuée instanciée lointaine (garde l'ancien aspect), nuit, co-op.
+## 2026-11-10 · monde en blocs derrière un interrupteur éteint (non livré, planche en attente du Roi)
+- Demande du Roi: terrain, bâtiments et décors sur une seule taille de bloc, façon Minecraft. Étude et mesures: `docs/studio-notes/blocks.md`. Bloc retenu: 0,5 unité (2 blocs par case, unité = 1,7 bloc, 16 pixels par bloc); alternative 1/3.
+- `rendering/blocks.js` (nouveau): `blocksState` (éteint par défaut), parties `terrain`, `decor`, `build`, `seasons`, `setBlocks()`, localStorage `dk_blocks`. Terrain: mêmes colonnes et hauteurs, textures de blocs dans le shader, falaises fusionnées, liseré d'herbe, chemins en blocs, eau en pixels. Décor (`terrain-props-blocks.js`, nouveau): arbres, rochers, minerai, buissons en voxels fusionnés par chunk, plantes sur la grille de pixels, tout choisi par hachage de position. Bâtiments: seule la densité de texture change (18 -> 32 px par unité), modèles intacts. Saisons: neige et automne dessinés sur les blocs.
+- Vérifié: `npm run build`; `npm test -- det smoke` PASS (det 436 s, smoke 1110 s); listes de hachages `det` identiques octet pour octet entre release-v84, cette branche interrupteur éteint et cette branche interrupteur allumé. Coût: appels de dessin inchangés (154 village, 199 carte entière), triangles -34 % (village) et -41 % (carte entière), construction des chunks pas plus lente.
+- Planche `docs/studio-boards/blocks/board.html` (9 lignes), codes dans `rows.json`. Rien à fusionner avant la réponse du Roi.
+- Reste: re-grille de la géométrie des bâtiments (non contenue, décrite dans les notes), contrôle sur un vrai GPU, co-op à l'œil. Régression probable notée (pas corrigée): depuis le lot bâtiments, l'id matière 9 (chaume) coupe les traits peints de l'herbe sèche du terrain.
 
 ## 2026-11-10 · logo Hammerdawn 1C appliqué, armes/outils en cours (non livré)
 - Planche `docs/studio-boards/hds/` (gen.py): le Roi a répondu « 1c » (soleil uni + 4 rayons + marteau droit). Appliqué aux calques de la carte d'intro (`packages/game/index.html`), animations inchangées. Ligne 2 (écriture du nom) sans réponse: nom laissé tel quel.

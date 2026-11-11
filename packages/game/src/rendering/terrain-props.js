@@ -1,7 +1,9 @@
 import { fb, hs } from '../core/math.js';
 import { rngf } from '../core/random.js';
 import { TH, TW } from '../gameplay/rules.js';
+import { blocksState } from './blocks.js';
 import { bxc, newG, rgb, toGeo } from './geometry.js';
+import { buildPropsB } from './terrain-props-blocks.js';
 import { matV } from './materials.js';
 import { scene, SHADOWS } from './scene.js';
 import { THREE } from './three.js';
@@ -71,7 +73,7 @@ function mergeVar(G,geo,x,y,z,rk,sc,sy){const p=geo.attributes.position.array,n=
 let FCOL;
 let TUFT;
 
-export function buildProps(cx,cy){const G=newG(),x0=cx*CH,y0=cy*CH,x1=Math.min(TW,x0+CH),y1=Math.min(TH,y0+CH);
+export function buildProps(cx,cy){if(blocksState.D)return buildPropsB(cx,cy);const G=newG(),x0=cx*CH,y0=cy*CH,x1=Math.min(TW,x0+CH),y1=Math.min(TH,y0+CH);
  for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){const i=y*TW+x,v=ter[i],h=hs(x,y,4),hh=HT[i],al=hh-LAND;
   if(v===0){if(pth[i]||occ.has(i)||stairs.has(i)||hh<LAND)continue;const q=hs(x,y,201);if(q>.07)continue;
    const jx0=(hs(x,y,61)-.5)*.5,jy0=(hs(x,y,62)-.5)*.5,rk0=(hs(x,y,63)*4)|0,wet=ter[i+1]===1||ter[i-1]===1||ter[i+TW]===1||ter[i-TW]===1;
