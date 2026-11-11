@@ -5,6 +5,7 @@ import { sessionState } from '../gameplay/session.js';
 import { TC, TCf } from '../i18n/language.js';
 import { uiBtn } from './build-menu.js';
 import { BTN, BTNH, CHAT, frame, GRN, GRNH } from './drawing.js';
+import { barX } from './hud-state.js';
 
 /* ================= EVENT BAR (events-camps) =================
    A framed banner under the top bars while a choice event is open: a title with the seconds left and two buttons.
@@ -31,9 +32,9 @@ export function eventBar(UW, y) {
       [labs[1], 'Renown +1 (now ' + (renownOf(p) + 1) + '): rebel tributes pay ' + Math.round(RENOWN_STEP * 100) + '% more per point (max ' + RENOWN_MAX + ')'],
     ];
   }
-  const w = Math.min(UW - 12, 330), x = Math.round((UW - w) / 2), bw = Math.floor((w - 18) / 2), h = 38;
+  const w = Math.min(UW - 12, 330), h = 38, x = barX(UW, w, y, h), bw = Math.floor((w - 18) / 2);
   frame(x, y, w, h, CHAT, 8);
-  TC(title + ' - ' + secs + ' s', UW / 2, y + 4, '#ffd23c', .85);
+  TC(title + ' - ' + secs + ' s', x + w / 2, y + 4, '#ffd23c', .85);
   for (let i = 0; i < 2; i++) {
     uiBtn(x + 6 + i * (bw + 6), y + 17, bw, 17, i ? BTN : GRN, i ? BTNH : GRNH, () => evChoose(i), tips[i],
       (bx, by, bw2) => TCf(labs[i], bx + bw2 / 2, by + 4, '#fff', .8, bw2 - 8));

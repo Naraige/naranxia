@@ -76,5 +76,7 @@ export function questMarker(UW,UH,logOpen){let t=null;
   /* menu slots sit right under the tab strip: their arrow bounces inside the top of the slot; small buttons (tabs, pills) get it above */
   if(h>=20)arrow(g,x+w/2,y+11-bo*.75,1,1);else arrow(g,x+w/2,y-3-bo,1,1);g.restore();return}
  const s=t[1];if(!s)return;const q=scr(s.x/TS,(s.bh||LAND)+(WH[s.type]||3.6),s.y/TS);if(!q.ok)return;
- const X=q.x/hudDisplayState.UIS,Y=q.y/hudDisplayState.UIS;if(X<8||X>UW-8||Y<40||Y>UH-70)return;
+ const X=q.x/hudDisplayState.UIS;let Y=q.y/hudDisplayState.UIS;if(X<8||X>UW-8||Y<40||Y>UH-70)return;
+ /* a building standing behind the quest panel: the arrow goes just under the panel instead of over its buttons */
+ const qb=hudDisplayState.qbox;if(qb&&X>qb[0]-7&&X<qb[0]+qb[2]+7&&Y>qb[1]-2&&Y-26<qb[1]+qb[3])Y=qb[1]+qb[3]+26;
  g.save();arrow(g,X,Y-bo*1.5,2,.95);g.restore()}

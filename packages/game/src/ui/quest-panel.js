@@ -6,6 +6,7 @@ import { questSwitch } from '../multiplayer/commands.js';
 import { canvasesState } from './canvases.js';
 import { BTN, BTNH, CHAT, frame, GRN, GRNH, PAN, RDB, UIT } from './drawing.js';
 import { hudState, U } from './hud.js';
+import { hudDisplayState } from './hud-state.js';
 import { kitFrame } from './menu-kit.js';
 import { pill } from './minimap.js';
 import { questMarker } from './quest-marker.js';
@@ -38,11 +39,11 @@ function pbar(x,y,w,h,f,col){const g=canvasesState.ctx;g.fillStyle='#000';g.fill
 
 const count=(LS,Q)=>{let n=0;for(const q of LS)if(Q.d[q.id])n++;return n};
 
-export function questPanel(UW,UH){if(!qActive()||sessionState.over||sessionState.showMap||questPanelState.log)return;
- const Q=questsState.Q,LS=qList(),N=LS.length,nd=count(LS,Q),x=4,y=settingsState.TOPH+38,lastQ=Q.last?qById(Q.last):null,just=!!lastQ&&sessionState.time-Q.dt<5&&sessionState.time>=Q.dt,cur=qCur();
- if(hidden()||(!cur&&!just)){const lab='Quests '+nd+'/'+N,w=tw(lab,.75)+14;hudState.uiRects.push(U(x,y,w,15));pill(x,y,w,15,lab,BTN,BTNH,()=>{questPanelState.log=true;snd('click')},null,.75);return}
+export function questPanel(UW,UH){hudDisplayState.qbox=null;if(!qActive()||sessionState.over||sessionState.showMap||questPanelState.log)return;
+ const Q=questsState.Q,LS=qList(),N=LS.length,nd=count(LS,Q),x=4,y=settingsState.TOPH+Math.max(38,hudDisplayState.barsH|0),lastQ=Q.last?qById(Q.last):null,just=!!lastQ&&sessionState.time-Q.dt<5&&sessionState.time>=Q.dt,cur=qCur();
+ if(hidden()||(!cur&&!just)){const lab='Quests '+nd+'/'+N,w=tw(lab,.75)+14;hudDisplayState.qbox=[x,y,w,15];hudState.uiRects.push(U(x,y,w,15));pill(x,y,w,15,lab,BTN,BTNH,()=>{questPanelState.log=true;snd('click')},null,.75);return}
  const w=Math.min(184,UW-8),q=just?lastQ:cur,num=Math.max(0,LS.indexOf(q))+1,dl=wrap(q.d,.75,w-14).slice(0,3),h=30+dl.length*10+(just?13:22);
- frame(x,y,w,h,CHAT,6);hudState.uiRects.push(U(x,y,w,h));
+ hudDisplayState.qbox=[x,y,w,h];frame(x,y,w,h,CHAT,6);hudState.uiRects.push(U(x,y,w,h));
  T_('Quest '+num+'/'+N,x+7,y+5,'#f2d48a',.72);
  pill(x+w-17,y+3,14,12,'x',BTN,BTNH,()=>{setHidden(true);snd('click')},null,.7);
  {const lw=Math.max(26,tw('Log',.7)+10);pill(x+w-20-lw,y+3,lw,12,'Log',BTN,BTNH,()=>{questPanelState.log=true;snd('click')},null,.7)}

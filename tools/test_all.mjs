@@ -31,13 +31,14 @@ const suite = {
   mp8: { args: ['tests/mp8.py', 'naranxia_readable.html', '40'], pass: /^ERRS \[\] \[\]/m },
   mpk: { args: ['tests/mpk.py', 'naranxia_readable.html', '40'], pass: /^ERRS \[\] \[\]/m },
   mp_resync: { args: ['tests/mp_resync.py', 'naranxia_readable.html', '220'], pass: /^RESULT OK/m },
+  mp_quests: { args: ['tests/mp_quests.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   mp_convoy: { args: ['tests/mp_convoy.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   save: { args: ['tools/run.py', 'tests/save.js'], pass: /"same0":true/ },
 };
-const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy'];
+const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy', 'mp_quests', 'mp_events', 'save'];
 const args = process.argv.slice(2);
 const names = args.includes('--full')
-  ? [...quick, 'save']
+  ? [...new Set([...quick, 'save'])]
   : args.filter((name) => name !== '--full');
 const selected = names.length ? names : quick;
 const unknown = selected.filter((name) => !suite[name]);

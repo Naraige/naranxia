@@ -59,7 +59,13 @@ export function initializeMaterials() {
  float kS=clamp(1.-sat*9.,0.,1.)*(1.-smoothstep(.78,.9,lum));
  float kD=clamp((bc.r-bc.b)*4.-.4,0.,1.)*(1.-kG)*(1.-smoothstep(.6,.74,lum));
  float kN=clamp((bc.r-bc.b)*3.,0.,1.)*smoothstep(.6,.72,lum)*(1.-kG);
- float mId=floor(vMat+.5);if(mId>.5&&mId<9.5){kG=0.;kT=0.;kS=mId==1.?.55:0.;kD=mId==2.?1.:0.;kN=0.;}
+ float mId=floor(vMat+.5);
+ /* ids 1..9 are building materials (9 = thatch); on the terrain 9 marks dry grass, which keeps its painted strokes */
+#ifdef TERR
+ if(mId>.5&&mId<8.5){kG=0.;kT=0.;kS=mId==1.?.55:0.;kD=mId==2.?1.:0.;kN=0.;}
+#else
+ if(mId>.5&&mId<9.5){kG=0.;kT=0.;kS=mId==1.?.55:0.;kD=mId==2.?1.:0.;kN=0.;}
+#endif
  /* block world (switch): kinds 20+ get their own pixel texture below */
  bool BL=uBlk>.5&&mId>19.5;if(BL){kG=0.;kT=0.;kS=0.;kD=0.;kN=0.;}
  float macro=vn3(wq*.15);

@@ -868,6 +868,7 @@ export const NL = {
   "Try a spike trap in the Defense menu: zombies on it get hurt": "Probeer een spijkerval in het Verdedigingsmenu: zombies erop raken gewond",
   "Zombies follow the red lines: the top bar counts down to the wave": "Zombies volgen de rode lijnen: de bovenbalk telt af tot de golf",
   "Research Stonemasonry in the castle menu to build in stone": "Onderzoek Steenhouwen in het kasteelmenu om in steen te bouwen",
+  "Research Stonemasonry at the Academy to build in stone": "Onderzoek Steenhouwen bij de Academie om in steen te bouwen",
   "Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!": "Goed gedaan! De seizoenen wisselen elke 4 golven, elke 10 komt er een eindbaas. Veel succes!",
   "Iron age": "IJzertijd",
   "Iron age: your units hit 10% harder, buildings slowly mend": "IJzertijd: je eenheden slaan 10% harder, gebouwen herstellen langzaam",

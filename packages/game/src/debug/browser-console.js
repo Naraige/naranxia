@@ -47,11 +47,13 @@ import { THEME } from '../ui/kingdom-theme.js';
 import { NAV } from '../ui/menu-nav.js';
 import { settingsDebug, settingsState } from '../ui/settings.js';
 import { titleDebug } from '../ui/title-menu.js';
+import { guideState, openGuide } from '../ui/video-guide.js';
 import { languageState } from '../i18n/language.js';
 import { FOWU } from '../rendering/fog.js';
 import { render3D, setRender3DHandler } from '../rendering/frame.js';
 import { matV } from '../rendering/materials.js';
 import { icoUnit } from '../rendering/model-icons.js';
+import { icoPart } from '../rendering/pixel-icons.js';
 import { shieldGeo } from '../rendering/models/heraldry.js';
 import { sGeo } from '../rendering/models/structures.js';
 import { toolGeos } from '../rendering/models/unit-parts.js';
@@ -71,6 +73,7 @@ import { hudState } from '../ui/hud.js';
 import {
   buildPreview,
   confirmPick,
+  openPicker,
   randomSite,
   setConfirmPickHandler,
   sitePickerState,
@@ -274,6 +277,11 @@ export function installBrowserConsole() {
     drawBanner: { get: () => drawBanner },
     bannerIcon: { get: () => bannerIcon },
     titleDebug: { get: () => titleDebug },
+    guideState: { get: () => guideState },
+    openGuide: { get: () => openGuide },
+    icoPart: { get: () => icoPart },
+    openPicker: { get: () => openPicker },
+    sitePickerState: { get: () => sitePickerState },
     languageState: { get: () => languageState },
     svPeek: { get: () => svPeek },
     continueLast: { get: () => continueLast },

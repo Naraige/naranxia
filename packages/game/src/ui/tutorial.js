@@ -6,6 +6,7 @@ import { wavesState } from '../gameplay/waves.js';
 import { T_, tw } from '../i18n/language.js';
 import { MP } from '../multiplayer/session.js';
 import { BTN, BTNH, CHAT, frame } from './drawing.js';
+import { barX } from './hud-state.js';
 import { pill } from './minimap.js';
 
 /* ===== contextual first-game hints: one line under the top bar, never blocking, each shown once ever (dk_hint_<id>).
@@ -26,6 +27,6 @@ export function hintBar(UW,y){if(sessionState.over||MP.on||diagnosticsState.DEVU
  if(hintCur&&now-hintT0>9000){hintMark(hintCur);hintCur=null}
  if(!hintCur){for(const id in HINTS)if(!hintSeen(id)&&HINTS[id][1]()){hintCur=id;hintT0=now;break}}
  if(!hintCur)return 0;
- const txt=HINTS[hintCur][0],sw=52,w=Math.min(UW-12,tw(txt,.85)+sw+26),x=Math.round((UW-w)/2);
+ const txt=HINTS[hintCur][0],sw=52,w=Math.min(UW-12,tw(txt,.85)+sw+26),x=barX(UW,w,y,20);
  frame(x,y,w,20,CHAT,8);T_(txt,x+9,y+6,'#ffffff',.85);
  pill(x+w-sw-6,y+2,sw,16,'Got it',BTN,BTNH,()=>{hintMark(hintCur);hintCur=null},null,.75);return 24}

@@ -867,6 +867,7 @@ export const TR = {
   "Try a spike trap in the Defense menu: zombies on it get hurt": "Savunma menüsünde bir kazıklı tuzak dene: üzerindeki zombiler zarar görür",
   "Zombies follow the red lines: the top bar counts down to the wave": "Zombiler kırmızı çizgileri izler: üst çubuk dalgaya kalan süreyi sayar",
   "Research Stonemasonry in the castle menu to build in stone": "Taştan inşa etmek için kale menüsünde Taş Ustalığı'nı araştır",
+  "Research Stonemasonry at the Academy to build in stone": "Taştan inşa etmek için Akademi'de Taş Ustalığı'nı araştır",
   "Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!": "Aferin! Mevsimler 4 dalgada bir değişir, her 10 dalgada bir patron gelir. İyi şanslar!",
   "Iron age": "Demir çağı",
   "Iron age: your units hit 10% harder, buildings slowly mend": "Demir çağı: birimlerin %10 daha sert vurur, binalar yavaşça onarılır",

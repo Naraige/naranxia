@@ -862,6 +862,7 @@ Object.assign(TRD,{
 "You get {0} stone":["Vous obtenez {0} pierre","Obtienes {0} piedra","Du erhältst {0} Stein","Ottieni {0} pietra","Recebe {0} pedra"],
 "You get {0} food":["Vous obtenez {0} nourriture","Obtienes {0} comida","Du erhältst {0} Nahrung","Ottieni {0} cibo","Recebe {0} comida"],
 "Saving...":["Sauvegarde...","Guardando...","Speichert...","Salvataggio...","A guardar..."],
+"Research Stonemasonry at the Academy to build in stone":["Recherchez la Maçonnerie à l'Académie pour construire en pierre","Investiga Cantería en la Academia para construir en piedra","Erforsche Steinmetzkunst in der Akademie, um in Stein zu bauen","Ricerca la Muratura all'Accademia per costruire in pietra","Pesquise Cantaria na Academia para construir em pedra"],
 "Spearman":["Lancier","Lancero","Speerträger","Lanciere","Lanceiro"],
 "Spearmen":["Lanciers","Lanceros","Speerträger","Lancieri","Lanceiros"],
 "Train spearman":["Former un lancier","Entrenar lancero","Speerträger ausbilden","Addestra lanciere","Treinar lanceiro"],
