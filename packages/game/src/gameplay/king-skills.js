@@ -6,6 +6,7 @@ import { sessionState } from './session.js';
 import { puff, ring, shake } from '../rendering/effects.js';
 import { BTN, BTNH, GRN, GRNH } from '../ui/drawing.js';
 import { hudDisplayState } from '../ui/hud-state.js';
+import { qmReg } from '../ui/quest-marker.js';
 import { pill } from '../ui/minimap.js';
 import { KB, kdisp } from '../ui/settings.js';
 
@@ -51,7 +52,7 @@ export function kingTick(dt){for(const u of sessionState.units)if(u.t===0&&u.typ
 
 export function kingBar(UW,y){const k=sessionState.started&&!sessionState.over?kingOf(playersState.CURPL|0):null;if(!k)return 0;const w=Math.min(112,(UW-24)/2),x0=Math.round(UW/2-w-3);
  [['cry','War cry','<'],['charge','Royal charge','>']].forEach(([n,lab,def],i)=>{const l=kskLeft(k,n),ky=kdisp(KB[n]||def),act=(n==='cry'?k.wcT:k.chT)>sessionState.time;
-  pill(x0+i*(w+6),y,w,15,l>0?lab+' ['+ky+'] '+Math.ceil(l)+'s':lab+' ['+ky+']',act?GRN:BTN,act?GRNH:BTNH,()=>kingSkill(n),null,.68,act,l>0)});
+  qmReg('sk:'+n,x0+i*(w+6),y,w,15);pill(x0+i*(w+6),y,w,15,l>0?lab+' ['+ky+'] '+Math.ceil(l)+'s':lab+' ['+ky+']',act?GRN:BTN,act?GRNH:BTNH,()=>kingSkill(n),null,.68,act,l>0)});
  /* second row: level and xp, and while a talent point is free one button per branch (next talent of the branch) */
  const lv=kxLevel(k),pt=kPoints(k),y2=y+17,lab=lv>=KXL.length?'King Lv '+lv+'  MAX':'King Lv '+lv+'  XP '+(k.kxp|0)+'/'+KXL[lv];
  if(pt>0)[0,1].forEach(b=>{const i=kNext(k,b),nm=i<0?KTAL[b][3]:KTAL[b][i%4];pill(x0+b*(w+6),y2,w,15,nm,GRN,GRNH,()=>kingTalent(b),null,.68,true,i<0)});
