@@ -29,12 +29,12 @@ import { simulationState } from '../gameplay/simulation.js';
 import { gstBest, sbRec, setUpdateHandler, statisticsState, update } from '../gameplay/statistics.js';
 import { SW } from '../gameplay/swarm.js';
 import { callWave, restT, setCallWaveHandler, wave, wavesState } from '../gameplay/waves.js';
-import { _N, mpExec, mpPush, roleAdj, sendConvoy, setMpExecHandler } from '../multiplayer/commands.js';
+import { _N, mpExec, mpPush, questSwitch, roleAdj, sendConvoy, setMpExecHandler } from '../multiplayer/commands.js';
 import { convoyStep, setConvoyStepHandler } from '../multiplayer/convoys.js';
 import { mpStart, mpWorldSync } from '../multiplayer/lobby.js';
 import { mpHash, mpMsg, setMpMsgHandler } from '../multiplayer/lockstep.js';
 import { objTick, SPK } from '../multiplayer/objectives.js';
-import { qSetOn, QUESTS, questsState } from '../gameplay/quests.js';
+import { qCur, qFix, QUESTS, questsState } from '../gameplay/quests.js';
 import { questPanelState } from '../ui/quest-panel.js';
 import { MP } from '../multiplayer/session.js';
 import { svApply } from '../persistence/restore.js';
@@ -138,7 +138,9 @@ export function installBrowserConsole() {
     SPK: { get: () => SPK },
     QST: { get: () => questsState.Q, set: value => { questsState.Q = value; } },
     QUESTS: { get: () => QUESTS },
-    qSetOn: { get: () => qSetOn },
+    questSwitch: { get: () => questSwitch },
+    qCur: { get: () => qCur },
+    qFix: { get: () => qFix },
     questPanelState: { get: () => questPanelState },
     SW: { get: () => SW },
     T: { get: () => T },

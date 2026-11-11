@@ -25,6 +25,7 @@ import { kingSkill0, kingTalent0, setKingSkillHandler, setKingTalentHandler } fr
 import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
 import { RN2, RS, RS2 } from '../gameplay/rules.js';
 import { curB, sel, selectionState } from '../gameplay/selection.js';
+import { qSetOn0, questsState } from '../gameplay/quests.js';
 import { sessionState } from '../gameplay/session.js';
 import { groupSel, setGroupSelHandler, setUngroupSelHandler, ungroupSel } from '../gameplay/squads.js';
 import { callWave, setCallWaveHandler } from '../gameplay/waves.js';
@@ -47,6 +48,9 @@ const gated = ()=>MP.on&&!MP.ex;
 export const repairB=function(sid){if(gated()){mpPush({k:'rp',b:sid});return}return repair0(sid)};
 
 export const sendConvoy=function(c){if(gated()){mpPush({k:'cv',g:c.g|0,w:c.w|0,s:c.s|0,f:c.f|0});return}return sendConvoy0(c)};
+
+/* quest line on / off: shared in co-op, so it is a command; the solo choice is also the default of the next solo game */
+export const questSwitch=function(on){if(gated()){mpPush({k:'qs',on:on?1:0});return}if(!MP.on){try{localStorage.setItem('dk_quests',on?'1':'0')}catch(e){}}return qSetOn0(on)};
 
 export const cancelTrain=function(sid,i){if(gated()){mpPush({k:'cq',b:sid,i:i|0});return}return cancelTrain0(sid,i)};
 
@@ -72,6 +76,7 @@ export let mpExec = function mpExec(c,mine){const m0=hudDisplayState.msgS,mt0=hu
   case'kt':kingTalent0(c.b);break;
   case'cq':cancelTrain0(c.b,c.i);break;
   case'cv':sendConvoy0(c);break;
+  case'qs':{const was=questsState.Q&&questsState.Q.on;qSetOn0(c.on);if(!mine&&questsState.Q&&was!==questsState.Q.on)MP.note=(MP.pname||'Your partner')+(c.on?' turned the quests on':' turned the quests off');break}
   case'ev':resolveEvent0(c.i|0,c.c|0);break}}
  finally{MP.ex=false;MP.rmt=false;setPl(LPL());selectionState.selB=sl;constructionState.formType=fm;constructionState.buildRot=br;if(!mine){hudDisplayState.msgS=m0;hudDisplayState.msgT=mt0;if(MP.note){hudDisplayState.msgS=MP.note;hudDisplayState.msgT=4;MP.note=null}}}};
 

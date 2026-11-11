@@ -3,6 +3,7 @@ import { dist } from '../core/math.js';
 import { walk } from '../gameplay/movement.js';
 import { LPL, playersState } from '../gameplay/players.js';
 import { TS } from '../gameplay/rules.js';
+import { qNote } from '../gameplay/quests.js';
 import { sessionState } from '../gameplay/session.js';
 import { leaveSquad } from '../gameplay/squads.js';
 import { L } from '../i18n/language.js';
@@ -30,7 +31,7 @@ export function sendConvoy0(c){const p=playersState.CURPL|0,q=1-p,from=p?session
 export let convoyStep = function convoyStep(u,dt){const c=u.cv,dest=c.back?(c.from?sessionState.CS2:sessionState.CS):(c.to?sessionState.CS2:sessionState.CS);c.t+=dt;
  if(!dest||dest.hp<=0||!sessionState.structs.includes(dest)){u.cv=null;u.o=null;u.carry=false;return}
  if(dist(u.x,u.y,dest.x,dest.y)<TS*4.6){
-  if(!c.back){const Rr=playersState.RESP[c.to];Rr.g+=c.g;Rr.w+=c.w;Rr.s+=c.s;Rr.f=(Rr.f||0)+c.f;
+  if(!c.back){const Rr=playersState.RESP[c.to];Rr.g+=c.g;Rr.w+=c.w;Rr.s+=c.s;Rr.f=(Rr.f||0)+c.f;qNote('cv');
    if(c.to===LPL()){hudDisplayState.msgS='Convoy delivered: +'+cvText(c);hudDisplayState.msgT=4}else if(c.from===LPL()){hudDisplayState.msgS='Your convoy reached your partner';hudDisplayState.msgT=3}
    if(c.to===LPL())snd('convoy');puff(u.x,u.y,'#ffd23c',6,40);c.g=c.w=c.s=c.f=0;c.back=true;c.t=0;u.carry=false;cvGo(u,c.from?sessionState.CS2:sessionState.CS)}
   else{u.cv=null;u.o=null;u.carry=false}

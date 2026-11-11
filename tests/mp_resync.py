@@ -78,11 +78,11 @@ with sync_playwright() as p:
     r=A.evaluate("""()=>{if(pvKey!==SEED)buildPreview();let a=null,b=null;for(let t=0;t<300&&!(a&&b);t++){randomSite();if(!pickPos||!pickPos.ok)continue;const s={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=s;else if(Math.hypot(a.tx-s.tx,a.ty-s.ty)>=40)b=s}
      MP.mine=a;MP.theirs=b;mpStart();return JSON.stringify({a,b,on:MP.on})}""")
     A.evaluate(REC);pump(A,B,1);B.evaluate(REC);P('start',r)
-    RS="()=>JSON.stringify({tick:MP.tick,ep:MP.ep,rsy:MP.rsy,ds:MP.desync,h:mpHash(),u:units.length,s:structs.length,hp:units.slice(0,6).map(u=>u.hp|0).join(',')})"
+    RS="()=>JSON.stringify({tick:MP.tick,ep:MP.ep,rsy:MP.rsy,ds:MP.desync,h:mpHash(),u:units.length,s:structs.length,hp:units.slice(0,6).map(u=>u.hp|0).join(','),q:JSON.stringify(QST)})"
     waitT(6);P('before A',A.evaluate(RS));P('before B',B.evaluate(RS))
     P('zz',A.evaluate("()=>{mpPush({k:'zz',n:10,r:12,p:0});mpPush({k:'zz',n:10,r:12,p:1});return MP.out.length}"))
     waitT(4)
-    P('corrupt B',B.evaluate("()=>{const u=units.find(q=>q.t===0);u.hp-=3;u.x+=20;RESP[0].g+=17;return u.uid}"))
+    P('corrupt B',B.evaluate("()=>{const u=units.find(q=>q.t===0);u.hp-=3;u.x+=20;RESP[0].g+=17;QST.a[1]+=7;QST.d.house=1;return u.uid}"))
     t0=time.time();seen=False
     while time.time()-t0<DUR:
         pump(A,B)
@@ -95,6 +95,7 @@ with sync_playwright() as p:
     waitT(12)
     a=json.loads(A.evaluate(RS));b=json.loads(B.evaluate(RS))
     P('later A',json.dumps(a));P('later B',json.dumps(b))
-    P('RESULT', 'OK' if (seen and a['ep']==b['ep']==1 and not a['ds'] and not b['ds'] and bad[0] is None) else 'FAIL', 'divergence' if bad[0] else '')
+    qs=lambda j:{k:json.loads(j)[k] for k in ('v','on','d','e','last')}
+    P('RESULT', 'OK' if (seen and a['ep']==b['ep']==1 and not a['ds'] and not b['ds'] and bad[0] is None and qs(a['q'])==qs(b['q']) and '"house"' not in b['q']) else 'FAIL', 'divergence' if bad[0] else '')
     P('ERRS',ea[:3],eb[:3])
     for br in brs:br.close()

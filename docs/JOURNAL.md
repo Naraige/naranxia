@@ -4,6 +4,18 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · quêtes lot 2: co-op, marché, guilde, siège, envoyé (branche hd-gameplay, non fusionné, non livré)
+- Décisions du Roi appliquées: quêtes aussi en co-op, les quêtes remplacent la barre Tutorial en 5 étapes, montants / ordre / noms revus, quêtes marché, guilde, siège, envoyé (+ convoi, co-op seulement). 21 quêtes en 7 chapitres (20 en solo). Tableau et règles: `docs/studio-notes/quests.md`.
+- Co-op: une seule ligne partagée, évaluée dans le tick, récompense payée aux DEUX joueurs (comme `objectives.js`), une partie co-op démarre toujours quêtes allumées. Interrupteur = commande lockstep `qs` (`questSwitch` dans `commands.js`, `case 'qs'` dans `mpExec`). État des quêtes ajouté au hachage lockstep (`mpHashX`).
+- État: `SAVA.QST` v2, par identifiant (`d:{id:1|2}`), plus par indice. Sauvegarde du lot 1 (indice sur 16 quêtes) migrée par identifiant dans `qFix`; sauvegarde sans quêtes = quêtes éteintes (inchangé).
+- Écran co-op: panneau à gauche 38 px sous la barre du haut, ligne des objectifs co-op centrée sur la première rangée: jamais sur la même rangée.
+- Barre Tutorial: `ui/tutorial.js` et `ui/title-menu.js` non touchés; les 5 étapes sont couvertes par les quêtes 1, 2, 3, 6, 8, 9; liste de ce qu'il faut décrocher dans les notes.
+- Textes: 18 clés de plus dans le bloc v92 (`docs/studio-texts/quests.json`).
+- Tests: `tests/quests.js` étendu (nouvelles quêtes, migration lot 1, co-op sur une machine: mêmes hachages deux fois, commande, instantané); `tests/mp8.py` compare l'état des quêtes des deux clients et envoie la commande depuis l'invité; `tests/mp_resync.py` corrompt aussi l'état des quêtes. Résultats: `det features mpk mp_resync quests save` PASS (same0 vrai), `mp8` PASS après correction de ma comparaison (compteurs lus à des ticks différents). Capture co-op 1280x720 avec les deux barres: `dist/qs/coop.png`.
+- Trouvé, non corrigé: dans `ui/hud.js` les barres `objBar`, `kingBar`, `tutBar`, `hintBar` sont dans le bloc `if(wavesState.WAVEZ>0...)` (accolade fermée après `hintBar`, depuis la migration en modules a022204): elles ne s'affichent que pendant un raid. Décision au Roi / coordinateur.
+- Non vérifié: `smoke`, `mp_convoy`, `mp_events`, `mp_kxp`, `fitcheck`, écrans étroits, autres langues à l'œil, quête convoi en vrai co-op à deux châteaux.
+- `det`: les 8 hachages changent (il tourne avec `MP.on`: +20 or de la quête bois, et l'état des quêtes est dans le hachage); les deux passes restent identiques.
+
 ## 2026-11-11 · quests merged (not released)
 
 - Merged `worktree-agent-a42328e0c65a6fedd` (commit c3d0612): 16 solo quests in 6 chapters, state in `SAVA.QST`, panel top left, log, Settings > Game switch. Details in the agent's entry below and `docs/studio-notes/quests.md`.
