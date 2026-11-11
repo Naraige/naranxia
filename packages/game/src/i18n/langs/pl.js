@@ -872,6 +872,7 @@ export const PL = {
   "Try a spike trap in the Defense menu: zombies on it get hurt": "Wypróbuj pułapkę z kolcami w menu Obrony: zombie na niej odnoszą rany",
   "Zombies follow the red lines: the top bar counts down to the wave": "Zombie podążają czerwonymi liniami: górny pasek odlicza czas do fali",
   "Research Stonemasonry in the castle menu to build in stone": "Zbadaj Kamieniarstwo w menu zamku, aby budować z kamienia",
+  "Research Stonemasonry at the Academy to build in stone": "Zbadaj Kamieniarstwo w Akademii, aby budować z kamienia",
   "Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!": "Brawo! Pory roku zmieniają się co 4 fale, boss pojawia się co 10. Powodzenia!",
   "Iron age": "Epoka żelaza",
   "Iron age: your units hit 10% harder, buildings slowly mend": "Epoka żelaza: twoje jednostki biją o 10% mocniej, budynki powoli się naprawiają",

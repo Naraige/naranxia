@@ -4,6 +4,23 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · full QA pass before v92 (hd-qa worktree, not merged, not released)
+
+- Base `release-v84` d49e027 (CI green on it: quick suite with `mp_resync`, `mp_convoy`). Nothing under `game/` or `announce/`, nothing pushed. Pictures: `dist/qa/shots/` (not committed), tool `tools/qa_shots.py`.
+- `save` is NOT slower: alone it took 562 s (tPack 223 s, tLoad 248 s) only because the live loop draws a software-WebGL frame at every `await` of pack / load; with `renderer.render` stubbed the same test gives tPack 1.3 s, tLoad 1.6 s, 91 s in all, `same0` true. `tests/save.js` now stubs it (one real frame after the load). The frames got heavier with the look / block lots, not the save code.
+- New test `mp_quests` (2 clients): wood, ore, house, farm, barracks, knights paid to BOTH players at the same tick; 3 + 4 spearmen trained and fighting on both; convoy quest closed by a real delivery (+30 food each); 2940 equal hashes. Passed 2 runs out of 2 after a placement retry was added (a first run failed in the test itself: spot refused by the build rules).
+- Quick suite now also runs `mp_quests`, `mp_events` (PASS, was in no suite) and `save` (cheap now). `mp_convoy`: the second site was searched in 300 random tries only (my first `mp_quests` run found none with the same code): 20000.
+- Fixed (render / layout / text only, no simulation change, `det` 8 hashes identical to the reference, `profile.py` hashes identical):
+  - `ui/hud.js`, `ui/hud-state.js` (`barX`, `qbox`, `barsH`), `ui/quest-panel.js`, `ui/event-bar.js`, `ui/tutorial.js`: with a King, the message line, the caravan / envoy bar and the hint bar covered the right end of the quest panel (Log and x buttons). Wide screens: they move right of the panel; narrow and medium screens: the panel sits under the bars.
+  - `ui/quest-marker.js`: the arrow above a building standing behind the quest panel was drawn over its buttons; it goes under the panel.
+  - `ui/title-menu.js` + texts: title tip said "Research Stonemasonry in the castle menu"; it is at the Academy (new key, 6 languages + NL / PL / TR, `docs/studio-texts/qa-v92.json`).
+  - `rendering/materials.js`: dry-grass strokes back (terrain keeps the `8.5` test); visible only with the block world off.
+  - `docs/studio-boards/revamp/cap_boot.py` works again (class `go`, whole `#boot` line). `debug/browser-console.js`: `openGuide`, `guideState`, `openPicker`, `sitePickerState`, `icoPart` for tools.
+- Seen by eye (1280x720 unless said): title without / with 10 scores, title 390x700, leaderboard, Update, settings (3 tabs), guide Build / Population / Walls / Research + 390x700, site picker in blocks, day HUD with King bar, quest panel, quest log (20, solo), markers (Build tab, barracks arrow, knight entry, King entry, market, guild, research, envoy, War cry), summer, autumn fog, winter, raid wave 10 with boss bar and caravan, spearmen in a fight (close), HUD + quest log 390x700, 900x600.
+- Not verified: night by eye (the two tries came out as day; `qa_shots.py` step 72 now renders it directly), hint bar by eye, quest log with 21 quests (co-op) by eye, far swarm, real GPU, phone / touch, sounds, launcher, `fitcheck` (not run), `mp_resync` / `mp_convoy` locally (CI).
+- Profile (6000 ticks, 33.5 s): `swStep` 36 % of the run (CLAUDE.md says ~20 %), `swPick` 9.5 %, `update0` 5 %, `swDn` 4.7 %; swarm functions together ~57 %.
+- Left for the King / other lots: NL / PL / TR miss 414 of 1464 texts (English shown; the v92 notes say "more languages"); big red banners ("KING NARAIGE HAS FALLEN") draw over the quest panel for 3 s; marker arrow of a King skill overlaps the top bar numbers; no marker when the building is under the HUD or off screen; grass tufts read as black dots from far (look B); "Masonry" and "Stonemasonry" both used; `HAMMERDAWNSTUDIO` without a space; restyle not started (far-swarm models, projectiles, stone banners, building re-grid).
+
 ## 2026-11-11 · video guide merged, old tutorial bar removed, pushed (not released)
 
 - Merged `worktree-agent-aaffcd280bd956aae` (c35fc26): `ui/video-guide.js`, 9 scripted chapters on the menu canvas (no video file), opened by the Tutorial button; `TUTS` / `tutBar` / `TUT` / `dk_tut` and the Settings line removed, `hintBar` kept. Conflicts: journal and translations (both sides kept). Agent's entry below, notes `docs/studio-notes/guide.md`.

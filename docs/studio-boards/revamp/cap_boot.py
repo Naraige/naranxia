@@ -7,7 +7,8 @@ from playwright.sync_api import sync_playwright
 D=Path(__file__).resolve().parent;ROOT=D.parents[2];G=ROOT/'packages/game'
 PRE=sys.argv[1]
 html=(G/'index.html').read_text(encoding='utf-8');css=(G/'src/styles/boot.css').read_text(encoding='utf-8')
-boot=re.search(r'<div id="boot".*?</div></div></div>',html,re.S).group(0)
+# the whole #boot line of index.html (the markup sits on one line, before the launch script); the cards only show with the class `go`
+boot=re.search(r'<div id="boot"[^\n]*',html).group(0).replace('<div id="boot"','<div id="boot" class="go"',1)
 fav=re.search(r'<link rel="icon" href="([^"]+)"',html)
 sys.path.insert(0,str(ROOT/'tools'))
 with sync_playwright() as p:
