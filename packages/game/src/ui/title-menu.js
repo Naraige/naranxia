@@ -166,9 +166,9 @@ function drawGameMenu(UW,UH,fh){NAV.onEsc=startGame;navBegin(!MP.on);NAV.first=f
 
 /* ================= Records ================= */
 /* the ten best games stored on this device (dk_sb), best score first */
-let TOPR=null,TOPT=-9;
-function topRuns(){if(TOPR&&Math.abs(sessionState.clockT-TOPT)<3)return TOPR;let runs=[];try{const all=JSON.parse(localStorage.getItem('dk_sb')||'{}');for(const k in all)for(const e of all[k])if(e&&e.w>=0)runs.push(e)}catch(e){}
- runs.sort((a,b2)=>b2.s-a.s);TOPT=sessionState.clockT;return TOPR=runs.slice(0,10)}
+let TOPR=null,TOPS=null;
+function topRuns(){let raw='';try{raw=localStorage.getItem('dk_sb')||''}catch(e){}if(TOPR&&raw===TOPS)return TOPR;const runs=[];try{const all=JSON.parse(raw||'{}');for(const k in all)for(const e of all[k])if(e&&e.w>=0)runs.push(e)}catch(e){}
+ runs.sort((a,b2)=>b2.s-a.s);TOPS=raw;return TOPR=runs.slice(0,10)}
 function drawRecords(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'rec',title:'Leaderboard',close:back,fh,maxW:460}),l=listBegin('rec',b.x,b.y,b.w,b.h),bs=sessionState.best,r=lastRun();
  const runs=topRuns();
  if(!(bs&&bs.w>0)&&!r&&!runs.length){l.gap(6);l.para('No record yet','#c4a37a',.9)}
