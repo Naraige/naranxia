@@ -12,8 +12,64 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Look: `px2Spearman` (chapel de fer, jaque matelassée à la couleur du royaume, col, baudrier, couverture roulée) et lance `g2Spear` (palette gear2, pennon à la couleur du royaume); animation du hallebardier (estoc, lance droite au repos, inclinée en marche). Écran titre: les blocs de piques sont ces lanciers avec cette lance (`pikeGeo()` supprimé).
 - IA et camps rebelles inchangés exprès: aucune lance dans la partie par défaut, hachages `det` identiques à la base.
 - Textes: 8 clés en 6 langues (`docs/studio-texts/spearman.json`). Nouveau test `spearman` (`tests/spearman.js`, ajouté à la suite rapide).
-- Vérifié / non vérifié: voir la fin des notes (résultats des tests reportés ci-dessous).
-SPEAR_RESULTS
+- Vérifié avant fusion (branche seule): `det` (8 hachages identiques à la base d'avant quêtes), `features`, `mp8`, `mpk` (2e passage; le 1er a expiré au chargement, machine chargée), `save` (same0 vrai), `spearman` PASS; 3 captures 1280x720 (combat, menu caserne, carte d'unité).
+- Vérifié après fusion de `release-v84` (quêtes, 3 conflits: journal, traductions, `tools/test_all.mjs`, les deux côtés gardés): `npm run build`; `det features spearman quests mp8 mpk` (résultats: `dist/spear/tests4.txt`); hachages `det` identiques à ceux de `release-v84` avec quêtes (ils ne diffèrent de l'ancienne base que par l'état des quêtes, pas par le lancier); une capture du combat.
+- Non vérifié: `save` après fusion (SAVA non touché), `smoke` (build compressé), `mp_resync`, fitcheck, vrai GPU, mobile, lanciers en co-op à l'œil (aucun test co-op n'en forme), écran titre non regardé (piquiers changés de modèle), NL/PL/TR en anglais pour les 8 textes.
+- Au Roi: bonus x1,6 contre les brutes (ou 1,4), touche `\` par défaut, lanciers chez les rebelles / royaumes IA (changerait les hachages `det`), galons de grade, prix.
+
+## 2026-11-11 · quests lot 3 merged: button marker, mp8 test fixed (not released)
+
+- Merged `worktree-agent-a42328e0c65a6fedd` (50f526a): `ui/quest-marker.js`, render only (gold pulse + arrow on the button of the active quest, or on what opens it). Agent's entry below.
+- `mp8` failure after lot 2 explained: the test sent the `qs` switch after the kingdom had fallen (lockstep stopped); the test now sends it before the wave and waits on ticks. Agent: `quests det mp8` PASS, `det` hashes unchanged.
+- After merge: build and push; GitHub runs the quick suite on the branch.
+- Left: remove the tutorial bar (after the video guide), spearman, full pass. King may want a stronger marker on tabs.
+
+## 2026-11-11 · v92 mega update announcement drafted (not released)
+
+- The King: prepare the mega update announcement with everything pushed since the GitHub cut, sent the way the system does at the next update.
+- `docs/release-v92/NOTES.md` rewritten (look, new to play, comfort); `README.md` there says how it ships (copied to `game/NOTES.md`, posted by `release.yml` through `tools/announce.sh` with `announce/img/v92/`). Old `announce-v92.md` draft removed (duplicate).
+- Before release: confirm bullets for spearman, video guide, quest marker (in progress), retake the 4 screenshots (they predate the new looks), King's go-ahead after the full pass.
+## 2026-11-11 · quêtes lot 3: repère sur le bouton à presser (branche hd-gameplay, non fusionné, non livré)
+- Demande du Roi: un repère visuel sur le bouton de la quête active. `ui/quest-marker.js` (nouveau, affichage seul): contour or qui pulse + petite flèche qui rebondit, sur l'entrée du menu, sinon sur l'onglet ou la catégorie qui l'ouvre, sinon flèche au-dessus du bâtiment à cliquer. Table quête -> cible dans `docs/studio-notes/quests.md`.
+- Crochets: une ligne dans `drawItem` et `drawTabs` (`ui/build-menu.js`), une dans `kingBar` (`gameplay/king-skills.js`), appel depuis `questLog` (`ui/quest-panel.js`); `ui/hud.js`, `ui/tutorial.js`, `ui/title-menu.js` non touchés. Aucun texte nouveau.
+- Choix: repère visible même panneau replié; caché si quêtes éteintes, F10, fin de partie, pause, carte, journal ouvert. Pas de repère sur les ressources (récolte) ni sur le camp rebelle.
+- `mp8` (échec vu par le coordinateur après fusion du lot 2): cause = la partie était finie (`over` vrai, château tombé) quand le test envoyait la commande `qs` en fin de test; le lockstep ne tourne plus, la commande ne s'exécute jamais. Ni la charge ni la commande. Test corrigé: bascule envoyée avant la vague, attente sur les ticks (invité coupe: vu après 19 ticks; hôte rallume: 8 ticks).
+- Vérifié: build; `quests`, `det` PASS, hachages `det` identiques à release-v84 (journal du dépôt principal); `mp8` PASS; 3 captures 1280x720 (`dist/qs/m1.png` onglet Build, `m2.png` entrée Maison, `m3.png` bouton Chevalier).
+- Non vérifié: flèche au-dessus d'un bâtiment (non capturée), boutons du Roi, marché, guilde, recherche, convoi (même mécanisme, non regardés), écrans étroits / tactile, co-op à l'œil.
+
+## 2026-11-11 · quests lot 2 merged, HUD bars fix (not released)
+
+- The King decided: quests in co-op too, quests replace the tutorial bar, adjust amounts, add market / guild / siege / envoy.
+- Merged `worktree-agent-a42328e0c65a6fedd` (a171c46): 21 quests in 7 chapters (20 solo, convoy is co-op only), shared line in co-op, switch is the lockstep command `qs`, quest state in the lockstep hash, `SAVA.QST` v2 by id. `det` hashes changed (expected). Agent's entry below.
+- Fixed in `ui/hud.js`: `objBar`, `kingBar`, `tutBar`, `hintBar` were inside the raid block (`WAVEZ>0`) since the module migration, so shown only during a raid; brace moved, they show all the time again. Not seen by eye yet.
+- Not done yet: unhook the old tutorial bar (list in the agent's report: `ui/hud.js`, `gameplay/reset.js`, `gameplay/traps.js`, `ui/settings.js`, `dk_tut`) after the video guide merge.
+- `save`: same0 true but 20 min 12 s under load (tPack 430 s, tLoad 562 s), over the 1200 s limit; to re-measure on a quiet machine.
+- Tests after merge: `dist/merge_tests12.txt`.
+
+## 2026-11-11 · GitHub back, branch pushed (not released)
+
+- The King: GitHub is up again; keep the repository organised by folders as it is, no `html` folder.
+- Checked: top level of `release-v84` equals `main` (`packages/ apps/ docs/ game/ announce/ tests/ tools/ .github/`) plus `.claude/agents/` (15 studio agents). Only HTML tracked outside review boards: `packages/game/index.html`, `apps/desktop/src/launcher.html`. `dist/` stays untracked.
+- Pushed `release-v84` (179 commits) to `origin/release-v84`. `main` untouched: no release, no Discord (those workflows run on `main` only); the test workflow runs on the branch.
+- Open: `save` test fails locally at the 1200 s limit with an empty log after the quests merge (direct run without limit in progress, `dist/save_direct.txt`).
+## 2026-11-11 · quêtes lot 2: co-op, marché, guilde, siège, envoyé (branche hd-gameplay, non fusionné, non livré)
+- Décisions du Roi appliquées: quêtes aussi en co-op, les quêtes remplacent la barre Tutorial en 5 étapes, montants / ordre / noms revus, quêtes marché, guilde, siège, envoyé (+ convoi, co-op seulement). 21 quêtes en 7 chapitres (20 en solo). Tableau et règles: `docs/studio-notes/quests.md`.
+- Co-op: une seule ligne partagée, évaluée dans le tick, récompense payée aux DEUX joueurs (comme `objectives.js`), une partie co-op démarre toujours quêtes allumées. Interrupteur = commande lockstep `qs` (`questSwitch` dans `commands.js`, `case 'qs'` dans `mpExec`). État des quêtes ajouté au hachage lockstep (`mpHashX`).
+- État: `SAVA.QST` v2, par identifiant (`d:{id:1|2}`), plus par indice. Sauvegarde du lot 1 (indice sur 16 quêtes) migrée par identifiant dans `qFix`; sauvegarde sans quêtes = quêtes éteintes (inchangé).
+- Écran co-op: panneau à gauche 38 px sous la barre du haut, ligne des objectifs co-op centrée sur la première rangée: jamais sur la même rangée.
+- Barre Tutorial: `ui/tutorial.js` et `ui/title-menu.js` non touchés; les 5 étapes sont couvertes par les quêtes 1, 2, 3, 6, 8, 9; liste de ce qu'il faut décrocher dans les notes.
+- Textes: 18 clés de plus dans le bloc v92 (`docs/studio-texts/quests.json`).
+- Tests: `tests/quests.js` étendu (nouvelles quêtes, migration lot 1, co-op sur une machine: mêmes hachages deux fois, commande, instantané); `tests/mp8.py` compare l'état des quêtes des deux clients et envoie la commande depuis l'invité; `tests/mp_resync.py` corrompt aussi l'état des quêtes. Résultats: `det features mpk mp_resync quests save` PASS (same0 vrai), `mp8` PASS après correction de ma comparaison (compteurs lus à des ticks différents). Capture co-op 1280x720 avec les deux barres: `dist/qs/coop.png`.
+- Trouvé, non corrigé: dans `ui/hud.js` les barres `objBar`, `kingBar`, `tutBar`, `hintBar` sont dans le bloc `if(wavesState.WAVEZ>0...)` (accolade fermée après `hintBar`, depuis la migration en modules a022204): elles ne s'affichent que pendant un raid. Décision au Roi / coordinateur.
+- Non vérifié: `smoke`, `mp_convoy`, `mp_events`, `mp_kxp`, `fitcheck`, écrans étroits, autres langues à l'œil, quête convoi en vrai co-op à deux châteaux.
+- `det`: les 8 hachages changent (il tourne avec `MP.on`: +20 or de la quête bois, et l'état des quêtes est dans le hachage); les deux passes restent identiques.
+
+## 2026-11-11 · quests merged (not released)
+
+- Merged `worktree-agent-a42328e0c65a6fedd` (commit c3d0612): 16 solo quests in 6 chapters, state in `SAVA.QST`, panel top left, log, Settings > Game switch. Details in the agent's entry below and `docs/studio-notes/quests.md`.
+- Agent verified: build, `quests` (new, in the quick suite), `det`, `features`, `mp8`, `save`. After merge: see `dist/merge_tests11.txt`.
+- Left to the King: quests in co-op or not, keep the 5-step tutorial bar or not, amounts / order / names, quests for market, guild, siege, envoy.
+- Still running: video guide (`aaffcd280bd956aae`), spearman (`a32a61bc6cb6d6ef9`). After them the King asked for a full pass: improve and test everything.
 
 ## 2026-11-11 · bannière C (gonfanon sur mât) fusionnée et allumée (réponse du Roi « 1C 2C 3C »), non livré
 - `BANNER2='C'` dans `rendering/banner-icon.js`: petite icône (HUD, sauvegardes) et grande bannière (carte du royaume). `npm run build:release` fait, build de test republié.
@@ -30,6 +86,14 @@ SPEAR_RESULTS
 - Planche `docs/studio-boards/banner/board.html` (3 lignes + référence du porte-étendard en jeu), `rows.json`; détail et constat: `docs/studio-notes/banner.md`. En attente du code du Roi.
 - Vérifié: `npm run build`; 24 captures du jeu sans erreur (4 variantes x 3 royaumes sur Nouveau royaume, sauvegardes, HUD, 16 et 32 px); feuille des 16 emblèmes x 3 variantes regardée une fois. Interrupteur éteint: `bannerIcon()` rend le canevas `BANNER` lui-même, mêmes rectangles.
 - Non vérifié: `npm test` (aucun fichier de simulation touché), vrai GPU, mobile, co-op. Non traité: texture 3D des bannières de pierre (reste A), pastilles d'emblème du menu (vectorielles), emblème or sur motif or peu contrasté.
+## 2026-11-11 · quêtes pour guider un nouveau joueur (branche hd-gameplay, non fusionné, non livré)
+- Demande du Roi: « add quest in game to guide new player ». 16 quêtes en 6 chapitres, une active à la fois: bois, pierre et or, maison, ferme, caserne, 2 chevaliers, 2 archers, 6 murs + porte, tour, 3 pièges, vague 1, académie + recherche, Roi, compétence du Roi, vague 5, vague 10. Liste, récompenses et règles: `docs/studio-notes/quests.md`.
+- Code: `gameplay/quests.js` (état `questsState.Q`, `qBegin`/`qTick` dans l'enveloppe `update` de `statistics.js`), `ui/quest-panel.js` (panneau en haut à gauche, journal des quêtes, bouton replié), petits crochets dans `hud.js`, `reset.js`, `save-format.js` (`SAVA.QST`), `restore.js`, `settings.js` (ligne Quests On/Off), `input/desktop.js` (Échap ferme le journal). `ui/tutorial.js` et `ui/title-menu.js` non touchés.
+- Décisions: solo seulement (`qTick` ne fait rien si `MP.on`), rien en mode test F10, ancienne sauvegarde sans `QST` = quêtes éteintes. Récompenses au total 540 or, 120 bois, 40 pierre, 80 nourriture (avant la vague 1: 130 or, 120 bois, 40 pierre, 30 nourriture).
+- Textes: 54 clés dans le bloc v92 (`docs/studio-texts/quests.json`), 6 langues; NL, PL, TR retombent sur l'anglais.
+- Vérifié: `npm run build`; `quests` (nouveau test, dans la suite rapide), `det`, `features`, `mp8` PASS; les 8 hachages de `det` identiques à ceux du dépôt principal (`det` tourne avec `MP.on`, les quêtes n'y bougent pas); `save` PASS (same0 vrai, sameCont faux connu). Deux captures 1280x720 (panneau, journal) dans `dist/qs/`.
+- Non vérifié: `mpk`, `mp_resync`, `smoke`, `fitcheck`, écrans étroits et tactile, les 5 autres langues à l'œil. Machine partagée très chargée: plusieurs tests ont dû être relancés (délai de chargement de page).
+- Reste au Roi: quêtes en co-op ou non, garder ou retirer la barre Tutorial en 5 étapes (double emploi), montants, ordre.
 
 ## 2026-11-11 · monde en blocs look B fusionné et allumé (réponse du Roi « 1B … 9B »), non livré
 - Le Roi a répondu 1B à 9B (planche blocs): branche fusionnée, `blocksState.on=true` par défaut (`rendering/blocks.js`), BLK=DBLK=0,5, terrain, décor, textures bâtiments et saisons allumés.

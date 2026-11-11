@@ -9,6 +9,7 @@ import { FAT, PBASE, PRICE } from '../gameplay/economy.js';
 import { eventsState } from '../gameplay/events.js';
 import { BASES } from '../ai/kingdoms.js';
 import { RUINS } from '../world/terrain.js';
+import { questsState } from '../gameplay/quests.js';
 import { sessionState } from '../gameplay/session.js';
 import { update } from '../gameplay/statistics.js';
 import { SW, swarmState } from '../gameplay/swarm.js';
@@ -41,6 +42,7 @@ function mpHashX(h){const E=eventsState,m=(a)=>{h=(Math.imul(h,31)+(a|0))|0};
  for(const R of playersState.RESP)m(R.ren);
  let d=0;for(const r of RUINS.values())if(r.done)d++;m(d);
  for(const b of BASES){m(b.envN);m(b.envG);m(b.envF)}
+ {const Q=questsState.Q;if(Q){let n=0;for(const k in Q.d)n+=Q.d[k]|0;m(Q.on);m(n);m(Math.round(Q.a[0]));m(Math.round(Q.a[1]));m(Math.round(Q.a[2]));if(Q.e){m(Q.e.tr);m(Q.e.cv)}}}
  return h}
 
 function mpChk(t){if(MP.hs[t]!==undefined&&MP.hr[t]!==undefined){const hl=MP.hl||(MP.hl=[]);hl.push([t,MP.hs[t],MP.hr[t]]);if(hl.length>60)hl.shift();if(MP.hs[t]!==MP.hr[t]){MP.desync=true;MP.dsN=(MP.dsN|0)+1;if(MP.host)mpResync();else mpSend({k:'rsq',e:MP.ep})}delete MP.hs[t];delete MP.hr[t]}}

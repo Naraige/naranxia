@@ -50,6 +50,7 @@ import { drawUnitCard } from './unit-card.js';
 import { NAV, navBegin } from './menu-nav.js';
 import { drawTroops, PLUN, troopPanelState } from './troop-panel.js';
 import { hintBar, tutBar } from './tutorial.js';
+import { questLog, questPanel } from './quest-panel.js';
 import { FF } from './typography.js';
 import { LAND, rollWorld, terrainState } from '../world/terrain.js';
 
@@ -138,8 +139,9 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
   uiBtn(4,fy0,fz,fz,BTN,BTNH,()=>{inputState.panMode=!inputState.panMode;hudDisplayState.msgS=inputState.panMode?'Pan mode: drag moves the camera':'Select mode: drag draws a box';hudDisplayState.msgT=2},['Move camera','One finger drags the view'],(x,y,w,h)=>dIc(IC.pan,x+(w-14)/2,y+(h-14)/2,14),inputState.panMode);
   if(can)uiBtn(4,fy0+fz+4,fz,fz,RDB,BTNH,()=>{sessionState.mode=null;for(const u of sessionState.units)u.sel=false;selectionState.selB=null;selectionState.castleSel=false;inputState.panMode=false},['Cancel','Clear build mode and selection'],(x,y,w,h)=>dIc(IC.close,x+(w-14)/2,y+(h-14)/2,14))}
  if(troopPanelState.troopsOpen)drawTroops(UW,UH);if(convoyPanelState.convoyOpen)drawConvoy(UW,UH);if(diagnosticsState.devOpen)drawDev(UW,UH);
+ questPanel(UW,UH);
  /* banners & hints */
- let bossY=0;if(wavesState.WAVEZ>0&&!sessionState.over){let rem=SW.n+swPending();for(const u of sessionState.units)if(u.t===1&&u.lane>=0)rem++;if(rem>0){const bw=Math.min(182,UW-40),bx=Math.round((UW-bw)/2),by=settingsState.TOPH+13;TC('Raid - Wave '+sessionState.waveN+'  ('+rem+' left)',UW/2,settingsState.TOPH+2,'#ffffff',.85);canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(bx-1,by-1,bw+2,7);canvasesState.ctx.fillStyle='#4a0e0e';canvasesState.ctx.fillRect(bx,by,bw,5);const fw=Math.max(1,Math.round(bw*Math.min(1,rem/wavesState.WAVEZ)));canvasesState.ctx.fillStyle='#d81e1e';canvasesState.ctx.fillRect(bx,by,fw,5);canvasesState.ctx.fillStyle='#ff6a6a';canvasesState.ctx.fillRect(bx,by,fw,1);canvasesState.ctx.fillStyle='rgba(0,0,0,.35)';for(let k=1;k<10;k++)canvasesState.ctx.fillRect(bx+Math.round(bw*k/10),by,1,5);bossY=22}else wavesState.WAVEZ=0;if(!sessionState.over)bossY+=bossBar(UW,settingsState.TOPH+bossY);bossY+=objBar(UW,settingsState.TOPH+bossY);bossY+=kingBar(UW,settingsState.TOPH+bossY);{const tb=tutBar(UW,settingsState.TOPH+bossY);bossY+=tb||hintBar(UW,settingsState.TOPH+bossY)}}
+ let bossY=0;if(wavesState.WAVEZ>0&&!sessionState.over){let rem=SW.n+swPending();for(const u of sessionState.units)if(u.t===1&&u.lane>=0)rem++;if(rem>0){const bw=Math.min(182,UW-40),bx=Math.round((UW-bw)/2),by=settingsState.TOPH+13;TC('Raid - Wave '+sessionState.waveN+'  ('+rem+' left)',UW/2,settingsState.TOPH+2,'#ffffff',.85);canvasesState.ctx.fillStyle='#000';canvasesState.ctx.fillRect(bx-1,by-1,bw+2,7);canvasesState.ctx.fillStyle='#4a0e0e';canvasesState.ctx.fillRect(bx,by,bw,5);const fw=Math.max(1,Math.round(bw*Math.min(1,rem/wavesState.WAVEZ)));canvasesState.ctx.fillStyle='#d81e1e';canvasesState.ctx.fillRect(bx,by,fw,5);canvasesState.ctx.fillStyle='#ff6a6a';canvasesState.ctx.fillRect(bx,by,fw,1);canvasesState.ctx.fillStyle='rgba(0,0,0,.35)';for(let k=1;k<10;k++)canvasesState.ctx.fillRect(bx+Math.round(bw*k/10),by,1,5);bossY=22}else wavesState.WAVEZ=0}if(!sessionState.over)bossY+=bossBar(UW,settingsState.TOPH+bossY);bossY+=objBar(UW,settingsState.TOPH+bossY);bossY+=kingBar(UW,settingsState.TOPH+bossY);{const tb=tutBar(UW,settingsState.TOPH+bossY);bossY+=tb||hintBar(UW,settingsState.TOPH+bossY)}
  if(!sessionState.over)bossY+=eventBar(UW,settingsState.TOPH+bossY);
  if(!sessionState.over){let msg=sessionState.mode?'Place '+NAMES[sessionState.mode]+(sessionState.mode==='gate'?' - 3 tiles: two towers and a passage, [R] rotates':sessionState.mode==='movec'?' - click the new centre of your castle':sessionState.mode==='ballista'||sessionState.mode==='trebuchet'?' on a tower - [R] sets facing':sessionState.mode==='raise'||sessionState.mode==='dig'?' - paint tiles':sessionState.mode==='ramp'?' - one block that climbs 1 level, [R] turns it':sessionState.mode==='demolish'?' - click a building':sessionState.mode==='upgrade'?' - click or drag over wood buildings':'')+' - click a tile - right-click or Esc cancels':hudDisplayState.msgT>0?hudDisplayState.msgS:sessionState.time<30?'Select peasants, then right-click a tree, rock or gold to harvest':'';
   if(hudDisplayState.msgT>0&&hudDisplayState.msgS&&hudDisplayState.msgS!==MSGL[MSGL.length-1]){MSGL.push(hudDisplayState.msgS);if(MSGL.length>25)MSGL.shift()}
@@ -151,7 +153,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
   frame(tx,ty,w,h,TIPP,UIT.rad.small);ln.forEach((s,i)=>{if(cpp&&i===ln.length-1){drawCost(cpp,tx+7,ty+5+i*11,w-14,.9,9)}else T_(s,tx+7,ty+5+i*11,i?'#aaaaaa':'#ffffff',.9)})}
  drawToasts(UW);
  fxGameIn(UW,UH);
- if(sessionState.showMap)drawMapModal(UW,UH);
+ if(sessionState.showMap)drawMapModal(UW,UH);else questLog(UW,UH);
  if(sessionState.over)drawEnd(UW,UH);
  canvasesState.ctx.setTransform(1,0,0,1,0,0)}
 
