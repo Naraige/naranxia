@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · spearman merged and pushed (not released)
+
+- Merged `worktree-agent-a32a61bc6cb6d6ef9` (93d2b76, b667670), no conflict. Unit `spearman` at the barracks: 85 HP, 11 dmg / 1 s, reach 36, x1.6 against brute and boss, 90 gold 30 wood 25 food, 15 s. Agent's entry below, notes `docs/studio-notes/spearman.md`.
+- Agent on the merged result: `det features spearman quests mp8 mpk` PASS, det hashes unchanged by the unit. New test `spearman` in the quick suite. CI on the branch was green at 7f37d07 (timeout raised to 100 min).
+- Not verified: title screen with the new pikemen, spearmen in co-op, `save` / `smoke` / `mp_resync` after merge (CI runs the quick suite).
+- Left to the King: bonus 1.6 or 1.4, default key `\` (awkward on AZERTY), spearmen for rebels and AI, price and HP.
+- Still running: video guide (also removes the old tutorial bar).
+
 ## 2026-11-11 · lancier (spearman): nouvelle unité jouable, allumée, non fusionnée, non livrée
 - Demande du Roi: « oui tu peux creer le lancier » (les piquiers de l'écran titre n'existaient pas en jeu). Branche de worktree hd-gameplay, rien dans `game/`, rien poussé. Détail, tableau et mesures: `docs/studio-notes/spearman.md`.
 - Unité `spearman`, caserne, dès le début: 85 PV, 11 dégâts / 1 s, portée 36 (chevalier 14: frappe par-dessus le premier rang), x1,6 contre brute et boss (`SPEAR_BIG`), 90 or 30 bois 25 nourriture, 15 s, 1 population. Pas de bouclier, pas de règle spéciale contre l'acide (moins de PV suffit).
