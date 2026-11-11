@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · GitHub back, branch pushed (not released)
+
+- The King: GitHub is up again; keep the repository organised by folders as it is, no `html` folder.
+- Checked: top level of `release-v84` equals `main` (`packages/ apps/ docs/ game/ announce/ tests/ tools/ .github/`) plus `.claude/agents/` (15 studio agents). Only HTML tracked outside review boards: `packages/game/index.html`, `apps/desktop/src/launcher.html`. `dist/` stays untracked.
+- Pushed `release-v84` (179 commits) to `origin/release-v84`. `main` untouched: no release, no Discord (those workflows run on `main` only); the test workflow runs on the branch.
+- Open: `save` test fails locally at the 1200 s limit with an empty log after the quests merge (direct run without limit in progress, `dist/save_direct.txt`).
+
 ## 2026-11-11 · quests merged (not released)
 
 - Merged `worktree-agent-a42328e0c65a6fedd` (commit c3d0612): 16 solo quests in 6 chapters, state in `SAVA.QST`, panel top left, log, Settings > Game switch. Details in the agent's entry below and `docs/studio-notes/quests.md`.
