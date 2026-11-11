@@ -27,6 +27,7 @@ import { FFT } from './typography.js';
 import { curMode, drawModes, modeIcon, modeState, openModes, playMode } from './mode-select.js';
 import { footH, menuFooter } from './menu-footer.js';
 import { fireGlow, fxTitleSeen } from './menu-fx.js';
+import { drawGuide, guideState, openGuide } from './video-guide.js';
 import { bevelBtn, KC, kitCard, kitEnd, kitRow, kitScreen, listBegin, listEnd, newPill, pxText, pxW } from './menu-kit.js';
 import { hexBadge, tipBanner, titleBlur, titleEmbers, titleLogo, titleLogoW, titleVignette } from './title-frame.js';
 
@@ -58,7 +59,7 @@ function drawTitleScreen(UW,UH){if(!sessionState.inGame)fxTitleSeen();settingsSt
  titleBlur(!ig&&!sub);
  if(!ig&&TFADE>.003&&!window.__cam){g.fillStyle='rgba(4,3,8,'+(TFADE*.92).toFixed(3)+')';g.fillRect(0,0,UW,UH)}
  if(TT0<0)TT0=performance.now();
- {const sk=settingsState.settingsOpen?'set':saveMenuState.saveOpen?'sav':languageState.langOpen?'lng':settingsState.setupOpen?'new':modeState.open?'mod':notesOpen?'not':chrOpen?'chr':recOpen?'rec':'main';if(sk!==scrKey){scrKey=sk;NAV.sel=-1}}
+ {const sk=settingsState.settingsOpen?'set':saveMenuState.saveOpen?'sav':languageState.langOpen?'lng':guideState.open?'gui':settingsState.setupOpen?'new':modeState.open?'mod':notesOpen?'not':chrOpen?'chr':recOpen?'rec':'main';if(sk!==scrKey){scrKey=sk;NAV.sel=-1}}
  const FT=(back,sel)=>menuFooter(UW,UH,sel?[['Esc','Back',back],['Enter','Select']]:[['Esc','Back',back]]);
  /* list screens: rows take the keyboard / pad focus, the first Enter only shows it */
  const LS=(back,draw,sel)=>{NAV.onEsc=back;navBegin(true);NAV.first=false;navPoll();draw(UW,UH,fh,back);kitEnd();FT(back,sel!==0);navEnd()};
@@ -67,6 +68,7 @@ function drawTitleScreen(UW,UH){if(!sessionState.inGame)fxTitleSeen();settingsSt
  if(languageState.langOpen){LS(()=>{languageState.langOpen=false},drawLang);return}
  if(settingsState.setupOpen){const b=()=>{settingsState.setupOpen=false};NAV.onEsc=null;navBegin(true);navPoll();drawSetup(UW,UH,fh,b);kitEnd();FT(b,1);navEnd();return}
  if(modeState.open){drawModes(UW,UH,cx,()=>{modeState.open=false});navEnd();return}
+ if(guideState.open){LS(()=>{guideState.open=false},drawGuide);return}
  if(notesOpen){LS(()=>{notesOpen=false},drawNotes,0);return}
  if(chrOpen){LS(()=>{chrOpen=false},drawChronicle,0);return}
  if(recOpen){LS(()=>{recOpen=false},drawRecords,0);return}
@@ -100,7 +102,7 @@ function drawLobby(UW,UH){const g=canvasesState.ctx,nar=UW<480,low=UH<300,m=nar?
  const cw=nar?UW-2*m:Math.min(184,UW*.3),cx0=nar?m:UW-m-cw,cy0=nar?y+2:30,rh=nar||low?16:18,lbR=11;let ch=31+items.length*(rh+2)+5,lbN=0,lbRuns=[];
  /* --- bottom left: Continue, mode band, Play --- */
  const pw=nar?UW-2*m:Math.min(214,Math.max(170,UW*.33)),px=nar?m:m+6,ph=low?30:nar?34:40,
-  key=[['Load game','l',()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null}],['Tutorial','t',()=>{try{localStorage.removeItem('dk_tut')}catch(e){}settingsState.setupOpen=true}],['Options','o',()=>{settingsState.settingsOpen=true}],[sndOn?'Sound: on':'Sound: off','',()=>{toggleSound()}],['','',()=>{languageState.langOpen=true},1]];
+  key=[['Load game','l',()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null}],['Tutorial','t',openGuide],['Options','o',()=>{settingsState.settingsOpen=true}],[sndOn?'Sound: on':'Sound: off','',()=>{toggleSound()}],['','',()=>{languageState.langOpen=true},1]];
  if(window.NARX&&NARX.desktop)key.push(['Exit to desktop','',()=>window.close()]);
  /* compact buttons: measured, then flowed in rows (right-aligned on wide screens, two columns on narrow ones) */
  const kh=low?18:20,kg=4,avail=nar?UW-2*m:UW-m-6-(px+pw+14),kw=key.map(k=>k[3]?Math.ceil(tw(LANGS[LANG][0],.85))+36:Math.ceil(pxW(k[0],10))+18+(k[1]&&!inputState.touch?20:0)),rows=[];

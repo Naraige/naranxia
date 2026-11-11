@@ -32,7 +32,6 @@ def main():
             pg.on('pageerror',lambda e:errs.append(str(e)[:300]))
             pg.route('**/three.min.js',lambda r:r.fulfill(path=str(ROOT/'node_modules/three/build/three.min.js'),content_type='application/javascript'))
             fontroute.setup(pg)
-            pg.add_init_script("try{localStorage.setItem('dk_tut','1')}catch(e){}")  # no tutorial box
             pg.goto((ROOT/'dist'/'naranxia_readable.html').resolve().as_uri(),timeout=TMO); pg.wait_for_timeout(3500)
             try: print(n,pg.evaluate(src),flush=True)
             except Exception as e: print(n,'EXC',str(e)[:500]); pg.close(); continue

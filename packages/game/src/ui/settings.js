@@ -52,8 +52,6 @@ let setTab=0;
 
 export const settingsDebug = { tab(n) { setTab = n } };
 
-const tutOn=()=>{try{return localStorage.getItem('dk_tut')!=='1'}catch(e){return true}};
-const tutSet=on=>{try{if(on)localStorage.removeItem('dk_tut');else localStorage.setItem('dk_tut','1')}catch(e){}};
 
 /* tabs: 0 Game, 1 Display & sound (2 = its old Sound half), 3 Controls. Template: tabs as bevelled buttons, sections, full-width rows with the value on the right. */
 export function drawSettings(UW,UH,fh,back){const tb=setTab===2?1:setTab,TABS=[['Game',0],['Display & sound',1],['Controls',3]],ti=Math.max(0,TABS.findIndex(t=>t[1]===tb));
@@ -77,7 +75,7 @@ export function drawSettings(UW,UH,fh,back){const tb=setTab===2?1:setTab,TABS=[[
   tog(l,'Colour-blind mode',cbOn(),v=>{cbSet(v);applyCB()})}
  else{l.section('General');
   l.row({label:'Language',value:LANGS[LANG][0],raw:false,fn:()=>{languageState.langOpen=true;settingsState.settingsOpen=false}});
-  tog(l,'Tutorial',tutOn(),tutSet);tog(l,'Quests',questsState.Q&&sessionState.inGame?!!questsState.Q.on:questsPref(),on=>{if(sessionState.inGame)questSwitch(on);else{try{localStorage.setItem('dk_quests',on?'1':'0')}catch(e){}}});prow(l,'Pause when away','ap',true);prow(l,'Autosave','as',true);
+  tog(l,'Quests',questsState.Q&&sessionState.inGame?!!questsState.Q.on:questsPref(),on=>{if(sessionState.inGame)questSwitch(on);else{try{localStorage.setItem('dk_quests',on?'1':'0')}catch(e){}}});prow(l,'Pause when away','ap',true);prow(l,'Autosave','as',true);
   {const on=pref('qi',false);l.row({label:'Studio intro',opts:[['First launch only',on,()=>setPref('qi',true)],['Every launch',!on,()=>setPref('qi',false)]],fn:()=>setPref('qi',!on)})}
   l.section('Accessibility');prow(l,'Reduce motion','rm',false);
   l.section('Help');

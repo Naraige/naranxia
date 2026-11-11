@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · video guide merged, old tutorial bar removed, pushed (not released)
+
+- Merged `worktree-agent-aaffcd280bd956aae` (c35fc26): `ui/video-guide.js`, 9 scripted chapters on the menu canvas (no video file), opened by the Tutorial button; `TUTS` / `tutBar` / `TUT` / `dk_tut` and the Settings line removed, `hintBar` kept. Conflicts: journal and translations (both sides kept). Agent's entry below, notes `docs/studio-notes/guide.md`.
+- Agent: `smoke quests det tools` PASS on its merged branch, det hashes unchanged. After this merge (with spearman): build, push, CI.
+- Left to the King: rename or remove "Play the tutorial game", sounds in clips, guide from the Esc menu, more chapters.
+- Next: the full pass asked by the King (test everything, improve everything), then his go-ahead for v92.
+
 ## 2026-11-11 · spearman merged and pushed (not released)
 
 - Merged `worktree-agent-a32a61bc6cb6d6ef9` (93d2b76, b667670), no conflict. Unit `spearman` at the barracks: 85 HP, 11 dmg / 1 s, reach 36, x1.6 against brute and boss, 90 gold 30 wood 25 food, 15 s. Agent's entry below, notes `docs/studio-notes/spearman.md`.
@@ -24,6 +31,15 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Vérifié après fusion de `release-v84` (quêtes, 3 conflits: journal, traductions, `tools/test_all.mjs`, les deux côtés gardés): `npm run build`; `det features spearman quests mp8 mpk` (résultats: `dist/spear/tests4.txt`); hachages `det` identiques à ceux de `release-v84` avec quêtes (ils ne diffèrent de l'ancienne base que par l'état des quêtes, pas par le lancier); une capture du combat.
 - Non vérifié: `save` après fusion (SAVA non touché), `smoke` (build compressé), `mp_resync`, fitcheck, vrai GPU, mobile, lanciers en co-op à l'œil (aucun test co-op n'en forme), écran titre non regardé (piquiers changés de modèle), NL/PL/TR en anglais pour les 8 textes.
 - Au Roi: bonus x1,6 contre les brutes (ou 1,4), touche `\` par défaut, lanciers chez les rebelles / royaumes IA (changerait les hachages `det`), galons de grade, prix.
+## 2026-11-11 · guide vidéo derrière le bouton Tutoriel, ancienne barre de tutoriel retirée (branche hd-menu-ux, non fusionné, non livré)
+- Demande du Roi: « make the tutorial more like a video guide ». Le bouton Tutoriel (T) du titre ouvre un écran lecteur (`ui/video-guide.js`, nouveau): 9 chapitres à gauche, « vidéo » à droite (légende, barre de progression, précédent / pause / suivant, enchaînement automatique). Détail, tableau des chapitres, reste à faire: `docs/studio-notes/guide.md`.
+- Les clips ne sont pas des fichiers vidéo: scènes 2D scriptées sur le canvas du menu (320 x 180, fonction pure du temps), icônes des vrais bâtiments (`IC`/`ICT`) et sprites tirés ici des vrais modèles d'unités posés par `animUnit` (89 petits rendus, par tranches de 10 ms à l'ouverture). Rien ne touche la simulation: unités jetables hors `sessionState`, horloge murale, `Math.random` remplacé par `REALR` pendant les rendus.
+- Décision du Roi: les quêtes remplacent l'ancienne barre de tutoriel en 5 étapes. Retirés: `TUTS`, `tutStart`, `tutEnd`, `tutBar` (`ui/tutorial.js` ne garde que `hintBar` et ses 3 astuces), l'appel dans `ui/hud.js` et `gameplay/reset.js`, `TUT` (`gameplay/traps.js`), la ligne « Tutoriel » des Options, la clé `dk_tut` (aussi dans `tools/announce_shots.py`). « Jouer la partie guidée » ouvre seulement Nouveau royaume.
+- `release-v84` (quêtes) fusionné dans la branche; conflit dans `i18n/translations.js` (deux blocs v92), les deux côtés gardés. Textes du guide: 31 clés (`docs/studio-texts/guide.json`).
+- Vérifié après fusion et retrait: `npm run build`; `npm test -- smoke quests det tools` ALL PASS (853 s, 275 s, 416 s, 474 s); les 8 hachages de `det` identiques à `dist/test-logs/det.log` du dépôt principal (18:59, release-v84 avec quêtes); captures 1280x720: guide (5 chapitres regardés en tout: Récolter, Former une armée, La nuit et la horde, Le Roi, Coop), en jeu (panneau de quête, plus de barre « Tutoriel 1/5 »); captures 390x700 et 760x360 du guide; `__ovf` vide; légendes: 27 x 6 langues mesurées hors navigateur avec Inter 500, aucune ne déborde (420 et 182 sur 2 lignes, 360 et 240 sur 1 ligne, colonne de 130 et 110).
+- Taille du build compressé: +17 752 octets pour le guide (704 592 -> 722 344 mesuré avant la fusion des quêtes); 735 084 après fusion et retrait (base avec quêtes non remesurée).
+- Non vérifié: vrai GPU, vrai téléphone, tactile, manette, clavier dans le lecteur (Gauche / Droite / Espace); 4 chapitres non regardés en image (Construire en 1280, Population, Murs et tours, Recherche); `rg` ne trouve plus aucune référence retirée, mais les traductions des 5 anciennes étapes restent dans la table; `tools/fitcheck.py` n'ouvre pas le guide.
+- Incident: en nettoyant après un délai dépassé, j'ai tué par erreur le navigateur headless d'un autre agent (`docs/studio-boards/banner/cap.py sheet,small`), signalé au lead.
 
 ## 2026-11-11 · quests lot 3 merged: button marker, mp8 test fixed (not released)
 
