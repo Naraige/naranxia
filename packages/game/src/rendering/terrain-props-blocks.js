@@ -22,7 +22,7 @@ const OAKT=['#6b4a2a','#5b3f22'].map(pc),PINT=['#4f3418','#3f2a14'].map(pc),BIRT
 const ROCK=[['#9aa1ac','#a9b0bb','#7e8590'],['#868d98','#9ea5b0','#6a717e'],['#a8aeb8','#b8bec8','#8c929e'],['#707784','#868d9a','#5a606c'],['#9c9a92','#adab9f','#7f7d74'],['#8a9098','#9aa0aa','#6f757f']].map(a=>a.map(pc));
 const ORE=pc('#8a8a8a');
 const FLW=[['#f0f0e8','#e8c020'],['#f0d020','#e8a010'],['#c8282a','#2a2a2a'],['#4a6ad8','#2a3a8a'],['#b060d8','#7a2a9a']].map(a=>a.map(rgb));
-const STEM=rgb('#3f7f2a'),BLADE=['#4a8e32','#5a9c3a','#3f7f2a'].map(rgb),REED=rgb('#94c86a'),REEDH=rgb('#6a9a48'),MSTEM=rgb('#e8e0d0'),MCAP=[rgb('#c8282a'),rgb('#9a6a4a')];
+const STEM=rgb('#3f7f2a'),BLADE=['#6aae46','#7cbc52','#5a9e3c'].map(rgb),REED=rgb('#94c86a'),REEDH=rgb('#6a9a48'),MSTEM=rgb('#e8e0d0'),MCAP=[rgb('#c8282a'),rgb('#9a6a4a')];
 const FK=[1,.9,.8,.86,.77,.55],RING8=[[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]],PLUS4=[[0,-1],[1,0],[0,1],[-1,0]];
 
 export function buildPropsB(cx,cy){const B=blocksState.DBLK,N=Math.max(1,Math.round(1/B)),p=B/16,x0=cx*CH,y0=cy*CH,x1=Math.min(TW,x0+CH),y1=Math.min(TH,y0+CH);

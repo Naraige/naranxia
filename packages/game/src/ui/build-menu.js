@@ -201,8 +201,8 @@ fire:['Fire arrows','Research (50 s, after Fletching): archers set','zombies on 
 era:['Iron age','Research (70 s, after Steel weapons or Chain mail): your units','hit 10% harder and buildings slowly mend'],
 oil:['Boiling oil','Research (55 s, after Bastion walls): walls, gates','and towers scald zombies next to them'],
 spike:['Spike trap','Passable: zombies standing on it are hurt','every half second until the spikes break'],
-bastion:['Bastion walls','Research (60 s): buildings take','28% less damage','Needs Stonemasonry'],
-tier:['Building tier [L]','Choose wood or stone for what you build','Stone needs Stonemasonry'],
+bastion:['Bastion walls','Research (60 s): buildings take','28% less damage','Needs Masonry'],
+tier:['Building tier [L]','Choose wood or stone for what you build','Stone needs Masonry'],
 demolish:['Demolish [P]','Click a building: peasants tear it down','and you recover 100% of its cost'],
 storage:['Storage [K]','2x2 depot: peasants drop wood, stone','and gold here: build it next to resources'],
 ramp:['Ramp [I]','Places a ramp block that climbs 1 level','[R] turns it - peasants build it (free)'],
@@ -218,11 +218,11 @@ bannerman:['Bannerman','Heals nearby allies in a wide area','and speeds up their
 captain:['Captain','Allies within 8 tiles hit 25% harder','and take 20% less damage'],
 king:['King Naraige','Summoned at the castle with his 2 royal guards - one king only','His sword cuts through the horde; allies within 10 tiles','hit 35% harder and take 20% less damage'],
 guard:['Royal guard','A new halberdier to escort the king (2 at most)','Long reach, sweeps several zombies at once'],
-stoneup:['Upgrade to stone','Rebuilds this building in stone:','twice the hit points','Needs Stonemasonry'],
+stoneup:['Upgrade to stone','Rebuilds this building in stone:','twice the hit points','Needs Masonry'],
 upgtool:['Stone upgrade tool','Click or drag over wooden buildings','to rebuild them in stone (walls...)'],
-cannon:['Cannon','Field gun pushed by a crew of 2 (2 population)','Its cannonballs blast whole groups of zombies','Slow, and weak up close. Needs Stonemasonry'],
+cannon:['Cannon','Field gun pushed by a crew of 2 (2 population)','Its cannonballs blast whole groups of zombies','Slow, and weak up close. Needs Masonry'],
 barracks:['Barracks [C]','2x2 building, click it to select','Units trained while it is selected','come out of it, 35% faster'],
-upgrade:['Stonemasonry [G]','Research (45 s): every wooden building,','castle included, becomes stone','New buildings are stone afterwards'],
+upgrade:['Masonry [G]','Research (45 s): every wooden building,','castle included, becomes stone','New buildings are stone afterwards'],
 wall:['Wooden wall','Cheap and links to its neighbours','Upgrade it to stone later'],
 gate:['Wooden gate','2 tiles long. R rotates it','Your units pass, zombies must break it'],
 tower:['Wooden tower','Long range: volleys of 5 arrows','Lights the night. Archers garrison (3)'],
@@ -247,7 +247,7 @@ const MW=34,MH=38;
 const BCATS={def:['Defense',['wall','gate','tower','torch','beacon','sappers','spike']],eco:['Economy',['farm','forester','storage','market','granary','orchard','embassy']],town:['Town',['house','barracks','guild','academy','observatory','bell','sanctuary','forge','warroom']],land:['Land',['path','raise','dig','ramp']],siege:['Siege',['ballista','trebuchet']]},BCI={def:'tower',eco:'farm',town:'house',land:'raise',siege:'ballista'};
 
 /* niche buildings (2x2 bonus halls, beacon, sappers...) appear once there is an Academy or the first wave has come, or while one is being placed; their hotkeys always work.
-   Stone variants appear once Stonemasonry is researched. */
+   Stone variants appear once Masonry is researched. */
 const NICHE=new Set(['beacon','sappers','granary','orchard','embassy','observatory','bell','sanctuary','forge','warroom']);
 const nicheOn=()=>hasAcademy(LPL())||sessionState.waveN>=1;
 
@@ -317,7 +317,7 @@ export function menuItems(){CMP=cv.width/hudDisplayState.UIS<420;const L=[],G0=[
 
 const upTarget=()=>selectionState.selB&&sessionState.structs.includes(selectionState.selB)?selectionState.selB:HOMEC();
 
-function itemFn(it){return it.k==='convoy'?()=>{convoyPanelState.convoyOpen=!convoyPanelState.convoyOpen;snd('click')}:JOBK.has(it.k)?()=>assignJob(it.k[1]):it.k==='stoneup'?()=>{const L=selBs().filter(s=>s.tier===0&&UPC[s.type]);if(L.length){for(const s of L)build('upgrade',s.tx,s.ty);return}const b=upTarget();if(b)build('upgrade',b.tx,b.ty)}:it.k==='upgtool'?()=>{if(!RS.done){hudDisplayState.msgS='Needs Stonemasonry';hudDisplayState.msgT=2;snd('err');return}sessionState.units.forEach(u=>u.sel=false);sessionState.mode=sessionState.mode==='upgrade'?null:'upgrade';snd('click')}:it.k.startsWith('cat:')?()=>{buildMenuState.BCAT=it.k.slice(4);snd('click')}:it.k==='back'?()=>{buildMenuState.BCAT=null;snd('click')}:ROLEK.has(it.k)?()=>roleAdj(it.k[1],it.k[2]==='+'?1:-1):STNK.has(it.k)?()=>setStance(it.k):it.k==='form'?()=>{constructionState.formType=(constructionState.formType+1)%FORMS.length;hudDisplayState.msgS='Formation: '+FORMS[constructionState.formType];hudDisplayState.msgT=2}:it.k==='idle'?selIdle:it.k==='buy'?(it.tr!==undefined?()=>tierPick(it):()=>buy(it.id)):it.k==='army'?army:it.k==='group'?groupSel:it.k==='ungroup'?ungroupSel:it.k==='mode'?()=>{inputState.panMode=!inputState.panMode}:null}
+function itemFn(it){return it.k==='convoy'?()=>{convoyPanelState.convoyOpen=!convoyPanelState.convoyOpen;snd('click')}:JOBK.has(it.k)?()=>assignJob(it.k[1]):it.k==='stoneup'?()=>{const L=selBs().filter(s=>s.tier===0&&UPC[s.type]);if(L.length){for(const s of L)build('upgrade',s.tx,s.ty);return}const b=upTarget();if(b)build('upgrade',b.tx,b.ty)}:it.k==='upgtool'?()=>{if(!RS.done){hudDisplayState.msgS='Needs Masonry';hudDisplayState.msgT=2;snd('err');return}sessionState.units.forEach(u=>u.sel=false);sessionState.mode=sessionState.mode==='upgrade'?null:'upgrade';snd('click')}:it.k.startsWith('cat:')?()=>{buildMenuState.BCAT=it.k.slice(4);snd('click')}:it.k==='back'?()=>{buildMenuState.BCAT=null;snd('click')}:ROLEK.has(it.k)?()=>roleAdj(it.k[1],it.k[2]==='+'?1:-1):STNK.has(it.k)?()=>setStance(it.k):it.k==='form'?()=>{constructionState.formType=(constructionState.formType+1)%FORMS.length;hudDisplayState.msgS='Formation: '+FORMS[constructionState.formType];hudDisplayState.msgT=2}:it.k==='idle'?selIdle:it.k==='buy'?(it.tr!==undefined?()=>tierPick(it):()=>buy(it.id)):it.k==='army'?army:it.k==='group'?groupSel:it.k==='ungroup'?ungroupSel:it.k==='mode'?()=>{inputState.panMode=!inputState.panMode}:null}
 
 let hovK='';
 /* four states shared by slots and pills: rest, hover (blue), pressed (1 px down, darker, ~150 ms after the click), disabled (flat, fn off); foc = keyboard focus ring */

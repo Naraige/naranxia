@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-12 · full pass merged, King's choices (branch release-v84, not released)
+
+- Merged: localization pass (NL/PL/TR complete, proofreading, fit fixes) and QA pass (HUD bars vs quest panel, title hint, save test without rendering, mp_quests / mp_events / save in the quick suite).
+- King's choices: HAMMERDAWNSTUDIO without a space is wanted; red banners over the quest panel stay; grass tufts lighter (BLADE colours in `rendering/terrain-props-blocks.js`); one research name "Masonry" (was also "Stonemasonry"; keys renamed in sources, translations, NL/PL/TR); swarm performance lot after v92.
+- Verified locally after the merges: smoke, quests, save (83 s), mp_convoy, mp_resync PASS; title screen seen with the Masonry hint.
+- NOT stable: `mp_quests` failed 2 of 4 local runs at the convoy step (goods returned, 19 other quests paid, no desync). Cause not established (random sites not linked, or a real convoy defect); given back to the QA agent. Logs `dist/mpq_fail/`.
+- Not seen by eye: the lighter tufts in game.
+- Left before release: stable mp_quests, green CI, the 4 screenshots of `announce/img/v92/`, the King's go.
+
 ## 2026-11-11 · localization pass before v92 (hd-localization worktree, text only, not merged, not released)
 
 - Audit (static, new `tools/textaudit.mjs`): 1463 keys, the 414 keys new in v92 checked. FR ES DE IT PT: none missing, `{0}` kept everywhere, no French "tu". Six texts were English only: barter title and message ("Swap 50 wood for stone", "Swapped 50 ..."), "You get N wood / stone / food", "Saving...": added in 8 languages (`docs/studio-texts/localization-v92.json`).

@@ -63,7 +63,7 @@ export let mpExec = function mpExec(c,mine){const m0=hudDisplayState.msgS,mt0=hu
   case'o':constructionState.formType=c.f;formationsState.FORCEF=c.fa==null?null:c.fa;try{withSel(new Set(c.i),()=>{if(sel().length)_N.order({x:c.x,y:c.y})})}finally{formationsState.FORCEF=null}break;
   case'b':{constructionState.buildRot=c.r;constructionState.gateLen=c.gl||2;selectionState.selB=c.sb!=null?(sessionState.structs.find(s=>s.sid===c.sb)||null):null;const bt0=playersState.BTIER;setTier(c.ti===undefined?1:c.ti);try{_N.build(c.t,c.x,c.y)}finally{setTier(bt0)}break}
   case't':selectionState.selB=sessionState.structs.find(s=>s.sid===c.b&&(s.pl|0)===playersState.CURPL)||null;_N.train(c.t);break;
-  case'r':{const was=RS.on;_N.startResearch();if(!mine&&!was&&RS.on)MP.note=(MP.pname||'Your partner')+' started Stonemasonry (shared)';break}
+  case'r':{const was=RS.on;_N.startResearch();if(!mine&&!was&&RS.on)MP.note=(MP.pname||'Your partner')+' started Masonry (shared)';break}
   case'rp':repair0(c.b);break;
   case'w':_N.callWave();break;
   case'r2':{const was=RS2.on;_N.startResearch2(c.n);if(!mine&&!was&&RS2.on===c.n)MP.note=(MP.pname||'Your partner')+' started '+RN2[c.n]+' (shared)';break}

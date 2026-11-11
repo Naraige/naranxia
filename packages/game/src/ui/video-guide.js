@@ -297,7 +297,7 @@ const CH = [
   ['Train an army', 20.5, [[0, 'Build barracks, then train soldiers in the Train bar'], [5, 'Knights fight up close, archers shoot from behind'], [14, 'Select your soldiers and right-click to send them']], cArmy],
   ['Walls and towers', 20, [[0, 'Zombies follow the red lines: block them with walls'], [5.5, 'Add a gate so your own units can pass'], [8.4, 'Towers shoot every zombie in range']], cWalls, ROAD],
   ['The night and the horde', 21.5, [[0, 'The top bar counts down to the next wave'], [4, 'At night the horde comes: keep your soldiers near the walls'], [15.5, 'Hold until dawn: every wave is stronger than the last']], cNight, ROAD],
-  ['Research', 18, [[0, 'Build an Academy to research'], [3, 'Each research takes time and makes your kingdom stronger'], [9, 'Stonemasonry lets you build in stone']], cRes],
+  ['Research', 18, [[0, 'Build an Academy to research'], [3, 'Each research takes time and makes your kingdom stronger'], [9, 'Masonry lets you build in stone']], cRes],
   ['The King', 18, [[0, 'Summon King Naraige at the castle: he arrives with 2 royal guards'], [6, 'He fights the horde and gains levels'], [11, 'His skills can turn a fight: use them at the right time']], cKing],
   ['Co-op', 20, [[0, 'Co-op: host a game and share the room code with a friend'], [4.5, 'Two kingdoms, one horde: defend together'], [13.4, 'Send a convoy to share resources with your partner']], cCoop],
 ];

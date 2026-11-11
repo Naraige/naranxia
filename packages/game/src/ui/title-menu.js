@@ -39,7 +39,7 @@ let recOpen = false;
 export const titleDebug = { rec(v) { recOpen = v }, notes(v) { notesOpen = v }, chr(v) { chrOpen = v }, modes(v) { modeState.open = v } };
 
 /* tip of the day: one of the tutorial lines, changing each day */
-const TIPS = ['Right-click a tree, a rock or gold: your peasants gather it', 'Build a house in the Town menu to raise your population limit', 'Train a knight in the Train bar: knights fight the zombies', 'Build walls or a tower in the Defense menu to hold the lanes', 'Try a spike trap in the Defense menu: zombies on it get hurt', 'Zombies follow the red lines: the top bar counts down to the wave', 'Research Stonemasonry at the Academy to build in stone'];
+const TIPS = ['Right-click a tree, a rock or gold: your peasants gather it', 'Build a house in the Town menu to raise your population limit', 'Train a knight in the Train bar: knights fight the zombies', 'Build walls or a tower in the Defense menu to hold the lanes', 'Try a spike trap in the Defense menu: zombies on it get hurt', 'Zombies follow the red lines: the top bar counts down to the wave', 'Research Masonry at the Academy to build in stone'];
 const TIPN = (Date.now() / 864e5 | 0) % TIPS.length;
 
 /* "What's new" keeps its NEW pill until the notes of this version were opened once (localStorage dk_seenver; visual only) */
