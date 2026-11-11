@@ -1,9 +1,8 @@
 import { mkU } from '../../gameplay/entities.js';
 import { TS } from '../../gameplay/rules.js';
-import { geometryState, newG, toGeo } from '../geometry.js';
 import { heraldryState, shdPose } from './heraldry.js';
-import { HANDY, mkModel, tb, toolGeos, VX } from './unit-parts.js';
-import { HA, unitsState } from './units.js';
+import { HANDY, mkModel, toolGeos, VX } from './unit-parts.js';
+import { unitsState } from './units.js';
 import { unitG } from '../terrain.js';
 import { THREE } from '../three.js';
 import { _tm, TARMY, titleDispose, titleSceneState, TS3, TT, TZ } from '../title-scene.js';
@@ -27,19 +26,13 @@ function mergePosed2(parts){const P=[],N=[],C=[],Mt=[],I=[];let off=0;
   for(let i=0;i<p.length;i++){P.push(p[i]);N.push(n[i]);C.push(c[i])}for(let i=0;i<nv;i++)Mt.push(ma?ma[i]:0);const ix=g.index.array;for(let i=0;i<ix.length;i++)I.push(ix[i]+off);off+=nv;g.dispose()}
  const r=new THREE.BufferGeometry();r.setAttribute('position',new THREE.Float32BufferAttribute(P,3));r.setAttribute('normal',new THREE.Float32BufferAttribute(N,3));r.setAttribute('color',new THREE.Float32BufferAttribute(C,3));r.setAttribute('mat',new THREE.Float32BufferAttribute(Mt,1));r.setIndex(I);return r}
 
-let PIKEG=null;
-
-function pikeGeo(){if(PIKEG)return PIKEG;const G=newG(),t=(m,x,y,z,w,h,d,c)=>{const o=geometryState.BMAT;geometryState.BMAT=m;try{tb(G,x,y,z,w,h,d,c)}finally{geometryState.BMAT=o}};
- t(2,0,8.5,0,.44,33,.44,'#6b4423');t(0,0,0,0,.6,1.6,.6,'#4a2e16');t(4,0,25.3,0,.62,.9,.62,HA.st3);t(4,0,27.1,0,.78,2.8,.3,HA.sth);t(4,0,29.0,0,.4,1.1,.24,'#ffffff');t(4,0,24.6,0,1.6,.28,.36,HA.st2);
- PIKEG=toGeo(G);return PIKEG}
-
-function soldierGeo(kind){const ty=kind==='pike'?'knight':kind,ab=unitsState.ALB;unitsState.ALB=2;let mdl;try{mdl=mkModel(ty,0)}finally{unitsState.ALB=ab}
+function soldierGeo(kind){const ty=kind==='pike'?'spearman':kind,ab=unitsState.ALB;unitsState.ALB=2;let mdl;try{mdl=mkModel(ty,0)}finally{unitsState.ALB=ab}
  const o=new THREE.Object3D(),M=(x,y,z,rx,ry,rz)=>{o.position.set(x,y,z);o.rotation.set(rx||0,ry||0,rz||0);o.updateMatrix();return o.matrix.clone()};
  const Q={knight:{ar:-1.0,arz:-.28,wr:-1.38,al:-.3,alz:0},pike:{ar:-.62,arz:-.05,wr:0,al:-.3,alz:0},archer:{ar:-.45,arz:0,wr:0,al:-1.28,alz:0}}[kind];
  const P=[[mdl.torso,M(0,0,0)],[mdl.head,M(0,mdl.neck,0,.05)],[mdl.leg,M(-mdl.lx,mdl.hip,0)],[mdl.leg,M(mdl.lx,mdl.hip,0)]];
  const A=M(mdl.ax,mdl.sh,0,Q.ar,0,Q.arz);P.push([mdl.arm,A]);const T2=mdl.T||toolGeos();
  if(kind==='knight')P.push([T2.sword,A.clone().multiply(M(0,HANDY*VX,.15*VX,Q.wr))]);
- if(kind==='pike'){const h=new THREE.Vector3(0,HANDY*VX,.15*VX).applyMatrix4(A);P.push([pikeGeo(),M(h.x,h.y,h.z)])}
+ if(kind==='pike'){const h=new THREE.Vector3(0,HANDY*VX,.15*VX).applyMatrix4(A);P.push([T2.spear,M(h.x,h.y,h.z,-Math.PI/2)])}
  if(mdl.armL){const B=M(-mdl.ax,mdl.sh,0,Q.al,0,Q.alz);P.push([mdl.armL,B]);
   if(kind==='archer')P.push([T2.bow,B.clone().multiply(M(0,HANDY*VX,.1*VX))]);
   else if(mdl.shield)P.push([mdl.shield,B.clone().multiply(M(mdl.shp[0],mdl.shp[1],mdl.shp[2],-Q.al+.03,-.14))])}

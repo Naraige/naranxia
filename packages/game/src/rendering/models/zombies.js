@@ -46,7 +46,7 @@ export function zSpec(kind,v,hint){const r=zRand(v*7919+({zombie:1,husk:2,runner
  S.outfit=kind==='husk'?(decay==='mummy'?'shroud':pick(['shroud','rags','monk','bare','rags'])):kind==='brute'?pick(['bare','rags','soldier','gambeson','bare']):kind==='runner'?pick(['rags','bare','tunic','peasant','rags']):
   pick(['tunic','peasant','soldier','gambeson','monk','noble','rags','shroud','bare','tunic','soldier','peasant']);
  const o=S.outfit;S.head=o==='soldier'?pick(['kettle','nasal','coif','nasal','none']):o==='monk'?'hood':o==='peasant'?pick(['straw','lcoif','none','none']):o==='noble'?pick(['circlet','none','hood']):o==='tunic'?pick(['lcoif','none','hood','none']):o==='shroud'&&decay!=='mummy'?pick(['shroud','none']):'none';
- if(hint==='knight'||hint==='captain'||hint==='bannerman'||hint==='king'||hint==='guard'){S.outfit='soldier';S.tun2=thp();S.head=pick(['nasal','kettle','coif'])}
+ if(hint==='knight'||hint==='spearman'||hint==='captain'||hint==='bannerman'||hint==='king'||hint==='guard'){S.outfit='soldier';S.tun2=thp();S.head=pick(['nasal','kettle','coif'])}
  else if(hint==='archer'){S.outfit='hooded';S.tun=ZCL.green;S.head='ghood'}
  else if(hint==='peasant'){S.outfit=pick(['peasant','tunic']);S.head=pick(['straw','lcoif','none'])}
  if(kind==='brute'){S.decay='rot';S.outfit=pick(['bare','bare','rags']);S.head='none';S.sk=ZSK[pick(['bruise','putrid','bruise','moss'])];S.arrows=0;S.eye=pick(['#ff3a2a','#ff6a20'])}

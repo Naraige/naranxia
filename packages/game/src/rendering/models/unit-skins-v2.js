@@ -112,6 +112,33 @@ export function px2Knight(P,AL){const m=mp({x:'#2e3138',y:'#474b55',R:'#c0392b',
  pxArms(P,T=>{pxSkinArms(T,K,m);pauldrons(T,m,m[5],m[4],m[3],AL>=1?m.o:m[2],AL>=1?m.g:m[3])});
 }
 
+/* ---------------- SPEARMAN: wide kettle helmet, padded jack quilted in the kingdom colour, arming collar, baldric and belt, bedroll on the back, leather gloves and boots.
+   No shield and no plate: armour research adds steel spaulders (1) and a gold band on the helmet (2). Extra cubes: brim, crown, collar, bedroll. ---------------- */
+export function px2Spearman(P,AL){const m=mp({h:'#5a3a1a',r:'#3a2410',H:'#7a5226',a:'#ddd0ae',A:'#b4a682',y:'#d9a83a',P:'#5a4a36',p:'#43382a'},thp());
+ const Q8=Array.from({length:12},(_,i)=>i%4===3?'TTtTTtTT':'UUtUUtUU'),Q4=Q8.map(r=>r.slice(0,4));
+ const K={hatMat:4,jacketMat:0,sleeveMat:AL>=1?4:0,
+  head:pxHead2({beard:1}),
+  hat:{F:['45555554','34444443','23333332','........','........','........','........','........'],R:'F',L:'F',B:'F',T:['34444443','45555554','45444454','45455454','45455454','45444454','45555554','34444443'],D:null},
+  body:fc(Q8,{R:Q4}),
+  jacket:{F:['.a2332a.','......b.','.....b..','....b...','...b....','..b.....','nbbyybbn','........','........','UUtUUtUU','TTtTTtTT','tt.tt.tt'],
+   R:['a23a','....','....','....','....','....','nbbn','....','....','UtUU','TtTT','tttt'],L:'~R',
+   B:['.a2332a.','.b......','..b.....','...b....','....b...','.....b..','nbbbbbbn','........','........','UUtUUtUU','TTtTTtTT','tt.tt.tt'],T:['aaaaaaaa','a222222a','a222222a','aaaaaaaa'],D:null},
+  arm:lim(Q4.slice(0,8).concat(['AAAA','bBbb','bbbb','nnnn'])),
+  sleeve:AL>=1?lim(['5555','4444','3333'].concat(rep('....',9)),['4444','3333','2222'].concat(rep('....',9)),{T:rep('5555',4),D:null}):null,
+  leg:lim(['PPPP','PPPP','PpPP','PPPP','PPPP','pPPp','PPPP','PPPP','PPPP','PPPP','PPPP','PPPP']),
+  pants:lim(rep('....',6).concat(['BBBB','bBbB','bbbb','bNbb','bbbb','nnnn']),null,{T:null})};
+ pxScene(()=>{pxSkin(P,K,m);
+  /* kettle helmet: wide brim, low crown */
+  pxBox(P.HG,-6.5,29.2,-6.5,13,.8,13,(f,u,v,W,H)=>f==='T'?((u===0||v===0||u===W-1||v===H-1)?m[5]:m[4]):(f==='D'?m[1]:m[2]),{mat:4,grid:[13,1,13]});
+  pxBox(P.HG,-3,32.5,-3,6,.8,6,(f,u,v,W,H)=>f==='T'?m[5]:m[3],{mat:4,grid:[6,1,6]});
+  if(AL>=2)pxBox(P.HG,-4.7,30,-4.7,9.4,.8,9.4,(f,u,v,W,H)=>f==='T'?m.G:(u%3===1?m.G:m.g),{mat:4,grid:[9,1,9]});
+  /* padded arming collar */
+  pxBox(P.G,-4.8,22.5,-2.8,9.6,1.8,5.6,(f,u,v,W,H)=>f==='T'?m.a:f==='D'?m.A:v===0?m.T:(u%2?m.a:m.A),{mat:0,grid:[10,2,6]});
+  /* bedroll strapped across the back */
+  pxBox(P.G,-3.5,13.4,-4.4,7,2.2,2.2,(f,u,v,W,H)=>(f==='B'||f==='T'||f==='D')&&(u===1||u===5)?m.n:f==='T'?m.a:f==='D'?m.A:(v===0?m.A:m.a),{mat:0,grid:[7,2,2]})});
+ pxArms(P,T=>{pxSkinArms(T,K,m);if(AL>=1)pxBox(T,-2.8,-1.6,-2.8,5.6,2.4,5.6,bev(m[5],m[4],m[2]),{mat:4,grid:[5,2,5]})});
+}
+
 /* ---------------- CAPTAIN: winged champion helm, gilded plate, red officer sash, kingdom skirt, gold pauldrons (cape and plume: animated parts as before) ---------------- */
 export function px2Captain(P){const m=mp({h:'#4a2c16',r:'#2e1a0c',H:'#6a4222',R:'#b8323c',Q:'#de5a62',X:'#7a1a24',a:'#fff0b8',x:'#2e3138',y:'#474b55',f:'#dcd6c6'},thp());
  const K={hatMat:4,jacketMat:4,sleeveMat:4,pantsMat:4,body:0,
@@ -203,5 +230,5 @@ export function px2King(P,AL){const m=mp({R:'#a62832',X:'#6c111b'},thp());pxKing
  pxArms(P,T=>pxBox(T,-2.85,-3.3,-2.85,5.7,2,5.7,(f,u,v,W,H)=>f==='T'?m[4]:f==='D'?m[1]:v===0?m.g:m[3],{mat:4,grid:[5,2,5]}));
 }
 
-export const PX2={peasant:px2Peasant,archer:px2Archer,knight:px2Knight,captain:px2Captain,bannerman:px2Bannerman,gunner:px2Gunner,gunner2:px2Gunner,guard:px2Guard,king:px2King,
+export const PX2={peasant:px2Peasant,archer:px2Archer,knight:px2Knight,spearman:px2Spearman,captain:px2Captain,bannerman:px2Bannerman,gunner:px2Gunner,gunner2:px2Gunner,guard:px2Guard,king:px2King,
  scout:pxScout,engineer:pxEngineer,envoy:pxEnvoy};

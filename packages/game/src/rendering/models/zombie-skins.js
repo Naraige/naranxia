@@ -106,7 +106,7 @@ export function pxZombie(type,ZV,P){
   if(type==='bomber'){const W2=6,yk=(13-12)*tT[1]+12;pxBox(P.G,-W2/2,yk,zB-5,W2,8,5,(f,u,v,W,H)=>{if(f==='T'||f==='D')return (u+v)%3?RWD[2]:RWD[1];if(v===1||v===6)return RDS[1];return u%2?RWD[2]:RWD[3]},{mat:0,grid:[6,8,5]});
    pxBox(P.G,-.3,yk+8,zB-2.8,.6,2,.6,()=>C('#3a2a1a'),{mat:0,grid:[1,2,1],ao:false});pxBox(P.G,-.45,yk+10,zB-2.95,.9,.9,.9,()=>C('#ffb02a'),{mat:5,grid:[1,1,1],ao:false})}
   if(type==='acid')for(const[sx,sy,sz,s]of[[-2.6,19,0,3.4],[1.4,16,-.6,2.8],[-.4,21.2,-.2,2.4]])pxBox(P.G,sx,sy*tT[1]+(1-tT[1])*12,zB-s*.75+sz,s,s,s,(f,u,v)=>((u+v)%2?C('#9ae030'):C('#c8ff60')),{mat:5,grid:[2,2,2],ao:false});
-  if(V2){const IR=PDP(['#2a2422','#4a403a','#6e625a','#8e8278']),RP=[C('#a08a5a'),C('#7a6840')],bone2=(f,u,v,W,H)=>f==='T'||v===H-1?BN:(v===0?BND:BN2),sold=hint==='knight'||hint==='captain'||hint==='bannerman'||hint==='king'||hint==='guard';
+  if(V2){const IR=PDP(['#2a2422','#4a403a','#6e625a','#8e8278']),RP=[C('#a08a5a'),C('#7a6840')],bone2=(f,u,v,W,H)=>f==='T'||v===H-1?BN:(v===0?BND:BN2),sold=hint==='knight'||hint==='spearman'||hint==='captain'||hint==='bannerman'||hint==='king'||hint==='guard';
    if(type==='zombie'&&!sold){const pr=sd%3+1;
     if(pr===1){zb('T',P.G,-3.1,22.8,-2.7,6.2,1.5,5.4,(f,u,v)=>RP[(u+v)%2],{mat:0,grid:[6,1,5]});zb('T',P.G,1.1,18,2.3,1.1,5,.9,(f,u,v)=>RP[v%2],{mat:0,grid:[1,5,1],ao:false})}
     if(pr===2){zb('T',P.G,-1.6,17.2,-6.4,1,1.7,11.4,(f,u,v,W,H)=>f==='F'?ST[3]:(u%4===3?RU:ST[2]),{mat:4,grid:[1,1,8]});zb('T',P.G,-3.4,16.6,-5.4,4.6,2.9,.9,()=>RU,{mat:0,grid:[4,1,1]})}
@@ -132,7 +132,7 @@ export function pxZombie(type,ZV,P){
   if(sleeve&&!skel)ab(-2.25,-12.25,-2.25,4.5,12.5,4.5,sleeve,{mat:o==='soldier'?4:0,grid:[4,12,4],ao:false});
   if(type==='brute'&&R==='AR')for(const[x,z,h]of[[-.8,-1,3.4],[.6,.9,2.6]])ab(x,0,z,1.2,h,1.2,(f)=>f==='T'?BN2:BN,{mat:0,grid:[1,3,1]});
   if(type==='brute'&&R==='AL'){ab(-2.6,-9.6,-2.6,5.2,1.8,5.2,(f,u,v)=>f==='T'||f==='D'?ST[1]:(u%2?ST[2]:ST[1]),{mat:4,grid:[5,2,5]});for(let i=0;i<3;i++)ab(-.5,-11.2-i*1.4,2.4,1,1.2,.6,()=>ST[i%2?1:2],{mat:4,grid:[1,1,1],ao:false})}
-  if(V2){const IR=PDP(['#2a2422','#4a403a','#6e625a','#8e8278']),sold=hint==='knight'||hint==='captain'||hint==='bannerman'||hint==='king'||hint==='guard';
+  if(V2){const IR=PDP(['#2a2422','#4a403a','#6e625a','#8e8278']),sold=hint==='knight'||hint==='spearman'||hint==='captain'||hint==='bannerman'||hint==='king'||hint==='guard';
    if(type==='runner')for(const[x,z,l]of[[-1.7,-.5,3.4],[.8,.4,2.8]])ab(x,-12-l,z,.9,l+.4,.9,(f,u,v)=>v===0?BND:BN,{mat:0,grid:[1,3,1],ao:false});
    if((type==='brute'&&R==='AL')||(boss&&R==='AR')||(type==='zombie'&&sold&&R==='AL')){ab(-2.9,-1.5,-2.9,5.8,3.1,5.8,(f,u,v,W,H)=>f==='T'?((u===1||u===3)&&(v===1||v===3)?IR[3]:IR[2]):(v===H-1?IR[3]:v===0?IR[0]:IR[1]),{mat:4,grid:[5,3,5]});
     if(type==='brute')ab(-.6,1.6,-.6,1.2,2.2,1.2,(f)=>f==='T'?BN2:BN,{mat:0,grid:[1,2,1]})}}

@@ -4,6 +4,17 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · lancier (spearman): nouvelle unité jouable, allumée, non fusionnée, non livrée
+- Demande du Roi: « oui tu peux creer le lancier » (les piquiers de l'écran titre n'existaient pas en jeu). Branche de worktree hd-gameplay, rien dans `game/`, rien poussé. Détail, tableau et mesures: `docs/studio-notes/spearman.md`.
+- Unité `spearman`, caserne, dès le début: 85 PV, 11 dégâts / 1 s, portée 36 (chevalier 14: frappe par-dessus le premier rang), x1,6 contre brute et boss (`SPEAR_BIG`), 90 or 30 bois 25 nourriture, 15 s, 1 population. Pas de bouclier, pas de règle spéciale contre l'acide (moins de PV suffit).
+- Courbe: par ressource contre les zombies ordinaires il vaut moins que le chevalier (13,2 contre 11,0 par DPS), par tête il vaut moins contre tout; meilleur seulement par ressource contre les brutes. Duels mesurés dans les notes.
+- Câblage: règles, `hit()`, rang de formation, menu caserne, infobulle, panneau des troupes, carte d'unité, raccourci `\` réassignable, icônes, brouillard, zombie converti. Entraînement par la commande `buy` existante (co-op sans nouvelle commande); unités sauvées entières, rien dans `SAVA`.
+- Look: `px2Spearman` (chapel de fer, jaque matelassée à la couleur du royaume, col, baudrier, couverture roulée) et lance `g2Spear` (palette gear2, pennon à la couleur du royaume); animation du hallebardier (estoc, lance droite au repos, inclinée en marche). Écran titre: les blocs de piques sont ces lanciers avec cette lance (`pikeGeo()` supprimé).
+- IA et camps rebelles inchangés exprès: aucune lance dans la partie par défaut, hachages `det` identiques à la base.
+- Textes: 8 clés en 6 langues (`docs/studio-texts/spearman.json`). Nouveau test `spearman` (`tests/spearman.js`, ajouté à la suite rapide).
+- Vérifié / non vérifié: voir la fin des notes (résultats des tests reportés ci-dessous).
+SPEAR_RESULTS
+
 ## 2026-11-11 · bannière C (gonfanon sur mât) fusionnée et allumée (réponse du Roi « 1C 2C 3C »), non livré
 - `BANNER2='C'` dans `rendering/banner-icon.js`: petite icône (HUD, sauvegardes) et grande bannière (carte du royaume). `npm run build:release` fait, build de test republié.
 - Non relancé: tests (aucun fichier de simulation touché). Reste: bannières de pierre 3D sur l'ancien dessin, emblème illisible à 16 px, or sur or peu contrasté (`docs/studio-notes/banner.md`).

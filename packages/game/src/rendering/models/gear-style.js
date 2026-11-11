@@ -1,6 +1,6 @@
 /* ================= GEAR BOARD (docs/studio-boards/gear): which hand-held items wear the new look (B) =================
    GEAR2_ON is the single switch: '' = every item keeps the current look (A), 'all' = every item on the new look, or a comma list of
-   the item keys the King picked, e.g. 'sword,shield,axe'. Keys: sword gsword rsword halberd bow shield cshield gshield
+   the item keys the King picked, e.g. 'sword,shield,axe'. Keys: sword gsword rsword halberd spear bow shield cshield gshield
    axe pick hoe hammer carry banner cannon.
    window.__GEAR2 (same format) overrides it for previews only (docs/studio-boards/gear/_src). Visual only: never read by the simulation. */
 export const GEAR2_ON='all';

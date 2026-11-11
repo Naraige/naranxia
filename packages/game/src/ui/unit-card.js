@@ -13,10 +13,10 @@ import { ornLine } from './title-frame.js';
 /* ================= detail card of the selected unit type or building (lot D, visual only) =================
    Same template for both: pixel title, role tag, icon rows with the REAL numbers (rules.js: T, TRAIN, C, BT, GCAP, GRNG, struct hp), one line of flavour.
    Read-only: it never writes game state. */
-const ROLE = { knight: 'Front line', archer: 'Ranged', peasant: 'Worker', bannerman: 'Support', captain: 'Commander', cannon: 'Siege', king: 'Royal', guard: 'Royal guard',
+const ROLE = { knight: 'Front line', spearman: 'Line holder', archer: 'Ranged', peasant: 'Worker', bannerman: 'Support', captain: 'Commander', cannon: 'Siege', king: 'Royal', guard: 'Royal guard',
   castle: 'Stronghold', barracks: 'Troops', tower: 'Defense', wall: 'Defense', gate: 'Defense', house: 'Housing', farm: 'Food', storage: 'Supplies', market: 'Trade', academy: 'Research', guild: 'Workers', forester: 'Wood' };
 const FLAV = {
-  knight: 'He holds the wall so the others do not have to.', archer: 'Patient eyes and a steady hand: the horde never reaches the wall twice.',
+  knight: 'He holds the wall so the others do not have to.', spearman: 'A long spear and good neighbours: the big ones stop here.', archer: 'Patient eyes and a steady hand: the horde never reaches the wall twice.',
   peasant: 'Without his axe and his plough the bastion would starve before dawn.', bannerman: 'Where his banner stands, the line remembers it is not alone.',
   captain: 'Soldiers fight harder when someone is shouting orders.', cannon: 'Slow and loud. The horde hears it coming too late.',
   king: 'The last light of Naranxia walks at the front.', guard: 'A halberd, a vow, and no plans to retreat.',
@@ -47,7 +47,7 @@ function content() {
     if (S.some(u => u.type !== t) || !T[t]) return null;
     const d = T[t], rows = [['heart', 'Health', String(d.hp)]];
     if (d.dmg) rows.push(['sword', 'Damage', d.dmg + ' (every ' + d.cdt + ' s)']);
-    if (d.rng) rows.push(['range', 'Range', d.rng + (d.rng <= 30 ? ' (melee)' : ' (ranged)')]);
+    if (d.rng) rows.push(['range', 'Range', d.rng + (d.rng <= 40 ? ' (melee)' : ' (ranged)')]);
     rows.push(['speed', 'Speed', String(d.spd)]);
     if (TRAIN[t]) rows.push(['clock', 'Training', TRAIN[t] + ' s']);
     else if (C[t] && Object.keys(C[t]).length) rows.push(['coin', 'Cost', { cost: C[t] }]);

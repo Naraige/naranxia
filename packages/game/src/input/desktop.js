@@ -56,7 +56,7 @@ const lpClear=()=>{const l=inputState.lp;if(l)clearTimeout(l.to);inputState.lp=n
 const hitKey=h=>(h.x|0)+','+(h.y|0)+','+(h.w|0);
 const paint=()=>{const w=wpos(),tx=Math.floor(w.x/TS),ty=Math.floor(w.y/TS);if((sessionState.mode==='raise'||sessionState.mode==='dig')&&tfo.has(ty*TW+tx))return;build(sessionState.mode,tx,ty)};
 
-const BK=['cannon','peasant','knight','archer','bannerman','captain','wall','gate','tower','path'];
+const BK=['cannon','peasant','knight','spearman','archer','bannerman','captain','wall','gate','tower','path'];
 
 export function initializeDesktopInput() {
   cv.oncontextmenu=e=>e.preventDefault();

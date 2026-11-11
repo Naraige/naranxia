@@ -856,6 +856,14 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Spearman":["Lancier","Lancero","Speerträger","Lanciere","Lanceiro"],
+"Spearmen":["Lanciers","Lanceros","Speerträger","Lancieri","Lanceiros"],
+"Train spearman":["Former un lancier","Entrenar lancero","Speerträger ausbilden","Addestra lanciere","Treinar lanceiro"],
+"Cheap line holder with a long spear":["Tient la ligne à bas prix avec une longue lance","Mantiene la línea a bajo coste con una lanza larga","Günstiger Linienhalter mit langem Speer","Tiene la linea a basso costo con una lunga lancia","Segura a linha a baixo custo com uma lança longa"],
+"Strikes over the front rank":["Frappe par-dessus le premier rang","Golpea por encima de la primera fila","Sticht über die erste Reihe hinweg","Colpisce oltre la prima fila","Ataca por cima da primeira fila"],
+"Hits brutes and bosses 60% harder":["Frappe les brutes et les boss 60 % plus fort","Golpea a los brutos y jefes un 60 % más fuerte","Trifft Brocken und Bosse 60 % härter","Colpisce bruti e boss il 60% più forte","Atinge brutos e chefes 60% mais forte"],
+"Line holder":["Tient la ligne","Mantiene la línea","Linienhalter","Tiene la linea","Segura a linha"],
+"A long spear and good neighbours: the big ones stop here.":["Une longue lance et de bons voisins : les gros s'arrêtent ici.","Una lanza larga y buenos vecinos: los grandes se detienen aquí.","Ein langer Speer und gute Nachbarn: Die Großen kommen hier nicht weiter.","Una lunga lancia e buoni vicini: i grossi si fermano qui.","Uma lança longa e bons vizinhos: os grandes param aqui."],
 "Update":["Mise à jour","Actualización","Update","Aggiornamento","Atualização"],
 "Leaderboard":["Classement","Clasificación","Rangliste","Classifica","Classificação"],
 "Top 10 kingdoms":["Top 10 des royaumes","Top 10 de reinos","Top 10 der Königreiche","Top 10 dei regni","Top 10 dos reinos"],

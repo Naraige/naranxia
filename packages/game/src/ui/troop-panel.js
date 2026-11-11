@@ -16,13 +16,13 @@ export const troopPanelState = {
 };
 
 /* ---- troops panel: all your units by type, and what each group is doing; click a line or a task to select them ---- */
-export const PLUN={peasant:'Peasants',knight:'Knights',archer:'Archers',bannerman:'Bannermen',captain:'Captains',cannon:'Cannons',guard:'Royal guards',scout:'Scouts',engineer:'Engineers',envoy:'Envoys'};
+export const PLUN={peasant:'Peasants',knight:'Knights',spearman:'Spearmen',archer:'Archers',bannerman:'Bannermen',captain:'Captains',cannon:'Cannons',guard:'Royal guards',scout:'Scouts',engineer:'Engineers',envoy:'Envoys'};
 
 function unitTask(u){if(u.cv)return'convoy';if(u.gar)return'tower';if(u.shel)return'shelter';if(u.type==='peasant'){if(u.role)return'r'+u.role;if(u.job)return'j'+u.job;return u.o?'move':'idle'}if(u.atk>0||u.cd>0)return'fight';if(u.o)return'move';return'guard'}
 
 const TASKN={convoy:'Convoy',tower:'In a tower',shelter:'Sheltering',idle:'Idle',move:'Moving',fight:'Fighting',guard:'On guard',jw:'Wood',js:'Stone',jg:'Gold',jf:'Farming',jp:'Planting',jt:'Terraforming',jr:'Building',rb:'Builder',rr:'Repairer',rt:'Terraformer'};
 
-const TROOPO=['peasant','knight','archer','bannerman','captain','scout','engineer','envoy','cannon','king','guard'],TRIC2={king:'crown',guard:'sword'};
+const TROOPO=['peasant','knight','spearman','archer','bannerman','captain','scout','engineer','envoy','cannon','king','guard'],TRIC2={king:'crown',guard:'sword'};
 
 function selectUnits(L){sessionState.units.forEach(u=>u.sel=false);for(const u of L)if(u.hp>0)u.sel=true;selectionState.selB=null;selectionState.castleSel=false;selectionState.SELBS=[];sessionState.mode=null;snd('select')}
 
