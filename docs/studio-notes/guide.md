@@ -13,7 +13,8 @@ self-completing steps of `ui/tutorial.js` still run in the first solo game. `ui/
 Controls: mouse / touch on rows and buttons, a click on the picture pauses, a click on the progress bar seeks; Up / Down / Enter and the
 gamepad move through rows and buttons like every list screen (NAV); Left / Right change the chapter, Space pauses, Esc (pad B) closes.
 Narrow screens (content under 380 units wide) drop the list: a "3/9 title" line over the picture, the tutorial-game button under the controls.
-Low screens (content under 170 units high) keep one caption line and smaller rows.
+Low screens (content under 170 units high, a phone held sideways) put the picture on the left at full height and the caption, progress bar,
+controls and tutorial-game button in a column beside it; if that column would be under 110 units wide the stacked layout stays, with one caption line.
 
 ## Chapters (each starts with a 1.3 s title card)
 

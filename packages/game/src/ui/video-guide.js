@@ -347,21 +347,26 @@ export function drawGuide(UW, UH, fh, back) {
   init(); sprites();
   { const now = performance.now(), dt = Math.min(.1, Math.max(0, (now - lastT) / 1000)); lastT = now; if (!paused && spDone) { T += dt; if (T >= CH[ch][1]) setCh(ch + 1) } }
   const b = kitScreen(UW, UH, { key: 'gui', title: 'Video guide', close: back, fh, maxW: 640 }), g = canvasesState.ctx, n = CH.length, C = CH[ch];
+  /* three layouts: list | video over its controls (desktop); video over its controls (narrow); video beside its controls (low screens) */
   const nar = b.w < 380, low = b.h < 170, lw = nar ? 0 : Math.min(160, Math.round(b.w * .29)), gp = nar ? 0 : 12, cx = b.x + lw + gp, cwd = b.w - lw - gp,
-    capL = low ? 1 : 2, capH = capL * 11 + 2, ctl = low ? 17 : 20, th = low ? 18 : 22, tut = nar ? th + 5 : 0, hd = nar ? 13 : 0;
-  let vh = Math.round(Math.max(36, Math.min(b.h - hd - capH - 13 - ctl - tut - 2, cwd * 9 / 16))), y = b.y + 1; const vw = Math.round(vh * 16 / 9), vx = Math.round(cx + (cwd - vw) / 2);
+    ctl = low ? 17 : 20, th = low ? 18 : 22, tut = nar ? th + 5 : 0, hd = nar ? 13 : 0, sw = Math.round((b.h - 2) * 16 / 9), side = low && cwd - sw - 10 >= 110;
+  let capL, vh, vw, vx, vy = b.y + 1, ix, iw, iy;
+  if (side) { vh = Math.round(b.h - 2); vw = sw; vx = cx; ix = cx + vw + 10; iw = cx + cwd - ix; iy = vy; capL = Math.max(1, Math.min(5, Math.floor((b.h - hd - 13 - ctl - tut) / 11))) }
+  else { capL = low ? 1 : 2; vh = Math.round(Math.max(36, Math.min(b.h - hd - capL * 11 - 15 - ctl - tut - 2, cwd * 9 / 16))); vw = Math.round(vh * 16 / 9); vx = Math.round(cx + (cwd - vw) / 2); ix = cx; iw = cwd; vy += hd; iy = vy + vh + 4 }
+  const capH = capL * 11 + 2, bx = side ? ix : vx, bw = side ? iw : vw;
   if (!nar) {
     const l = listBegin('gui', b.x, b.y, lw, b.h - th - 6);
     CH.forEach((c, i) => l.row({ label: (i + 1) + '. ' + L(c[0]), raw: true, on: i === ch, fn: () => setCh(i) }, low ? 15 : 18)); listEnd();
     bevelBtn(b.x, b.y + b.h - th, lw, th, 'Play the tutorial game', 'go', playTut, { sc: .8 });
-  } else { pxText((ch + 1) + '/' + n + '  ' + L(C[0]), b.x + b.w / 2, y + 5, 9, KC.gold, { raw: true, al: 'center', max: b.w }); y += hd }
-  video(vx, y, vw, vh); kitHitAdd(vx, y, vw, vh, toggle); y += vh + 4;
-  { const f = capFit(capAt(C, T - TC0), cwd, capL), y0 = y + (capH - f.ls.length * 11) / 2 + 1; f.ls.forEach((s, i) => T_(s, Math.round(cx + cwd / 2 - tw(s, f.sc) / 2), y0 + i * 11, KC.txt, f.sc)); y += capH + 2 }
-  { g.fillStyle = '#05060a'; g.fillRect(vx, y, vw, 4); g.fillStyle = KC.gold; g.fillRect(vx, y, Math.round(vw * cl(T / C[1])), 4); g.fillStyle = 'rgba(255,255,255,.4)'; g.fillRect(vx, y, Math.round(vw * cl(T / C[1])), 1);
-    g.fillStyle = 'rgba(255,255,255,.55)'; for (const q of C[2]) if (q[0]) g.fillRect(vx + Math.round(vw * (q[0] + TC0) / C[1]), y, 1, 4);
-    kitHitAdd(vx, y - 3, vw, 10, () => { T = cl((inputState.mouse.x / hudDisplayState.UIS - vx) / vw) * C[1] * .999 }); y += 9 }
-  bevelBtn(vx, y, 30, ctl, '', 'dark', () => setCh(ch - 1), { ic: glyph(0) }); bevelBtn(vx + 34, y, 30, ctl, '', paused ? 'go' : 'dark', toggle, { ic: glyph(paused ? 1 : 2) }); bevelBtn(vx + 68, y, 30, ctl, '', 'dark', () => setCh(ch + 1), { ic: glyph(3) });
-  pxText(fmt(T) + ' / ' + fmt(C[1]), vx + 106, y + ctl / 2, 8, KC.dim, { raw: true, wt: 500, sh: '' });
-  if (!nar) pxText((ch + 1) + ' / ' + n, vx + vw, y + ctl / 2, 8, KC.dim, { raw: true, wt: 500, sh: '', al: 'right' });
-  else bevelBtn(b.x, y + ctl + 5, b.w, th, 'Play the tutorial game', 'go', playTut, { sc: .85 });
+  } else { pxText((ch + 1) + '/' + n + '  ' + L(C[0]), side ? ix + iw / 2 : b.x + b.w / 2, (side ? iy : b.y + 1) + 5, 9, KC.gold, { raw: true, al: 'center', max: side ? iw : b.w }); if (side) iy += hd }
+  video(vx, vy, vw, vh); kitHitAdd(vx, vy, vw, vh, toggle);
+  let y = iy;
+  { const f = capFit(capAt(C, T - TC0), iw, capL), y0 = y + (capH - f.ls.length * 11) / 2 + 1; f.ls.forEach((s, i) => T_(s, Math.round(ix + iw / 2 - tw(s, f.sc) / 2), y0 + i * 11, KC.txt, f.sc)); y += capH + 2 }
+  { g.fillStyle = '#05060a'; g.fillRect(bx, y, bw, 4); g.fillStyle = KC.gold; g.fillRect(bx, y, Math.round(bw * cl(T / C[1])), 4); g.fillStyle = 'rgba(255,255,255,.4)'; g.fillRect(bx, y, Math.round(bw * cl(T / C[1])), 1);
+    g.fillStyle = 'rgba(255,255,255,.55)'; for (const q of C[2]) if (q[0]) g.fillRect(bx + Math.round(bw * (q[0] + TC0) / C[1]), y, 1, 4);
+    kitHitAdd(bx, y - 3, bw, 10, () => { T = cl((inputState.mouse.x / hudDisplayState.UIS - bx) / bw) * C[1] * .999 }); y += 9 }
+  bevelBtn(bx, y, 30, ctl, '', 'dark', () => setCh(ch - 1), { ic: glyph(0) }); bevelBtn(bx + 34, y, 30, ctl, '', paused ? 'go' : 'dark', toggle, { ic: glyph(paused ? 1 : 2) }); bevelBtn(bx + 68, y, 30, ctl, '', 'dark', () => setCh(ch + 1), { ic: glyph(3) });
+  if (bw >= 170) pxText(fmt(T) + ' / ' + fmt(C[1]), bx + 106, y + ctl / 2, 8, KC.dim, { raw: true, wt: 500, sh: '' });
+  if (!nar && bw >= 220) pxText((ch + 1) + ' / ' + n, bx + bw, y + ctl / 2, 8, KC.dim, { raw: true, wt: 500, sh: '', al: 'right' });
+  if (nar) bevelBtn(side ? ix : b.x, y + ctl + 5, side ? iw : b.w, th, 'Play the tutorial game', 'go', playTut, { sc: .85 });
 }
