@@ -71,6 +71,32 @@ To remove with the bar: the `tutBar(...)` call in `ui/hud.js` (the line `{const 
 `TUT` in `gameplay/traps.js` (and its use in `hintBar`: `if(TUT.on||...)`), the `Tutorial` On / Off row and `tutOn` / `tutSet` in `ui/settings.js`, the localStorage key `dk_tut`,
 the texts `Tutorial {n}/{m}`, `Skip`, and the five step lines. `hintBar` (the three one-line hints) is separate and worth keeping.
 
+## Quest marker (lot 3, display only)
+`ui/quest-marker.js`: a pulsing gold outline with a light gold wash and a small bouncing pixel arrow on the button to press for the active quest.
+Buttons announce themselves while drawn (`qmReg(id,x,y,w,h)`): menu entries in `drawItem` (id = item id), tabs in `drawTabs` (`tab:Name`), King skills in `kingBar` (`sk:cry`).
+The marker is drawn from `questLog()` (already called at the end of the HUD), so `ui/hud.js` has no new hook. Table `STEP` = quest id -> next target from the game state:
+
+| quest | marked, in order |
+|---|---|
+| wood, ore, wave1, wave5, wave10 | nothing (no button; no marker on resources, see below) |
+| house, farm | tab Build if another tab is open, then the entry |
+| barracks, tower, traps, walls | tab Build, then the category button (Town or Defense), then the entry; walls: Wall until 6 stand, then Gate (category Defense) |
+| knights, archers | no barracks of yours: the barracks build path; else arrow over the barracks, then tab Train, then Knight / Archer |
+| market | market build path (Economy); then arrow over the market, tab Trade, the "sell wood" button |
+| guild | guild build path (Town); then arrow over the guild, tab Builders, the "+ builder" button |
+| research | academy build path (Town); then arrow over the academy, tab Research, Iron weapons; nothing while a research runs |
+| king | tab Train of the castle, then the King button (arrow over the castle if another menu is open); nothing once he is queued |
+| skill | the War cry button of the King bar |
+| siege | Masonry not done: academy path then the Masonry entry; done: tab Build, Siege category, Ballista |
+| envoy | embassy build path (Economy); then castle, tab Train, Envoy; nothing once an envoy exists (sending him to a camp is a click in the world) |
+| convoy | castle, tab Co-op, Convoy |
+
+Rules: a wrong category open marks its Back button; while the player is placing the building of the quest nothing is marked; with units selected only entries that are on screen are marked.
+Shown when quests are on, also when the panel is folded (folding hides the text, not the guidance; turning quests off removes both). Hidden in test mode (F10), game over, pause, world map, quest log open.
+Co-op: each player is guided with their own buildings (a barracks of the partner does not count for "click your barracks").
+Render only: real-time pulse (`performance.now`), no simulation state, nothing saved or hashed; `det` hashes equal those of release-v84.
+Not done: marker on a tree / rock / gold vein for the gathering quests (needs a search of resource tiles in view every frame; skipped), marker on the rebel camp for the envoy, on the tower for the ballista.
+
 ## Not covered
 - Found, not fixed: in `ui/hud.js` the calls `objBar`, `kingBar`, `tutBar`, `hintBar` sit inside the `if(wavesState.WAVEZ>0&&!sessionState.over){...}` block (its brace closes after `hintBar`, since the module migration a022204), so the co-op goals line, the King buttons, the tutorial bar and the hints are drawn only during a raid. The quest panel is outside that block. Moving one brace fixes it; left to the coordinator because it changes what every player sees.
 - The convoy quest was not played in a real two-castle co-op game (the two-client tests do not send a convoy with quests that far).

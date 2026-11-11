@@ -36,6 +36,7 @@ import { mpHash, mpMsg, setMpMsgHandler } from '../multiplayer/lockstep.js';
 import { objTick, SPK } from '../multiplayer/objectives.js';
 import { qCur, qFix, QUESTS, questsState } from '../gameplay/quests.js';
 import { questPanelState } from '../ui/quest-panel.js';
+import { tabState } from '../ui/build-menu.js';
 import { MP } from '../multiplayer/session.js';
 import { svApply } from '../persistence/restore.js';
 import { SAVA, svAssign, svPack } from '../persistence/save-format.js';
@@ -142,6 +143,7 @@ export function installBrowserConsole() {
     qCur: { get: () => qCur },
     qFix: { get: () => qFix },
     questPanelState: { get: () => questPanelState },
+    tabState: { get: () => tabState },
     SW: { get: () => SW },
     T: { get: () => T },
     TFL: { get: () => TFL },

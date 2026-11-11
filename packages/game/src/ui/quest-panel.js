@@ -8,6 +8,7 @@ import { BTN, BTNH, CHAT, frame, GRN, GRNH, PAN, RDB, UIT } from './drawing.js';
 import { hudState, U } from './hud.js';
 import { kitFrame } from './menu-kit.js';
 import { pill } from './minimap.js';
+import { questMarker } from './quest-marker.js';
 import { settingsState } from './settings.js';
 import { btnReset } from './typography.js';
 
@@ -53,7 +54,7 @@ export function questPanel(UW,UH){if(!qActive()||sessionState.over||sessionState
  T_('Reward',x+7,yy+12,'#9aa3b4',.7);T_(rt,x+11+tw('Reward',.7),yy+12,rc,.7)}
 
 /* the log: every quest by chapter, done / active / to come, the reward of each, and the On / Off and panel buttons */
-export function questLog(UW,UH){if(!questPanelState.log)return;const Q=questsState.Q;if(!Q||sessionState.over){questPanelState.log=false;return}
+export function questLog(UW,UH){questMarker(UW,UH,questPanelState.log);if(!questPanelState.log)return;const Q=questsState.Q;if(!Q||sessionState.over){questPanelState.log=false;return}
  const g=canvasesState.ctx,LS=qList(),N=LS.length,nd=count(LS,Q),cur=qCur();g.fillStyle='rgba(5,8,16,.78)';g.fillRect(0,0,UW,UH);hudState.uiHits=[];hudState.uiRects=[U(0,0,UW,UH)];btnReset();/* texts of the log must not take the ink of HUD buttons lying under it */
  const rows=[];let lc=-1;for(const q of LS){if(q.c!==lc){lc=q.c;rows.push({h:q.c})}rows.push({q})}
  const availH=UH-12-30-44,cols=availH/rows.length<11&&UW>=440?2:1,per=Math.ceil(rows.length/cols),w=Math.min(UW-12,cols===2?600:330),rh=Math.max(8,Math.min(13,Math.floor(availH/per))),sc=Math.min(.85,rh/13),
