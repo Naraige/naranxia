@@ -11,7 +11,7 @@ The biggest Naranxia update so far: a new look for the whole game, a deeper last
 - New unit: the Spearman, a cheap line holder with reach, strong against brutes and bosses.
 - The tutorial is now a video-style guide with short looping clips.
 - Last bastion: ruins to loot, rebel camps with personalities, envoys and tribute, scouts, engineers and eleven new buildings.
-- New events: wolf packs, eclipses, blood moons, caravans and meteor showers. Caravans and envoys ask you to choose.
+- New events: wolf packs, eclipses and meteor showers. Caravans and rebel envoys now ask you to choose.
 - Named bosses with legends and powers, a realm journal in the Chronicle.
 - The King gains XP, levels up to 5 and learns talents in two branches.
 - Research with either-or paths, and barter at the market.

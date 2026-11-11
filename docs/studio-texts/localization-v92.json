@@ -1,0 +1,8 @@
+{
+"Swap 50 {0} for {1}":["Échanger 50 {0} contre {1}","Cambiar 50 {0} por {1}","50 {0} gegen {1} tauschen","Scambia 50 {0} con {1}","Trocar 50 {0} por {1}"],
+"Swapped 50 {0} for {1} {2}":["50 {0} échangés contre {1} {2}","50 {0} cambiados por {1} {2}","50 {0} gegen {1} {2} getauscht","50 {0} scambiati con {1} {2}","50 {0} trocados por {1} {2}"],
+"You get {0} wood":["Vous obtenez {0} bois","Obtienes {0} madera","Du erhältst {0} Holz","Ottieni {0} legno","Recebe {0} madeira"],
+"You get {0} stone":["Vous obtenez {0} pierre","Obtienes {0} piedra","Du erhältst {0} Stein","Ottieni {0} pietra","Recebe {0} pedra"],
+"You get {0} food":["Vous obtenez {0} nourriture","Obtienes {0} comida","Du erhältst {0} Nahrung","Ottieni {0} cibo","Recebe {0} comida"],
+"Saving...":["Sauvegarde...","Guardando...","Speichert...","Salvataggio...","A guardar..."]
+}
