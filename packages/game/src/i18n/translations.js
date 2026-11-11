@@ -856,6 +856,7 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v92 */
 Object.assign(TRD,{
+"Update":["Mise à jour","Actualización","Update","Aggiornamento","Atualização"],
 "Leaderboard":["Classement","Clasificación","Rangliste","Classifica","Classificação"],
 "Top 10 kingdoms":["Top 10 des royaumes","Top 10 de reinos","Top 10 der Königreiche","Top 10 dei regni","Top 10 dos reinos"],
 "Change":["Changer","Cambiar","Ändern","Cambia","Mudar"],

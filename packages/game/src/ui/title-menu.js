@@ -95,8 +95,8 @@ function drawLobby(UW,UH){const g=canvasesState.ctx,nar=UW<480,low=UH<300,m=nar?
  if(!nar&&!low&&best&&best.w>0){let x=lx+2;const cnt=(ic,val,lab)=>{hexBadge(x+10,y+11,10,ic);const w1=pxText(val,x+25,y+7,13,'#ffe39a',{raw:true}),w2=tw(lab,.72);T_(lab,x+25,y+14,'#b8c4d8',.72);x+=25+Math.max(w1,w2)+14};
   cnt('crown',String(best.w),'Best wave');cnt('skull',String(best.k),'Zombies slain');if(run)cnt('glass',String(run.w),'Last game')}
  /* --- season card: version, season of the last game, What's new / Records / Chronicle --- */
- const items=[['Leaderboard',()=>{recOpen=true}],['Chronicle',()=>{chrOpen=true}]];if(GNOTES)items.unshift(['What\'s new',openNotes,notesNew()]);
- const cw=nar?UW-2*m:Math.min(184,UW*.3),cx0=nar?m:UW-m-cw,cy0=nar?y+2:30,rh=nar||low?16:18,ch=31+items.length*(rh+2)+5;
+ const items=[['Leaderboard',()=>{recOpen=true}],['Chronicle',()=>{chrOpen=true}]];if(GNOTES)items.unshift(['Update',openNotes,notesNew()]);
+ const cw=nar?UW-2*m:Math.min(184,UW*.3),cx0=nar?m:UW-m-cw,cy0=nar?y+2:30,rh=nar||low?16:18,lbR=11;let ch=31+items.length*(rh+2)+5,lbN=0,lbRuns=[];
  /* --- bottom left: Continue, mode band, Play --- */
  const pw=nar?UW-2*m:Math.min(214,Math.max(170,UW*.33)),px=nar?m:m+6,ph=low?30:nar?34:40,
   key=[['Load game','l',()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null}],['Tutorial','t',()=>{try{localStorage.removeItem('dk_tut')}catch(e){}settingsState.setupOpen=true}],['Options','o',()=>{settingsState.settingsOpen=true}],[sndOn?'Sound: on':'Sound: off','',()=>{toggleSound()}],['','',()=>{languageState.langOpen=true},1]];
@@ -106,6 +106,7 @@ function drawLobby(UW,UH){const g=canvasesState.ctx,nar=UW<480,low=UH<300,m=nar?
  if(nar){const hw=Math.floor((avail-kg)/2);for(let i=0;i<key.length;i+=2)rows.push(key.slice(i,i+2).map((k,j,a)=>[k,a.length===1?avail:j?avail-hw-kg:hw]))}
  else{let cur=[],wsum=0;key.forEach((k,i)=>{if(cur.length&&wsum+kw[i]>avail){rows.push(cur);cur=[];wsum=0}cur.push([k,kw[i]]);wsum+=kw[i]+kg});if(cur.length)rows.push(cur)}
  const kTop=UH-m-(nar?2:4)-rows.length*(kh+kg)+kg,py=nar?kTop-8-ph:UH-m-4-ph,by=py-21,cy1=by-28;
+ if(!nar){const ch2=ch-(rh+2),room=kTop-8-(cy0+ch2+6)-(rh+15);lbN=Math.min(10,Math.floor(room/lbR));if(lbN>=3){ch=ch2;lbRuns=topRuns().slice(0,lbN)}else lbN=0}
  g.globalAlpha=ent(.35,1);
  NAV.keys={};
  if(saveMenuState.last){const s=saveMenuState.last,wv=/^Wave (\d+)/.exec(String(s.name));bevelBtn(px,cy1,pw,23,'Continue','gold',continueLast,{sub:wv?L('Wave '+wv[1]):null})}
@@ -128,7 +129,14 @@ function drawLobby(UW,UH){const g=canvasesState.ctx,nar=UW<480,low=UH<300,m=nar?
   pxText(GVER,cx0+8,cy0+9,9,KC.gold,{raw:true});T_(wl,cx0+cw-8-tw(wl,.78),cy0+5,run?titleSeasonColor():SEASC[0],.78);
   g.fillStyle='#0c0d12';g.fillRect(cx0+8,cy0+18,cw-16,5);g.fillStyle=SEASC[si];g.fillRect(cx0+8,cy0+18,Math.round((cw-16)*prog),5);g.fillStyle='rgba(255,255,255,.35)';g.fillRect(cx0+8,cy0+18,Math.round((cw-16)*prog),1);
   for(let i=1;i<4;i++){g.fillStyle='rgba(0,0,0,.5)';g.fillRect(cx0+8+Math.round((cw-16)*i/4),cy0+18,1,5)}
-  let ry=cy0+29;for(const it of items){kitRow(cx0+5,ry,cw-10,rh,{label:it[0],fn:it[1],sc:.82,right:it[2]?(rx,yy,hh)=>newPill(rx,yy+hh/2,true)+2:null});ry+=rh+2}}
+  let ry=cy0+29;for(const it of items){if(lbN&&it[0]==='Leaderboard')continue;kitRow(cx0+5,ry,cw-10,rh,{label:it[0],fn:it[1],sc:.82,right:it[2]?(rx,yy,hh)=>newPill(rx,yy+hh/2,true)+2:null});ry+=rh+2}
+  if(lbN){/* leaderboard card: title row (opens the full screen) and a preview of the top 10 */
+   const ly=cy0+ch+6,lh=rh+10+Math.max(1,lbRuns.length)*lbR+5,open=()=>{recOpen=true};kitCard(cx0,ly,cw,lh);kitRow(cx0+5,ly+4,cw-10,rh,{label:'Leaderboard',fn:open,sc:.82});
+   g.fillStyle='rgba(184,149,76,.35)';g.fillRect(cx0+8,ly+rh+6,cw-16,1);let yy=ly+rh+10+lbR/2;
+   if(!lbRuns.length)T_('No record yet',cx0+9,yy-5,'#c4a37a',.72);
+   lbRuns.forEach((e,i)=>{const c=i?'#b8c4d8':'#ffe39a',rw=pxText('#'+(i+1),cx0+9,yy,8,i?'#8f96a6':'#e9b93c',{raw:true}),ww=pxText('Wave '+e.w,cx0+30,yy,8,c);void rw;
+    pxText(e.n||(e.k+''),cx0+cw-9,yy,8,i?'#c4a37a':'#e9b93c',{raw:true,al:'right',max:cw-48-ww});yy+=lbR});
+   hudState.uiHits.push({...U(cx0,ly+rh+6,cw,lh-rh-6),fn:open,tip:null})}}
  else{/* very small screens: the three links as one row of compact buttons */
   const n=items.length,w1=Math.floor((cw-kg*(n-1))/n);items.forEach((it,i)=>bevelBtn(cx0+i*(w1+kg),cy0,w1,16,it[0],'dark',it[1],{sc:.9}))}
  /* --- hints --- */
@@ -157,16 +165,19 @@ function drawGameMenu(UW,UH,fh){NAV.onEsc=startGame;navBegin(!MP.on);NAV.first=f
  navEnd()}
 
 /* ================= Records ================= */
+/* the ten best games stored on this device (dk_sb), best score first */
+let TOPR=null,TOPT=-9;
+function topRuns(){if(TOPR&&Math.abs(sessionState.clockT-TOPT)<3)return TOPR;let runs=[];try{const all=JSON.parse(localStorage.getItem('dk_sb')||'{}');for(const k in all)for(const e of all[k])if(e&&e.w>=0)runs.push(e)}catch(e){}
+ runs.sort((a,b2)=>b2.s-a.s);TOPT=sessionState.clockT;return TOPR=runs.slice(0,10)}
 function drawRecords(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'rec',title:'Leaderboard',close:back,fh,maxW:460}),l=listBegin('rec',b.x,b.y,b.w,b.h),bs=sessionState.best,r=lastRun();
- let runs=[];try{const all=JSON.parse(localStorage.getItem('dk_sb')||'{}');for(const k in all)for(const e of all[k])if(e&&e.w>=0)runs.push(e)}catch(e){}
- runs.sort((a,b2)=>b2.s-a.s);runs=runs.slice(0,10);
+ const runs=topRuns();
  if(!(bs&&bs.w>0)&&!r&&!runs.length){l.gap(6);l.para('No record yet','#c4a37a',.9)}
  if(runs.length){l.section('Top 10 kingdoms');runs.forEach((e,i)=>l.row({label:'Wave '+e.w+'   '+e.k+' kills',value:e.n||'',vcol:i?'#c4a37a':'#e9b93c',vsc:.8,tag:['#'+(i+1),i?'#8f96a6':'#e9b93c'],block:1},18))}
  if(r){l.section('Last game');l.row({label:'Last game: wave '+r.w+'  -  '+r.k+' zombies slain',value:titleWeatherLabel(),vcol:titleSeasonColor(),vsc:.78,ic:(x,y,s)=>hexBadge(x+s/2,y+s/2,s/2-1,'glass'),block:1},22)}
  listEnd()}
 
 /* ================= What's new ================= */
-function drawNotes(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'not',title:'What\'s new',close:back,fh,maxW:500}),l=listBegin('not',b.x,b.y,b.w,b.h);
+function drawNotes(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'not',title:'Update',close:back,fh,maxW:500}),l=listBegin('not',b.x,b.y,b.w,b.h);
  const items=String(GNOTES||'').split('\n').map(s=>s.replace(/^\s*[-*]\s*/,'').trim()).filter(Boolean);
  l.section(GVER);for(const it of items)l.para(it,'#ead8ba',.88,true);
  listEnd()}
