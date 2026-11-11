@@ -98,18 +98,26 @@ with sync_playwright() as p:
     waitT(5);both('after iron')
     P('B plate',B.evaluate("()=>{selB=structs.find(s=>s.type==='academy'&&(s.pl|0)===1);buy('plate');return MP.out.length}"))
     waitT(6);both('after plate')
+    # quest line: shared, same state on both machines, the switch is a command (guest turns it off, host turns it on again).
+    # Done here, while the kingdom stands: once the game is over the lockstep stops and no command runs any more.
+    # Waits on the simulation, not on the clock: until the command has run on both machines, within a tick budget (a loaded machine ticks slowly).
+    TQ="()=>JSON.stringify({t:MP.tick,on:QST.on,over:over,ds:MP.desync,stall:MP.stall})"
+    QS="()=>JSON.stringify({v:QST.v,on:QST.on,d:QST.d,e:QST.e,last:QST.last})"
+    def qswitch(pg,on,name):
+        t_push=json.loads(A.evaluate(TQ))['t'];pg.evaluate("(on)=>{questSwitch(!!on)}",on);t0=time.time();k=0
+        while True:
+            pump(A,B);k+=1
+            if k%10==0:
+                check();sa=json.loads(A.evaluate(TQ));sb=json.loads(B.evaluate(TQ))
+                if (sa['on']==on and sb['on']==on) or sa['over'] or sa['t']-t_push>900 or time.time()-t0>240:break
+        P('quests',name,'sets',on,'seen after',sa['t']-t_push,'ticks',round(time.time()-t0,1),'s','A',json.dumps(sa),'B',json.dumps(sb))
+        return sa['on']==on and sb['on']==on and A.evaluate(QS)==B.evaluate(QS)
+    on0=json.loads(A.evaluate(QS))['on'];ok1=qswitch(B,0,'guest');ok2=qswitch(A,1,'host')
+    okq=on0==1 and ok1 and ok2 and bad[0] is None
+    P('QUESTS','OK' if okq else 'FAIL','start on',on0,'off',ok1,'on again',ok2,A.evaluate(QS)[:200])
+    if not okq:ea.append('quest state differs or switch command failed')
     P('wave',B.evaluate("()=>{callWave();return MP.out.length}"))
     P('B masonry',B.evaluate("()=>{selB=structs.find(s=>s.type==='academy'&&(s.pl|0)===1);buy('upgrade');return MP.out.length}"))
     waitT(DUR);both('end')
-    # quest line: shared, same state on both machines, the switch is a command sent by the guest
-    QJ="()=>JSON.stringify({q:QST,res:RESP.map(R=>Math.round(R.g)+'/'+Math.round(R.w)+'/'+Math.round(R.s)+'/'+Math.round(R.f||0))})"
-    qa=A.evaluate(QJ);qb=B.evaluate(QJ);P('quests A',qa[:400]);n_done=len(json.loads(qa)['q']['d'])
-    P('B quests off',B.evaluate("()=>{questSwitch(false);return MP.out.length}"));waitT(4)
-    # the gather counters move every tick and the two pages are read at different ticks: compare what is stable (the lockstep hash covers the rest)
-    st=lambda j:{k:json.loads(j)['q'][k] for k in ('v','on','d','e','last')}
-    qa2=st(A.evaluate(QJ));qb2=st(B.evaluate(QJ))
-    okq=st(qa)['on']==1 and qa2==qb2 and qa2['on']==0 and bad[0] is None
-    P('QUESTS','OK' if okq else 'FAIL','done',n_done,'on A',qa2['on'],'on B',qb2['on'],'same',qa2==qb2)
-    if not okq:ea.append('quest state differs or switch command failed')
     P('ERRS',ea[:3],eb[:3])
     for br in brs:br.close()

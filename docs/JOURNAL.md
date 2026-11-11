@@ -4,11 +4,25 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · quests lot 3 merged: button marker, mp8 test fixed (not released)
+
+- Merged `worktree-agent-a42328e0c65a6fedd` (50f526a): `ui/quest-marker.js`, render only (gold pulse + arrow on the button of the active quest, or on what opens it). Agent's entry below.
+- `mp8` failure after lot 2 explained: the test sent the `qs` switch after the kingdom had fallen (lockstep stopped); the test now sends it before the wave and waits on ticks. Agent: `quests det mp8` PASS, `det` hashes unchanged.
+- After merge: build and push; GitHub runs the quick suite on the branch.
+- Left: remove the tutorial bar (after the video guide), spearman, full pass. King may want a stronger marker on tabs.
+
 ## 2026-11-11 · v92 mega update announcement drafted (not released)
 
 - The King: prepare the mega update announcement with everything pushed since the GitHub cut, sent the way the system does at the next update.
 - `docs/release-v92/NOTES.md` rewritten (look, new to play, comfort); `README.md` there says how it ships (copied to `game/NOTES.md`, posted by `release.yml` through `tools/announce.sh` with `announce/img/v92/`). Old `announce-v92.md` draft removed (duplicate).
 - Before release: confirm bullets for spearman, video guide, quest marker (in progress), retake the 4 screenshots (they predate the new looks), King's go-ahead after the full pass.
+## 2026-11-11 · quêtes lot 3: repère sur le bouton à presser (branche hd-gameplay, non fusionné, non livré)
+- Demande du Roi: un repère visuel sur le bouton de la quête active. `ui/quest-marker.js` (nouveau, affichage seul): contour or qui pulse + petite flèche qui rebondit, sur l'entrée du menu, sinon sur l'onglet ou la catégorie qui l'ouvre, sinon flèche au-dessus du bâtiment à cliquer. Table quête -> cible dans `docs/studio-notes/quests.md`.
+- Crochets: une ligne dans `drawItem` et `drawTabs` (`ui/build-menu.js`), une dans `kingBar` (`gameplay/king-skills.js`), appel depuis `questLog` (`ui/quest-panel.js`); `ui/hud.js`, `ui/tutorial.js`, `ui/title-menu.js` non touchés. Aucun texte nouveau.
+- Choix: repère visible même panneau replié; caché si quêtes éteintes, F10, fin de partie, pause, carte, journal ouvert. Pas de repère sur les ressources (récolte) ni sur le camp rebelle.
+- `mp8` (échec vu par le coordinateur après fusion du lot 2): cause = la partie était finie (`over` vrai, château tombé) quand le test envoyait la commande `qs` en fin de test; le lockstep ne tourne plus, la commande ne s'exécute jamais. Ni la charge ni la commande. Test corrigé: bascule envoyée avant la vague, attente sur les ticks (invité coupe: vu après 19 ticks; hôte rallume: 8 ticks).
+- Vérifié: build; `quests`, `det` PASS, hachages `det` identiques à release-v84 (journal du dépôt principal); `mp8` PASS; 3 captures 1280x720 (`dist/qs/m1.png` onglet Build, `m2.png` entrée Maison, `m3.png` bouton Chevalier).
+- Non vérifié: flèche au-dessus d'un bâtiment (non capturée), boutons du Roi, marché, guilde, recherche, convoi (même mécanisme, non regardés), écrans étroits / tactile, co-op à l'œil.
 
 ## 2026-11-11 · quests lot 2 merged, HUD bars fix (not released)
 
