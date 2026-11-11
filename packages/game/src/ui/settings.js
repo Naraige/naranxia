@@ -2,6 +2,8 @@ import { cbOn, cbSet, pref, setPref } from '../core/prefs.js';
 import { applyVol, saveVol, snd, sndOn, soundState, toggleSound } from '../audio/sound.js';
 import { startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
+import { qSetOn, questsPref, questsState } from '../gameplay/quests.js';
+import { MP } from '../multiplayer/session.js';
 import { LANG, LANGS, languageState, T_, tw } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { saveTheme } from '../rendering/kingdom-banner.js';
@@ -75,7 +77,7 @@ export function drawSettings(UW,UH,fh,back){const tb=setTab===2?1:setTab,TABS=[[
   tog(l,'Colour-blind mode',cbOn(),v=>{cbSet(v);applyCB()})}
  else{l.section('General');
   l.row({label:'Language',value:LANGS[LANG][0],raw:false,fn:()=>{languageState.langOpen=true;settingsState.settingsOpen=false}});
-  tog(l,'Tutorial',tutOn(),tutSet);prow(l,'Pause when away','ap',true);prow(l,'Autosave','as',true);
+  tog(l,'Tutorial',tutOn(),tutSet);tog(l,'Quests',questsState.Q&&sessionState.inGame&&!MP.on?!!questsState.Q.on:questsPref(),qSetOn);prow(l,'Pause when away','ap',true);prow(l,'Autosave','as',true);
   {const on=pref('qi',false);l.row({label:'Studio intro',opts:[['First launch only',on,()=>setPref('qi',true)],['Every launch',!on,()=>setPref('qi',false)]],fn:()=>setPref('qi',!on)})}
   l.section('Accessibility');prow(l,'Reduce motion','rm',false);
   l.section('Help');

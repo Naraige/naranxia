@@ -1,4 +1,5 @@
 import { NAV } from '../ui/menu-nav.js';
+import { questPanelState } from '../ui/quest-panel.js';
 import { kitTouchCancel, kitTouchEnd, kitTouchMove, kitTouchStart, kitWheel } from '../ui/menu-kit.js';
 import { rangeOf } from '../ai/kingdoms.js';
 import { SAPL, wkOf, WKT } from '../ai/workplaces.js';
@@ -99,7 +100,7 @@ export function initializeDesktopInput() {
    if(!sessionState.started){if(k==='escape'){if(settingsState.settingsOpen){settingsState.settingsOpen=false;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}}else if(sitePickerState.picking){sitePickerState.picking=false;if(MP.conn)lobbyShow()}else if(settingsState.setupOpen)settingsState.setupOpen=false}else if(k==='enter'&&!settingsState.settingsOpen){e.preventDefault();if(NAV.active&&!sitePickerState.picking)return;if(sitePickerState.picking)confirmPick();else if(settingsState.setupOpen)openPicker();else if(sessionState.inGame)startGame();else settingsState.setupOpen=true}else if(sitePickerState.picking&&k===KB.rotate&&!settingsState.settingsOpen)pkRotate();return}
    if(sessionState.over)return;
    if((k==='pagedown'||k==='pageup')&&!e.ctrlKey&&!e.altKey&&!e.metaKey){if(cycleTab(k==='pagedown'?1:-1))e.preventDefault();return}
-   if(k==='escape'){if(sessionState.showMap)sessionState.showMap=false;else if(sessionState.mode||sel().length){sessionState.mode=null;sessionState.units.forEach(u=>u.sel=false)}else if(buildMenuState.BCAT)buildMenuState.BCAT=null;else openMenu();return}
+   if(k==='escape'){if(questPanelState.log)questPanelState.log=false;else if(sessionState.showMap)sessionState.showMap=false;else if(sessionState.mode||sel().length){sessionState.mode=null;sessionState.units.forEach(u=>u.sel=false)}else if(buildMenuState.BCAT)buildMenuState.BCAT=null;else openMenu();return}
    if(!e.ctrlKey&&!e.shiftKey&&!e.metaKey&&['1','2','3','4'].includes(k)&&sel().some(u=>u.type!=='peasant')){setStance(['agg','def','hold','stop'][+k-1]);return}
    const a=Object.keys(KB).find(x=>KB[x]===k);if(!a)return;if(k.length===1&&!/[a-z0-9]/.test(k))e.preventDefault();
    if(a==='map'){sessionState.showMap=!sessionState.showMap;return}

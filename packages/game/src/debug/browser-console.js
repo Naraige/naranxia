@@ -34,6 +34,8 @@ import { convoyStep, setConvoyStepHandler } from '../multiplayer/convoys.js';
 import { mpStart, mpWorldSync } from '../multiplayer/lobby.js';
 import { mpHash, mpMsg, setMpMsgHandler } from '../multiplayer/lockstep.js';
 import { objTick, SPK } from '../multiplayer/objectives.js';
+import { qSetOn, QUESTS, questsState } from '../gameplay/quests.js';
+import { questPanelState } from '../ui/quest-panel.js';
 import { MP } from '../multiplayer/session.js';
 import { svApply } from '../persistence/restore.js';
 import { SAVA, svAssign, svPack } from '../persistence/save-format.js';
@@ -131,6 +133,10 @@ export function installBrowserConsole() {
     SEED: { get: () => terrainState.SEED, set: value => { terrainState.SEED = value; } },
     SITE2: { get: () => sessionState.SITE2, set: value => { sessionState.SITE2 = value; } },
     SPK: { get: () => SPK },
+    QST: { get: () => questsState.Q, set: value => { questsState.Q = value; } },
+    QUESTS: { get: () => QUESTS },
+    qSetOn: { get: () => qSetOn },
+    questPanelState: { get: () => questPanelState },
     SW: { get: () => SW },
     T: { get: () => T },
     TFL: { get: () => TFL },

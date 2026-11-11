@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · quêtes pour guider un nouveau joueur (branche hd-gameplay, non fusionné, non livré)
+- Demande du Roi: « add quest in game to guide new player ». 16 quêtes en 6 chapitres, une active à la fois: bois, pierre et or, maison, ferme, caserne, 2 chevaliers, 2 archers, 6 murs + porte, tour, 3 pièges, vague 1, académie + recherche, Roi, compétence du Roi, vague 5, vague 10. Liste, récompenses et règles: `docs/studio-notes/quests.md`.
+- Code: `gameplay/quests.js` (état `questsState.Q`, `qBegin`/`qTick` dans l'enveloppe `update` de `statistics.js`), `ui/quest-panel.js` (panneau en haut à gauche, journal des quêtes, bouton replié), petits crochets dans `hud.js`, `reset.js`, `save-format.js` (`SAVA.QST`), `restore.js`, `settings.js` (ligne Quests On/Off), `input/desktop.js` (Échap ferme le journal). `ui/tutorial.js` et `ui/title-menu.js` non touchés.
+- Décisions: solo seulement (`qTick` ne fait rien si `MP.on`), rien en mode test F10, ancienne sauvegarde sans `QST` = quêtes éteintes. Récompenses au total 540 or, 120 bois, 40 pierre, 80 nourriture (avant la vague 1: 130 or, 120 bois, 40 pierre, 30 nourriture).
+- Textes: 54 clés dans le bloc v92 (`docs/studio-texts/quests.json`), 6 langues; NL, PL, TR retombent sur l'anglais.
+- Vérifié: `npm run build`; `quests` (nouveau test, dans la suite rapide), `det`, `features`, `mp8` PASS; les 8 hachages de `det` identiques à ceux du dépôt principal (`det` tourne avec `MP.on`, les quêtes n'y bougent pas); `save` PASS (same0 vrai, sameCont faux connu). Deux captures 1280x720 (panneau, journal) dans `dist/qs/`.
+- Non vérifié: `mpk`, `mp_resync`, `smoke`, `fitcheck`, écrans étroits et tactile, les 5 autres langues à l'œil. Machine partagée très chargée: plusieurs tests ont dû être relancés (délai de chargement de page).
+- Reste au Roi: quêtes en co-op ou non, garder ou retirer la barre Tutorial en 5 étapes (double emploi), montants, ordre.
+
 ## 2026-11-11 · monde en blocs look B fusionné et allumé (réponse du Roi « 1B … 9B »), non livré
 - Le Roi a répondu 1B à 9B (planche blocs): branche fusionnée, `blocksState.on=true` par défaut (`rendering/blocks.js`), BLK=DBLK=0,5, terrain, décor, textures bâtiments et saisons allumés.
 - Rendu seulement, simulation intacte. Tests après fusion: smoke det tools mp8 mpk ALL PASS (`dist/merge_tests10.txt`); une capture du village avec mutants, armes et blocs allumés, sans erreur; build de test republié.
