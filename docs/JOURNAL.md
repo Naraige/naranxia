@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · quests merged (not released)
+
+- Merged `worktree-agent-a42328e0c65a6fedd` (commit c3d0612): 16 solo quests in 6 chapters, state in `SAVA.QST`, panel top left, log, Settings > Game switch. Details in the agent's entry below and `docs/studio-notes/quests.md`.
+- Agent verified: build, `quests` (new, in the quick suite), `det`, `features`, `mp8`, `save`. After merge: see `dist/merge_tests11.txt`.
+- Left to the King: quests in co-op or not, keep the 5-step tutorial bar or not, amounts / order / names, quests for market, guild, siege, envoy.
+- Still running: video guide (`aaffcd280bd956aae`), spearman (`a32a61bc6cb6d6ef9`). After them the King asked for a full pass: improve and test everything.
+
 ## 2026-11-11 · bannière C (gonfanon sur mât) fusionnée et allumée (réponse du Roi « 1C 2C 3C »), non livré
 - `BANNER2='C'` dans `rendering/banner-icon.js`: petite icône (HUD, sauvegardes) et grande bannière (carte du royaume). `npm run build:release` fait, build de test republié.
 - Non relancé: tests (aucun fichier de simulation touché). Reste: bannières de pierre 3D sur l'ancien dessin, emblème illisible à 16 px, or sur or peu contrasté (`docs/studio-notes/banner.md`).
@@ -19,6 +26,14 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Planche `docs/studio-boards/banner/board.html` (3 lignes + référence du porte-étendard en jeu), `rows.json`; détail et constat: `docs/studio-notes/banner.md`. En attente du code du Roi.
 - Vérifié: `npm run build`; 24 captures du jeu sans erreur (4 variantes x 3 royaumes sur Nouveau royaume, sauvegardes, HUD, 16 et 32 px); feuille des 16 emblèmes x 3 variantes regardée une fois. Interrupteur éteint: `bannerIcon()` rend le canevas `BANNER` lui-même, mêmes rectangles.
 - Non vérifié: `npm test` (aucun fichier de simulation touché), vrai GPU, mobile, co-op. Non traité: texture 3D des bannières de pierre (reste A), pastilles d'emblème du menu (vectorielles), emblème or sur motif or peu contrasté.
+## 2026-11-11 · quêtes pour guider un nouveau joueur (branche hd-gameplay, non fusionné, non livré)
+- Demande du Roi: « add quest in game to guide new player ». 16 quêtes en 6 chapitres, une active à la fois: bois, pierre et or, maison, ferme, caserne, 2 chevaliers, 2 archers, 6 murs + porte, tour, 3 pièges, vague 1, académie + recherche, Roi, compétence du Roi, vague 5, vague 10. Liste, récompenses et règles: `docs/studio-notes/quests.md`.
+- Code: `gameplay/quests.js` (état `questsState.Q`, `qBegin`/`qTick` dans l'enveloppe `update` de `statistics.js`), `ui/quest-panel.js` (panneau en haut à gauche, journal des quêtes, bouton replié), petits crochets dans `hud.js`, `reset.js`, `save-format.js` (`SAVA.QST`), `restore.js`, `settings.js` (ligne Quests On/Off), `input/desktop.js` (Échap ferme le journal). `ui/tutorial.js` et `ui/title-menu.js` non touchés.
+- Décisions: solo seulement (`qTick` ne fait rien si `MP.on`), rien en mode test F10, ancienne sauvegarde sans `QST` = quêtes éteintes. Récompenses au total 540 or, 120 bois, 40 pierre, 80 nourriture (avant la vague 1: 130 or, 120 bois, 40 pierre, 30 nourriture).
+- Textes: 54 clés dans le bloc v92 (`docs/studio-texts/quests.json`), 6 langues; NL, PL, TR retombent sur l'anglais.
+- Vérifié: `npm run build`; `quests` (nouveau test, dans la suite rapide), `det`, `features`, `mp8` PASS; les 8 hachages de `det` identiques à ceux du dépôt principal (`det` tourne avec `MP.on`, les quêtes n'y bougent pas); `save` PASS (same0 vrai, sameCont faux connu). Deux captures 1280x720 (panneau, journal) dans `dist/qs/`.
+- Non vérifié: `mpk`, `mp_resync`, `smoke`, `fitcheck`, écrans étroits et tactile, les 5 autres langues à l'œil. Machine partagée très chargée: plusieurs tests ont dû être relancés (délai de chargement de page).
+- Reste au Roi: quêtes en co-op ou non, garder ou retirer la barre Tutorial en 5 étapes (double emploi), montants, ordre.
 
 ## 2026-11-11 · monde en blocs look B fusionné et allumé (réponse du Roi « 1B … 9B »), non livré
 - Le Roi a répondu 1B à 9B (planche blocs): branche fusionnée, `blocksState.on=true` par défaut (`rendering/blocks.js`), BLK=DBLK=0,5, terrain, décor, textures bâtiments et saisons allumés.
