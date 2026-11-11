@@ -310,7 +310,7 @@ function capFit(s, w, lines) {
 
 const setCh = i => { ch = (i + CH.length) % CH.length; T = 0; paused = false };
 const toggle = () => { paused = !paused };
-const playTut = () => { guideState.open = false; try { localStorage.removeItem('dk_tut') } catch (e) { } settingsState.setupOpen = true };
+const playTut = () => { guideState.open = false; settingsState.setupOpen = true };
 export function openGuide() { guideState.open = true; ch = 0; T = 0; paused = false; lastT = performance.now() }
 
 function init() {

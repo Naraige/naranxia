@@ -7,8 +7,8 @@ Request of the King, word for word: "make the tutorial more like a video guide".
 The Tutorial button (key T) of the title menu now opens a player screen (`ui/video-guide.js`, `drawGuide`) built with the menu kit:
 chapters on the left (`listBegin` rows, the current one lit), the "video" on the right with a caption under it, a progress bar with a tick at
 each caption change, previous / play-pause / next, the clip time and the chapter count. Chapters follow each other by themselves and loop.
-"Play the tutorial game" (under the list) does what the Tutorial button did before: clears `dk_tut` and opens New kingdom, so the five
-self-completing steps of `ui/tutorial.js` still run in the first solo game. `ui/tutorial.js` itself is unchanged.
+"Play the tutorial game" (under the list) opens New kingdom; the first game is then guided by the quests (`gameplay/quests.js`).
+The old five-step tutorial bar is gone (decision of the King, see "Old tutorial bar removed" below).
 
 Controls: mouse / touch on rows and buttons, a click on the picture pauses, a click on the progress bar seeks; Up / Down / Enter and the
 gamepad move through rows and buttons like every list screen (NAV); Left / Right change the chapter, Space pauses, Esc (pad B) closes.
@@ -55,6 +55,7 @@ Simulation safety: the module never touches `sessionState`, sends no command and
 ## Files
 
 - `packages/game/src/ui/video-guide.js` (new): screen, player, sprites, the nine clips.
+- `packages/game/src/ui/tutorial.js`: only `hintBar` and its three hints are left.
 - `packages/game/src/ui/title-menu.js`: 4 small edits (import, screen key, the `guideState.open` branch, the Tutorial button action).
 - `packages/game/src/i18n/translations.js`: 31 keys added by `tools/addtexts.py`.
 - Tools: `window.__guide` (`at(chapter, seconds, paused)`, `fit(width, lines)`, `ready()`) for screenshots and caption checks.
@@ -63,7 +64,15 @@ Simulation safety: the module never touches `sessionState`, sends no command and
 
 - Look of the clips on a real GPU and a real phone (only headless captures were looked at).
 - The clips have no sound: a click / chop / horn track from the existing sound set is possible, not done.
-- "Play the tutorial game" still opens the old five text steps; the other agent's quests may replace them.
+- The button is still called "Play the tutorial game" although it now only opens New kingdom (the quests guide the game): rename it ("Start a game"?) or drop it.
 - The guide is not reachable from the in-game Esc menu (title only).
 - `tools/fitcheck.py` does not open the guide yet (captions were checked with a separate script, see the journal).
 - Chapters not covered: traps, seasons, market, events and rebel camps, king talents.
+
+## Old tutorial bar removed (King: the quests replace it)
+
+Removed: the `TUTS` steps, `tutStart`, `tutEnd`, `tutBar` (`ui/tutorial.js`), the `tutBar` call in `ui/hud.js` (now `bossY+=hintBar(...)`),
+the `tutStart()` call in `gameplay/reset.js`, `TUT` in `gameplay/traps.js` and its test in `hintBar`, the "Tutorial" line of Settings
+(`tutOn` / `tutSet`), every read or write of the `dk_tut` key (also in `tools/announce_shots.py`). `hintBar` and its three hints stay.
+The translations of the five old step texts stay in the table (three of them are still the tips of the day and guide captions).
+A `dk_tut` value already stored in a browser is simply ignored.

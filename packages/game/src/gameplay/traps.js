@@ -21,7 +21,6 @@ import { gOK } from '../world/routes.js';
 import { occ, ter } from '../world/terrain.js';
 
 /* tile -> hp */
-export const TUT={on:false,i:0};
 /* ================= SPIKE TRAPS AND BOILING OIL (#9) =================
    Spike trap (Defense menu, 10 gold + 15 wood): one tile, passable, zombies standing on it are hurt every 0.5 s until the trap breaks.
    Boiling oil (Academy research after Bastion walls): every finished wall, gate and tower scalds zombies within 1.3 tiles every 1.5 s.
