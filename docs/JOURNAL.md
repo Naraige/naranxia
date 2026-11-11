@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · liste du Roi: Update, carte Leaderboard, 3 agents lancés (bannière, quêtes, guide vidéo), non livré
+- Liste du Roi (GitHub suspendu, donc pas d'issues): « What's new » -> « Update »; leaderboard en carte séparée sous la carte du haut avec aperçu du top 10; icône de bannière à refaire façon porte-étendard; tutoriel façon guide vidéo; quêtes pour guider les nouveaux joueurs; « où sont les lanciers du menu en jeu ? ».
+- Fait: `ui/title-menu.js` (libellé et titre « Update », texte ajouté via `docs/studio-texts/update.json`; carte Leaderboard sous la carte de saison, autant de lignes que la place le permet jusqu'à 10, clic = écran complet; `topRuns()` partagé avec l'écran). Vérifié: une capture 1280x720 avec 11 scores factices (10 lignes affichées). Non vérifié: écrans étroits/bas, fitcheck, tests non relancés (interface seule).
+- Lanciers: décor de l'écran titre seulement (`rendering/models/title-army.js`, chevaliers avec une pique), aucune unité lancier en jeu. Question posée au Roi: créer l'unité ou les retirer du titre.
+- Agents en worktree (rien fusionné): bannière (planche `docs/studio-boards/banner/`), quêtes (`gameplay/quests.js`, `docs/studio-notes/quests.md`), guide vidéo (`ui/video-guide.js`, `docs/studio-notes/guide.md`).
+
 ## 2026-11-11 · monde en blocs look B fusionné et allumé (réponse du Roi « 1B … 9B »), non livré
 - Le Roi a répondu 1B à 9B (planche blocs): branche fusionnée, `blocksState.on=true` par défaut (`rendering/blocks.js`), BLK=DBLK=0,5, terrain, décor, textures bâtiments et saisons allumés.
 - Rendu seulement, simulation intacte. Tests après fusion: smoke det tools mp8 mpk ALL PASS (`dist/merge_tests10.txt`); une capture du village avec mutants, armes et blocs allumés, sans erreur; build de test republié.
