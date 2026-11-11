@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Does any button text spill out of its button? One headless page per language and screen size.
-   python3 tools/fitcheck.py [W H]     (needs npm run build first). Prints, per language, the labels that still overflow
+   python3 tools/fitcheck.py [W H [x|1,6 [N]]]     (needs npm run build first; x = the first N languages, 1,6 = only those). Prints, per language, the labels that still overflow
    at the smallest font scale, plus HTML buttons (co-op window) whose text is wider than the button."""
 import sys, time, json
 from pathlib import Path
@@ -17,7 +17,8 @@ with sync_playwright() as p:
     b = p.chromium.launch(args=['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--enable-unsafe-swiftshader'])
     n_lang = int(sys.argv[4]) if len(sys.argv) > 4 else 8
     bad = 0
-    for li in range(n_lang):
+    # third argument: x = every language, or indices like 1,6 (0 English, 1 French ... 6 Dutch, 7 Polish, 8 Turkish)
+    for li in ([int(x) for x in LANGS] if LANGS and all(x.isdigit() for x in LANGS) else range(n_lang)):
         ctx = b.new_context(viewport={'width': W, 'height': H})
         ctx.add_init_script("localStorage.setItem('dk_lang','%d');localStorage.setItem('dk_last','{\"w\":9,\"k\":120}')" % li)
         pg = ctx.new_page()

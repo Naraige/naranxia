@@ -4,6 +4,18 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · localization pass before v92 (hd-localization worktree, text only, not merged, not released)
+
+- Audit (static, new `tools/textaudit.mjs`): 1463 keys, the 414 keys new in v92 checked. FR ES DE IT PT: none missing, `{0}` kept everywhere, no French "tu". Six texts were English only: barter title and message ("Swap 50 wood for stone", "Swapped 50 ..."), "You get N wood / stone / food", "Saving...": added in 8 languages (`docs/studio-texts/localization-v92.json`).
+- Removed 9 keys no source uses: 4 from quests lot 1 ("Power", "The long night", two old descriptions), 5 from the old tutorial bar (2 steps, "Tutorial {0}/{1}", "Tutorial: on / off"). Removed 5 v92 copies of keys an older block redefines (the lower block wins: "Exit to desktop", "Co-op", "Best runs", "Tutorial", "Cancel"), no visible change. Table now 1460 keys.
+- Dutch, Polish, Turkish are shipped languages (language list, announced): each lacked the 414 v92 keys, now 0 missing (`node tools/langcheck.mjs`), 415 lines added per file.
+- 40 corrections in the v92 texts: German "Sie / Ihr" back to "du" in tooltips, "Bollwerk" to "Bastion", Portuguese "Recebes" and "Levanta-te" to the formal form, "zombies" to "zumbis", Italian "zombie" to "zombi", "cancello" to "porta", "accampamento" to "campo", French "Invoquez" to "Appelez", "météorites" to "météores", small typos.
+- `tools/fitcheck.py 1280 720 x 9`: 3 overflows, all in the 34-wide peasant task buttons (FR "Construire", PT "3 inativo(s)", PL "3 bezczynnych"). Shortened: "Build" FR "Bâtir", "{0} idle" FR / ES "libres", PT "livres", NL "vrij", PL "wolni". Rerun on FR, PT, PL: 0 (the idle label only shows when peasants are idle at that moment, so a clean run is not proof). fitcheck now takes a language list (`1,5,7`).
+- Quest panel, quest log and guide captions (fitcheck opens neither): new `tools/textwidth.py` measures them with Inter Medium outside the browser, 21 quests and 27 captions in 9 languages, all fit. Not looked at in a browser.
+- `docs/release-v92/NOTES.md`: "New events" listed blood moons and caravans, both already in v91; line now says wolf packs, eclipses and meteor showers, and that caravans and rebel envoys now ask you to choose. To confirm with the King.
+- Not verified: NL / PL / TR texts read by a native speaker; guide chapter list and quest log by eye; "eleven new buildings" and "levels up to 5" in the notes; no gameplay test run (text only).
+- To the King: Portuguese mixes European and Brazilian forms (pick one); German lore lines use "Ihr / Euer" while the interface uses "du"; Dutch plural "2 boers" (old keys with `{1}`) is wrong; add `textaudit.mjs` and `textwidth.py` to the tool list in CLAUDE.md.
+
 ## 2026-11-11 · video guide merged, old tutorial bar removed, pushed (not released)
 
 - Merged `worktree-agent-aaffcd280bd956aae` (c35fc26): `ui/video-guide.js`, 9 scripted chapters on the menu canvas (no video file), opened by the Tutorial button; `TUTS` / `tutBar` / `TUT` / `dk_tut` and the Settings line removed, `hintBar` kept. Conflicts: journal and translations (both sides kept). Agent's entry below, notes `docs/studio-notes/guide.md`.
