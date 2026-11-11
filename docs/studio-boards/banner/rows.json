@@ -1,0 +1,15 @@
+{
+ "switch": "packages/game/src/rendering/banner-icon.js : export const BANNER2=''",
+ "1": "petite image (HUD en jeu, liste des sauvegardes) = 1re lettre de BANNER2",
+ "2": "grande image (carte « Votre royaume » de Nouveau royaume) = 2e lettre de BANNER2",
+ "3": "même dessin que la ligne 2 avec deux autres royaumes: si la lettre diffère de la ligne 2, redemander au Roi",
+ "apply": {
+  "1B 2B 3B": "BANNER2='B'",
+  "1C 2C 3C": "BANNER2='C'",
+  "1D 2D 3D": "BANNER2='D'",
+  "1A 2A 3A": "BANNER2='' (rien à faire)",
+  "1D 2B 3B": "BANNER2='DB' (petite D, grande B)",
+  "1A 2C 3C": "BANNER2='AC'"
+ },
+ "after": "npm run build; une capture (python3 docs/studio-boards/banner/cap.py setup,hud); journal; la texture 3D des bannières de pierre (drawBanner) n'est pas changée par l'interrupteur"
+}

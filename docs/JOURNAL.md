@@ -4,11 +4,21 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · bannière C (gonfanon sur mât) fusionnée et allumée (réponse du Roi « 1C 2C 3C »), non livré
+- `BANNER2='C'` dans `rendering/banner-icon.js`: petite icône (HUD, sauvegardes) et grande bannière (carte du royaume). `npm run build:release` fait, build de test republié.
+- Non relancé: tests (aucun fichier de simulation touché). Reste: bannières de pierre 3D sur l'ancien dessin, emblème illisible à 16 px, or sur or peu contrasté (`docs/studio-notes/banner.md`).
+
 ## 2026-11-11 · liste du Roi: Update, carte Leaderboard, 3 agents lancés (bannière, quêtes, guide vidéo), non livré
 - Liste du Roi (GitHub suspendu, donc pas d'issues): « What's new » -> « Update »; leaderboard en carte séparée sous la carte du haut avec aperçu du top 10; icône de bannière à refaire façon porte-étendard; tutoriel façon guide vidéo; quêtes pour guider les nouveaux joueurs; « où sont les lanciers du menu en jeu ? ».
 - Fait: `ui/title-menu.js` (libellé et titre « Update », texte ajouté via `docs/studio-texts/update.json`; carte Leaderboard sous la carte de saison, autant de lignes que la place le permet jusqu'à 10, clic = écran complet; `topRuns()` partagé avec l'écran). Vérifié: une capture 1280x720 avec 11 scores factices (10 lignes affichées). Non vérifié: écrans étroits/bas, fitcheck, tests non relancés (interface seule).
 - Lanciers: décor de l'écran titre seulement (`rendering/models/title-army.js`, chevaliers avec une pique), aucune unité lancier en jeu. Question posée au Roi: créer l'unité ou les retirer du titre.
 - Agents en worktree (rien fusionné): bannière (planche `docs/studio-boards/banner/`), quêtes (`gameplay/quests.js`, `docs/studio-notes/quests.md`), guide vidéo (`ui/video-guide.js`, `docs/studio-notes/guide.md`).
+## 2026-11-11 · icône de bannière façon porte-étendard: planche A/B/C/D, interrupteur éteint (non fusionné, non livré)
+- Demande du Roi: « i'm still not happy about the icon for banner rework the banner maybe something more like the bannerman ». Branche de worktree hd-design, rien dans `game/`, rien poussé.
+- `rendering/banner-icon.js` (nouveau): `BANNER2=''` (défaut = image actuelle), 'B' étendard du porte-étendard, 'C' gonfanon sur mât, 'D' bannière murale; sprites 24x36 qui suivent couleur, 2e couleur, motif et emblème (16 emblèmes redessinés en 11x11). Deux lettres = petite puis grande image ('DB'). HUD, liste des sauvegardes et carte Nouveau royaume passent par `bannerIcon()`.
+- Planche `docs/studio-boards/banner/board.html` (3 lignes + référence du porte-étendard en jeu), `rows.json`; détail et constat: `docs/studio-notes/banner.md`. En attente du code du Roi.
+- Vérifié: `npm run build`; 24 captures du jeu sans erreur (4 variantes x 3 royaumes sur Nouveau royaume, sauvegardes, HUD, 16 et 32 px); feuille des 16 emblèmes x 3 variantes regardée une fois. Interrupteur éteint: `bannerIcon()` rend le canevas `BANNER` lui-même, mêmes rectangles.
+- Non vérifié: `npm test` (aucun fichier de simulation touché), vrai GPU, mobile, co-op. Non traité: texture 3D des bannières de pierre (reste A), pastilles d'emblème du menu (vectorielles), emblème or sur motif or peu contrasté.
 
 ## 2026-11-11 · monde en blocs look B fusionné et allumé (réponse du Roi « 1B … 9B »), non livré
 - Le Roi a répondu 1B à 9B (planche blocs): branche fusionnée, `blocksState.on=true` par défaut (`rendering/blocks.js`), BLK=DBLK=0,5, terrain, décor, textures bâtiments et saisons allumés.

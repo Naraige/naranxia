@@ -29,7 +29,7 @@ import { objBar } from '../multiplayer/objectives.js';
 import { MP } from '../multiplayer/session.js';
 import { home, scr } from '../rendering/camera.js';
 import { CAM } from '../rendering/scene.js';
-import { BANNER } from '../rendering/structures.js';
+import { bannerIcon } from '../rendering/banner-icon.js';
 import { UNITK } from '../rendering/unit-animation.js';
 import { SEASC, seasonIdx, wxLabel } from '../rendering/weather.js';
 import { CMP, costParts, drawCost, drawItem, drawTabs, menuItems, NAMES, TABH, tabsWidth, tabState, uiBtn } from './build-menu.js';
@@ -113,7 +113,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  /* narrow screens (touch scale): when the wave texts would run under the buttons they get their own strip below them */
  const wrap=UW<560&&wwid+(UW-rx)>UW-8,ex=wrap?14:0;if(wrap)frame(3,22,UW-6,15,CHAT,6);
  if(UW<560||rx-wwid>UW*.42){let x=UW<560?6:rx-wwid;const wy=wrap?25:7;wp.forEach(p=>{const w0=tw(p[0],.95)+10;if(wrap&&x+w0>UW-6)return;T_(p[0],x,wy,p[1],.95);x+=w0});if(UW>=560)rx-=wwid+4;hudState.uiHits.push({...U(UW<560?6:rx,wrap?22:3,wrap?UW-12:wwid,wrap?15:17),tip:['Next wave','Zombies come along the red lines','Wave '+WPV.n+' brings:'].concat(WPV.kinds,WPV.ev.length?['Event:'].concat(WPV.ev,WPV.boss?[WPV.boss]:[]):[])})}
- let x=6;{const nmw=Math.min(90,tw(THEME.n,.9)+4);if(UW>=560){canvasesState.ctx.drawImage(BANNER,x,2,13,19.5);T_(THEME.n,x+17,7,'#fff',.9);hudState.uiHits.push({...U(x,2,17+nmw,20),tip:['Your kingdom','Banner on your castle, towers and gates']});x+=21+nmw}}
+ let x=6;{const nmw=Math.min(90,tw(THEME.n,.9)+4);if(UW>=560){canvasesState.ctx.drawImage(bannerIcon(),x,2,13,19.5);T_(THEME.n,x+17,7,'#fff',.9);hudState.uiHits.push({...U(x,2,17+nmw,20),tip:['Your kingdom','Banner on your castle, towers and gates']});x+=21+nmw}}
  const two=UW<560;settingsState.TOPH=two?46+ex:28;let ry=3;if(two){hudState.uiRects.push(U(0,22,UW,19+ex));frame(3,22+ex,UW-6,19,CHAT,6);x=9;rx=UW-6;ry=23+ex}
  const item=(ic,s,col,tip)=>{const n=16+tw(s)+10;if(x+n>rx-4)return;dIc(ic,x,ry+2,13);T_(s,x+16,ry+3.5,col);hudState.uiHits.push({...U(x,ry,n-4,17),tip});x+=n};
  item(IC.coin,sessionState.res.g,'#ffd23c',['Gold']);item(IC.wood,sessionState.res.w,'#e8b27a',['Wood']);item(IC.stone,sessionState.res.s,'#d4dae6',['Stone']);item(IC.food,Math.floor(sessionState.res.f||0),'#f2c14e',['Food','Farms make it while a peasant works them','Every unit costs food to train']);
