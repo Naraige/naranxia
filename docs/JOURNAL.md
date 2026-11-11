@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-11 · v92 mega update announcement drafted (not released)
+
+- The King: prepare the mega update announcement with everything pushed since the GitHub cut, sent the way the system does at the next update.
+- `docs/release-v92/NOTES.md` rewritten (look, new to play, comfort); `README.md` there says how it ships (copied to `game/NOTES.md`, posted by `release.yml` through `tools/announce.sh` with `announce/img/v92/`). Old `announce-v92.md` draft removed (duplicate).
+- Before release: confirm bullets for spearman, video guide, quest marker (in progress), retake the 4 screenshots (they predate the new looks), King's go-ahead after the full pass.
+
 ## 2026-11-11 · quests lot 2 merged, HUD bars fix (not released)
 
 - The King decided: quests in co-op too, quests replace the tutorial bar, adjust amounts, add market / guild / siege / envoy.
