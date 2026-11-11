@@ -101,5 +101,15 @@ with sync_playwright() as p:
     P('wave',B.evaluate("()=>{callWave();return MP.out.length}"))
     P('B masonry',B.evaluate("()=>{selB=structs.find(s=>s.type==='academy'&&(s.pl|0)===1);buy('upgrade');return MP.out.length}"))
     waitT(DUR);both('end')
+    # quest line: shared, same state on both machines, the switch is a command sent by the guest
+    QJ="()=>JSON.stringify({q:QST,res:RESP.map(R=>Math.round(R.g)+'/'+Math.round(R.w)+'/'+Math.round(R.s)+'/'+Math.round(R.f||0))})"
+    qa=A.evaluate(QJ);qb=B.evaluate(QJ);P('quests A',qa[:400]);n_done=len(json.loads(qa)['q']['d'])
+    P('B quests off',B.evaluate("()=>{questSwitch(false);return MP.out.length}"));waitT(4)
+    # the gather counters move every tick and the two pages are read at different ticks: compare what is stable (the lockstep hash covers the rest)
+    st=lambda j:{k:json.loads(j)['q'][k] for k in ('v','on','d','e','last')}
+    qa2=st(A.evaluate(QJ));qb2=st(B.evaluate(QJ))
+    okq=st(qa)['on']==1 and qa2==qb2 and qa2['on']==0 and bad[0] is None
+    P('QUESTS','OK' if okq else 'FAIL','done',n_done,'on A',qa2['on'],'on B',qb2['on'],'same',qa2==qb2)
+    if not okq:ea.append('quest state differs or switch command failed')
     P('ERRS',ea[:3],eb[:3])
     for br in brs:br.close()
