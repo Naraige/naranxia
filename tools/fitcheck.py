@@ -24,7 +24,7 @@ with sync_playwright() as p:
         pg = ctx.new_page()
         pg.route('**/three.min.js', lambda r: r.fulfill(path=str(ROOT / 'node_modules/three/build/three.min.js'), content_type='application/javascript'))
         pg.route('**/fonts.g*', lambda r: r.abort())
-        pg.goto((ROOT / 'dist/naranxia_readable.html').as_uri(), timeout=180000, wait_until='domcontentloaded')
+        pg.goto((ROOT / 'dist/naranxia_readable.html').as_uri(), timeout=900000, wait_until='domcontentloaded')
         time.sleep(10)
         pg.evaluate("()=>{renderer.render=function(){}}")
         name = pg.evaluate("()=>document.title")

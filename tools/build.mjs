@@ -49,5 +49,7 @@ let html = htmlSource
   .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
   .replace(styleTag, () => `<style>\n${style}\n</style>`)
   .replace(scriptTag, () => `<script>\n${script}\n</script>`);
-await fs.writeFile(path.join(out, 'naranxia_readable.html'), html, 'utf8');
+/* written beside, then renamed: a page that loads the file while a build runs never reads half of it */
+await fs.writeFile(path.join(out, 'naranxia_readable.html.tmp'), html, 'utf8');
+await fs.rename(path.join(out, 'naranxia_readable.html.tmp'), path.join(out, 'naranxia_readable.html'));
 console.log(`Built dist/naranxia_readable.html (${version})`);

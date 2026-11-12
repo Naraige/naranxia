@@ -12,7 +12,7 @@ import { rngf } from '../core/random.js';
 import { GVER } from '../core/version.js';
 import { diagnosticsState, ERRLOG } from './diagnostics.js';
 import { bugReport, devAct, devToggle } from './tools.js';
-import { ach, ACH } from '../gameplay/achievements.js';
+import { ach, ACH, TOASTS } from '../gameplay/achievements.js';
 import { build, constructionState, setBuildHandler, tilesFor, valid } from '../gameplay/construction.js';
 import { buy, economyState, FAT, PBASE, PRICE, priceTick, setTrainHandler, train } from '../gameplay/economy.js';
 import { mkU, spawnPos } from '../gameplay/entities.js';
@@ -48,7 +48,7 @@ import { NAV } from '../ui/menu-nav.js';
 import { KB, loadKB, settingsDebug, settingsState } from '../ui/settings.js';
 import { titleDebug } from '../ui/title-menu.js';
 import { guideState, guideWatch, openGuide } from '../ui/video-guide.js';
-import { languageState } from '../i18n/language.js';
+import { languageState, setLang } from '../i18n/language.js';
 import { FOWU } from '../rendering/fog.js';
 import { render3D, setRender3DHandler } from '../rendering/frame.js';
 import { matV } from '../rendering/materials.js';
@@ -166,6 +166,7 @@ export function installBrowserConsole() {
     ZNV: { get: () => ZNV },
     _N: { get: () => _N },
     ach: { get: () => ach },
+    TOASTS: { get: () => TOASTS },
     animUnit: { get: () => animUnit },
     bossStomp: { get: () => bossStomp },
     bugReport: { get: () => bugReport },
@@ -295,6 +296,7 @@ export function installBrowserConsole() {
     openPicker: { get: () => openPicker },
     sitePickerState: { get: () => sitePickerState },
     languageState: { get: () => languageState },
+    setLang: { get: () => setLang },
     svPeek: { get: () => svPeek },
     continueLast: { get: () => continueLast },
     ter: { get: () => ter },

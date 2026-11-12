@@ -36,7 +36,7 @@ import { CMP, costParts, drawCost, drawItem, drawTabs, menuItems, NAMES, TABH, t
 import { canvasesState, cv } from './canvases.js';
 import { convoyPanelState, drawConvoy } from './convoy-panel.js';
 import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, RDB, SLOT, TIPP, UIT } from './drawing.js';
-import { hudDisplayState } from './hud-state.js';
+import { hudDisplayState, topBox } from './hud-state.js';
 import { dIc, IC } from './icons.js';
 import { THEME } from './kingdom-theme.js';
 import { bar, drawMapModal, drawWorld, mmss, pill } from './minimap.js';
@@ -95,7 +95,9 @@ function drawEnd(UW,UH){const g=canvasesState.ctx.createLinearGradient(0,0,0,UH)
  canvasesState.ctx.fillStyle=UIT.gold;canvasesState.ctx.fillRect(Math.round(cx-60),Math.round(y),120,1);y+=9;
  bevelBtn(cx-pw/2,y,pw,24,'Play again','go',newGame,{nav:false,sc:.95});bevelBtn(cx-pw/2,y+30,pw,22,'Title Screen','dark',()=>{sessionState.inGame=false;sessionState.over=false;sessionState.started=false;rollWorld()},{nav:false,sc:.9})}
 
-function drawToasts(UW){for(let i=0;i<TOASTS.length;i++){const o=TOASTS[i];o.t+=UIDT;const T=o.t,sl=T<.35?1-T/.35:T>4.6?(T-4.6)/.35:0;if(T>4.95){TOASTS.splice(i,1);i--;continue}const d=ACHD[o.k],w=Math.max(150,Math.max(tw(d[0],.9),twH('Achievement',.95))+40),h=30,x=UW-w-4+sl*(w+8),y=settingsState.TOPH+4+i*(h+4);
+/* achievement toasts, top right, one under the other; a toast never lies on the message line, an event or hint bar or the raid / boss bars:
+   it goes under those that reach it (boxes noted since the last call, so a bar drawn after the toasts counts one frame later) */
+function drawToasts(UW){const BX=hudDisplayState.tbox;hudDisplayState.tbox=[];if(hudDisplayState.cbar)BX.push(hudDisplayState.cbar);let ty=settingsState.TOPH+4;for(let i=0;i<TOASTS.length;i++){const o=TOASTS[i];o.t+=UIDT;const T=o.t,sl=T<.35?1-T/.35:T>4.6?(T-4.6)/.35:0;if(T>4.95){TOASTS.splice(i,1);i--;continue}const d=ACHD[o.k],w=Math.max(150,Math.max(tw(d[0],.9),twH('Achievement',.95))+40),h=30,x=UW-w-4+sl*(w+8);for(let k=0;k<4;k++)for(const b of BX)if(b[0]+b[2]>UW-w-7&&ty<b[1]+b[3]+2&&ty+h>b[1]-2)ty=b[1]+b[3]+3;const y=ty;ty+=h+4;
   frame(x,y,w,h,PAN,4);
   const ic=IC[o.k==='w1'||o.k==='w5'||o.k==='w10'?'shield':o.k==='k1'||o.k==='k100'||o.k==='k500'?'sword':o.k==='res'?'upgrade':o.k==='move'?'home':o.k==='keep'?'tower':o.k]||IC.sword;if(ic)dIc(ic,x+6,y+7,16);
   TTL('Achievement',x+28,y+4,.95);T_(d[0],x+28,y+17,'#ffffff',.85)}}
@@ -151,7 +153,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  hudDisplayState.cbar=bossY>0?[UW/2-125,settingsState.TOPH,250,bossY]:null;
  if(!sessionState.over){let msg=sessionState.mode?'Place '+NAMES[sessionState.mode]+(sessionState.mode==='gate'?' - 3 tiles: two towers and a passage, [R] rotates':sessionState.mode==='movec'?' - click the new centre of your castle':sessionState.mode==='ballista'||sessionState.mode==='trebuchet'?' on a tower - [R] sets facing':sessionState.mode==='raise'||sessionState.mode==='dig'?' - paint tiles':sessionState.mode==='ramp'?' - one block that climbs 1 level, [R] turns it':sessionState.mode==='demolish'?' - click a building':sessionState.mode==='upgrade'?' - click or drag over wood buildings':'')+' - click a tile - right-click or Esc cancels':hudDisplayState.msgT>0?hudDisplayState.msgS:sessionState.time<30?'Select peasants, then right-click a tree, rock or gold to harvest':'';
   if(hudDisplayState.msgT>0&&hudDisplayState.msgS&&hudDisplayState.msgS!==MSGL[MSGL.length-1]){MSGL.push(hudDisplayState.msgS);if(MSGL.length>25)MSGL.shift()}
-  if(msg&&sessionState.bannerT<=0){canvasesState.ctx.globalAlpha=sessionState.mode||hudDisplayState.msgT>0?1:Math.min(1,(18-sessionState.time)/3);const my=settingsState.TOPH+bossY,qb=hudDisplayState.qbox,lx=qb&&my<qb[1]+qb[3]+2&&my+16>qb[1]-2&&UW-qb[0]-qb[2]>=210?qb[0]+qb[2]+3:0;/* beside the quest panel when it would cover it */let ms=.95;while(ms>.55&&tw(msg,ms)+16>UW-6-lx)ms-=.05;const w=tw(msg,ms)+16,mx=Math.max(Math.round((UW-w)/2),lx);frame(mx,my,w,16,CHAT,8);TC(msg,mx+w/2,my+4,'#ffffff',ms);canvasesState.ctx.globalAlpha=1}
+  if(msg&&sessionState.bannerT<=0){canvasesState.ctx.globalAlpha=sessionState.mode||hudDisplayState.msgT>0?1:Math.min(1,(18-sessionState.time)/3);const my=settingsState.TOPH+bossY,qb=hudDisplayState.qbox,lx=qb&&my<qb[1]+qb[3]+2&&my+16>qb[1]-2&&UW-qb[0]-qb[2]>=210?qb[0]+qb[2]+3:0;/* beside the quest panel when it would cover it */let ms=.95;while(ms>.55&&tw(msg,ms)+16>UW-6-lx)ms-=.05;const w=tw(msg,ms)+16,mx=Math.max(Math.round((UW-w)/2),lx);frame(mx,my,w,16,CHAT,8);TC(msg,mx+w/2,my+4,'#ffffff',ms);canvasesState.ctx.globalAlpha=1;topBox(mx,my,w,16)}
   if(sessionState.bannerT>0){canvasesState.ctx.globalAlpha=Math.min(1,sessionState.bannerT*1.2);let bs=3.4;while(bs>1.6&&tw(sessionState.bannerS,bs)>UW-20)bs-=.2;let b2=1.15;while(b2>.6&&tw(sessionState.bannerS2,b2)>UW-20)b2-=.05;const yb=Math.max(settingsState.TOPH+8,UH*.2);TC(sessionState.bannerS,UW/2,yb,'#ff5555',bs);TC(sessionState.bannerS2,UW/2,yb+9*bs+6,'#ffff55',b2);canvasesState.ctx.globalAlpha=1}
   if(sessionState.paused){canvasesState.ctx.fillStyle='rgba(0,0,0,.35)';canvasesState.ctx.fillRect(0,0,UW,UH);TC('Game Paused',UW/2,UH*.36,'#ffffff',2.2);TC(backgroundLoopState.autoPaused?'Click anywhere or press Space to resume':'Press Space to resume',UW/2,UH*.36+28,'#a0a0a0',.95)}}
  const hv=inputState.touch?(hudState.tipKey&&performance.now()<hudState.tipT?hudState.uiHits.find(h=>h.tip&&((h.x|0)+','+(h.y|0)+','+(h.w|0))===hudState.tipKey):null):hudState.uiHits.find(h=>h.tip&&inR(inputState.mouse,h));
