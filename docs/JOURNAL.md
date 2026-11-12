@@ -15,6 +15,19 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Not verified: the bottom of the page (Comfort; the wheel did not scroll headless); the guard with a failing notes file (nothing under `game/` was touched); NL / PL / TR by a native speaker; fitcheck not rerun (no button label changed length upward except tips drawn with fitting).
 - Left to the King: FR / ES / PT "Tous vos {0}s" still glue an "s" to the unit name; NL "de {1}" in two repair messages ignores de / het; "Você" kept for "You".
 
+## 2026-11-12 · v93 lot "spearman 2": rebel spearmen, F4 key (hd-gameplay, branch `worktree-agent-ab29372462c98b8a5`, not merged, not released)
+
+- Issue #24, the King: "fait le tout". Decided for him: bonus x1.6 and price stay. Details in `docs/studio-notes/spearman.md` ("Lot 2").
+- Rebel camps (`ai/kingdoms.js`, the AI kingdoms and their settlements, the only AI force with knights or archers) now train spearmen: share of the melee fighters by trait, merchants 1 in 4, wary 1 in 3, warlike 1 in 2 (`spearN`, `SPEAR_DIV`), at least 1 from 2 melee fighters on, always 1 knight kept; camp price 30 g 10 w 15 f. Soldier count per camp unchanged. No RNG added, nothing new in `SAVA` (units saved whole, trait on the camp); v92 saves load unchanged. `matBase` (old static camps) is dead code and was left alone.
+- Default key of the spearman: `F4` instead of `\` (keys are matched by `e.key`; every letter and every character that is one plain press on both QWERTY and AZERTY is taken). Still rebindable; saved keys that still hold `\` move to F4 once per browser (marker `dk_keyv`), unless F4 is bound elsewhere (`loadKB` in `ui/settings.js`). A bound function key no longer triggers the browser default.
+- No text added (so no `docs/studio-texts/spearman2.json`); the spearman texts of v92 are already in NL, PL, TR.
+- `det` hashes CHANGED, as expected (a camp trains its first spearman at about 75 s): samples 1 and 2 identical to v92, 3 to 8 differ, the two runs equal. New reference (first field of the 8 samples): 1289907662, 78342706, -1731518221, 1421632697, -2023083426, -766400875, 432483754, 1830404059 (v92: 1289907662, 78342706, -118423406, -488580333, -981978411, -1779167516, -915779825, 103508539). `tools/profile.py` hashes will differ from v92 for the same reason (not run).
+- Tests (2 cores shared, load 6 to 14): `det` PASS, `mpk` PASS, `features` PASS, `spearman` PASS (extended: share rule, three grown camps 7k2s / 6k3s / 5k4s with 4 archers each, losses replaced in kind, rebel spearman 17.6 on a brute, F4 queues a spearman, 4 key migration cases). The first `spearman` run of the suite failed on a page load over 180 s (machine load, the base build did the same), not on the test.
+- Seen: one picture 1280x720 of a warlike camp, 4 knights and 4 spearmen in the camp colour in line before the keep (`dist/rebel-spearmen.png`, not committed).
+- Not verified: `mp8`, `mp_resync`, `save`, `events`, `envoy` with the change (CI will run them); a real AZERTY keyboard; F4 in the Electron launcher and on laptops where F keys need Fn; a long game (camp survival with fewer knights).
+- Found, not changed: on AZERTY the digit defaults (peasant 1, knight 2 ... and stances 1 to 4) need Shift, and Shift + digit is taken by the control groups: read in the code only. Proposed: match digit actions by `e.code`.
+- Left to the King: the shares per trait; spearmen replacing knights 1 for 1 (or 3 for 2 at equal price); F4 or another key; the AZERTY digits.
+
 ## 2026-11-12 · v92
 
 - Released on the King's go ("sors la v92"): everything merged on release-v84 since v91 (block look, units and buildings B, mutants, last bastion, events, bosses, King XP, research paths, quests solo and co-op with marker, spearman, video guide, leaderboard, Update page, NL/PL/TR complete).

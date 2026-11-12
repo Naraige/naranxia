@@ -34,7 +34,7 @@ export function placeInput(){if(!settingsState.nameBox||sessionState.started){nm
 
 export let uiMul=1;
 
-const KDEF={cry:'<',charge:'>',cannon:'/',peasant:'1',knight:'2',spearman:'\\',archer:'3',bannerman:'4',captain:'5',wall:'6',gate:'7',tower:'8',path:'9',ballista:'b',trebuchet:'t',raise:'y',dig:'u',army:'q',idle:'.',form:'v',rotate:'r',sound:'o',wave:'n',home:'h',map:'m',upgrade:'g',barracks:'c',farm:'j',peas:'e',storage:'k',house:'0',movec:',',academy:';',market:':',forester:'[',guild:']',torch:"'",rally:'-',rallyc:'=',ramp:'i',tier:'l',demolish:'p',pause:' ',speed:'f',up:'w',down:'s',left:'a',right:'d',rotL:'z',rotR:'x'};
+const KDEF={cry:'<',charge:'>',cannon:'/',peasant:'1',knight:'2',spearman:'f4',archer:'3',bannerman:'4',captain:'5',wall:'6',gate:'7',tower:'8',path:'9',ballista:'b',trebuchet:'t',raise:'y',dig:'u',army:'q',idle:'.',form:'v',rotate:'r',sound:'o',wave:'n',home:'h',map:'m',upgrade:'g',barracks:'c',farm:'j',peas:'e',storage:'k',house:'0',movec:',',academy:';',market:':',forester:'[',guild:']',torch:"'",rally:'-',rallyc:'=',ramp:'i',tier:'l',demolish:'p',pause:' ',speed:'f',up:'w',down:'s',left:'a',right:'d',rotL:'z',rotR:'x'};
 
 const ACTL={cry:'King: war cry',charge:'King: royal charge',king:'Summon King Naraige',guard:'Train a royal guard',cannon:'Train cannon',movec:'Move castle',rotate:'Rotate building',peasant:'Train peasant',knight:'Train knight',spearman:'Train spearman',archer:'Train archer',bannerman:'Train bannerman',captain:'Train captain',upgrade:'Masonry research',barracks:'Build barracks',farm:'Build farm',storage:'Build storage',house:'Build house',academy:'Build academy',market:'Build market',forester:'Build forester hut',guild:'Build builders guild',torch:'Build torch',rally:'Barracks rally point',rallyc:'Castle rally point',peas:'Select all peasants',tier:'Wood / stone tier',demolish:'Demolish building',ramp:'Dig a ramp',wall:'Build wall',gate:'Build gate',tower:'Build tower',path:'Build path',ballista:'Ballista',trebuchet:'Trebuchet',raise:'Raise ground',dig:'Dig ground',army:'Select army',idle:'Idle peasants',form:'Formation',sound:'Mute sound',wave:'Call wave',home:'Back to base',map:'World map',pause:'Pause',speed:'Game speed',up:'Camera up',down:'Camera down',left:'Camera left',right:'Camera right',rotL:'Turn camera left',rotR:'Turn camera right'};
 
@@ -43,6 +43,13 @@ export let KB;
 export const kdisp=k=>k===' '?'Space':k.length===1?k.toUpperCase():k[0].toUpperCase()+k.slice(1);
 
 function syncHK(){for(const a of['cannon','peasant','knight','spearman','archer','bannerman','captain','wall','gate','tower','path','upgrade','barracks','farm','storage','house','academy','market','forester','guild','torch','rally','rallyc','movec','rotate','ramp','tier','demolish','ballista','trebuchet','raise','dig','army','idle','form'])HK[a]=kdisp(KB[a])}
+
+/* keys: the defaults, then what the player saved. v93: the spearman default went from backslash (AltGr on AZERTY) to F4. Once per browser
+   (marker dk_keyv), saved keys that still hold the old default move to F4, unless F4 was given to another action */
+export function loadKB(){KB={...KDEF};
+ try{Object.assign(KB,JSON.parse(localStorage.getItem('dk_keys')||'{}'))}catch(e){}
+ try{if(localStorage.getItem('dk_keyv')!=='2'){if(KB.spearman==='\\'&&!Object.keys(KB).some(a=>KB[a]==='f4')){KB.spearman='f4';if(localStorage.getItem('dk_keys'))localStorage.setItem('dk_keys',JSON.stringify(KB))}localStorage.setItem('dk_keyv','2')}}catch(e){}
+ syncHK()}
 
 export function saveKB(){try{localStorage.setItem('dk_keys',JSON.stringify(KB))}catch(e){}syncHK()}
 
@@ -99,8 +106,6 @@ export function initializeSettings() {
   nmI.oninput=()=>{THEME.n=nmI.value.slice(0,18)||'Nameless';saveTheme()};
   nmI.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')nmI.blur()};
   try{uiMul=+localStorage.getItem('dk_ui')||1}catch(e){}
-  KB = {...KDEF};
-  try{Object.assign(KB,JSON.parse(localStorage.getItem('dk_keys')||'{}'))}catch(e){}
-  syncHK();
+  loadKB();
   applyCB();
 }
