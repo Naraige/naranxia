@@ -4,6 +4,18 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-12 · video guide lot for v93 (hd-menu-ux, issue #23, committed on the worktree branch, not pushed, not released)
+
+- King: "fait le tout" on the four open points of the guide. Detail in `docs/studio-notes/guide.md`.
+- Sounds in the clips: per-chapter `[time, sound]` lists played through `snd` (visual side, REALR) when the clip time crosses them; `snd` now returns the gain node of its voice so the guide fades its voices on pause, chapter change and close. Sound on/off and the effects volume apply as everywhere.
+- "Guide" row in the Esc menu (`drawGameMenu`): solo is stopped by the menu itself, the co-op lockstep is untouched, no command, nothing in SAVA.
+- Five chapters (Traps, Seasons, Market and barter, Rebel camps and envoys, King talents): 14 in all, list rows shrink to fit (18 px at 1280x720), no list at 390x700 (header + previous / next).
+- "Play the tutorial game" removed with `playTut` and its key (table, NL / PL / TR, guide.json). 20 new keys (`docs/studio-texts/guide2.json`, v93 block; NL / PL / TR).
+- Seen once (headless, `tools/qa_shots.py` steps 10, 13a-13e, 14, 33-35): SEEN_PLACEHOLDER
+- Tests: TESTS_PLACEHOLDER
+- Not verified: the sounds by ear (no audio in headless), a real GPU / phone, a real two-machine co-op game with the guide open, native proofreading of the new captions.
+- Left to the King: sound level and density; the amounts in the clips are examples.
+
 ## 2026-11-12 · v92
 
 - Released on the King's go ("sors la v92"): everything merged on release-v84 since v91 (block look, units and buildings B, mutants, last bastion, events, bosses, King XP, research paths, quests solo and co-op with marker, spearman, video guide, leaderboard, Update page, NL/PL/TR complete).

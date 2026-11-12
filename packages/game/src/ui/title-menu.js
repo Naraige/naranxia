@@ -27,7 +27,7 @@ import { FFT } from './typography.js';
 import { curMode, drawModes, modeIcon, modeState, openModes, playMode } from './mode-select.js';
 import { footH, menuFooter } from './menu-footer.js';
 import { fireGlow, fxTitleSeen } from './menu-fx.js';
-import { drawGuide, guideState, openGuide } from './video-guide.js';
+import { closeGuide, drawGuide, guideState, openGuide } from './video-guide.js';
 import { bevelBtn, KC, kitCard, kitEnd, kitRow, kitScreen, listBegin, listEnd, newPill, pxText, pxW } from './menu-kit.js';
 import { hexBadge, tipBanner, titleBlur, titleEmbers, titleLogo, titleLogoW, titleVignette } from './title-frame.js';
 
@@ -68,7 +68,7 @@ function drawTitleScreen(UW,UH){if(!sessionState.inGame)fxTitleSeen();settingsSt
  if(languageState.langOpen){LS(()=>{languageState.langOpen=false},drawLang);return}
  if(settingsState.setupOpen){const b=()=>{settingsState.setupOpen=false};NAV.onEsc=null;navBegin(true);navPoll();drawSetup(UW,UH,fh,b);kitEnd();FT(b,1);navEnd();return}
  if(modeState.open){drawModes(UW,UH,cx,()=>{modeState.open=false});navEnd();return}
- if(guideState.open){LS(()=>{guideState.open=false},drawGuide);return}
+ if(guideState.open){LS(closeGuide,drawGuide);return}
  if(notesOpen){LS(()=>{notesOpen=false},drawNotes,0);return}
  if(chrOpen){LS(()=>{chrOpen=false},drawChronicle,0);return}
  if(recOpen){LS(()=>{recOpen=false},drawRecords,0);return}
@@ -156,6 +156,8 @@ function drawGameMenu(UW,UH,fh){NAV.onEsc=startGame;navBegin(!MP.on);NAV.first=f
  l.row({label:'Back to Game',fn:startGame},22);
  if(!MP.on)l.row({label:'Save / Load',fn:()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null}},22);
  l.row({label:'Options',fn:()=>{settingsState.settingsOpen=true}},22);
+ /* the video guide: this menu already stops a solo game (started = false) and leaves the co-op lockstep running; the guide only draws */
+ l.row({label:'Guide',fn:openGuide},22);
  l.section('Sound');
  l.row({label:'Sound',opts:[['On',sndOn,()=>{if(!sndOn)toggleSound()}],['Off',!sndOn,()=>{if(sndOn)toggleSound()}]],fn:()=>{toggleSound()}},22);
  l.section('Session');

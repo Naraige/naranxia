@@ -1,5 +1,7 @@
+import { snd } from '../audio/sound.js';
 import { REALR } from '../core/random.js';
 import { T as UT } from '../gameplay/rules.js';
+import { sessionState } from '../gameplay/session.js';
 import { L, T_, tw } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { FOWU } from '../rendering/fog.js';
@@ -8,21 +10,23 @@ import { renderer, scene } from '../rendering/scene.js';
 import { unitG } from '../rendering/terrain.js';
 import { THREE } from '../rendering/three.js';
 import { animUnit } from '../rendering/unit-animation.js';
+import { SEAS, SEASC } from '../rendering/weather.js';
 import { canvasesState, cvs } from './canvases.js';
 import { ICO_RT } from './drawing.js';
 import { hudDisplayState } from './hud-state.js';
 import { IC } from './icons.js';
 import { THEME } from './kingdom-theme.js';
 import { bevelBtn, goldTitle, KC, kitFrame, kitHitAdd, kitScreen, listBegin, listEnd, pxText, wrapT } from './menu-kit.js';
-import { settingsState } from './settings.js';
 
-/* ================= VIDEO GUIDE (title menu, Tutorial button) =================
+/* ================= VIDEO GUIDE (title menu: Tutorial button; in game: Guide row of the Esc menu) =================
    A player screen: chapters on the left, a "video" on the right with a caption, a progress bar, previous / play-pause / next, and auto-advance.
    The clips are not video files: each one is a small scripted 2D scene (320 x 180 virtual pixels) drawn on the menu canvas as a pure function
    of the clip time, so pausing and seeking are free. It uses the game's own pictures: the building icons (renders of the real models, IC / ICT)
    and unit sprites shot here from the real unit models and their real walk / attack poses (animUnit) into small canvases, once per opening.
    Nothing here reads or writes the simulation: the posed units are throw-away objects that never enter sessionState, no command is sent,
-   time is the wall clock, and the few mesh builds run with Math.random swapped to REALR (like every other visual mesh build). */
+   time is the wall clock, and the few mesh builds run with Math.random swapped to REALR (like every other visual mesh build).
+   In game it is opened from the Esc menu, which already stops a solo game and leaves the co-op lockstep running: the only thing read from the
+   session is inGame (for the veil over the game view). The clips play a few of the game's own sounds through snd (visual side, REALR). */
 
 export const guideState = { open: false };
 
@@ -46,7 +50,7 @@ function at(K, t, e) {
 /* ---------- unit sprites: the real models, posed by the real animation code, shot with a fixed camera (no size jitter between frames) ---------- */
 const SP = {}, PX = 18, YAW = -.9, PIT = .5, SZ = 96;
 const SETS = [['peasant', 0, { w: [6], c: [6], a: [4, 'w'], h: [4, 'r'], f: [4, 'f'] }], ['knight', 0, { w: [6], a: [4] }], ['archer', 0, { w: [4], a: [3] }], ['king', 0, { w: [6], a: [4] }],
-  ['guard', 0, { w: [4], a: [3] }], ['zombie', 1, { w: [6], a: [3] }], ['brute', 1, { w: [4], a: [3] }], ['runner', 1, { w: [4], a: [3] }]];
+  ['guard', 0, { w: [4], a: [3] }], ['envoy', 0, { w: [4] }], ['zombie', 1, { w: [6], a: [3] }], ['brute', 1, { w: [4], a: [3] }], ['runner', 1, { w: [4], a: [3] }]];
 let spSig = null, spDone = false, spTmp = null;
 function shot(obj, c, r) {
   const R = ICR, cam = R.cam, d = r / Math.sin(cam.fov * Math.PI / 360);
@@ -156,7 +160,7 @@ function cur(c, t, clicks, col, tag) { Q.push([2000, () => { const g = G; let dn
   g.save(); g.translate(c.x, c.y + dn); g.fillStyle = col || '#ffffff'; poly(); g.restore();
   if (tag) pxText(tag, c.x + 10, c.y + 14, 6, col || '#ffffff', { raw: true }) }]) }
 
-/* ---------- the nine clips: (scene time) => queued drawing ---------- */
+/* ---------- the clips: (scene time) => queued drawing ---------- */
 const RES = (w, s, g, f, pop, pc) => [['wood', w], ['stone', s], ['coin', g], ['food', f], ['peasant', pop, pc]];
 const TREES = [[222, 68], [246, 94], [230, 126], [268, 58], [288, 112]];
 function cGather(t) {
@@ -289,17 +293,137 @@ function cCoop(t) {
   cur(at([[0, 230, 150], [2.4, 236, 112], [3.4, 236, 112], [4.3, 176, 108], [9, 190, 124], [12, 176, 100], [15, 262, 84]], t, 1), t, [[4.4, 1]], O, 'P2');
 }
 
-/* chapter: [title, duration (s, title card included), captions [[scene time, text], ...], clip, road of the ground] */
+/* ---- v93: traps, seasons, market, rebel camps, king talents ---- */
+const TRP = [[246, 96], [262, 97], [278, 95]];
+const spikes = (x, y) => Q.push([y - 8, () => { R4('rgba(0,0,0,.25)', x - 8, y + 2, 16, 2); R4('#5b4630', x - 7, y - 3, 14, 6); R4('#7a6042', x - 7, y - 3, 14, 1); for (let i = 0; i < 4; i++) { R4('#d4d7de', x - 6 + i * 4, y - 7, 1, 5); R4('#8a8d94', x - 5 + i * 4, y - 6, 1, 4) } }]);
+function cTraps(t) {
+  hud(RES(200 - num(t, TRP.map((p, i) => [2.6 + i * .8, 15])), 120, 180 - num(t, TRP.map((p, i) => [2.6 + i * .8, 10])), 90, '12/20'));
+  route(t, ROAD); B('castle', 50, 106, 82); tree(120, 40); tree(290, 40); tree(300, 160); tree(110, 168);
+  WY.forEach(y => B('wall', WX, y, 22)); B('gate', WX, 96, 32);
+  TRP.forEach(([x, y], i) => { const a = 2.6 + i * .8; if (t > a && !(i === 0 && t > 10.4)) spikes(x, y); ringFx(t, a, x, y, 12, '#e9c98a', .4) });
+  ringFx(t, 10.4, TRP[0][0], TRP[0][1], 16, '#ff6a5a', .6);
+  [9.1, 9.6, 10.3, 13.8, 14.6, 15.2].forEach((d, i) => {
+    const y = 92 + (i % 3) * 4, a = 5 + i * .55, ex = i < 3 ? 250 + i * 10 : 228 - (i % 2) * 6, K = [[a, 332, y], [a + 1.6, 286, y], [a + 1.6 + (286 - ex) / 14, ex, y]], p = at(K, t);
+    zed(t, i === 5 ? 'brute' : 'zombie', K, i < 3 ? 99 : K[2][0], d);
+    if (t < d && p.x < 286 && p.x > 240) fl(t, t - (t + i * .3) % 1, p.x, p.y - 24, '-6', '#ff8a7a');
+    if (i > 2 && t > K[2][0] && t < d) fl(t, t - (t + i * .4) % 1.5, p.x + 4, p.y - 26, '-12', '#ffb04a');
+  });
+  if (t > 11) { Q.push([930, () => { R4('rgba(8,10,16,.85)', WX - 11, 15, 22, 22); if (IC.oil) G.drawImage(IC.oil, WX - 9, 17, 18, 18) }]); ringFx(t, 11.6, WX, 26, 26, '#7ec8ff') }
+  if (t > 12.2 && t < 15.6) ringFx(t, 12.2 + Math.floor((t - 12.2) / 1.2) * 1.2, 222, 96, 22, '#ffa23c', .8);
+  const c = at([[0, 120, 60], [1, sx(3, 4), SY], [1.7, sx(3, 4), SY], [2.6, 246, 96], [3.4, 262, 97], [4.2, 278, 95], [5.2, 150, 150]], t, 1);
+  panel(['wall', 'gate', 'tower', 'spike'], t > .9 && t < 4.6 ? 3 : -1, 1 - sm(t, 4.6, 5));
+  cur(c, t, [[1.2, 0], [2.6, 0], [3.4, 0], [4.2, 0]]);
+}
+function cSeasons(t) {
+  const i = Math.min(3, t / 4 | 0), wv = Math.min(15, Math.max(1, t | 0)), tk = (a, b) => sm(t, a - .5, a + .5) * (1 - sm(t, b - .5, b + .5));
+  const sum = tk(4, 8), aut = tk(8, 12), win = sm(t, 11.5, 12.5), rain = sm(t, 1, 1.6) * (1 - sm(t, 3.2, 3.9)), fog = sm(t, 9, 10) * (1 - sm(t, 11.2, 12));
+  hud(RES(160, 90, 220, 80 + num(t, [2, 4, 6, 8, 10, 12, 14].map(a => [a, 6])), '9/15').concat([['clock', L('Wave ' + wv), 0, 196], ['', L(SEAS[i]), SEASC[i], 256]]));
+  B('castle', 56, 106, 86); B('house', 150, 66, 42); B('house', 196, 58, 42); B('farm', 232, 150, 50); TREES.forEach(([x, y]) => tree(x, y - 14)); tree(20, 166); tree(120, 160); rock(296, 156);
+  unit('peasant', at([[0, 214, 154]], t), { atk: (t * 1.4) % 1, k: 'f', dx: 1 }); unit('peasant', at([[0, 112, 132], [3, 150, 120], [8, 150, 120], [11, 112, 132]], t)); unit('knight', at([[0, 104, 112]], t));
+  for (const a of [2, 4, 6, 8, 10, 12, 14]) fl(t, a, 232, 126, '+6', '#ffe08a');
+  if (win > 0) Q.push([0, () => R4('rgba(238,245,255,' + (.62 * win).toFixed(3) + ')', 0, 0, W, H)]);
+  Q.push([890, () => { const g = G;
+    if (sum > 0) R4('rgba(255,214,110,' + (.13 * sum).toFixed(3) + ')', 0, 0, W, H);
+    if (aut > 0) R4('rgba(214,104,24,' + (.24 * aut).toFixed(3) + ')', 0, 0, W, H);
+    if (fog > 0) R4('rgba(206,210,214,' + (.42 * fog).toFixed(3) + ')', 0, 0, W, H);
+    if (win > 0) R4('rgba(190,215,255,' + (.14 * win).toFixed(3) + ')', 0, 0, W, H);
+    if (rain > 0) { g.fillStyle = 'rgba(176,206,255,' + (.6 * rain).toFixed(3) + ')'; for (let k = 0; k < 46; k++) { const x = ((hsh(k, 4) * W - t * 40) % W + W) % W, y = (hsh(k, 5) * H + t * 230) % H; g.fillRect(x, y, 1, 6) } }
+    if (win > 0) { g.fillStyle = 'rgba(255,255,255,' + (.9 * win).toFixed(3) + ')'; for (let k = 0; k < 60; k++) { const x = (hsh(k, 1) * W + Math.sin(t * 1.3 + k) * 5 + W) % W, y = (hsh(k, 2) * H + t * 26 * (.6 + hsh(k, 3))) % H; g.fillRect(x, y, 2, 2) } } }]);
+  const u = t - i * 4, a = lin(u, 0, .3) * (1 - lin(u, 1.4, 1.9));
+  if (a > 0) Q.push([960, () => { G.globalAlpha = a; R4('rgba(6,7,12,.55)', 0, 30, W, 26); pxText(L(SEAS[i]), W / 2, 43, 14, SEASC[i], { raw: true, al: 'center' }); G.globalAlpha = 1 }]);
+}
+function cMarket(t) {
+  hud(RES(300 - num(t, [[3, 50], [4.2, 50], [5.4, 50], [11.2, 50]]), 40 + num(t, [[11.2, 34]]), 80 + num(t, [[3, 40], [4.2, 37], [5.4, 34], [16.4, 120]]), 120, '12/20'));
+  B('castle', 56, 106, 86); B('market', 176, 98, 58); B('storage', 120, 56, 40); tree(296, 46); tree(280, 168); tree(20, 166); tree(236, 44);
+  unit('peasant', at([[0, 150, 112]], t), { dx: 1 });
+  [[3, '+40'], [4.2, '+37'], [5.4, '+34']].forEach(([a, s]) => { fl(t, a, 176, 58, s, '#ffd25a'); ringFx(t, a, 176, 92, 20, '#ffd25a', .5) });
+  fl(t, 11.2, 164, 58, '-50', '#e9c98a'); fl(t, 11.2, 190, 58, '+34', '#d6dae2'); ringFx(t, 11.2, 176, 92, 24, '#7ec8ff', .6);
+  if (t > 13 && t < 16.4) { const p = at([[13, 334, 140], [16.4, 204, 116]], t); Q.push([p.y, () => { G.fillStyle = 'rgba(0,0,0,.25)'; G.beginPath(); G.ellipse(p.x, p.y, 9, 3, 0, 0, 6.283); G.fill(); if (IC.convoy) { G.save(); G.translate(2 * p.x, 0); G.scale(-1, 1); G.drawImage(IC.convoy, p.x - 11, p.y - 19 + Math.abs(Math.sin(t * 9)), 22, 22); G.restore() } }]) }
+  fl(t, 16.4, 186, 60, '+120', '#ffd25a'); ringFx(t, 16.4, 186, 96, 30, '#ffd25a');
+  const o = sm(t, 1.2, 1.5) * (1 - sm(t, 8.6, 9)), o2 = sm(t, 9, 9.3) * (1 - sm(t, 12.4, 12.8)),
+    c = at([[0, 250, 50], [1, 176, 84], [1.8, 176, 84], [2.6, sx(0, 3), SY], [8.8, sx(0, 3), SY], [10.6, W / 2, SY], [12.4, W / 2, SY], [13.4, 110, 150]], t, 1);
+  panel(['wood', 'stone', 'food'], t > 2.4 && t < 8.7 ? 0 : -1, o);
+  if (o2 > 0) Q.push([1001, () => { const g = G, y0 = H - 27 + (1 - o2) * 30, lit = t > 10.4; R4('rgba(8,10,16,.9)', W / 2 - 34, y0, 68, 27); R4('rgba(184,149,76,.8)', W / 2 - 34, y0, 68, 1);
+    [['wood', -30], ['stone', 8]].forEach(([k, dx]) => { R4(lit ? '#4a5166' : '#2b2e38', W / 2 + dx, y0 + 3, 22, 22); if (IC[k]) g.drawImage(IC[k], W / 2 + dx + 2, y0 + 5, 18, 18) });
+    g.fillStyle = KC.gold; g.beginPath(); g.moveTo(W / 2 - 4, y0 + 9); g.lineTo(W / 2 - 4, y0 + 19); g.lineTo(W / 2 + 4, y0 + 14); g.closePath(); g.fill() }]);
+  cur(c, t, [[1.2, 0], [3, 0], [4.2, 0], [5.4, 0], [11.2, 0]]);
+}
+const camp = (x, y, t) => Q.push([y, () => { const g = G, tent = (tx, ty, w, h, c1, c2) => { g.fillStyle = c1; g.beginPath(); g.moveTo(tx - w, ty); g.lineTo(tx, ty - h); g.lineTo(tx + w, ty); g.closePath(); g.fill(); g.fillStyle = c2; g.beginPath(); g.moveTo(tx, ty - h); g.lineTo(tx + w, ty); g.lineTo(tx + w * .3, ty); g.closePath(); g.fill(); R4('#2a2018', tx - 2, ty - h * .45, 4, h * .45) };
+  g.fillStyle = 'rgba(0,0,0,.22)'; g.beginPath(); g.ellipse(x, y, 34, 8, 0, 0, 6.283); g.fill();
+  tent(x - 16, y - 6, 15, 22, '#8a4a3a', '#6a3428'); tent(x + 16, y - 2, 17, 26, '#93573f', '#70392a');
+  R4('#4f3a22', x + 33, y - 40, 1, 40); R4('#b0302c', x + 34, y - 40, 10, 7); R4('#7c1f1c', x + 34, y - 35, 10, 2);
+  R4('#3a2a1c', x - 4, y + 3, 8, 2); const f = 4 + Math.sin(t * 13) * 1.5; R4('#ff8a2a', x - 2, y + 3 - f, 4, f); R4('#ffe08a', x - 1, y + 4 - f * .6, 2, f * .6) }]);
+function cCamps(t) {
+  hud(RES(120, 60, 300 - num(t, [[2.6, 80]]) + num(t, [[11.4, 150]]), 140 - num(t, [[2.6, 20]]) + num(t, [[11.4, 60]]), (9 + (t > 4.6 ? 1 : 0)) + '/15'));
+  B('castle', 56, 106, 86); B('embassy', 138, 64, 50); camp(268, 108, t); tree(296, 46); tree(20, 166); tree(190, 168); tree(230, 40); rock(160, 150);
+  if (t > 2.6 && t < 4.6) Q.push([930, () => { bar(56, 44, 30, lin(t, 2.6, 4.6), '#ffd25a'); if (IC.envoy) G.drawImage(IC.envoy, 34, 38, 10, 10) }]);
+  if (t > 4.6) { ringFx(t, 4.6, 84, 118, 14, '#ffe08a', .6); unit('envoy', at([[4.6, 84, 118], [5.4, 104, 122], [7.2, 104, 122], [11.2, 240, 112]], t), { ring: t > 6 && t < 11.2 ? '#7dff8a' : 0 }) }
+  fl(t, 11.4, 256, 62, '+150', '#ffd25a'); fl(t, 11.7, 280, 62, '+60', '#ffe08a'); ringFx(t, 11.4, 268, 100, 34, '#ffd25a');
+  const o = sm(t, 1.2, 1.5) * (1 - sm(t, 3.2, 3.6)), ev = sm(t, 13.2, 13.5) * (1 - sm(t, 16, 16.3)),
+    c = at([[0, 220, 50], [1, 56, 90], [1.7, 56, 90], [2.4, sx(1, 2), SY], [3.2, sx(1, 2), SY], [5.4, 94, 104], [5.5, 94, 104], [6, 116, 130], [6.3, 116, 130], [7.1, 264, 98], [8.2, 200, 152], [13.8, 200, 152], [14.9, 190, 40]], t, 1);
+  if (t > 5.5 && t < 6.1) box(94, 104, c.x, c.y);
+  panel(['peasant', 'envoy'], t > 2.2 && t < 3.3 ? 1 : -1, o);
+  if (ev > 0) Q.push([1100, () => { const g = G, y0 = 18 - (1 - ev) * 50, hit = t > 15.2; R4('rgba(8,10,16,.92)', 86, y0, 148, 36); g.strokeStyle = KC.gold; g.lineWidth = 1; g.strokeRect(86.5, y0 + .5, 147, 35);
+    if (IC.envoy) g.drawImage(IC.envoy, 92, y0 + 6, 24, 24);
+    R4('#2b2e38', 124, y0 + 7, 44, 22); if (IC.coin) g.drawImage(IC.coin, 128, y0 + 10, 16, 16); if (IC.food) g.drawImage(IC.food, 148, y0 + 10, 16, 16);
+    R4(hit ? '#4a5166' : '#2b2e38', 176, y0 + 7, 44, 22); if (hit) g.strokeRect(176.5, y0 + 7.5, 43, 21); if (IC.crown) g.drawImage(IC.crown, 180, y0 + 10, 16, 16); pxText('+1', 200, y0 + 18, 8, '#d9c2ff', { raw: true, sh: '' }) }]);
+  fl(t, 15.2, 198, 66, '+1', '#d9c2ff');
+  cur(c, t, [[1.2, 0], [2.6, 0], [7.2, 1], [15.2, 0]]);
+}
+function cTalents(t) {
+  const lv = 1 + (t > 4.5 ? 1 : 0) + (t > 12 ? 1 : 0), xp = t < 4.5 ? lin(t, 1.4, 4.5) : t < 12 ? lin(t, 9.4, 12) : .15, got = [t > 7.4, t > 14.2];
+  hud(RES(200, 180, 450, 160, '16/20'));
+  B('castle', 56, 106, 86); tree(296, 46); tree(280, 160); tree(130, 44); rock(36, 164);
+  const k = { x: 150, y: 104, mv: false, dx: 1 }, fight = (t > 1.4 && t < 4.6) || (t > 9.4 && t < 12.2) || (t > 15.6 && t < 16.6);
+  Q.push([k.y - .1, () => { const g = G; g.fillStyle = 'rgba(255,210,60,.1)'; g.strokeStyle = 'rgba(255,210,60,.5)'; g.lineWidth = 1; g.beginPath(); g.ellipse(k.x, k.y, 34, 15, 0, 0, 6.283); g.fill(); g.stroke() }]);
+  unit('king', k, { atk: fight ? (t * 1.3) % 1 : -1 });
+  [[-13, -11], [-13, 11]].forEach(([ox, oy], i) => unit('guard', { x: k.x + ox, y: k.y + oy, mv: false, dx: 1 }, { atk: fight ? (t * 1.2 + .4 + i * .3) % 1 : -1 }));
+  Q.push([930, () => { bar(k.x + 4, k.y - 46, 26, xp, '#b48cff'); if (IC.crown) G.drawImage(IC.crown, k.x - 22, k.y - 51, 9, 9); pxText(String(lv), k.x + 21, k.y - 45, 7, '#ffe08a', { raw: true }) }]);
+  [4.5, 12].forEach(a => { ringFx(t, a, k.x, k.y - 6, 30, '#ffe066', .9); fl(t, a, k.x, k.y - 52, '+1', '#ffe08a') });
+  ringFx(t, 16, k.x, k.y, 96, '#ffd23c', .9); ringFx(t, 16.15, k.x, k.y, 70, '#fff0a0', .8);
+  for (let i = 0; i < 11; i++) { const b = i < 4 ? 0 : i < 8 ? 1 : 2, j = i - b * 4, a = [0, 8, 13.6][b] + j * .45, y = 78 + hsh(i, 3) * 54, kb = b === 2 ? sm(t, 16, 16.5) * 34 : 0;
+    zed(t, j === 3 ? 'brute' : 'zombie', [[a, 334, y], [a + 2, 174 + (j % 3) * 9 + kb, 104 + (y - 104) * .5]], a + 2, b === 2 ? 16.1 : [2.8, 10.4][b] + j * .55, { dx: -1 }) }
+  const o = sm(t, 5.4, 5.7) * (1 - sm(t, 8.2, 8.5)) + sm(t, 12.6, 12.9) * (1 - sm(t, 15, 15.3)), TX = [208, 250], TY = j => 52 + j * 22;
+  if (o > 0) Q.push([1100, () => { const g = G, pts = lv - 1 - (got[0] ? 1 : 0) - (got[1] ? 1 : 0); g.globalAlpha = o; R4('rgba(8,10,16,.92)', 186, 22, 106, 122); g.strokeStyle = KC.gold; g.lineWidth = 1; g.strokeRect(186.5, 22.5, 105, 121);
+    if (IC.crown) g.drawImage(IC.crown, 192, 26, 12, 12); for (let q = 0; q < 2; q++) { g.fillStyle = q < pts ? '#ffd23c' : '#3a3d48'; g.beginPath(); g.moveTo(214 + q * 12, 27); g.lineTo(219 + q * 12, 32); g.lineTo(214 + q * 12, 37); g.lineTo(209 + q * 12, 32); g.closePath(); g.fill() }
+    for (let b = 0; b < 2; b++) { R4('#3a3d48', TX[b] + 7, TY(0) + 8, 2, 66); for (let j = 0; j < 4; j++) { const on = (b === 0 && j === 0 && got[0]) || (b === 1 && j === 0 && got[1]), nx = pts > 0 && j === (b === 0 ? (got[0] ? 1 : 0) : (got[1] ? 1 : 0));
+      R4(on ? '#c99a2c' : '#2b2e38', TX[b], TY(j), 16, 16); if (on) R4('#ffe08a', TX[b], TY(j), 16, 2); if (nx && t % .7 < .45) g.strokeRect(TX[b] + .5, TY(j) + .5, 15, 15);
+      const ic = IC[b ? 'sword' : 'rally']; if (ic) { g.globalAlpha = o * (on ? 1 : nx ? .8 : .3); g.drawImage(ic, TX[b] + 2, TY(j) + 2, 12, 12); g.globalAlpha = o } } }
+    g.globalAlpha = 1 }]);
+  const c = at([[0, 110, 150], [5.6, 110, 150], [6.8, TX[0] + 8, TY(0) + 8], [8.4, TX[0] + 8, TY(0) + 8], [9.2, 110, 150], [12.8, 110, 150], [13.8, TX[1] + 8, TY(0) + 8], [15.2, TX[1] + 8, TY(0) + 8], [16, 110, 150]], t, 1);
+  cur(c, t, [[7.4, 0], [14.2, 0]]);
+}
+
+/* ---------- sounds: [scene time, sound] lists per chapter, played when the clip time crosses them (never on a seek).
+   Existing game sounds through snd without a position: sound on/off, the effects volume and the audio graph are the game's own. The voices are
+   kept so pausing, changing chapter or closing fades them at once. Visual side only: snd draws from REALR, nothing here is simulation. ---------- */
+const rp = (a, b, d, n) => { const r = []; for (let x = a; x < b; x += d) r.push([x, n]); return r };
+const ev = (...A) => { const r = []; for (const a of A) if (typeof a[0] === 'number') r.push(a); else r.push(...a); return r };
+const SV = [];
+function hush() { for (const g of SV) { try { g.gain.cancelScheduledValues(0); g.gain.setTargetAtTime(0, g.context.currentTime, .02) } catch (e) { } } SV.length = 0 }
+function sfx(a, b) { const E = CH[ch][5]; if (!E) return; for (const [x, n] of E) if (x > a && x <= b) { const g = snd(n); if (g && g.gain) { g.gain.value *= .7; SV.push(g); if (SV.length > 24) SV.shift() } } }
+
+/* chapter: [title, duration (s, title card included), captions [[scene time, text], ...], clip, road of the ground, sounds] */
 const CH = [
-  ['Gather', 17.5, [[0, 'Drag a box around your peasants to select them'], [2.6, 'Right-click a tree, a rock or gold: your peasants gather it'], [9.5, 'They carry everything back to the castle: your stock grows']], cGather],
-  ['Build', 18, [[0, 'Open the build menu and choose a building'], [2.4, 'Click the ground to place it'], [6.5, 'Your peasants build it: every building has a cost']], cBuild],
-  ['Population and food', 18, [[0, 'Population limit reached: build houses in the Town menu'], [4.5, 'Farms give food: put a peasant on each farm'], [9.4, 'Every new unit costs food']], cPop],
-  ['Train an army', 20.5, [[0, 'Build barracks, then train soldiers in the Train bar'], [5, 'Knights fight up close, archers shoot from behind'], [14, 'Select your soldiers and right-click to send them']], cArmy],
-  ['Walls and towers', 20, [[0, 'Zombies follow the red lines: block them with walls'], [5.5, 'Add a gate so your own units can pass'], [8.4, 'Towers shoot every zombie in range']], cWalls, ROAD],
-  ['The night and the horde', 21.5, [[0, 'The top bar counts down to the next wave'], [4, 'At night the horde comes: keep your soldiers near the walls'], [15.5, 'Hold until dawn: every wave is stronger than the last']], cNight, ROAD],
-  ['Research', 18, [[0, 'Build an Academy to research'], [3, 'Each research takes time and makes your kingdom stronger'], [9, 'Masonry lets you build in stone']], cRes],
-  ['The King', 18, [[0, 'Summon King Naraige at the castle: he arrives with 2 royal guards'], [6, 'He fights the horde and gains levels'], [11, 'His skills can turn a fight: use them at the right time']], cKing],
-  ['Co-op', 20, [[0, 'Co-op: host a game and share the room code with a friend'], [4.5, 'Two kingdoms, one horde: defend together'], [13.4, 'Send a convoy to share resources with your partner']], cCoop],
+  ['Gather', 17.5, [[0, 'Drag a box around your peasants to select them'], [2.6, 'Right-click a tree, a rock or gold: your peasants gather it'], [9.5, 'They carry everything back to the castle: your stock grows']], cGather, null, ev([2.2, 'select'], [3.7, 'order'], rp(6.5, 9.6, .77, 'chop'), [11.6, 'coin'], rp(14.6, 16, .77, 'chop'))],
+  ['Build', 18, [[0, 'Open the build menu and choose a building'], [2.4, 'Click the ground to place it'], [6.5, 'Your peasants build it: every building has a cost']], cBuild, null, ev([1, 'click'], [2.3, 'click'], [4.2, 'build'], rp(6.7, 11, .67, 'build'), [11, 'ok'], [11.5, 'click'], [12.5, 'click'], [13.5, 'build'], rp(15.4, 16.6, .67, 'build'))],
+  ['Population and food', 18, [[0, 'Population limit reached: build houses in the Town menu'], [4.5, 'Farms give food: put a peasant on each farm'], [9.4, 'Every new unit costs food']], cPop, null, ev(rp(.4, 4, .67, 'build'), [4, 'ok'], [9.9, 'click'], [10.2, 'spawn'], [12.9, 'click'], [13.2, 'spawn'])],
+  ['Train an army', 20.5, [[0, 'Build barracks, then train soldiers in the Train bar'], [5, 'Knights fight up close, archers shoot from behind'], [14, 'Select your soldiers and right-click to send them']], cArmy, null, ev([2.4, 'click'], [2.8, 'click'], [3.2, 'click'], [5, 'spawn'], [7, 'spawn'], [9, 'spawn'], [9.05, 'click'], [9.4, 'click'], [11.5, 'spawn'], [13, 'spawn'], [15.2, 'select'], [16.1, 'order'])],
+  ['Walls and towers', 20, [[0, 'Zombies follow the red lines: block them with walls'], [5.5, 'Add a gate so your own units can pass'], [8.4, 'Towers shoot every zombie in range']], cWalls, ROAD, ev([1.2, 'click'], rp(2, 5.2, .8, 'build'), [5.8, 'click'], [7.5, 'gate'], [8.8, 'click'], [10.5, 'build'], [12, 'groan'], rp(13, 17.6, .7, 'arrow'), [15.4, 'die'], [16.2, 'die'], [17, 'die'], [17.6, 'die'])],
+  ['The night and the horde', 21.5, [[0, 'The top bar counts down to the next wave'], [4, 'At night the horde comes: keep your soldiers near the walls'], [15.5, 'Hold until dawn: every wave is stronger than the last']], cNight, ROAD, ev([1, 'tick'], [2, 'tick'], [2.4, 'night'], [3, 'tick'], [4, 'horn'], [6, 'groan'], rp(7.8, 16.4, .9, 'sword'), rp(8.1, 16.2, 1.3, 'arrow'), [9.4, 'die'], [10.6, 'groan'], [11.2, 'die'], [12.9, 'die'], [14.3, 'die'], [15.6, 'die'], [16.4, 'die'], [17, 'fanfare'])],
+  ['Research', 18, [[0, 'Build an Academy to research'], [3, 'Each research takes time and makes your kingdom stronger'], [9, 'Masonry lets you build in stone']], cRes, null, ev([1.2, 'click'], [3, 'click'], [9, 'ok'], rp(9.1, 10.9, .4, 'build'), [11.5, 'click'], [15, 'ok'])],
+  ['The King', 18, [[0, 'Summon King Naraige at the castle: he arrives with 2 royal guards'], [6, 'He fights the horde and gains levels'], [11, 'His skills can turn a fight: use them at the right time']], cKing, null, ev([1.2, 'click'], [3, 'click'], [3.5, 'fanfare'], rp(9.2, 11.4, .8, 'sword'), [10.2, 'die'], [10.7, 'die'], [11.6, 'boom'], [11.9, 'die'], rp(12.4, 14.2, .8, 'sword'), [13.6, 'horn'])],
+  ['Co-op', 20, [[0, 'Co-op: host a game and share the room code with a friend'], [4.5, 'Two kingdoms, one horde: defend together'], [13.4, 'Send a convoy to share resources with your partner']], cCoop, null, ev([3.9, 'order'], [4.4, 'order'], rp(8.2, 13, .85, 'sword'), rp(8.5, 13, 1.2, 'arrow'), [9.4, 'die'], [10.9, 'die'], [12.4, 'die'], [13.6, 'click'], [13.8, 'convoy'], [17.6, 'coin'])],
+  ['Traps', 18, [[0, 'Spike traps are in the Defense menu: cheap, one tile each'], [5.5, 'Zombies walking on a trap are hurt until it breaks'], [11, 'Research Boiling oil: your walls scald the zombies that touch them']], cTraps, ROAD,
+    ev([1.2, 'click'], [2.6, 'build'], [3.4, 'build'], [4.2, 'build'], [5.6, 'groan'], rp(7, 10.2, .5, 'zhit'), [9.1, 'die'], [9.6, 'die'], [10.3, 'die'], [10.4, 'clank'], [11.6, 'ok'], [12.4, 'sizzle'], [13.8, 'die'], [14, 'sizzle'], [14.6, 'die'], [15.2, 'die'])],
+  ['Seasons', 17.5, [[0, 'A season lasts 4 waves: spring, summer, autumn, winter'], [6, 'Each wave has its weather: clear, rain, fog or snow'], [12, 'Seasons change the light and the sounds, not the rules']], cSeasons, null,
+    ev([.1, 'notice'], [4, 'notice'], [8, 'notice'], [12, 'notice'], rp(1.2, 15.5, 1.43, 'dirt'))],
+  ['Market and barter', 19, [[0, 'Market: sell wood, stone or food for gold, or buy them'], [6, 'Selling the same resource again and again pays less for a while'], [9.4, 'Barter swaps 50 of one resource for another at a better rate'], [13, 'A merchant caravan passes at times: take its goods or escort it to the market']], cMarket, null,
+    ev([1.2, 'click'], [3, 'coin'], [4.2, 'coin'], [5.4, 'coin'], [11.2, 'coin'], [13, 'caravan'], [16.4, 'coin'])],
+  ['Rebel camps and envoys', 18.5, [[0, 'Build an embassy, then train an envoy at the castle'], [5.5, 'Send to a rebel camp: tribute of gold and food, once per camp'], [13, 'When rebel envoys come, take their tribute or refuse it for renown: later tributes pay more']], cCamps, null,
+    ev([1.2, 'click'], [2.6, 'click'], [4.6, 'spawn'], [6, 'select'], [7.2, 'order'], [11.4, 'coin'], [13.2, 'envoy'], [15.2, 'click'], [15.3, 'ok'])],
+  ['King talents', 19, [[0, 'The King gains XP when zombies die near him, after each wave and from bosses'], [5, 'Each new level gives one talent point'], [9, 'Two branches of four talents, learned in order: the war cry or the charge']], cTalents, null,
+    ev(rp(1.5, 4.4, .8, 'sword'), [2.8, 'die'], [3.4, 'die'], [4, 'die'], [4.5, 'horn'], [7.4, 'click'], [7.5, 'ok'], rp(9.6, 12, .8, 'sword'), [10.4, 'die'], [11, 'die'], [12, 'horn'], [14.2, 'click'], [14.3, 'ok'], [16, 'horn'], [16.3, 'die'])],
 ];
 const capAt = (C, t) => { let s = C[2][0][1]; for (const [a, x] of C[2]) if (t >= a) s = x; return s };
 /* caption wrapped on at most `lines` lines, shrinking the text first; still too long = reported like every other overflow (tools/fitcheck) */
@@ -308,21 +432,22 @@ function capFit(s, w, lines) {
   const o = window.__ovf || (window.__ovf = []); if (o.length < 400) o.push(L(s) + ' @cap' + Math.round(w)); return { ls: ls.slice(0, lines), sc: .62, over: true };
 }
 
-const setCh = i => { ch = (i + CH.length) % CH.length; T = 0; paused = false };
-const toggle = () => { paused = !paused };
-const playTut = () => { guideState.open = false; settingsState.setupOpen = true };
+const setCh = i => { ch = (i + CH.length) % CH.length; T = 0; paused = false; hush() };
+const toggle = () => { paused = !paused; if (paused) hush() };
 export function openGuide() { guideState.open = true; ch = 0; T = 0; paused = false; lastT = performance.now() }
+export function closeGuide() { guideState.open = false; hush() }
 
 function init() {
   if (inited) return; inited = true;
   /* Left / Right change the chapter, Space pauses (the menu navigation keeps Up / Down / Enter / Esc) */
   addEventListener('keydown', e => {
-    if (!guideState.open || e.ctrlKey || e.altKey || e.metaKey) return;
+    if (!guideState.open || sessionState.started || e.ctrlKey || e.altKey || e.metaKey) return;
     const f = e.key === 'ArrowRight' ? () => setCh(ch + 1) : e.key === 'ArrowLeft' ? () => setCh(ch - 1) : e.key === ' ' ? toggle : null;
     if (f) { e.preventDefault(); e.stopImmediatePropagation(); f() }
   }, true);
   /* tools and tests: __guide.at(chapter, seconds, paused), __guide.fit(width, lines) */
-  guideState.at = (c, t, p) => { ch = c; T = t; paused = !!p };
+  guideState.at = (c, t, p) => { ch = c; T = t; paused = !!p; hush() };
+  guideState.n = CH.length;
   guideState.fit = (w, n) => { const r = []; for (const C of CH) for (const q of C[2]) { const f = capFit(q[1], w, n); if (f.over) r.push(L(q[1])); } return r };
   guideState.ready = () => spDone;
   window.__guide = guideState;
@@ -345,19 +470,19 @@ function video(x, y, w, h) {
 
 export function drawGuide(UW, UH, fh, back) {
   init(); sprites();
-  { const now = performance.now(), dt = Math.min(.1, Math.max(0, (now - lastT) / 1000)); lastT = now; if (!paused && spDone) { T += dt; if (T >= CH[ch][1]) setCh(ch + 1) } }
-  const b = kitScreen(UW, UH, { key: 'gui', title: 'Video guide', close: back, fh, maxW: 640 }), g = canvasesState.ctx, n = CH.length, C = CH[ch];
+  { const now = performance.now(), dt = Math.min(.1, Math.max(0, (now - lastT) / 1000)); lastT = now; if (!paused && spDone) { const a = T; T += dt; if (dt > 0) sfx(a - TC0, T - TC0); if (T >= CH[ch][1]) setCh(ch + 1) } }
+  const b = kitScreen(UW, UH, { key: 'gui', title: 'Video guide', close: back, fh, maxW: 640, veil: sessionState.inGame ? 'rgba(9,10,15,.92)' : undefined }), g = canvasesState.ctx, n = CH.length, C = CH[ch];
   /* three layouts: list | video over its controls (desktop); video over its controls (narrow); video beside its controls (low screens) */
   const nar = b.w < 380, low = b.h < 170, lw = nar ? 0 : Math.min(160, Math.round(b.w * .29)), gp = nar ? 0 : 12, cx = b.x + lw + gp, cwd = b.w - lw - gp,
-    ctl = low ? 17 : 20, th = low ? 18 : 22, tut = nar ? th + 5 : 0, hd = nar ? 13 : 0, sw = Math.round((b.h - 2) * 16 / 9), side = low && cwd - sw - 10 >= 110;
+    ctl = low ? 17 : 20, hd = nar ? 13 : 0, sw = Math.round((b.h - 2) * 16 / 9), side = low && cwd - sw - 10 >= 110;
   let capL, vh, vw, vx, vy = b.y + 1, ix, iw, iy;
-  if (side) { vh = Math.round(b.h - 2); vw = sw; vx = cx; ix = cx + vw + 10; iw = cx + cwd - ix; iy = vy; capL = Math.max(1, Math.min(5, Math.floor((b.h - hd - 13 - ctl - tut) / 11))) }
-  else { capL = low ? 1 : 2; vh = Math.round(Math.max(36, Math.min(b.h - hd - capL * 11 - 15 - ctl - tut - 2, cwd * 9 / 16))); vw = Math.round(vh * 16 / 9); vx = Math.round(cx + (cwd - vw) / 2); ix = cx; iw = cwd; vy += hd; iy = vy + vh + 4 }
+  if (side) { vh = Math.round(b.h - 2); vw = sw; vx = cx; ix = cx + vw + 10; iw = cx + cwd - ix; iy = vy; capL = Math.max(1, Math.min(5, Math.floor((b.h - hd - 13 - ctl) / 11))) }
+  else { capL = low ? 1 : 2; vh = Math.round(Math.max(36, Math.min(b.h - hd - capL * 11 - 15 - ctl - 2, cwd * 9 / 16))); vw = Math.round(vh * 16 / 9); vx = Math.round(cx + (cwd - vw) / 2); ix = cx; iw = cwd; vy += hd; iy = vy + vh + 4 }
   const capH = capL * 11 + 2, bx = side ? ix : vx, bw = side ? iw : vw;
   if (!nar) {
-    const l = listBegin('gui', b.x, b.y, lw, b.h - th - 6);
-    CH.forEach((c, i) => l.row({ label: (i + 1) + '. ' + L(c[0]), raw: true, on: i === ch, fn: () => setCh(i) }, low ? 15 : 18)); listEnd();
-    bevelBtn(b.x, b.y + b.h - th, lw, th, 'Play the tutorial game', 'go', playTut, { sc: .8 });
+    /* the rows shrink (18 to 12 px) so every chapter shows without scrolling where the screen allows; below that the list scrolls */
+    const rh = Math.max(12, Math.min(18, Math.floor((b.h + 3) / n) - 3)), l = listBegin('gui', b.x, b.y, lw, b.h);
+    CH.forEach((c, i) => l.row({ label: (i + 1) + '. ' + L(c[0]), raw: true, on: i === ch, fn: () => setCh(i) }, rh)); listEnd();
   } else { pxText((ch + 1) + '/' + n + '  ' + L(C[0]), side ? ix + iw / 2 : b.x + b.w / 2, (side ? iy : b.y + 1) + 5, 9, KC.gold, { raw: true, al: 'center', max: side ? iw : b.w }); if (side) iy += hd }
   video(vx, vy, vw, vh); kitHitAdd(vx, vy, vw, vh, toggle);
   let y = iy;
@@ -368,5 +493,4 @@ export function drawGuide(UW, UH, fh, back) {
   bevelBtn(bx, y, 30, ctl, '', 'dark', () => setCh(ch - 1), { ic: glyph(0) }); bevelBtn(bx + 34, y, 30, ctl, '', paused ? 'go' : 'dark', toggle, { ic: glyph(paused ? 1 : 2) }); bevelBtn(bx + 68, y, 30, ctl, '', 'dark', () => setCh(ch + 1), { ic: glyph(3) });
   if (bw >= 170) pxText(fmt(T) + ' / ' + fmt(C[1]), bx + 106, y + ctl / 2, 8, KC.dim, { raw: true, wt: 500, sh: '' });
   if (!nar && bw >= 220) pxText((ch + 1) + ' / ' + n, bx + bw, y + ctl / 2, 8, KC.dim, { raw: true, wt: 500, sh: '', al: 'right' });
-  if (nar) bevelBtn(side ? ix : b.x, y + ctl + 5, side ? iw : b.w, th, 'Play the tutorial game', 'go', playTut, { sc: .85 });
 }

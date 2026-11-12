@@ -19,7 +19,7 @@ import { mkU, spawnPos } from '../gameplay/entities.js';
 import { wavePreview } from '../gameplay/wave-preview.js';
 import { formationsState, order, setOrderHandler } from '../gameplay/formations.js';
 import { kingOf, kingSkill, kingTalent, kingSkill0, kingTick, kskLeft, kingXp, kingTalent0, kxLevel, kPoints, kHas, KXL } from '../gameplay/king-skills.js';
-import { setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
+import { openMenu, setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
 import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
 import { reset } from '../gameplay/reset.js';
 import { C, LH, RS, RS2, RT2, rulesState, rxLock, T, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
@@ -279,6 +279,7 @@ export function installBrowserConsole() {
     titleDebug: { get: () => titleDebug },
     guideState: { get: () => guideState },
     openGuide: { get: () => openGuide },
+    openMenu: { get: () => openMenu },
     icoPart: { get: () => icoPart },
     openPicker: { get: () => openPicker },
     sitePickerState: { get: () => sitePickerState },
