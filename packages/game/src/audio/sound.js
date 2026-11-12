@@ -181,6 +181,7 @@ const CAP=[5,4,7,4,3],CAPW=12;
 /* an alert passes over the fight: world effects dip while it sounds */
 function duck(d){const t=AC.currentTime+BT;FXB.gain.cancelScheduledValues(t);FXB.gain.setTargetAtTime(.45,t,.04);FXB.gain.setTargetAtTime(1,t+Math.min(1.6,d*.7),.35)}
 
+/* returns the gain node of the voice it started (nothing when the sound was dropped): the video guide fades its own voices on pause */
 export let snd = function snd(n,x,y){if(!AC||!sndOn||!SFX[n])return;if(!BENCH){if(AC.state!=='running')return;audioWake()}
  const M=META[n]||DEF,c=M[0],t=BENCH?BT*1000:performance.now();if(t-(lastS[n]===undefined?-1e9:lastS[n])<M[1]*1000)return;
  if(c>1){if(t-budT>120||t<budT){budT=t;bud=0}if(bud>=6)return}
@@ -193,7 +194,7 @@ export let snd = function snd(n,x,y){if(!AC||!sndOn||!SFX[n])return;if(!BENCH){i
  /* pitch: random within the range of the sound, pushed away from the last one played */
  {const r=M[3];let p=(R()*2-1)*r;const l=lastP[n]||0;if(r&&Math.abs(p-l)<r*.3)p=(l>0?-1:1)*r*(.35+R()*.65);lastP[n]=p;PV=1+p}
  CUR=n;const g=AC.createGain();g.gain.value=v;const dst=c<2?UIB:FXB;if(pan&&AC.createStereoPanner){const p=AC.createStereoPanner();p.pan.value=pan;g.connect(p);p.connect(dst)}else g.connect(dst);
- if(c===1)duck(M[2]);OUT=g;try{SFX[n]()}catch(e){ERRN++}OUT=FXB;PV=1};
+ if(c===1)duck(M[2]);OUT=g;try{SFX[n]()}catch(e){ERRN++}OUT=FXB;PV=1;return g};
 
 /* ambience: wind always, birds by day, crickets / owls / distant wolves by night */
 function ambTick(){if(!AC||!sndOn||BENCH||AC.state!=='running')return;OUT=FXB;PV=1;const on=sessionState.started&&!sessionState.paused;if(WIND)WIND.forEach((g,i)=>g.gain.setTargetAtTime(on?(i?.016:.045)*(1.2-dayK*.4):.02,AC.currentTime,1.2));if(!on)return;

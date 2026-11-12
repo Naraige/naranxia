@@ -1,4 +1,4 @@
-# Video guide (Tutorial button of the title menu)
+# Video guide (Tutorial button of the title menu, Guide row of the Esc menu)
 
 Request of the King, word for word: "make the tutorial more like a video guide". Branch of the hd-menu-ux worktree, not merged, not shipped.
 
@@ -54,20 +54,56 @@ Simulation safety: the module never touches `sessionState`, sends no command and
 
 ## Files
 
-- `packages/game/src/ui/video-guide.js` (new): screen, player, sprites, the nine clips.
+- `packages/game/src/ui/video-guide.js` (new): screen, player, sprites, the clips (nine in v92, fourteen in v93) and their sounds.
 - `packages/game/src/ui/tutorial.js`: only `hintBar` and its three hints are left.
 - `packages/game/src/ui/title-menu.js`: 4 small edits (import, screen key, the `guideState.open` branch, the Tutorial button action).
 - `packages/game/src/i18n/translations.js`: 31 keys added by `tools/addtexts.py`.
 - Tools: `window.__guide` (`at(chapter, seconds, paused)`, `fit(width, lines)`, `ready()`) for screenshots and caption checks.
 
+## v93 lot "guide" (issue #23, King: "fait le tout")
+
+Branch of the hd-menu-ux worktree, committed, not pushed, not shipped.
+
+1. Sounds. Each chapter has a list of `[scene time, sound]` (6th field of `CH`): chop, build, click, select, order, spawn, coin, gate, arrow,
+   sword, zombie hit, groan, die, tick, night bell, horn, fanfare, boom, convoy, caravan, envoy, sizzle, clank, notice, dirt. They are the
+   game's own sounds, played through `snd` without a position when the clip time crosses them (never on a seek, never while paused): sound
+   on/off, the effects volume and the limiter are the game's. `snd` now returns the gain node of the voice it started; the guide keeps its
+   voices (at 70 % of the game level) and fades them in 20 ms on pause, chapter change and close (`hush`). No audio file, nothing new.
+2. In game. The Esc menu has a "Guide" row (`drawGameMenu`, `ui/title-menu.js`). That menu already sets `started = false`, which stops a solo
+   game, and leaves the co-op lockstep running; the guide adds nothing to that: it reads `sessionState.inGame` (veil over the game view) and
+   `started` (its Left / Right / Space keys are dead while the game runs), sends no command, writes no state. Esc closes the guide back to
+   the game menu.
+3. Five chapters in the same scripted style (16 captions, 2 of them existing keys), 14 chapters in all:
+
+| # | title | length (s) | what is shown |
+|---|---|---|---|
+| 10 | Traps | 18 | the pointer picks the spike trap in the Defense bar and places three on the road (10 gold, 15 wood each); six zombies walk over them ("-6"), three fall, the first trap breaks; Boiling oil is researched, the gate scalds the three that got through ("-12") |
+| 11 | Seasons | 17.5 | the same kingdom through spring (rain), summer, autumn (fog), winter (snow on the ground and falling), 4 s each, with the wave number and the season name in the top bar and a season card; the farm keeps giving "+6" |
+| 12 | Market and barter | 19 | click on the market, wood sold three times ("+40", "+37", "+34": each sale pays less), the barter slot wood > stone ("-50", "+34"), a merchant caravan rolls in to the market ("+120") |
+| 13 | Rebel camps and envoys | 18.5 | an embassy stands; an envoy is trained at the castle, selected and sent to a rebel camp (tents, fire, red banner): "+150" gold, "+60" food; then the "rebel envoys" banner with its two choices, the pointer refuses: renown "+1" |
+| 14 | King talents | 19 | the King and his guards fight, the XP bar fills, level 2; the talent panel opens (two branches of four, one point), the first talent of the cry branch is taken; level 3, the first of the charge branch; a cry throws the zombies back |
+
+   The amounts in the clips are examples (the market prices move in the game). New drawings: spike plate, rebel camp, barter slot, event
+   banner, talent panel (a few rectangles each); the envoy has its own sprite set (4 walk frames).
+   Chapter list: the rows shrink from 18 to 12 px so the 14 chapters show without scrolling (18 px at 1280x720); under that the list scrolls.
+   At 390x700 there is no list: the header shows "12/14 title" and the previous / next buttons change the chapter, as before.
+4. "Play the tutorial game" removed: the button (both layouts), `playTut`, the `settingsState` import, the key in the table, in NL / PL / TR
+   and in `docs/studio-texts/guide.json`.
+
+Texts: `docs/studio-texts/guide2.json` (20 keys: "Guide", 5 titles, 14 captions) added to the v93 block; NL, PL, TR in `i18n/langs/*.js`.
+Tools: `tools/qa_shots.py` has steps `13a` to `13e` (the new chapters), `33_game_menu`, `34_guide_ingame`, `35_guide_closed`;
+`openMenu` is a debug accessor; `__guide.n` is the number of chapters.
+
 ## Left to do / decisions for the King
 
 - Look of the clips on a real GPU and a real phone (only headless captures were looked at).
-- The clips have no sound: a click / chop / horn track from the existing sound set is possible, not done.
-- The button is still called "Play the tutorial game" although it now only opens New kingdom (the quests guide the game): rename it ("Start a game"?) or drop it.
-- The guide is not reachable from the in-game Esc menu (title only).
-- `tools/fitcheck.py` does not open the guide yet (captions were checked with a separate script, see the journal).
-- Chapters not covered: traps, seasons, market, events and rebel camps, king talents.
+- The sounds were not heard: the headless browser has no running audio, only the wiring was checked (every sound name exists, the build and
+  the tests pass). Level (70 % of the game's), density and choice of sounds are for the King's ear. In co-op the game's own sounds go on
+  under the guide.
+- The amounts shown in the Market, Traps and Camps clips are examples, not read from the rules.
+- If the guide is left open when a co-op game ends, the title shows the guide (Esc closes it).
+- `tools/fitcheck.py` does not open the guide (captions are checked by `tools/textwidth.py`: 43 captions, 9 languages, all fit).
+- PT / DE register and NL wording of the new captions follow the existing ones; not proofread by a native speaker.
 
 ## Old tutorial bar removed (King: the quests replace it)
 

@@ -23,6 +23,17 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Tests (machine loaded 9 to 23, other agents): `mp_convoy` PASS (302 s), `mp_resync` PASS, `det` PASS (same game twice, same hashes; convoys are not in the det scenario, solo). `mp_quests` NOT green locally, twice: run 1 the convoy quest closed, 2857 equal hashes, no desync, no error, but the 6 s real-time waits of the test for the house and farm sites ran out under load (RESULT FAIL); run 2 the page did not load in 180 s (load 23). To rerun on a quiet machine or on CI.
 - Not verified: a real two-machine game; the 103 pairs of the 120 that already worked were not rerun past trial 35; a pair whose porters other than the first have no route (their share comes back after 120 s as before).
 - For the King (not done, rule choice): about 1 site in 12 puts a castle on a closed ledge or behind a river: the convoy quest cannot be done there until the player builds a ramp or a bridge. Either `siteOK` refuses such sites, or the levelling cuts a way down, or the co-op convoy quest is skipped when the two castles are not linked.
+## 2026-11-12 · video guide lot for v93 (hd-menu-ux, issue #23, committed on the worktree branch, not pushed, not released)
+
+- King: "fait le tout" on the four open points of the guide. Detail in `docs/studio-notes/guide.md`.
+- Sounds in the clips: per-chapter `[time, sound]` lists played through `snd` (visual side, REALR) when the clip time crosses them; `snd` now returns the gain node of its voice so the guide fades its voices on pause, chapter change and close. Sound on/off and the effects volume apply as everywhere.
+- "Guide" row in the Esc menu (`drawGameMenu`): solo is stopped by the menu itself, the co-op lockstep is untouched, no command, nothing in SAVA.
+- Five chapters (Traps, Seasons, Market and barter, Rebel camps and envoys, King talents): 14 in all, list rows shrink to fit (18 px at 1280x720), no list at 390x700 (header + previous / next).
+- "Play the tutorial game" removed with `playTut` and its key (table, NL / PL / TR, guide.json). 20 new keys (`docs/studio-texts/guide2.json`, v93 block; NL / PL / TR).
+- Seen once (headless, `tools/qa_shots.py` steps 10, 13a-13e, 14, 33-35): the 14-row list at 1280x720, the Traps, Seasons (winter), Market, Camps (tribute and event banner) and Talents clips, the 390x700 layout, the Esc menu with its Guide row, the guide over a running game. No page error.
+- Tests: `quests` PASS, `det` PASS, `tools/textwidth.py` 43 captions x 9 languages all fit, `textaudit` 0 dead key in the v93 block, `langcheck` 0 missing. `smoke` and `tools` did NOT pass locally: 20 min timeout twice each with an empty log, machine load 8 to 14 on 2 cores; `smoke` on an untouched v92 copy timed out the same way in the same conditions, so the load is the likely cause, not established for `tools`. To rerun on a quiet machine or on CI.
+- Not verified: the sounds by ear (no audio in headless), a real GPU / phone, a real two-machine co-op game with the guide open, native proofreading of the new captions.
+- Left to the King: sound level and density; the amounts in the clips are examples.
 
 ## 2026-11-12 · v92
 
