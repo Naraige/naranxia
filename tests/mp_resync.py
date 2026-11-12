@@ -87,7 +87,7 @@ with sync_playwright() as p:
     while time.time()-t0<DUR:
         pump(A,B)
         a=json.loads(A.evaluate(RS));b=json.loads(B.evaluate(RS))
-        if a['rsy'] or b['rsy']:seen=True
+        if a['rsy'] or b['rsy'] or (a['ep']>=1 and b['ep']>=1):seen=True  # the epoch only moves with a resync: a resync done between two polls counts too
         if seen and a['ep']==1 and b['ep']==1 and not a['rsy'] and not b['rsy']:break
     P('resync seen',seen,'after',round(time.time()-t0,1),'s')
     P('after A',A.evaluate(RS));P('after B',B.evaluate(RS))

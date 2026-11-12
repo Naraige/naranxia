@@ -18,7 +18,8 @@ REC="""()=>{window.__H={};const _u=update;update=function(dt){_u(dt);if(!MP.on)r
   const us=units.map(u=>u.uid+':'+u.type+':'+u.t+':'+u.x.toFixed(2)+','+u.y.toFixed(2)+':'+(u.hp|0)).join('|');
   const rs=RESP.map(R=>R.g.toFixed(2)+','+R.w.toFixed(2)+','+R.s.toFixed(2)+','+(R.f||0).toFixed(2)+','+(R.ren|0)).join('/');
   const h=s=>{let x=0;for(let i=0;i<s.length;i++)x=(Math.imul(x,31)+s.charCodeAt(i))|0;return x};
-  window.__H[t]=[h(us),h(rs),h(JSON.stringify(EVS)),units.length,structs.length].join(',')}}"""
+  /* keyed by epoch too: after a resync both machines replay ticks from the snapshot, and a tick of the old epoch must not be compared with the replayed one */
+  window.__H[MP.ep+':'+t]=[h(us),h(rs),h(JSON.stringify(EVS)),units.length,structs.length].join(',')}}"""
 def P(*a):print(*a,flush=True)
 def pump(A,B,n=1):
     for _ in range(n):
@@ -31,9 +32,9 @@ GETH="()=>{const o=window.__H;window.__H={};return o}"
 HA={};HB={};bad=[None]
 def check():
     HA.update(A.evaluate(GETH));HB.update(B.evaluate(GETH))
-    for t in sorted(set(HA)&set(HB),key=int):
+    for t in sorted(set(HA)&set(HB),key=lambda k:[int(x) for x in k.split(':')]):
         if HA[t]!=HB[t] and bad[0] is None:
-            bad[0]=t;P('FIRST DIVERGENCE tick',t,'A',HA[t],'B',HB[t])
+            bad[0]=t;P('FIRST DIVERGENCE epoch:tick',t,'A',HA[t],'B',HB[t])
         if t in HA and t in HB:
             del HA[t];del HB[t]
 def waitT(sec):
@@ -42,7 +43,7 @@ def waitT(sec):
         pump(A,B);k+=1
         if k%10==0:check()
     check()
-SNAP="()=>JSON.stringify({cur:EVS.cur?{k:EVS.cur.k,i:EVS.cur.i,left:Math.round(EVS.cur.exp-time)}:null,q:EVS.q.length,pay:EVS.pay.map(p=>p.g),ren:RESP.map(R=>R.ren|0),g:RESP.map(R=>Math.round(R.g)),f:RESP.map(R=>Math.round(R.f||0)),ds:MP.desync})"
+SNAP="()=>JSON.stringify({ep:MP.ep,cur:EVS.cur?{k:EVS.cur.k,i:EVS.cur.i,left:Math.round(EVS.cur.exp-time)}:null,q:EVS.q.length,pay:EVS.pay.map(p=>p.g),ren:RESP.map(R=>R.ren|0),g:RESP.map(R=>Math.round(R.g)),f:RESP.map(R=>Math.round(R.f||0)),ds:MP.desync})"
 def snap(lbl):
     a=json.loads(A.evaluate(SNAP));b=json.loads(B.evaluate(SNAP));same=(a==b)
     P(lbl,'A',json.dumps(a),'' if same else 'B '+json.dumps(b));return a,b,same
@@ -73,7 +74,7 @@ with sync_playwright() as p:
     g0=a['g'][0]
     B.evaluate("()=>{evChoose(1)}");waitT(1.5)
     a,b,s=snap('car escorted');need(s and a['cur'] is None and a['pay']==[250],'escort chosen on both: '+json.dumps(a))
-    need(a['g'][0]==g0,'escort pays later, not now')
+    need(a['g'][0]<g0+100,'escort pays later, not now')  # not ==: peasants bring gold in (10 at a time) while the test runs
     # 2. both click at the same moment, differently: the first command decides, both machines agree
     A.evaluate("(e)=>{mpPush({k:'zev',e})}",ENV(9002));waitT(1.5)
     a,b,s=snap('env open');need(s and a['cur'] and a['cur']['k']=='env','env open on both')
@@ -82,7 +83,7 @@ with sync_playwright() as p:
     need((a['ren']==[0,0]) or (a['ren']==[1,1]),'renown consistent: '+json.dumps(a['ren']))
     # a late click on the closed event does nothing
     B.evaluate("()=>{evChoose(1)}");waitT(1)
-    a2,b2,s=snap('late click');need(s and a2['ren']==a['ren'] and a2['g']==a['g'],'late click ignored')
+    a2,b2,s=snap('late click');need(s and a2['ren']==a['ren'] and all(y-x<60 for x,y in zip(a['g'],a2['g'])),'late click ignored')  # a tribute would be 120 gold; a peasant's load is 10 (the old == failed when one came in)
     # 3. nobody answers: default choice after the sim-time deadline
     A.evaluate("(e)=>{mpPush({k:'zev',e,ttl:3})}",CAR(9003));waitT(1)
     a,b,s=snap('car timing');need(s and a['cur'] and a['cur']['i']==9003,'timed car open')
@@ -100,7 +101,7 @@ with sync_playwright() as p:
     while time.time()-t0<DUR:
         pump(A,B)
         a=json.loads(A.evaluate(RSQ));b=json.loads(B.evaluate(RSQ))
-        if a['rsy'] or b['rsy']:seen=True
+        if a['rsy'] or b['rsy'] or (a['ep']>=1 and b['ep']>=1):seen=True  # the epoch only moves with a resync: a resync done between two polls counts too
         if seen and a['ep']==1 and b['ep']==1 and not a['rsy'] and not b['rsy']:break
     P('resync seen',seen,'after',round(time.time()-t0,1),'s')
     need(seen,'resync happened')
