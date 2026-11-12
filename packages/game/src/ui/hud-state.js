@@ -5,6 +5,9 @@ export const hudDisplayState = {
   /* quest panel box of this frame [x, y, w, h] (null when not drawn) and height of the centre bars of the last frame */
   qbox: null,
   barsH: 0,
+  /* band of the centre bars of the last frame [x, y, w, h] or null; what the quest marker drew this frame (see ui/quest-marker.js) */
+  cbar: null,
+  qm: null,
 };
 
 /* left edge of a centre bar (w x h at height y): centred, or moved right of the quest panel when the two would overlap and there is room */

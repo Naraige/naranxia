@@ -1498,4 +1498,6 @@ export const PL = {
   "The King gains XP when zombies die near him, after each wave and from bosses": "Król zdobywa XP, gdy zombie giną blisko niego, po każdej fali i za bossów",
   "Each new level gives one talent point": "Każdy nowy poziom daje jeden punkt talentu",
   "Two branches of four talents, learned in order: the war cry or the charge": "Dwie gałęzie po cztery talenty, poznawane po kolei: okrzyk wojenny albo szarża",
+  "Quest skipped: {0}": "Zadanie pominięte: {0}",
+  "Skipped": "Pominięte",
 };

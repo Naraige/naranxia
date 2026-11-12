@@ -31,7 +31,7 @@ import { buildMenuState, cycleTab, NAMES } from '../ui/build-menu.js';
 import { cv } from '../ui/canvases.js';
 import { hudState, inR, mmRect, selIdle, selPeas } from '../ui/hud.js';
 import { hudDisplayState } from '../ui/hud-state.js';
-import { KB, nmI, saveKB, settingsState } from '../ui/settings.js';
+import { KB, kbCustom, nmI, saveKB, settingsState } from '../ui/settings.js';
 import { confirmPick, openPicker, pkRotate, PVH, PVW, sitePickerState } from '../ui/site-picker.js';
 import { occ } from '../world/terrain.js';
 
@@ -94,11 +94,17 @@ export function initializeDesktopInput() {
 
   cv.onwheel=e=>{e.preventDefault();inputState.mouse=pos(e);if(!sessionState.started&&kitWheel(e.deltaY,inputState.mouse))return;if(sessionState.started&&!sessionState.showMap)camZoom(e.deltaY>0?1:-1);else if(sitePickerState.picking&&PKL.on)camZoom(e.deltaY>0?1:-1);else if(sitePickerState.picking&&PK)PK.dist=Math.max(50,Math.min(900,PK.dist*(e.deltaY>0?1.15:1/1.15)))};
 
-  addEventListener('keydown',e=>{aInit();if(document.activeElement===nmI)return;const k=e.key.toLowerCase();
-   if(settingsState.rebind){e.preventDefault();if(k==='escape'){settingsState.rebind=null;return}const old=KB[settingsState.rebind];for(const a in KB)if(a!==settingsState.rebind&&KB[a]===k)KB[a]=old;KB[settingsState.rebind]=k;settingsState.rebind=null;saveKB();return}
+  /* The digit row is matched by the physical key (e.code Digit1..Digit0), not by the character: on AZERTY the row types & é " ' ( - è _ ç à
+     and the digits need Shift, which belongs to the control groups. dg = the digit of an unshifted digit-row key. In game it stands for the
+     key unless the typed character is itself a binding the player chose (a key saved from an AZERTY keyboard keeps working); when
+     rebinding, a digit-row key that types a sign is stored as its digit, so the settings show the digit printed on the key. */
+  addEventListener('keydown',e=>{aInit();if(document.activeElement===nmI)return;let k=e.key.toLowerCase();
+   const dg=!e.shiftKey&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&/^Digit\d$/.test(e.code||'')?e.code[5]:'';
+   if(settingsState.rebind){e.preventDefault();if(dg&&!/^[a-z0-9]$/.test(k))k=dg;if(k==='escape'){settingsState.rebind=null;return}const old=KB[settingsState.rebind];for(const a in KB)if(a!==settingsState.rebind&&KB[a]===k)KB[a]=old;KB[settingsState.rebind]=k;settingsState.rebind=null;saveKB();return}
    keys[k]=true;
    if(!sessionState.started){if(k==='escape'){if(settingsState.settingsOpen){settingsState.settingsOpen=false;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}}else if(sitePickerState.picking){sitePickerState.picking=false;if(MP.conn)lobbyShow()}else if(settingsState.setupOpen)settingsState.setupOpen=false}else if(k==='enter'&&!settingsState.settingsOpen){e.preventDefault();if(NAV.active&&!sitePickerState.picking)return;if(sitePickerState.picking)confirmPick();else if(settingsState.setupOpen)openPicker();else if(sessionState.inGame)startGame();else settingsState.setupOpen=true}else if(sitePickerState.picking&&k===KB.rotate&&!settingsState.settingsOpen)pkRotate();return}
    if(sessionState.over)return;
+   if(dg&&k!==dg&&!kbCustom(k))k=dg;
    if((k==='pagedown'||k==='pageup')&&!e.ctrlKey&&!e.altKey&&!e.metaKey){if(cycleTab(k==='pagedown'?1:-1))e.preventDefault();return}
    if(k==='escape'){if(questPanelState.log)questPanelState.log=false;else if(sessionState.showMap)sessionState.showMap=false;else if(sessionState.mode||sel().length){sessionState.mode=null;sessionState.units.forEach(u=>u.sel=false)}else if(buildMenuState.BCAT)buildMenuState.BCAT=null;else openMenu();return}
    if(!e.ctrlKey&&!e.shiftKey&&!e.metaKey&&['1','2','3','4'].includes(k)&&sel().some(u=>u.type!=='peasant')){setStance(['agg','def','hold','stop'][+k-1]);return}

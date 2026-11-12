@@ -11,6 +11,7 @@ import { MP } from './session.js';
 import { puff } from '../rendering/effects.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { mkG } from '../world/pathfinding.js';
+import { bfsW, freeTile, fv } from '../world/traversal.js';
 
 /* ---- co-op convoys: peasants carry resources to the partner's castle, then walk home and go back to work.
    Zombies can kill them on the way: what they carry is lost. Sent as a command, so both machines run the same errand. ---- */
@@ -24,7 +25,7 @@ export function sendConvoy0(c){const p=playersState.CURPL|0,q=1-p,from=p?session
  P.sort((x,y)=>((x.job||x.o||x.carry)?1:0)-((y.job||y.o||y.carry)?1:0)||dist(x.x,x.y,from.x,from.y)-dist(y.x,y.y,from.x,from.y)||x.uid-y.uid);
  const n=Math.min(P.length,Math.max(1,Math.min(5,Math.ceil(tot/100))));if(!n){if(p===LPL()){hudDisplayState.msgS='No peasant free to carry the convoy';hudDisplayState.msgT=3;snd('err')}return}
  /* no land route for the first porter (river, castle on a cliff without a ramp): said at once, nothing leaves */
- {const g=mkG(to.tx+2,to.ty+2,P[0].x/TS,P[0].y/TS);g.mk();if(!g.S||(g.alt&&dist(g.alt.x,g.alt.y,to.x,to.y)>TS*(CVE-1))){if(p===LPL()){hudDisplayState.msgS='The convoy cannot reach your partner';hudDisplayState.msgT=4;snd('err')}return}}
+ if(!cvRoute(P[0].x/TS,P[0].y/TS,to)){if(p===LPL()){hudDisplayState.msgS='The convoy cannot reach your partner';hudDisplayState.msgT=4;snd('err')}return}
  R.g-=a.g;R.w-=a.w;R.s-=a.s;R.f=(R.f||0)-a.f;
  for(let i=0;i<n;i++){const u=P[i],sh=k=>Math.floor(a[k]/n)+(i<a[k]%n?1:0);u.cv={to:q,from:p,g:sh('g'),w:sh('w'),s:sh('s'),f:sh('f'),back:false,t:0,tt:0,rt:0};
   u.job=null;u.role=null;u.tl=-1;u.work=0;u.carry=true;u.cj=a.g>=a.w&&a.g>=a.s?'g':a.w>=a.s?'w':'s';leaveSquad(u);cvGo(u,to)}
@@ -32,6 +33,26 @@ export function sendConvoy0(c){const p=playersState.CURPL|0,q=1-p,from=p?session
 
 /* a porter is there within 4.6 tiles of the castle, or within 8 when its path ends there (castle on a ledge: the foot of it counts) */
 const CVN=4.6,CVE=8,CVW=120,CVMAX=900;
+
+/* a land route from the tile position (sx, sy) to within CVE - 1 tiles of the castle `to`: what the command asks of its first porter */
+function cvRoute(sx,sy,to){const g=mkG(to.tx+2,to.ty+2,sx,sy);g.mk();return !!g.S&&!(g.alt&&dist(g.alt.x,g.alt.y,to.x,to.y)>TS*(CVE-1))}
+
+/* can either player send a convoy at all? Asked by the co-op quest "Share the load" (gameplay/quests.js), which is skipped when not.
+   Simulation state only (structures, units, terrain), same answer on both machines. Same rule as the command above, for both senders
+   at once: the walkable land is flooded from the free tile next to each castle (first a small rectangle around the two castles, which
+   answers yes in a few milliseconds on a linked map, then the wide one of the path search); a player can send when his castle tile or
+   one of his peasants (a castle walled in without a gate may still have peasants outside) is in the flood of the partner's castle, or
+   when the flood of his own castle comes within CVE - 1 tiles of the partner's (castle on a ledge: its foot counts). A fallen castle: no. */
+export function convoyLinked(){const A=sessionState.CS,B=sessionState.CS2;if(!A||!B||A.hp<=0||B.hp<=0)return false;
+ const fa=freeTile(A.tx+2,A.ty+2),fb=freeTile(B.tx+2,B.ty+2);if(!fa||!fb)return false;
+ const side=(S,f,p)=>{if(fv(S,f[0],f[1])<65535)return true;
+  for(const u of sessionState.units)if(u.t===0&&u.hp>0&&(u.pl|0)===p&&u.type==='peasant'&&!u.gar&&!u.shel&&fv(S,Math.floor(u.x/TS),Math.floor(u.y/TS))<65535)return true;return false};
+ const near=(S,c)=>{const cx=c.x/TS,cy=c.y/TS,r=CVE-1;for(let y=Math.floor(cy-r);y<=cy+r;y++)for(let x=Math.floor(cx-r);x<=cx+r;x++)if((x+.5-cx)**2+(y+.5-cy)**2<=r*r&&fv(S,x,y)<65535)return true;return false};
+ for(const m of[24,160]){let x0=Math.min(fa[0],fb[0])-m,y0=Math.min(fa[1],fb[1])-m,x1=Math.max(fa[0],fb[0])+m,y1=Math.max(fa[1],fb[1])+m;
+  if(x1-x0>460){const c=(fa[0]+fb[0])>>1;x0=c-230;x1=c+230}if(y1-y0>460){const c=(fa[1]+fb[1])>>1;y0=c-230;y1=c+230}
+  const SB=bfsW([fb],true,x0,y0,x1-x0,y1-y0);if(side(SB,fa,0)||near(SB,A))return true;if(m<160)continue;
+  const SA=bfsW([fa],true,x0,y0,x1-x0,y1-y0);if(side(SA,fb,1)||near(SA,B))return true}
+ return false}
 
 function cvHome(c){return c.from?sessionState.CS2:sessionState.CS}
 

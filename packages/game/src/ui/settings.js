@@ -40,6 +40,9 @@ const ACTL={cry:'King: war cry',charge:'King: royal charge',king:'Summon King Na
 
 export let KB;
 
+/* is this key a binding the player chose (not the default of its action)? Asked by the keyboard handler for digit-row keys */
+export const kbCustom=k=>{for(const a in KB)if(KB[a]===k&&KDEF[a]!==k)return true;return false};
+
 export const kdisp=k=>k===' '?'Space':k.length===1?k.toUpperCase():k[0].toUpperCase()+k.slice(1);
 
 function syncHK(){for(const a of['cannon','peasant','knight','spearman','archer','bannerman','captain','wall','gate','tower','path','upgrade','barracks','farm','storage','house','academy','market','forester','guild','torch','rally','rallyc','movec','rotate','ramp','tier','demolish','ballista','trebuchet','raise','dig','army','idle','form'])HK[a]=kdisp(KB[a])}

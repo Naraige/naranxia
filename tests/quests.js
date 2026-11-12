@@ -49,5 +49,22 @@ async()=>{/* quest line: order, rewards, gather counters, new quests (market, gu
   const n0=MP.out.length;questSwitch(false);const sent=MP.out[MP.out.length-1];chk('switchIsCommand',MP.out.length===n0+1&&sent&&sent.k==='qs'&&sent.on===0&&QST.on===1);MP.out.length=n0;
   mpExec({k:'qs',on:0},false);const off=QST.on;const h0=mpHash();mpExec({k:'qs',on:1},true);chk('switchExec',off===0&&QST.on===1&&h0!==mpHash());let lp2='y';try{lp2=localStorage.getItem('dk_quests')}catch(e){}chk('coopKeepsPref',lp===lp2);
   paused=true;const q0=JSON.stringify(QST),hq=mpHash(),txt=await svPack();QST.d={};QST.on=0;QST.a=[7,7,7];await svApply(txt);chk('snapshotKeeps',JSON.stringify(QST)===q0&&mpHash()===hq);
+  /* convoy quest (co-op only): it stays while the two castles are linked by land and is looked at again only every 30 s (QST.ct, kept by
+     a snapshot); with no land route (here a closed ring of walls around the partner's castle) it is skipped for both, without reward;
+     a convoy already delivered is paid even then. All from simulation state: the same run twice gives the same result and hash. */
+  {const cvq=async()=>{MP.on=true;MP.host=true;SITE2=null;Math.random=rngf(777);randomSite();CX=pickPos.tx;CY=pickPos.ty;let b=null;for(let t=0;t<20000&&!b;t++){randomSite();if(!pickPos||!pickPos.ok)continue;const d=Math.hypot(pickPos.tx-CX,pickPos.ty-CY);if(d>24&&d<45)b={tx:pickPos.tx,ty:pickPos.ty,rot:0}}
+    SITE2=b;reset();inGame=true;started=false;paused=false;waveT=1e9;Math.random=rngf(999);const r={cs2:!!CS2};if(!CS2)return r;
+    for(const q of QUESTS)if(q.id!=='convoy'&&q.id!=='wave10')QST.d[q.id]=1;for(const R of RESP){R.w=99999;R.s=99999;R.g=99999}
+    update(1/30);r.l0=convoyLinked();r.cur0=qCur().id;r.ct=QST.ct>time+29;
+    const cx=CS2.tx+2,cy=CS2.ty+2,rr=11;let n=0;setPl(1);for(let i=-rr;i<=rr;i++)for(const[x,y]of[[cx+i,cy-rr],[cx+i,cy+rr],[cx-rr,cy+i],[cx+rr,cy+i]]){const m=structs.length;_N.build('wall',x,y);if(structs.length>m){const w=structs[structs.length-1];w.prog=1;w.hp=w.max;n++}}setPl(0);
+    r.walls=n;r.l1=convoyLinked();update(1/30);r.wait=qCur().id;/* not looked at again yet */
+    paused=true;const c0=QST.ct,txt=await svPack();QST.ct=-5;await svApply(txt);r.ctKept=QST.ct===c0;r.mp=MP.on;MP.on=true;MP.host=true;paused=false;/* (a load outside a resync may leave co-op: back on for the rest) */
+    time=QST.ct;const f0=RESP.map(R=>R.f||0);update(1/30);r.d=QST.d.convoy;r.cur=qCur().id;r.gain=RESP.map((R,i)=>Math.round((R.f||0)-f0[i]));r.msg=msgS;r.h=mpHash();
+    /* delivered before the look: paid to both, not skipped */
+    delete QST.d.convoy;QST.e.cv=1;QST.ct=-1e9;const f1=RESP.map(R=>R.f||0);update(1/30);r.paid=QST.d.convoy+':'+RESP.map((R,i)=>Math.round((R.f||0)-f1[i])).join();return r};
+   const a=await cvq(),b=await cvq();O.convoy=a;
+   chk('convoyLinkedStays',a.cs2&&a.l0===true&&a.cur0==='convoy'&&a.ct&&a.wait==='convoy'&&a.ctKept);
+   chk('convoySkipped',a.l1===false&&a.d===2&&a.cur==='wave10'&&a.gain.every(v=>v<25)&&/^Quest skipped/.test(a.msg));
+   chk('convoyPaidFirst',a.paid==='1:30,30');chk('convoySame',JSON.stringify(a)===JSON.stringify(b))}
   MP.on=false;MP.host=false;try{if(pref===null)localStorage.removeItem('dk_quests');else localStorage.setItem('dk_quests',pref)}catch(e){}}
  Math.random=RR;O.ok=C.every(Boolean);return JSON.stringify(O)}
