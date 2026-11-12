@@ -1,6 +1,7 @@
 import { AC, sndOn, toggleSound } from '../audio/sound.js';
 import { inputState } from '../input/state.js';
 import { GNOTES } from '../core/version.js';
+import { notesLines } from '../core/notes.js';
 import { GVER } from '../core/version.js';
 import { quitGame, startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
@@ -181,8 +182,9 @@ function drawRecords(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'rec',title:'Le
 
 /* ================= What's new ================= */
 function drawNotes(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'not',title:'Update',close:back,fh,maxW:500}),l=listBegin('not',b.x,b.y,b.w,b.h);
- const items=String(GNOTES||'').split('\n').map(s=>s.replace(/^\s*[-*]\s*/,'').trim()).filter(Boolean);
- l.section(GVER);for(const it of items)l.para(it,'#ead8ba',.88,true);
+ /* **Title** lines are section headings, the others paragraphs (a bullet when written with a dash); no Markdown marker is drawn.
+    Each line is one translation key, looked up whole (tools/textaudit.mjs --notes refuses a release with a line left in English) */
+ l.section(GVER);for(const it of notesLines(GNOTES))it.h?l.section(it.t):l.para(it.t,'#ead8ba',.88,it.b);
  listEnd()}
 
 const CHRON=['Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.','King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.','Around the bastion, other camps survive. They refused the King\'s rule: rebels, and neighbours. Some trade, some raid.','Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.'];

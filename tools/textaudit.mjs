@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Static audit of the texts (no browser): node tools/textaudit.mjs [--since v91] [--block 92] [--all]
+// Static audit of the texts (no browser): node tools/textaudit.mjs [--since v91] [--block 92] [--all] [--notes]
+//   0. notes: every line of game/NOTES.md is a key with all languages (--notes: this check alone, exit 1 on a fault; used by tools/release.sh)
 //   1. table: every key has FR ES DE IT PT, same {n} in each, no French "tu/ton/ta/tes/toi", extra languages coverage
 //   2. sources: string literals of packages/game/src (outside i18n) that look like player text and that L() would leave in English
 //      (same logic as L(): exact key, trimmed, templates, pieces split on ' - ' ' | ' and 3 spaces, "[key]" suffix, capitalised entry).
@@ -12,7 +13,6 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const acorn = createRequire(import.meta.url)(path.join(root, 'node_modules/acorn'));
 const SRC = path.join(root, 'packages/game/src');
 const arg = (n, d) => { const i = process.argv.indexOf(n); return i > 0 ? process.argv[i + 1] : d; };
 const since = process.argv.includes('--all') ? null : arg('--since', 'v91');
@@ -26,6 +26,31 @@ const TRD = tr.TRD, keys = Object.keys(TRD), NAMES = ['FR', 'ES', 'DE', 'IT', 'P
 const ph = (s) => (s.replace(/(peasant|villager|sapling)\{\d\}/g, '$1').match(/\{\d\}/g) || []).sort().join('');
 let bad = 0;
 const say = (...a) => { bad++; console.log(...a); };
+const { EXTRA } = await import(pathToFileURL(path.join(SRC, 'i18n/langs/index.js')));
+
+/* 0. release notes: every line of game/NOTES.md, stripped as the Update page strips it (core/notes.js), must be a key of the table
+      with every language (the page looks whole lines up; a missing one is drawn in English). --notes runs this check alone;
+      tools/release.sh calls it before the build, so a release cannot ship untranslated notes. */
+const { notesLines } = await import(pathToFileURL(path.join(SRC, 'core/notes.js')));
+const noteKeys = new Set(['Update']);
+let noteBad = 0;
+{
+  let md = '';
+  try { md = readFileSync(path.join(root, 'game/NOTES.md'), 'utf8'); } catch (e) {}
+  const lines = notesLines(md);
+  for (const l of lines) {
+    noteKeys.add(l.t);
+    if (/\*\*|`|^[-*#]\s/.test(l.t)) { noteBad++; console.log('notes: Markdown marker left in', JSON.stringify(l.t)); }
+  }
+  for (const k of noteKeys) {
+    const v = TRD[k], miss = NAMES.filter((n, i) => !(v && typeof v[i] === 'string' && v[i])).concat(EXTRA.filter((e) => !e.tr[k]).map((e) => e.flag.toUpperCase()));
+    if (miss.length) { noteBad++; console.log(`notes: no ${miss.length === NAMES.length + EXTRA.length ? 'translation at all' : miss.join(' ')} for`, JSON.stringify(k)); }
+  }
+  console.log(`== notes: ${lines.length} lines of game/NOTES.md, ${noteBad} problem(s)`);
+  if (noteBad) console.log('   add them with tools/addtexts.py (FR ES DE IT PT, key = the line exactly as printed above) and in packages/game/src/i18n/langs/{nl,pl,tr}.js');
+  bad += noteBad;
+  if (process.argv.includes('--notes')) process.exit(noteBad ? 1 : 0);
+}
 
 console.log(`== table: ${keys.length} keys`);
 for (const k of keys) {
@@ -48,7 +73,6 @@ for (const k of keys) {
     seen.set(k, { n: i + 1, v: m[2] });
   });
 }
-const { EXTRA } = await import(pathToFileURL(path.join(SRC, 'i18n/langs/index.js')));
 for (const e of EXTRA) {
   /* these files may keep the plural suffix ({0} boer{1}) or drop it */
   const raw = (s) => (s.match(/\{\d\}/g) || []).sort().join('');
@@ -58,6 +82,8 @@ for (const e of EXTRA) {
   for (const k of pb) console.log('   ', JSON.stringify(k), '->', JSON.stringify(e.tr[k]));
 }
 
+/* loaded here: the notes check above must run without node_modules */
+const acorn = createRequire(import.meta.url)(path.join(root, 'node_modules/acorn'));
 /* the lookup of L(), for "is there a translation" only */
 const TRX = new Map(), TRT = [];
 for (const k of keys) {
@@ -131,7 +157,7 @@ if (a >= 0) {
   const bk = [...blk.matchAll(/^\s*"((?:[^"\\]|\\.)*)"\s*:\s*\[/gm)].map((m) => JSON.parse('"' + m[1] + '"'));
   const joined = all.join('\u0001') + '\u0001' + readFileSync(path.join(root, 'packages/game/index.html'), 'utf8');
   const dead = bk.filter((k) => {
-    if (used.has(k)) return false;
+    if (used.has(k) || noteKeys.has(k)) return false;
     /* a template key: all its fixed parts appear somewhere in the sources */
     const parts = k.split(/\{\d\}/).map((p) => p.trim()).filter((p) => p.length > 1);
     if (k.indexOf('{0}') >= 0 && parts.length && parts.every((p) => joined.indexOf(p) >= 0)) return false;
