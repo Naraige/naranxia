@@ -1,4 +1,4 @@
-import { baseTrait, BASES, campLabel, inTerr, TRAITS } from '../ai/kingdoms.js';
+import { baseTrait, BASES, campDebug, campLabel, inTerr, spearN, TRAITS } from '../ai/kingdoms.js';
 import { evChoose, eventsState, eventsTick, evPush, renownMul, resolveEvent0 } from '../gameplay/events.js';
 import { bossStomp } from '../ai/wave-boss.js';
 import { RHAS, roleAdj0 } from '../ai/worker-roles.js';
@@ -45,7 +45,7 @@ import { bannerIcon } from '../rendering/banner-icon.js';
 import { drawBanner } from '../rendering/kingdom-banner.js';
 import { THEME } from '../ui/kingdom-theme.js';
 import { NAV } from '../ui/menu-nav.js';
-import { settingsDebug, settingsState } from '../ui/settings.js';
+import { KB, loadKB, settingsDebug, settingsState } from '../ui/settings.js';
 import { titleDebug } from '../ui/title-menu.js';
 import { guideState, openGuide } from '../ui/video-guide.js';
 import { languageState } from '../i18n/language.js';
@@ -214,6 +214,10 @@ export function installBrowserConsole() {
     baseTrait: { get: () => baseTrait },
     campLabel: { get: () => campLabel },
     TRAITS: { get: () => TRAITS },
+    spearN: { get: () => spearN },
+    campDebug: { get: () => campDebug },
+    KB: { get: () => KB },
+    loadKB: { get: () => loadKB },
     kskLeft: { get: () => kskLeft },
     matUI: { get: () => matUI },
     matV: { get: () => matV },

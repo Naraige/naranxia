@@ -57,6 +57,12 @@ const rI=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 export const TRAITS=['merchant','warlike','wary'];
 const TRNAME={merchant:'merchants',warlike:'warlike',wary:'wary'};
 export function baseTrait(b){if(!b.trait||TRAITS.indexOf(b.trait)<0){let h=Math.imul(((+terrainState.SEED||0)|0)^0x5bd1e995,0x9E3779B1)+Math.imul((b.id|0)+1,0x85EBCA6B)|0;h^=h>>>15;h=Math.imul(h,0xC2B2AE35);h^=h>>>13;b.trait=TRAITS[(h>>>0)%TRAITS.length]}return b.trait}
+/* ---- spearmen in the rebel camps (v93): how many of n melee fighters of a camp carry a spear instead of a sword, by trait: merchants pay for
+   knights (1 in 4), wary camps hold their gate with spears (1 in 3), warlike camps raise a levy (1 in 2). From 2 melee fighters on there is
+   always 1 spearman, and always at least 1 knight. Used by the training of aiTick. Pure function of the trait and the head count: no RNG,
+   nothing new to save (units are saved whole, the trait is on the camp). */
+export const SPEAR_DIV={merchant:4,wary:3,warlike:2};
+export const spearN=(b,n)=>n<2?0:Math.max(1,Math.floor(n/SPEAR_DIV[baseTrait(b)]));
 export const campLabel=b=>b.name+' - '+TRNAME[baseTrait(b)];
 
 /* attack reach of a building in tiles (null if it does not shoot): shown by the selection ring and in the info line */
@@ -178,7 +184,7 @@ function unmatBase(b){const alive=b.us.filter(u=>u.hp>0).length,lost=b.n0-alive;
    farms, builds houses, a barracks, towers, then walls and stone, trains an army and holds off the hordes.
    They are on your side against the dead; when a castle falls its people turn. Everything runs in the simulation (co-op safe). */
 const AIK_N=4,AIR=11,AIC={house:{w:40},farm:{w:30},barracks:{w:90,s:20},tower:{w:45,s:10},wall:{w:6},gate:{w:20},storage:{w:50},academy:{w:80,s:40},guild:{w:60,s:30},market:{w:70,g:30},
- peasant:{f:20},knight:{g:50,f:20},archer:{g:35,w:15,f:20}},AIBT={house:22,farm:18,barracks:40,tower:30,wall:5,gate:12,storage:26,academy:45,guild:36,market:36};
+ peasant:{f:20},knight:{g:50,f:20},spearman:{g:30,w:10,f:15},archer:{g:35,w:15,f:20}},AIBT={house:22,farm:18,barracks:40,tower:30,wall:5,gate:12,storage:26,academy:45,guild:36,market:36};
 
 const aiNear=(x,y,r)=>{for(const b of BASES)if(b.ai&&b.alive&&Math.abs(b.x-x)<r&&Math.abs(b.y-y)<r)return true;return false};
 
@@ -264,7 +270,7 @@ function aiTick(D){let nAI=0;for(const b of BASES)if(b.ai&&b.alive)nAI+=b.us.len
   /* training */
   b.trT-=D;if(b.trT<=0){b.trT=8;const cap=8+5*Hs,pW=Math.min(16,4+2*Hs),sW=Math.min(22,2+b.lvl*3+Tw);
    if(b.us.length<cap&&nAI<230){if(P.length<pW&&aiPay(b,AIC.peasant))aiSpawn(b,'peasant');
-    else if(aiCnt(b,'barracks',1)&&S<sW){const ar=b.us.filter(u=>u.type==='archer').length,t=ar<Tw*2&&ar<S*.6?'archer':'knight';if(aiPay(b,AIC[t]))aiSpawn(b,t)}}}
+    else if(aiCnt(b,'barracks',1)&&S<sW){const ar=b.us.filter(u=>u.type==='archer').length,t=ar<Tw*2&&ar<S*.6?'archer':b.us.filter(u=>u.type==='spearman').length<spearN(b,S-ar+1)?'spearman':'knight';if(aiPay(b,AIC[t]))aiSpawn(b,t)}}}
   /* a grown kingdom founds a new settlement */
   if(b.lvl>=6&&(b.kids||0)<2&&!b.proj&&!b.exS&&b.res.w>=500&&b.res.s>=250&&b.res.g>=300&&BASES.filter(q=>q.alive).length<10){b.exT=(b.exT||0)-D;if(b.exT<=0){b.exT=60;
    for(let a=0;a<30;a++){const an=Math.random()*6.283,r=rnd(55,85),tx=Math.round(b.tx+Math.cos(an)*r),ty=Math.round(b.ty+Math.sin(an)*r);if(tx<90||ty<90||tx>TW-90||ty>TH-90)continue;
@@ -302,6 +308,9 @@ function aiPeasant(u,b,dt){const[z]=targetZ(u,120);if(z&&!u.gar){u.work=0;aiGo(u
  else{u.work=0;aiGo(u,tx,ty,dt)}}
 
 function aiRes(b,u){const want=Math.random();for(let k=0;k<40;k++){const a=Math.random()*6.283,r=rnd(9,26),x=Math.round(b.tx+Math.cos(a)*r),y=Math.round(b.ty+Math.sin(a)*r);if(!gOK(x,y))continue;const i=y*TW+x,t=ter[i];if(t<2||t>4||!(amt[i]>0)||occ.has(i))continue;if(t===4&&want>.35)continue;if(t===3&&want>.7)continue;return i}return -1}
+
+/* for the headless tests (tests/spearman.js): grow a camp and run its training without waiting for its economy */
+export const campDebug={aiSpot,aiPlace,aiTick};
 
 export function aiUnit(u,d,dt){const b=u.base;if(!b){u.t=1;return}
  if(u.gar){const s=u.gar;if(s.hp<=0||!sessionState.structs.includes(s)){ungar(u);u.hp-=8}else{const j=s.garr.indexOf(u),sp=garSlot(s,j);u.x=sp.x;u.y=sp.y;u.gz=(s.bh||0)+gtopOf(s);const[z]=targetZ(u,d.rng*GRNG[s.type]+20);if(z&&u.cd<=0&&z.type in T)hit(u,z);u.walk=0}return}

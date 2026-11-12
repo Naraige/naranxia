@@ -52,10 +52,10 @@ The mid game (resources short, population free) gets easier against brutes; `SPE
 - Training goes through the existing `buy` / `train` command (any key of `T` / `C`), so co-op needs no new command. Population 1 (`popOf` default).
 - Research: iron, steel, forge, era (damage) and plate, mail (damage taken) apply to every unit of the player, spearman included. Promotion ranks (XP) too.
 - Menus: barracks Train list, name, tooltip (`ui/build-menu.js`); troop panel order and plural (`ui/troop-panel.js`); unit card role and flavour, "(melee)" label now up to range 40 (`ui/unit-card.js`).
-- Hotkey: `\` by default, rebindable in Settings > Keys (`ui/settings.js`, `input/desktop.js`). Every letter and digit was taken.
+- Hotkey: `F4` by default since v93 (was `\`), rebindable in Settings > Keys (`ui/settings.js`, `input/desktop.js`). See "Lot 2" below.
 - Icons: head icon and 3D icon (`rendering/pixel-icons.js`, `rendering/model-icons.js`); fog sight 11, selection ring.
 - Save: units are saved whole, nothing new in `SAVA`. Old saves load unchanged (no spearman in them). A save with spearmen needs this build or later.
-- AI kingdoms and rebel camps: unchanged on purpose (they still train knights and archers), so the default game holds no spearman and the `det` hashes are the same.
+- Rebel camps: they train spearmen since v93, in a share set by their trait (see "Lot 2" below). v92 camps trained knights and archers only.
 - A spearman turned by the horde rises as a soldier zombie (`rendering/models/zombies.js`, `zombie-skins.js`), like a knight.
 
 ## Look
@@ -74,6 +74,59 @@ The mid game (resources short, population free) gets easier against brutes; `SPE
 - No rank stripes on the sleeves (knights and archers only, `rkOf`).
 - No look A skin: with `UV2_ON` off he would wear the old generic armour.
 - Left hand does not hold the shaft; the pennant does not wave.
-- Dutch, Polish and Turkish (`i18n/langs/`) fall back to English for the 8 new texts.
 - `tools/fitcheck.py` not run (no new button text; the tooltip has 4 lines).
-- Rebel camps and AI kingdoms with spearmen: would change `det` hashes and the balance of camps; left to the King.
+
+## Lot 2 (v93, issue #24): rebel spearmen and the F4 key
+
+The King said "fait le tout" about the open points. Decided for him: bonus x1.6 and price stay.
+
+### Rebel camps (`ai/kingdoms.js`)
+
+- The rebel camps of the game are the AI kingdoms (`b.ai`, 4 per world, plus the settlements they found). They are the only AI force that
+  fields knights or archers. `matBase` / `unmatBase` (the old static camps) are never called: left as they were.
+- Share of spearmen among the melee fighters (knights + spearmen) of a camp, by trait: `spearN(b,n) = n<2 ? 0 : max(1, floor(n / SPEAR_DIV[trait]))`.
+
+| Trait | Idea | Share | Melee 2 | 4 | 6 | 9 (grown camp) |
+|---|---|---|---|---|---|---|
+| merchants | they pay for knights | 1 in 4 | 1 | 1 | 1 | 2 |
+| wary | spears hold the gate | 1 in 3 | 1 | 1 | 2 | 3 |
+| warlike | a levy host | 1 in 2 | 1 | 2 | 3 | 4 |
+
+- Training (`aiTick`, every 8 s with a barracks): archers first as before (2 per tower, at most 60 % of the soldiers), then a spearman
+  when the camp holds fewer than `spearN(b, melee + 1)`, else a knight. A fallen spearman is replaced by a spearman.
+  A camp is founded with 2 knights as before, so its first barracks soldier is a spearman (the third melee fighter), whatever the trait.
+- Camp price `AIC.spearman = {g:30, w:10, f:15}` (camp knight 50 g 20 f, camp archer 35 g 15 w 20 f): same ratio to the knight as the player's prices.
+- Number of soldiers of a camp unchanged (`sW`): spearmen take knight places 1 for 1. A camp is a little weaker against the common
+  horde (85 HP against 130 per place taken) and stronger against brutes and bosses (17.6 DPS with reach 43 against 20 at reach 24).
+- Fighting: `aiUnit` already used `d.rng + d.r`, so the rebel spearman strikes at 43 px; `SPEAR_BIG` in `hit()` has no team test, so it applies.
+  Research and ranks do not apply to camp units (unchanged). A camp that falls turns its spearmen into soldier zombies (`aiFall`, `zk`).
+- Determinism: no RNG added (the share is a pure function of the trait, itself a hash of world seed and camp id); `aiSpawn` draws the same
+  random numbers for a spearman as for a knight. Nothing new in `SAVA`: units are saved whole, the trait is on the camp. A v92 save loads
+  unchanged (its camps keep their knights and train spearmen from then on). A save with rebel spearmen loads in v92 too (the unit exists there).
+- `det`: the hashes change from the third sample on (tick 2250: a camp trains its first spearman instead of a knight); the two runs stay equal.
+  The reference is the list in the journal entry of v93 (the test itself only compares two runs).
+
+### Hotkey F4 (`ui/settings.js`, `input/desktop.js`)
+
+- Keys are matched by `e.key.toLowerCase()` (the character, not the physical key). Every letter is taken, and so is every character that is one
+  plain press on both QWERTY and AZERTY (`,` `;` `=` `-` `'`). So the default is a function key: `F4` is unused by the game (F1 help, F2 troops,
+  F8 report, F10 test mode) and by browsers (F3 find, F5 reload, F6 address bar, F7 caret, F11 full screen, F12 tools). The game prevents the
+  browser default on a bound function key.
+- `loadKB()`: defaults, then the saved keys (`dk_keys`). Once per browser (marker `dk_keyv` = 2): saved keys that still hold `\` for the
+  spearman move to F4, unless F4 was given to another action. After that a player who chooses `\` keeps it. "Reset keys" gives F4.
+- The barracks button shows no key for the spearman (`hkShow` shows digits, `.` and `Q` only), as before.
+
+### Tests
+
+- `tests/spearman.js`: share rule; three camps grown (4 houses, barracks, 2 towers, 4 farms, storage) with the three traits, their training
+  run (`campDebug` in `ai/kingdoms.js`, exposed by `debug/browser-console.js`), counts checked against the rule, a fallen spearman and a fallen
+  knight replaced in kind, a rebel spearman hits a brute for 17.6 at 46 px, 20 s of simulation; F4 default unique, F4 pressed with the barracks
+  selected queues a spearman, migration of saved keys (4 cases).
+
+### Found on the way, not changed
+
+- AZERTY: the digit keys of the defaults (peasant 1, knight 2, archer 3 ... house 0, and the stances 1 to 4) need Shift on AZERTY, and Shift + digit
+  is taken by the control groups (`input/control-groups.js` matches `e.code` `Digit1-9` with Shift and stops the event). Read in the code, not
+  tried on a real AZERTY keyboard. Fix proposed: match the digit actions by `e.code` (`Digit1` ...), so the same physical key works on both layouts.
+- `[` `]` (forester, guild) need AltGr on AZERTY; `:` (market), `<` `>` (King skills) need Shift on QWERTY.
+- `-`, `=`, `,` and `p` have a second hard-coded use in `input/desktop.js` (zoom, idle peasants, pan mode) next to their rebindable action.

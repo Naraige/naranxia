@@ -102,7 +102,7 @@ export function initializeDesktopInput() {
    if((k==='pagedown'||k==='pageup')&&!e.ctrlKey&&!e.altKey&&!e.metaKey){if(cycleTab(k==='pagedown'?1:-1))e.preventDefault();return}
    if(k==='escape'){if(questPanelState.log)questPanelState.log=false;else if(sessionState.showMap)sessionState.showMap=false;else if(sessionState.mode||sel().length){sessionState.mode=null;sessionState.units.forEach(u=>u.sel=false)}else if(buildMenuState.BCAT)buildMenuState.BCAT=null;else openMenu();return}
    if(!e.ctrlKey&&!e.shiftKey&&!e.metaKey&&['1','2','3','4'].includes(k)&&sel().some(u=>u.type!=='peasant')){setStance(['agg','def','hold','stop'][+k-1]);return}
-   const a=Object.keys(KB).find(x=>KB[x]===k);if(!a)return;if(k.length===1&&!/[a-z0-9]/.test(k))e.preventDefault();
+   const a=Object.keys(KB).find(x=>KB[x]===k);if(!a)return;if((k.length===1&&!/[a-z0-9]/.test(k))||/^f\d+$/.test(k))e.preventDefault();
    if(a==='map'){sessionState.showMap=!sessionState.showMap;return}
    if(a==='cry'||a==='charge'){kingSkill(a);return}
    if(sessionState.showMap)return;

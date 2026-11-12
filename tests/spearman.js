@@ -25,4 +25,31 @@ async()=>{/* spearman: trained at the barracks for its cost, reach over a front 
  chk('reach',zS===11&&zK===0);
  /* bonus against big targets */
  const bS=firstHit('spearman','brute',46);O.bS=bS;chk('bigBonus',Math.abs(bS-11*SPEAR_BIG)<.01);
+ /* rebel camps (v93): the share of spearmen among the melee fighters follows the camp's trait: merchants 1 in 4, wary 1 in 3, warlike 1 in 2 */
+ chk('shareRule',[1,2,4,8,9].map(n=>['merchant','wary','warlike'].map(t=>spearN({trait:t},n)).join('')).join(' ')==='000 111 112 224 234');
+ const bs=BASES.filter(b=>b.alive&&b.ai),cnt=(b,t)=>b.us.filter(u=>u.hp>0&&u.type===t).length,camp={};O.camps=bs.length;
+ ['merchant','wary','warlike'].forEach((tr,i)=>{const b=bs[i];if(!b)return;b.trait=tr;b.res={g:1e5,w:1e5,s:1e5,f:1e5};
+  /* a grown camp: 4 houses, barracks, 2 towers, 4 farms, storage, all finished (level 3: room for 13 soldiers) */
+  for(const t of['house','house','house','house','barracks','tower','tower','farm','farm','farm','farm','storage']){const sp=campDebug.aiSpot(b,t);if(!sp)continue;const st=campDebug.aiPlace(b,t,sp[0],sp[1],sp[2]);st.prog=1;st.hp=st.max;b.proj=null}
+  for(let k=0;k<40;k++){b.trT=0;b.bT=99;campDebug.aiTick(8)}
+  const kn=cnt(b,'knight'),sp=cnt(b,'spearman'),ar=cnt(b,'archer');camp[tr]=kn+'k'+sp+'s'+ar+'a';
+  chk('camp_'+tr,sp===spearN(b,kn+sp)&&sp>=1&&kn>=1&&ar>=1);
+  /* a fallen spearman is replaced by a spearman, a fallen knight by a knight */
+  const d1=b.us.find(u=>u.type==='spearman');d1.hp=0;b.trT=0;campDebug.aiTick(8);const r1=cnt(b,'spearman')===sp&&cnt(b,'knight')===kn;
+  const d2=b.us.find(u=>u.type==='knight'&&u.hp>0);d2.hp=0;b.trT=0;campDebug.aiTick(8);chk('refill_'+tr,r1&&cnt(b,'spearman')===sp&&cnt(b,'knight')===kn)});
+ O.camp=camp;chk('campOrder',!!camp.warlike&&+camp.warlike.split('k')[1].split('s')[0]>+camp.merchant.split('k')[1].split('s')[0]);
+ /* a rebel spearman is a camp unit (team 2, camp colour) and fights like ours: reach, and the bonus against a brute */
+ {const b=bs[0],u=b.us.find(q=>q.type==='spearman'&&q.hp>0);chk('rebelUnit',u.t===2&&u.base===b&&u.ci===b.ci&&u.hp===85);
+  const x0=u.hx,y0=u.hy;u.x=x0;u.y=y0;const z=mkU(1,'brute',x0,y0+46,null,-1);units.push(z);const h0=z.hp;let dm=0;
+  for(let i=0;i<60&&!dm;i++){u.x=x0;u.y=y0;z.x=x0;z.y=y0+46;z.cd=9;update(.05);dm=h0-z.hp}z.hp=0;z.nokill=1;O.rebB=Math.round(dm*100)/100;chk('rebelBonus',Math.abs(dm-11*SPEAR_BIG)<.01)}
+ /* the camps live on for 20 s of simulation with their spearmen, and the state hash is a number */
+ for(let i=0;i<400;i++)update(.05);chk('runs',units.some(u=>u.t===2&&u.type==='spearman'&&u.hp>0)&&typeof mpHash()!=='undefined');
+ /* hotkey (v93): F4 by default, used by nothing else; saved keys with the old default move once, a later choice of the player is kept */
+ {const LS=localStorage,k0=LS.getItem('dk_keys'),v0=LS.getItem('dk_keyv'),put=(o,v)=>{if(o)LS.setItem('dk_keys',JSON.stringify(o));else LS.removeItem('dk_keys');if(v)LS.setItem('dk_keyv',v);else LS.removeItem('dk_keyv');loadKB();return KB.spearman+'/'+KB.knight+'/'+(o?JSON.parse(LS.getItem('dk_keys')).spearman:LS.getItem('dk_keys'))};
+  const n=put(null);chk('keyDefault',n==='f4/2/null'&&Object.keys(KB).filter(q=>KB[q]==='f4').length===1);
+  /* the key itself: F4 with the barracks selected queues a spearman */
+  selB=bk;const q0=queue.filter(q=>q.type==='spearman').length;dispatchEvent(new KeyboardEvent('keydown',{key:'F4',cancelable:true}));O.q=queue.filter(q=>q.type==='spearman').length-q0;chk('keyPress',O.q===1);selB=null;
+  const B=String.fromCharCode(92),a=put({...KB,spearman:B}),b=put({...KB,spearman:B,knight:'f4'}),c=put({...KB,spearman:B,knight:'2'},'2'),d=put({spearman:'f9'});O.keys=[n,a,b,c,d].join(' ');
+  chk('keyMigrate',a==='f4/2/f4'&&b===B+'/f4/'+B&&c===B+'/2/'+B&&d==='f9/2/f9');
+  if(k0===null)LS.removeItem('dk_keys');else LS.setItem('dk_keys',k0);if(v0===null)LS.removeItem('dk_keyv');else LS.setItem('dk_keyv',v0);loadKB()}
  Math.random=RR;return JSON.stringify({ok:C0.every(Boolean),...O})}
