@@ -11,8 +11,8 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - "Guide" row in the Esc menu (`drawGameMenu`): solo is stopped by the menu itself, the co-op lockstep is untouched, no command, nothing in SAVA.
 - Five chapters (Traps, Seasons, Market and barter, Rebel camps and envoys, King talents): 14 in all, list rows shrink to fit (18 px at 1280x720), no list at 390x700 (header + previous / next).
 - "Play the tutorial game" removed with `playTut` and its key (table, NL / PL / TR, guide.json). 20 new keys (`docs/studio-texts/guide2.json`, v93 block; NL / PL / TR).
-- Seen once (headless, `tools/qa_shots.py` steps 10, 13a-13e, 14, 33-35): SEEN_PLACEHOLDER
-- Tests: TESTS_PLACEHOLDER
+- Seen once (headless, `tools/qa_shots.py` steps 10, 13a-13e, 14, 33-35): the 14-row list at 1280x720, the Traps, Seasons (winter), Market, Camps (tribute and event banner) and Talents clips, the 390x700 layout, the Esc menu with its Guide row, the guide over a running game. No page error.
+- Tests: `quests` PASS, `det` PASS, `tools/textwidth.py` 43 captions x 9 languages all fit, `textaudit` 0 dead key in the v93 block, `langcheck` 0 missing. `smoke` and `tools` did NOT pass locally: 20 min timeout twice each with an empty log, machine load 8 to 14 on 2 cores; `smoke` on an untouched v92 copy timed out the same way in the same conditions, so the load is the likely cause, not established for `tools`. To rerun on a quiet machine or on CI.
 - Not verified: the sounds by ear (no audio in headless), a real GPU / phone, a real two-machine co-op game with the guide open, native proofreading of the new captions.
 - Left to the King: sound level and density; the amounts in the clips are examples.
 
