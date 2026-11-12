@@ -37,7 +37,11 @@ export let SWD;
 export let SWH;
 export const SWN = new Int32Array(SWMAX);
 let UNF;
-let SNF;
+/* per-lane constants of one step: way points in pixels (flat) and the lane's castle */
+const LWX=[],LWY=[],LCA=[];
+const TS2=TS*2;
+function swLanes(){const RT=terrainState.ROUTES;for(let L=0;L<RT.length;L++){const Wp=RT[L].wps,n=Wp.length;let X=LWX[L],Y=LWY[L];if(!X||X.length!==n){X=LWX[L]=new Float64Array(n);Y=LWY[L]=new Float64Array(n)}
+  for(let p=0;p<n;p++){X[p]=Wp[p][0]*TS;Y[p]=Wp[p][1]*TS}LCA[L]=LC(L)}LCA.length=RT.length}
 const D9N = [[0,0],[0,1],[1,0],[0,-1],[-1,0],[1,1],[-1,1],[1,-1],[-1,-1]];
 
 export const SWP={x:0,y:0,t:1,type:'husk',hp:1,swi:-1,swarm:true};
@@ -72,10 +76,17 @@ function fmask(S,tx,ty,terr){const lx=tx-S.x0,ly=ty-S.y0;if(lx<0||ly<0||lx>=S.w|
  M[k]=m;return m}
 
 const DX8=[1,-1,0,0,1,1,-1,-1],DY8=[0,0,1,-1,1,-1,1,-1];
+/* per-zombie constants read from tables (same expressions as before, so the same numbers): aim jitter inside the tile, walking speed */
+const SWJ=new Float64Array(256),SWV=new Float64Array(16);
+for(let v=0;v<256;v++)SWJ[v]=(v/255-.5)*.62*TS;
+for(let v=0;v<16;v++)SWV[v]=SWSP*(v&8?1.08:1)*(.9+(v&7)*.03);
 
 function swPick(S,tx,ty,terr,o){const m=fmask(S,tx,ty,terr);if(m<=0)return m===0?-1:-2;let bq=-1,bs=1e9;const W=S.w,F=S.F,fb=(ty-S.y0)*W+tx-S.x0,sb=ty*TW+tx;
- for(let q=0;q<8;q++){if(!(m&(1<<q)))continue;const dx=DX8[q],dy=DY8[q],sc=F[fb+dy*W+dx]*4+SWD[sb+dy*TW+dx]+((o>>q)&1)*1.5;if(sc<bs){bs=sc;bq=q}}
+ for(let b=m;b;b&=b-1){const q=31-Math.clz32(b&-b),dx=DX8[q],dy=DY8[q],sc=F[fb+dy*W+dx]*4+SWD[sb+dy*TW+dx]+((o>>q)&1)*1.5;if(sc<bs){bs=sc;bq=q}}
  return bq}
+
+/* value of one path field at a tile (a list of fields goes to the general fv) */
+function fv1(S,tx,ty){if(S.list)return fv(S,tx,ty);const lx=tx-S.x0,ly=ty-S.y0;return lx<0||ly<0||lx>=S.w||ly>=S.h?65535:S.F[ly*S.w+lx]}
 
 function swSpawn(){for(let qi=SW.q.length-1;qi>=0;qi--){const q=SW.q[qi];let m=Math.min(q.left,Math.ceil(q.rate*SWDT));q.left-=m;
   while(m-->0&&SW.n<SWMAX){let x=0,y=0,ok=false;for(let t=0;t<4&&!ok;t++){x=(q.x+rnd(-5,5))*TS;y=(q.y+rnd(-5,5))*TS;ok=!solidAt(x,y)}if(!ok)continue;
@@ -85,42 +96,43 @@ function swSpawn(){for(let qi=SW.q.length-1;qi>=0;qi--){const q=SW.q[qi];let m=M
 
 export function swUpdate(dt){if(!SW.n&&!SW.q.length){if(swarmState.SWARMS.length)swarmState.SWARMS=[];SW.acc=0;return}SW.acc+=dt;let g=0;while(SW.acc>=SWDT&&g++<4){SW.acc-=SWDT;swStep()}if(SW.acc>SWDT)SW.acc=SWDT}
 
-function swStep(){SW.step++;SW.fxN=0;zombieLanesState.lfBud=Math.max(zombieLanesState.lfBud,2);swSpawn();const n=SW.n,gs=terrainState.gateSolid;terrainState.gateSolid=true;
+function swStep(){SW.step++;SW.fxN=0;zombieLanesState.lfBud=Math.max(zombieLanesState.lfBud,2);swSpawn();const sX=SW.x,sY=SW.y,sPX=SW.px,sPY=SW.py,sHP=SW.hp,sCD=SW.cd,sLN=SW.ln,sPH=SW.ph,sST=SW.st,sTA=SW.ta,sSD=SW.sd,sK=SW.k,sMX=SW.mx,sMY=SW.my,sTI=SW.ti;const n=SW.n,gs=terrainState.gateSolid;terrainState.gateSolid=true;
  /* units the swarm can bite: flag their 3x3 tiles */
  const UM=new Map(),flg=[];for(const u of sessionState.units){if(u.t===1||u.hp<=0||u.gar)continue;const tx=(u.x/TS)|0,ty=(u.y/TS)|0,k=ty*TW+tx;let a=UM.get(k);
-  if(!a){UM.set(k,a=[]);for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const q=k+j*TW+i;if(q>=0&&q<TW*TH&&!UNF[q]){UNF[q]=1;flg.push(q)}}}a.push(u)}
- const sfl=[];for(const s of sessionState.structs){if(s.t!==0||s.hp<=0||!s.tiles)continue;for(const[a,b]of s.tiles)for(let j=-1;j<=1;j++)for(let q=-1;q<=1;q++){const k=(b+j)*TW+a+q;if(k>=0&&k<TW*TH&&!SNF[k]){SNF[k]=1;sfl.push(k)}}}
- const hitS=new Set(),R46=(46*TS)**2,R62=(62*TS)**2,ZA=FD[0]&&FD[0].list?FD[0].list:FD[0]?[FD[0]]:[],ZZ=swarmState.FZ&&swarmState.FZ.list?swarmState.FZ.list:swarmState.FZ?[swarmState.FZ]:[];
- for(let i=0;i<n;i++){const x=SW.x[i],y=SW.y[i],o=SW.sd[i];SW.px[i]=x;SW.py[i]=y;if(SW.hp[i]<=0)continue;SW.cd[i]-=SWDT;
-  const tx=(x/TS)|0,ty=(y/TS)|0,ti=ty*TW+tx;
-  if(UNF[ti]){let bu=null,bd=1e9;for(let j=-1;j<=1;j++)for(let q=-1;q<=1;q++){const a=UM.get(ti+j*TW+q);if(!a)continue;for(const u of a){const d=hyp(u.x-x,u.y-y)-T[u.type].r;if(d<bd){bd=d;bu=u}}}
-   if(bu&&bd<=18){SW.st[i]=1;SW.ta[i]=Math.atan2(bu.x-x,bu.y-y);if(SW.cd[i]<=0){SW.cd[i]=.9+(SW.sd[i]&7)*.06;bu.swh=(bu.swh||0)+1;hitS.add(bu)}continue}}
-  if(SNF[ti]){let bs=null;for(const[dx,dy]of D9N){const s=occ.get(ti+dy*TW+dx);if(s&&s.t===0&&s.hp>0){bs=s;break}}
-   if(bs){SW.st[i]=7;SW.ta[i]=Math.atan2(bs.x-x,bs.y-y);if(SW.cd[i]<=0){SW.cd[i]=.9+(o&7)*.06;bs.swh=(bs.swh||0)+1;hitS.add(bs)}continue}}
-  const L=SW.ln[i],C=LC(L),dcx=C.x-x,dcy=C.y-y,dc2=dcx*dcx+dcy*dcy;
+  if(!a){UM.set(k,a=[]);for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const q=k+j*TW+i;if(q>=0&&q<TW*TH&&!(UNF[q]&1)){UNF[q]|=1;flg.push(q)}}}a.push(u)}
+ const sfl=[];for(const s of sessionState.structs){if(s.t!==0||s.hp<=0||!s.tiles)continue;for(const[a,b]of s.tiles)for(let j=-1;j<=1;j++)for(let q=-1;q<=1;q++){const k=(b+j)*TW+a+q;if(k>=0&&k<TW*TH&&!(UNF[k]&2)){UNF[k]|=2;sfl.push(k)}}}
+ const hitS=new Set(),R46=(46*TS)**2,R62=(62*TS)**2,ZA=FD[0]&&FD[0].list?FD[0].list:FD[0]?[FD[0]]:[],ZZ=swarmState.FZ&&swarmState.FZ.list?swarmState.FZ.list:swarmState.FZ?[swarmState.FZ]:[];swLanes();
+ for(let i=0;i<n;i++){const x=sX[i],y=sY[i],o=sSD[i];sPX[i]=x;sPY[i]=y;if(sHP[i]<=0)continue;sCD[i]-=SWDT;
+  const tx=(x/TS)|0,ty=(y/TS)|0,ti=ty*TW+tx,fl=UNF[ti];
+  if(fl&1){let bu=null,bd=1e9;for(let j=-1;j<=1;j++)for(let q=-1;q<=1;q++){const a=UM.get(ti+j*TW+q);if(!a)continue;for(const u of a){const d=hyp(u.x-x,u.y-y)-T[u.type].r;if(d<bd){bd=d;bu=u}}}
+   if(bu&&bd<=18){sST[i]=1;sTA[i]=Math.atan2(bu.x-x,bu.y-y);if(sCD[i]<=0){sCD[i]=.9+(sSD[i]&7)*.06;bu.swh=(bu.swh||0)+1;hitS.add(bu)}continue}}
+  if(fl&2){let bs=null;for(const[dx,dy]of D9N){const s=occ.get(ti+dy*TW+dx);if(s&&s.t===0&&s.hp>0){bs=s;break}}
+   if(bs){sST[i]=7;sTA[i]=Math.atan2(bs.x-x,bs.y-y);if(sCD[i]<=0){sCD[i]=.9+(o&7)*.06;bs.swh=(bs.swh||0)+1;hitS.add(bs)}continue}}
+  const L=sLN[i],C=LCA[L]||LC(L),dcx=C.x-x,dcy=C.y-y,dc2=dcx*dcx+dcy*dcy;
   let gx=0,gy=0,has=false,dir=-2,ph=false;
-  if(dc2<=R46)SW.ph[i]=65535;if(dc2>R46&&SW.ph[i]!==65535){const Wp=terrainState.ROUTES[L].wps;let p=SW.ph[i];while(p<Wp.length&&Math.abs(Wp[p][0]*TS-x)<TS*2&&Math.abs(Wp[p][1]*TS-y)<TS*2)p++;
-   if(p<Wp.length){let S=laneFieldQ(L,(p/LSEG)|0),v=S?fv(S,tx,ty):65535;if(S&&v<=3&&S.tg+1>p){p=Math.min(Wp.length,S.tg+1);if(p<Wp.length){S=laneFieldQ(L,(p/LSEG)|0);v=S?fv(S,tx,ty):65535}}SW.ph[i]=p;
-    if(p<Wp.length){SW.st[i]=2;if(S&&v<65535){dir=swPick(S,tx,ty,false,o);if(dir===-1){const g=Wp[S.tg];gx=g[0]*TS;gy=g[1]*TS;has=true}}else{ph=true;SW.st[i]=3;const g=Wp[p];gx=g[0]*TS;gy=g[1]*TS;has=true}}}}
-  if(dir===-2&&!has){let bs=null,bv=65535;for(const S of ZA){const v=fv(S,tx,ty);if(v<bv){bv=v;bs=S}}
-   if(bs){dir=swPick(bs,tx,ty,false,o);SW.st[i]=4}else{for(const S of ZZ){const v=fv(S,tx,ty);if(v<bv){bv=v;bs=S}}if(bs){dir=swPick(bs,tx,ty,true,o);SW.st[i]=5}}
-   if(dir<0){const hc=nearC(x,y);gx=hc.x;gy=hc.y;has=true;if(!bs)SW.st[i]=6}}
-  if(dir>=0){gx=(tx+D8[dir][0]+.5)*TS+((o&255)/255-.5)*.62*TS;gy=(ty+D8[dir][1]+.5)*TS+(((o>>8)&255)/255-.5)*.62*TS}
+  if(dc2<=R46)sPH[i]=65535;if(dc2>R46&&sPH[i]!==65535){const Wp=terrainState.ROUTES[L].wps,WX=LWX[L],WY=LWY[L],WL=WX.length;let p=sPH[i];while(p<WL&&Math.abs(WX[p]-x)<TS2&&Math.abs(WY[p]-y)<TS2)p++;
+   if(p<Wp.length){let S=laneFieldQ(L,(p/LSEG)|0),v=S?fv1(S,tx,ty):65535;if(S&&v<=3&&S.tg+1>p){p=Math.min(Wp.length,S.tg+1);if(p<Wp.length){S=laneFieldQ(L,(p/LSEG)|0);v=S?fv1(S,tx,ty):65535}}sPH[i]=p;
+    if(p<Wp.length){sST[i]=2;if(S&&v<65535){dir=swPick(S,tx,ty,false,o);if(dir===-1){const g=Wp[S.tg];gx=g[0]*TS;gy=g[1]*TS;has=true}}else{ph=true;sST[i]=3;const g=Wp[p];gx=g[0]*TS;gy=g[1]*TS;has=true}}}}
+  if(dir===-2&&!has){let bs=null,bv=65535;for(const S of ZA){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}
+   if(bs){dir=swPick(bs,tx,ty,false,o);sST[i]=4}else{for(const S of ZZ){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}if(bs){dir=swPick(bs,tx,ty,true,o);sST[i]=5}}
+   if(dir<0){const hc=nearC(x,y);gx=hc.x;gy=hc.y;has=true;if(!bs)sST[i]=6}}
+  if(dir>=0){gx=(tx+DX8[dir]+.5)*TS+SWJ[o&255];gy=(ty+DY8[dir]+.5)*TS+SWJ[(o>>8)&255]}
   let vx=gx-x,vy=gy-y;const l=hyp(vx,vy);if(l>.5){vx/=l;vy/=l}else{vx=0;vy=0}
-  const D0=SWD[ti];let jam=1;if(D0>1&&tx>0&&ty>0&&tx<TW-1&&ty<TH-1){const h0=HT[ti],pl=(swDn(ti,ti-1,h0,D0)-swDn(ti,ti+1,h0,D0))*.07,pu=(swDn(ti,ti-TW,h0,D0)-swDn(ti,ti+TW,h0,D0))*.07;vx+=pl>.6?.6:pl<-.6?-.6:pl;vy+=pu>.6?.6:pu<-.6?-.6:pu;if(D0>6)jam=Math.max(.3,1-(D0-6)*.05)}
-  const sp=SWSP*(SW.k[i]?1.08:1)*(.9+(o>>13)*.03)*jam*SWDT;let nx=x+vx*sp,ny=y+vy*sp;
+  const D0=SWD[ti];let jam=1;if(D0>1&&tx>0&&ty>0&&tx<TW-1&&ty<TH-1){const h0=HT[ti];let dl=D0,dr=D0,du=D0,dd=D0,q=ti-1;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dl=SWD[q];q=ti+1;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dr=SWD[q];q=ti-TW;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))du=SWD[q];q=ti+TW;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dd=SWD[q];
+   const pl=(dl-dr)*.07,pu=(du-dd)*.07;vx+=pl>.6?.6:pl<-.6?-.6:pl;vy+=pu>.6?.6:pu<-.6?-.6:pu;if(D0>6)jam=Math.max(.3,1-(D0-6)*.05)}
+  const sp=SWV[(sK[i]?8:0)|(o>>13)]*jam*SWDT;let nx=x+vx*sp,ny=y+vy*sp;
   nx=nx<TS?TS:nx>W-TS?W-TS:nx;ny=ny<TS?TS:ny>H-TS?H-TS:ny;const ntx=(nx/TS)|0,nty=(ny/TS)|0;
   if(ntx!==tx||nty!==ty){const pb=(a,b)=>!!occ.get(b*TW+a),B=ph?(a,b,c,d)=>pb(c,d):blk;
    const bl=ntx!==tx&&nty!==ty?(B(tx,ty,ntx,ty)||B(tx,ty,tx,nty)||B(tx,ty,ntx,nty)):B(tx,ty,ntx,nty);
    if(bl){let s=occ.get(nty*TW+ntx);if((!s||s.t===1)&&ntx!==tx)s=occ.get(ty*TW+ntx);if((!s||s.t===1)&&nty!==ty)s=occ.get(nty*TW+tx);
-    if(s&&s.t!==1&&s.hp>0){SW.st[i]=7;SW.ta[i]=Math.atan2(s.x-x,s.y-y);if(SW.cd[i]<=0){SW.cd[i]=.9+(o&7)*.06;s.swh=(s.swh||0)+1;hitS.add(s)}nx=x;ny=y}
-    else{const Dc=SWD[ti],cap=Math.min(6,(Dc>=5?1+((Dc-5)/6|0):0)+(SW.st[i]===6?2:0));let cm=false;
+    if(s&&s.t!==1&&s.hp>0){sST[i]=7;sTA[i]=Math.atan2(s.x-x,s.y-y);if(sCD[i]<=0){sCD[i]=.9+(o&7)*.06;s.swh=(s.swh||0)+1;hitS.add(s)}nx=x;ny=y}
+    else{const Dc=SWD[ti],cap=Math.min(6,(Dc>=5?1+((Dc-5)/6|0):0)+(sST[i]===6?2:0));let cm=false;
      if(cap){const cl=(a,b)=>{if(tsol(a,b)||occ.get(b*TW+a))return false;const dh=HT[b*TW+a]-HT[ti];return dh>0?dh<=cap:-dh<=2+cap};
       if(ntx!==tx&&nty!==ty){const ax=Math.abs(nx-x)>=Math.abs(ny-y);if(ax&&cl(ntx,ty)){ny=y;cm=true}else if(cl(tx,nty)){nx=x;cm=true}else if(!ax&&cl(ntx,ty)){ny=y;cm=true}}else cm=cl(ntx,nty)}
      if(!cm){const okx=ntx===tx||!B(tx,ty,ntx,ty),oky=nty===ty||!B(tx,ty,tx,nty);if(ntx!==tx&&nty!==ty){if(okx&&!oky)ny=y;else if(oky&&!okx)nx=x;else if(okx&&oky){if(Math.abs(nx-x)>Math.abs(ny-y))ny=y;else nx=x}else{nx=x;ny=y}}else if(ntx!==tx)nx=x;else ny=y}}}}
-  if(nx!==x||ny!==y){SW.x[i]=nx;SW.y[i]=ny;nx=SW.x[i];ny=SW.y[i];SW.ta[i]=NaN;SW.mx[i]=nx-x;SW.my[i]=ny-y;const nti=((ny/TS)|0)*TW+((nx/TS)|0);
-   if(nti!==ti){SWD[ti]--;SWD[nti]++;SW.ti[i]=nti;if(ph){const ck=((((ny/TS)|0)/CH)|0)*NCX+((((nx/TS)|0)/CH)|0);if(!genF[ck])genChunk(ck%NCX,(ck/NCX)|0)}}}}
- for(const q of flg)UNF[q]=0;for(const q of sfl)SNF[q]=0;
+  if(nx!==x||ny!==y){sX[i]=nx;sY[i]=ny;nx=sX[i];ny=sY[i];sTA[i]=NaN;sMX[i]=nx-x;sMY[i]=ny-y;const nti=((ny/TS)|0)*TW+((nx/TS)|0);
+   if(nti!==ti){SWD[ti]--;SWD[nti]++;sTI[i]=nti;if(ph){const ck=((((ny/TS)|0)/CH)|0)*NCX+((((nx/TS)|0)/CH)|0);if(!genF[ck])genChunk(ck%NCX,(ck/NCX)|0)}}}}
+ for(const q of flg)UNF[q]=0;for(const q of sfl)UNF[q]=0;
  /* the bites: capped per target so a pile of zombies cannot melt anything in a blink */
  for(const e of hitS){const hits=e.swh||0;e.swh=0;if(!hits||e.hp<=0)continue;const bs=!(e.type in T);
   const one=3*(e.t===0&&RS2.done.plate?.78:1)*(e.t===0&&RS2.done.mail?.85:1)*(bs?(e.t===0&&RS2.done.bastion?.72:1)*1.6:(e.cb?.8:1));
@@ -129,8 +141,6 @@ function swStep(){SW.step++;SW.fxN=0;zombieLanesState.lfBud=Math.max(zombieLanes
   if(SW.fxN<14){SW.fxN++;if(bs)puff(e.x+rnd(-14,14),e.y+rnd(-14,14),'#8a8a90',2,40,{T:.4,z:.8,vz:2,g:8,s:.07});else blood(e.x,e.y,'#7a1a1a')}
   snd(bs?'stone':'zhit',e.x,e.y);if(!bs&&e.hp<=0&&e.t!==1)e.conv=true}
  terrainState.gateSolid=gs;swCompact();swCells();if(SW.step%10===0||!SW.n)swRear()}
-
-function swDn(ti,q,h0,D0){return ter[q]===0&&(HT[q]===h0||canStepZ(ti,q))?SWD[q]:D0}
 
 function swCompact(){const n=SW.n;let w=0,dead=0;
  for(let i=0;i<n;i++){if(SW.hp[i]>0){if(w!==i){SW.x[w]=SW.x[i];SW.y[w]=SW.y[i];SW.px[w]=SW.px[i];SW.py[w]=SW.py[i];SW.hp[w]=SW.hp[i];SW.cd[w]=SW.cd[i];SW.ln[w]=SW.ln[i];SW.ph[w]=SW.ph[i];SW.ri[w]=SW.ri[i];SW.k[w]=SW.k[i];SW.ti[w]=SW.ti[i];SW.fa[w]=SW.fa[i];SW.ta[w]=SW.ta[i];SW.mx[w]=SW.mx[i];SW.my[w]=SW.my[i];SW.sd[w]=SW.sd[i];SW.id[w]=SW.id[i];SW.st[w]=SW.st[i]}w++;continue}
@@ -183,5 +193,4 @@ export function initializeSwarm() {
   SWD = new Uint16Array(TW*TH);
   SWH = new Int32Array(SWCW*SWCH).fill(-1);
   UNF = new Uint8Array(TW*TH);
-  SNF = new Uint8Array(TW*TH);
 }
