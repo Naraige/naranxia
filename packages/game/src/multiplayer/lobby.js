@@ -18,6 +18,15 @@ export const sitesFar=(a,b)=>!a||!b||Math.max(Math.abs(a.tx-b.tx),Math.abs(a.ty-
 /* ---- lobby state ---- */
 export function mpConnected(){registryHide();MP.conn=true;MP.mine=null;MP.theirs=null;mpSend({k:'hello',n:THEME.n,v:GVER});if(MP.host)mpWorldSync();lobbyRender();lobbyShow()}
 
+/* the one line on top during a co-op game: what is happening and what the player has to do. Nothing while the game runs: a short wait
+   (under 1.5 s) for the partner's commands is not shown, and the line goes as soon as the game moves again */
+export function mpBanner(now){const nm=MP.pname||'your partner',ws=MP.stall&&!sessionState.paused?(now-(MP.stallAt||now))/1000:0,quiet=(now-(MP.rxAt||now))/1000;
+ if(MP.rsy||MP.desync)return 'Co-op: putting both games back in step, a few seconds (nothing to do)';
+ if(ws>=1.5&&quiet>=6)return 'Co-op: no answer from '+nm+' for '+Math.round(quiet)+' s, the game goes on when the connection is back';
+ if(ws>=1.5)return 'Co-op: waiting for '+nm+', '+Math.round(ws)+' s (slow connection or computer)';
+ if(MP.rtt>=250)return 'Co-op: slow connection ('+MP.rtt+' ms)';
+ return ''}
+
 export function mpWorldSync(){if(MP.conn&&MP.host){MP.theirs=null;mpSend({k:'w',seed:terrainState.SEED,gpr:terrainState.GPR,d:sessionState.diffI});MP.mine=null;lobbyRender()}}
 
 let _rw;
@@ -121,8 +130,8 @@ export function initializeLobby() {
   $m('mpPlay').onclick=mpStart;
 
   setInterval(()=>{if(MP.on)mpSend({k:'pg',t:performance.now()})},2000);
-  setInterval(()=>{let t='';if(MP.on){t=MP.rsy?'Co-op: resynchronizing...':MP.desync?'Co-op: OUT OF SYNC':MP.stall?'Co-op: waiting for your partner...':MP.rtt>=250?'Co-op: slow connection ('+MP.rtt+' ms)':''}
+  setInterval(()=>{let t='';if(MP.on)t=mpBanner(performance.now());
    else if(MP.conn&&sitePickerState.picking){t='Co-op lobby - '+(MP.mine?'your castle: placed':'choose your castle site')+' | '+(MP.pname||'partner')+': '+(MP.theirs?'ready':'choosing...')}
    else if(MP.conn&&!MP.host&&sessionState.started===false&&MP.mine&&MP.theirs)t='Waiting for the host to press Play';
-   if(t!==mpHud._t){mpHud._t=t;mpHud.textContent=t;mpHud.style.display=t?'block':'none';mpHud.style.color=MP.desync?'#ff8a8a':'#ffd9a0'}},300);
+   if(t!==mpHud._t){mpHud._t=t;mpHud.textContent=t;mpHud.style.display=t?'block':'none'}},300);
 }

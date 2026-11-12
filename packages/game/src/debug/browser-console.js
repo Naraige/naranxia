@@ -60,6 +60,7 @@ import { toolGeos } from '../rendering/models/unit-parts.js';
 import { ZNV } from '../rendering/models/zombies.js';
 import { rs } from '../rendering/resolution.js';
 import { CAM, hemi, renderer, scene, sun } from '../rendering/scene.js';
+import { pickGround as dbgPickGround, scr as dbgScr } from '../rendering/camera.js';
 import { buildStructMesh, setBuildStructMeshHandler } from '../rendering/structures.js';
 import { unitG } from '../rendering/terrain.js';
 import { animUnit } from '../rendering/unit-animation.js';
@@ -102,6 +103,8 @@ export function installBrowserConsole() {
   const bindings = {
     ACH: { get: () => ACH },
     CAM: { get: () => CAM },
+    scr: { get: () => dbgScr },
+    pickGround: { get: () => dbgPickGround },
     CS: { get: () => sessionState.CS, set: value => { sessionState.CS = value; } },
     CS2: { get: () => sessionState.CS2, set: value => { sessionState.CS2 = value; } },
     CURPL: { get: () => playersState.CURPL, set: value => { playersState.CURPL = value; } },
