@@ -93,7 +93,7 @@ import {
   terrainState,
   TFL,
 } from '../world/terrain.js';
-import { freeTile } from '../world/traversal.js';
+import { bfsW, freeTile } from '../world/traversal.js';
 
 // Browser automation and the in-repo preview tools evaluate these names in the page.
 // Gameplay code uses imports and never reads through this console interface.
@@ -184,6 +184,7 @@ export function installBrowserConsole() {
     dist: { get: () => dist },
     forester: { get: () => forester },
     formType: { get: () => constructionState.formType, set: value => { constructionState.formType = value; } },
+    bfsW: { get: () => bfsW },
     freeTile: { get: () => freeTile },
     gOK: { get: () => gOK },
     gstBest: { get: () => gstBest },
