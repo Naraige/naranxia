@@ -43,6 +43,7 @@ import { bar, drawMapModal, drawWorld, mmss, pill } from './minimap.js';
 import { settingsState } from './settings.js';
 import { drawPicker, sitePickerState } from './site-picker.js';
 import { drawTitle } from './title-menu.js';
+import { guideWatch } from './video-guide.js';
 import { titleBlur } from './title-frame.js';
 import { bevelBtn, goldTitle, kitFrame } from './menu-kit.js';
 import { fxGameIn } from './menu-fx.js';
@@ -102,6 +103,7 @@ function drawToasts(UW){for(let i=0;i<TOASTS.length;i++){const o=TOASTS[i];o.t+=
 /* ---- main HUD ---- */
 export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,hudDisplayState.UIS,0,0);canvasesState.ctx.imageSmoothingEnabled=true;hudState.uiHits=[];hudState.uiRects=[];
  const UW=Math.floor(cv.width/hudDisplayState.UIS),UH=Math.floor(cv.height/hudDisplayState.UIS);
+ guideWatch();
  if(!sessionState.started){if(sitePickerState.picking){titleBlur(false);if(NAV.active)navBegin(false);NAV.onEsc=null;drawPicker(UW,UH)}else drawTitle(UW,UH);canvasesState.ctx.setTransform(1,0,0,1,0,0);return}
  titleBlur(false);if(NAV.active){navBegin(false);NAV.onEsc=null}
  frame(-3,-3,UW+6,27,CHAT,0);hudState.uiRects.push(U(0,0,UW,24));
@@ -145,6 +147,8 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  if(!sessionState.over)bossY+=eventBar(UW,settingsState.TOPH+bossY);
  /* where the quest panel (left, 184 wide) reaches the centre bars, it sits under them next frame, one message line lower */
  hudDisplayState.barsH=bossY>0&&Math.min(184,UW-8)+10>UW/2-116?bossY+20:0;
+ /* the band taken by those centre bars (the quest marker keeps its arrows off it) */
+ hudDisplayState.cbar=bossY>0?[UW/2-125,settingsState.TOPH,250,bossY]:null;
  if(!sessionState.over){let msg=sessionState.mode?'Place '+NAMES[sessionState.mode]+(sessionState.mode==='gate'?' - 3 tiles: two towers and a passage, [R] rotates':sessionState.mode==='movec'?' - click the new centre of your castle':sessionState.mode==='ballista'||sessionState.mode==='trebuchet'?' on a tower - [R] sets facing':sessionState.mode==='raise'||sessionState.mode==='dig'?' - paint tiles':sessionState.mode==='ramp'?' - one block that climbs 1 level, [R] turns it':sessionState.mode==='demolish'?' - click a building':sessionState.mode==='upgrade'?' - click or drag over wood buildings':'')+' - click a tile - right-click or Esc cancels':hudDisplayState.msgT>0?hudDisplayState.msgS:sessionState.time<30?'Select peasants, then right-click a tree, rock or gold to harvest':'';
   if(hudDisplayState.msgT>0&&hudDisplayState.msgS&&hudDisplayState.msgS!==MSGL[MSGL.length-1]){MSGL.push(hudDisplayState.msgS);if(MSGL.length>25)MSGL.shift()}
   if(msg&&sessionState.bannerT<=0){canvasesState.ctx.globalAlpha=sessionState.mode||hudDisplayState.msgT>0?1:Math.min(1,(18-sessionState.time)/3);const my=settingsState.TOPH+bossY,qb=hudDisplayState.qbox,lx=qb&&my<qb[1]+qb[3]+2&&my+16>qb[1]-2&&UW-qb[0]-qb[2]>=210?qb[0]+qb[2]+3:0;/* beside the quest panel when it would cover it */let ms=.95;while(ms>.55&&tw(msg,ms)+16>UW-6-lx)ms-=.05;const w=tw(msg,ms)+16,mx=Math.max(Math.round((UW-w)/2),lx);frame(mx,my,w,16,CHAT,8);TC(msg,mx+w/2,my+4,'#ffffff',ms);canvasesState.ctx.globalAlpha=1}

@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Regenerates the Discord v92 pictures announce/img/v92/*.png (1280x720, < 1.5 MB), offline fonts via tools/fontroute.py.
+"""Takes the Discord announcement pictures (1280x720, < 1.5 MB), offline fonts via tools/fontroute.py.
 usage: python3 tools/announce_shots.py [01 02 03 04]     (needs dist/naranxia_readable.html; one shot after the other, never in parallel)
+The pictures go to dist/announce-shots/ (SHOT_OUT=dir for another place): look at them, then copy the good ones to announce/img/vNN/
+with the batch that ships them. Nothing is written under announce/ by this tool.
 One script per picture in tools/shots/NN-name.js (shared start: tools/shots/_prelude.js, seed per picture below). Each script builds the scene
 (same style as tests/*.js), then renders a frame; Playwright takes the screenshot. SHOT_TIMEOUT = screenshot timeout in s (slow machine)."""
 import os, sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
-SHOTS=ROOT/'tools'/'shots'; OUT=ROOT/'announce'/'img'/'v92'; OUT.mkdir(parents=True,exist_ok=True)
+SHOTS=ROOT/'tools'/'shots'; OUT=Path(os.environ.get('SHOT_OUT') or ROOT/'dist'/'announce-shots'); OUT.mkdir(parents=True,exist_ok=True)
 SEEDS={'01':7,'02':11,'03':7,'04':7}
 TMO=int(os.environ.get('SHOT_TIMEOUT','600'))*1000
 def optimise(p):

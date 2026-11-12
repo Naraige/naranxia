@@ -1498,4 +1498,6 @@ export const TR = {
   "The King gains XP when zombies die near him, after each wave and from bosses": "Kral, yakınında zombiler öldüğünde, her dalgadan sonra ve boss'lardan XP kazanır",
   "Each new level gives one talent point": "Her yeni seviye bir yetenek puanı verir",
   "Two branches of four talents, learned in order: the war cry or the charge": "Dörder yetenekli iki dal, sırayla öğrenilir: savaş narası ya da hücum",
+  "Quest skipped: {0}": "Görev atlandı: {0}",
+  "Skipped": "Atlandı",
 };

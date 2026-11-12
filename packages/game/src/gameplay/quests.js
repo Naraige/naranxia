@@ -2,6 +2,7 @@ import { BASES } from '../ai/kingdoms.js';
 import { ROLE } from '../ai/worker-roles.js';
 import { snd } from '../audio/sound.js';
 import { diagnosticsState } from '../debug/diagnostics.js';
+import { convoyLinked } from '../multiplayer/convoys.js';
 import { SPK } from '../multiplayer/objectives.js';
 import { MP } from '../multiplayer/session.js';
 import { hudDisplayState } from '../ui/hud-state.js';
@@ -20,7 +21,7 @@ import { wavesState } from './waves.js';
    multiplayer/commands.js (command 'qs') calls qSetOn0. Nothing moves in test mode (F10, solo only, like the achievements).
    The panel and the log are in ui/quest-panel.js and only read this state.
    Q = {v:2, on, d:{id:1 done | 2 skipped}, a:[gold, wood, stone gathered since the active quest started], e:{tr trades, cv convoys delivered},
-        dt (sim time of the last completion), last (its id)}. Quests are known by id, never by index, so the list can change between versions. */
+        dt (sim time of the last completion), last (its id), ct (sim time of the next route check of the convoy quest)}. Quests are known by id, never by index, so the list can change between versions. */
 export const questsState = { Q: null };
 
 const cntS=(type)=>{let n=0;for(const s of sessionState.structs)if(s.t===0&&s.type===type&&s.prog>=1&&s.hp>0)n++;return n};
@@ -33,6 +34,10 @@ const tributes=()=>{let n=0;for(const b of BASES)n+=b.envN|0;return n};
 const campLeft=()=>{for(const b of BASES)if(b.alive)return true;return false};
 const ev=k=>(questsState.Q.e&&questsState.Q.e[k])|0;
 const two=(a,b)=>a?1+(b?1:0):0;
+/* co-op convoy quest: no convoy can go when the two castles have no land route between them (river, castle on a closed ledge: the
+   command is refused at once by multiplayer/convoys.js) or when one castle has fallen. Looked at when the quest comes up, then every
+   30 s of simulation time; the time of the next look is Q.ct, in the saved state, so both machines look at the same ticks, also after a resync */
+const cvCut=()=>{const Q=questsState.Q;if(sessionState.time<Q.ct)return false;Q.ct=sessionState.time+30;return !convoyLinked()};
 
 export const QCH=['First steps','A village','An army','Defences','Trade and craft','The crown','Beyond the walls'];
 
@@ -58,7 +63,7 @@ export const QUESTS=[
  {id:'wave5',c:5,t:'Hold the line',d:'Survive wave 5',n:5,p:wavesDone,r:{g:100}},
  {id:'siege',c:6,t:'Engines of war',d:'Research Masonry, then put a ballista on a tower or train a cannon',n:2,p:()=>{const m=cntS('ballista')+cntS('trebuchet')+cntU('cannon');return two(RS.done||m,m)},r:{s:60}},
  {id:'envoy',c:6,t:'Friends in the wild',d:'Build an embassy, train an envoy at the castle and send it to a rebel camp',n:2,p:()=>two(cntS('embassy')||tributes(),tributes()),r:{g:60},s:()=>!campLeft()&&!tributes()},
- {id:'convoy',c:6,t:'Share the load',d:'Send a convoy of resources to your partner',n:1,p:()=>ev('cv'),r:{f:30},mp:1,s:()=>!sessionState.CS2},
+ {id:'convoy',c:6,t:'Share the load',d:'Send a convoy of resources to your partner',n:1,p:()=>ev('cv'),r:{f:30},mp:1,s:()=>!sessionState.CS2||cvCut()},
  {id:'wave10',c:6,t:'The last bastion',d:'Survive wave 10',n:10,p:wavesDone,r:{g:150}}];
 
 /* the 16 quests of the first version (saves of that build keep an index into this list) */
@@ -68,14 +73,14 @@ const OLD1=['wood','ore','house','farm','barracks','knights','archers','walls','
    because a local preference must not make the two machines differ */
 export const questsPref=()=>{try{return localStorage.getItem('dk_quests')!=='0'}catch(e){return true}};
 
-const fresh=on=>({v:2,on:on?1:0,d:{},a:[0,0,0],e:{tr:0,cv:0},dt:-1e9,last:''});
+const fresh=on=>({v:2,on:on?1:0,d:{},a:[0,0,0],e:{tr:0,cv:0},dt:-1e9,last:'',ct:-1e9});
 
 export function qReset(){questsState.Q=fresh(MP.on?true:questsPref())}
 
 /* a save without quests (older build) loads with the quest line off: a kingdom at wave 20 does not cash every reward at once.
    A save of the first version (index i into the 16 quests of that build) keeps what was done, by id. */
 export function qFix(v){if(!v||typeof v!=='object')return fresh(false);const a=Array.isArray(v.a)?v.a:[],Q=fresh(v.on);
- Q.a=[+a[0]||0,+a[1]||0,+a[2]||0];Q.dt=Number.isFinite(v.dt)?v.dt:-1e9;
+ Q.a=[+a[0]||0,+a[1]||0,+a[2]||0];Q.dt=Number.isFinite(v.dt)?v.dt:-1e9;Q.ct=Number.isFinite(v.ct)?v.ct:-1e9;
  if(v.d&&typeof v.d==='object'){for(const q of QUESTS){const x=v.d[q.id]|0;if(x===1||x===2)Q.d[q.id]=x}}
  else{const n=Math.max(0,Math.min(OLD1.length,v.i|0));for(let i=0;i<n;i++)Q.d[OLD1[i]]=1;Q.dt=-1e9}
  if(v.e&&typeof v.e==='object'){Q.e.tr=v.e.tr|0;Q.e.cv=v.e.cv|0}
@@ -108,8 +113,8 @@ export function qTick(){const Q=questsState.Q;if(!Q||!Q.on||diagnosticsState.DEV
  const P=playersState.RESP,np=sessionState.CS2?2:1;
  for(let p=0;p<np&&p<P.length;p++){Q.a[0]+=Math.max(0,P[p].g-B0[p][0]);Q.a[1]+=Math.max(0,P[p].w-B0[p][1]);Q.a[2]+=Math.max(0,P[p].s-B0[p][2])}
  const q=qCur();if(!q)return;
- if(q.s&&q.s()){Q.d[q.id]=2;Q.a=[0,0,0];return}
- if(q.p()<q.n)return;
+ /* a quest that cannot be done in this game is passed: no reward, shown as skipped in the log (a quest already fulfilled is paid first) */
+ if(q.p()<q.n){if(q.s&&q.s()){Q.d[q.id]=2;Q.a=[0,0,0];hudDisplayState.msgS='Quest skipped: '+q.t;hudDisplayState.msgT=4}return}
  const r=q.r;for(let p=0;p<np&&p<P.length;p++){const R=P[p];if(r.g)R.g+=r.g;if(r.w)R.w+=r.w;if(r.s)R.s+=r.s;if(r.f)R.f=(R.f||0)+r.f}
  Q.d[q.id]=1;Q.a=[0,0,0];Q.dt=sessionState.time;Q.last=q.id;
  hudDisplayState.msgS='Quest complete: '+q.t;hudDisplayState.msgT=4;snd('coin')}

@@ -19,7 +19,7 @@ import { mkU, spawnPos } from '../gameplay/entities.js';
 import { wavePreview } from '../gameplay/wave-preview.js';
 import { formationsState, order, setOrderHandler } from '../gameplay/formations.js';
 import { kingOf, kingSkill, kingTalent, kingSkill0, kingTick, kskLeft, kingXp, kingTalent0, kxLevel, kPoints, kHas, KXL } from '../gameplay/king-skills.js';
-import { openMenu, setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
+import { openMenu, quitGame, setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
 import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
 import { reset } from '../gameplay/reset.js';
 import { C, LH, RS, RS2, RT2, rulesState, rxLock, T, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
@@ -30,7 +30,7 @@ import { gstBest, sbRec, setUpdateHandler, statisticsState, update } from '../ga
 import { SW } from '../gameplay/swarm.js';
 import { callWave, restT, setCallWaveHandler, wave, wavesState } from '../gameplay/waves.js';
 import { _N, mpExec, mpPush, questSwitch, roleAdj, sendConvoy, setMpExecHandler } from '../multiplayer/commands.js';
-import { convoyStep, setConvoyStepHandler } from '../multiplayer/convoys.js';
+import { convoyLinked, convoyStep, setConvoyStepHandler } from '../multiplayer/convoys.js';
 import { mpStart, mpWorldSync } from '../multiplayer/lobby.js';
 import { mpHash, mpMsg, setMpMsgHandler } from '../multiplayer/lockstep.js';
 import { objTick, SPK } from '../multiplayer/objectives.js';
@@ -47,7 +47,7 @@ import { THEME } from '../ui/kingdom-theme.js';
 import { NAV } from '../ui/menu-nav.js';
 import { KB, loadKB, settingsDebug, settingsState } from '../ui/settings.js';
 import { titleDebug } from '../ui/title-menu.js';
-import { guideState, openGuide } from '../ui/video-guide.js';
+import { guideState, guideWatch, openGuide } from '../ui/video-guide.js';
 import { languageState } from '../i18n/language.js';
 import { FOWU } from '../rendering/fog.js';
 import { render3D, setRender3DHandler } from '../rendering/frame.js';
@@ -63,13 +63,14 @@ import { CAM, hemi, renderer, scene, sun } from '../rendering/scene.js';
 import { buildStructMesh, setBuildStructMeshHandler } from '../rendering/structures.js';
 import { unitG } from '../rendering/terrain.js';
 import { animUnit } from '../rendering/unit-animation.js';
+import { nightK } from '../rendering/lighting.js';
 import { matUI } from '../rendering/unit-instances.js';
 import { seasonIdx, weatherTick, WX, wxKind, wxLabel } from '../rendering/weather.js';
 import { cv } from '../ui/canvases.js';
 import { convoyPanelState, CVA } from '../ui/convoy-panel.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { inputState } from '../input/state.js';
-import { hudState } from '../ui/hud.js';
+import { drawUI, hudState } from '../ui/hud.js';
 import {
   buildPreview,
   confirmPick,
@@ -231,6 +232,7 @@ export function installBrowserConsole() {
     mpWorldSync: { get: () => mpWorldSync },
     msgS: { get: () => hudDisplayState.msgS, set: value => { hudDisplayState.msgS = value; } },
     nextL: { get: () => sessionState.nextL, set: value => { sessionState.nextL = value; } },
+    nightK: { get: () => nightK },
     nightLv: { get: () => wavesState.nightLv, set: value => { wavesState.nightLv = value; } },
     objTick: { get: () => objTick },
     occ: { get: () => occ },
@@ -284,7 +286,11 @@ export function installBrowserConsole() {
     titleDebug: { get: () => titleDebug },
     guideState: { get: () => guideState },
     openGuide: { get: () => openGuide },
+    guideWatch: { get: () => guideWatch },
     openMenu: { get: () => openMenu },
+    quitGame: { get: () => quitGame },
+    drawUI: { get: () => drawUI },
+    convoyLinked: { get: () => convoyLinked },
     icoPart: { get: () => icoPart },
     openPicker: { get: () => openPicker },
     sitePickerState: { get: () => sitePickerState },

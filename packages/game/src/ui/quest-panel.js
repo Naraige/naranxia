@@ -64,10 +64,10 @@ export function questLog(UW,UH){questMarker(UW,UH,questPanelState.log);if(!quest
  T_(nd+'/'+N,x+w-12-tw(nd+'/'+N,.8),y+11,'#f2d48a',.8);
  rows.forEach((r,k)=>{const cx=x+8+Math.floor(k/per)*(cw+14),ry=y+28+(k%per)*rh;
   if(r.h!==undefined){T_(QCH[r.h],cx,ry+rh-9*sc-1,'#f2d48a',sc);g.fillStyle=UIT.goldDim;g.fillRect(Math.round(cx+tw(QCH[r.h],sc)+5),Math.round(ry+rh-4),Math.max(0,Math.round(cw-tw(QCH[r.h],sc)-5)),1);return}
-  const q=r.q,dn=Q.d[q.id]|0,st=dn===2?3:dn?2:q===cur?1:0,bs=Math.min(9,rh-2),[rt,rc]=rwd(q),right=st===3?'':st===1&&Q.on?qProg(q)+'/'+q.n+'  '+L(rt):L(rt),rw=tw(right,sc*.9);
+  const q=r.q,dn=Q.d[q.id]|0,st=dn===2?3:dn?2:q===cur?1:0,bs=Math.min(9,rh-2),[rt,rc]=rwd(q),right=st===3?L('Skipped'):st===1&&Q.on?qProg(q)+'/'+q.n+'  '+L(rt):L(rt),rw=tw(right,sc*.9);
   if(st===1){g.fillStyle='rgba(242,200,98,.12)';g.fillRect(cx-2,ry,cw+4,rh)}
   box(cx+2,ry+(rh-bs)/2,bs,st);let ts=sc;while(ts>.5&&tw(q.t,ts)>cw-20-rw-6)ts-=.03;
-  T_(q.t,cx+16,ry+(rh-9*ts)/2,st===2?'#9af0a8':st===1?'#ffffff':'#8f98a8',ts);if(right)T_(right,cx+cw-rw,ry+(rh-9*sc*.9)/2,st===0?'#7d8696':rc,sc*.9)});
+  T_(q.t,cx+16,ry+(rh-9*ts)/2,st===2?'#9af0a8':st===1?'#ffffff':'#8f98a8',ts);if(right)T_(right,cx+cw-rw,ry+(rh-9*sc*.9)/2,st===0||st===3?'#7d8696':rc,sc*.9)});
  const fy=y+28+per*rh+4;
  {const s=!Q.on?'Quests are off':cur?cur.d:'All quests complete';let ds=.8;while(ds>.55&&tw(s,ds)>w-20)ds-=.03;TC(s,x+w/2,fy+2,Q.on&&cur?'#ffffff':'#c9d2e0',ds)}
  const bw=Math.min(104,(w-16-12)/3),bx=x+(w-(bw*3+12))/2,by=fy+17;

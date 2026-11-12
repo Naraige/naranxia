@@ -1,5 +1,6 @@
 import { snd } from '../audio/sound.js';
 import { REALR } from '../core/random.js';
+import { startGame } from '../gameplay/lifecycle.js';
 import { T as UT } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { L, T_, tw } from '../i18n/language.js';
@@ -434,8 +435,17 @@ function capFit(s, w, lines) {
 
 const setCh = i => { ch = (i + CH.length) % CH.length; T = 0; paused = false; hush() };
 const toggle = () => { paused = !paused; if (paused) hush() };
-export function openGuide() { guideState.open = true; ch = 0; T = 0; paused = false; lastT = performance.now() }
+export function openGuide() { guideState.open = true; guideState.ig = !!sessionState.inGame; ch = 0; T = 0; paused = false; lastT = performance.now() }
 export function closeGuide() { guideState.open = false; hush() }
+/* The guide belongs to the screen it was opened from (the title, or the Esc menu of a game). Called every frame by drawUI: it closes
+   when a game starts or resumes under it, when the player is back on the title (quit, or a new game after a defeat), and when the game
+   ends while it plays (co-op: the lockstep runs under the Esc menu); then the game view comes back, where the end panel is drawn.
+   Display only: reads the session, sends no command. */
+export function guideWatch() {
+  if (!guideState.open) return;
+  if (sessionState.started || !!sessionState.inGame !== !!guideState.ig) { closeGuide(); return }
+  if (sessionState.inGame && sessionState.over) { closeGuide(); startGame() }
+}
 
 function init() {
   if (inited) return; inited = true;

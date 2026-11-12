@@ -1498,4 +1498,6 @@ export const NL = {
   "The King gains XP when zombies die near him, after each wave and from bosses": "De Koning krijgt XP als zombies bij hem in de buurt sterven, na elke golf en van bazen",
   "Each new level gives one talent point": "Elk nieuw niveau geeft één talentpunt",
   "Two branches of four talents, learned in order: the war cry or the charge": "Twee takken van vier talenten, in volgorde geleerd: de oorlogskreet of de aanval",
+  "Quest skipped: {0}": "Missie overgeslagen: {0}",
+  "Skipped": "Overgeslagen",
 };

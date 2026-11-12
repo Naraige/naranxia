@@ -5,5 +5,5 @@ async()=>{//@PRELUDE
  army(['knight','archer','knight','knight','archer','knight','archer','knight'],-4,5,4);
  kg.x=cast.x+TS*0;kg.y=cast.y+TS*6;
  for(const u of units)if(u.t===0&&u!==kg&&u.type!=='castle'){u.x=kg.x+(((u.id||units.indexOf(u))*37)%9-4)*TS*.8;u.y=kg.y+(((u.id||units.indexOf(u))*53)%7-3)*TS*.7}
- explore(30);kg.sk_cry=0;kingSkill0('cry');settle(3);
+ explore(30);kg.sk_cry=0;kingSkill0('cry');settle(3);calm(127);
  look(kg.x/TS,kg.y/TS-1.5,19,.95,.0);await quiet(5000);render3D(.05);Math.random=RR;return 'lvl '+kxLevel(kg)}
