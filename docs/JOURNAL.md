@@ -4,6 +4,17 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-12 · co-op tests made stable (mp_quests, mp_convoy, mp_events, mp_resync); convoy defect found, not fixed (hd-qa, not released)
+
+- Game defect, NOT fixed (rule decision for the King): a co-op convoy between two valid sites fails in about 1 pair out of 7 (probe `tests/convoy_probe.js`, 36 random pairs 24 to 60 tiles apart: 31 delivered in 10 to 71 s, 5 not). Three ways: porters stop about 6 tiles from the partner's castle with no order left and never come within the 4.6 tiles that count as arrived (2 pairs); no path found at the start, porters stand at home (2 pairs); route so long that the 120 s of `convoyStep` run out (1 pair, another delivered at 120 s). The goods then go back ("The convoy cannot reach your partner"). Zombies are not the cause.
+- Smallest fix proposed (`multiplayer/convoys.js`): count a porter as arrived when its path is finished within about 8 tiles of the castle, and make the 120 s a time without progress instead of the whole trip. Both change a rule slightly; `det mp8 mpk mp_convoy mp_quests` to run after.
+- `mp_quests`, `mp_convoy`: world and sites fixed (seeded `Math.random` for the roll and the site search, in ONE page call: frames between two calls draw random numbers), sites (1126,624) and (1101,599), convoy delivered in about 10 s. `mp_quests` also compared the stocks of the two machines read a few ticks apart (failed once under load): removed, the per-tick hashes cover them.
+- `mp_events` (failed twice on CI): fault of the test, not a time budget and not the game. It required the gold to be exactly unchanged during one second; a peasant bringing 10 gold in broke it (depends on the random site; reproduced locally 1 run in 2). Now a tolerance below the tribute (120). Its hashes are keyed by epoch (a tick replayed after a resync is not compared with the old one) and the epoch is printed; one local run under load 9 showed a unit-hash difference at one tick right after the resync, not seen again in 2 runs: if it comes back the log now says which epoch.
+- `mp_resync` (failed once on CI at 292 s = its whole 220 s wait): locally the resync takes 5 to 9 s. The wait needed to SEE the resync flag between two polls; it now also accepts the epoch having moved. Budget unchanged.
+- `tools/test_all.mjs`: a failing test prints the last 15 lines of its log (the CI artifact cannot be downloaded).
+- Runs on the merged `release-v84` (machine loaded, 5 to 10): `mp_quests` PASS x3, `mp_convoy` PASS, `mp_events` PASS x2, `mp_resync` PASS, `det` PASS (8 hashes identical to the reference). Before the fixes: `mp_events` 3 PASS / 2 FAIL, `mp_resync` 2 PASS.
+- Not verified: the cause of the CI failure of `mp_resync` (no log), the convoy defect in a real two-machine game, the next CI run.
+
 ## 2026-11-12 · full pass merged, King's choices (branch release-v84, not released)
 
 - Merged: localization pass (NL/PL/TR complete, proofreading, fit fixes) and QA pass (HUD bars vs quest panel, title hint, save test without rendering, mp_quests / mp_events / save in the quick suite).

@@ -81,6 +81,8 @@ function run(name) {
       const seconds = Math.floor((Date.now() - started) / 1000);
       console.log(`${passed ? 'PASS' : 'FAIL'} ${name.padEnd(10)} ${String(seconds).padStart(4)}s`);
       if (!passed) console.log(`     log: ${path.relative(root, logPath)}${timedOut ? ' (timed out)' : ''}`);
+      /* the CI job log is all that can be read after a failure (the test-logs artifact cannot be downloaded): show the end of the log */
+      if (!passed) console.log(output.trimEnd().split('\n').slice(-15).map((line) => `     | ${line.slice(0, 400)}`).join('\n'));
       resolve();
     });
   });
