@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-12 · v92
+
+- Released on the King's go ("sors la v92"): everything merged on release-v84 since v91 (block look, units and buildings B, mutants, last bastion, events, bosses, King XP, research paths, quests solo and co-op with marker, spearman, video guide, leaderboard, Update page, NL/PL/TR complete).
+- Notes: `docs/release-v92/NOTES.md` copied to `game/NOTES.md`; 4 pictures retaken in `announce/img/v92/` (the "night" one is in daylight, two show an odd "Next" countdown).
+- Verified before release: local smoke, quests, save, mp_convoy, mp_resync, mp_quests (3 of 3 on a fixed world), mp_events (2 of 2), det; the release workflow runs the whole suite.
+- Known, not fixed (King: after v92): convoys fail on about 1 pair of sites in 7 (porters stop 6 tiles short, no path at start, or detour over 120 s); proposed fix in `multiplayer/convoys.js` (arrival within ~8 tiles, 120 s without progress). Swarm at 36 % of sim time: performance lot after v92.
+- Not established: CI failure of mp_resync on 3e35792; a one-tick unit hash gap after a resync seen once under load in mp_events.
+- Defaults kept without an answer: spearman x1.6 and key `\`, guide silent, "Play the tutorial game" kept, PT/DE register, NL plural.
+
 ## 2026-11-12 · co-op tests made stable (mp_quests, mp_convoy, mp_events, mp_resync); convoy defect found, not fixed (hd-qa, not released)
 
 - Game defect, NOT fixed (rule decision for the King): a co-op convoy between two valid sites fails in about 1 pair out of 7 (probe `tests/convoy_probe.js`, 36 random pairs 24 to 60 tiles apart: 31 delivered in 10 to 71 s, 5 not). Three ways: porters stop about 6 tiles from the partner's castle with no order left and never come within the 4.6 tiles that count as arrived (2 pairs); no path found at the start, porters stand at home (2 pairs); route so long that the 120 s of `convoyStep` run out (1 pair, another delivered at 120 s). The goods then go back ("The convoy cannot reach your partner"). Zombies are not the cause.

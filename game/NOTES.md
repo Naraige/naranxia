@@ -1,7 +1,22 @@
-- Seasons and weather: a season lasts 4 waves (Spring, Summer, Autumn, Winter), each wave has its own weather (clear, rain with thunder, fog, snow), with falling petals, pollen and leaves, season colours, weather sounds and a label in the top bar.
-- Wave boss: every 10th wave a giant brute joins the horde with its own health bar. It stomps buildings and troops around it; killing it pays 400 gold.
-- King skills: War cry [<] (your troops near him hit 35% harder for 8 s) and Royal charge [>] (he runs and hits much harder for 4 s and throws zombies back). Buttons under the top bar, keys can be changed in Options.
-- Defense: spike traps (passable, zombies standing on them are hurt until they break; drag to place several), Boiling oil research (walls, gates and towers scald zombies next to them) and Iron age research (units hit 10% harder, buildings slowly mend).
-- Co-op: ping types (Alt+click look, +Shift defend, +Ctrl gather, +Shift+Ctrl attack) and shared goals (reach wave 5, 10, 15... and slay zombies together) that pay both players.
-- End of game: stats (resources earned, best unit, units lost), your three best runs on the same map and a "new record" banner, daily map flagged.
-- Guided tutorial the first time you play (Esc menu > Tutorial to see it again), touch controls (pinch to zoom, two fingers to move, tap the ground to order), dust on hits and construction, a snowy bell in the winter calm music.
+The biggest Naranxia update so far: a new look for the whole game, a deeper last bastion, and a real welcome for new players.
+
+**A whole new look**
+- Every unit, building, weapon and tool rebuilt in a blocky pixel style, with team tabards, rank stripes and pixel health bars.
+- The world is made of blocks: terrain, trees, rocks and seasons.
+- Mutants are now true monstrosities, and wave bosses are bigger and meaner.
+- New title screen, menus, launch intro, kingdom banners on a pole, and remade sounds and music.
+
+**New to play**
+- Quests guide your first game, from the first log to wave 10, with small rewards. They work solo and in co-op (shared with your partner), and a marker shows the button to press.
+- New unit: the Spearman, a cheap line holder with reach, strong against brutes and bosses.
+- The tutorial is now a video-style guide with short looping clips.
+- Last bastion: ruins to loot, rebel camps with personalities, envoys and tribute, scouts, engineers and eleven new buildings.
+- New events: wolf packs, eclipses and meteor showers. Caravans and rebel envoys now ask you to choose.
+- Named bosses with legends and powers, a realm journal in the Chronicle.
+- The King gains XP, levels up to 5 and learns talents in two branches.
+- Research with either-or paths, and barter at the market.
+
+**Comfort**
+- Leaderboard with your top 10 right on the title screen, and an Update page for what changed.
+- Colour-blind mode, touch controls, one-time hints, public co-op lobby, more languages.
+- Saves always load after an update.
