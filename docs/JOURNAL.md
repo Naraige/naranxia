@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-12 · v93
+
+- Released as the batch the King asked for ("fait le tout", "ajoute la traduction pour les textes maj", "des ** qui trainent"): lots texts (#22, #25), convoys (#20), guide (#23), spearman 2 (#24), small fixes, swarm performance (#21, share only slightly down).
+- Notes of v93 written in `game/NOTES.md` with their 8 translations (`docs/studio-texts/notes-v93*.json`); `tools/release.sh` now refuses untranslated notes (`node tools/textaudit.mjs --notes`).
+- Verified: each lot's own tests (see the entries below); after the last merge `det` PASS with the hashes of lot "spearman 2"; CI green on 5973d54 (guide + spearman 2); the release workflow runs the whole suite on the final commit.
+- Not verified: sounds of the guide by ear, a real AZERTY keyboard, F4 in the launcher, a real map cut by a river for the skipped convoy quest, two real machines, real GPU.
+- Open for the King: default keys for torch and barracks rally point on AZERTY (their old keys are now digits 4 and 6; T and Y are taken by trebuchet and raise), rebel spearmen shares (1/4, 1/3, 1/2), guide sound level, example amounts in guide clips, swarm options that change behaviour (10 Hz step, cell order, pressure per cell).
+- CLAUDE.md still to update (new tests `ui`, `mp_quests`, `mp_events`, tools `textaudit.mjs`, `qa_shots.py`, swarm line): needs the King's word since agents must not edit it.
+
 ## 2026-11-12 · v93 lot "small fixes": convoy quest skipped, guide closes, AZERTY digits, quest arrow, shots tool (hd-qa worktree, not merged, not released)
 
 - King: "fait le tout" on the leftovers of the v92 pass. Six small items, nothing under `game/` or `announce/`.

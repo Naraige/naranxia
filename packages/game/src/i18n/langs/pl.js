@@ -1500,4 +1500,13 @@ export const PL = {
   "Two branches of four talents, learned in order: the war cry or the charge": "Dwie gałęzie po cztery talenty, poznawane po kolei: okrzyk wojenny albo szarża",
   "Quest skipped: {0}": "Zadanie pominięte: {0}",
   "Skipped": "Pominięte",
+  "Comfort and fixes after the big update.": "Wygoda i poprawki po dużej aktualizacji.",
+  "The Update page shows clean section titles and is translated in every language.": "Strona Aktualizacja pokazuje czyste tytuły sekcji i jest przetłumaczona na każdy język.",
+  "Video guide: sounds in the clips, five new chapters (traps, seasons, market, rebel camps, King talents) and a Guide entry in the Esc menu.": "Przewodnik wideo: dźwięki w klipach, pięć nowych rozdziałów (pułapki, pory roku, targ, obozy buntowników, talenty Króla) i pozycja Przewodnik w menu Esc.",
+  "Rebel camps now field spearmen, more of them in warlike camps. The Spearman's default key is F4.": "Obozy buntowników wystawiają teraz włóczników, więcej w obozach wojowniczych. Domyślny klawisz Włócznika to F4.",
+  "Co-op convoys: porters no longer stop short of your partner's castle, long detours are allowed, and a convoy with no land route is refused at once.": "Konwoje w kooperacji: tragarze nie zatrzymują się już przed zamkiem partnera, długie objazdy są dozwolone, a konwój bez drogi lądowej jest od razu odrzucany.",
+  "Co-op: the convoy quest is skipped when the two castles are not linked by land.": "Kooperacja: zadanie z konwojem jest pomijane, gdy dwa zamki nie są połączone lądem.",
+  "AZERTY keyboards: the number row now works without Shift.": "Klawiatury AZERTY: rząd cyfr działa teraz bez Shift.",
+  "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "Strzałka zadania nie zasłania już górnych pasków i wskazuje z krawędzi ekranu, gdy budynek jest poza ekranem.",
+  "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Szybsza symulacja hordy oraz poprawione teksty portugalskie, niemieckie, niderlandzkie, polskie i tureckie.",
 };

@@ -1500,4 +1500,13 @@ export const NL = {
   "Two branches of four talents, learned in order: the war cry or the charge": "Twee takken van vier talenten, in volgorde geleerd: de oorlogskreet of de aanval",
   "Quest skipped: {0}": "Missie overgeslagen: {0}",
   "Skipped": "Overgeslagen",
+  "Comfort and fixes after the big update.": "Comfort en verbeteringen na de grote update.",
+  "The Update page shows clean section titles and is translated in every language.": "De Update-pagina toont nette sectietitels en is in elke taal vertaald.",
+  "Video guide: sounds in the clips, five new chapters (traps, seasons, market, rebel camps, King talents) and a Guide entry in the Esc menu.": "Videogids: geluiden in de clips, vijf nieuwe hoofdstukken (vallen, seizoenen, markt, rebellenkampen, talenten van de Koning) en een item Gids in het Esc-menu.",
+  "Rebel camps now field spearmen, more of them in warlike camps. The Spearman's default key is F4.": "Rebellenkampen zetten nu speerdragers in, meer in oorlogszuchtige kampen. De standaardtoets van de Speerdrager is F4.",
+  "Co-op convoys: porters no longer stop short of your partner's castle, long detours are allowed, and a convoy with no land route is refused at once.": "Coöp-konvooien: dragers stoppen niet meer vóór het kasteel van je partner, lange omwegen zijn toegestaan en een konvooi zonder route over land wordt meteen geweigerd.",
+  "Co-op: the convoy quest is skipped when the two castles are not linked by land.": "Coöp: de konvooimissie wordt overgeslagen als de twee kastelen niet over land verbonden zijn.",
+  "AZERTY keyboards: the number row now works without Shift.": "AZERTY-toetsenborden: de cijferrij werkt nu zonder Shift.",
+  "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "De missiepijl blijft uit de buurt van de bovenste balken en wijst vanaf de schermrand als het gebouw buiten beeld is.",
+  "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Snellere simulatie van de horde, en nagelezen Portugese, Duitse, Nederlandse, Poolse en Turkse teksten.",
 };

@@ -1500,4 +1500,13 @@ export const TR = {
   "Two branches of four talents, learned in order: the war cry or the charge": "Dörder yetenekli iki dal, sırayla öğrenilir: savaş narası ya da hücum",
   "Quest skipped: {0}": "Görev atlandı: {0}",
   "Skipped": "Atlandı",
+  "Comfort and fixes after the big update.": "Büyük güncellemeden sonra konfor ve düzeltmeler.",
+  "The Update page shows clean section titles and is translated in every language.": "Güncelleme sayfası düzgün bölüm başlıkları gösterir ve her dile çevrildi.",
+  "Video guide: sounds in the clips, five new chapters (traps, seasons, market, rebel camps, King talents) and a Guide entry in the Esc menu.": "Video rehber: kliplerde sesler, beş yeni bölüm (tuzaklar, mevsimler, pazar, isyancı kampları, Kral yetenekleri) ve Esc menüsünde Rehber girişi.",
+  "Rebel camps now field spearmen, more of them in warlike camps. The Spearman's default key is F4.": "İsyancı kampları artık mızrakçı çıkarıyor, savaşçı kamplarda daha fazla. Mızrakçının varsayılan tuşu F4.",
+  "Co-op convoys: porters no longer stop short of your partner's castle, long detours are allowed, and a convoy with no land route is refused at once.": "Eşli oyunda konvoylar: taşıyıcılar artık ortağınızın kalesinden önce durmuyor, uzun dolambaçlara izin veriliyor ve kara yolu olmayan konvoy hemen reddediliyor.",
+  "Co-op: the convoy quest is skipped when the two castles are not linked by land.": "Eşli oyun: iki kale karadan bağlı değilse konvoy görevi atlanır.",
+  "AZERTY keyboards: the number row now works without Shift.": "AZERTY klavyeler: rakam sırası artık Shift olmadan çalışıyor.",
+  "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "Görev oku artık üst çubukların üstüne gelmiyor ve bina ekran dışındayken ekran kenarından gösteriyor.",
+  "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Daha hızlı sürü simülasyonu ve gözden geçirilmiş Portekizce, Almanca, Felemenkçe, Lehçe ve Türkçe metinler.",
 };
