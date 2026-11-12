@@ -4,6 +4,17 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-12 · swarm performance, issue #21 (hd-perf worktree, not merged, not released)
+
+- Cause of "36 % instead of 20 %": nothing grew. The same profile on 16526d6 (the commit that wrote "~20 %") gives `swStep` 35.2 %, `swPick` 9.7 %, `swDn` 4.9 % of the simulation, as at v92 (35.0 / 9.2 / 4.7). The 20 % was the share of the whole profile, which is half `(program)` (time outside the page script, not simulation): `swStep` is 17 % of that at v92. In wall time the swarm (everything inside `swUpdate`) is about 70 % of the 6000-tick scenario (26 000 zombies).
+- Changed, `gameplay/swarm.js` only, same results: way points of each lane flat in pixels and the lane's castle read once per step (`swLanes`); aim jitter and walking speed from tables built with the same expressions (`SWJ`, `SWV`); `swPick` visits only the set bits of the mask, in the same order; one flag array for units and structures (`UNF` bits 1 and 2, `SNF` gone); local names for the `SW` arrays in `swStep`; `swDn` written inline; `fv1` for a single path field.
+- Hashes: the 8 hashes of `tools/profile.py` identical to the baseline taken on b28db24 before the first change, after each step and at the end (11 runs); `det` PASS.
+- Numbers, 6000 ticks, same machine, runs alternated, swarm time = time inside `swUpdate` (load 1.1 to 1.8): before 39.6 / 34.6 / 39.5 / 36.2 s in all, swarm 27.3 / 25.3 / 27.4 / 26.0 s; after 37.1 / 32.5 / 32.4 / 29.6 s, swarm 24.4 / 22.5 / 21.3 / 20.8 s. Means: 37.5 to 32.9 s (-12 %), swarm 26.5 to 22.2 s (-16 %).
+- Profile shares of the simulation (script time only): before (load 1.4 to 3.5, then 3.5 to 6.3) swarm functions with `fv` 60.3 / 59.1 %, `swStep` + `swDn` + `fv` 43.2 / 40.9 %, `swPick` 9.2 / 8.7 %; after (load 1.3 to 2.2) 56.6 / 57.8 %, 39.4 / 40.8 %, 8.1 / 7.9 %. The share moves little because it is a share: the gain is in the times.
+- By step: flat way points alone gave nothing visible in the profile under load (59.3 %); tables + set bits + one flag array + local arrays gave most of the gain (swarm 22.7 s mean over 4 runs); `swDn` inline + `fv1` are within the noise (22.2 s), kept.
+- Not done, changes of behaviour (hashes would change, still deterministic), for the King: swarm step at 10 Hz instead of 20 Hz (about half the swarm time, movement drawn by interpolation as today); zombies stepped in cell order (better memory locality, gain not measured); crowd pressure once per tile instead of once per zombie.
+- Not verified: the gain in a real browser with a GPU (measured in headless Chromium only), games with other sizes of horde, co-op tests other than `mpk`.
+
 ## 2026-11-12 · v92
 
 - Released on the King's go ("sors la v92"): everything merged on release-v84 since v91 (block look, units and buildings B, mutants, last bastion, events, bosses, King XP, research paths, quests solo and co-op with marker, spearman, video guide, leaderboard, Update page, NL/PL/TR complete).
