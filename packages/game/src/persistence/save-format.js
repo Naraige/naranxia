@@ -53,7 +53,11 @@ export function svFix(D){const ok=a=>Array.isArray(a)?a:[];
   for(const k of['BASES','HORDES'])if(Array.isArray(D[k]))D[k].forEach(cl);
   if(D.CAMPS)for(const c of(D.CAMPS instanceof Map?D.CAMPS.values():Array.isArray(D.CAMPS)?D.CAMPS:[]))cl(Array.isArray(c)?c[1]:c)}
  return D}
-const SVSKIP = new Set(['zf','zft','_tc','pfS']);
+/* Not saved: pfS (the path field a peasant last walked, an object rebuilt on demand; movement.js stepF takes the new one after a load).
+   Saved since v94, because the simulation reads them and a loaded game must go on exactly like the game that was saved:
+   _tc (the target a unit or tower keeps for up to 2 ticks, combat.js target(); only for what is alive, a dead target keeps none)
+   and zf / zft (the walking field around a rebel base, kept 30 s, zombie-lanes.js baseZF). Older saves lack them: rebuilt as before. */
+const SVSKIP = new Set(['pfS']);
 
 const svX=v=>!!v&&typeof v==='object'&&typeof THREE!=='undefined'&&(v instanceof THREE.Object3D||v.isMaterial||v.isBufferGeometry||v.isTexture||v.isBufferAttribute);
 
@@ -65,7 +69,7 @@ async function gzU8(u8,de){const cs=de?new DecompressionStream('gzip'):new Compr
 
 const TACT={Uint8Array,Int8Array,Uint16Array,Int16Array,Uint32Array,Int32Array,Float32Array,Float64Array,Uint8ClampedArray};
 
-export async function svEncode(){const ids=new Map(),objs=[],Q=[],big=[];
+export async function svEncode(){const ids=new Map(),objs=[],Q=[],big=[];const alive=new Set(sessionState.units);for(const q of sessionState.structs)alive.add(q);
  const ref=v=>{if(v===null)return null;const t=typeof v;if(t==='number')return Number.isFinite(v)?v:{$n:String(v)};if(t==='string'||t==='boolean')return v;if(t!=='object')return {$u:1};
   if(svX(v)||(typeof Node!=='undefined'&&v instanceof Node)||v instanceof CanvasRenderingContext2D)return {$u:1};
   let id=ids.get(v);if(id===undefined){id=objs.length;ids.set(v,id);objs.push(null);Q.push(v)}return {$r:id}};
@@ -77,7 +81,7 @@ export async function svEncode(){const ids=new Map(),objs=[],Q=[],big=[];
   else if(v instanceof Set)o={$s:[...v].map(ref)};
   else if(typeof v.mk==='function'&&'tx' in v&&'sx' in v)o={$g:[v.tx,v.ty,v.sx,v.sy,v.big|0,v.q|0]};
   else if(Object.getPrototypeOf(v)!==Object.prototype&&Object.getPrototypeOf(v)!==null){o={$x:1};(window.__svw||(window.__svw=[])).push('class:'+(v.constructor&&v.constructor.name))}
-  else{const p={};for(const k in v){if(SVSKIP.has(k))continue;const x=v[k];if(typeof x==='function'){(window.__svw||(window.__svw=[])).push('fn:'+k);continue}if(svX(x))continue;p[k]=ref(x)}o={$o:p}}
+  else{const p={};for(const k in v){if(SVSKIP.has(k)||(k==='_tc'&&!alive.has(v)))continue;const x=v[k];if(typeof x==='function'){(window.__svw||(window.__svw=[])).push('fn:'+k);continue}if(svX(x))continue;p[k]=ref(x)}o={$o:p}}
   objs[id]=o}
  for(const[o,u8]of big)o.z=b64e(await gzU8(u8));
  return {v:SVVER,gv:GVER,R,objs}}

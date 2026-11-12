@@ -24,7 +24,7 @@ export async function svApply(txt){const S=svMigrate(JSON.parse(txt));
  terrainState.SEED=S.R.SEED;terrainState.GPR=JSON.parse(JSON.stringify(S.objs[S.R.GPR.$r].$o));terrainState.CX=S.R.CX;terrainState.CY=S.R.CY;
  const D=await svDecode(S);
  sessionState.SITE2=null;for(const s of sessionState.structs||[])rmStruct(s);initWorld();for(const k in SAVA)if(!(k in D)&&!SAVA[k][1])svAssign(k,undefined);if(!('QST' in D))svAssign('QST',undefined);for(const k in D)svAssign(k,D[k]);RAWD.fill(0);smDone.fill(0);
- for(const u of sessionState.units){u.m=null;u._tc=null}for(const s of sessionState.structs)s.o3=null;
+ for(const u of sessionState.units)u.m=null;for(const s of sessionState.structs)s.o3=null;
  GF.clear();LFLD.clear();LFQT.fill(-1);LFQS.fill(null);SEPM.clear&&SEPM.clear();setPl(0);calcFD();sessionState.fdDirty=true;sessionState.ver++;rebuildOwn(true);
  fogState.fowTm=-9;fowT.needsUpdate=true;sessionState.inGame=true;sessionState.started=true;sessionState.paused=false;sessionState.showMap=false;sessionState.camSave=null;
  build3D();svMini();try{icoPart('tier');icoPart('units')}catch(e){}
