@@ -34,7 +34,8 @@ const suite = {
   mp_resync: { args: ['tests/mp_resync.py', 'naranxia_readable.html', '220'], pass: /^RESULT OK/m },
   mp_quests: { args: ['tests/mp_quests.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   mp_convoy: { args: ['tests/mp_convoy.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
-  save: { args: ['tools/run.py', 'tests/save.js'], pass: /"same0":true/ },
+  save: { args: ['tools/run.py', 'tests/save.js'], pass: /"ok":true/ },
+  mp_resync_deep: { args: ['tests/mp_resync_deep.py', 'naranxia_readable.html', '200'], pass: /^RESULT OK/m },
 };
 const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'ui', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy', 'mp_quests', 'mp_events', 'save'];
 const args = process.argv.slice(2);

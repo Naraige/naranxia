@@ -8,7 +8,7 @@ import fontroute
 # Five resyncs in one game: during an open event, a convoy on the road, a raid (wolf pack wave and zombies at the walls), King skills
 # running, then everything at once with the HOST corrupted. After each one, every tick is compared between the two machines, indexed by
 # epoch:tick, over at least TICKS ticks, with a digest far wider than mpHash: every plain field of every unit and structure (references
-# as ids, the kept target _tc included), the whole swarm, the number of random draws, resources, prices, events, quests and every scalar
+# as ids, the kept target _tc included, path objects without their local version counter), the whole swarm, the random draws of the tick, resources, prices, events, quests and every scalar
 # of the save registry. Ticks of an epoch after the moment a machine was corrupted on purpose are not compared (they must differ).
 # usage: python3 tests/mp_resync_deep.py [naranxia_readable.html] [ticks after each resync, default 200]
 html=sys.argv[1] if len(sys.argv)>1 else 'naranxia_readable.html'
@@ -22,16 +22,16 @@ INIT="""()=>{'use strict';window.__out=[];MP.dc={readyState:'open',send:s=>windo
   return _e(c,m)};
  const _sg=startGame;startGame=function(){_sg();for(const R of RESP){R.g=5000;R.w=5000;R.s=5000}waveT=1e9};
  return 'ok'}"""
-REC="""()=>{window.__H={};window.__D={};let rc=0,inner=MP.simR;const w=function(){rc++;return inner()};
+REC="""()=>{window.__H={};window.__D={};let rc=0,rc0=0,inner=MP.simR;const w=function(){rc++;return inner()};
  Object.defineProperty(MP,'simR',{configurable:true,get(){return w},set(f){inner=f}});
  const h=s=>{let x=0;for(let i=0;i<s.length;i++)x=(Math.imul(x,31)+s.charCodeAt(i))|0;return x};
  const SK=new Set(['sel','m','o3']);
  const prim=o=>{const ks=Object.keys(o).sort(),p=[];for(const k of ks){if(SK.has(k))continue;const v=o[k],t=typeof v;if(t==='number')p.push(k+'='+(Number.isInteger(v)?v:v.toFixed(4)));else if(t==='string'||t==='boolean')p.push(k+'='+v);else if(v===null)p.push(k+'=null');else if(v===undefined)p.push(k+'=undef');
-   else if(k==='_tc')p.push(k+'='+v.tt+'/'+v.r+'/'+v.tk+'/'+(v.b?(v.b.uid!==undefined?'u'+v.b.uid:'s'+v.b.sid):'-'));else if(Array.isArray(v))p.push(k+'=['+v.length+']');else if(v.uid!==undefined)p.push(k+'=u'+v.uid);else if(v.sid!==undefined)p.push(k+'=s'+v.sid);else if(t==='object'&&!v.isObject3D){let q;try{q=JSON.stringify(v,(kk,x)=>x&&typeof x==='object'&&x.uid!==undefined?'u'+x.uid:x&&typeof x==='object'&&x.sid!==undefined?'s'+x.sid:x&&x.isObject3D?0:x)}catch(e){q='{}'}p.push(k+'='+(q&&q.length<400?q:'{'+(q?h(q):0)+'}'))}}return p.join(',')};
+   else if(k==='_tc')p.push(k+'='+v.tt+'/'+v.r+'/'+v.tk+'/'+(v.b?(v.b.uid!==undefined?'u'+v.b.uid:'s'+v.b.sid):'-'));else if(Array.isArray(v))p.push(k+'=['+v.length+']');else if(v.uid!==undefined)p.push(k+'=u'+v.uid);else if(v.sid!==undefined)p.push(k+'=s'+v.sid);else if(t==='object'&&!v.isObject3D){let q;try{q=JSON.stringify(v,(kk,x)=>kk==='ver'?0:ArrayBuffer.isView(x)?x.length+'#'+h(String.fromCharCode.apply(null,x.length>60000?x.subarray(0,60000):x)):x&&typeof x==='object'&&x.uid!==undefined?'u'+x.uid:x&&typeof x==='object'&&x.sid!==undefined?'s'+x.sid:x&&x.isObject3D?0:x)}catch(e){q='{}'}p.push(k+'='+(q&&q.length<400?q:'{'+(q?h(q):0)+'}'))}}return p.join(',')};
  const _u=update;update=function(dt){_u(dt);if(!MP.on)return;const t=MP.tick,P={};
   P.units=units.map(prim).join('|');P.structs=structs.map(prim).join('|');
   let sw=SW.n;for(let i=0;i<SW.n;i++)sw=(Math.imul(sw,31)+((SW.x[i]*64)|0)+Math.imul((SW.y[i]*64)|0,7))|0;P.swarm=sw+':'+SW.n;
-  P.rng=''+rc;P.eco=JSON.stringify(RESP)+JSON.stringify(PRICE)+JSON.stringify(FAT);
+  P.rng=''+(rc-rc0);rc0=rc;P.eco=JSON.stringify(RESP)+JSON.stringify(PRICE)+JSON.stringify(FAT);
   P.evt=JSON.stringify(EVS,(k,v)=>v&&typeof v==='object'&&v.uid!==undefined?'u'+v.uid:v);P.qst=JSON.stringify(QST);
   const sc=[];for(const k in SAVA){const v=SAVA[k][0]();if(v===null||typeof v!=='object')sc.push(k+'='+v)}P.scal=sc.join(',');
   const key=MP.ep+':'+t;window.__H[key]=Object.keys(P).map(k=>k+'~'+h(P[k])).join(' ');window.__D[key]=P;delete window.__D[MP.ep+':'+(t-150)]}}"""
