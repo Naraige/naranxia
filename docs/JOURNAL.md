@@ -4,6 +4,17 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-12 · v93 lot "texts": Update page translated, registers (#22, #25) (hd-localization worktree, not merged, not released)
+
+- Update page (#22): `core/notes.js` `notesLines()` turns `game/NOTES.md` into lines; `**Title**` (or `# Title`) is drawn with `l.section`, a dash line as a bullet, the intro as a plain paragraph; `**`, backticks, `__`, links are stripped. Each stripped line is one key, looked up whole by `L()` (exact match first), English when missing. No other `**` reaches the screen (searched the sources and the tables).
+- The 19 lines of the v92 notes translated in FR ES DE IT PT (`docs/studio-texts/notes-v92.json`, block v93) and NL PL TR (`notes-v92-nl-pl-tr.json`, appended to `i18n/langs/*.js`).
+- Guard: `node tools/textaudit.mjs --notes` (check 0 of the audit, also in the full run) exits 1 when a line of `game/NOTES.md` is not a key with all 8 languages or keeps a marker; `tools/release.sh` calls it before the version bump and the build. So each release: write the notes, add their translations, then release. Old notes keys then show as "reached by no source" in the audit and can be removed.
+- Registers (#25), decided for the King ("fait le tout"): Portuguese = European, formal (the interface already said ecrã, guardar, rato, controlos, quinta, "está a ser", partilhar, câmara; Brazilian only in "zumbi" on 45 lines and 6 phrases): zumbi(s) to zombie(s), "Gerando", "Salvo", "Pressione ... selecioná-los", "Conserta", "se consertam", "se ferem", "encontrá-los" fixed. German = "du" everywhere: the Chronicle line "Haltet ... Euer Volk", 3 "Eure" lines, "Haltet das letzte Licht" and 4 title tips ("Baut", "Bildet", "Erforscht") to the singular; kept on purpose: "Haltet die Linie!" (order to the troops) and plurals speaking to both co-op players.
+- Plurals: the English suffix `{1}` ('s') was printed by NL, PL and TR ("2 boers", "2 köylüs", "Chłopów: 2s"): the 7 peasant / villager / sapling keys reworded without it in the three files; NL "All your / All visible {0}s" and DE "Alle deine {0}s" reworded. `tools/langcheck.mjs` now counts a kept suffix as a fault.
+- Verified: `textaudit` table OK and notes 0 problem, `langcheck` 0 / 0 for the three, `npm run build`, `npm test -- smoke tools` PASS (a first run under load timed out at page load). Seen by eye at 1280x720: Update page in French and German, top of the list (intro, both first headings, bullets), no asterisk, wraps inside the panel, no overflow reported.
+- Not verified: the bottom of the page (Comfort; the wheel did not scroll headless); the guard with a failing notes file (nothing under `game/` was touched); NL / PL / TR by a native speaker; fitcheck not rerun (no button label changed length upward except tips drawn with fitting).
+- Left to the King: FR / ES / PT "Tous vos {0}s" still glue an "s" to the unit name; NL "de {1}" in two repair messages ignores de / het; "Você" kept for "You".
+
 ## 2026-11-12 · v92
 
 - Released on the King's go ("sors la v92"): everything merged on release-v84 since v91 (block look, units and buildings B, mutants, last bastion, events, bosses, King XP, research paths, quests solo and co-op with marker, spearman, video guide, leaderboard, Update page, NL/PL/TR complete).

@@ -20,7 +20,8 @@ const { EXTRA } = await import(pathToFileURL(path.join(root, 'packages/game/src/
 console.log(`English table: ${keys.length} keys`);
 for (const e of EXTRA) {
   const miss = keys.filter((k) => !e.tr[k]);
-  const bad = keys.filter((k) => e.tr[k] && ph(k) !== ph(e.tr[k]));
+  /* the English plural suffix ({0} peasant{1}, replaced by 's') must be dropped: kept, it prints "2 boers" */
+  const bad = keys.filter((k) => e.tr[k] && ph(k.replace(/(peasant|villager|sapling)\{\d\}/g, '$1')) !== ph(e.tr[k]));
   console.log(`${e.name.padEnd(12)} missing ${miss.length}  placeholder mismatches ${bad.length}`);
   for (const k of bad.slice(0, 5)) console.log('   ', JSON.stringify(k), '->', JSON.stringify(e.tr[k]));
 }
