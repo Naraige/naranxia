@@ -107,7 +107,10 @@ with sync_playwright() as p:
     need(seen,'resync happened')
     HA.clear();HB.clear();A.evaluate(GETH);B.evaluate(GETH)
     waitT(3)
-    a,b,s=snap('after resync');need(s and a['cur'] and a['cur']['i']==9004,'open event identical after resync: '+json.dumps([a,b]))
+    a,b,s=snap('after resync')
+    # the two pages are read a few ticks apart while the game runs: the countdown and gold may differ by a tick; the per-tick hashes cover them
+    ev=lambda x:[x['ep'],x['cur'] and [x['cur']['k'],x['cur']['i']],x['q'],x['pay'],x['ren'],x['ds']]
+    need(ev(a)==ev(b) and a['cur'] and a['cur']['i']==9004,'open event identical after resync: '+json.dumps([a,b]))
     A.evaluate("()=>{evChoose(1)}");waitT(2)
     a,b,s=snap('final');need(s and a['cur'] is None and a['pay'] in ([250],[]),'final identical (escorted caravan on its way or already paid, same on both)')
     need(s and not a['ds'],'no desync flag')
