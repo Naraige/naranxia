@@ -32,7 +32,7 @@ import { laneFieldQ, LFLD } from '../ai/zombie-lanes.js';
 import { callWave, restT, setCallWaveHandler, wave, wavesState } from '../gameplay/waves.js';
 import { _N, mpExec, mpPush, questSwitch, roleAdj, sendConvoy, setMpExecHandler } from '../multiplayer/commands.js';
 import { convoyLinked, convoyStep, setConvoyStepHandler } from '../multiplayer/convoys.js';
-import { mpStart, mpWorldSync } from '../multiplayer/lobby.js';
+import { mpBanner, mpStart, mpWorldSync } from '../multiplayer/lobby.js';
 import { mpHash, mpMsg, setMpMsgHandler } from '../multiplayer/lockstep.js';
 import { objTick, SPK } from '../multiplayer/objectives.js';
 import { qCur, qFix, QUESTS, questsState } from '../gameplay/quests.js';
@@ -50,6 +50,7 @@ import { KB, loadKB, settingsDebug, settingsState } from '../ui/settings.js';
 import { titleDebug } from '../ui/title-menu.js';
 import { guideState, guideWatch, openGuide } from '../ui/video-guide.js';
 import { languageState, setLang } from '../i18n/language.js';
+import { L as dbgL } from '../i18n/language.js';
 import { FOWU } from '../rendering/fog.js';
 import { render3D, setRender3DHandler } from '../rendering/frame.js';
 import { matV } from '../rendering/materials.js';
@@ -61,6 +62,8 @@ import { toolGeos } from '../rendering/models/unit-parts.js';
 import { ZNV } from '../rendering/models/zombies.js';
 import { rs } from '../rendering/resolution.js';
 import { CAM, hemi, renderer, scene, sun } from '../rendering/scene.js';
+import { home as dbgHome, pickGround as dbgPickGround, scr as dbgScr } from '../rendering/camera.js';
+import { mpLost as dbgMpLost } from '../multiplayer/lockstep.js';
 import { buildStructMesh, setBuildStructMeshHandler } from '../rendering/structures.js';
 import { unitG } from '../rendering/terrain.js';
 import { animUnit } from '../rendering/unit-animation.js';
@@ -103,6 +106,8 @@ export function installBrowserConsole() {
   const bindings = {
     ACH: { get: () => ACH },
     CAM: { get: () => CAM },
+    scr: { get: () => dbgScr },
+    pickGround: { get: () => dbgPickGround },
     CS: { get: () => sessionState.CS, set: value => { sessionState.CS = value; } },
     CS2: { get: () => sessionState.CS2, set: value => { sessionState.CS2 = value; } },
     CURPL: { get: () => playersState.CURPL, set: value => { playersState.CURPL = value; } },
@@ -120,6 +125,8 @@ export function installBrowserConsole() {
     HT: { get: () => HT },
     LH: { get: () => LH },
     LPL: { get: () => LPL },
+    mpLost: { get: () => dbgMpLost },
+    home: { get: () => dbgHome },
     MP: { get: () => MP },
     OBJ: { get: () => statisticsState.OBJ, set: value => { statisticsState.OBJ = value; } },
     PRICE: { get: () => PRICE },
@@ -302,6 +309,8 @@ export function installBrowserConsole() {
     bannerT: { get: () => sessionState.bannerT, set: value => { sessionState.bannerT = value; } },
     bannerS: { get: () => sessionState.bannerS, set: value => { sessionState.bannerS = value; } },
     bannerS2: { get: () => sessionState.bannerS2, set: value => { sessionState.bannerS2 = value; } },
+    trL: { get: () => dbgL },
+    mpBanner: { get: () => mpBanner },
     svPeek: { get: () => svPeek },
     continueLast: { get: () => continueLast },
     ter: { get: () => ter },

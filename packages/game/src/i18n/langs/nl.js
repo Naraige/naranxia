@@ -1509,4 +1509,7 @@ export const NL = {
   "AZERTY keyboards: the number row now works without Shift.": "AZERTY-toetsenborden: de cijferrij werkt nu zonder Shift.",
   "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "De missiepijl blijft uit de buurt van de bovenste balken en wijst vanaf de schermrand als het gebouw buiten beeld is.",
   "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Snellere simulatie van de horde, en nagelezen Portugese, Duitse, Nederlandse, Poolse en Turkse teksten.",
+  "Co-op: putting both games back in step, a few seconds (nothing to do)": "Coöp: beide spellen worden gelijkgezet, een paar seconden (je hoeft niets te doen)",
+  "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Coöp: wachten op {0}, {1} s (trage verbinding of computer)",
+  "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Coöp: geen antwoord van {0} sinds {1} s, het spel gaat verder zodra de verbinding terug is",
 };

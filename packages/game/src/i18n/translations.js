@@ -853,7 +853,13 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v93 */
+  /* texts added in v94 */
+Object.assign(TRD,{
+"Co-op: putting both games back in step, a few seconds (nothing to do)":["Coop : remise en phase des deux parties, quelques secondes (rien à faire)","Cooperativo: poniendo las dos partidas a la par, unos segundos (no hay que hacer nada)","Koop: beide Spiele werden abgeglichen, ein paar Sekunden (du musst nichts tun)","Coop: riallineamento delle due partite, pochi secondi (niente da fare)","Cooperativo: a acertar os dois jogos, alguns segundos (nada a fazer)"],
+"Co-op: waiting for {0}, {1} s (slow connection or computer)":["Coop : en attente de {0}, {1} s (connexion ou ordinateur lent)","Cooperativo: esperando a {0}, {1} s (conexión u ordenador lento)","Koop: warte auf {0}, {1} s (langsame Verbindung oder langsamer Rechner)","Coop: in attesa di {0}, {1} s (connessione o computer lento)","Cooperativo: à espera de {0}, {1} s (ligação ou computador lento)"],
+"Co-op: no answer from {0} for {1} s, the game goes on when the connection is back":["Coop : aucune réponse de {0} depuis {1} s, la partie reprend au retour de la connexion","Cooperativo: sin respuesta de {0} desde hace {1} s, la partida sigue cuando vuelva la conexión","Koop: keine Antwort von {0} seit {1} s, das Spiel geht weiter, sobald die Verbindung zurück ist","Coop: nessuna risposta da {0} da {1} s, la partita riprende al ritorno della connessione","Cooperativo: sem resposta de {0} há {1} s, o jogo continua quando a ligação voltar"],
+});
+/* texts added in v93 */
 Object.assign(TRD,{
 "Comfort and fixes after the big update.":["Confort et corrections après la grande mise à jour.","Comodidad y correcciones tras la gran actualización.","Komfort und Korrekturen nach dem großen Update.","Comodità e correzioni dopo il grande aggiornamento.","Conforto e correções depois da grande atualização."],
 "The Update page shows clean section titles and is translated in every language.":["La page Mise à jour affiche des titres de section propres et elle est traduite dans toutes les langues.","La página Actualización muestra títulos de sección limpios y está traducida a todos los idiomas.","Die Update-Seite zeigt saubere Abschnittstitel und ist in jede Sprache übersetzt.","La pagina Aggiornamento mostra titoli di sezione puliti ed è tradotta in ogni lingua.","A página Atualização mostra títulos de secção limpos e está traduzida em todas as línguas."],

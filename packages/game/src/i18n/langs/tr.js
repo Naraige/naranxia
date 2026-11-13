@@ -1509,4 +1509,7 @@ export const TR = {
   "AZERTY keyboards: the number row now works without Shift.": "AZERTY klavyeler: rakam sırası artık Shift olmadan çalışıyor.",
   "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "Görev oku artık üst çubukların üstüne gelmiyor ve bina ekran dışındayken ekran kenarından gösteriyor.",
   "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Daha hızlı sürü simülasyonu ve gözden geçirilmiş Portekizce, Almanca, Felemenkçe, Lehçe ve Türkçe metinler.",
+  "Co-op: putting both games back in step, a few seconds (nothing to do)": "Co-op: iki oyun eşitleniyor, birkaç saniye (bir şey yapman gerekmiyor)",
+  "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Co-op: {0} bekleniyor, {1} sn (yavaş bağlantı veya bilgisayar)",
+  "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Co-op: {0} {1} sn'dir yanıt vermiyor, bağlantı dönünce oyun devam eder",
 };

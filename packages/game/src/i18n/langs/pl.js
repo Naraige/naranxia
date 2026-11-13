@@ -1509,4 +1509,7 @@ export const PL = {
   "AZERTY keyboards: the number row now works without Shift.": "Klawiatury AZERTY: rząd cyfr działa teraz bez Shift.",
   "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "Strzałka zadania nie zasłania już górnych pasków i wskazuje z krawędzi ekranu, gdy budynek jest poza ekranem.",
   "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Szybsza symulacja hordy oraz poprawione teksty portugalskie, niemieckie, niderlandzkie, polskie i tureckie.",
+  "Co-op: putting both games back in step, a few seconds (nothing to do)": "Co-op: wyrównywanie obu gier, kilka sekund (nic nie trzeba robić)",
+  "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Co-op: czekam na: {0}, {1} s (wolne połączenie lub komputer)",
+  "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Co-op: brak odpowiedzi ({0}) od {1} s, gra ruszy, gdy wróci połączenie",
 };

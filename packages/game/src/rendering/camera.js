@@ -41,7 +41,7 @@ export const wpos=()=>{const p=pickGround(inputState.mouse.x,inputState.mouse.y)
 
 export function scr(x,y,z){_v3.set(x,y,z).project(camera);return{x:(_v3.x+1)/2*cv.width,y:(1-_v3.y)/2*cv.height,ok:_v3.z<1}}
 
-export function home(){const hc=MP.on&&LPL()===1&&sessionState.CS2?sessionState.CS2:HOMEC();CAM.x=hc.x/TS;CAM.z=hc.y/TS;CAM.y=LAND;CAM.yaw=0;CAM.pitch=.92;CAM.dist=window.innerWidth>=900?24:30}
+export function home(){const hc=LPL()===1&&sessionState.CS2?sessionState.CS2:HOMEC();CAM.x=hc.x/TS;CAM.z=hc.y/TS;CAM.y=LAND;CAM.yaw=0;CAM.pitch=.92;CAM.dist=window.innerWidth>=900?24:30}
 
 export function initializeCamera() {
   _LD = (()=>{const v=[-24,44,18],l=Math.hypot(...v);return v.map(q=>q/l)})();
