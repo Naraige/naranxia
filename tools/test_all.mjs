@@ -29,6 +29,7 @@ const suite = {
   market: { args: ['tools/run.py', 'tests/market.js'], pass: /"ok":true/ },
   quests: { args: ['tools/run.py', 'tests/quests.js'], pass: /"ok":true/ },
   ui: { args: ['tools/run.py', 'tests/ui.js', '-', '1280', '720'], pass: /"ok":true/ },
+  waves: { args: ['tools/run.py', 'tests/waves.js'], pass: /"ok":true/ },
   mp8: { args: ['tests/mp8.py', 'naranxia_readable.html', '40'], pass: /^ERRS \[\] \[\]/m },
   mpk: { args: ['tests/mpk.py', 'naranxia_readable.html', '40'], pass: /^ERRS \[\] \[\]/m },
   mp_resync: { args: ['tests/mp_resync.py', 'naranxia_readable.html', '220'], pass: /^RESULT OK/m },
@@ -36,7 +37,7 @@ const suite = {
   mp_convoy: { args: ['tests/mp_convoy.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   save: { args: ['tools/run.py', 'tests/save.js'], pass: /"same0":true/ },
 };
-const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'ui', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy', 'mp_quests', 'mp_events', 'save'];
+const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'ui', 'waves', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy', 'mp_quests', 'mp_events', 'save'];
 const args = process.argv.slice(2);
 const names = args.includes('--full')
   ? [...new Set([...quick, 'save'])]

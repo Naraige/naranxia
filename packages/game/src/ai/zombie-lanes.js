@@ -5,7 +5,7 @@ import { TS } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { SW } from '../gameplay/swarm.js';
 import { longField } from '../world/connectivity.js';
-import { gOK } from '../world/routes.js';
+import { FD, gOK } from '../world/routes.js';
 import { ensureAround, terrainState } from '../world/terrain.js';
 import { bfsW, fv, solid } from '../world/traversal.js';
 
@@ -36,7 +36,9 @@ function laneField(L,sg){const key=L*4096+sg,E=LFLD.get(key);if(E&&(E.v===sessio
 
 export function laneWalk(u,dt){const Wp=terrainState.ROUTES[u.lane].wps;while(u.ph<Wp.length&&dist(u.x,u.y,Wp[u.ph][0]*TS,Wp[u.ph][1]*TS)<TS*2)u.ph++;if(u.ph>=Wp.length)return false;
  const S=laneField(u.lane,Math.floor(u.ph/LSEG)),tx=Math.floor(u.x/TS),ty=Math.floor(u.y/TS);
- if(S){const v=fv(S,tx,ty);if(v<65535){u.lost=0;u.reAnc=0;if(v<=3&&S.tg+1>u.ph){u.ph=Math.min(Wp.length,S.tg+1);return laneWalk(u,dt)}const g=Wp[S.tg];stepF(u,S,g[0]*TS,g[1]*TS,dt);return true}}
+ if(S){const v=fv(S,tx,ty);if(v<65535){u.lost=0;u.reAnc=0;if(v<=3&&S.tg+1>u.ph){u.ph=Math.min(Wp.length,S.tg+1);return laneWalk(u,dt)}
+  /* the way points left in this stretch lie in rock or water: over land to the castle when its field reaches this tile, else on to the next stretch */
+  if(v<=3){if(fv(FD[0],tx,ty)<65535){u.inC=1;return false}u.ph=Math.min(Wp.length,(Math.floor(u.ph/LSEG)+1)*LSEG);u.reAnc=1;return laneWalk(u,dt)}const g=Wp[S.tg];stepF(u,S,g[0]*TS,g[1]*TS,dt);return true}}
  u.lost=(u.lost||0)+dt;
  if(u.lost>1.5&&!u.reAnc){u.reAnc=1;let bj=u.ph,bd=1e18;for(let j=0;j<Wp.length;j++){const dx=Wp[j][0]*TS-u.x,dy=Wp[j][1]*TS-u.y,d=dx*dx+dy*dy;if(d<bd){bd=d;bj=j}}if(bj!==u.ph){u.ph=bj;return laneWalk(u,dt)}}
  if(u.lost>4){const L2=longField(tx,ty);if(L2&&fv(L2,tx,ty)<65535){const hc=nearC(u.x,u.y);stepF(u,L2,hc.x,hc.y,dt);return true}}
