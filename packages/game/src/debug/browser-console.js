@@ -60,7 +60,8 @@ import { toolGeos } from '../rendering/models/unit-parts.js';
 import { ZNV } from '../rendering/models/zombies.js';
 import { rs } from '../rendering/resolution.js';
 import { CAM, hemi, renderer, scene, sun } from '../rendering/scene.js';
-import { pickGround as dbgPickGround, scr as dbgScr } from '../rendering/camera.js';
+import { home as dbgHome, pickGround as dbgPickGround, scr as dbgScr } from '../rendering/camera.js';
+import { mpLost as dbgMpLost } from '../multiplayer/lockstep.js';
 import { buildStructMesh, setBuildStructMeshHandler } from '../rendering/structures.js';
 import { unitG } from '../rendering/terrain.js';
 import { animUnit } from '../rendering/unit-animation.js';
@@ -122,6 +123,8 @@ export function installBrowserConsole() {
     HT: { get: () => HT },
     LH: { get: () => LH },
     LPL: { get: () => LPL },
+    mpLost: { get: () => dbgMpLost },
+    home: { get: () => dbgHome },
     MP: { get: () => MP },
     OBJ: { get: () => statisticsState.OBJ, set: value => { statisticsState.OBJ = value; } },
     PRICE: { get: () => PRICE },

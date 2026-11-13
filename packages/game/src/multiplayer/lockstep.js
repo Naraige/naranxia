@@ -67,7 +67,7 @@ export function mpFrame(dt){if(sessionState.over)return;mpWatch();if(MP.rsy)retu
  if(n===8)MP.acc=0}
 
 export function mpBegin(st){hudDisplayState.msgS='Co-op: Alt+click pings the map / Shift: defend / Ctrl: gather / Shift+Ctrl: attack';hudDisplayState.msgT=12;terrainState.SEED=st.seed;terrainState.GPR=st.gpr;terrainState.CX=st.cx;terrainState.CY=st.cy;sessionState.CROT=st.cr&3;sessionState.diffI=0;swarmState.SWF=100;sessionState.SITE2={tx:st.cx2,ty:st.cy2,rot:st.cr2&3};sitePickerState.picking=false;settingsState.setupOpen=false;settingsState.settingsOpen=false;
- MP.on=true;const sd=Math.floor(terrainState.SEED*1e6)+1;Math.random=rngf(sd);try{reset()}finally{Math.random=REALR}
+ MP.on=true;MP.side=0;const sd=Math.floor(terrainState.SEED*1e6)+1;Math.random=rngf(sd);try{reset()}finally{Math.random=REALR}
  sessionState.inGame=false;sessionState.camSave=null;startGame();sessionState.spd=1;sessionState.paused=false;sessionState.over=false;setPl(LPL());home();
  MP.simR=rngf(sd+977);MP.tick=0;MP.sent=MPD-1;MP.acc=0;MP.out=[];MP.loc={};MP.rem={};MP.hs={};MP.hr={};MP.desync=false;MP.stall=false;MP.ep=0;MP.rsy=null;MP.rsLast=-1e9;MP.hl=[];MP.dsN=0;MP.stallAt=0;MP.rxAt=performance.now();MP.rsAt=0;
  for(let i=0;i<MPD;i++){MP.loc[i]=[];MP.rem[i]=[]}
@@ -80,7 +80,7 @@ export let mpMsg = function mpMsg(m){MP.rxAt=performance.now();if(m.k==='pg'){mp
  else if(m.k==='ready'){const again=!!MP.theirs;MP.theirs={tx:m.cx,ty:m.cy,rot:m.r&3};snd('click');lobbyNote(MP.pname+(again?' moved their castle':' placed their castle'));lobbyRender()}
  else if(m.k==='s'&&!MP.host)mpBegin(m)};
 
-export function mpLost(){if(!MP.conn&&!MP.on)return;const was=MP.on;MP.conn=false;MP.on=false;MP.mine=null;MP.theirs=null;if(was){hudDisplayState.msgS='Partner disconnected - continuing solo';hudDisplayState.msgT=6}lobbyNote('Your partner left the lobby.');lobbyRender()}
+export function mpLost(){if(!MP.conn&&!MP.on)return;const was=MP.on;if(was&&!MP.host&&sessionState.CS2)MP.side=1;MP.conn=false;MP.on=false;MP.rsy=null;MP.desync=false;MP.stall=false;MP.mine=null;MP.theirs=null;if(was){hudDisplayState.msgS='Partner disconnected - continuing solo';hudDisplayState.msgT=6}lobbyNote('Your partner left the lobby.');lobbyRender()}
 
 export function setMpMsgHandler(handler) {
   mpMsg = handler;

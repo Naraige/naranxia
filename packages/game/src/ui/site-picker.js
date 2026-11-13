@@ -55,7 +55,7 @@ export function randomSite(){if(sitePickerState.pvKey!==terrainState.SEED)buildP
 
 export function openPicker(){sitePickerState.picking=true;PKL.on=true;sitePickerState.pickPos=null;sitePickerState.pickMsg='';if(sitePickerState.pvKey!==terrainState.SEED)buildPreview();randomSite();if(!PK)pkInit();pkFocus();PK.dist=400;if(sitePickerState.pickPos)pkLiveFocus(sitePickerState.pickPos.tx,sitePickerState.pickPos.ty)}
 
-export let confirmPick = function confirmPick(){if(!sitePickerState.pickPos||!sitePickerState.pickPos.ok)return;terrainState.CX=sitePickerState.pickPos.tx;terrainState.CY=sitePickerState.pickPos.ty;sessionState.CROT=sessionState.PKROT&3;sitePickerState.picking=false;settingsState.setupOpen=false;reset();sessionState.inGame=false;startGame()};
+export let confirmPick = function confirmPick(){if(!sitePickerState.pickPos||!sitePickerState.pickPos.ok)return;terrainState.CX=sitePickerState.pickPos.tx;terrainState.CY=sitePickerState.pickPos.ty;sessionState.CROT=sessionState.PKROT&3;sitePickerState.picking=false;settingsState.setupOpen=false;MP.side=0;reset();sessionState.inGame=false;startGame()};
 
 export function drawPicker(UW,UH){menuSkin(true);try{drawPickerIn(UW,UH)}finally{menuSkin(false)}}
 function drawPickerIn(UW,UH){if(!sessionState.inGame)fxTitleSeen();settingsState.nameBox=null;if(sitePickerState.pvKey!==terrainState.SEED)buildPreview();hudState.uiHits=[];

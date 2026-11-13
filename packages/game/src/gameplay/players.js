@@ -16,7 +16,9 @@ export const aliveC=()=>CASTLES().filter(c=>c.hp>0&&sessionState.structs.include
 export const nearC=(x,y)=>{let b=sessionState.CS,bd=1e12;for(const c of aliveC()){const d=(c.x-x)*(c.x-x)+(c.y-y)*(c.y-y);if(d<bd){bd=d;b=c}}return b};
 export const stoneOn=()=>RS.done&&playersState.BTIER;
 export function setTier(v){playersState.BTIER=v?1:0;Object.assign(C,RS.done&&playersState.BTIER?CSTONE:CWOOD)}
-export const LPL=()=>MP.on&&!MP.host?1:0,setPl=p=>{playersState.CURPL=p;sessionState.res=playersState.RESP[p]};
+/* the local player's index. A guest whose partner left goes on alone as player 2 (MP.side): it used to fall back to 0 and found itself
+   running the host's kingdom (resources, buildings, home key) for the rest of the game */
+export const LPL=()=>MP.on?(MP.host?0:1):(MP.side|0),setPl=p=>{playersState.CURPL=p;sessionState.res=playersState.RESP[p]};
 
 export const HOMEC=()=>playersState.CURPL===1&&sessionState.CS2?sessionState.CS2:sessionState.CS;
 export const killPl=u=>!sessionState.CS2||!sessionState.SITE2?0:u.lane>=3?1:u.lane>=0?0:dist(u.x,u.y,sessionState.CS2.x,sessionState.CS2.y)<dist(u.x,u.y,sessionState.CS.x,sessionState.CS.y)?1:0;
