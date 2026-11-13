@@ -27,12 +27,12 @@ async()=>{/* waves end (#27): fixed worlds where v93 left the horde standing, pl
  {for(let k=0;k<700;k++)tick();/* past the dawn that burns the stragglers */let c=CS,wt=null,bd=1e9;
   for(const cc of[CS,CS2])for(let j=-45;j<=45;j++)for(let i=-45;i<=45;i++){const x=cc.tx+i,y=cc.ty+j,d=Math.hypot(i,j);if(d<12||d>45||d>=bd||!gOK(x,y)||ter[y*TW+x]!==1)continue;let dp=true;for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]])if(ter[(y+dy)*TW+x+dx]!==1)dp=false;if(dp){bd=d;wt=[x,y];c=cc}}
   O.waterAt=wt?wt.join(',')+' '+Math.round(bd):null;chk('waterNear',!!wt);
-  if(wt){const f=freeTile(c.tx+10,c.ty+10),n0=SW.n;SW.q.push({ln:0,x:f[0]+.5,y:f[1]+.5,ph:65535,left:30,rate:600,hp:5});update(.05);const D=swDbg.SWD,ids=new Set();
+  if(wt){const f=freeTile(c.tx+10,c.ty+10),n0=SW.n;SW.q.push({ln:0,x:f[0]+.5,y:f[1]+.5,ph:65535,left:30,rate:600,hp:5});update(.1);const D=swDbg.SWD,ids=new Set();
    for(let i=n0;i<SW.n;i++){D[SW.ti[i]]--;SW.x[i]=SW.px[i]=(wt[0]+.5)*TS;SW.y[i]=SW.py[i]=(wt[1]+.5)*TS;SW.ti[i]=wt[1]*TW+wt[0];SW.sa[i]=SW.ti[i];D[SW.ti[i]]++;ids.add(SW.id[i])}
    O.put=ids.size;let inW=0,t=0;for(;t<2400;t++){tick();inW=0;let al=0;for(let i=0;i<SW.n;i++)if(ids.has(SW.id[i])&&SW.hp[i]>0){al++;if(isW(SW.x[i],SW.y[i]))inW++}if(!al)break}
    O.outSec=Math.round(t*.05);O.stillInWater=inW;chk('wadesOut',ids.size>=20&&inW===0&&t<2400)}}
  /* last resort: a zombie that still stands 80 s after giving up its path is taken away, without a kill */
- {const c=CS,f=freeTile(c.tx-30,c.ty-30);SW.q.push({ln:0,x:f[0]+.5,y:f[1]+.5,ph:65535,left:1,rate:600,hp:5});const n0=SW.n;update(.05);const id=SW.id[n0],x=SW.x[n0],y=SW.y[n0],k0=kills;
+ {const c=CS,f=freeTile(c.tx-30,c.ty-30);SW.q.push({ln:0,x:f[0]+.5,y:f[1]+.5,ph:65535,left:1,rate:600,hp:5});const n0=SW.n;update(.1);const id=SW.id[n0],x=SW.x[n0],y=SW.y[n0],k0=kills;
   const at=()=>{for(let i=0;i<SW.n;i++)if(SW.id[i]===id)return i;return -1};let gone=-1,gave=-1;
   for(let t=0;t<2600&&gone<0;t++){const i=at();if(i<0){gone=t;break}if(gave<0&&SW.sk[i]>=10)gave=t;if(SW.st[i]===1||SW.st[i]===7)SW.st[i]=0;SW.x[i]=x;SW.y[i]=y;update(.05);const j=at();if(j>=0){swDbg.SWD[SW.ti[j]]--;SW.x[j]=x;SW.y[j]=y;SW.ti[j]=((y/TS)|0)*TW+((x/TS)|0);swDbg.SWD[SW.ti[j]]++}}
   O.gaveUpSec=Math.round(gave*.05);O.goneSec=Math.round(gone*.05);chk('givesUp',gave>500&&gave<720);chk('takenAway',gone>2000&&gone<2400&&kills===k0)}

@@ -13,6 +13,12 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Found by the test, not a fault: in a small window (960x600) the quest panel lies over the left of the map; a click there opens the quest log (full screen) instead of placing. The test avoids it.
 - Not verified: two real machines on a real link (latency, PeerJS, real GPU), a real public lobby, a real touch screen, the re-queue after a resync on a click inside the last 6 ticks.
 - For the King: #26 stays open; if it happens again an F8 report from the GUEST right after the bad placement tells enough (plog, castles, window). Ask him which of the two castles the building appeared near and whether the camera moved by itself.
+## 2026-11-13 · v94 lot "swarm performance 2" (#21) (hd-perf worktree, committed on branch, not merged, not released)
+
+- Exact step (hashes of profile.py identical): no division for a zombie well inside its tile (0.01 px margin), jam table, `swPick` returns at once when one neighbour is downhill, castle distance only for zombies still on a lane. Gain inside the noise (share of swarm functions excluding `(program)`: 57.2 / 55.6 / 61.0 / 56.6 before, 56.1 / 54.5 / 54.9 / 58.3 after; machine load 4 to 15).
+- Behaviour step: swarm at 10 Hz (`SWDT` .1, look every 32 steps = still 3.2 s, bite cap per step x2, `swRear` every 5 steps; render already interpolates). Swarm share excluding `(program)`: 43.9 / 45.6 %, swarm time about 16 to 24 s instead of 25 to 36 s. det hashes change (new ones identical on two runs).
+- Waves on worlds 0, 1, 2, 9 (probe, wave 3, perfect defence): end 461/808/508/493 s before, 463/793/505/490 after; kills equal within 20 (6931/10506/6126/11287 vs 6932/10523/6131/11289); no stuck zombie for 60 s, none in water.
+- Not verified: by eye in a real browser, bosses and miners at 10 Hz, real GPU.
 
 ## 2026-11-13 · v94
 
