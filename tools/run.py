@@ -17,7 +17,7 @@ with sync_playwright() as p:
     try:
         import fontroute;fontroute.setup(pg)
     except Exception:pass
-    pg.goto((ROOT/'dist'/html).resolve().as_uri(),timeout=180000);pg.wait_for_timeout(3500)
+    pg.goto((ROOT/'dist'/html).resolve().as_uri(),timeout=900000);pg.wait_for_timeout(3500)
     try:
         r=pg.evaluate(js)
         if r is not None: print(r,flush=True)

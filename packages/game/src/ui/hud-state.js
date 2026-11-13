@@ -11,6 +11,9 @@ export const hudDisplayState = {
   /* boxes [x, y, w, h] of what was drawn under the top bar since the toasts were last drawn (message line, event and hint bars):
      the achievement toasts go under those that reach them (ui/hud.js drawToasts) */
   tbox: [],
+  /* for the tests: toasts drawn by the last frame {t: their boxes at rest, b: the boxes they had to clear}, y of the wave banner */
+  tq: null,
+  bny: 0,
 };
 
 /* left edge of a centre bar (w x h at height y): centred, or moved right of the quest panel when the two would overlap and there is room */

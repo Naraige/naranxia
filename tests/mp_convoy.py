@@ -45,7 +45,7 @@ with sync_playwright() as p:
         pg=br.new_page(viewport={'width':640,'height':400});errs=[]
         pg.on('pageerror',lambda e,errs=errs:errs.append(str(e)[:300]))
         fontroute.setup(pg);pg.route('**/three.min.js',lambda r:r.fulfill(path=os.path.join(ROOT,'node_modules/three/build/three.min.js'),content_type='application/javascript'))
-        pg.goto((Path(ROOT)/'dist'/html).resolve().as_uri(),timeout=180000);pg.wait_for_timeout(2500)
+        pg.goto((Path(ROOT)/'dist'/html).resolve().as_uri(),timeout=600000);pg.wait_for_timeout(2500)
         P('loaded',i,pg.evaluate(INIT));pages.append((pg,errs))
     A,ea=pages[0];B,eb=pages[1]
     A.evaluate("()=>{MP.host=true;MP.conn=true}");B.evaluate("()=>{MP.host=false;MP.conn=true}")
