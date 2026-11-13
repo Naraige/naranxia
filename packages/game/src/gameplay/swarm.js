@@ -21,9 +21,10 @@ export const swarmState = {
 };
 
 /* ================= THE SWARM: the wave husks as a light-weight crowd (tens of thousands of zombies) =================
-   typed arrays stepped at 20 Hz - path fields + tile density drive the flow - cell lists answer the combat queries */
+   typed arrays stepped at 10 Hz (SWDT, movement interpolated at render) - path fields + tile density drive the flow - cell lists answer the combat queries */
 const SWMAX = 30000;
-export const SWDT = .05;
+export const SWDT = .1;
+const SWSC = SWDT/.05;
 const SWCS = 4;
 let SWCW;
 let SWCH;
@@ -36,7 +37,7 @@ export const SW={n:0,acc:0,step:0,fxN:0,gacc:[0,0],q:[],
    counts one more look in sk. At SWGH looks (32 s) it gives up its path and walks straight at the nearest castle over any ground, as the horde already does
    where a lane has no way through (buildings still stop it, and it bites them): earth works, cliffs and water delay the horde but never keep it out.
    A zombie that still stands SWRM looks later (80 s more) is taken away without gold or a kill. sa and sk are saved with the swarm. */
-const SWCK=64,SWGH=10,SWRM=25;
+const SWCK=32,SWGH=10,SWRM=25;
 
 export let SWD;
 export let SWH;
@@ -155,11 +156,11 @@ function swStep(){if(!SW.sk||!SW.sa){SW.sk=new Uint8Array(SWMAX);SW.sa=new Int32
  /* the bites: capped per target so a pile of zombies cannot melt anything in a blink */
  for(const e of hitS){const hits=e.swh||0;e.swh=0;if(!hits||e.hp<=0)continue;const bs=!(e.type in T);
   const one=3*(e.t===0&&RS2.done.plate?.78:1)*(e.t===0&&RS2.done.mail?.85:1)*(bs?(e.t===0&&RS2.done.bastion?.72:1)*1.6:(e.cb?.8:1));
-  e.hp-=Math.min(hits*one,bs?1.6:1.2);if(!bs)e.hurt=.2;
+  e.hp-=Math.min(hits*one,(bs?1.6:1.2)*SWSC);if(!bs)e.hurt=.2;
   if(e.t===0&&economyState.alertT<=0){economyState.alertT=8;ALERTS.push({x:e.x,y:e.y,t:5});hudDisplayState.msgS=bs?'Your '+(NAMES[e.type]||'building').toLowerCase()+' is under attack!':'Your units are under attack!';hudDisplayState.msgT=3;snd('alarm')}
   if(SW.fxN<14){SW.fxN++;if(bs)puff(e.x+rnd(-14,14),e.y+rnd(-14,14),'#8a8a90',2,40,{T:.4,z:.8,vz:2,g:8,s:.07});else blood(e.x,e.y,'#7a1a1a')}
   snd(bs?'stone':'zhit',e.x,e.y);if(!bs&&e.hp<=0&&e.t!==1)e.conv=true}
- terrainState.gateSolid=gs;swCompact();swCells();if(SW.step%10===0||!SW.n)swRear()}
+ terrainState.gateSolid=gs;swCompact();swCells();if(SW.step%5===0||!SW.n)swRear()}
 
 function swCompact(){const n=SW.n;let w=0,dead=0;
  for(let i=0;i<n;i++){if(SW.hp[i]>0){if(w!==i){SW.x[w]=SW.x[i];SW.y[w]=SW.y[i];SW.px[w]=SW.px[i];SW.py[w]=SW.py[i];SW.hp[w]=SW.hp[i];SW.cd[w]=SW.cd[i];SW.ln[w]=SW.ln[i];SW.ph[w]=SW.ph[i];SW.ri[w]=SW.ri[i];SW.k[w]=SW.k[i];SW.ti[w]=SW.ti[i];SW.fa[w]=SW.fa[i];SW.ta[w]=SW.ta[i];SW.mx[w]=SW.mx[i];SW.my[w]=SW.my[i];SW.sd[w]=SW.sd[i];SW.id[w]=SW.id[i];SW.st[w]=SW.st[i];SW.sa[w]=SW.sa[i];SW.sk[w]=SW.sk[i]}w++;continue}
