@@ -4,12 +4,20 @@
    whose notes are not translated, so keep it free of imports. */
 export function notesLines(md) {
   const out = [];
-  for (let s of String(md || '').split('\n')) {
-    s = s.trim(); if (!s) continue;
+  for (let s of String(md || "").split("\n")) {
+    s = s.trim();
+    if (!s) continue;
     const m = /^\*\*(.+?)\*\*:?$/.exec(s) || /^#{1,6}\s+(.+)$/.exec(s);
     let b = false;
-    if (m) s = m[1]; else if (/^(?:[-+]\s*|\*\s+)/.test(s)) { b = true; s = s.replace(/^(?:[-+]\s*|\*\s+)/, '') }
-    s = s.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/\*\*|__|`/g, '').trim();
+    if (m) s = m[1];
+    else if (/^(?:[-+]\s*|\*\s+)/.test(s)) {
+      b = true;
+      s = s.replace(/^(?:[-+]\s*|\*\s+)/, "");
+    }
+    s = s
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+      .replace(/\*\*|__|`/g, "")
+      .trim();
     if (s) out.push({ t: s, h: !!m, b });
   }
   return out;

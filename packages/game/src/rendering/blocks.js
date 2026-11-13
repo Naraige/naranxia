@@ -10,8 +10,8 @@
 export const blocksState = {
   on: true,
   /* world units per block: terrain (and building pixels), decor */
-  BLK: .5,
-  DBLK: .5,
+  BLK: 0.5,
+  DBLK: 0.5,
   terrain: true,
   decor: true,
   build: true,
@@ -25,29 +25,80 @@ export const blocksState = {
 
 /* shader uniforms: blocks per world unit for the terrain material and for the prop / building material (0 = off),
    and the pixels per world unit of the building textures (0 = the default 18) */
-export const BLKU = {value: 0};
-export const BLKV = {value: 0};
-export const BPXU = {value: 0};
+export const BLKU = { value: 0 };
+export const BLKV = { value: 0 };
+export const BPXU = { value: 0 };
 /* season weights (spring, summer, autumn, winter), fed by the weather module: visual only */
-export const BSEAS = {value: [1,0,0,0]};
-export function setSeasons(s){const k=blocksState.on&&blocksState.seasons;BSEAS.value[0]=k?s[0]:1;for(let i=1;i<4;i++)BSEAS.value[i]=k?s[i]:0}
+export const BSEAS = { value: [1, 0, 0, 0] };
+export function setSeasons(s) {
+  const k = blocksState.on && blocksState.seasons;
+  BSEAS.value[0] = k ? s[0] : 1;
+  for (let i = 1; i < 4; i++) BSEAS.value[i] = k ? s[i] : 0;
+}
 
 /* material ids of the block kinds (attribute `mat` = 20 + kind, + 20 for terrain next to water) */
-export const BK = {grass:1,dirt:2,stone:3,sand:4,snow:5,gravel:6,path:7,cap:8,cobble:9,leaves:10,bark:11,ore:12,rock:13,pine:14,birch:15,plant:16};
+export const BK = {
+  grass: 1,
+  dirt: 2,
+  stone: 3,
+  sand: 4,
+  snow: 5,
+  gravel: 6,
+  path: 7,
+  cap: 8,
+  cobble: 9,
+  leaves: 10,
+  bark: 11,
+  ore: 12,
+  rock: 13,
+  pine: 14,
+  birch: 15,
+  plant: 16,
+};
 
-function apply(){const S=blocksState;S.T=S.on&&S.terrain;S.D=S.on&&S.decor;BLKU.value=S.T?1/S.BLK:0;BLKV.value=S.D?1/S.DBLK:0;BPXU.value=S.on&&S.build?16/S.BLK:0;if(!(S.on&&S.seasons))setSeasons([1,0,0,0])}
+function apply() {
+  const S = blocksState;
+  S.T = S.on && S.terrain;
+  S.D = S.on && S.decor;
+  BLKU.value = S.T ? 1 / S.BLK : 0;
+  BLKV.value = S.D ? 1 / S.DBLK : 0;
+  BPXU.value = S.on && S.build ? 16 / S.BLK : 0;
+  if (!(S.on && S.seasons)) setSeasons([1, 0, 0, 0]);
+}
 
 /* opts: a block size (terrain and decor), or an object with any field of blocksState */
-export function setBlocks(on,opts){blocksState.on=!!on;if(typeof opts==='number'&&opts>0)blocksState.BLK=blocksState.DBLK=opts;else if(opts&&typeof opts==='object')for(const k of['BLK','DBLK','terrain','decor','build','seasons'])if(k in opts)blocksState[k]=opts[k];
- apply();if(blocksState.onChange)blocksState.onChange()}
+export function setBlocks(on, opts) {
+  blocksState.on = !!on;
+  if (typeof opts === "number" && opts > 0) blocksState.BLK = blocksState.DBLK = opts;
+  else if (opts && typeof opts === "object")
+    for (const k of ["BLK", "DBLK", "terrain", "decor", "build", "seasons"]) if (k in opts) blocksState[k] = opts[k];
+  apply();
+  if (blocksState.onChange) blocksState.onChange();
+}
 
-export function initializeBlocks(){let v=null;try{v=localStorage.getItem('dk_blocks')}catch(e){}
- if(v==='1')blocksState.on=true;else if(v&&v[0]==='{'){try{const o=JSON.parse(v);blocksState.on=o.on!==false;for(const k of['BLK','DBLK','terrain','decor','build','seasons'])if(k in o)blocksState[k]=o[k]}catch(e){}}
- apply()}
+export function initializeBlocks() {
+  let v = null;
+  try {
+    v = localStorage.getItem("dk_blocks");
+  } catch {
+    /* A blocked store leaves the default block-rendering settings active. */
+  }
+  if (v === "1") blocksState.on = true;
+  else if (v && v[0] === "{") {
+    try {
+      const o = JSON.parse(v);
+      blocksState.on = o.on !== false;
+      for (const k of ["BLK", "DBLK", "terrain", "decor", "build", "seasons"]) if (k in o) blocksState[k] = o[k];
+    } catch {
+      /* Ignore malformed saved graphics options and keep initialized defaults. */
+    }
+  }
+  apply();
+}
 
 /* GLSL: pixel texture of a block face. m = block kind, c = base colour, pc = pixel coordinates (16 per block),
    fz = face seed, up = top face, pf / bf = pixel and block detail left at this distance (1 near, 0 far) */
-export const GLBLK=`
+export const GLBLK = `
 uniform float uBlk;uniform float uBpx;uniform vec4 uSeas;
 float bq4(float t,float a,float b,float c,float d){return t<.22?a:(t<.58?b:(t<.86?c:d));}
 vec3 blkTex(float m,vec3 c,vec2 pc,float fz,bool up,float pf,float bf,vec3 wp){

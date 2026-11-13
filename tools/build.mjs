@@ -1,19 +1,19 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { build } from 'esbuild';
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { build } from "esbuild";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const game = path.join(root, 'packages', 'game');
-const out = path.join(root, 'dist');
-const version = (await fs.readFile(path.join(root, 'game', 'VERSION'), 'utf8')).trim();
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const game = path.join(root, "packages", "game");
+const out = path.join(root, "dist");
+const version = (await fs.readFile(path.join(root, "game", "VERSION"), "utf8")).trim();
 if (!/^v\d+$/.test(version)) throw new Error(`Invalid game/VERSION: ${version}`);
-const notes = await fs.readFile(path.join(root, 'game', 'NOTES.md'), 'utf8').catch(() => '');
+const notes = await fs.readFile(path.join(root, "game", "NOTES.md"), "utf8").catch(() => "");
 await fs.mkdir(out, { recursive: true });
 
-const entry = path.join(game, 'src', 'main.js');
-const htmlPath = path.join(game, 'index.html');
-const htmlSource = await fs.readFile(htmlPath, 'utf8');
+const entry = path.join(game, "src", "main.js");
+const htmlPath = path.join(game, "index.html");
+const htmlSource = await fs.readFile(htmlPath, "utf8");
 const scriptTag = '<script type="module" src="./src/main.js"></script>';
 const styleTag = '<link rel="stylesheet" href="./src/styles/game.css">';
 if (htmlSource.split(scriptTag).length !== 2) {
@@ -25,24 +25,37 @@ if (htmlSource.split(styleTag).length !== 2) {
 
 const [js, css] = await Promise.all([
   build({
-    entryPoints: [entry], outfile: path.join(out, 'naranxia-bundle.js'), bundle: true, write: false, platform: 'browser',
-    format: 'iife', target: ['es2020'], define: { __NX_VERSION__: JSON.stringify(version), __NX_NOTES__: JSON.stringify(notes.trim()) },
-    legalComments: 'none', charset: 'utf8', logLevel: 'warning',
+    entryPoints: [entry],
+    outfile: path.join(out, "naranxia-bundle.js"),
+    bundle: true,
+    write: false,
+    platform: "browser",
+    format: "iife",
+    target: ["es2020"],
+    define: { __NX_VERSION__: JSON.stringify(version), __NX_NOTES__: JSON.stringify(notes.trim()) },
+    legalComments: "none",
+    charset: "utf8",
+    logLevel: "warning",
   }),
   build({
-    entryPoints: [path.join(game, 'src', 'styles', 'game.css')], outfile: path.join(out, 'naranxia-bundle.css'), bundle: true, write: false,
-    platform: 'browser', loader: { '.woff2': 'dataurl', '.woff': 'dataurl', '.png': 'dataurl' },
-    legalComments: 'none', logLevel: 'warning',
+    entryPoints: [path.join(game, "src", "styles", "game.css")],
+    outfile: path.join(out, "naranxia-bundle.css"),
+    bundle: true,
+    write: false,
+    platform: "browser",
+    loader: { ".woff2": "dataurl", ".woff": "dataurl", ".png": "dataurl" },
+    legalComments: "none",
+    logLevel: "warning",
   }),
 ]);
 const script = js.outputFiles[0]?.text;
 const style = css.outputFiles[0]?.text;
-if (!script || !style) throw new Error('Build did not produce bundled JavaScript and CSS');
+if (!script || !style) throw new Error("Build did not produce bundled JavaScript and CSS");
 if (/^\s*(?:import|export)\s/m.test(script)) {
-  throw new Error('Browser game bundle contains module syntax; expected a classic standalone script');
+  throw new Error("Browser game bundle contains module syntax; expected a classic standalone script");
 }
-if (script.includes('__NX_VERSION__')) throw new Error('Build did not substitute __NX_VERSION__ from game/VERSION');
-if (/<\/script/i.test(script)) throw new Error('Game bundle contains a closing script tag');
+if (script.includes("__NX_VERSION__")) throw new Error("Build did not substitute __NX_VERSION__ from game/VERSION");
+if (/<\/script/i.test(script)) throw new Error("Game bundle contains a closing script tag");
 
 const title = `Naranxia ${version}`;
 let html = htmlSource
@@ -50,6 +63,6 @@ let html = htmlSource
   .replace(styleTag, () => `<style>\n${style}\n</style>`)
   .replace(scriptTag, () => `<script>\n${script}\n</script>`);
 /* written beside, then renamed: a page that loads the file while a build runs never reads half of it */
-await fs.writeFile(path.join(out, 'naranxia_readable.html.tmp'), html, 'utf8');
-await fs.rename(path.join(out, 'naranxia_readable.html.tmp'), path.join(out, 'naranxia_readable.html'));
+await fs.writeFile(path.join(out, "naranxia_readable.html.tmp"), html, "utf8");
+await fs.rename(path.join(out, "naranxia_readable.html.tmp"), path.join(out, "naranxia_readable.html"));
 console.log(`Built dist/naranxia_readable.html (${version})`);

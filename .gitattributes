@@ -1,0 +1,2 @@
+# Keep source line endings consistent on Windows and in CI; leave binary files intact.
+* text=auto eol=lf

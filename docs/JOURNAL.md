@@ -4,6 +4,16 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-13 · codebase cleanup (unreleased, pinned v94)
+
+- Integrated the cleanup with fetched v94 `4a57714017d38c8d5294445e20962eb4b1e76c11`; this verification stays pinned by request. No release/version/notes change.
+- Added ESLint, Prettier, LF conventions, architectural checks and CI gates; all 240 maintained JS syntax trees remain identical through the formatting-only pass. Removed verified dead private code and unused bindings while retaining exported names, arities and effect/RNG evaluation.
+- Established language/panel/catalog and terrain/query/traversal/cache owners, explicit synchronous chunk/invalidation registration and music audio-state injection. Removed 331 cyclic edges from v94, added none; one 121-module component with 811 cyclic edges remains under a ratchet.
+- Verified `npm run quality`, translation/notes checks, all 31 full-suite scenarios without retries, strict save continuation/shared references, five deep resync recoveries and a 6010-compared-tick multiplayer soak. Disconnected-map regression and caller-relative CLI check also pass.
+- Baseline/candidate parity: all 146 model signatures and six audio peak/RMS summaries match; three 6000-tick simulation profiles match, median 13508 -> 13522 ms (about 0.1%). PCM bytes are nondeterministic in unchanged Chromium baseline renders and are diagnostic only.
+- Windows/Linux packages build and embedded resource hashes match. Actual preload/save IPC contract passes with Electron mocked. Title/update/settings/desktop/narrow screenshots inspected; no observed visual regression or page error.
+- Guidance/evidence/limits: `CONTRIBUTING.md`, `docs/ARCHITECTURE.md`, `docs/CLEANUP_AUDIT.md`; local reports under `dist/cleanup-review/`. Remaining work includes legacy SCC boundaries; native installers/macOS, physical input, real GPUs and internet co-op were not exercised. Remote CI has not run for these local changes.
+
 ## 2026-11-13 · v94
 
 - Released as the batch the King asked for after playing v93 in co-op (his list: guest buildings on player 1's site, zombies lost in water so the wave never ends, unclear sync message) plus "continue de tout tester / améliorer" and "oui fait tout".

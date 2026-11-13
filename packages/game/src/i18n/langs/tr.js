@@ -91,7 +91,8 @@ export const TR = {
   "A peasant now works the ": "Bir köylü artık şurada çalışıyor: ",
   "A peasant who only builds new buildings": "Yalnızca yeni binalar inşa eden bir köylü",
   "A tower with a siege weapon cannot turn": "Kuşatma silahı olan bir kule dönemez",
-  "A villager is cut off from your castle and storages - open a way or build a gate": "Bir köylünün kale ve depolarla bağlantısı kesildi - bir yol aç veya kapı inşa et",
+  "A villager is cut off from your castle and storages - open a way or build a gate":
+    "Bir köylünün kale ve depolarla bağlantısı kesildi - bir yol aç veya kapı inşa et",
   "ACID SPITTERS": "ASİT TÜKÜRENLER",
   "Academy": "Akademi",
   "Academy: research upgrades here": "Akademi: yükseltmeleri burada araştır",
@@ -172,7 +173,8 @@ export const TR = {
   "Build towers!": "Kule inşa et!",
   "Build wall": "Sur inşa et",
   "Builders": "İnşaatçılar",
-  "Builders guild: choose how many peasants build, repair and reshape the land": "İnşaatçı loncası: kaç köylünün inşa edeceğini, onaracağını ve araziyi şekillendireceğini seç",
+  "Builders guild: choose how many peasants build, repair and reshape the land":
+    "İnşaatçı loncası: kaç köylünün inşa edeceğini, onaracağını ve araziyi şekillendireceğini seç",
   "Builders' guild []]": "İnşaatçı loncası []]",
   "Building tier [L]": "Bina seviyesi [L]",
   "Buildings have 40% more strength": "Binalar %40 daha dayanıklı",
@@ -186,7 +188,8 @@ export const TR = {
   "Cancel current orders and stay here": "Mevcut emirleri iptal et ve burada kal",
   "Cannon": "Top",
   "Cannon [/]": "Top [/]",
-  "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)": "Kale oraya taşınamaz (5x5 boş, 40 kare içinde, düz zemin)",
+  "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)":
+    "Kale oraya taşınamaz (5x5 boş, 40 kare içinde, düz zemin)",
   "Cannot reshape this tile": "Bu kare şekillendirilemez",
   "Captain": "Yüzbaşı",
   "Castle health": "Kale sağlığı",
@@ -196,7 +199,8 @@ export const TR = {
   "Castle rally point set": "Kale toplanma noktası ayarlandı",
   "Castle rally: new peasants gather this resource": "Kale toplanma noktası: yeni köylüler bu kaynağı toplar",
   "Castle view": "Kale görünümü",
-  "Castle: shoots arrows at zombies in range, trains peasants and builds": "Kale: menzildeki zombilere ok atar, köylü eğitir ve inşa eder",
+  "Castle: shoots arrows at zombies in range, trains peasants and builds":
+    "Kale: menzildeki zombilere ok atar, köylü eğitir ve inşa eder",
   "Centers the camera on your castle": "Kamerayı kaleye ortalar",
   "Chain mail": "Zincir zırh",
   "Champion": "Şampiyon",
@@ -221,7 +225,8 @@ export const TR = {
   "Click or drag over wooden buildings": "Ahşap binaların üzerine tıkla veya sürükle",
   "Click or drag to paint": "Boyamak için tıkla veya sürükle",
   "Click the map: new soldiers from": "Haritaya tıkla: yeni askerler şuradan:",
-  "Click to place the castle  -  drag / WASD: move   Right drag: rotate   Wheel: zoom": "Kaleyi yerleştirmek için tıkla  -  sürükle / WASD: hareket   Sağ sürükle: döndür   Tekerlek: yakınlaştır",
+  "Click to place the castle  -  drag / WASD: move   Right drag: rotate   Wheel: zoom":
+    "Kaleyi yerleştirmek için tıkla  -  sürükle / WASD: hareket   Sağ sürükle: döndür   Tekerlek: yakınlaştır",
   "Close [M]": "Kapat [M]",
   "Co-op lobby - ": "Co-op lobisi - ",
   "Co-op: OUT OF SYNC": "Co-op: EŞZAMANSIZ",
@@ -234,7 +239,8 @@ export const TR = {
   "Costs ": "Bedel ",
   "Costs 100 gold, 150 wood": "Bedeli 100 altın, 150 odun",
   "Costs part of its wood / stone / gold": "Odununun / taşının / altınının bir kısmına mal olur",
-  "Could not reach the matchmaking service. Check your connection and try again.": "Eşleştirme servisine ulaşılamadı. Bağlantını kontrol et ve tekrar dene.",
+  "Could not reach the matchmaking service. Check your connection and try again.":
+    "Eşleştirme servisine ulaşılamadı. Bağlantını kontrol et ve tekrar dene.",
   "Creating your room...": "Odan oluşturuluyor...",
   "Crest": "Arma",
   "Crews": "Mürettebatlar",
@@ -284,7 +290,8 @@ export const TR = {
   "Field gun pushed by a crew of 2 (2 population)": "2 kişilik mürettebatın ittiği sahra topu (2 nüfus)",
   "Fight around their post, then walk back to it": "Karakollarının çevresinde savaşır, sonra geri döner",
   "Finish a research": "Bir araştırmayı bitir",
-  "Finish this wave first: the next one comes after the rest time": "Önce bu dalgayı bitir: sonraki dalga dinlenme süresinden sonra gelir",
+  "Finish this wave first: the next one comes after the rest time":
+    "Önce bu dalgayı bitir: sonraki dalga dinlenme süresinden sonra gelir",
   "Fletching": "Ok tüyleme",
   "Food": "Yiyecek",
   "Ford": "Geçit",
@@ -354,7 +361,8 @@ export const TR = {
   "LONG LIVE KING NARAIGE": "ÇOK YAŞA KRAL NARAİGE",
   "Land": "Arazi",
   "Large": "Büyük",
-  "Left drag: move   Right drag: rotate   Wheel: zoom": "Sol sürükle: hareket   Sağ sürükle: döndür   Tekerlek: yakınlaştır",
+  "Left drag: move   Right drag: rotate   Wheel: zoom":
+    "Sol sürükle: hareket   Sağ sürükle: döndür   Tekerlek: yakınlaştır",
   "Lights the night. Archers garrison (3)": "Geceyi aydınlatır. Okçular yerleşir (3)",
   "Line": "Çizgi",
   "Load": "Yükle",
@@ -363,7 +371,8 @@ export const TR = {
   "Loading...": "Yükleniyor...",
   "Locked": "Kilitli",
   "Locked: research Masonry at the Academy": "Kilitli: Akademi'de Taş İşçiliği'ni araştır",
-  "Long calm between waves, then a slow swarm. It grows stronger each wave.": "Dalgalar arasında uzun bir sakinlik, sonra yavaş bir sürü. Her dalgada güçlenir.",
+  "Long calm between waves, then a slow swarm. It grows stronger each wave.":
+    "Dalgalar arasında uzun bir sakinlik, sonra yavaş bir sürü. Her dalgada güçlenir.",
   "Long range: volleys of 5 arrows": "Uzun menzil: 5 okluk yaylım ateşi",
   "Long reach, sweeps several zombies at once": "Uzun menzil, birkaç zombiyi birden süpürür",
   "MINERS": "MADENCİLER",
@@ -418,9 +427,11 @@ export const TR = {
   "None": "Yok",
   "Normal": "Normal",
   "Not enough ": "Yeterli değil ",
-  "Not enough food: build farms and put a peasant on each": "Yeterli yiyecek yok: çiftlik inşa et ve her birine bir köylü koy",
+  "Not enough food: build farms and put a peasant on each":
+    "Yeterli yiyecek yok: çiftlik inşa et ve her birine bir köylü koy",
   "Not enough resources to upgrade": "Yükseltmek için yeterli kaynak yok",
-  "Not suitable: needs dry, gentle land away from the edge": "Uygun değil: kenardan uzak, kuru, hafif eğimli arazi gerekir",
+  "Not suitable: needs dry, gentle land away from the edge":
+    "Uygun değil: kenardan uzak, kuru, hafif eğimli arazi gerekir",
   "Nothing to save": "Kaydedilecek bir şey yok",
   "Now with keeps!": "Artık kalelerle!",
   "One research at a time: ": "Aynı anda tek araştırma: ",
@@ -508,7 +519,8 @@ export const TR = {
   "Researching Masonry...": "Taş Ustalığı araştırılıyor...",
   "Reset keys": "Tuşları sıfırla",
   "Return to the building categories": "Bina kategorilerine dön",
-  "Right-click a resource to harvest, a building to repair": "Toplamak için bir kaynağa, onarmak için bir binaya sağ tıkla",
+  "Right-click a resource to harvest, a building to repair":
+    "Toplamak için bir kaynağa, onarmak için bir binaya sağ tıkla",
   "Right-click a wall, gate or tower": "Bir sura, kapıya veya kuleye sağ tıkla",
   "Right-click a wall, gate or tower to garrison": "Yerleştirmek için bir sura, kapıya veya kuleye sağ tıkla",
   "Right-click to move or attack": "Hareket etmek veya saldırmak için sağ tıkla",
@@ -523,7 +535,8 @@ export const TR = {
   "Rotate right [X]": "Sağa döndür [X]",
   "Rotated ": "Döndürüldü ",
   "Royal guard": "Kraliyet muhafızı",
-  "Royal guards serve King Naraige: summon him first": "Kraliyet muhafızları Kral Naraige'ye hizmet eder: önce onu çağır",
+  "Royal guards serve King Naraige: summon him first":
+    "Kraliyet muhafızları Kral Naraige'ye hizmet eder: önce onu çağır",
   "STONE AGE": "TAŞ ÇAĞI",
   "Saltire": "Çapraz",
   "Save / Load": "Kaydet / Yükle",
@@ -534,14 +547,16 @@ export const TR = {
   "Score: ": "Skor: ",
   "See the whole world, spawns and routes": "Tüm dünyayı, doğuş noktalarını ve rotaları gör",
   "Select": "Seç",
-  "Select a building and press Upgrade, or use the Stone upgrade tool": "Bir bina seç ve Yükselt'e bas ya da Taş yükseltme aracını kullan",
+  "Select a building and press Upgrade, or use the Stone upgrade tool":
+    "Bir bina seç ve Yükselt'e bas ya da Taş yükseltme aracını kullan",
   "Select a captain first": "Önce bir yüzbaşı seç",
   "Select all peasants": "Tüm köylüleri seç",
   "Select army": "Ordu seç",
   "Select army [Q]": "Ordu seç [Q]",
   "Select it to open the research menu": "Araştırma menüsünü açmak için seç",
   "Select mode: drag draws a box": "Seçim modu: sürüklemek kutu çizer",
-  "Select peasants, then right-click a tree, rock or gold to harvest": "Köylüleri seç, sonra toplamak için bir ağaca, kayaya veya altına sağ tıkla",
+  "Select peasants, then right-click a tree, rock or gold to harvest":
+    "Köylüleri seç, sonra toplamak için bir ağaca, kayaya veya altına sağ tıkla",
   "Select, then right-click a tree, rock": "Seç, sonra bir ağaca, kayaya sağ tıkla",
   "Select: drag draws a box": "Seç: sürüklemek kutu çizer",
   "Selects all fighters": "Tüm savaşçıları seçer",
@@ -589,7 +604,8 @@ export const TR = {
   "Storage Box": "Depo Sandığı",
   "Storage [K]": "Depo [K]",
   "Summon King Naraige": "Kral Naraige'yi çağır",
-  "Summoned at the castle with his 2 royal guards - one king only": "2 kraliyet muhafızıyla kalede çağrıldı - yalnızca tek kral",
+  "Summoned at the castle with his 2 royal guards - one king only":
+    "2 kraliyet muhafızıyla kalede çağrıldı - yalnızca tek kral",
   "Survive 10 waves": "10 dalga hayatta kal",
   "Survive 5 waves": "5 dalga hayatta kal",
   "Survive the night!": "Geceyi atlat!",
@@ -604,7 +620,8 @@ export const TR = {
   "The castle door needs the 3 tiles in front of it free": "Kale kapısının önünde 3 karenin boş olması gerekir",
   "The castle door turns with it": "Kale kapısı onunla birlikte döner",
   "The code ": "Kod ",
-  "The darkness hurts! Stay near the castle, towers, torches or a bannerman": "Karanlık yaralar! Kaleye, kulelere, meşalelere veya bir sancaktara yakın dur",
+  "The darkness hurts! Stay near the castle, towers, torches or a bannerman":
+    "Karanlık yaralar! Kaleye, kulelere, meşalelere veya bir sancaktara yakın dur",
   "The horde turns on ": "Ordu şuna yöneliyor: ",
   "The host chose a map": "Ev sahibi bir harita seçti",
   "The host chose a new map": "Ev sahibi yeni bir harita seçti",
@@ -614,8 +631,10 @@ export const TR = {
   "The two castles are too close: one of you must move.": "İki kale birbirine çok yakın: biriniz taşınmalı.",
   "This tower already has a siege weapon": "Bu kulede zaten bir kuşatma silahı var",
   "Title Screen": "Başlık Ekranı",
-  "Too close to another forester: their planting areas would touch": "Başka bir ormancıya çok yakın: dikim alanları birbirine değer",
-  "Too close to your partner: pick a site at least 45 tiles away": "Ortağına çok yakın: en az 45 kare uzakta bir konum seç",
+  "Too close to another forester: their planting areas would touch":
+    "Başka bir ormancıya çok yakın: dikim alanları birbirine değer",
+  "Too close to your partner: pick a site at least 45 tiles away":
+    "Ortağına çok yakın: en az 45 kare uzakta bir konum seç",
   "Too high": "Çok yüksek",
   "Torch": "Meşale",
   "Torch [']": "Meşale [']",
@@ -638,7 +657,8 @@ export const TR = {
   "Turns the selected building 90 degrees": "Seçili binayı 90 derece döndürür",
   "Type the room code first.": "Önce oda kodunu yaz.",
   "Ultra HD": "Ultra HD",
-  "Units are trained in a Barracks: build one, then click it": "Birimler Kışla'da eğitilir: bir tane inşa et, sonra ona tıkla",
+  "Units are trained in a Barracks: build one, then click it":
+    "Birimler Kışla'da eğitilir: bir tane inşa et, sonra ona tıkla",
   "Units train 25% faster": "Birimler %25 daha hızlı eğitilir",
   "Units trained while it is selected": "Seçili olduğunda eğitilen birimler",
   "Unknown save format": "Bilinmeyen kayıt biçimi",
@@ -732,9 +752,12 @@ export const TR = {
   "save not found": "kayıt bulunamadı",
   "tab hidden": "sekme gizli",
   "the other peasants keep gathering": "diğer köylüler toplamaya devam eder",
-  "their acid keeps burning men and walls - spread your troops": "asitleri adamları ve surları yakmaya devam eder - birliklerini dağıt",
-  "they blow up at your walls, or when they die - shoot them from afar, ideally inside the horde": "surlarında veya öldüklerinde patlarlar - onları uzaktan, ideal olarak ordunun ortasında vur",
-  "they dig through cliffs, rock and woods to open a way for the horde": "ordunun yolunu açmak için uçurumları, kayaları ve ormanları kazarlar",
+  "their acid keeps burning men and walls - spread your troops":
+    "asitleri adamları ve surları yakmaya devam eder - birliklerini dağıt",
+  "they blow up at your walls, or when they die - shoot them from afar, ideally inside the horde":
+    "surlarında veya öldüklerinde patlarlar - onları uzaktan, ideal olarak ordunun ortasında vur",
+  "they dig through cliffs, rock and woods to open a way for the horde":
+    "ordunun yolunu açmak için uçurumları, kayaları ve ormanları kazarlar",
   "to garrison it for more range": "menzil için orada yerleştirmek üzere",
   "to rebuild them in stone (walls...)": "onları taştan yeniden inşa etmek için (surlar...)",
   "towers +40% damage": "kuleler +%40 hasar",
@@ -745,9 +768,11 @@ export const TR = {
   "   Generating {0}%": "   Oluşturuluyor %{0}",
   "   {0} x {1} tiles": "   {0} x {1} kare",
   " - {0} sapling{1} growing": " - {0} fidan büyüyor",
-  " - {0} villager{1} sheltering inside (Repair calls them out)": " - {0} köylü içeride sığınıyor (Onar onları çağırır)",
+  " - {0} villager{1} sheltering inside (Repair calls them out)":
+    " - {0} köylü içeride sığınıyor (Onar onları çağırır)",
   "+{0} gold": "+{0} altın",
-  "A merchant caravan passes: +{0} gold, +{1} wood, +{2} stone": "Bir tüccar kervanı geçiyor: +{0} altın, +{1} odun, +{2} taş",
+  "A merchant caravan passes: +{0} gold, +{1} wood, +{2} stone":
+    "Bir tüccar kervanı geçiyor: +{0} altın, +{1} odun, +{2} taş",
   "A peasant now works the {0}": "Bir köylü artık şurada çalışıyor: {0}",
   "All visible {0}s selected": "Görünen tüm {0} seçildi",
   "BLOOD MOON - a bigger, faster horde! {0}": "KAN AYI - daha büyük, daha hızlı bir ordu! {0}",
@@ -755,7 +780,8 @@ export const TR = {
   "Best: wave {0}  -  {1} zombies slain": "Rekor: dalga {0}  -  {1} öldürülen zombi",
   "Bought 50 {0} for {1} gold": "{1} altına 50 {0} satın alındı",
   "Buy 50 {0}": "50 {0} satın al",
-  "Castle: shoots arrows at zombies in range, trains peasants and builds{0}": "Kale: menzildeki zombilere ok atar, köylü eğitir ve inşa eder{0}",
+  "Castle: shoots arrows at zombies in range, trains peasants and builds{0}":
+    "Kale: menzildeki zombilere ok atar, köylü eğitir ve inşa eder{0}",
   "Co-op lobby - {0} | {1}: {2}": "Co-op lobisi - {0} | {1}: {2}",
   "Connection error ({0}).": "Bağlantı hatası ({0}).",
   "Costs {0} gold": "Bedeli {0} altın",
@@ -773,7 +799,8 @@ export const TR = {
   "Joining room {0}...": "{0} odasına katılınıyor...",
   "Load failed: {0}": "Yükleme başarısız: {0}",
   "Map #{0}   Click to jump there": "Harita #{0}   Oraya gitmek için tıkla",
-  "Matchmaking error ({0}). Check your connection and try again.": "Eşleştirme hatası ({0}). Bağlantını kontrol et ve tekrar dene.",
+  "Matchmaking error ({0}). Check your connection and try again.":
+    "Eşleştirme hatası ({0}). Bağlantını kontrol et ve tekrar dene.",
   "NEW ZOMBIES: {0}": "YENİ ZOMBİLER: {0}",
   "NEW ZOMBIES: {0}!  -  from {1}": "YENİ ZOMBİLER: {0}!  -  şuradan: {1}",
   "New buildings: {0}": "Yeni binalar: {0}",
@@ -784,7 +811,8 @@ export const TR = {
   "Only one {0} per kingdom": "Krallık başına yalnızca bir {0}",
   "Pattern colour: {0}": "Desen rengi: {0}",
   "Place {0}": "Yerleştir: {0}",
-  "Place {0} - click a tile - right-click or Esc cancels": "Yerleştir: {0} - bir kareye tıkla - sağ tık veya Esc iptal eder",
+  "Place {0} - click a tile - right-click or Esc cancels":
+    "Yerleştir: {0} - bir kareye tıkla - sağ tık veya Esc iptal eder",
   "Raid - Wave {0}": "Akın - Dalga {0}",
   "Raid - Wave {0}  ({1} left)": "Akın - Dalga {0}  ({1} kaldı)",
   "Repairing the {0}": "Onarılıyor: {0}",
@@ -802,17 +830,20 @@ export const TR = {
   "Sound {0}": "Ses {0}",
   "Sound: {0}": "Ses: {0}",
   "Squad: {0} / 10 soldiers": "Takım: {0} / 10 asker",
-  "The code {0} is already used by another room: choose a different one.": "{0} kodu zaten başka bir odada kullanılıyor: başka birini seç.",
+  "The code {0} is already used by another room: choose a different one.":
+    "{0} kodu zaten başka bir odada kullanılıyor: başka birini seç.",
   "The horde turns on {0}": "Ordu şuna yöneliyor: {0}",
   "The {0}": "{0}",
-  "Version mismatch: you run {0}, {1} runs {2}. Use the same version or the game will desync.": "Sürüm uyuşmazlığı: sen {0} kullanıyorsun, {1} ise {2} kullanıyor. Aynı sürümü kullan, yoksa oyun eşzamanını kaybeder.",
+  "Version mismatch: you run {0}, {1} runs {2}. Use the same version or the game will desync.":
+    "Sürüm uyuşmazlığı: sen {0} kullanıyorsun, {1} ise {2} kullanıyor. Aynı sürümü kullan, yoksa oyun eşzamanını kaybeder.",
   "WAVE {0}": "DALGA {0}",
   "WAVE {0} BEATEN": "DALGA {0} YENİLDİ",
   "Wait: {0} first": "Bekle: önce {0}",
   "Wave called early: +{0} gold": "Dalga erken çağrıldı: +{0} altın",
   "Wave {0}": "Dalga {0}",
   "Waves survived: {0}": "Hayatta kalınan dalga: {0}",
-  "Waves survived: {0}    Zombies slain: {1}    Best: wave {2}": "Hayatta kalınan dalga: {0}    Öldürülen zombi: {1}    Rekor: dalga {2}",
+  "Waves survived: {0}    Zombies slain: {1}    Best: wave {2}":
+    "Hayatta kalınan dalga: {0}    Öldürülen zombi: {1}    Rekor: dalga {2}",
   "You get {0} gold": "{0} altın alıyorsun",
   "You need 50 {0} to sell": "Satmak için 50 {0} gerekiyor",
   "You need {0}": "Gerekiyor: {0}",
@@ -859,17 +890,26 @@ export const TR = {
   "Tutorial": "Eğitim",
   "Skip": "Atla",
   "Close": "Kapat",
-  "Right-click a tree, a rock or gold: your peasants gather it": "Bir ağaca, kayaya veya altına sağ tıkla: köylülerin toplar",
-  "Build a house in the Town menu to raise your population limit": "Nüfus sınırını yükseltmek için Kasaba menüsünde bir ev inşa et",
-  "Train a knight in the Train bar: knights fight the zombies": "Eğit çubuğunda bir şövalye eğit: şövalyeler zombilerle savaşır",
-  "Build walls or a tower in the Defense menu to hold the lanes": "Yolları tutmak için Savunma menüsünde sur veya kule inşa et",
-  "Try a spike trap in the Defense menu: zombies on it get hurt": "Savunma menüsünde bir kazıklı tuzak dene: üzerindeki zombiler zarar görür",
-  "Zombies follow the red lines: the top bar counts down to the wave": "Zombiler kırmızı çizgileri izler: üst çubuk dalgaya kalan süreyi sayar",
-  "Research Masonry in the castle menu to build in stone": "Taştan inşa etmek için kale menüsünde Taş Ustalığı'nı araştır",
+  "Right-click a tree, a rock or gold: your peasants gather it":
+    "Bir ağaca, kayaya veya altına sağ tıkla: köylülerin toplar",
+  "Build a house in the Town menu to raise your population limit":
+    "Nüfus sınırını yükseltmek için Kasaba menüsünde bir ev inşa et",
+  "Train a knight in the Train bar: knights fight the zombies":
+    "Eğit çubuğunda bir şövalye eğit: şövalyeler zombilerle savaşır",
+  "Build walls or a tower in the Defense menu to hold the lanes":
+    "Yolları tutmak için Savunma menüsünde sur veya kule inşa et",
+  "Try a spike trap in the Defense menu: zombies on it get hurt":
+    "Savunma menüsünde bir kazıklı tuzak dene: üzerindeki zombiler zarar görür",
+  "Zombies follow the red lines: the top bar counts down to the wave":
+    "Zombiler kırmızı çizgileri izler: üst çubuk dalgaya kalan süreyi sayar",
+  "Research Masonry in the castle menu to build in stone":
+    "Taştan inşa etmek için kale menüsünde Taş Ustalığı'nı araştır",
   "Research Masonry at the Academy to build in stone": "Taştan inşa etmek için Akademi'de Taş Ustalığı'nı araştır",
-  "Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!": "Aferin! Mevsimler 4 dalgada bir değişir, her 10 dalgada bir patron gelir. İyi şanslar!",
+  "Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!":
+    "Aferin! Mevsimler 4 dalgada bir değişir, her 10 dalgada bir patron gelir. İyi şanslar!",
   "Iron age": "Demir çağı",
-  "Iron age: your units hit 10% harder, buildings slowly mend": "Demir çağı: birimlerin %10 daha sert vurur, binalar yavaşça onarılır",
+  "Iron age: your units hit 10% harder, buildings slowly mend":
+    "Demir çağı: birimlerin %10 daha sert vurur, binalar yavaşça onarılır",
   "Research (70 s, after Steel weapons): your units": "Araştırma (70 sn, Çelik silahlardan sonra): birimlerin",
   "hit 10% harder and buildings slowly mend": "%10 daha sert vurur ve binalar yavaşça onarılır",
   "Spike trap": "Kazıklı tuzak",
@@ -891,14 +931,18 @@ export const TR = {
   "King: royal charge": "Kral: kraliyet hücumu",
   "BOSS - a giant brute walks with the horde! {0}": "PATRON - dev bir canavar orduyla yürüyor! {0}",
   "This map": "Bu harita",
-  "Co-op: Alt+click pings the map / Shift: defend / Ctrl: gather / Shift+Ctrl: attack": "Co-op: Alt+tık haritayı işaretler / Shift: savun / Ctrl: topla / Shift+Ctrl: saldır",
-  "Co-op goals: wave {0} (now {1})  /  zombies slain {2} (now {3})": "Co-op hedefleri: dalga {0} (şimdi {1})  /  öldürülen zombi {2} (şimdi {3})",
+  "Co-op: Alt+click pings the map / Shift: defend / Ctrl: gather / Shift+Ctrl: attack":
+    "Co-op: Alt+tık haritayı işaretler / Shift: savun / Ctrl: topla / Shift+Ctrl: saldır",
+  "Co-op goals: wave {0} (now {1})  /  zombies slain {2} (now {3})":
+    "Co-op hedefleri: dalga {0} (şimdi {1})  /  öldürülen zombi {2} (şimdi {3})",
   "Look here": "Buraya bak",
   "Defend here": "Burayı savun",
   "Gather here": "Burada topla",
   "Attack here": "Buraya saldır",
-  "Co-op goal: wave {0} reached! Both players get +{1} gold, +{2} wood, +{3} stone": "Co-op hedefi: dalga {0}'a ulaşıldı! İki oyuncu da +{1} altın, +{2} odun, +{3} taş alır",
-  "Co-op goal: zombies slain together! Both players get +{0} gold, +{1} food": "Co-op hedefi: birlikte öldürülen zombiler! İki oyuncu da +{0} altın, +{1} yiyecek alır",
+  "Co-op goal: wave {0} reached! Both players get +{1} gold, +{2} wood, +{3} stone":
+    "Co-op hedefi: dalga {0}'a ulaşıldı! İki oyuncu da +{1} altın, +{2} odun, +{3} taş alır",
+  "Co-op goal: zombies slain together! Both players get +{0} gold, +{1} food":
+    "Co-op hedefi: birlikte öldürülen zombiler! İki oyuncu da +{0} altın, +{1} yiyecek alır",
   "NEW RECORD!": "YENİ REKOR!",
   "Best runs": "En iyi oyunlar",
   "#{0}   Wave {1}   {2} kills": "#{0}   Dalga {1}   {2} öldürme",
@@ -920,7 +964,8 @@ export const TR = {
   "Report a bug [F8]": "Hata bildir [F8]",
   "Bug report [F8]": "Hata raporu [F8]",
   "Preparing the bug report...": "Hata raporu hazırlanıyor...",
-  "Bug report saved: {0} - send it on Discord with a few words": "Hata raporu kaydedildi: {0} - birkaç kelimeyle Discord'dan gönder",
+  "Bug report saved: {0} - send it on Discord with a few words":
+    "Hata raporu kaydedildi: {0} - birkaç kelimeyle Discord'dan gönder",
   "Bug report failed: {0}": "Hata raporu başarısız: {0}",
   "Test mode [F10]": "Test modu [F10]",
   "Solo only - no achievements in this game": "Yalnızca tek kişilik - bu oyunda başarım yok",
@@ -1015,7 +1060,8 @@ export const TR = {
   "food": "yiyecek",
   "Co-op: resynchronizing...": "Co-op: yeniden eşzamanlanıyor...",
   "Resynchronized with your partner": "Ortağınla yeniden eşzamanlandı",
-  "Your castles would overlap: move a little away from your partner": "Kaleleriniz üst üste biner: ortağından biraz uzaklaş",
+  "Your castles would overlap: move a little away from your partner":
+    "Kaleleriniz üst üste biner: ortağından biraz uzaklaş",
   "{0} moved their castle": "{0} kalesini taşıdı",
   " moved their castle": " kalesini taşıdı",
   "Turn castle [{0}]": "Kaleyi döndür [{0}]",
@@ -1024,14 +1070,16 @@ export const TR = {
   "range {0} tiles": "menzil {0} kare",
   "All your {0}s selected ({1})": "Tüm {0} birimlerin seçildi ({1})",
   "Upgrade turns every wooden one to stone": "Yükseltme tüm ahşap olanları taşa çevirir",
-  "Different versions ({0} and {1}): both players must run the same one": "Farklı sürümler ({0} ve {1}): iki oyuncu da aynısını kullanmalı",
+  "Different versions ({0} and {1}): both players must run the same one":
+    "Farklı sürümler ({0} ve {1}): iki oyuncu da aynısını kullanmalı",
   "restart the launcher or reload the page": "başlatıcıyı yeniden başlat veya sayfayı yenile",
   "Public games": "Herkese açık oyunlar",
   "List my game in the public lobby": "Oyunumu herkese açık lobide göster",
   "Refresh": "Yenile",
   "Join": "Katıl",
   "The public lobby is not set up yet: join with a code.": "Herkese açık lobi henüz kurulmadı: bir kodla katıl.",
-  "Could not reach the lobby. Check your connection and try again.": "Lobiye ulaşılamadı. Bağlantını kontrol et ve tekrar dene.",
+  "Could not reach the lobby. Check your connection and try again.":
+    "Lobiye ulaşılamadı. Bağlantını kontrol et ve tekrar dene.",
   "No public game right now: host one!": "Şu anda herkese açık oyun yok: bir tane kur!",
   "Records": "Rekorlar",
   "No record yet": "Henüz rekor yok",
@@ -1052,7 +1100,8 @@ export const TR = {
   "Strikes over the front rank": "Ön sıranın üzerinden vurur",
   "Hits brutes and bosses 60% harder": "Canavarlara ve patronlara %60 daha sert vurur",
   "Line holder": "Hat tutucu",
-  "A long spear and good neighbours: the big ones stop here.": "Uzun bir mızrak ve iyi komşular: büyükler burada durur.",
+  "A long spear and good neighbours: the big ones stop here.":
+    "Uzun bir mızrak ve iyi komşular: büyükler burada durur.",
   "Video guide": "Video rehber",
   "Population and food": "Nüfus ve yiyecek",
   "Train an army": "Ordu eğit",
@@ -1077,26 +1126,33 @@ export const TR = {
   "Hold until dawn: every wave is stronger than the last": "Şafağa kadar dayan: her dalga bir öncekinden güçlüdür",
   "Each research takes time and makes your kingdom stronger": "Her araştırma zaman alır ve krallığını güçlendirir",
   "Masonry lets you build in stone": "Taş Ustalığı taştan inşa etmeni sağlar",
-  "Summon King Naraige at the castle: he arrives with 2 royal guards": "Kral Naraige'yi kalede çağır: 2 kraliyet muhafızıyla gelir",
+  "Summon King Naraige at the castle: he arrives with 2 royal guards":
+    "Kral Naraige'yi kalede çağır: 2 kraliyet muhafızıyla gelir",
   "He fights the horde and gains levels": "Orduyla savaşır ve seviye kazanır",
   "His skills can turn a fight: use them at the right time": "Yetenekleri bir savaşı çevirebilir: doğru anda kullan",
-  "Co-op: host a game and share the room code with a friend": "Co-op: bir oyun kur ve oda kodunu bir arkadaşınla paylaş",
+  "Co-op: host a game and share the room code with a friend":
+    "Co-op: bir oyun kur ve oda kodunu bir arkadaşınla paylaş",
   "Two kingdoms, one horde: defend together": "İki krallık, tek ordu: birlikte savunun",
   "Send a convoy to share resources with your partner": "Ortağınla kaynak paylaşmak için bir kervan gönder",
-  "Double-click a peasant to select them all, then right-click a tree": "Hepsini seçmek için bir köylüye çift tıkla, sonra bir ağaca sağ tıkla",
+  "Double-click a peasant to select them all, then right-click a tree":
+    "Hepsini seçmek için bir köylüye çift tıkla, sonra bir ağaca sağ tıkla",
   "Train 2 knights at the barracks: knights fight the zombies": "Kışlada 2 şövalye eğit: şövalyeler zombilerle savaşır",
-  "Zombies follow the red lines: build 6 walls and a gate across one": "Zombiler kırmızı çizgileri izler: birinin üzerine 6 sur ve bir kapı inşa et",
+  "Zombies follow the red lines: build 6 walls and a gate across one":
+    "Zombiler kırmızı çizgileri izler: birinin üzerine 6 sur ve bir kapı inşa et",
   "Trade and craft": "Ticaret ve zanaat",
   "The crown": "Taç",
   "Beyond the walls": "Surların ötesi",
   "Open for trade": "Ticarete açık",
-  "Build a market, then sell, buy or swap something there": "Bir pazar inşa et, sonra orada bir şey sat, al veya takas et",
+  "Build a market, then sell, buy or swap something there":
+    "Bir pazar inşa et, sonra orada bir şey sat, al veya takas et",
   "Master builders": "Usta inşaatçılar",
   "Build a builders guild and ask for a builder there": "İnşaatçı loncası inşa et ve orada bir inşaatçı iste",
   "Engines of war": "Savaş makineleri",
-  "Research Masonry, then put a ballista on a tower or train a cannon": "Taş İşçiliği'ni araştır, sonra bir kuleye balista koy veya top eğit",
+  "Research Masonry, then put a ballista on a tower or train a cannon":
+    "Taş İşçiliği'ni araştır, sonra bir kuleye balista koy veya top eğit",
   "Friends in the wild": "Yabandaki dostlar",
-  "Build an embassy, train an envoy at the castle and send it to a rebel camp": "Bir elçilik inşa et, kalede bir elçi eğit ve onu bir isyancı kampına gönder",
+  "Build an embassy, train an envoy at the castle and send it to a rebel camp":
+    "Bir elçilik inşa et, kalede bir elçi eğit ve onu bir isyancı kampına gönder",
   "Share the load": "Yükü paylaş",
   "Send a convoy of resources to your partner": "Ortağına bir kaynak kervanı gönder",
   "{0} turned the quests off": "{0} görevleri kapattı",
@@ -1211,9 +1267,12 @@ export const TR = {
   "{0} tiles": "{0} kare",
   "NEW": "YENİ",
   "He holds the wall so the others do not have to.": "Suru o tutar, başkaları tutmak zorunda kalmasın diye.",
-  "Patient eyes and a steady hand: the horde never reaches the wall twice.": "Sabırlı gözler ve sağlam bir el: ordu sura asla iki kez ulaşamaz.",
-  "Without his axe and his plough the bastion would starve before dawn.": "Onun baltası ve sabanı olmasa tabya şafaktan önce aç kalırdı.",
-  "Where his banner stands, the line remembers it is not alone.": "Sancağının durduğu yerde hat yalnız olmadığını hatırlar.",
+  "Patient eyes and a steady hand: the horde never reaches the wall twice.":
+    "Sabırlı gözler ve sağlam bir el: ordu sura asla iki kez ulaşamaz.",
+  "Without his axe and his plough the bastion would starve before dawn.":
+    "Onun baltası ve sabanı olmasa tabya şafaktan önce aç kalırdı.",
+  "Where his banner stands, the line remembers it is not alone.":
+    "Sancağının durduğu yerde hat yalnız olmadığını hatırlar.",
   "Soldiers fight harder when someone is shouting orders.": "Biri emir haykırınca askerler daha sert dövüşür.",
   "Slow and loud. The horde hears it coming too late.": "Yavaş ve gürültülü. Ordu geldiğini çok geç duyar.",
   "The last light of Naranxia walks at the front.": "Naranxia'nın son ışığı en önde yürür.",
@@ -1247,12 +1306,14 @@ export const TR = {
   "Accept the tribute": "Haracı kabul et",
   "Refuse and gain renown": "Reddet ve ün kazan",
   "You receive {0} gold and {1} food": "{0} altın ve {1} yiyecek alırsın",
-  "Renown +1 (now {0}): rebel tributes pay {1}% more per point (max {2})": "Ün +1 (şimdi {0}): isyancı haraçları puan başına %{1} daha fazla öder (en çok {2})",
+  "Renown +1 (now {0}): rebel tributes pay {1}% more per point (max {2})":
+    "Ün +1 (şimdi {0}): isyancı haraçları puan başına %{1} daha fazla öder (en çok {2})",
   "The caravan is escorted: it pays {0} gold in {1} s": "Kervana eşlik ediliyor: {1} sn sonra {0} altın öder",
   "The caravan reaches the market: +{0} gold": "Kervan pazara ulaştı: +{0} altın",
   "Tribute of {0}: +{1} gold, +{2} food": "{0} haracı: +{1} altın, +{2} yiyecek",
   "Tribute refused: renown {0}": "Haraç reddedildi: ün {0}",
-  "The envoy is turned away by {0}: a wary camp needs a second visit": "Elçi {0} tarafından geri çevrildi: temkinli bir kamp ikinci bir ziyaret ister",
+  "The envoy is turned away by {0}: a wary camp needs a second visit":
+    "Elçi {0} tarafından geri çevrildi: temkinli bir kamp ikinci bir ziyaret ister",
   "merchants": "tüccarlar",
   "warlike": "savaşçı",
   "wary": "temkinli",
@@ -1276,11 +1337,13 @@ export const TR = {
   "Closed: you chose {0}": "Kapalı: {0} seçtin",
   "Exclusive path: closes {0}": "Tek yönlü yol: {0} kapanır",
   "This rebel camp has nothing left to give": "Bu isyancı kampının verecek bir şeyi kalmadı",
-  "Research (70 s, after Steel weapons or Chain mail): your units": "Araştırma (70 sn, Çelik silahlar veya Zincir zırhtan sonra): birimlerin",
+  "Research (70 s, after Steel weapons or Chain mail): your units":
+    "Araştırma (70 sn, Çelik silahlar veya Zincir zırhtan sonra): birimlerin",
   "Move camera": "Kamerayı hareket ettir",
   "One finger drags the view": "Tek parmak görünümü sürükler",
   "Clear build mode and selection": "İnşa modundan ve seçimden çıkar",
-  "Night falls - the horde is coming. The villagers shelter in the castle; keep your soldiers in the light!": "Gece çöküyor - ordu geliyor. Köylüler kaleye sığınıyor; askerlerini ışıkta tut!",
+  "Night falls - the horde is coming. The villagers shelter in the castle; keep your soldiers in the light!":
+    "Gece çöküyor - ordu geliyor. Köylüler kaleye sığınıyor; askerlerini ışıkta tut!",
   "2nd colour": "2. renk",
   "100% blocky!": "%100 bloklu!",
   "100x the swarm!": "Sürü 100 kat!",
@@ -1320,7 +1383,8 @@ export const TR = {
   "Co-op (online, 2 players)": "Co-op (çevrimiçi, 2 oyuncu)",
   "Host a game": "Oyun kur",
   "Join with a code": "Kodla katıl",
-  "Choose a room code (like a password) - or leave empty for a random one": "Bir oda kodu seç (parola gibi) - ya da rastgele bir kod için boş bırak",
+  "Choose a room code (like a password) - or leave empty for a random one":
+    "Bir oda kodu seç (parola gibi) - ya da rastgele bir kod için boş bırak",
   "Create room": "Oda oluştur",
   "Type the code your host gave you": "Ev sahibinin verdiği kodu yaz",
   "Players": "Oyuncular",
@@ -1344,54 +1408,76 @@ export const TR = {
   "Both prices shift a little": "İki fiyat da biraz değişir",
   "Colour-blind mode": "Renk körü modu",
   "Population limit reached: build houses in the Town menu": "Nüfus sınırına ulaşıldı: Kasaba menüsünden ev inşa et",
-  "Idle peasants? Press [.] to select them, then right-click a resource": "Boşta köylüler mi var? Seçmek için [.] tuşuna bas, sonra bir kaynağa sağ tıkla",
-  "A wave is about to start: gather your troops near the castle and walls": "Bir dalga başlamak üzere: birliklerini kalenin ve surların yanında topla",
+  "Idle peasants? Press [.] to select them, then right-click a resource":
+    "Boşta köylüler mi var? Seçmek için [.] tuşuna bas, sonra bir kaynağa sağ tıkla",
+  "A wave is about to start: gather your troops near the castle and walls":
+    "Bir dalga başlamak üzere: birliklerini kalenin ve surların yanında topla",
   "Got it": "Anladım",
   "The Hollow Warden": "Oyuk Bekçi",
   "The Bell-Bearer": "Çan Taşıyan",
   "The Frost King": "Ayaz Kralı",
   "The Hive Queen": "Kovan Kraliçesi",
-  "Once he guarded the old gates. Now he guards nothing.": "Bir zamanlar eski kapıları korurdu. Şimdi hiçbir şeyi korumuyor.",
-  "He rang the last bell of the old world. The dead still answer.": "Eski dünyanın son çanını o çaldı. Ölüler hâlâ cevap veriyor.",
-  "He ruled the northern snows. The cold still obeys him.": "Kuzeyin karlarına hükmederdi. Soğuk hâlâ ona itaat ediyor.",
+  "Once he guarded the old gates. Now he guards nothing.":
+    "Bir zamanlar eski kapıları korurdu. Şimdi hiçbir şeyi korumuyor.",
+  "He rang the last bell of the old world. The dead still answer.":
+    "Eski dünyanın son çanını o çaldı. Ölüler hâlâ cevap veriyor.",
+  "He ruled the northern snows. The cold still obeys him.":
+    "Kuzeyin karlarına hükmederdi. Soğuk hâlâ ona itaat ediyor.",
   "She fed a whole city to her brood. The brood remembers.": "Koca bir şehri yavrularına yedirdi. Yavrular unutmadı.",
   "BOSS SLAIN": "PATRON ÖLDÜRÜLDÜ",
   "has fallen": "düştü",
   "Journal of the realm": "Krallık günlüğü",
   "Wave {0}: {1} walks with the horde.": "Dalga {0}: {1} orduyla yürüyor.",
   "Wave {0}: {1} has fallen. The bastion holds.": "Dalga {0}: {1} düştü. Tabya dayanıyor.",
-  "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.": "Oyuk Bekçi: Ordu içlerinden geçene dek eski kapıları tuttu. Ölüm ona nöbeti bırakmayı öğretmedi. Kimi içeri alacağını seçmeyi bırakmayı öğretti.",
-  "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.": "Çan Taşıyan: Eski dünyanın son çanını çaldı ve ölüler dinlemeye geldi. Şimdi yine çalıyor ve kabuklar çağrısına geliyor.",
-  "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.": "Ayaz Kralı: Kuzeyin karlarına hükmetti ve güneyden gelen her ulağı geri çevirdi. Kış onu aldı, o da kışı yanında götürdü.",
-  "The Hive Queen: She promised her people they would never be hungry. She kept the promise: the brood that follows her eats whatever she points at.": "Kovan Kraliçesi: Halkına asla aç kalmayacaklarına söz verdi. Sözünü tuttu: peşindeki yavrular onun gösterdiği her şeyi yer.",
+  "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.":
+    "Oyuk Bekçi: Ordu içlerinden geçene dek eski kapıları tuttu. Ölüm ona nöbeti bırakmayı öğretmedi. Kimi içeri alacağını seçmeyi bırakmayı öğretti.",
+  "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.":
+    "Çan Taşıyan: Eski dünyanın son çanını çaldı ve ölüler dinlemeye geldi. Şimdi yine çalıyor ve kabuklar çağrısına geliyor.",
+  "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.":
+    "Ayaz Kralı: Kuzeyin karlarına hükmetti ve güneyden gelen her ulağı geri çevirdi. Kış onu aldı, o da kışı yanında götürdü.",
+  "The Hive Queen: She promised her people they would never be hungry. She kept the promise: the brood that follows her eats whatever she points at.":
+    "Kovan Kraliçesi: Halkına asla aç kalmayacaklarına söz verdi. Sözünü tuttu: peşindeki yavrular onun gösterdiği her şeyi yer.",
   "Huge": "Devasa",
-  "Wave 15: The wolves come down from the hills. Even the wild has chosen a side, and it is not yours.": "Dalga 15: Kurtlar tepelerden iniyor. Yaban bile tarafını seçti, ve o taraf seninki değil.",
-  "Wave 25: Under the old ruins the survivors left vaults. The King sends scouts to find them before the horde does.": "Dalga 25: Hayatta kalanlar eski harabelerin altında mahzenler bıraktı. Kral, ordudan önce bulsunlar diye gözcüler gönderiyor.",
-  "Wave 40: The eclipse has come and gone. The rebels no longer hide their fires; they watch the bastion as one watches a lighthouse.": "Dalga 40: Tutulma geldi ve geçti. İsyancılar artık ateşlerini gizlemiyor; tabyaya, bir deniz fenerine bakar gibi bakıyorlar.",
-  "Wave 50: Fifty waves. In the rebel camps they say the King does not hold the walls: the walls hold the King. Both are true.": "Dalga 50: Elli dalga. İsyancı kamplarında derler ki surları Kral tutmuyor: Kral'ı surlar tutuyor. İkisi de doğru.",
+  "Wave 15: The wolves come down from the hills. Even the wild has chosen a side, and it is not yours.":
+    "Dalga 15: Kurtlar tepelerden iniyor. Yaban bile tarafını seçti, ve o taraf seninki değil.",
+  "Wave 25: Under the old ruins the survivors left vaults. The King sends scouts to find them before the horde does.":
+    "Dalga 25: Hayatta kalanlar eski harabelerin altında mahzenler bıraktı. Kral, ordudan önce bulsunlar diye gözcüler gönderiyor.",
+  "Wave 40: The eclipse has come and gone. The rebels no longer hide their fires; they watch the bastion as one watches a lighthouse.":
+    "Dalga 40: Tutulma geldi ve geçti. İsyancılar artık ateşlerini gizlemiyor; tabyaya, bir deniz fenerine bakar gibi bakıyorlar.",
+  "Wave 50: Fifty waves. In the rebel camps they say the King does not hold the walls: the walls hold the King. Both are true.":
+    "Dalga 50: Elli dalga. İsyancı kamplarında derler ki surları Kral tutmuyor: Kral'ı surlar tutuyor. İkisi de doğru.",
   "The last light goes out. Only the walls remember.": "Son ışık sönüyor. Yalnızca surlar hatırlıyor.",
   "The rebels will tell it: the bastion held until the end.": "İsyancılar anlatacak: tabya sonuna kadar dayandı.",
   "Dawn did not come. Not this time.": "Şafak gelmedi. Bu sefer değil.",
   "The horde walks on. The old world was lost twice.": "Ordu yürümeye devam ediyor. Eski dünya ikinci kez kaybedildi.",
-  "The banner of King Naraige falls, but it can be raised again.": "Kral Naraige'nin sancağı düşüyor, ama yeniden kaldırılabilir.",
+  "The banner of King Naraige falls, but it can be raised again.":
+    "Kral Naraige'nin sancağı düşüyor, ama yeniden kaldırılabilir.",
   "Rise again, King. The bastion needs you.": "Yeniden ayağa kalk, Kral. Tabyanın sana ihtiyacı var.",
-  "The sky pales in the east. Dawn may still come: hold the bastion.": "Doğuda gök ağarıyor. Şafak hâlâ gelebilir: tabyayı tut.",
+  "The sky pales in the east. Dawn may still come: hold the bastion.":
+    "Doğuda gök ağarıyor. Şafak hâlâ gelebilir: tabyayı tut.",
   "Fifty waves. Even the rebels light fires in your honor.": "Elli dalga. İsyancılar bile senin onuruna ateş yakıyor.",
   "Sure?": "Emin misin?",
   "Envoy": "Elçi",
   "Envoys": "Elçiler",
-  "Send to a rebel camp: tribute of gold and food, once per camp": "Bir isyancı kampına gönder: altın ve yiyecek haracı, kamp başına bir kez",
+  "Send to a rebel camp: tribute of gold and food, once per camp":
+    "Bir isyancı kampına gönder: altın ve yiyecek haracı, kamp başına bir kez",
   "Needs an embassy": "Elçilik gerekir",
   "Rebel camp tribute: +{0} gold, +{1} food": "İsyancı kampı haracı: +{0} altın, +{1} yiyecek",
   "WOLF PACK - fast raiders from the wild!": "KURT SÜRÜSÜ - yabandan gelen hızlı yağmacılar!",
   "WOLF PACK - fast raiders from the wild! {0}": "KURT SÜRÜSÜ - yabandan gelen hızlı yağmacılar! {0}",
-  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold. {1}": "TUTULMA - ölüler güçleniyor, ama kalıntılar düşüyor: +{0} altın. {1}",
-  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold.": "TUTULMA - ölüler güçleniyor, ama kalıntılar düşüyor: +{0} altın.",
-  "Ruins explored: an old vault of coins and stone (+{0} gold, +{1} stone)": "Harabeler keşfedildi: sikke ve taş dolu eski bir mahzen (+{0} altın, +{1} taş)",
-  "Ruins explored: a ruined granary and woodpile (+{0} wood, +{1} food)": "Harabeler keşfedildi: yıkık bir ambar ve odun yığını (+{0} odun, +{1} yiyecek)",
+  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold. {1}":
+    "TUTULMA - ölüler güçleniyor, ama kalıntılar düşüyor: +{0} altın. {1}",
+  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold.":
+    "TUTULMA - ölüler güçleniyor, ama kalıntılar düşüyor: +{0} altın.",
+  "Ruins explored: an old vault of coins and stone (+{0} gold, +{1} stone)":
+    "Harabeler keşfedildi: sikke ve taş dolu eski bir mahzen (+{0} altın, +{1} taş)",
+  "Ruins explored: a ruined granary and woodpile (+{0} wood, +{1} food)":
+    "Harabeler keşfedildi: yıkık bir ambar ve odun yığını (+{0} odun, +{1} yiyecek)",
   "Ruins explored: a forgotten treasury (+{0} gold)": "Harabeler keşfedildi: unutulmuş bir hazine (+{0} altın)",
-  "Rebel envoys bring tribute from a nearby camp: +{0} gold, +{1} food": "İsyancı elçileri yakındaki bir kamptan haraç getiriyor: +{0} altın, +{1} yiyecek",
-  "A meteor shower: rare stone falls near the walls: +{0} stone": "Meteor yağmuru: surların yanına nadir taş düşüyor: +{0} taş",
+  "Rebel envoys bring tribute from a nearby camp: +{0} gold, +{1} food":
+    "İsyancı elçileri yakındaki bir kamptan haraç getiriyor: +{0} altın, +{1} yiyecek",
+  "A meteor shower: rare stone falls near the walls: +{0} stone":
+    "Meteor yağmuru: surların yanına nadir taş düşüyor: +{0} taş",
   "Scout": "Gözcü",
   "Engineer": "Mühendis",
   "Scouts": "Gözcüler",
@@ -1412,10 +1498,14 @@ export const TR = {
   "train units 15% faster": "birimleri %15 daha hızlı eğitir",
   "2x2 workshop: buildings around it": "Atölye 2x2: etrafındaki binalar",
   "slowly repair themselves": "yavaşça kendini onarır",
-  "Wave 5: The first rebel scouts are seen on the hills. They watch the walls, and they do not wave.": "Dalga 5: İlk isyancı gözcüleri tepelerde görüldü. Surları izliyorlar ve el sallamıyorlar.",
-  "Wave 10: A giant walks with the horde. The old records call such things Wardens, the fallen leaders of the old world.": "Dalga 10: Orduyla bir dev yürüyor. Eski kayıtlar bunlara Bekçi der: eski dünyanın düşmüş önderleri.",
-  "Wave 20: A rebel envoy leaves a message at the gate: the camps know the King's light cannot burn forever.": "Dalga 20: Bir isyancı elçisi kapıya bir mesaj bırakıyor: kamplar Kral'ın ışığının sonsuza dek yanamayacağını biliyor.",
-  "Wave 30: Only the bastion still stands. If dawn comes again, Naranxia will be more than a refuge.": "Dalga 30: Yalnızca tabya ayakta. Şafak yeniden gelirse Naranxia bir sığınaktan fazlası olacak.",
+  "Wave 5: The first rebel scouts are seen on the hills. They watch the walls, and they do not wave.":
+    "Dalga 5: İlk isyancı gözcüleri tepelerde görüldü. Surları izliyorlar ve el sallamıyorlar.",
+  "Wave 10: A giant walks with the horde. The old records call such things Wardens, the fallen leaders of the old world.":
+    "Dalga 10: Orduyla bir dev yürüyor. Eski kayıtlar bunlara Bekçi der: eski dünyanın düşmüş önderleri.",
+  "Wave 20: A rebel envoy leaves a message at the gate: the camps know the King's light cannot burn forever.":
+    "Dalga 20: Bir isyancı elçisi kapıya bir mesaj bırakıyor: kamplar Kral'ın ışığının sonsuza dek yanamayacağını biliyor.",
+  "Wave 30: Only the bastion still stands. If dawn comes again, Naranxia will be more than a refuge.":
+    "Dalga 30: Yalnızca tabya ayakta. Şafak yeniden gelirse Naranxia bir sığınaktan fazlası olacak.",
   "Reach a higher wave to read more.": "Daha fazlasını okumak için daha yüksek bir dalgaya ulaş.",
   "Watch beacon": "Gözcü ateşi",
   "Orchard": "Meyve bahçesi",
@@ -1424,10 +1514,14 @@ export const TR = {
   "2x2 apple grove: a trickle of food": "Elma bahçesi 2x2: azar azar yiyecek",
   "without a peasant": "köylü gerekmeden",
   "Chronicle": "Vakayiname",
-  "Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.": "Çok önce eski dünya orduya yenildi. Geriye yalnızca Naranxia kaldı: insanlığın son tabyası.",
-  "King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.": "Kral Naraige onun surlarını ve son ışığını korur. Ordu her gece geri döner, güneş her şafakta onu yakıp kül eder.",
-  "Around the bastion, other camps survive. They refused the King's rule: rebels, and neighbours. Some trade, some raid.": "Tabyanın çevresinde başka kamplar hayatta kalıyor. Kral'ın yönetimini reddettiler: isyancılar ve komşular. Kimi ticaret yapar, kimi yağmalar.",
-  "Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.": "Surları tut, halkını doyur ve kampların ne istediğini öğren. Gece uzun, ama şafak hep gelir.",
+  "Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.":
+    "Çok önce eski dünya orduya yenildi. Geriye yalnızca Naranxia kaldı: insanlığın son tabyası.",
+  "King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.":
+    "Kral Naraige onun surlarını ve son ışığını korur. Ordu her gece geri döner, güneş her şafakta onu yakıp kül eder.",
+  "Around the bastion, other camps survive. They refused the King's rule: rebels, and neighbours. Some trade, some raid.":
+    "Tabyanın çevresinde başka kamplar hayatta kalıyor. Kral'ın yönetimini reddettiler: isyancılar ve komşular. Kimi ticaret yapar, kimi yağmalar.",
+  "Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.":
+    "Surları tut, halkını doyur ve kampların ne istediğini öğren. Gece uzun, ama şafak hep gelir.",
   "The last bastion of humanity": "İnsanlığın son tabyası",
   "Rebel camps watch from afar": "İsyancı kampları uzaktan izliyor",
   "Hold the last light": "Son ışığı koru",
@@ -1459,24 +1553,39 @@ export const TR = {
   "You get {0} stone": "{0} taş alıyorsun",
   "You get {0} food": "{0} yiyecek alıyorsun",
   "Saving...": "Kaydediliyor...",
-  "The biggest Naranxia update so far: a new look for the whole game, a deeper last bastion, and a real welcome for new players.": "Naranxia'nın şimdiye kadarki en büyük güncellemesi: tüm oyun için yeni bir görünüm, daha derin bir son tabya ve yeni oyuncular için gerçek bir karşılama.",
+  "The biggest Naranxia update so far: a new look for the whole game, a deeper last bastion, and a real welcome for new players.":
+    "Naranxia'nın şimdiye kadarki en büyük güncellemesi: tüm oyun için yeni bir görünüm, daha derin bir son tabya ve yeni oyuncular için gerçek bir karşılama.",
   "A whole new look": "Yepyeni bir görünüm",
-  "Every unit, building, weapon and tool rebuilt in a blocky pixel style, with team tabards, rank stripes and pixel health bars.": "Her birim, bina, silah ve alet bloklu piksel tarzında yeniden yapıldı; takım cübbeleri, rütbe şeritleri ve piksel can çubuklarıyla.",
-  "The world is made of blocks: terrain, trees, rocks and seasons.": "Dünya bloklardan oluşuyor: arazi, ağaçlar, kayalar ve mevsimler.",
-  "Mutants are now true monstrosities, and wave bosses are bigger and meaner.": "Mutantlar artık gerçek birer ucube; dalga patronları da daha büyük ve daha acımasız.",
-  "New title screen, menus, launch intro, kingdom banners on a pole, and remade sounds and music.": "Yeni başlık ekranı, menüler, açılış tanıtımı, direkte krallık sancakları ve yeniden yapılmış sesler ile müzik.",
+  "Every unit, building, weapon and tool rebuilt in a blocky pixel style, with team tabards, rank stripes and pixel health bars.":
+    "Her birim, bina, silah ve alet bloklu piksel tarzında yeniden yapıldı; takım cübbeleri, rütbe şeritleri ve piksel can çubuklarıyla.",
+  "The world is made of blocks: terrain, trees, rocks and seasons.":
+    "Dünya bloklardan oluşuyor: arazi, ağaçlar, kayalar ve mevsimler.",
+  "Mutants are now true monstrosities, and wave bosses are bigger and meaner.":
+    "Mutantlar artık gerçek birer ucube; dalga patronları da daha büyük ve daha acımasız.",
+  "New title screen, menus, launch intro, kingdom banners on a pole, and remade sounds and music.":
+    "Yeni başlık ekranı, menüler, açılış tanıtımı, direkte krallık sancakları ve yeniden yapılmış sesler ile müzik.",
   "New to play": "Oyundaki yenilikler",
-  "Quests guide your first game, from the first log to wave 10, with small rewards. They work solo and in co-op (shared with your partner), and a marker shows the button to press.": "Görevler ilk oyununda sana yol gösterir: ilk kütükten 10. dalgaya kadar, küçük ödüllerle. Tek başına ve co-op'ta çalışır (ortağınla paylaşılır), bir işaret de basılacak düğmeyi gösterir.",
-  "New unit: the Spearman, a cheap line holder with reach, strong against brutes and bosses.": "Yeni birim: Mızrakçı; ucuz, menzilli bir hat tutucu, canavarlara ve patronlara karşı güçlü.",
-  "The tutorial is now a video-style guide with short looping clips.": "Eğitim artık kısa, döngülü kliplerden oluşan video tarzı bir rehber.",
-  "Last bastion: ruins to loot, rebel camps with personalities, envoys and tribute, scouts, engineers and eleven new buildings.": "Son tabya: yağmalanacak harabeler, kendine has karakterli isyancı kampları, elçiler ve haraç, gözcüler, mühendisler ve on bir yeni bina.",
-  "New events: wolf packs, eclipses and meteor showers. Caravans and rebel envoys now ask you to choose.": "Yeni olaylar: kurt sürüleri, tutulmalar ve meteor yağmurları. Kervanlar ve isyancı elçiler artık senden seçim yapmanı istiyor.",
-  "Named bosses with legends and powers, a realm journal in the Chronicle.": "Efsaneleri ve güçleri olan adlı patronlar, Vakayiname'de bir krallık günlüğü.",
-  "The King gains XP, levels up to 5 and learns talents in two branches.": "Kral XP kazanır, 5. seviyeye kadar yükselir ve iki dalda yetenek öğrenir.",
-  "Research with either-or paths, and barter at the market.": "İkisinden birini seçtiğin araştırma yolları ve pazarda takas.",
+  "Quests guide your first game, from the first log to wave 10, with small rewards. They work solo and in co-op (shared with your partner), and a marker shows the button to press.":
+    "Görevler ilk oyununda sana yol gösterir: ilk kütükten 10. dalgaya kadar, küçük ödüllerle. Tek başına ve co-op'ta çalışır (ortağınla paylaşılır), bir işaret de basılacak düğmeyi gösterir.",
+  "New unit: the Spearman, a cheap line holder with reach, strong against brutes and bosses.":
+    "Yeni birim: Mızrakçı; ucuz, menzilli bir hat tutucu, canavarlara ve patronlara karşı güçlü.",
+  "The tutorial is now a video-style guide with short looping clips.":
+    "Eğitim artık kısa, döngülü kliplerden oluşan video tarzı bir rehber.",
+  "Last bastion: ruins to loot, rebel camps with personalities, envoys and tribute, scouts, engineers and eleven new buildings.":
+    "Son tabya: yağmalanacak harabeler, kendine has karakterli isyancı kampları, elçiler ve haraç, gözcüler, mühendisler ve on bir yeni bina.",
+  "New events: wolf packs, eclipses and meteor showers. Caravans and rebel envoys now ask you to choose.":
+    "Yeni olaylar: kurt sürüleri, tutulmalar ve meteor yağmurları. Kervanlar ve isyancı elçiler artık senden seçim yapmanı istiyor.",
+  "Named bosses with legends and powers, a realm journal in the Chronicle.":
+    "Efsaneleri ve güçleri olan adlı patronlar, Vakayiname'de bir krallık günlüğü.",
+  "The King gains XP, levels up to 5 and learns talents in two branches.":
+    "Kral XP kazanır, 5. seviyeye kadar yükselir ve iki dalda yetenek öğrenir.",
+  "Research with either-or paths, and barter at the market.":
+    "İkisinden birini seçtiğin araştırma yolları ve pazarda takas.",
   "Comfort": "Konfor",
-  "Leaderboard with your top 10 right on the title screen, and an Update page for what changed.": "İlk 10'unu doğrudan başlık ekranında gösteren sıralama ve nelerin değiştiğini anlatan bir Güncelleme sayfası.",
-  "Colour-blind mode, touch controls, one-time hints, public co-op lobby, more languages.": "Renk körü modu, dokunmatik kontroller, bir kez gösterilen ipuçları, herkese açık co-op lobisi, daha fazla dil.",
+  "Leaderboard with your top 10 right on the title screen, and an Update page for what changed.":
+    "İlk 10'unu doğrudan başlık ekranında gösteren sıralama ve nelerin değiştiğini anlatan bir Güncelleme sayfası.",
+  "Colour-blind mode, touch controls, one-time hints, public co-op lobby, more languages.":
+    "Renk körü modu, dokunmatik kontroller, bir kez gösterilen ipuçları, herkese açık co-op lobisi, daha fazla dil.",
   "Saves always load after an update.": "Kayıtlar güncellemeden sonra her zaman yüklenir.",
   "Guide": "Rehber",
   "Traps": "Tuzaklar",
@@ -1484,39 +1593,66 @@ export const TR = {
   "Market and barter": "Pazar ve takas",
   "Rebel camps and envoys": "İsyancı kampları ve elçiler",
   "King talents": "Kral yetenekleri",
-  "Spike traps are in the Defense menu: cheap, one tile each": "Kazıklı tuzaklar Savunma menüsündedir: ucuz, her biri bir kare",
-  "Zombies walking on a trap are hurt until it breaks": "Tuzağın üstünden geçen zombiler, tuzak kırılana kadar hasar alır",
-  "Research Boiling oil: your walls scald the zombies that touch them": "Kaynar yağı araştır: surların onlara dokunan zombileri haşlar",
+  "Spike traps are in the Defense menu: cheap, one tile each":
+    "Kazıklı tuzaklar Savunma menüsündedir: ucuz, her biri bir kare",
+  "Zombies walking on a trap are hurt until it breaks":
+    "Tuzağın üstünden geçen zombiler, tuzak kırılana kadar hasar alır",
+  "Research Boiling oil: your walls scald the zombies that touch them":
+    "Kaynar yağı araştır: surların onlara dokunan zombileri haşlar",
   "A season lasts 4 waves: spring, summer, autumn, winter": "Bir mevsim 4 dalga sürer: ilkbahar, yaz, sonbahar, kış",
   "Each wave has its weather: clear, rain, fog or snow": "Her dalganın kendi havası vardır: açık, yağmur, sis veya kar",
   "Seasons change the light and the sounds, not the rules": "Mevsimler ışığı ve sesleri değiştirir, kuralları değil",
-  "Selling the same resource again and again pays less for a while": "Aynı kaynağı tekrar tekrar satmak bir süre daha az kazandırır",
-  "Barter swaps 50 of one resource for another at a better rate": "Takas, bir kaynaktan 50 birimi daha iyi bir oranla başka bir kaynağa çevirir",
-  "A merchant caravan passes at times: take its goods or escort it to the market": "Zaman zaman bir tüccar kervanı geçer: mallarını al ya da ona pazara kadar eşlik et",
+  "Selling the same resource again and again pays less for a while":
+    "Aynı kaynağı tekrar tekrar satmak bir süre daha az kazandırır",
+  "Barter swaps 50 of one resource for another at a better rate":
+    "Takas, bir kaynaktan 50 birimi daha iyi bir oranla başka bir kaynağa çevirir",
+  "A merchant caravan passes at times: take its goods or escort it to the market":
+    "Zaman zaman bir tüccar kervanı geçer: mallarını al ya da ona pazara kadar eşlik et",
   "Build an embassy, then train an envoy at the castle": "Bir elçilik inşa et, sonra kalede bir elçi eğit",
-  "When rebel envoys come, take their tribute or refuse it for renown: later tributes pay more": "İsyancı elçileri gelince haracı al ya da ün için reddet: sonraki haraçlar daha çok öder",
-  "The King gains XP when zombies die near him, after each wave and from bosses": "Kral, yakınında zombiler öldüğünde, her dalgadan sonra ve boss'lardan XP kazanır",
+  "When rebel envoys come, take their tribute or refuse it for renown: later tributes pay more":
+    "İsyancı elçileri gelince haracı al ya da ün için reddet: sonraki haraçlar daha çok öder",
+  "The King gains XP when zombies die near him, after each wave and from bosses":
+    "Kral, yakınında zombiler öldüğünde, her dalgadan sonra ve boss'lardan XP kazanır",
   "Each new level gives one talent point": "Her yeni seviye bir yetenek puanı verir",
-  "Two branches of four talents, learned in order: the war cry or the charge": "Dörder yetenekli iki dal, sırayla öğrenilir: savaş narası ya da hücum",
+  "Two branches of four talents, learned in order: the war cry or the charge":
+    "Dörder yetenekli iki dal, sırayla öğrenilir: savaş narası ya da hücum",
   "Quest skipped: {0}": "Görev atlandı: {0}",
   "Skipped": "Atlandı",
   "Comfort and fixes after the big update.": "Büyük güncellemeden sonra konfor ve düzeltmeler.",
-  "The Update page shows clean section titles and is translated in every language.": "Güncelleme sayfası düzgün bölüm başlıkları gösterir ve her dile çevrildi.",
-  "Video guide: sounds in the clips, five new chapters (traps, seasons, market, rebel camps, King talents) and a Guide entry in the Esc menu.": "Video rehber: kliplerde sesler, beş yeni bölüm (tuzaklar, mevsimler, pazar, isyancı kampları, Kral yetenekleri) ve Esc menüsünde Rehber girişi.",
-  "Rebel camps now field spearmen, more of them in warlike camps. The Spearman's default key is F4.": "İsyancı kampları artık mızrakçı çıkarıyor, savaşçı kamplarda daha fazla. Mızrakçının varsayılan tuşu F4.",
-  "Co-op convoys: porters no longer stop short of your partner's castle, long detours are allowed, and a convoy with no land route is refused at once.": "Eşli oyunda konvoylar: taşıyıcılar artık ortağınızın kalesinden önce durmuyor, uzun dolambaçlara izin veriliyor ve kara yolu olmayan konvoy hemen reddediliyor.",
-  "Co-op: the convoy quest is skipped when the two castles are not linked by land.": "Eşli oyun: iki kale karadan bağlı değilse konvoy görevi atlanır.",
-  "AZERTY keyboards: the number row now works without Shift.": "AZERTY klavyeler: rakam sırası artık Shift olmadan çalışıyor.",
-  "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "Görev oku artık üst çubukların üstüne gelmiyor ve bina ekran dışındayken ekran kenarından gösteriyor.",
-  "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Daha hızlı sürü simülasyonu ve gözden geçirilmiş Portekizce, Almanca, Felemenkçe, Lehçe ve Türkçe metinler.",
-  "Co-op: putting both games back in step, a few seconds (nothing to do)": "Co-op: iki oyun eşitleniyor, birkaç saniye (bir şey yapman gerekmiyor)",
-  "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Co-op: {0} bekleniyor, {1} sn (yavaş bağlantı veya bilgisayar)",
-  "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Co-op: {0} {1} sn'dir yanıt vermiyor, bağlantı dönünce oyun devam eder",
-  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Kaleyi yerleştirmek için tıkla  -  sürükle / {0}: hareket   Sağ sürükle: döndür   Tekerlek: yakınlaştır",
-  "Co-op fixes, waves that always end, and new default keys.": "Eşli oyun düzeltmeleri, her zaman biten dalgalar ve yeni varsayılan tuşlar.",
-  "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.": "Zombiler artık suda veya uçurumlarda sıkışmıyor: her dalga artık bitirilebilir.",
-  "Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.": "Eşli oyun: yeniden eşitlemeden sonra iki oyun da tam olarak aynı durumdan devam eder ve tek satırlık net bir mesaj beklerken ne olduğunu söyler.",
-  "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.": "Eşli oyun: ortağınız ayrılırsa kendi kalenizle 2. oyuncu olarak kalırsınız. Kayıtlı oyunlar artık tam olarak asıl oyun gibi devam eder.",
-  "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.": "Yeni varsayılan tuşlar: meşale F6, kışla toplanma noktası F7, ormancı F9, lonca F3. AZERTY'de kamera artık Z Q S D üzerinde.",
-  "The minimap now frames the area you explored, and banners no longer cover the event buttons.": "Mini harita artık keşfedilen alanı gösteriyor ve afişler olay düğmelerini artık kapatmıyor.",
+  "The Update page shows clean section titles and is translated in every language.":
+    "Güncelleme sayfası düzgün bölüm başlıkları gösterir ve her dile çevrildi.",
+  "Video guide: sounds in the clips, five new chapters (traps, seasons, market, rebel camps, King talents) and a Guide entry in the Esc menu.":
+    "Video rehber: kliplerde sesler, beş yeni bölüm (tuzaklar, mevsimler, pazar, isyancı kampları, Kral yetenekleri) ve Esc menüsünde Rehber girişi.",
+  "Rebel camps now field spearmen, more of them in warlike camps. The Spearman's default key is F4.":
+    "İsyancı kampları artık mızrakçı çıkarıyor, savaşçı kamplarda daha fazla. Mızrakçının varsayılan tuşu F4.",
+  "Co-op convoys: porters no longer stop short of your partner's castle, long detours are allowed, and a convoy with no land route is refused at once.":
+    "Eşli oyunda konvoylar: taşıyıcılar artık ortağınızın kalesinden önce durmuyor, uzun dolambaçlara izin veriliyor ve kara yolu olmayan konvoy hemen reddediliyor.",
+  "Co-op: the convoy quest is skipped when the two castles are not linked by land.":
+    "Eşli oyun: iki kale karadan bağlı değilse konvoy görevi atlanır.",
+  "AZERTY keyboards: the number row now works without Shift.":
+    "AZERTY klavyeler: rakam sırası artık Shift olmadan çalışıyor.",
+  "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.":
+    "Görev oku artık üst çubukların üstüne gelmiyor ve bina ekran dışındayken ekran kenarından gösteriyor.",
+  "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.":
+    "Daha hızlı sürü simülasyonu ve gözden geçirilmiş Portekizce, Almanca, Felemenkçe, Lehçe ve Türkçe metinler.",
+  "Co-op: putting both games back in step, a few seconds (nothing to do)":
+    "Co-op: iki oyun eşitleniyor, birkaç saniye (bir şey yapman gerekmiyor)",
+  "Co-op: waiting for {0}, {1} s (slow connection or computer)":
+    "Co-op: {0} bekleniyor, {1} sn (yavaş bağlantı veya bilgisayar)",
+  "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back":
+    "Co-op: {0} {1} sn'dir yanıt vermiyor, bağlantı dönünce oyun devam eder",
+  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom":
+    "Kaleyi yerleştirmek için tıkla  -  sürükle / {0}: hareket   Sağ sürükle: döndür   Tekerlek: yakınlaştır",
+  "Co-op fixes, waves that always end, and new default keys.":
+    "Eşli oyun düzeltmeleri, her zaman biten dalgalar ve yeni varsayılan tuşlar.",
+  "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.":
+    "Zombiler artık suda veya uçurumlarda sıkışmıyor: her dalga artık bitirilebilir.",
+  "Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.":
+    "Eşli oyun: yeniden eşitlemeden sonra iki oyun da tam olarak aynı durumdan devam eder ve tek satırlık net bir mesaj beklerken ne olduğunu söyler.",
+  "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.":
+    "Eşli oyun: ortağınız ayrılırsa kendi kalenizle 2. oyuncu olarak kalırsınız. Kayıtlı oyunlar artık tam olarak asıl oyun gibi devam eder.",
+  "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.":
+    "Yeni varsayılan tuşlar: meşale F6, kışla toplanma noktası F7, ormancı F9, lonca F3. AZERTY'de kamera artık Z Q S D üzerinde.",
+  "The minimap now frames the area you explored, and banners no longer cover the event buttons.":
+    "Mini harita artık keşfedilen alanı gösteriyor ve afişler olay düğmelerini artık kapatmıyor.",
 };

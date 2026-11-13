@@ -1,11 +1,23 @@
-import { snd } from '../audio/sound.js';
-import { sessionState } from '../gameplay/session.js';
-import { inputState } from '../input/state.js';
+import { snd } from "../audio/sound.js";
+import { sessionState } from "../gameplay/session.js";
+import { inputState } from "../input/state.js";
 
 /* ================= TITLE MENU: keyboard and gamepad navigation, hover feedback =================
    The menu registers its buttons in drawing order every frame (navBegin / navAdd). Up / Down (or the pad's d-pad / left stick) move the
    selection, Enter / Space / pad A press it, Esc (pad B) runs the current "back" action. The mouse takes over when it moves. */
-export const NAV = { sel: -1, fns: [], active: false, horiz: false, onEsc: null, keys: null, kbT: 0, first: true, mx: -1, my: -1, pad: { up: 0, dn: 0, ok: 0, bk: 0 } };
+export const NAV = {
+  sel: -1,
+  fns: [],
+  active: false,
+  horiz: false,
+  onEsc: null,
+  keys: null,
+  kbT: 0,
+  first: true,
+  mx: -1,
+  my: -1,
+  pad: { up: 0, dn: 0, ok: 0, bk: 0 },
+};
 
 export function navBegin(on) {
   NAV.fns = [];
@@ -21,14 +33,21 @@ export function navAdd(fn, hovered) {
   if (!NAV.active) return -1;
   const i = NAV.fns.length;
   NAV.fns.push(fn);
-  const m = inputState.mouse, moved = m && (m.x !== NAV.mx || m.y !== NAV.my);
-  if (hovered && moved && NAV.sel !== i) { NAV.sel = i; snd('hover') }
+  const m = inputState.mouse,
+    moved = m && (m.x !== NAV.mx || m.y !== NAV.my);
+  if (hovered && moved && NAV.sel !== i) {
+    NAV.sel = i;
+    snd("hover");
+  }
   return i;
 }
 
 export function navEnd() {
   const m = inputState.mouse;
-  if (m) { NAV.mx = m.x; NAV.my = m.y }
+  if (m) {
+    NAV.mx = m.x;
+    NAV.my = m.y;
+  }
   if (NAV.sel >= NAV.fns.length) NAV.sel = NAV.fns.length - 1;
 }
 
@@ -37,50 +56,102 @@ function move(d) {
   if (!n) return;
   NAV.sel = NAV.sel < 0 ? (d > 0 ? 0 : n - 1) : (NAV.sel + d + n) % n;
   NAV.kbT = performance.now();
-  snd('hover');
+  snd("hover");
 }
 
 function press() {
   if (!NAV.fns.length) return;
   /* list screens (NAV.first = false): the first Enter only puts the focus on the first row */
-  if (NAV.sel < 0 && !NAV.first) { NAV.sel = 0; NAV.kbT = performance.now(); snd('hover'); return }
+  if (NAV.sel < 0 && !NAV.first) {
+    NAV.sel = 0;
+    NAV.kbT = performance.now();
+    snd("hover");
+    return;
+  }
   const f = NAV.fns[NAV.sel < 0 ? 0 : NAV.sel];
-  snd('click');
+  snd("click");
   f();
 }
 
-const typing = e => { const t = e.target && e.target.tagName; return t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT' || t === 'BUTTON' };
-const modalOpen = () => { const m = document.getElementById('mpClose'); return !!(m && m.offsetParent) };
+const typing = (e) => {
+  const t = e.target && e.target.tagName;
+  return t === "INPUT" || t === "TEXTAREA" || t === "SELECT" || t === "BUTTON";
+};
+const modalOpen = () => {
+  const m = document.getElementById("mpClose");
+  return !!(m && m.offsetParent);
+};
 
 export function initializeMenuNav() {
-  addEventListener('keydown', e => {
+  addEventListener("keydown", (e) => {
     if (e.ctrlKey || e.altKey || e.metaKey || typing(e)) return;
-    if (e.key === 'Escape' && NAV.onEsc && !modalOpen()) { e.preventDefault(); NAV.onEsc(); return }
+    if (e.key === "Escape" && NAV.onEsc && !modalOpen()) {
+      e.preventDefault();
+      NAV.onEsc();
+      return;
+    }
     if (!NAV.active || modalOpen()) return;
-    if (e.key === 'ArrowDown') { e.preventDefault(); move(1) }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1) }
-    else if (NAV.horiz && e.key === 'ArrowRight') { e.preventDefault(); move(1) }
-    else if (NAV.horiz && e.key === 'ArrowLeft') { e.preventDefault(); move(-1) }
-    else if (e.key === 'Enter' || (e.key === ' ' && !sessionState.inGame)) { e.preventDefault(); press() }
-    else if (NAV.keys && e.key.length === 1 && NAV.keys[e.key.toLowerCase()]) { e.preventDefault(); snd('click'); NAV.keys[e.key.toLowerCase()]() }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      move(1);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      move(-1);
+    } else if (NAV.horiz && e.key === "ArrowRight") {
+      e.preventDefault();
+      move(1);
+    } else if (NAV.horiz && e.key === "ArrowLeft") {
+      e.preventDefault();
+      move(-1);
+    } else if (e.key === "Enter" || (e.key === " " && !sessionState.inGame)) {
+      e.preventDefault();
+      press();
+    } else if (NAV.keys && e.key.length === 1 && NAV.keys[e.key.toLowerCase()]) {
+      e.preventDefault();
+      snd("click");
+      NAV.keys[e.key.toLowerCase()]();
+    }
   });
 }
 
 export function padOn() {
-  try { const l = navigator.getGamepads ? navigator.getGamepads() : []; for (const p of l) if (p && p.connected) return true } catch (e) { }
+  try {
+    const l = navigator.getGamepads ? navigator.getGamepads() : [];
+    for (const p of l) if (p && p.connected) return true;
+  } catch {
+    /* Unsupported or denied gamepad access means no pad is connected. */
+  }
   return false;
 }
 
 /* gamepad: called once per drawn frame while the menu is shown */
 export function navPoll() {
   let g = null;
-  try { const l = navigator.getGamepads ? navigator.getGamepads() : []; for (const p of l) if (p && p.connected) { g = p; break } } catch (e) { return }
+  try {
+    const l = navigator.getGamepads ? navigator.getGamepads() : [];
+    for (const p of l)
+      if (p && p.connected) {
+        g = p;
+        break;
+      }
+  } catch {
+    return;
+  }
   if (!g) return;
-  const b = i => !!(g.buttons[i] && g.buttons[i].pressed), ax = g.axes[1] || 0, ax0 = NAV.horiz ? (g.axes[0] || 0) : 0, P = NAV.pad;
-  const up = b(12) || ax < -.6 || (NAV.horiz && (b(14) || ax0 < -.6)), dn = b(13) || ax > .6 || (NAV.horiz && (b(15) || ax0 > .6)), ok = b(0), bk = b(1);
+  const b = (i) => !!(g.buttons[i] && g.buttons[i].pressed),
+    ax = g.axes[1] || 0,
+    ax0 = NAV.horiz ? g.axes[0] || 0 : 0,
+    P = NAV.pad;
+  const up = b(12) || ax < -0.6 || (NAV.horiz && (b(14) || ax0 < -0.6)),
+    dn = b(13) || ax > 0.6 || (NAV.horiz && (b(15) || ax0 > 0.6)),
+    ok = b(0),
+    bk = b(1);
   if (NAV.active && up && !P.up) move(-1);
   if (NAV.active && dn && !P.dn) move(1);
   if (NAV.active && ok && !P.ok) press();
   if (bk && !P.bk && NAV.onEsc) NAV.onEsc();
-  P.up = up ? 1 : 0; P.dn = dn ? 1 : 0; P.ok = ok ? 1 : 0; P.bk = bk ? 1 : 0;
+  P.up = up ? 1 : 0;
+  P.dn = dn ? 1 : 0;
+  P.ok = ok ? 1 : 0;
+  P.bk = bk ? 1 : 0;
 }
