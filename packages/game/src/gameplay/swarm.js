@@ -32,7 +32,7 @@ const SWSP = 31;
 export const SW={n:0,acc:0,step:0,fxN:0,gacc:[0,0],q:[],
  x:new Float32Array(SWMAX),y:new Float32Array(SWMAX),px:new Float32Array(SWMAX),py:new Float32Array(SWMAX),hp:new Float32Array(SWMAX),cd:new Float32Array(SWMAX),
  ln:new Int8Array(SWMAX),ph:new Uint16Array(SWMAX),ri:new Uint16Array(SWMAX),k:new Uint8Array(SWMAX),ti:new Int32Array(SWMAX),fa:new Float32Array(SWMAX),ta:new Float32Array(SWMAX),mx:new Float32Array(SWMAX),my:new Float32Array(SWMAX),sd:new Uint16Array(SWMAX),id:new Uint32Array(SWMAX),st:new Uint8Array(SWMAX),sa:new Int32Array(SWMAX),sk:new Uint8Array(SWMAX),nid:0};
-/* a zombie that cannot go on: every SWCK steps (3.2 s) each zombie is looked at; one that bites nothing and has not left the 3x3 tiles around the tile noted in sa
+/* a zombie that cannot go on: every SWCK steps (3.2 s) each zombie is looked at (its turn comes from sd, not from id: nid is not reset between games); one that bites nothing and has not left the 3x3 tiles around the tile noted in sa
    counts one more look in sk. At SWGH looks (32 s) it gives up its path and walks straight at the nearest castle over any ground, as the horde already does
    where a lane has no way through (buildings still stop it, and it bites them): earth works, cliffs and water delay the horde but never keep it out.
    A zombie that still stands SWRM looks later (80 s more) is taken away without gold or a kill. sa and sk are saved with the swarm. */
@@ -101,7 +101,7 @@ function swSpawn(){for(let qi=SW.q.length-1;qi>=0;qi--){const q=SW.q[qi];let m=M
 
 export function swUpdate(dt){if(!SW.n&&!SW.q.length){if(swarmState.SWARMS.length)swarmState.SWARMS=[];SW.acc=0;return}SW.acc+=dt;let g=0;while(SW.acc>=SWDT&&g++<4){SW.acc-=SWDT;swStep()}if(SW.acc>SWDT)SW.acc=SWDT}
 
-function swStep(){if(!SW.sk||!SW.sa){SW.sk=new Uint8Array(SWMAX);SW.sa=new Int32Array(SWMAX)}SW.step++;SW.fxN=0;zombieLanesState.lfBud=Math.max(zombieLanesState.lfBud,2);swSpawn();const sX=SW.x,sY=SW.y,sPX=SW.px,sPY=SW.py,sHP=SW.hp,sCD=SW.cd,sLN=SW.ln,sPH=SW.ph,sST=SW.st,sTA=SW.ta,sSD=SW.sd,sK=SW.k,sMX=SW.mx,sMY=SW.my,sTI=SW.ti,sSA=SW.sa,sSK=SW.sk,sID=SW.id,stp=SW.step;const n=SW.n,gs=terrainState.gateSolid;terrainState.gateSolid=true;
+function swStep(){if(!SW.sk||!SW.sa){SW.sk=new Uint8Array(SWMAX);SW.sa=new Int32Array(SWMAX)}SW.step++;SW.fxN=0;zombieLanesState.lfBud=Math.max(zombieLanesState.lfBud,2);swSpawn();const sX=SW.x,sY=SW.y,sPX=SW.px,sPY=SW.py,sHP=SW.hp,sCD=SW.cd,sLN=SW.ln,sPH=SW.ph,sST=SW.st,sTA=SW.ta,sSD=SW.sd,sK=SW.k,sMX=SW.mx,sMY=SW.my,sTI=SW.ti,sSA=SW.sa,sSK=SW.sk,stp=SW.step;const n=SW.n,gs=terrainState.gateSolid;terrainState.gateSolid=true;
  /* units the swarm can bite: flag their 3x3 tiles */
  const UM=new Map(),flg=[];for(const u of sessionState.units){if(u.t===1||u.hp<=0||u.gar)continue;const tx=(u.x/TS)|0,ty=(u.y/TS)|0,k=ty*TW+tx;let a=UM.get(k);
   if(!a){UM.set(k,a=[]);for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const q=k+j*TW+i;if(q>=0&&q<TW*TH&&!(UNF[q]&1)){UNF[q]|=1;flg.push(q)}}}a.push(u)}
@@ -110,7 +110,7 @@ function swStep(){if(!SW.sk||!SW.sa){SW.sk=new Uint8Array(SWMAX);SW.sa=new Int32
  const AC=aliveC(),CS0=sessionState.CS,hasC=(tx,ty)=>{for(const S of ZA)if(S&&fv1(S,tx,ty)<65535)return true;for(const S of ZZ)if(S&&fv1(S,tx,ty)<65535)return true;return false};
  for(let i=0;i<n;i++){const x=sX[i],y=sY[i],o=sSD[i];sPX[i]=x;sPY[i]=y;if(sHP[i]<=0)continue;sCD[i]-=SWDT;
   const tx=(x/TS)|0,ty=(y/TS)|0,ti=ty*TW+tx,fl=UNF[ti];
-  if(((stp+sID[i])&(SWCK-1))===0){const s0=sST[i],a=sSA[i];let k=sSK[i];
+  if(((stp+o)&(SWCK-1))===0){const s0=sST[i],a=sSA[i];let k=sSK[i];
    if(s0===1||s0===7||Math.abs(a%TW-tx)>1||Math.abs(((a/TW)|0)-ty)>1){sSA[i]=ti;k=k<SWGH?0:SWGH}else if(k<255)k++;
    sSK[i]=k;if(k>=SWGH+SWRM){sHP[i]=0;sST[i]=9;continue}}
   const gho=sSK[i]>=SWGH;
