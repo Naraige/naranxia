@@ -37,7 +37,8 @@ export const NL = {
   " idle": " inactief",
   " idle peasant": " inactieve boer",
   " inside": " binnen",
-  " is already used by another room: choose a different one.": " wordt al door een andere kamer gebruikt: kies een andere.",
+  " is already used by another room: choose a different one.":
+    " wordt al door een andere kamer gebruikt: kies een andere.",
   " is empty": " is leeg",
   " is full": " is vol",
   " is in progress": " is bezig",
@@ -91,7 +92,8 @@ export const NL = {
   "A peasant now works the ": "Een boer werkt nu aan de ",
   "A peasant who only builds new buildings": "Een boer die alleen nieuwe gebouwen bouwt",
   "A tower with a siege weapon cannot turn": "Een toren met een belegeringswapen kan niet draaien",
-  "A villager is cut off from your castle and storages - open a way or build a gate": "Een dorpeling is afgesneden van je kasteel en opslagplaatsen - maak een doorgang of bouw een poort",
+  "A villager is cut off from your castle and storages - open a way or build a gate":
+    "Een dorpeling is afgesneden van je kasteel en opslagplaatsen - maak een doorgang of bouw een poort",
   "ACID SPITTERS": "ZUURSPUGERS",
   "Academy": "Academie",
   "Academy: research upgrades here": "Academie: onderzoek hier verbeteringen",
@@ -172,7 +174,8 @@ export const NL = {
   "Build towers!": "Bouw torens!",
   "Build wall": "Bouw muur",
   "Builders": "Bouwers",
-  "Builders guild: choose how many peasants build, repair and reshape the land": "Bouwersgilde: kies hoeveel boeren bouwen, repareren en het land hervormen",
+  "Builders guild: choose how many peasants build, repair and reshape the land":
+    "Bouwersgilde: kies hoeveel boeren bouwen, repareren en het land hervormen",
   "Builders' guild []]": "Bouwersgilde []]",
   "Building tier [L]": "Gebouwniveau [L]",
   "Buildings have 40% more strength": "Gebouwen zijn 40% sterker",
@@ -186,7 +189,8 @@ export const NL = {
   "Cancel current orders and stay here": "Annuleer de huidige orders en blijf hier",
   "Cannon": "Kanon",
   "Cannon [/]": "Kanon [/]",
-  "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)": "Het kasteel kan daar niet heen (5x5 vrij, binnen 40 vakjes, vlakke grond)",
+  "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)":
+    "Het kasteel kan daar niet heen (5x5 vrij, binnen 40 vakjes, vlakke grond)",
   "Cannot reshape this tile": "Dit vakje kan niet hervormd worden",
   "Captain": "Kapitein",
   "Castle health": "Gezondheid van het kasteel",
@@ -196,7 +200,8 @@ export const NL = {
   "Castle rally point set": "Verzamelpunt kasteel ingesteld",
   "Castle rally: new peasants gather this resource": "Verzamelpunt kasteel: nieuwe boeren verzamelen deze grondstof",
   "Castle view": "Kasteelweergave",
-  "Castle: shoots arrows at zombies in range, trains peasants and builds": "Kasteel: schiet pijlen op zombies binnen bereik, traint boeren en bouwt",
+  "Castle: shoots arrows at zombies in range, trains peasants and builds":
+    "Kasteel: schiet pijlen op zombies binnen bereik, traint boeren en bouwt",
   "Centers the camera on your castle": "Centreert de camera op je kasteel",
   "Chain mail": "Maliënkolder",
   "Champion": "Kampioen",
@@ -221,7 +226,8 @@ export const NL = {
   "Click or drag over wooden buildings": "Klik of sleep over houten gebouwen",
   "Click or drag to paint": "Klik of sleep om te verven",
   "Click the map: new soldiers from": "Klik op de kaart: nieuwe soldaten van",
-  "Click to place the castle  -  drag / WASD: move   Right drag: rotate   Wheel: zoom": "Klik om het kasteel te plaatsen  -  sleep / WASD: bewegen   Rechts slepen: draaien   Wiel: zoomen",
+  "Click to place the castle  -  drag / WASD: move   Right drag: rotate   Wheel: zoom":
+    "Klik om het kasteel te plaatsen  -  sleep / WASD: bewegen   Rechts slepen: draaien   Wiel: zoomen",
   "Close [M]": "Sluiten [M]",
   "Co-op lobby - ": "Coöp-lobby - ",
   "Co-op: OUT OF SYNC": "Coöp: NIET IN SYNC",
@@ -234,7 +240,8 @@ export const NL = {
   "Costs ": "Kost ",
   "Costs 100 gold, 150 wood": "Kost 100 goud, 150 hout",
   "Costs part of its wood / stone / gold": "Kost een deel van zijn hout / steen / goud",
-  "Could not reach the matchmaking service. Check your connection and try again.": "Kon de matchmakingdienst niet bereiken. Controleer je verbinding en probeer het opnieuw.",
+  "Could not reach the matchmaking service. Check your connection and try again.":
+    "Kon de matchmakingdienst niet bereiken. Controleer je verbinding en probeer het opnieuw.",
   "Creating your room...": "Je kamer wordt aangemaakt...",
   "Crest": "Wapen",
   "Crews": "Bemanningen",
@@ -284,7 +291,8 @@ export const NL = {
   "Field gun pushed by a crew of 2 (2 population)": "Veldkanon geduwd door een bemanning van 2 (2 bevolking)",
   "Fight around their post, then walk back to it": "Vecht rond hun post en loop dan terug",
   "Finish a research": "Rond een onderzoek af",
-  "Finish this wave first: the next one comes after the rest time": "Maak eerst deze golf af: de volgende komt na de rusttijd",
+  "Finish this wave first: the next one comes after the rest time":
+    "Maak eerst deze golf af: de volgende komt na de rusttijd",
   "Fletching": "Pijlen maken",
   "Food": "Voedsel",
   "Ford": "Doorwaadbare plaats",
@@ -363,7 +371,8 @@ export const NL = {
   "Loading...": "Laden...",
   "Locked": "Vergrendeld",
   "Locked: research Masonry at the Academy": "Vergrendeld: onderzoek Metselwerk bij de Academie",
-  "Long calm between waves, then a slow swarm. It grows stronger each wave.": "Lange rust tussen de golven, daarna een trage zwerm. Elke golf wordt sterker.",
+  "Long calm between waves, then a slow swarm. It grows stronger each wave.":
+    "Lange rust tussen de golven, daarna een trage zwerm. Elke golf wordt sterker.",
   "Long range: volleys of 5 arrows": "Groot bereik: salvo's van 5 pijlen",
   "Long reach, sweeps several zombies at once": "Lang bereik, maait meerdere zombies tegelijk neer",
   "MINERS": "MIJNWERKERS",
@@ -373,7 +382,8 @@ export const NL = {
   "March": "Mars",
   "Market": "Markt",
   "Market [:]": "Markt [:]",
-  "Market: sell wood, stone or food for gold, or buy them": "Markt: verkoop hout, steen of voedsel voor goud, of koop ze",
+  "Market: sell wood, stone or food for gold, or buy them":
+    "Markt: verkoop hout, steen of voedsel voor goud, of koop ze",
   "Masonry": "Steenhouwen",
   "Masonry research": "Onderzoek Steenhouwen",
   "Matchmaking error (": "Matchmakingfout (",
@@ -418,9 +428,11 @@ export const NL = {
   "None": "Geen",
   "Normal": "Normaal",
   "Not enough ": "Niet genoeg ",
-  "Not enough food: build farms and put a peasant on each": "Niet genoeg voedsel: bouw boerderijen en zet op elk een boer",
+  "Not enough food: build farms and put a peasant on each":
+    "Niet genoeg voedsel: bouw boerderijen en zet op elk een boer",
   "Not enough resources to upgrade": "Niet genoeg grondstoffen om te verbeteren",
-  "Not suitable: needs dry, gentle land away from the edge": "Ongeschikt: heeft droog, glooiend land nodig, weg van de rand",
+  "Not suitable: needs dry, gentle land away from the edge":
+    "Ongeschikt: heeft droog, glooiend land nodig, weg van de rand",
   "Nothing to save": "Niets om op te slaan",
   "Now with keeps!": "Nu met burchten!",
   "One research at a time: ": "Eén onderzoek tegelijk: ",
@@ -508,7 +520,8 @@ export const NL = {
   "Researching Masonry...": "Steenhouwen onderzoeken...",
   "Reset keys": "Toetsen resetten",
   "Return to the building categories": "Terug naar de gebouwcategorieën",
-  "Right-click a resource to harvest, a building to repair": "Rechtsklik op een grondstof om te oogsten, op een gebouw om te repareren",
+  "Right-click a resource to harvest, a building to repair":
+    "Rechtsklik op een grondstof om te oogsten, op een gebouw om te repareren",
   "Right-click a wall, gate or tower": "Rechtsklik op een muur, poort of toren",
   "Right-click a wall, gate or tower to garrison": "Rechtsklik op een muur, poort of toren om te bemannen",
   "Right-click to move or attack": "Rechtsklik om te bewegen of aan te vallen",
@@ -534,14 +547,16 @@ export const NL = {
   "Score: ": "Score: ",
   "See the whole world, spawns and routes": "Zie de hele wereld, spawns en routes",
   "Select": "Selecteren",
-  "Select a building and press Upgrade, or use the Stone upgrade tool": "Selecteer een gebouw en druk op Verbeteren, of gebruik het steenverbeteringsgereedschap",
+  "Select a building and press Upgrade, or use the Stone upgrade tool":
+    "Selecteer een gebouw en druk op Verbeteren, of gebruik het steenverbeteringsgereedschap",
   "Select a captain first": "Selecteer eerst een kapitein",
   "Select all peasants": "Selecteer alle boeren",
   "Select army": "Selecteer leger",
   "Select army [Q]": "Selecteer leger [Q]",
   "Select it to open the research menu": "Selecteer het om het onderzoeksmenu te openen",
   "Select mode: drag draws a box": "Selectiemodus: slepen tekent een kader",
-  "Select peasants, then right-click a tree, rock or gold to harvest": "Selecteer boeren en rechtsklik dan op een boom, rots of goud om te oogsten",
+  "Select peasants, then right-click a tree, rock or gold to harvest":
+    "Selecteer boeren en rechtsklik dan op een boom, rots of goud om te oogsten",
   "Select, then right-click a tree, rock": "Selecteer, rechtsklik dan op een boom, rots",
   "Select: drag draws a box": "Selecteren: slepen tekent een kader",
   "Selects all fighters": "Selecteert alle strijders",
@@ -589,7 +604,8 @@ export const NL = {
   "Storage Box": "Opslagkist",
   "Storage [K]": "Opslagplaats [K]",
   "Summon King Naraige": "Roep koning Naraige op",
-  "Summoned at the castle with his 2 royal guards - one king only": "Opgeroepen bij het kasteel met zijn 2 koninklijke gardisten - slechts één koning",
+  "Summoned at the castle with his 2 royal guards - one king only":
+    "Opgeroepen bij het kasteel met zijn 2 koninklijke gardisten - slechts één koning",
   "Survive 10 waves": "Overleef 10 golven",
   "Survive 5 waves": "Overleef 5 golven",
   "Survive the night!": "Overleef de nacht!",
@@ -605,18 +621,22 @@ export const NL = {
   "The castle door needs the 3 tiles in front of it free": "De kasteeldeur heeft de 3 vakjes ervoor vrij nodig",
   "The castle door turns with it": "De kasteeldeur draait mee",
   "The code ": "De code ",
-  "The darkness hurts! Stay near the castle, towers, torches or a bannerman": "De duisternis doet pijn! Blijf bij het kasteel, de torens, fakkels of een bannerdrager",
+  "The darkness hurts! Stay near the castle, towers, torches or a bannerman":
+    "De duisternis doet pijn! Blijf bij het kasteel, de torens, fakkels of een bannerdrager",
   "The horde turns on ": "De horde keert zich tegen ",
   "The host chose a map": "De host koos een kaart",
   "The host chose a new map": "De host koos een nieuwe kaart",
   "The king is summoned at your castle": "De koning wordt bij je kasteel opgeroepen",
   "The ramp could not be built here": "De helling kon hier niet gebouwd worden",
   "The sun burns the last zombies": "De zon verbrandt de laatste zombies",
-  "The two castles are too close: one of you must move.": "De twee kastelen staan te dicht bij elkaar: een van jullie moet verhuizen.",
+  "The two castles are too close: one of you must move.":
+    "De twee kastelen staan te dicht bij elkaar: een van jullie moet verhuizen.",
   "This tower already has a siege weapon": "Deze toren heeft al een belegeringswapen",
   "Title Screen": "Titelscherm",
-  "Too close to another forester: their planting areas would touch": "Te dicht bij een andere boswachter: hun plantgebieden zouden elkaar raken",
-  "Too close to your partner: pick a site at least 45 tiles away": "Te dicht bij je partner: kies een plek minstens 45 vakjes weg",
+  "Too close to another forester: their planting areas would touch":
+    "Te dicht bij een andere boswachter: hun plantgebieden zouden elkaar raken",
+  "Too close to your partner: pick a site at least 45 tiles away":
+    "Te dicht bij je partner: kies een plek minstens 45 vakjes weg",
   "Too high": "Te hoog",
   "Torch": "Fakkel",
   "Torch [']": "Fakkel [']",
@@ -639,7 +659,8 @@ export const NL = {
   "Turns the selected building 90 degrees": "Draait het geselecteerde gebouw 90 graden",
   "Type the room code first.": "Typ eerst de kamercode.",
   "Ultra HD": "Ultra HD",
-  "Units are trained in a Barracks: build one, then click it": "Eenheden worden in een Kazerne getraind: bouw er een en klik erop",
+  "Units are trained in a Barracks: build one, then click it":
+    "Eenheden worden in een Kazerne getraind: bouw er een en klik erop",
   "Units train 25% faster": "Eenheden trainen 25% sneller",
   "Units trained while it is selected": "Eenheden getraind terwijl het geselecteerd is",
   "Unknown save format": "Onbekend opslagformaat",
@@ -733,9 +754,12 @@ export const NL = {
   "save not found": "opslag niet gevonden",
   "tab hidden": "tabblad verborgen",
   "the other peasants keep gathering": "de andere boeren blijven verzamelen",
-  "their acid keeps burning men and walls - spread your troops": "hun zuur blijft mannen en muren branden - verspreid je troepen",
-  "they blow up at your walls, or when they die - shoot them from afar, ideally inside the horde": "ze ontploffen bij je muren of als ze sterven - schiet ze van veraf neer, het liefst midden in de horde",
-  "they dig through cliffs, rock and woods to open a way for the horde": "ze graven door kliffen, rots en bossen om een weg voor de horde te openen",
+  "their acid keeps burning men and walls - spread your troops":
+    "hun zuur blijft mannen en muren branden - verspreid je troepen",
+  "they blow up at your walls, or when they die - shoot them from afar, ideally inside the horde":
+    "ze ontploffen bij je muren of als ze sterven - schiet ze van veraf neer, het liefst midden in de horde",
+  "they dig through cliffs, rock and woods to open a way for the horde":
+    "ze graven door kliffen, rots en bossen om een weg voor de horde te openen",
   "to garrison it for more range": "om hem te bemannen voor meer bereik",
   "to rebuild them in stone (walls...)": "om ze in steen te herbouwen (muren...)",
   "towers +40% damage": "torens +40% schade",
@@ -746,9 +770,11 @@ export const NL = {
   "   Generating {0}%": "   Genereren {0}%",
   "   {0} x {1} tiles": "   {0} x {1} vakjes",
   " - {0} sapling{1} growing": " - groeiende boompjes: {0}",
-  " - {0} villager{1} sheltering inside (Repair calls them out)": " - schuilende dorpelingen: {0} (Repareren roept ze naar buiten)",
+  " - {0} villager{1} sheltering inside (Repair calls them out)":
+    " - schuilende dorpelingen: {0} (Repareren roept ze naar buiten)",
   "+{0} gold": "+{0} goud",
-  "A merchant caravan passes: +{0} gold, +{1} wood, +{2} stone": "Een handelskaravaan trekt voorbij: +{0} goud, +{1} hout, +{2} steen",
+  "A merchant caravan passes: +{0} gold, +{1} wood, +{2} stone":
+    "Een handelskaravaan trekt voorbij: +{0} goud, +{1} hout, +{2} steen",
   "A peasant now works the {0}": "Een boer werkt nu aan de {0}",
   "All visible {0}s selected": "Alle zichtbare eenheden geselecteerd: {0}",
   "BLOOD MOON - a bigger, faster horde! {0}": "BLOEDMAAN - een grotere, snellere horde! {0}",
@@ -756,11 +782,13 @@ export const NL = {
   "Best: wave {0}  -  {1} zombies slain": "Record: golf {0}  -  {1} gedode zombies",
   "Bought 50 {0} for {1} gold": "50 {0} gekocht voor {1} goud",
   "Buy 50 {0}": "Koop 50 {0}",
-  "Castle: shoots arrows at zombies in range, trains peasants and builds{0}": "Kasteel: schiet pijlen op zombies binnen bereik, traint boeren en bouwt{0}",
+  "Castle: shoots arrows at zombies in range, trains peasants and builds{0}":
+    "Kasteel: schiet pijlen op zombies binnen bereik, traint boeren en bouwt{0}",
   "Co-op lobby - {0} | {1}: {2}": "Coöp-lobby - {0} | {1}: {2}",
   "Connection error ({0}).": "Verbindingsfout ({0}).",
   "Costs {0} gold": "Kost {0} goud",
-  "Dawn - {0} villager{1} leave the castle and go back to work": "Dageraad - de dorpelingen ({0}) verlaten het kasteel en gaan terug aan het werk",
+  "Dawn - {0} villager{1} leave the castle and go back to work":
+    "Dageraad - de dorpelingen ({0}) verlaten het kasteel en gaan terug aan het werk",
   "Dawn is coming - next wave in {0}": "De dageraad komt - volgende golf over {0}",
   "Formation: {0}": "Formatie: {0}",
   "Game loaded - wave {0}": "Spel geladen - golf {0}",
@@ -774,7 +802,8 @@ export const NL = {
   "Joining room {0}...": "Kamer {0} betreden...",
   "Load failed: {0}": "Laden mislukt: {0}",
   "Map #{0}   Click to jump there": "Kaart #{0}   Klik om erheen te gaan",
-  "Matchmaking error ({0}). Check your connection and try again.": "Matchmakingfout ({0}). Controleer je verbinding en probeer het opnieuw.",
+  "Matchmaking error ({0}). Check your connection and try again.":
+    "Matchmakingfout ({0}). Controleer je verbinding en probeer het opnieuw.",
   "NEW ZOMBIES: {0}": "NIEUWE ZOMBIES: {0}",
   "NEW ZOMBIES: {0}!  -  from {1}": "NIEUWE ZOMBIES: {0}!  -  van {1}",
   "New buildings: {0}": "Nieuwe gebouwen: {0}",
@@ -785,7 +814,8 @@ export const NL = {
   "Only one {0} per kingdom": "Slechts één {0} per koninkrijk",
   "Pattern colour: {0}": "Patroonkleur: {0}",
   "Place {0}": "Plaats {0}",
-  "Place {0} - click a tile - right-click or Esc cancels": "Plaats {0} - klik op een vakje - rechtsklik of Esc annuleert",
+  "Place {0} - click a tile - right-click or Esc cancels":
+    "Plaats {0} - klik op een vakje - rechtsklik of Esc annuleert",
   "Raid - Wave {0}": "Overval - Golf {0}",
   "Raid - Wave {0}  ({1} left)": "Overval - Golf {0}  ({1} over)",
   "Repairing the {0}": "Repareert de {0}",
@@ -803,17 +833,20 @@ export const NL = {
   "Sound {0}": "Geluid {0}",
   "Sound: {0}": "Geluid: {0}",
   "Squad: {0} / 10 soldiers": "Eskader: {0} / 10 soldaten",
-  "The code {0} is already used by another room: choose a different one.": "De code {0} wordt al door een andere kamer gebruikt: kies een andere.",
+  "The code {0} is already used by another room: choose a different one.":
+    "De code {0} wordt al door een andere kamer gebruikt: kies een andere.",
   "The horde turns on {0}": "De horde keert zich tegen {0}",
   "The {0}": "De {0}",
-  "Version mismatch: you run {0}, {1} runs {2}. Use the same version or the game will desync.": "Versieverschil: jij gebruikt {0}, {1} gebruikt {2}. Gebruik dezelfde versie, anders raakt het spel uit sync.",
+  "Version mismatch: you run {0}, {1} runs {2}. Use the same version or the game will desync.":
+    "Versieverschil: jij gebruikt {0}, {1} gebruikt {2}. Gebruik dezelfde versie, anders raakt het spel uit sync.",
   "WAVE {0}": "GOLF {0}",
   "WAVE {0} BEATEN": "GOLF {0} VERSLAGEN",
   "Wait: {0} first": "Wacht: eerst {0}",
   "Wave called early: +{0} gold": "Golf vroeg opgeroepen: +{0} goud",
   "Wave {0}": "Golf {0}",
   "Waves survived: {0}": "Golven overleefd: {0}",
-  "Waves survived: {0}    Zombies slain: {1}    Best: wave {2}": "Golven overleefd: {0}    Gedode zombies: {1}    Record: golf {2}",
+  "Waves survived: {0}    Zombies slain: {1}    Best: wave {2}":
+    "Golven overleefd: {0}    Gedode zombies: {1}    Record: golf {2}",
   "You get {0} gold": "Je krijgt {0} goud",
   "You need 50 {0} to sell": "Je hebt 50 {0} nodig om te verkopen",
   "You need {0}": "Je hebt {0} nodig",
@@ -836,7 +869,8 @@ export const NL = {
   "{0} needs {1}": "{0} heeft {1} nodig",
   "{0} peasants selected": "{0} boeren geselecteerd",
   "{0} peasant{1}": "Boeren: {0}",
-  "{0} peasant{1} sent to repair the {2} (uses resources)": "Boeren gestuurd ({0}) om te repareren: {2} (gebruikt grondstoffen)",
+  "{0} peasant{1} sent to repair the {2} (uses resources)":
+    "Boeren gestuurd ({0}) om te repareren: {2} (gebruikt grondstoffen)",
   "{0} peasant{1} sent to repair the {2}": "Boeren gestuurd ({0}) om te repareren: {2}",
   "{0} placed their castle": "{0} heeft zijn kasteel geplaatst",
   "{0} promoted: {1}": "{0} bevorderd: {1}",
@@ -860,17 +894,26 @@ export const NL = {
   "Tutorial": "Tutorial",
   "Skip": "Overslaan",
   "Close": "Sluiten",
-  "Right-click a tree, a rock or gold: your peasants gather it": "Rechtsklik op een boom, rots of goud: je boeren verzamelen het",
-  "Build a house in the Town menu to raise your population limit": "Bouw een huis in het Stad-menu om je bevolkingslimiet te verhogen",
-  "Train a knight in the Train bar: knights fight the zombies": "Train een ridder in de Trainbalk: ridders bestrijden de zombies",
-  "Build walls or a tower in the Defense menu to hold the lanes": "Bouw muren of een toren in het Verdedigingsmenu om de paden te houden",
-  "Try a spike trap in the Defense menu: zombies on it get hurt": "Probeer een spijkerval in het Verdedigingsmenu: zombies erop raken gewond",
-  "Zombies follow the red lines: the top bar counts down to the wave": "Zombies volgen de rode lijnen: de bovenbalk telt af tot de golf",
-  "Research Masonry in the castle menu to build in stone": "Onderzoek Steenhouwen in het kasteelmenu om in steen te bouwen",
+  "Right-click a tree, a rock or gold: your peasants gather it":
+    "Rechtsklik op een boom, rots of goud: je boeren verzamelen het",
+  "Build a house in the Town menu to raise your population limit":
+    "Bouw een huis in het Stad-menu om je bevolkingslimiet te verhogen",
+  "Train a knight in the Train bar: knights fight the zombies":
+    "Train een ridder in de Trainbalk: ridders bestrijden de zombies",
+  "Build walls or a tower in the Defense menu to hold the lanes":
+    "Bouw muren of een toren in het Verdedigingsmenu om de paden te houden",
+  "Try a spike trap in the Defense menu: zombies on it get hurt":
+    "Probeer een spijkerval in het Verdedigingsmenu: zombies erop raken gewond",
+  "Zombies follow the red lines: the top bar counts down to the wave":
+    "Zombies volgen de rode lijnen: de bovenbalk telt af tot de golf",
+  "Research Masonry in the castle menu to build in stone":
+    "Onderzoek Steenhouwen in het kasteelmenu om in steen te bouwen",
   "Research Masonry at the Academy to build in stone": "Onderzoek Steenhouwen bij de Academie om in steen te bouwen",
-  "Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!": "Goed gedaan! De seizoenen wisselen elke 4 golven, elke 10 komt er een eindbaas. Veel succes!",
+  "Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!":
+    "Goed gedaan! De seizoenen wisselen elke 4 golven, elke 10 komt er een eindbaas. Veel succes!",
   "Iron age": "IJzertijd",
-  "Iron age: your units hit 10% harder, buildings slowly mend": "IJzertijd: je eenheden slaan 10% harder, gebouwen herstellen langzaam",
+  "Iron age: your units hit 10% harder, buildings slowly mend":
+    "IJzertijd: je eenheden slaan 10% harder, gebouwen herstellen langzaam",
   "Research (70 s, after Steel weapons): your units": "Onderzoek (70 s, na Stalen wapens): je eenheden",
   "hit 10% harder and buildings slowly mend": "slaan 10% harder en gebouwen herstellen langzaam",
   "Spike trap": "Spijkerval",
@@ -892,14 +935,18 @@ export const NL = {
   "King: royal charge": "Koning: koninklijke aanval",
   "BOSS - a giant brute walks with the horde! {0}": "BAAS - een gigantische bruut loopt mee met de horde! {0}",
   "This map": "Deze kaart",
-  "Co-op: Alt+click pings the map / Shift: defend / Ctrl: gather / Shift+Ctrl: attack": "Coöp: Alt+klik pingt de kaart / Shift: verdedigen / Ctrl: verzamelen / Shift+Ctrl: aanvallen",
-  "Co-op goals: wave {0} (now {1})  /  zombies slain {2} (now {3})": "Coöp-doelen: golf {0} (nu {1})  /  gedode zombies {2} (nu {3})",
+  "Co-op: Alt+click pings the map / Shift: defend / Ctrl: gather / Shift+Ctrl: attack":
+    "Coöp: Alt+klik pingt de kaart / Shift: verdedigen / Ctrl: verzamelen / Shift+Ctrl: aanvallen",
+  "Co-op goals: wave {0} (now {1})  /  zombies slain {2} (now {3})":
+    "Coöp-doelen: golf {0} (nu {1})  /  gedode zombies {2} (nu {3})",
   "Look here": "Kijk hier",
   "Defend here": "Verdedig hier",
   "Gather here": "Verzamel hier",
   "Attack here": "Val hier aan",
-  "Co-op goal: wave {0} reached! Both players get +{1} gold, +{2} wood, +{3} stone": "Coöp-doel: golf {0} bereikt! Beide spelers krijgen +{1} goud, +{2} hout, +{3} steen",
-  "Co-op goal: zombies slain together! Both players get +{0} gold, +{1} food": "Coöp-doel: samen zombies gedood! Beide spelers krijgen +{0} goud, +{1} voedsel",
+  "Co-op goal: wave {0} reached! Both players get +{1} gold, +{2} wood, +{3} stone":
+    "Coöp-doel: golf {0} bereikt! Beide spelers krijgen +{1} goud, +{2} hout, +{3} steen",
+  "Co-op goal: zombies slain together! Both players get +{0} gold, +{1} food":
+    "Coöp-doel: samen zombies gedood! Beide spelers krijgen +{0} goud, +{1} voedsel",
   "NEW RECORD!": "NIEUW RECORD!",
   "Best runs": "Beste runs",
   "#{0}   Wave {1}   {2} kills": "#{0}   Golf {1}   {2} doden",
@@ -921,7 +968,8 @@ export const NL = {
   "Report a bug [F8]": "Meld een bug [F8]",
   "Bug report [F8]": "Bugrapport [F8]",
   "Preparing the bug report...": "Bugrapport voorbereiden...",
-  "Bug report saved: {0} - send it on Discord with a few words": "Bugrapport opgeslagen: {0} - stuur het op Discord met een paar woorden",
+  "Bug report saved: {0} - send it on Discord with a few words":
+    "Bugrapport opgeslagen: {0} - stuur het op Discord met een paar woorden",
   "Bug report failed: {0}": "Bugrapport mislukt: {0}",
   "Test mode [F10]": "Testmodus [F10]",
   "Solo only - no achievements in this game": "Alleen solo - geen prestaties in dit spel",
@@ -951,7 +999,8 @@ export const NL = {
   "Captains": "Kapiteins",
   "Cannons": "Kanonnen",
   "Royal guards": "Koninklijke garde",
-  "The convoy cannot reach your partner: goods returned": "Het konvooi kan je partner niet bereiken: goederen teruggestuurd",
+  "The convoy cannot reach your partner: goods returned":
+    "Het konvooi kan je partner niet bereiken: goederen teruggestuurd",
   "your partner": "je partner",
   "Fire arrows": "Vuurpijlen",
   "Research (50 s, after Fletching): archers set": "Onderzoek (50 s, na Pijlen maken): boogschutters steken",
@@ -963,9 +1012,11 @@ export const NL = {
   "Sends the selected peasants to the nearest rocks": "Stuurt de geselecteerde boeren naar de dichtstbijzijnde rotsen",
   "Mine gold": "Goud delven",
   "Sends the selected peasants to the nearest gold": "Stuurt de geselecteerde boeren naar het dichtstbijzijnde goud",
-  "One selected peasant works the nearest free farm": "Eén geselecteerde boer bewerkt de dichtstbijzijnde vrije boerderij",
+  "One selected peasant works the nearest free farm":
+    "Eén geselecteerde boer bewerkt de dichtstbijzijnde vrije boerderij",
   "Build and repair": "Bouwen en repareren",
-  "Sends the selected peasants to the nearest building site": "Stuurt de geselecteerde boeren naar de dichtstbijzijnde bouwplaats",
+  "Sends the selected peasants to the nearest building site":
+    "Stuurt de geselecteerde boeren naar de dichtstbijzijnde bouwplaats",
   "or damaged building": "of beschadigd gebouw",
   "No trees within reach": "Geen bomen binnen bereik",
   "No rocks within reach": "Geen rotsen binnen bereik",
@@ -1016,7 +1067,8 @@ export const NL = {
   "food": "voedsel",
   "Co-op: resynchronizing...": "Coöp: opnieuw synchroniseren...",
   "Resynchronized with your partner": "Opnieuw gesynchroniseerd met je partner",
-  "Your castles would overlap: move a little away from your partner": "Je kastelen zouden overlappen: ga een stukje weg van je partner",
+  "Your castles would overlap: move a little away from your partner":
+    "Je kastelen zouden overlappen: ga een stukje weg van je partner",
   "{0} moved their castle": "{0} heeft zijn kasteel verplaatst",
   " moved their castle": " heeft zijn kasteel verplaatst",
   "Turn castle [{0}]": "Draai kasteel [{0}]",
@@ -1025,14 +1077,17 @@ export const NL = {
   "range {0} tiles": "bereik {0} vakjes",
   "All your {0}s selected ({1})": "Al je eenheden geselecteerd: {0} ({1})",
   "Upgrade turns every wooden one to stone": "Verbeteren maakt elk houten exemplaar van steen",
-  "Different versions ({0} and {1}): both players must run the same one": "Verschillende versies ({0} en {1}): beide spelers moeten dezelfde gebruiken",
+  "Different versions ({0} and {1}): both players must run the same one":
+    "Verschillende versies ({0} en {1}): beide spelers moeten dezelfde gebruiken",
   "restart the launcher or reload the page": "herstart de launcher of laad de pagina opnieuw",
   "Public games": "Openbare spellen",
   "List my game in the public lobby": "Mijn spel in de openbare lobby tonen",
   "Refresh": "Vernieuwen",
   "Join": "Meedoen",
-  "The public lobby is not set up yet: join with a code.": "De openbare lobby is nog niet ingesteld: doe mee met een code.",
-  "Could not reach the lobby. Check your connection and try again.": "Lobby niet bereikbaar. Controleer je verbinding en probeer het opnieuw.",
+  "The public lobby is not set up yet: join with a code.":
+    "De openbare lobby is nog niet ingesteld: doe mee met een code.",
+  "Could not reach the lobby. Check your connection and try again.":
+    "Lobby niet bereikbaar. Controleer je verbinding en probeer het opnieuw.",
   "No public game right now: host one!": "Nu geen openbaar spel: start er zelf een!",
   "Records": "Records",
   "No record yet": "Nog geen record",
@@ -1052,7 +1107,8 @@ export const NL = {
   "Strikes over the front rank": "Steekt over de voorste rij heen",
   "Hits brutes and bosses 60% harder": "Raakt bruten en bazen 60% harder",
   "Line holder": "Liniehouder",
-  "A long spear and good neighbours: the big ones stop here.": "Een lange speer en goede buren: de groten stoppen hier.",
+  "A long spear and good neighbours: the big ones stop here.":
+    "Een lange speer en goede buren: de groten stoppen hier.",
   "Video guide": "Videogids",
   "Population and food": "Bevolking en voedsel",
   "Train an army": "Een leger trainen",
@@ -1067,25 +1123,33 @@ export const NL = {
   "Farms give food: put a peasant on each farm": "Boerderijen geven voedsel: zet een boer op elke boerderij",
   "Every new unit costs food": "Elke nieuwe eenheid kost voedsel",
   "Build barracks, then train soldiers in the Train bar": "Bouw een kazerne en train soldaten in de Trainbalk",
-  "Knights fight up close, archers shoot from behind": "Ridders vechten van dichtbij, boogschutters schieten van achteren",
+  "Knights fight up close, archers shoot from behind":
+    "Ridders vechten van dichtbij, boogschutters schieten van achteren",
   "Select your soldiers and right-click to send them": "Selecteer je soldaten en rechtsklik om ze te sturen",
   "Zombies follow the red lines: block them with walls": "Zombies volgen de rode lijnen: versper ze met muren",
   "Add a gate so your own units can pass": "Voeg een poort toe zodat je eigen eenheden erdoor kunnen",
   "Towers shoot every zombie in range": "Torens beschieten elke zombie binnen bereik",
   "The top bar counts down to the next wave": "De bovenbalk telt af tot de volgende golf",
-  "At night the horde comes: keep your soldiers near the walls": "'s Nachts komt de horde: houd je soldaten bij de muren",
-  "Hold until dawn: every wave is stronger than the last": "Houd stand tot de dageraad: elke golf is sterker dan de vorige",
+  "At night the horde comes: keep your soldiers near the walls":
+    "'s Nachts komt de horde: houd je soldaten bij de muren",
+  "Hold until dawn: every wave is stronger than the last":
+    "Houd stand tot de dageraad: elke golf is sterker dan de vorige",
   "Each research takes time and makes your kingdom stronger": "Elk onderzoek kost tijd en maakt je koninkrijk sterker",
   "Masonry lets you build in stone": "Met Steenhouwen kun je in steen bouwen",
-  "Summon King Naraige at the castle: he arrives with 2 royal guards": "Roep koning Naraige op bij het kasteel: hij komt met 2 koninklijke gardisten",
+  "Summon King Naraige at the castle: he arrives with 2 royal guards":
+    "Roep koning Naraige op bij het kasteel: hij komt met 2 koninklijke gardisten",
   "He fights the horde and gains levels": "Hij bevecht de horde en stijgt in niveau",
-  "His skills can turn a fight: use them at the right time": "Zijn vaardigheden kunnen een gevecht keren: gebruik ze op het juiste moment",
+  "His skills can turn a fight: use them at the right time":
+    "Zijn vaardigheden kunnen een gevecht keren: gebruik ze op het juiste moment",
   "Co-op: host a game and share the room code with a friend": "Coöp: host een spel en deel de kamercode met een vriend",
   "Two kingdoms, one horde: defend together": "Twee koninkrijken, één horde: verdedig samen",
   "Send a convoy to share resources with your partner": "Stuur een konvooi om grondstoffen met je partner te delen",
-  "Double-click a peasant to select them all, then right-click a tree": "Dubbelklik op een boer om ze allemaal te selecteren en rechtsklik dan op een boom",
-  "Train 2 knights at the barracks: knights fight the zombies": "Train 2 ridders in de kazerne: ridders bestrijden de zombies",
-  "Zombies follow the red lines: build 6 walls and a gate across one": "Zombies volgen de rode lijnen: bouw 6 muren en een poort dwars over één ervan",
+  "Double-click a peasant to select them all, then right-click a tree":
+    "Dubbelklik op een boer om ze allemaal te selecteren en rechtsklik dan op een boom",
+  "Train 2 knights at the barracks: knights fight the zombies":
+    "Train 2 ridders in de kazerne: ridders bestrijden de zombies",
+  "Zombies follow the red lines: build 6 walls and a gate across one":
+    "Zombies volgen de rode lijnen: bouw 6 muren en een poort dwars over één ervan",
   "Trade and craft": "Handel en ambacht",
   "The crown": "De kroon",
   "Beyond the walls": "Voorbij de muren",
@@ -1094,9 +1158,11 @@ export const NL = {
   "Master builders": "Meesterbouwers",
   "Build a builders guild and ask for a builder there": "Bouw een bouwersgilde en vraag er een bouwer aan",
   "Engines of war": "Oorlogsmachines",
-  "Research Masonry, then put a ballista on a tower or train a cannon": "Onderzoek Metselwerk en zet dan een ballista op een toren of train een kanon",
+  "Research Masonry, then put a ballista on a tower or train a cannon":
+    "Onderzoek Metselwerk en zet dan een ballista op een toren of train een kanon",
   "Friends in the wild": "Vrienden in de wildernis",
-  "Build an embassy, train an envoy at the castle and send it to a rebel camp": "Bouw een ambassade, train een gezant in het kasteel en stuur hem naar een rebellenkamp",
+  "Build an embassy, train an envoy at the castle and send it to a rebel camp":
+    "Bouw een ambassade, train een gezant in het kasteel en stuur hem naar een rebellenkamp",
   "Share the load": "Deel de last",
   "Send a convoy of resources to your partner": "Stuur een konvooi met grondstoffen naar je partner",
   "{0} turned the quests off": "{0} heeft de missies uitgezet",
@@ -1211,14 +1277,18 @@ export const NL = {
   "{0} tiles": "{0} vakjes",
   "NEW": "NIEUW",
   "He holds the wall so the others do not have to.": "Hij houdt de muur, zodat de anderen dat niet hoeven.",
-  "Patient eyes and a steady hand: the horde never reaches the wall twice.": "Geduldige ogen en een vaste hand: de horde bereikt de muur nooit twee keer.",
-  "Without his axe and his plough the bastion would starve before dawn.": "Zonder zijn bijl en zijn ploeg zou het bastion vóór de dageraad verhongeren.",
-  "Where his banner stands, the line remembers it is not alone.": "Waar zijn banier staat, weet de linie dat ze niet alleen is.",
+  "Patient eyes and a steady hand: the horde never reaches the wall twice.":
+    "Geduldige ogen en een vaste hand: de horde bereikt de muur nooit twee keer.",
+  "Without his axe and his plough the bastion would starve before dawn.":
+    "Zonder zijn bijl en zijn ploeg zou het bastion vóór de dageraad verhongeren.",
+  "Where his banner stands, the line remembers it is not alone.":
+    "Waar zijn banier staat, weet de linie dat ze niet alleen is.",
   "Soldiers fight harder when someone is shouting orders.": "Soldaten vechten harder als iemand bevelen schreeuwt.",
   "Slow and loud. The horde hears it coming too late.": "Traag en luid. De horde hoort het te laat aankomen.",
   "The last light of Naranxia walks at the front.": "Het laatste licht van Naranxia loopt voorop.",
   "A halberd, a vow, and no plans to retreat.": "Een hellebaard, een eed en geen plannen om te wijken.",
-  "The last light of humanity. If it falls, the night wins.": "Het laatste licht van de mensheid. Als het valt, wint de nacht.",
+  "The last light of humanity. If it falls, the night wins.":
+    "Het laatste licht van de mensheid. Als het valt, wint de nacht.",
   "The drills never stop here, day or night.": "De oefeningen stoppen hier nooit, dag en nacht.",
   "It sees the horde long before the horde sees it.": "Hij ziet de horde lang voordat de horde hem ziet.",
   "Cheap, ugly, and it works.": "Goedkoop, lelijk, en het werkt.",
@@ -1236,7 +1306,8 @@ export const NL = {
   "Rally": "Verzamelpunt",
   "Forester's hut": "Boswachtershut",
   "Builders' guild": "Bouwersgilde",
-  "The market is tired of this: sales pay less for a while": "De markt is dit beu: verkopen leveren een tijdje minder op",
+  "The market is tired of this: sales pay less for a while":
+    "De markt is dit beu: verkopen leveren een tijdje minder op",
   "Merchant caravan": "Handelskaravaan",
   "Envoys of {0}": "Gezanten van {0}",
   "Take the goods now": "Neem de goederen nu",
@@ -1247,12 +1318,15 @@ export const NL = {
   "Accept the tribute": "Aanvaard het tribuut",
   "Refuse and gain renown": "Weiger en win aanzien",
   "You receive {0} gold and {1} food": "Je krijgt {0} goud en {1} voedsel",
-  "Renown +1 (now {0}): rebel tributes pay {1}% more per point (max {2})": "Aanzien +1 (nu {0}): rebellentributen leveren {1}% meer op per punt (max {2})",
-  "The caravan is escorted: it pays {0} gold in {1} s": "De karavaan wordt geëscorteerd: ze betaalt {0} goud over {1} s",
+  "Renown +1 (now {0}): rebel tributes pay {1}% more per point (max {2})":
+    "Aanzien +1 (nu {0}): rebellentributen leveren {1}% meer op per punt (max {2})",
+  "The caravan is escorted: it pays {0} gold in {1} s":
+    "De karavaan wordt geëscorteerd: ze betaalt {0} goud over {1} s",
   "The caravan reaches the market: +{0} gold": "De karavaan bereikt de markt: +{0} goud",
   "Tribute of {0}: +{1} gold, +{2} food": "Tribuut van {0}: +{1} goud, +{2} voedsel",
   "Tribute refused: renown {0}": "Tribuut geweigerd: aanzien {0}",
-  "The envoy is turned away by {0}: a wary camp needs a second visit": "De gezant wordt weggestuurd door {0}: een argwanend kamp vraagt een tweede bezoek",
+  "The envoy is turned away by {0}: a wary camp needs a second visit":
+    "De gezant wordt weggestuurd door {0}: een argwanend kamp vraagt een tweede bezoek",
   "merchants": "kooplieden",
   "warlike": "krijgshaftig",
   "wary": "argwanend",
@@ -1276,11 +1350,13 @@ export const NL = {
   "Closed: you chose {0}": "Gesloten: je koos {0}",
   "Exclusive path: closes {0}": "Exclusief pad: sluit {0}",
   "This rebel camp has nothing left to give": "Dit rebellenkamp heeft niets meer te geven",
-  "Research (70 s, after Steel weapons or Chain mail): your units": "Onderzoek (70 s, na Stalen wapens of Maliënkolder): je eenheden",
+  "Research (70 s, after Steel weapons or Chain mail): your units":
+    "Onderzoek (70 s, na Stalen wapens of Maliënkolder): je eenheden",
   "Move camera": "Camera bewegen",
   "One finger drags the view": "Eén vinger versleept het beeld",
   "Clear build mode and selection": "Verlaat bouwmodus en selectie",
-  "Night falls - the horde is coming. The villagers shelter in the castle; keep your soldiers in the light!": "De nacht valt - de horde komt eraan. De dorpelingen schuilen in het kasteel; houd je soldaten in het licht!",
+  "Night falls - the horde is coming. The villagers shelter in the castle; keep your soldiers in the light!":
+    "De nacht valt - de horde komt eraan. De dorpelingen schuilen in het kasteel; houd je soldaten in het licht!",
   "2nd colour": "2e kleur",
   "100% blocky!": "100% blokken!",
   "100x the swarm!": "100x de zwerm!",
@@ -1297,7 +1373,8 @@ export const NL = {
   "22% less damage": "22% minder schade",
   "2x2 depot: peasants drop wood, stone": "Depot 2x2: boeren leveren hout, steen",
   "25% faster, at the castle or barracks": "25% sneller, in het kasteel of de kazerne",
-  "His sword cuts through the horde; allies within 10 tiles": "Zijn zwaard klieft door de horde; bondgenoten binnen 10 vakjes",
+  "His sword cuts through the horde; allies within 10 tiles":
+    "Zijn zwaard klieft door de horde; bondgenoten binnen 10 vakjes",
   "2x2 building, click it to select": "Gebouw 2x2, klik erop om te selecteren",
   "2 tiles long. R rotates it": "2 vakjes lang. R draait het",
   "and demolishes; he waits at the guild": "en sloopt; hij wacht bij de gilde",
@@ -1320,7 +1397,8 @@ export const NL = {
   "Co-op (online, 2 players)": "Coöp (online, 2 spelers)",
   "Host a game": "Een spel hosten",
   "Join with a code": "Meedoen met een code",
-  "Choose a room code (like a password) - or leave empty for a random one": "Kies een kamercode (zoals een wachtwoord) - of laat leeg voor een willekeurige",
+  "Choose a room code (like a password) - or leave empty for a random one":
+    "Kies een kamercode (zoals een wachtwoord) - of laat leeg voor een willekeurige",
   "Create room": "Kamer aanmaken",
   "Type the code your host gave you": "Typ de code die je host je gaf",
   "Players": "Spelers",
@@ -1344,54 +1422,79 @@ export const NL = {
   "Both prices shift a little": "Beide prijzen verschuiven een beetje",
   "Colour-blind mode": "Kleurenblindmodus",
   "Population limit reached: build houses in the Town menu": "Bevolkingslimiet bereikt: bouw huizen in het Stad-menu",
-  "Idle peasants? Press [.] to select them, then right-click a resource": "Inactieve boeren? Druk op [.] om ze te selecteren en rechtsklik dan op een grondstof",
-  "A wave is about to start: gather your troops near the castle and walls": "Er begint zo een golf: verzamel je troepen bij het kasteel en de muren",
+  "Idle peasants? Press [.] to select them, then right-click a resource":
+    "Inactieve boeren? Druk op [.] om ze te selecteren en rechtsklik dan op een grondstof",
+  "A wave is about to start: gather your troops near the castle and walls":
+    "Er begint zo een golf: verzamel je troepen bij het kasteel en de muren",
   "Got it": "Begrepen",
   "The Hollow Warden": "De Holle Wachter",
   "The Bell-Bearer": "De Klokkendrager",
   "The Frost King": "De Vorstkoning",
   "The Hive Queen": "De Korfkoningin",
-  "Once he guarded the old gates. Now he guards nothing.": "Ooit bewaakte hij de oude poorten. Nu bewaakt hij niets meer.",
-  "He rang the last bell of the old world. The dead still answer.": "Hij luidde de laatste klok van de oude wereld. De doden antwoorden nog steeds.",
-  "He ruled the northern snows. The cold still obeys him.": "Hij heerste over de noordelijke sneeuw. De kou gehoorzaamt hem nog.",
-  "She fed a whole city to her brood. The brood remembers.": "Ze voerde een hele stad aan haar broed. Het broed vergeet het niet.",
+  "Once he guarded the old gates. Now he guards nothing.":
+    "Ooit bewaakte hij de oude poorten. Nu bewaakt hij niets meer.",
+  "He rang the last bell of the old world. The dead still answer.":
+    "Hij luidde de laatste klok van de oude wereld. De doden antwoorden nog steeds.",
+  "He ruled the northern snows. The cold still obeys him.":
+    "Hij heerste over de noordelijke sneeuw. De kou gehoorzaamt hem nog.",
+  "She fed a whole city to her brood. The brood remembers.":
+    "Ze voerde een hele stad aan haar broed. Het broed vergeet het niet.",
   "BOSS SLAIN": "BAAS VERSLAGEN",
   "has fallen": "is gevallen",
   "Journal of the realm": "Dagboek van het rijk",
   "Wave {0}: {1} walks with the horde.": "Golf {0}: {1} loopt mee met de horde.",
   "Wave {0}: {1} has fallen. The bastion holds.": "Golf {0}: {1} is gevallen. Het bastion houdt stand.",
-  "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.": "De Holle Wachter: Hij hield de oude poorten tot de horde erdoorheen liep. De dood leerde hem niet om te stoppen met waken. Hij leerde hem niet meer te kiezen wie er binnen mag.",
-  "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.": "De Klokkendrager: Hij luidde de laatste klok van de oude wereld, en de doden kwamen luisteren. Nu luidt hij haar opnieuw, en de hulzen komen als hij roept.",
-  "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.": "De Vorstkoning: Hij heerste over de noordelijke sneeuw en weigerde elke bode uit het zuiden. De winter nam hem, en hij nam de winter met zich mee.",
-  "The Hive Queen: She promised her people they would never be hungry. She kept the promise: the brood that follows her eats whatever she points at.": "De Korfkoningin: Ze beloofde haar volk dat het nooit honger zou lijden. Ze hield woord: het broed dat haar volgt eet alles wat zij aanwijst.",
+  "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.":
+    "De Holle Wachter: Hij hield de oude poorten tot de horde erdoorheen liep. De dood leerde hem niet om te stoppen met waken. Hij leerde hem niet meer te kiezen wie er binnen mag.",
+  "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.":
+    "De Klokkendrager: Hij luidde de laatste klok van de oude wereld, en de doden kwamen luisteren. Nu luidt hij haar opnieuw, en de hulzen komen als hij roept.",
+  "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.":
+    "De Vorstkoning: Hij heerste over de noordelijke sneeuw en weigerde elke bode uit het zuiden. De winter nam hem, en hij nam de winter met zich mee.",
+  "The Hive Queen: She promised her people they would never be hungry. She kept the promise: the brood that follows her eats whatever she points at.":
+    "De Korfkoningin: Ze beloofde haar volk dat het nooit honger zou lijden. Ze hield woord: het broed dat haar volgt eet alles wat zij aanwijst.",
   "Huge": "Enorm",
-  "Wave 15: The wolves come down from the hills. Even the wild has chosen a side, and it is not yours.": "Golf 15: De wolven dalen af uit de heuvels. Zelfs de wildernis heeft een kant gekozen, en het is niet de jouwe.",
-  "Wave 25: Under the old ruins the survivors left vaults. The King sends scouts to find them before the horde does.": "Golf 25: Onder de oude ruïnes lieten de overlevenden kluizen achter. De Koning stuurt verkenners om ze te vinden voordat de horde dat doet.",
-  "Wave 40: The eclipse has come and gone. The rebels no longer hide their fires; they watch the bastion as one watches a lighthouse.": "Golf 40: De eclips is gekomen en gegaan. De rebellen verbergen hun vuren niet langer; ze kijken naar het bastion zoals men naar een vuurtoren kijkt.",
-  "Wave 50: Fifty waves. In the rebel camps they say the King does not hold the walls: the walls hold the King. Both are true.": "Golf 50: Vijftig golven. In de rebellenkampen zegt men dat de Koning de muren niet houdt: de muren houden de Koning. Beide zijn waar.",
+  "Wave 15: The wolves come down from the hills. Even the wild has chosen a side, and it is not yours.":
+    "Golf 15: De wolven dalen af uit de heuvels. Zelfs de wildernis heeft een kant gekozen, en het is niet de jouwe.",
+  "Wave 25: Under the old ruins the survivors left vaults. The King sends scouts to find them before the horde does.":
+    "Golf 25: Onder de oude ruïnes lieten de overlevenden kluizen achter. De Koning stuurt verkenners om ze te vinden voordat de horde dat doet.",
+  "Wave 40: The eclipse has come and gone. The rebels no longer hide their fires; they watch the bastion as one watches a lighthouse.":
+    "Golf 40: De eclips is gekomen en gegaan. De rebellen verbergen hun vuren niet langer; ze kijken naar het bastion zoals men naar een vuurtoren kijkt.",
+  "Wave 50: Fifty waves. In the rebel camps they say the King does not hold the walls: the walls hold the King. Both are true.":
+    "Golf 50: Vijftig golven. In de rebellenkampen zegt men dat de Koning de muren niet houdt: de muren houden de Koning. Beide zijn waar.",
   "The last light goes out. Only the walls remember.": "Het laatste licht dooft. Alleen de muren herinneren het zich.",
-  "The rebels will tell it: the bastion held until the end.": "De rebellen zullen het vertellen: het bastion hield stand tot het einde.",
+  "The rebels will tell it: the bastion held until the end.":
+    "De rebellen zullen het vertellen: het bastion hield stand tot het einde.",
   "Dawn did not come. Not this time.": "De dageraad kwam niet. Deze keer niet.",
   "The horde walks on. The old world was lost twice.": "De horde trekt verder. De oude wereld ging twee keer verloren.",
-  "The banner of King Naraige falls, but it can be raised again.": "De banier van koning Naraige valt, maar hij kan weer worden gehesen.",
+  "The banner of King Naraige falls, but it can be raised again.":
+    "De banier van koning Naraige valt, maar hij kan weer worden gehesen.",
   "Rise again, King. The bastion needs you.": "Sta weer op, Koning. Het bastion heeft je nodig.",
-  "The sky pales in the east. Dawn may still come: hold the bastion.": "De hemel verbleekt in het oosten. De dageraad kan nog komen: houd het bastion.",
-  "Fifty waves. Even the rebels light fires in your honor.": "Vijftig golven. Zelfs de rebellen ontsteken vuren ter ere van jou.",
+  "The sky pales in the east. Dawn may still come: hold the bastion.":
+    "De hemel verbleekt in het oosten. De dageraad kan nog komen: houd het bastion.",
+  "Fifty waves. Even the rebels light fires in your honor.":
+    "Vijftig golven. Zelfs de rebellen ontsteken vuren ter ere van jou.",
   "Sure?": "Zeker?",
   "Envoy": "Gezant",
   "Envoys": "Gezanten",
-  "Send to a rebel camp: tribute of gold and food, once per camp": "Stuur naar een rebellenkamp: tribuut van goud en voedsel, één keer per kamp",
+  "Send to a rebel camp: tribute of gold and food, once per camp":
+    "Stuur naar een rebellenkamp: tribuut van goud en voedsel, één keer per kamp",
   "Needs an embassy": "Vereist een ambassade",
   "Rebel camp tribute: +{0} gold, +{1} food": "Tribuut van het rebellenkamp: +{0} goud, +{1} voedsel",
   "WOLF PACK - fast raiders from the wild!": "WOLVENROEDEL - snelle rovers uit de wildernis!",
   "WOLF PACK - fast raiders from the wild! {0}": "WOLVENROEDEL - snelle rovers uit de wildernis! {0}",
-  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold. {1}": "ECLIPS - de doden worden sterker, maar er vallen relikwieën: +{0} goud. {1}",
-  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold.": "ECLIPS - de doden worden sterker, maar er vallen relikwieën: +{0} goud.",
-  "Ruins explored: an old vault of coins and stone (+{0} gold, +{1} stone)": "Ruïnes verkend: een oude kluis met munten en steen (+{0} goud, +{1} steen)",
-  "Ruins explored: a ruined granary and woodpile (+{0} wood, +{1} food)": "Ruïnes verkend: een vervallen graanschuur en houtstapel (+{0} hout, +{1} voedsel)",
+  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold. {1}":
+    "ECLIPS - de doden worden sterker, maar er vallen relikwieën: +{0} goud. {1}",
+  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold.":
+    "ECLIPS - de doden worden sterker, maar er vallen relikwieën: +{0} goud.",
+  "Ruins explored: an old vault of coins and stone (+{0} gold, +{1} stone)":
+    "Ruïnes verkend: een oude kluis met munten en steen (+{0} goud, +{1} steen)",
+  "Ruins explored: a ruined granary and woodpile (+{0} wood, +{1} food)":
+    "Ruïnes verkend: een vervallen graanschuur en houtstapel (+{0} hout, +{1} voedsel)",
   "Ruins explored: a forgotten treasury (+{0} gold)": "Ruïnes verkend: een vergeten schatkamer (+{0} goud)",
-  "Rebel envoys bring tribute from a nearby camp: +{0} gold, +{1} food": "Rebellengezanten brengen tribuut van een nabij kamp: +{0} goud, +{1} voedsel",
-  "A meteor shower: rare stone falls near the walls: +{0} stone": "Een meteorenregen: zeldzaam steen valt bij de muren: +{0} steen",
+  "Rebel envoys bring tribute from a nearby camp: +{0} gold, +{1} food":
+    "Rebellengezanten brengen tribuut van een nabij kamp: +{0} goud, +{1} voedsel",
+  "A meteor shower: rare stone falls near the walls: +{0} stone":
+    "Een meteorenregen: zeldzaam steen valt bij de muren: +{0} steen",
   "Scout": "Verkenner",
   "Engineer": "Ingenieur",
   "Scouts": "Verkenners",
@@ -1412,10 +1515,14 @@ export const NL = {
   "train units 15% faster": "trainen eenheden 15% sneller",
   "2x2 workshop: buildings around it": "Werkplaats 2x2: gebouwen eromheen",
   "slowly repair themselves": "herstellen zichzelf langzaam",
-  "Wave 5: The first rebel scouts are seen on the hills. They watch the walls, and they do not wave.": "Golf 5: De eerste rebellenverkenners worden op de heuvels gezien. Ze kijken naar de muren, en ze zwaaien niet.",
-  "Wave 10: A giant walks with the horde. The old records call such things Wardens, the fallen leaders of the old world.": "Golf 10: Een reus loopt mee met de horde. De oude geschriften noemen zulke wezens Wachters, de gevallen leiders van de oude wereld.",
-  "Wave 20: A rebel envoy leaves a message at the gate: the camps know the King's light cannot burn forever.": "Golf 20: Een rebellengezant laat een bericht achter bij de poort: de kampen weten dat het licht van de Koning niet eeuwig kan branden.",
-  "Wave 30: Only the bastion still stands. If dawn comes again, Naranxia will be more than a refuge.": "Golf 30: Alleen het bastion staat nog overeind. Als de dageraad terugkeert, wordt Naranxia meer dan een toevluchtsoord.",
+  "Wave 5: The first rebel scouts are seen on the hills. They watch the walls, and they do not wave.":
+    "Golf 5: De eerste rebellenverkenners worden op de heuvels gezien. Ze kijken naar de muren, en ze zwaaien niet.",
+  "Wave 10: A giant walks with the horde. The old records call such things Wardens, the fallen leaders of the old world.":
+    "Golf 10: Een reus loopt mee met de horde. De oude geschriften noemen zulke wezens Wachters, de gevallen leiders van de oude wereld.",
+  "Wave 20: A rebel envoy leaves a message at the gate: the camps know the King's light cannot burn forever.":
+    "Golf 20: Een rebellengezant laat een bericht achter bij de poort: de kampen weten dat het licht van de Koning niet eeuwig kan branden.",
+  "Wave 30: Only the bastion still stands. If dawn comes again, Naranxia will be more than a refuge.":
+    "Golf 30: Alleen het bastion staat nog overeind. Als de dageraad terugkeert, wordt Naranxia meer dan een toevluchtsoord.",
   "Reach a higher wave to read more.": "Bereik een hogere golf om meer te lezen.",
   "Watch beacon": "Wachtbaken",
   "Orchard": "Boomgaard",
@@ -1424,10 +1531,14 @@ export const NL = {
   "2x2 apple grove: a trickle of food": "Appelgaard 2x2: een straaltje voedsel",
   "without a peasant": "zonder boer",
   "Chronicle": "Kroniek",
-  "Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.": "Lang geleden viel de oude wereld ten prooi aan de horde. Naranxia is alles wat overblijft: het laatste bastion van de mensheid.",
-  "King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.": "Koning Naraige bewaakt de muren en het laatste licht ervan. Elke nacht keert de horde terug, en elke dageraad brandt de zon haar weg.",
-  "Around the bastion, other camps survive. They refused the King's rule: rebels, and neighbours. Some trade, some raid.": "Rond het bastion overleven andere kampen. Ze weigerden het gezag van de Koning: rebellen, en buren. Sommige drijven handel, andere plunderen.",
-  "Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.": "Houd de muren, voed je volk en ontdek wat de kampen willen. De nacht is lang, maar de dageraad komt altijd.",
+  "Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.":
+    "Lang geleden viel de oude wereld ten prooi aan de horde. Naranxia is alles wat overblijft: het laatste bastion van de mensheid.",
+  "King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.":
+    "Koning Naraige bewaakt de muren en het laatste licht ervan. Elke nacht keert de horde terug, en elke dageraad brandt de zon haar weg.",
+  "Around the bastion, other camps survive. They refused the King's rule: rebels, and neighbours. Some trade, some raid.":
+    "Rond het bastion overleven andere kampen. Ze weigerden het gezag van de Koning: rebellen, en buren. Sommige drijven handel, andere plunderen.",
+  "Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.":
+    "Houd de muren, voed je volk en ontdek wat de kampen willen. De nacht is lang, maar de dageraad komt altijd.",
   "The last bastion of humanity": "Het laatste bastion van de mensheid",
   "Rebel camps watch from afar": "Rebellenkampen kijken toe van ver",
   "Hold the last light": "Houd het laatste licht",
@@ -1459,24 +1570,38 @@ export const NL = {
   "You get {0} stone": "Je krijgt {0} steen",
   "You get {0} food": "Je krijgt {0} voedsel",
   "Saving...": "Opslaan...",
-  "The biggest Naranxia update so far: a new look for the whole game, a deeper last bastion, and a real welcome for new players.": "De grootste Naranxia-update tot nu toe: een nieuwe look voor het hele spel, een rijker laatste bastion en een echt welkom voor nieuwe spelers.",
+  "The biggest Naranxia update so far: a new look for the whole game, a deeper last bastion, and a real welcome for new players.":
+    "De grootste Naranxia-update tot nu toe: een nieuwe look voor het hele spel, een rijker laatste bastion en een echt welkom voor nieuwe spelers.",
   "A whole new look": "Een compleet nieuwe look",
-  "Every unit, building, weapon and tool rebuilt in a blocky pixel style, with team tabards, rank stripes and pixel health bars.": "Elke eenheid, elk gebouw, wapen en gereedschap opnieuw gemaakt in een blokkerige pixelstijl, met wapenrokken in teamkleur, rangstrepen en pixel-levensbalken.",
-  "The world is made of blocks: terrain, trees, rocks and seasons.": "De wereld bestaat uit blokken: terrein, bomen, rotsen en seizoenen.",
-  "Mutants are now true monstrosities, and wave bosses are bigger and meaner.": "Mutanten zijn nu echte gedrochten, en de golfbazen zijn groter en gemener.",
-  "New title screen, menus, launch intro, kingdom banners on a pole, and remade sounds and music.": "Nieuw titelscherm, nieuwe menu's, een startintro, koninkrijksbanieren aan een mast en opnieuw gemaakte geluiden en muziek.",
+  "Every unit, building, weapon and tool rebuilt in a blocky pixel style, with team tabards, rank stripes and pixel health bars.":
+    "Elke eenheid, elk gebouw, wapen en gereedschap opnieuw gemaakt in een blokkerige pixelstijl, met wapenrokken in teamkleur, rangstrepen en pixel-levensbalken.",
+  "The world is made of blocks: terrain, trees, rocks and seasons.":
+    "De wereld bestaat uit blokken: terrein, bomen, rotsen en seizoenen.",
+  "Mutants are now true monstrosities, and wave bosses are bigger and meaner.":
+    "Mutanten zijn nu echte gedrochten, en de golfbazen zijn groter en gemener.",
+  "New title screen, menus, launch intro, kingdom banners on a pole, and remade sounds and music.":
+    "Nieuw titelscherm, nieuwe menu's, een startintro, koninkrijksbanieren aan een mast en opnieuw gemaakte geluiden en muziek.",
   "New to play": "Nieuw in het spel",
-  "Quests guide your first game, from the first log to wave 10, with small rewards. They work solo and in co-op (shared with your partner), and a marker shows the button to press.": "Missies begeleiden je eerste spel, van het eerste houtblok tot golf 10, met kleine beloningen. Ze werken solo en in coöp (gedeeld met je partner), en een markering toont de knop die je moet indrukken.",
-  "New unit: the Spearman, a cheap line holder with reach, strong against brutes and bosses.": "Nieuwe eenheid: de Speerdrager, een goedkope linievechter met bereik, sterk tegen bruten en bazen.",
-  "The tutorial is now a video-style guide with short looping clips.": "De tutorial is nu een gids in videostijl met korte, herhalende clips.",
-  "Last bastion: ruins to loot, rebel camps with personalities, envoys and tribute, scouts, engineers and eleven new buildings.": "Laatste bastion: ruïnes om te plunderen, rebellenkampen met een eigen karakter, gezanten en tribuut, verkenners, ingenieurs en elf nieuwe gebouwen.",
-  "New events: wolf packs, eclipses and meteor showers. Caravans and rebel envoys now ask you to choose.": "Nieuwe gebeurtenissen: wolvenroedels, eclipsen en meteorenregens. Karavanen en rebellengezanten laten je nu kiezen.",
-  "Named bosses with legends and powers, a realm journal in the Chronicle.": "Bazen met een naam, legendes en krachten, en een dagboek van het rijk in de Kroniek.",
-  "The King gains XP, levels up to 5 and learns talents in two branches.": "De Koning verdient XP, stijgt tot niveau 5 en leert talenten in twee takken.",
+  "Quests guide your first game, from the first log to wave 10, with small rewards. They work solo and in co-op (shared with your partner), and a marker shows the button to press.":
+    "Missies begeleiden je eerste spel, van het eerste houtblok tot golf 10, met kleine beloningen. Ze werken solo en in coöp (gedeeld met je partner), en een markering toont de knop die je moet indrukken.",
+  "New unit: the Spearman, a cheap line holder with reach, strong against brutes and bosses.":
+    "Nieuwe eenheid: de Speerdrager, een goedkope linievechter met bereik, sterk tegen bruten en bazen.",
+  "The tutorial is now a video-style guide with short looping clips.":
+    "De tutorial is nu een gids in videostijl met korte, herhalende clips.",
+  "Last bastion: ruins to loot, rebel camps with personalities, envoys and tribute, scouts, engineers and eleven new buildings.":
+    "Laatste bastion: ruïnes om te plunderen, rebellenkampen met een eigen karakter, gezanten en tribuut, verkenners, ingenieurs en elf nieuwe gebouwen.",
+  "New events: wolf packs, eclipses and meteor showers. Caravans and rebel envoys now ask you to choose.":
+    "Nieuwe gebeurtenissen: wolvenroedels, eclipsen en meteorenregens. Karavanen en rebellengezanten laten je nu kiezen.",
+  "Named bosses with legends and powers, a realm journal in the Chronicle.":
+    "Bazen met een naam, legendes en krachten, en een dagboek van het rijk in de Kroniek.",
+  "The King gains XP, levels up to 5 and learns talents in two branches.":
+    "De Koning verdient XP, stijgt tot niveau 5 en leert talenten in twee takken.",
   "Research with either-or paths, and barter at the market.": "Onderzoek met of-of-paden, en ruilhandel op de markt.",
   "Comfort": "Comfort",
-  "Leaderboard with your top 10 right on the title screen, and an Update page for what changed.": "Ranglijst met je top 10 direct op het titelscherm, en een Update-pagina met wat er veranderd is.",
-  "Colour-blind mode, touch controls, one-time hints, public co-op lobby, more languages.": "Kleurenblindmodus, aanraakbediening, eenmalige tips, openbare coöp-lobby, meer talen.",
+  "Leaderboard with your top 10 right on the title screen, and an Update page for what changed.":
+    "Ranglijst met je top 10 direct op het titelscherm, en een Update-pagina met wat er veranderd is.",
+  "Colour-blind mode, touch controls, one-time hints, public co-op lobby, more languages.":
+    "Kleurenblindmodus, aanraakbediening, eenmalige tips, openbare coöp-lobby, meer talen.",
   "Saves always load after an update.": "Opgeslagen spellen laden altijd na een update.",
   "Guide": "Gids",
   "Traps": "Vallen",
@@ -1484,39 +1609,66 @@ export const NL = {
   "Market and barter": "Markt en ruilhandel",
   "Rebel camps and envoys": "Rebellenkampen en gezanten",
   "King talents": "Talenten van de Koning",
-  "Spike traps are in the Defense menu: cheap, one tile each": "Spijkervallen staan in het menu Verdediging: goedkoop, elk één tegel",
+  "Spike traps are in the Defense menu: cheap, one tile each":
+    "Spijkervallen staan in het menu Verdediging: goedkoop, elk één tegel",
   "Zombies walking on a trap are hurt until it breaks": "Zombies die over een val lopen raken gewond tot hij breekt",
-  "Research Boiling oil: your walls scald the zombies that touch them": "Onderzoek Kokende olie: je muren verbranden de zombies die ze aanraken",
+  "Research Boiling oil: your walls scald the zombies that touch them":
+    "Onderzoek Kokende olie: je muren verbranden de zombies die ze aanraken",
   "A season lasts 4 waves: spring, summer, autumn, winter": "Een seizoen duurt 4 golven: lente, zomer, herfst, winter",
   "Each wave has its weather: clear, rain, fog or snow": "Elke golf heeft zijn weer: helder, regen, mist of sneeuw",
-  "Seasons change the light and the sounds, not the rules": "Seizoenen veranderen het licht en de geluiden, niet de regels",
-  "Selling the same resource again and again pays less for a while": "Steeds dezelfde grondstof verkopen levert een tijdje minder op",
-  "Barter swaps 50 of one resource for another at a better rate": "Ruilhandel wisselt 50 van een grondstof voor een andere tegen een betere koers",
-  "A merchant caravan passes at times: take its goods or escort it to the market": "Soms komt er een handelskaravaan langs: neem de goederen of escorteer haar naar de markt",
+  "Seasons change the light and the sounds, not the rules":
+    "Seizoenen veranderen het licht en de geluiden, niet de regels",
+  "Selling the same resource again and again pays less for a while":
+    "Steeds dezelfde grondstof verkopen levert een tijdje minder op",
+  "Barter swaps 50 of one resource for another at a better rate":
+    "Ruilhandel wisselt 50 van een grondstof voor een andere tegen een betere koers",
+  "A merchant caravan passes at times: take its goods or escort it to the market":
+    "Soms komt er een handelskaravaan langs: neem de goederen of escorteer haar naar de markt",
   "Build an embassy, then train an envoy at the castle": "Bouw een ambassade en train daarna een gezant in het kasteel",
-  "When rebel envoys come, take their tribute or refuse it for renown: later tributes pay more": "Komen er rebellengezanten, neem hun tribuut of weiger het voor aanzien: latere tributen leveren meer op",
-  "The King gains XP when zombies die near him, after each wave and from bosses": "De Koning krijgt XP als zombies bij hem in de buurt sterven, na elke golf en van bazen",
+  "When rebel envoys come, take their tribute or refuse it for renown: later tributes pay more":
+    "Komen er rebellengezanten, neem hun tribuut of weiger het voor aanzien: latere tributen leveren meer op",
+  "The King gains XP when zombies die near him, after each wave and from bosses":
+    "De Koning krijgt XP als zombies bij hem in de buurt sterven, na elke golf en van bazen",
   "Each new level gives one talent point": "Elk nieuw niveau geeft één talentpunt",
-  "Two branches of four talents, learned in order: the war cry or the charge": "Twee takken van vier talenten, in volgorde geleerd: de oorlogskreet of de aanval",
+  "Two branches of four talents, learned in order: the war cry or the charge":
+    "Twee takken van vier talenten, in volgorde geleerd: de oorlogskreet of de aanval",
   "Quest skipped: {0}": "Missie overgeslagen: {0}",
   "Skipped": "Overgeslagen",
   "Comfort and fixes after the big update.": "Comfort en verbeteringen na de grote update.",
-  "The Update page shows clean section titles and is translated in every language.": "De Update-pagina toont nette sectietitels en is in elke taal vertaald.",
-  "Video guide: sounds in the clips, five new chapters (traps, seasons, market, rebel camps, King talents) and a Guide entry in the Esc menu.": "Videogids: geluiden in de clips, vijf nieuwe hoofdstukken (vallen, seizoenen, markt, rebellenkampen, talenten van de Koning) en een item Gids in het Esc-menu.",
-  "Rebel camps now field spearmen, more of them in warlike camps. The Spearman's default key is F4.": "Rebellenkampen zetten nu speerdragers in, meer in oorlogszuchtige kampen. De standaardtoets van de Speerdrager is F4.",
-  "Co-op convoys: porters no longer stop short of your partner's castle, long detours are allowed, and a convoy with no land route is refused at once.": "Coöp-konvooien: dragers stoppen niet meer vóór het kasteel van je partner, lange omwegen zijn toegestaan en een konvooi zonder route over land wordt meteen geweigerd.",
-  "Co-op: the convoy quest is skipped when the two castles are not linked by land.": "Coöp: de konvooimissie wordt overgeslagen als de twee kastelen niet over land verbonden zijn.",
-  "AZERTY keyboards: the number row now works without Shift.": "AZERTY-toetsenborden: de cijferrij werkt nu zonder Shift.",
-  "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "De missiepijl blijft uit de buurt van de bovenste balken en wijst vanaf de schermrand als het gebouw buiten beeld is.",
-  "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Snellere simulatie van de horde, en nagelezen Portugese, Duitse, Nederlandse, Poolse en Turkse teksten.",
-  "Co-op: putting both games back in step, a few seconds (nothing to do)": "Coöp: beide spellen worden gelijkgezet, een paar seconden (je hoeft niets te doen)",
-  "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Coöp: wachten op {0}, {1} s (trage verbinding of computer)",
-  "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Coöp: geen antwoord van {0} sinds {1} s, het spel gaat verder zodra de verbinding terug is",
-  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Klik om het kasteel te plaatsen  -  sleep / {0}: bewegen   Rechts slepen: draaien   Wiel: zoomen",
-  "Co-op fixes, waves that always end, and new default keys.": "Coöp-verbeteringen, golven die altijd eindigen en nieuwe standaardtoetsen.",
-  "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.": "Zombies blijven niet meer vastzitten in water of op kliffen: elke golf kan nu worden uitgespeeld.",
-  "Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.": "Coöp: na een hersynchronisatie starten beide spellen precies in dezelfde toestand, en een duidelijke regel zegt wat er gebeurt terwijl je wacht.",
-  "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.": "Coöp: als je partner weggaat, blijf je speler 2 met je eigen kasteel. Opgeslagen spellen gaan nu precies verder zoals het oorspronkelijke spel.",
-  "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.": "Nieuwe standaardtoetsen: fakkel F6, verzamelpunt van de kazerne F7, boswachter F9, gilde F3. Op AZERTY zit de camera nu op Z Q S D.",
-  "The minimap now frames the area you explored, and banners no longer cover the event buttons.": "De minimap toont nu het verkende gebied, en banners bedekken de gebeurtenisknoppen niet meer.",
+  "The Update page shows clean section titles and is translated in every language.":
+    "De Update-pagina toont nette sectietitels en is in elke taal vertaald.",
+  "Video guide: sounds in the clips, five new chapters (traps, seasons, market, rebel camps, King talents) and a Guide entry in the Esc menu.":
+    "Videogids: geluiden in de clips, vijf nieuwe hoofdstukken (vallen, seizoenen, markt, rebellenkampen, talenten van de Koning) en een item Gids in het Esc-menu.",
+  "Rebel camps now field spearmen, more of them in warlike camps. The Spearman's default key is F4.":
+    "Rebellenkampen zetten nu speerdragers in, meer in oorlogszuchtige kampen. De standaardtoets van de Speerdrager is F4.",
+  "Co-op convoys: porters no longer stop short of your partner's castle, long detours are allowed, and a convoy with no land route is refused at once.":
+    "Coöp-konvooien: dragers stoppen niet meer vóór het kasteel van je partner, lange omwegen zijn toegestaan en een konvooi zonder route over land wordt meteen geweigerd.",
+  "Co-op: the convoy quest is skipped when the two castles are not linked by land.":
+    "Coöp: de konvooimissie wordt overgeslagen als de twee kastelen niet over land verbonden zijn.",
+  "AZERTY keyboards: the number row now works without Shift.":
+    "AZERTY-toetsenborden: de cijferrij werkt nu zonder Shift.",
+  "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.":
+    "De missiepijl blijft uit de buurt van de bovenste balken en wijst vanaf de schermrand als het gebouw buiten beeld is.",
+  "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.":
+    "Snellere simulatie van de horde, en nagelezen Portugese, Duitse, Nederlandse, Poolse en Turkse teksten.",
+  "Co-op: putting both games back in step, a few seconds (nothing to do)":
+    "Coöp: beide spellen worden gelijkgezet, een paar seconden (je hoeft niets te doen)",
+  "Co-op: waiting for {0}, {1} s (slow connection or computer)":
+    "Coöp: wachten op {0}, {1} s (trage verbinding of computer)",
+  "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back":
+    "Coöp: geen antwoord van {0} sinds {1} s, het spel gaat verder zodra de verbinding terug is",
+  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom":
+    "Klik om het kasteel te plaatsen  -  sleep / {0}: bewegen   Rechts slepen: draaien   Wiel: zoomen",
+  "Co-op fixes, waves that always end, and new default keys.":
+    "Coöp-verbeteringen, golven die altijd eindigen en nieuwe standaardtoetsen.",
+  "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.":
+    "Zombies blijven niet meer vastzitten in water of op kliffen: elke golf kan nu worden uitgespeeld.",
+  "Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.":
+    "Coöp: na een hersynchronisatie starten beide spellen precies in dezelfde toestand, en een duidelijke regel zegt wat er gebeurt terwijl je wacht.",
+  "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.":
+    "Coöp: als je partner weggaat, blijf je speler 2 met je eigen kasteel. Opgeslagen spellen gaan nu precies verder zoals het oorspronkelijke spel.",
+  "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.":
+    "Nieuwe standaardtoetsen: fakkel F6, verzamelpunt van de kazerne F7, boswachter F9, gilde F3. Op AZERTY zit de camera nu op Z Q S D.",
+  "The minimap now frames the area you explored, and banners no longer cover the event buttons.":
+    "De minimap toont nu het verkende gebied, en banners bedekken de gebeurtenisknoppen niet meer.",
 };

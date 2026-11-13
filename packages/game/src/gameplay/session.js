@@ -12,10 +12,10 @@ export const sessionState = {
   paused: false,
   diffI: 1,
   bannerT: 0,
-  bannerS: '',
-  bannerS2: '',
+  bannerS: "",
+  bannerS2: "",
   kills: 0,
-  best: {w:0,k:0},
+  best: { w: 0, k: 0 },
   jrn: [],
   clockT: 0,
   camSave: null,
@@ -39,12 +39,15 @@ export const sessionState = {
   ver: 0,
 };
 
-
-
-const DIFFS = [{n:'Normal',zm:1,tm:1,g:200,first:600}];
-export const D_ = ()=>DIFFS[0];
+const DIFFS = [{ n: "Normal", zm: 1, tm: 1, g: 200, first: 600 }];
+export const D_ = () => DIFFS[0];
 /* ================= GAME LOGIC ================= */
 
 export function initializeSessionPreferences() {
-  try{sessionState.diffI=0;sessionState.best=JSON.parse(localStorage.getItem('dk_best')||'{"w":0,"k":0}')}catch{/* Unavailable or invalid storage keeps the initialized session defaults. */}
+  try {
+    sessionState.diffI = 0;
+    sessionState.best = JSON.parse(localStorage.getItem("dk_best") || '{"w":0,"k":0}');
+  } catch {
+    /* Unavailable or invalid storage keeps the initialized session defaults. */
+  }
 }

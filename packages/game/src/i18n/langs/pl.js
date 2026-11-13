@@ -14,7 +14,8 @@ export const PL = {
   " - click a tile - right-click or Esc cancels": " - kliknij pole - prawy przycisk lub Esc anuluje",
   " - click or drag over wood buildings": " - kliknij lub przeciągnij po drewnianych budynkach",
   " - click the new centre of your castle": " - kliknij nowy środek zamku",
-  " - nobody works it: right-click it with a peasant": " - nikt go nie obsługuje: kliknij go prawym przyciskiem chłopem",
+  " - nobody works it: right-click it with a peasant":
+    " - nikt go nie obsługuje: kliknij go prawym przyciskiem chłopem",
   " - one block that climbs 1 level, [R] turns it": " - jeden blok wznoszący się o 1 poziom, [R] obraca go",
   " - paint tiles": " - maluj pola",
   " - press Repair": " - naciśnij Napraw",
@@ -91,7 +92,8 @@ export const PL = {
   "A peasant now works the ": "Chłop pracuje teraz przy: ",
   "A peasant who only builds new buildings": "Chłop, który buduje tylko nowe budynki",
   "A tower with a siege weapon cannot turn": "Wieża z machiną oblężniczą nie może się obracać",
-  "A villager is cut off from your castle and storages - open a way or build a gate": "Wieśniak jest odcięty od zamku i magazynów - otwórz drogę lub zbuduj bramę",
+  "A villager is cut off from your castle and storages - open a way or build a gate":
+    "Wieśniak jest odcięty od zamku i magazynów - otwórz drogę lub zbuduj bramę",
   "ACID SPITTERS": "PLUJĄCY KWASEM",
   "Academy": "Akademia",
   "Academy: research upgrades here": "Akademia: tutaj badasz ulepszenia",
@@ -172,7 +174,8 @@ export const PL = {
   "Build towers!": "Buduj wieże!",
   "Build wall": "Zbuduj mur",
   "Builders": "Budowniczowie",
-  "Builders guild: choose how many peasants build, repair and reshape the land": "Gildia budowniczych: wybierz, ilu chłopów buduje, naprawia i przekształca teren",
+  "Builders guild: choose how many peasants build, repair and reshape the land":
+    "Gildia budowniczych: wybierz, ilu chłopów buduje, naprawia i przekształca teren",
   "Builders' guild []]": "Gildia budowniczych []]",
   "Building tier [L]": "Poziom budynku [L]",
   "Buildings have 40% more strength": "Budynki są o 40% wytrzymalsze",
@@ -186,7 +189,8 @@ export const PL = {
   "Cancel current orders and stay here": "Anuluj bieżące rozkazy i zostań tutaj",
   "Cannon": "Armata",
   "Cannon [/]": "Armata [/]",
-  "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)": "Nie można tam przenieść zamku (5x5 wolne, w promieniu 40 pól, płaski teren)",
+  "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)":
+    "Nie można tam przenieść zamku (5x5 wolne, w promieniu 40 pól, płaski teren)",
   "Cannot reshape this tile": "Nie można przekształcić tego pola",
   "Captain": "Kapitan",
   "Castle health": "Zdrowie zamku",
@@ -196,7 +200,8 @@ export const PL = {
   "Castle rally point set": "Ustawiono punkt zbiórki zamku",
   "Castle rally: new peasants gather this resource": "Zbiórka zamku: nowi chłopi zbierają ten surowiec",
   "Castle view": "Widok zamku",
-  "Castle: shoots arrows at zombies in range, trains peasants and builds": "Zamek: strzela z łuków do zombie w zasięgu, szkoli chłopów i buduje",
+  "Castle: shoots arrows at zombies in range, trains peasants and builds":
+    "Zamek: strzela z łuków do zombie w zasięgu, szkoli chłopów i buduje",
   "Centers the camera on your castle": "Centruje kamerę na zamku",
   "Chain mail": "Kolczuga",
   "Champion": "Czempion",
@@ -221,7 +226,8 @@ export const PL = {
   "Click or drag over wooden buildings": "Kliknij lub przeciągnij po drewnianych budynkach",
   "Click or drag to paint": "Kliknij lub przeciągnij, aby malować",
   "Click the map: new soldiers from": "Kliknij mapę: nowi żołnierze z",
-  "Click to place the castle  -  drag / WASD: move   Right drag: rotate   Wheel: zoom": "Kliknij, aby postawić zamek  -  przeciągnij / WASD: ruch   Prawy przycisk: obrót   Kółko: zoom",
+  "Click to place the castle  -  drag / WASD: move   Right drag: rotate   Wheel: zoom":
+    "Kliknij, aby postawić zamek  -  przeciągnij / WASD: ruch   Prawy przycisk: obrót   Kółko: zoom",
   "Close [M]": "Zamknij [M]",
   "Co-op lobby - ": "Poczekalnia co-op - ",
   "Co-op: OUT OF SYNC": "Co-op: BRAK SYNCHRONIZACJI",
@@ -234,7 +240,8 @@ export const PL = {
   "Costs ": "Koszt ",
   "Costs 100 gold, 150 wood": "Koszt: 100 złota, 150 drewna",
   "Costs part of its wood / stone / gold": "Kosztuje część drewna / kamienia / złota",
-  "Could not reach the matchmaking service. Check your connection and try again.": "Nie można połączyć się z usługą kojarzenia graczy. Sprawdź połączenie i spróbuj ponownie.",
+  "Could not reach the matchmaking service. Check your connection and try again.":
+    "Nie można połączyć się z usługą kojarzenia graczy. Sprawdź połączenie i spróbuj ponownie.",
   "Creating your room...": "Tworzenie twojego pokoju...",
   "Crest": "Herb",
   "Crews": "Załogi",
@@ -284,7 +291,8 @@ export const PL = {
   "Field gun pushed by a crew of 2 (2 population)": "Działo polowe pchane przez załogę 2 osób (2 populacji)",
   "Fight around their post, then walk back to it": "Walcz wokół swojego posterunku, potem wróć na niego",
   "Finish a research": "Dokończ badanie",
-  "Finish this wave first: the next one comes after the rest time": "Najpierw dokończ tę falę: następna przyjdzie po czasie odpoczynku",
+  "Finish this wave first: the next one comes after the rest time":
+    "Najpierw dokończ tę falę: następna przyjdzie po czasie odpoczynku",
   "Fletching": "Lotki do strzał",
   "Food": "Jedzenie",
   "Ford": "Bród",
@@ -363,7 +371,8 @@ export const PL = {
   "Loading...": "Wczytywanie...",
   "Locked": "Zablokowane",
   "Locked: research Masonry at the Academy": "Zablokowane: zbadaj Murarstwo w Akademii",
-  "Long calm between waves, then a slow swarm. It grows stronger each wave.": "Długi spokój między falami, potem wolny rój. Z każdą falą jest silniejszy.",
+  "Long calm between waves, then a slow swarm. It grows stronger each wave.":
+    "Długi spokój między falami, potem wolny rój. Z każdą falą jest silniejszy.",
   "Long range: volleys of 5 arrows": "Duży zasięg: salwy po 5 strzał",
   "Long reach, sweeps several zombies at once": "Długi zasięg, zmiata kilku zombie naraz",
   "MINERS": "GÓRNICY",
@@ -373,7 +382,8 @@ export const PL = {
   "March": "Marsz",
   "Market": "Targ",
   "Market [:]": "Targ [:]",
-  "Market: sell wood, stone or food for gold, or buy them": "Targ: sprzedaj drewno, kamień lub jedzenie za złoto albo je kup",
+  "Market: sell wood, stone or food for gold, or buy them":
+    "Targ: sprzedaj drewno, kamień lub jedzenie za złoto albo je kup",
   "Masonry": "Kamieniarstwo",
   "Masonry research": "Badanie Kamieniarstwa",
   "Matchmaking error (": "Błąd kojarzenia graczy (",
@@ -420,7 +430,8 @@ export const PL = {
   "Not enough ": "Za mało ",
   "Not enough food: build farms and put a peasant on each": "Za mało jedzenia: zbuduj farmy i postaw na każdej chłopa",
   "Not enough resources to upgrade": "Za mało surowców na ulepszenie",
-  "Not suitable: needs dry, gentle land away from the edge": "Nieodpowiednie: potrzebny suchy, łagodny teren z dala od krawędzi",
+  "Not suitable: needs dry, gentle land away from the edge":
+    "Nieodpowiednie: potrzebny suchy, łagodny teren z dala od krawędzi",
   "Nothing to save": "Nic do zapisania",
   "Now with keeps!": "Teraz z basztami!",
   "One research at a time: ": "Jedno badanie naraz: ",
@@ -508,7 +519,8 @@ export const PL = {
   "Researching Masonry...": "Badanie Kamieniarstwa...",
   "Reset keys": "Zresetuj klawisze",
   "Return to the building categories": "Wróć do kategorii budynków",
-  "Right-click a resource to harvest, a building to repair": "Kliknij surowiec prawym przyciskiem, aby zbierać, budynek, aby naprawiać",
+  "Right-click a resource to harvest, a building to repair":
+    "Kliknij surowiec prawym przyciskiem, aby zbierać, budynek, aby naprawiać",
   "Right-click a wall, gate or tower": "Kliknij prawym przyciskiem mur, bramę lub wieżę",
   "Right-click a wall, gate or tower to garrison": "Kliknij prawym przyciskiem mur, bramę lub wieżę, aby obsadzić",
   "Right-click to move or attack": "Kliknij prawym przyciskiem, aby się ruszyć lub atakować",
@@ -534,14 +546,16 @@ export const PL = {
   "Score: ": "Wynik: ",
   "See the whole world, spawns and routes": "Zobacz cały świat, miejsca pojawiania się i trasy",
   "Select": "Zaznacz",
-  "Select a building and press Upgrade, or use the Stone upgrade tool": "Zaznacz budynek i naciśnij Ulepsz lub użyj narzędzia ulepszania kamieniem",
+  "Select a building and press Upgrade, or use the Stone upgrade tool":
+    "Zaznacz budynek i naciśnij Ulepsz lub użyj narzędzia ulepszania kamieniem",
   "Select a captain first": "Najpierw zaznacz kapitana",
   "Select all peasants": "Zaznacz wszystkich chłopów",
   "Select army": "Zaznacz armię",
   "Select army [Q]": "Zaznacz armię [Q]",
   "Select it to open the research menu": "Zaznacz, aby otworzyć menu badań",
   "Select mode: drag draws a box": "Tryb zaznaczania: przeciągnięcie rysuje ramkę",
-  "Select peasants, then right-click a tree, rock or gold to harvest": "Zaznacz chłopów, potem kliknij prawym przyciskiem drzewo, skałę lub złoto, aby zbierać",
+  "Select peasants, then right-click a tree, rock or gold to harvest":
+    "Zaznacz chłopów, potem kliknij prawym przyciskiem drzewo, skałę lub złoto, aby zbierać",
   "Select, then right-click a tree, rock": "Zaznacz, potem kliknij prawym przyciskiem drzewo, skałę",
   "Select: drag draws a box": "Zaznaczanie: przeciągnięcie rysuje ramkę",
   "Selects all fighters": "Zaznacza wszystkich wojowników",
@@ -589,7 +603,8 @@ export const PL = {
   "Storage Box": "Skrzynia Magazynowa",
   "Storage [K]": "Magazyn [K]",
   "Summon King Naraige": "Wezwij króla Naraige",
-  "Summoned at the castle with his 2 royal guards - one king only": "Wezwany do zamku z 2 gwardzistami królewskimi - tylko jeden król",
+  "Summoned at the castle with his 2 royal guards - one king only":
+    "Wezwany do zamku z 2 gwardzistami królewskimi - tylko jeden król",
   "Survive 10 waves": "Przetrwaj 10 fal",
   "Survive 5 waves": "Przetrwaj 5 fal",
   "Survive the night!": "Przetrwaj noc!",
@@ -605,7 +620,8 @@ export const PL = {
   "The castle door needs the 3 tiles in front of it free": "Drzwi zamku wymagają wolnych 3 pól przed sobą",
   "The castle door turns with it": "Drzwi zamku obracają się razem z nim",
   "The code ": "Kod ",
-  "The darkness hurts! Stay near the castle, towers, torches or a bannerman": "Ciemność rani! Zostań blisko zamku, wież, pochodni lub chorążego",
+  "The darkness hurts! Stay near the castle, towers, torches or a bannerman":
+    "Ciemność rani! Zostań blisko zamku, wież, pochodni lub chorążego",
   "The horde turns on ": "Horda zwraca się przeciw ",
   "The host chose a map": "Host wybrał mapę",
   "The host chose a new map": "Host wybrał nową mapę",
@@ -615,8 +631,10 @@ export const PL = {
   "The two castles are too close: one of you must move.": "Oba zamki są za blisko: jedno z was musi się przenieść.",
   "This tower already has a siege weapon": "Ta wieża ma już machinę oblężniczą",
   "Title Screen": "Ekran tytułowy",
-  "Too close to another forester: their planting areas would touch": "Za blisko innego leśniczego: ich obszary sadzenia by się stykały",
-  "Too close to your partner: pick a site at least 45 tiles away": "Za blisko partnera: wybierz miejsce co najmniej 45 pól dalej",
+  "Too close to another forester: their planting areas would touch":
+    "Za blisko innego leśniczego: ich obszary sadzenia by się stykały",
+  "Too close to your partner: pick a site at least 45 tiles away":
+    "Za blisko partnera: wybierz miejsce co najmniej 45 pól dalej",
   "Too high": "Za wysoko",
   "Torch": "Pochodnia",
   "Torch [']": "Pochodnia [']",
@@ -639,7 +657,8 @@ export const PL = {
   "Turns the selected building 90 degrees": "Obraca zaznaczony budynek o 90 stopni",
   "Type the room code first.": "Najpierw wpisz kod pokoju.",
   "Ultra HD": "Ultra HD",
-  "Units are trained in a Barracks: build one, then click it": "Jednostki szkoli się w Koszarach: zbuduj je, potem kliknij",
+  "Units are trained in a Barracks: build one, then click it":
+    "Jednostki szkoli się w Koszarach: zbuduj je, potem kliknij",
   "Units train 25% faster": "Jednostki szkolą się o 25% szybciej",
   "Units trained while it is selected": "Jednostki szkolone, gdy jest zaznaczone",
   "Unknown save format": "Nieznany format zapisu",
@@ -733,9 +752,12 @@ export const PL = {
   "save not found": "nie znaleziono zapisu",
   "tab hidden": "karta ukryta",
   "the other peasants keep gathering": "pozostali chłopi dalej zbierają",
-  "their acid keeps burning men and walls - spread your troops": "ich kwas wciąż pali ludzi i mury - rozproszcie wojska",
-  "they blow up at your walls, or when they die - shoot them from afar, ideally inside the horde": "wybuchają przy twoich murach lub gdy giną - strzelaj z daleka, najlepiej w środku hordy",
-  "they dig through cliffs, rock and woods to open a way for the horde": "przekopują się przez klify, skały i lasy, by otworzyć hordzie drogę",
+  "their acid keeps burning men and walls - spread your troops":
+    "ich kwas wciąż pali ludzi i mury - rozproszcie wojska",
+  "they blow up at your walls, or when they die - shoot them from afar, ideally inside the horde":
+    "wybuchają przy twoich murach lub gdy giną - strzelaj z daleka, najlepiej w środku hordy",
+  "they dig through cliffs, rock and woods to open a way for the horde":
+    "przekopują się przez klify, skały i lasy, by otworzyć hordzie drogę",
   "to garrison it for more range": "aby go obsadzić dla większego zasięgu",
   "to rebuild them in stone (walls...)": "aby odbudować je z kamienia (mury...)",
   "towers +40% damage": "wieże +40% obrażeń",
@@ -748,7 +770,8 @@ export const PL = {
   " - {0} sapling{1} growing": " - rosnące sadzonki: {0}",
   " - {0} villager{1} sheltering inside (Repair calls them out)": " - wieśniacy w schronieniu: {0} (Napraw ich wzywa)",
   "+{0} gold": "+{0} złota",
-  "A merchant caravan passes: +{0} gold, +{1} wood, +{2} stone": "Przejeżdża karawana kupiecka: +{0} złota, +{1} drewna, +{2} kamienia",
+  "A merchant caravan passes: +{0} gold, +{1} wood, +{2} stone":
+    "Przejeżdża karawana kupiecka: +{0} złota, +{1} drewna, +{2} kamienia",
   "A peasant now works the {0}": "Chłop pracuje teraz przy: {0}",
   "All visible {0}s selected": "Zaznaczono wszystkie widoczne: {0}",
   "BLOOD MOON - a bigger, faster horde! {0}": "KRWAWY KSIĘŻYC - większa, szybsza horda! {0}",
@@ -756,11 +779,13 @@ export const PL = {
   "Best: wave {0}  -  {1} zombies slain": "Rekord: fala {0}  -  {1} zabitych zombie",
   "Bought 50 {0} for {1} gold": "Kupiono 50 {0} za {1} złota",
   "Buy 50 {0}": "Kup 50 {0}",
-  "Castle: shoots arrows at zombies in range, trains peasants and builds{0}": "Zamek: strzela z łuków do zombie w zasięgu, szkoli chłopów i buduje{0}",
+  "Castle: shoots arrows at zombies in range, trains peasants and builds{0}":
+    "Zamek: strzela z łuków do zombie w zasięgu, szkoli chłopów i buduje{0}",
   "Co-op lobby - {0} | {1}: {2}": "Poczekalnia co-op - {0} | {1}: {2}",
   "Connection error ({0}).": "Błąd połączenia ({0}).",
   "Costs {0} gold": "Koszt: {0} złota",
-  "Dawn - {0} villager{1} leave the castle and go back to work": "Świt - wieśniacy ({0}) opuszczają zamek i wracają do pracy",
+  "Dawn - {0} villager{1} leave the castle and go back to work":
+    "Świt - wieśniacy ({0}) opuszczają zamek i wracają do pracy",
   "Dawn is coming - next wave in {0}": "Zbliża się świt - następna fala za {0}",
   "Formation: {0}": "Szyk: {0}",
   "Game loaded - wave {0}": "Gra wczytana - fala {0}",
@@ -774,7 +799,8 @@ export const PL = {
   "Joining room {0}...": "Dołączanie do pokoju {0}...",
   "Load failed: {0}": "Wczytanie nie powiodło się: {0}",
   "Map #{0}   Click to jump there": "Mapa #{0}   Kliknij, aby tam przejść",
-  "Matchmaking error ({0}). Check your connection and try again.": "Błąd kojarzenia graczy ({0}). Sprawdź połączenie i spróbuj ponownie.",
+  "Matchmaking error ({0}). Check your connection and try again.":
+    "Błąd kojarzenia graczy ({0}). Sprawdź połączenie i spróbuj ponownie.",
   "NEW ZOMBIES: {0}": "NOWE ZOMBIE: {0}",
   "NEW ZOMBIES: {0}!  -  from {1}": "NOWE ZOMBIE: {0}!  -  z {1}",
   "New buildings: {0}": "Nowe budynki: {0}",
@@ -785,7 +811,8 @@ export const PL = {
   "Only one {0} per kingdom": "Tylko jeden: {0} na królestwo",
   "Pattern colour: {0}": "Kolor wzoru: {0}",
   "Place {0}": "Postaw: {0}",
-  "Place {0} - click a tile - right-click or Esc cancels": "Postaw: {0} - kliknij pole - prawy przycisk lub Esc anuluje",
+  "Place {0} - click a tile - right-click or Esc cancels":
+    "Postaw: {0} - kliknij pole - prawy przycisk lub Esc anuluje",
   "Raid - Wave {0}": "Najazd - Fala {0}",
   "Raid - Wave {0}  ({1} left)": "Najazd - Fala {0}  (zostało {1})",
   "Repairing the {0}": "Naprawianie: {0}",
@@ -803,17 +830,20 @@ export const PL = {
   "Sound {0}": "Dźwięk {0}",
   "Sound: {0}": "Dźwięk: {0}",
   "Squad: {0} / 10 soldiers": "Oddział: {0} / 10 żołnierzy",
-  "The code {0} is already used by another room: choose a different one.": "Kod {0} jest już używany przez inny pokój: wybierz inny.",
+  "The code {0} is already used by another room: choose a different one.":
+    "Kod {0} jest już używany przez inny pokój: wybierz inny.",
   "The horde turns on {0}": "Horda zwraca się przeciw: {0}",
   "The {0}": "{0}",
-  "Version mismatch: you run {0}, {1} runs {2}. Use the same version or the game will desync.": "Niezgodność wersji: używasz {0}, {1} używa {2}. Używaj tej samej wersji, inaczej gra się rozsynchronizuje.",
+  "Version mismatch: you run {0}, {1} runs {2}. Use the same version or the game will desync.":
+    "Niezgodność wersji: używasz {0}, {1} używa {2}. Używaj tej samej wersji, inaczej gra się rozsynchronizuje.",
   "WAVE {0}": "FALA {0}",
   "WAVE {0} BEATEN": "FALA {0} POKONANA",
   "Wait: {0} first": "Czekaj: najpierw {0}",
   "Wave called early: +{0} gold": "Fala wezwana wcześniej: +{0} złota",
   "Wave {0}": "Fala {0}",
   "Waves survived: {0}": "Przetrwane fale: {0}",
-  "Waves survived: {0}    Zombies slain: {1}    Best: wave {2}": "Przetrwane fale: {0}    Zabite zombie: {1}    Rekord: fala {2}",
+  "Waves survived: {0}    Zombies slain: {1}    Best: wave {2}":
+    "Przetrwane fale: {0}    Zabite zombie: {1}    Rekord: fala {2}",
   "You get {0} gold": "Dostajesz {0} złota",
   "You need 50 {0} to sell": "Potrzebujesz 50 {0}, aby sprzedać",
   "You need {0}": "Potrzebujesz: {0}",
@@ -860,17 +890,25 @@ export const PL = {
   "Tutorial": "Samouczek",
   "Skip": "Pomiń",
   "Close": "Zamknij",
-  "Right-click a tree, a rock or gold: your peasants gather it": "Kliknij prawym przyciskiem drzewo, skałę lub złoto: twoi chłopi to zbiorą",
-  "Build a house in the Town menu to raise your population limit": "Zbuduj dom w menu Miasto, aby podnieść limit populacji",
-  "Train a knight in the Train bar: knights fight the zombies": "Wyszkol rycerza na pasku Szkolenia: rycerze walczą z zombie",
-  "Build walls or a tower in the Defense menu to hold the lanes": "Zbuduj mury lub wieżę w menu Obrony, aby utrzymać szlaki",
-  "Try a spike trap in the Defense menu: zombies on it get hurt": "Wypróbuj pułapkę z kolcami w menu Obrony: zombie na niej odnoszą rany",
-  "Zombies follow the red lines: the top bar counts down to the wave": "Zombie podążają czerwonymi liniami: górny pasek odlicza czas do fali",
+  "Right-click a tree, a rock or gold: your peasants gather it":
+    "Kliknij prawym przyciskiem drzewo, skałę lub złoto: twoi chłopi to zbiorą",
+  "Build a house in the Town menu to raise your population limit":
+    "Zbuduj dom w menu Miasto, aby podnieść limit populacji",
+  "Train a knight in the Train bar: knights fight the zombies":
+    "Wyszkol rycerza na pasku Szkolenia: rycerze walczą z zombie",
+  "Build walls or a tower in the Defense menu to hold the lanes":
+    "Zbuduj mury lub wieżę w menu Obrony, aby utrzymać szlaki",
+  "Try a spike trap in the Defense menu: zombies on it get hurt":
+    "Wypróbuj pułapkę z kolcami w menu Obrony: zombie na niej odnoszą rany",
+  "Zombies follow the red lines: the top bar counts down to the wave":
+    "Zombie podążają czerwonymi liniami: górny pasek odlicza czas do fali",
   "Research Masonry in the castle menu to build in stone": "Zbadaj Kamieniarstwo w menu zamku, aby budować z kamienia",
   "Research Masonry at the Academy to build in stone": "Zbadaj Kamieniarstwo w Akademii, aby budować z kamienia",
-  "Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!": "Brawo! Pory roku zmieniają się co 4 fale, boss pojawia się co 10. Powodzenia!",
+  "Well done! Seasons change every 4 waves, a boss comes every 10. Good luck!":
+    "Brawo! Pory roku zmieniają się co 4 fale, boss pojawia się co 10. Powodzenia!",
   "Iron age": "Epoka żelaza",
-  "Iron age: your units hit 10% harder, buildings slowly mend": "Epoka żelaza: twoje jednostki biją o 10% mocniej, budynki powoli się naprawiają",
+  "Iron age: your units hit 10% harder, buildings slowly mend":
+    "Epoka żelaza: twoje jednostki biją o 10% mocniej, budynki powoli się naprawiają",
   "Research (70 s, after Steel weapons): your units": "Badanie (70 s, po Stalowej broni): twoje jednostki",
   "hit 10% harder and buildings slowly mend": "biją o 10% mocniej, a budynki powoli się naprawiają",
   "Spike trap": "Pułapka z kolcami",
@@ -892,20 +930,25 @@ export const PL = {
   "King: royal charge": "Król: królewska szarża",
   "BOSS - a giant brute walks with the horde! {0}": "BOSS - olbrzymi brutal idzie z hordą! {0}",
   "This map": "Ta mapa",
-  "Co-op: Alt+click pings the map / Shift: defend / Ctrl: gather / Shift+Ctrl: attack": "Co-op: Alt+klik oznacza na mapie / Shift: broń / Ctrl: zbieraj / Shift+Ctrl: atak",
-  "Co-op goals: wave {0} (now {1})  /  zombies slain {2} (now {3})": "Cele co-op: fala {0} (teraz {1})  /  zabite zombie {2} (teraz {3})",
+  "Co-op: Alt+click pings the map / Shift: defend / Ctrl: gather / Shift+Ctrl: attack":
+    "Co-op: Alt+klik oznacza na mapie / Shift: broń / Ctrl: zbieraj / Shift+Ctrl: atak",
+  "Co-op goals: wave {0} (now {1})  /  zombies slain {2} (now {3})":
+    "Cele co-op: fala {0} (teraz {1})  /  zabite zombie {2} (teraz {3})",
   "Look here": "Patrz tutaj",
   "Defend here": "Broń tutaj",
   "Gather here": "Zbieraj tutaj",
   "Attack here": "Atakuj tutaj",
-  "Co-op goal: wave {0} reached! Both players get +{1} gold, +{2} wood, +{3} stone": "Cel co-op: osiągnięto falę {0}! Obaj gracze dostają +{1} złota, +{2} drewna, +{3} kamienia",
-  "Co-op goal: zombies slain together! Both players get +{0} gold, +{1} food": "Cel co-op: wspólnie zabite zombie! Obaj gracze dostają +{0} złota, +{1} jedzenia",
+  "Co-op goal: wave {0} reached! Both players get +{1} gold, +{2} wood, +{3} stone":
+    "Cel co-op: osiągnięto falę {0}! Obaj gracze dostają +{1} złota, +{2} drewna, +{3} kamienia",
+  "Co-op goal: zombies slain together! Both players get +{0} gold, +{1} food":
+    "Cel co-op: wspólnie zabite zombie! Obaj gracze dostają +{0} złota, +{1} jedzenia",
   "NEW RECORD!": "NOWY REKORD!",
   "Best runs": "Najlepsze podejścia",
   "#{0}   Wave {1}   {2} kills": "#{0}   Fala {1}   {2} zabójstw",
   "BOSS": "BOSS",
   "BOSS - a giant brute walks with the horde! ": "BOSS - olbrzymi brutal idzie z hordą! ",
-  "Earned: {0} gold    {1} wood    {2} stone    {3} food": "Zdobyto: {0} złota    {1} drewna    {2} kamienia    {3} jedzenia",
+  "Earned: {0} gold    {1} wood    {2} stone    {3} food":
+    "Zdobyto: {0} złota    {1} drewna    {2} kamienia    {3} jedzenia",
   "Best unit: ": "Najlepsza jednostka: ",
   "({0} kills)": "({0} zabójstw)",
   "Towers and cannons": "Wieże i armaty",
@@ -921,7 +964,8 @@ export const PL = {
   "Report a bug [F8]": "Zgłoś błąd [F8]",
   "Bug report [F8]": "Raport o błędzie [F8]",
   "Preparing the bug report...": "Przygotowywanie raportu o błędzie...",
-  "Bug report saved: {0} - send it on Discord with a few words": "Raport o błędzie zapisany: {0} - wyślij go na Discordzie z kilkoma słowami",
+  "Bug report saved: {0} - send it on Discord with a few words":
+    "Raport o błędzie zapisany: {0} - wyślij go na Discordzie z kilkoma słowami",
   "Bug report failed: {0}": "Raport o błędzie nie powiódł się: {0}",
   "Test mode [F10]": "Tryb testowy [F10]",
   "Solo only - no achievements in this game": "Tylko solo - w tej grze brak osiągnięć",
@@ -951,7 +995,8 @@ export const PL = {
   "Captains": "Kapitanowie",
   "Cannons": "Armaty",
   "Royal guards": "Gwardia królewska",
-  "The convoy cannot reach your partner: goods returned": "Konwój nie może dotrzeć do twojego partnera: towary zwrócone",
+  "The convoy cannot reach your partner: goods returned":
+    "Konwój nie może dotrzeć do twojego partnera: towary zwrócone",
   "your partner": "twój partner",
   "Fire arrows": "Płonące strzały",
   "Research (50 s, after Fletching): archers set": "Badanie (50 s, po Lotkach do strzał): łucznicy podpalają",
@@ -965,7 +1010,8 @@ export const PL = {
   "Sends the selected peasants to the nearest gold": "Wysyła zaznaczonych chłopów do najbliższego złota",
   "One selected peasant works the nearest free farm": "Jeden zaznaczony chłop pracuje na najbliższej wolnej farmie",
   "Build and repair": "Buduj i naprawiaj",
-  "Sends the selected peasants to the nearest building site": "Wysyła zaznaczonych chłopów do najbliższego placu budowy",
+  "Sends the selected peasants to the nearest building site":
+    "Wysyła zaznaczonych chłopów do najbliższego placu budowy",
   "or damaged building": "lub uszkodzonego budynku",
   "No trees within reach": "Brak drzew w zasięgu",
   "No rocks within reach": "Brak skał w zasięgu",
@@ -1016,7 +1062,8 @@ export const PL = {
   "food": "jedzenie",
   "Co-op: resynchronizing...": "Co-op: ponowna synchronizacja...",
   "Resynchronized with your partner": "Ponownie zsynchronizowano z partnerem",
-  "Your castles would overlap: move a little away from your partner": "Wasze zamki by się nakładały: odsuń się trochę od partnera",
+  "Your castles would overlap: move a little away from your partner":
+    "Wasze zamki by się nakładały: odsuń się trochę od partnera",
   "{0} moved their castle": "{0} przeniósł swój zamek",
   " moved their castle": " przeniósł swój zamek",
   "Turn castle [{0}]": "Obróć zamek [{0}]",
@@ -1025,14 +1072,17 @@ export const PL = {
   "range {0} tiles": "zasięg {0} pól",
   "All your {0}s selected ({1})": "Wszyscy twoi: {0} zaznaczeni ({1})",
   "Upgrade turns every wooden one to stone": "Ulepszenie zmienia każdy drewniany na kamienny",
-  "Different versions ({0} and {1}): both players must run the same one": "Różne wersje ({0} i {1}): obaj gracze muszą używać tej samej",
+  "Different versions ({0} and {1}): both players must run the same one":
+    "Różne wersje ({0} i {1}): obaj gracze muszą używać tej samej",
   "restart the launcher or reload the page": "uruchom ponownie launcher lub odśwież stronę",
   "Public games": "Gry publiczne",
   "List my game in the public lobby": "Pokaż moją grę w publicznym lobby",
   "Refresh": "Odśwież",
   "Join": "Dołącz",
-  "The public lobby is not set up yet: join with a code.": "Publiczne lobby nie jest jeszcze skonfigurowane: dołącz za pomocą kodu.",
-  "Could not reach the lobby. Check your connection and try again.": "Nie można połączyć się z lobby. Sprawdź połączenie i spróbuj ponownie.",
+  "The public lobby is not set up yet: join with a code.":
+    "Publiczne lobby nie jest jeszcze skonfigurowane: dołącz za pomocą kodu.",
+  "Could not reach the lobby. Check your connection and try again.":
+    "Nie można połączyć się z lobby. Sprawdź połączenie i spróbuj ponownie.",
   "No public game right now: host one!": "Brak publicznych gier: załóż własną!",
   "Records": "Rekordy",
   "No record yet": "Brak rekordów",
@@ -1052,7 +1102,8 @@ export const PL = {
   "Strikes over the front rank": "Uderza ponad pierwszym szeregiem",
   "Hits brutes and bosses 60% harder": "Bije brutali i bossów o 60% mocniej",
   "Line holder": "Obrońca linii",
-  "A long spear and good neighbours: the big ones stop here.": "Długa włócznia i dobrzy sąsiedzi: wielcy zatrzymują się tutaj.",
+  "A long spear and good neighbours: the big ones stop here.":
+    "Długa włócznia i dobrzy sąsiedzi: wielcy zatrzymują się tutaj.",
   "Video guide": "Wideoporadnik",
   "Population and food": "Populacja i jedzenie",
   "Train an army": "Wyszkol armię",
@@ -1074,18 +1125,24 @@ export const PL = {
   "Towers shoot every zombie in range": "Wieże strzelają do każdego zombie w zasięgu",
   "The top bar counts down to the next wave": "Górny pasek odlicza czas do następnej fali",
   "At night the horde comes: keep your soldiers near the walls": "Nocą nadchodzi horda: trzymaj żołnierzy przy murach",
-  "Hold until dawn: every wave is stronger than the last": "Wytrwaj do świtu: każda fala jest silniejsza od poprzedniej",
+  "Hold until dawn: every wave is stronger than the last":
+    "Wytrwaj do świtu: każda fala jest silniejsza od poprzedniej",
   "Each research takes time and makes your kingdom stronger": "Każde badanie wymaga czasu i wzmacnia twoje królestwo",
   "Masonry lets you build in stone": "Kamieniarstwo pozwala budować z kamienia",
-  "Summon King Naraige at the castle: he arrives with 2 royal guards": "Wezwij króla Naraige w zamku: przybywa z 2 gwardzistami królewskimi",
+  "Summon King Naraige at the castle: he arrives with 2 royal guards":
+    "Wezwij króla Naraige w zamku: przybywa z 2 gwardzistami królewskimi",
   "He fights the horde and gains levels": "Walczy z hordą i zdobywa poziomy",
-  "His skills can turn a fight: use them at the right time": "Jego umiejętności mogą odwrócić losy walki: użyj ich we właściwej chwili",
+  "His skills can turn a fight: use them at the right time":
+    "Jego umiejętności mogą odwrócić losy walki: użyj ich we właściwej chwili",
   "Co-op: host a game and share the room code with a friend": "Co-op: załóż grę i podaj znajomemu kod pokoju",
   "Two kingdoms, one horde: defend together": "Dwa królestwa, jedna horda: brońcie się razem",
   "Send a convoy to share resources with your partner": "Wyślij konwój, aby podzielić się surowcami z partnerem",
-  "Double-click a peasant to select them all, then right-click a tree": "Kliknij dwukrotnie chłopa, aby zaznaczyć wszystkich, potem prawym przyciskiem drzewo",
-  "Train 2 knights at the barracks: knights fight the zombies": "Wyszkol 2 rycerzy w koszarach: rycerze walczą z zombie",
-  "Zombies follow the red lines: build 6 walls and a gate across one": "Zombie podążają czerwonymi liniami: zbuduj 6 murów i bramę w poprzek jednej z nich",
+  "Double-click a peasant to select them all, then right-click a tree":
+    "Kliknij dwukrotnie chłopa, aby zaznaczyć wszystkich, potem prawym przyciskiem drzewo",
+  "Train 2 knights at the barracks: knights fight the zombies":
+    "Wyszkol 2 rycerzy w koszarach: rycerze walczą z zombie",
+  "Zombies follow the red lines: build 6 walls and a gate across one":
+    "Zombie podążają czerwonymi liniami: zbuduj 6 murów i bramę w poprzek jednej z nich",
   "Trade and craft": "Handel i rzemiosło",
   "The crown": "Korona",
   "Beyond the walls": "Za murami",
@@ -1094,9 +1151,11 @@ export const PL = {
   "Master builders": "Mistrzowie budowy",
   "Build a builders guild and ask for a builder there": "Zbuduj gildię budowniczych i poproś tam o budowniczego",
   "Engines of war": "Machiny wojenne",
-  "Research Masonry, then put a ballista on a tower or train a cannon": "Zbadaj Murarstwo, potem postaw balistę na wieży lub wyszkol armatę",
+  "Research Masonry, then put a ballista on a tower or train a cannon":
+    "Zbadaj Murarstwo, potem postaw balistę na wieży lub wyszkol armatę",
   "Friends in the wild": "Przyjaciele w dziczy",
-  "Build an embassy, train an envoy at the castle and send it to a rebel camp": "Zbuduj ambasadę, wyszkol wysłannika w zamku i wyślij go do obozu buntowników",
+  "Build an embassy, train an envoy at the castle and send it to a rebel camp":
+    "Zbuduj ambasadę, wyszkol wysłannika w zamku i wyślij go do obozu buntowników",
   "Share the load": "Podziel ciężar",
   "Send a convoy of resources to your partner": "Wyślij partnerowi konwój z surowcami",
   "{0} turned the quests off": "{0} wyłącza zadania",
@@ -1211,14 +1270,18 @@ export const PL = {
   "{0} tiles": "{0} pól",
   "NEW": "NOWE",
   "He holds the wall so the others do not have to.": "Trzyma mur, żeby inni nie musieli.",
-  "Patient eyes and a steady hand: the horde never reaches the wall twice.": "Cierpliwe oko i pewna ręka: horda nigdy nie dociera do muru dwa razy.",
-  "Without his axe and his plough the bastion would starve before dawn.": "Bez jego siekiery i pługa bastion zagłodziłby się przed świtem.",
-  "Where his banner stands, the line remembers it is not alone.": "Tam, gdzie stoi jego sztandar, linia pamięta, że nie jest sama.",
+  "Patient eyes and a steady hand: the horde never reaches the wall twice.":
+    "Cierpliwe oko i pewna ręka: horda nigdy nie dociera do muru dwa razy.",
+  "Without his axe and his plough the bastion would starve before dawn.":
+    "Bez jego siekiery i pługa bastion zagłodziłby się przed świtem.",
+  "Where his banner stands, the line remembers it is not alone.":
+    "Tam, gdzie stoi jego sztandar, linia pamięta, że nie jest sama.",
   "Soldiers fight harder when someone is shouting orders.": "Żołnierze walczą mocniej, gdy ktoś wykrzykuje rozkazy.",
   "Slow and loud. The horde hears it coming too late.": "Powolna i głośna. Horda słyszy ją za późno.",
   "The last light of Naranxia walks at the front.": "Ostatnie światło Naranxii idzie na przedzie.",
   "A halberd, a vow, and no plans to retreat.": "Halabarda, przysięga i żadnych planów odwrotu.",
-  "The last light of humanity. If it falls, the night wins.": "Ostatnie światło ludzkości. Jeśli upadnie, noc zwycięży.",
+  "The last light of humanity. If it falls, the night wins.":
+    "Ostatnie światło ludzkości. Jeśli upadnie, noc zwycięży.",
   "The drills never stop here, day or night.": "Ćwiczenia nie ustają tu nigdy, ani w dzień, ani w nocy.",
   "It sees the horde long before the horde sees it.": "Widzi hordę na długo, zanim horda zobaczy ją.",
   "Cheap, ugly, and it works.": "Tani, brzydki i działa.",
@@ -1247,12 +1310,14 @@ export const PL = {
   "Accept the tribute": "Przyjmij daninę",
   "Refuse and gain renown": "Odmów i zyskaj sławę",
   "You receive {0} gold and {1} food": "Dostajesz {0} złota i {1} jedzenia",
-  "Renown +1 (now {0}): rebel tributes pay {1}% more per point (max {2})": "Sława +1 (teraz {0}): daniny buntowników dają {1}% więcej za punkt (maks. {2})",
+  "Renown +1 (now {0}): rebel tributes pay {1}% more per point (max {2})":
+    "Sława +1 (teraz {0}): daniny buntowników dają {1}% więcej za punkt (maks. {2})",
   "The caravan is escorted: it pays {0} gold in {1} s": "Karawana jest eskortowana: zapłaci {0} złota za {1} s",
   "The caravan reaches the market: +{0} gold": "Karawana dociera na targ: +{0} złota",
   "Tribute of {0}: +{1} gold, +{2} food": "Danina ({0}): +{1} złota, +{2} jedzenia",
   "Tribute refused: renown {0}": "Danina odrzucona: sława {0}",
-  "The envoy is turned away by {0}: a wary camp needs a second visit": "Wysłannik zostaje odprawiony ({0}): nieufny obóz wymaga drugiej wizyty",
+  "The envoy is turned away by {0}: a wary camp needs a second visit":
+    "Wysłannik zostaje odprawiony ({0}): nieufny obóz wymaga drugiej wizyty",
   "merchants": "kupcy",
   "warlike": "wojowniczy",
   "wary": "nieufny",
@@ -1276,11 +1341,13 @@ export const PL = {
   "Closed: you chose {0}": "Zamknięte: wybrano {0}",
   "Exclusive path: closes {0}": "Ścieżka wyłączna: zamyka {0}",
   "This rebel camp has nothing left to give": "Ten obóz buntowników nie ma już nic do oddania",
-  "Research (70 s, after Steel weapons or Chain mail): your units": "Badanie (70 s, po Stalowej broni lub Kolczudze): twoje jednostki",
+  "Research (70 s, after Steel weapons or Chain mail): your units":
+    "Badanie (70 s, po Stalowej broni lub Kolczudze): twoje jednostki",
   "Move camera": "Ruch kamery",
   "One finger drags the view": "Jeden palec przesuwa widok",
   "Clear build mode and selection": "Wyłącza tryb budowy i zaznaczenie",
-  "Night falls - the horde is coming. The villagers shelter in the castle; keep your soldiers in the light!": "Zapada noc - nadchodzi horda. Wieśniacy chronią się w zamku; trzymaj żołnierzy w świetle!",
+  "Night falls - the horde is coming. The villagers shelter in the castle; keep your soldiers in the light!":
+    "Zapada noc - nadchodzi horda. Wieśniacy chronią się w zamku; trzymaj żołnierzy w świetle!",
   "2nd colour": "2. kolor",
   "100% blocky!": "100% z klocków!",
   "100x the swarm!": "100x większy rój!",
@@ -1320,7 +1387,8 @@ export const PL = {
   "Co-op (online, 2 players)": "Co-op (online, 2 graczy)",
   "Host a game": "Załóż grę",
   "Join with a code": "Dołącz z kodem",
-  "Choose a room code (like a password) - or leave empty for a random one": "Wybierz kod pokoju (jak hasło) - albo zostaw puste, by dostać losowy",
+  "Choose a room code (like a password) - or leave empty for a random one":
+    "Wybierz kod pokoju (jak hasło) - albo zostaw puste, by dostać losowy",
   "Create room": "Utwórz pokój",
   "Type the code your host gave you": "Wpisz kod, który dał ci host",
   "Players": "Gracze",
@@ -1344,15 +1412,18 @@ export const PL = {
   "Both prices shift a little": "Obie ceny trochę się zmieniają",
   "Colour-blind mode": "Tryb dla daltonistów",
   "Population limit reached: build houses in the Town menu": "Limit populacji osiągnięty: buduj domy w menu Miasto",
-  "Idle peasants? Press [.] to select them, then right-click a resource": "Bezczynni chłopi? Naciśnij [.], aby ich zaznaczyć, potem prawym przyciskiem surowiec",
-  "A wave is about to start: gather your troops near the castle and walls": "Zaraz zacznie się fala: zbierz wojska przy zamku i murach",
+  "Idle peasants? Press [.] to select them, then right-click a resource":
+    "Bezczynni chłopi? Naciśnij [.], aby ich zaznaczyć, potem prawym przyciskiem surowiec",
+  "A wave is about to start: gather your troops near the castle and walls":
+    "Zaraz zacznie się fala: zbierz wojska przy zamku i murach",
   "Got it": "Rozumiem",
   "The Hollow Warden": "Pusty Strażnik",
   "The Bell-Bearer": "Dzwonnik",
   "The Frost King": "Król Mrozu",
   "The Hive Queen": "Królowa Roju",
   "Once he guarded the old gates. Now he guards nothing.": "Kiedyś strzegł starych bram. Teraz nie strzeże niczego.",
-  "He rang the last bell of the old world. The dead still answer.": "Uderzył w ostatni dzwon starego świata. Umarli wciąż odpowiadają.",
+  "He rang the last bell of the old world. The dead still answer.":
+    "Uderzył w ostatni dzwon starego świata. Umarli wciąż odpowiadają.",
   "He ruled the northern snows. The cold still obeys him.": "Władał śniegami północy. Chłód wciąż jest mu posłuszny.",
   "She fed a whole city to her brood. The brood remembers.": "Nakarmiła swój lęg całym miastem. Lęg pamięta.",
   "BOSS SLAIN": "BOSS POKONANY",
@@ -1360,38 +1431,57 @@ export const PL = {
   "Journal of the realm": "Dziennik królestwa",
   "Wave {0}: {1} walks with the horde.": "Fala {0}: {1} kroczy z hordą.",
   "Wave {0}: {1} has fallen. The bastion holds.": "Fala {0}: {1} poległ. Bastion się trzyma.",
-  "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.": "Pusty Strażnik: Trzymał stare bramy, aż horda przez nie przeszła. Śmierć nie nauczyła go, by przestał strzec. Nauczyła go, by przestał wybierać, kogo wpuścić.",
-  "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.": "Dzwonnik: Uderzył w ostatni dzwon starego świata, a umarli przyszli słuchać. Teraz bije w niego znowu, a skorupy przychodzą na jego wezwanie.",
-  "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.": "Król Mrozu: Władał śniegami północy i odprawiał każdego posłańca z południa. Zima go zabrała, a on zabrał zimę ze sobą.",
-  "The Hive Queen: She promised her people they would never be hungry. She kept the promise: the brood that follows her eats whatever she points at.": "Królowa Roju: Obiecała swojemu ludowi, że nigdy nie zazna głodu. Dotrzymała słowa: lęg, który za nią idzie, pożera wszystko, co ona wskaże.",
+  "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.":
+    "Pusty Strażnik: Trzymał stare bramy, aż horda przez nie przeszła. Śmierć nie nauczyła go, by przestał strzec. Nauczyła go, by przestał wybierać, kogo wpuścić.",
+  "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.":
+    "Dzwonnik: Uderzył w ostatni dzwon starego świata, a umarli przyszli słuchać. Teraz bije w niego znowu, a skorupy przychodzą na jego wezwanie.",
+  "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.":
+    "Król Mrozu: Władał śniegami północy i odprawiał każdego posłańca z południa. Zima go zabrała, a on zabrał zimę ze sobą.",
+  "The Hive Queen: She promised her people they would never be hungry. She kept the promise: the brood that follows her eats whatever she points at.":
+    "Królowa Roju: Obiecała swojemu ludowi, że nigdy nie zazna głodu. Dotrzymała słowa: lęg, który za nią idzie, pożera wszystko, co ona wskaże.",
   "Huge": "Ogromny",
-  "Wave 15: The wolves come down from the hills. Even the wild has chosen a side, and it is not yours.": "Fala 15: Wilki schodzą ze wzgórz. Nawet dzicz wybrała stronę, i nie jest to twoja strona.",
-  "Wave 25: Under the old ruins the survivors left vaults. The King sends scouts to find them before the horde does.": "Fala 25: Pod starymi ruinami ocalali zostawili skarbce. Król wysyła zwiadowców, by znaleźli je przed hordą.",
-  "Wave 40: The eclipse has come and gone. The rebels no longer hide their fires; they watch the bastion as one watches a lighthouse.": "Fala 40: Zaćmienie przyszło i minęło. Buntownicy nie kryją już swoich ognisk; patrzą na bastion, jak patrzy się na latarnię morską.",
-  "Wave 50: Fifty waves. In the rebel camps they say the King does not hold the walls: the walls hold the King. Both are true.": "Fala 50: Pięćdziesiąt fal. W obozach buntowników mówią, że to nie Król trzyma mury: to mury trzymają Króla. Jedno i drugie jest prawdą.",
+  "Wave 15: The wolves come down from the hills. Even the wild has chosen a side, and it is not yours.":
+    "Fala 15: Wilki schodzą ze wzgórz. Nawet dzicz wybrała stronę, i nie jest to twoja strona.",
+  "Wave 25: Under the old ruins the survivors left vaults. The King sends scouts to find them before the horde does.":
+    "Fala 25: Pod starymi ruinami ocalali zostawili skarbce. Król wysyła zwiadowców, by znaleźli je przed hordą.",
+  "Wave 40: The eclipse has come and gone. The rebels no longer hide their fires; they watch the bastion as one watches a lighthouse.":
+    "Fala 40: Zaćmienie przyszło i minęło. Buntownicy nie kryją już swoich ognisk; patrzą na bastion, jak patrzy się na latarnię morską.",
+  "Wave 50: Fifty waves. In the rebel camps they say the King does not hold the walls: the walls hold the King. Both are true.":
+    "Fala 50: Pięćdziesiąt fal. W obozach buntowników mówią, że to nie Król trzyma mury: to mury trzymają Króla. Jedno i drugie jest prawdą.",
   "The last light goes out. Only the walls remember.": "Ostatnie światło gaśnie. Pamiętają tylko mury.",
-  "The rebels will tell it: the bastion held until the end.": "Buntownicy będą o tym opowiadać: bastion wytrwał do końca.",
+  "The rebels will tell it: the bastion held until the end.":
+    "Buntownicy będą o tym opowiadać: bastion wytrwał do końca.",
   "Dawn did not come. Not this time.": "Świt nie nadszedł. Nie tym razem.",
   "The horde walks on. The old world was lost twice.": "Horda idzie dalej. Stary świat został utracony po raz drugi.",
-  "The banner of King Naraige falls, but it can be raised again.": "Sztandar króla Naraige upada, ale można go znów podnieść.",
+  "The banner of King Naraige falls, but it can be raised again.":
+    "Sztandar króla Naraige upada, ale można go znów podnieść.",
   "Rise again, King. The bastion needs you.": "Powstań znów, Królu. Bastion cię potrzebuje.",
-  "The sky pales in the east. Dawn may still come: hold the bastion.": "Niebo blednie na wschodzie. Świt może jeszcze nadejść: utrzymaj bastion.",
-  "Fifty waves. Even the rebels light fires in your honor.": "Pięćdziesiąt fal. Nawet buntownicy palą ognie na twoją cześć.",
+  "The sky pales in the east. Dawn may still come: hold the bastion.":
+    "Niebo blednie na wschodzie. Świt może jeszcze nadejść: utrzymaj bastion.",
+  "Fifty waves. Even the rebels light fires in your honor.":
+    "Pięćdziesiąt fal. Nawet buntownicy palą ognie na twoją cześć.",
   "Sure?": "Na pewno?",
   "Envoy": "Wysłannik",
   "Envoys": "Wysłannicy",
-  "Send to a rebel camp: tribute of gold and food, once per camp": "Wyślij do obozu buntowników: danina w złocie i jedzeniu, raz na obóz",
+  "Send to a rebel camp: tribute of gold and food, once per camp":
+    "Wyślij do obozu buntowników: danina w złocie i jedzeniu, raz na obóz",
   "Needs an embassy": "Wymaga ambasady",
   "Rebel camp tribute: +{0} gold, +{1} food": "Danina obozu buntowników: +{0} złota, +{1} jedzenia",
   "WOLF PACK - fast raiders from the wild!": "WATAHA WILKÓW - szybcy łupieżcy z dziczy!",
   "WOLF PACK - fast raiders from the wild! {0}": "WATAHA WILKÓW - szybcy łupieżcy z dziczy! {0}",
-  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold. {1}": "ZAĆMIENIE - umarli rosną w siłę, ale spadają relikty: +{0} złota. {1}",
-  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold.": "ZAĆMIENIE - umarli rosną w siłę, ale spadają relikty: +{0} złota.",
-  "Ruins explored: an old vault of coins and stone (+{0} gold, +{1} stone)": "Ruiny zbadane: stary skarbiec z monetami i kamieniem (+{0} złota, +{1} kamienia)",
-  "Ruins explored: a ruined granary and woodpile (+{0} wood, +{1} food)": "Ruiny zbadane: zrujnowany spichlerz i stos drewna (+{0} drewna, +{1} jedzenia)",
+  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold. {1}":
+    "ZAĆMIENIE - umarli rosną w siłę, ale spadają relikty: +{0} złota. {1}",
+  "ECLIPSE - the dead grow stronger, but relics fall: +{0} gold.":
+    "ZAĆMIENIE - umarli rosną w siłę, ale spadają relikty: +{0} złota.",
+  "Ruins explored: an old vault of coins and stone (+{0} gold, +{1} stone)":
+    "Ruiny zbadane: stary skarbiec z monetami i kamieniem (+{0} złota, +{1} kamienia)",
+  "Ruins explored: a ruined granary and woodpile (+{0} wood, +{1} food)":
+    "Ruiny zbadane: zrujnowany spichlerz i stos drewna (+{0} drewna, +{1} jedzenia)",
   "Ruins explored: a forgotten treasury (+{0} gold)": "Ruiny zbadane: zapomniany skarbiec (+{0} złota)",
-  "Rebel envoys bring tribute from a nearby camp: +{0} gold, +{1} food": "Wysłannicy buntowników przynoszą daninę z pobliskiego obozu: +{0} złota, +{1} jedzenia",
-  "A meteor shower: rare stone falls near the walls: +{0} stone": "Deszcz meteorów: rzadki kamień spada przy murach: +{0} kamienia",
+  "Rebel envoys bring tribute from a nearby camp: +{0} gold, +{1} food":
+    "Wysłannicy buntowników przynoszą daninę z pobliskiego obozu: +{0} złota, +{1} jedzenia",
+  "A meteor shower: rare stone falls near the walls: +{0} stone":
+    "Deszcz meteorów: rzadki kamień spada przy murach: +{0} kamienia",
   "Scout": "Zwiadowca",
   "Engineer": "Inżynier",
   "Scouts": "Zwiadowcy",
@@ -1412,10 +1502,14 @@ export const PL = {
   "train units 15% faster": "szkolą jednostki 15% szybciej",
   "2x2 workshop: buildings around it": "Warsztat 2x2: budynki wokół niego",
   "slowly repair themselves": "powoli same się naprawiają",
-  "Wave 5: The first rebel scouts are seen on the hills. They watch the walls, and they do not wave.": "Fala 5: Na wzgórzach widać pierwszych zwiadowców buntowników. Obserwują mury i nie machają na powitanie.",
-  "Wave 10: A giant walks with the horde. The old records call such things Wardens, the fallen leaders of the old world.": "Fala 10: Z hordą kroczy olbrzym. Stare kroniki nazywają takie istoty Strażnikami, upadłymi przywódcami starego świata.",
-  "Wave 20: A rebel envoy leaves a message at the gate: the camps know the King's light cannot burn forever.": "Fala 20: Wysłannik buntowników zostawia wiadomość przy bramie: obozy wiedzą, że światło Króla nie może płonąć wiecznie.",
-  "Wave 30: Only the bastion still stands. If dawn comes again, Naranxia will be more than a refuge.": "Fala 30: Stoi już tylko bastion. Jeśli świt znów nadejdzie, Naranxia będzie czymś więcej niż schronieniem.",
+  "Wave 5: The first rebel scouts are seen on the hills. They watch the walls, and they do not wave.":
+    "Fala 5: Na wzgórzach widać pierwszych zwiadowców buntowników. Obserwują mury i nie machają na powitanie.",
+  "Wave 10: A giant walks with the horde. The old records call such things Wardens, the fallen leaders of the old world.":
+    "Fala 10: Z hordą kroczy olbrzym. Stare kroniki nazywają takie istoty Strażnikami, upadłymi przywódcami starego świata.",
+  "Wave 20: A rebel envoy leaves a message at the gate: the camps know the King's light cannot burn forever.":
+    "Fala 20: Wysłannik buntowników zostawia wiadomość przy bramie: obozy wiedzą, że światło Króla nie może płonąć wiecznie.",
+  "Wave 30: Only the bastion still stands. If dawn comes again, Naranxia will be more than a refuge.":
+    "Fala 30: Stoi już tylko bastion. Jeśli świt znów nadejdzie, Naranxia będzie czymś więcej niż schronieniem.",
   "Reach a higher wave to read more.": "Dotrzyj do wyższej fali, aby przeczytać więcej.",
   "Watch beacon": "Ognisko strażnicze",
   "Orchard": "Sad",
@@ -1424,10 +1518,14 @@ export const PL = {
   "2x2 apple grove: a trickle of food": "Sad jabłoni 2x2: strużka jedzenia",
   "without a peasant": "bez chłopa",
   "Chronicle": "Kronika",
-  "Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.": "Dawno temu stary świat padł pod naporem hordy. Naranxia to wszystko, co zostało: ostatni bastion ludzkości.",
-  "King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.": "Król Naraige strzeże jej murów i jej ostatniego światła. Każdej nocy horda wraca, a każdego świtu słońce ją wypala.",
-  "Around the bastion, other camps survive. They refused the King's rule: rebels, and neighbours. Some trade, some raid.": "Wokół bastionu trwają inne obozy. Odrzuciły władzę Króla: buntownicy i sąsiedzi. Jedni handlują, inni łupią.",
-  "Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.": "Utrzymaj mury, nakarm swój lud i dowiedz się, czego chcą obozy. Noc jest długa, ale świt zawsze nadchodzi.",
+  "Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.":
+    "Dawno temu stary świat padł pod naporem hordy. Naranxia to wszystko, co zostało: ostatni bastion ludzkości.",
+  "King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.":
+    "Król Naraige strzeże jej murów i jej ostatniego światła. Każdej nocy horda wraca, a każdego świtu słońce ją wypala.",
+  "Around the bastion, other camps survive. They refused the King's rule: rebels, and neighbours. Some trade, some raid.":
+    "Wokół bastionu trwają inne obozy. Odrzuciły władzę Króla: buntownicy i sąsiedzi. Jedni handlują, inni łupią.",
+  "Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.":
+    "Utrzymaj mury, nakarm swój lud i dowiedz się, czego chcą obozy. Noc jest długa, ale świt zawsze nadchodzi.",
   "The last bastion of humanity": "Ostatni bastion ludzkości",
   "Rebel camps watch from afar": "Obozy buntowników patrzą z daleka",
   "Hold the last light": "Strzeż ostatniego światła",
@@ -1459,24 +1557,39 @@ export const PL = {
   "You get {0} stone": "Dostajesz {0} kamienia",
   "You get {0} food": "Dostajesz {0} jedzenia",
   "Saving...": "Zapisywanie...",
-  "The biggest Naranxia update so far: a new look for the whole game, a deeper last bastion, and a real welcome for new players.": "Największa jak dotąd aktualizacja Naranxii: nowy wygląd całej gry, bogatszy ostatni bastion i prawdziwe powitanie dla nowych graczy.",
+  "The biggest Naranxia update so far: a new look for the whole game, a deeper last bastion, and a real welcome for new players.":
+    "Największa jak dotąd aktualizacja Naranxii: nowy wygląd całej gry, bogatszy ostatni bastion i prawdziwe powitanie dla nowych graczy.",
   "A whole new look": "Zupełnie nowy wygląd",
-  "Every unit, building, weapon and tool rebuilt in a blocky pixel style, with team tabards, rank stripes and pixel health bars.": "Każda jednostka, budynek, broń i narzędzie zrobione od nowa w klockowym stylu pikselowym, z tabardami drużyny, paskami rangi i pikselowymi paskami zdrowia.",
-  "The world is made of blocks: terrain, trees, rocks and seasons.": "Świat jest zbudowany z bloków: teren, drzewa, skały i pory roku.",
-  "Mutants are now true monstrosities, and wave bosses are bigger and meaner.": "Mutanty to teraz prawdziwe potwory, a bossowie fal są więksi i groźniejsi.",
-  "New title screen, menus, launch intro, kingdom banners on a pole, and remade sounds and music.": "Nowy ekran tytułowy, menu, intro startowe, sztandary królestwa na maszcie oraz odnowione dźwięki i muzyka.",
+  "Every unit, building, weapon and tool rebuilt in a blocky pixel style, with team tabards, rank stripes and pixel health bars.":
+    "Każda jednostka, budynek, broń i narzędzie zrobione od nowa w klockowym stylu pikselowym, z tabardami drużyny, paskami rangi i pikselowymi paskami zdrowia.",
+  "The world is made of blocks: terrain, trees, rocks and seasons.":
+    "Świat jest zbudowany z bloków: teren, drzewa, skały i pory roku.",
+  "Mutants are now true monstrosities, and wave bosses are bigger and meaner.":
+    "Mutanty to teraz prawdziwe potwory, a bossowie fal są więksi i groźniejsi.",
+  "New title screen, menus, launch intro, kingdom banners on a pole, and remade sounds and music.":
+    "Nowy ekran tytułowy, menu, intro startowe, sztandary królestwa na maszcie oraz odnowione dźwięki i muzyka.",
   "New to play": "Nowości w grze",
-  "Quests guide your first game, from the first log to wave 10, with small rewards. They work solo and in co-op (shared with your partner), and a marker shows the button to press.": "Zadania prowadzą przez pierwszą grę, od pierwszej kłody do fali 10, z małymi nagrodami. Działają solo i w co-op (wspólne z partnerem), a znacznik pokazuje przycisk do naciśnięcia.",
-  "New unit: the Spearman, a cheap line holder with reach, strong against brutes and bosses.": "Nowa jednostka: Włócznik, tani, trzyma linię i ma zasięg, mocny przeciw brutalom i bossom.",
-  "The tutorial is now a video-style guide with short looping clips.": "Samouczek to teraz przewodnik w stylu wideo z krótkimi, zapętlonymi klipami.",
-  "Last bastion: ruins to loot, rebel camps with personalities, envoys and tribute, scouts, engineers and eleven new buildings.": "Ostatni bastion: ruiny do splądrowania, obozy rebeliantów z charakterem, wysłannicy i trybut, zwiadowcy, inżynierowie i jedenaście nowych budynków.",
-  "New events: wolf packs, eclipses and meteor showers. Caravans and rebel envoys now ask you to choose.": "Nowe wydarzenia: watahy wilków, zaćmienia i deszcze meteorów. Karawany i wysłannicy rebeliantów każą teraz wybierać.",
-  "Named bosses with legends and powers, a realm journal in the Chronicle.": "Bossowie z imionami, legendami i mocami oraz dziennik królestwa w Kronice.",
-  "The King gains XP, levels up to 5 and learns talents in two branches.": "Król zdobywa XP, awansuje do poziomu 5 i uczy się talentów w dwóch gałęziach.",
-  "Research with either-or paths, and barter at the market.": "Badania ze ścieżkami do wyboru (jedna albo druga) i wymiana towarów na targu.",
+  "Quests guide your first game, from the first log to wave 10, with small rewards. They work solo and in co-op (shared with your partner), and a marker shows the button to press.":
+    "Zadania prowadzą przez pierwszą grę, od pierwszej kłody do fali 10, z małymi nagrodami. Działają solo i w co-op (wspólne z partnerem), a znacznik pokazuje przycisk do naciśnięcia.",
+  "New unit: the Spearman, a cheap line holder with reach, strong against brutes and bosses.":
+    "Nowa jednostka: Włócznik, tani, trzyma linię i ma zasięg, mocny przeciw brutalom i bossom.",
+  "The tutorial is now a video-style guide with short looping clips.":
+    "Samouczek to teraz przewodnik w stylu wideo z krótkimi, zapętlonymi klipami.",
+  "Last bastion: ruins to loot, rebel camps with personalities, envoys and tribute, scouts, engineers and eleven new buildings.":
+    "Ostatni bastion: ruiny do splądrowania, obozy rebeliantów z charakterem, wysłannicy i trybut, zwiadowcy, inżynierowie i jedenaście nowych budynków.",
+  "New events: wolf packs, eclipses and meteor showers. Caravans and rebel envoys now ask you to choose.":
+    "Nowe wydarzenia: watahy wilków, zaćmienia i deszcze meteorów. Karawany i wysłannicy rebeliantów każą teraz wybierać.",
+  "Named bosses with legends and powers, a realm journal in the Chronicle.":
+    "Bossowie z imionami, legendami i mocami oraz dziennik królestwa w Kronice.",
+  "The King gains XP, levels up to 5 and learns talents in two branches.":
+    "Król zdobywa XP, awansuje do poziomu 5 i uczy się talentów w dwóch gałęziach.",
+  "Research with either-or paths, and barter at the market.":
+    "Badania ze ścieżkami do wyboru (jedna albo druga) i wymiana towarów na targu.",
   "Comfort": "Wygoda",
-  "Leaderboard with your top 10 right on the title screen, and an Update page for what changed.": "Ranking z twoją najlepszą dziesiątką od razu na ekranie tytułowym oraz strona Aktualizacja z listą zmian.",
-  "Colour-blind mode, touch controls, one-time hints, public co-op lobby, more languages.": "Tryb dla daltonistów, sterowanie dotykowe, jednorazowe podpowiedzi, publiczne lobby co-op, więcej języków.",
+  "Leaderboard with your top 10 right on the title screen, and an Update page for what changed.":
+    "Ranking z twoją najlepszą dziesiątką od razu na ekranie tytułowym oraz strona Aktualizacja z listą zmian.",
+  "Colour-blind mode, touch controls, one-time hints, public co-op lobby, more languages.":
+    "Tryb dla daltonistów, sterowanie dotykowe, jednorazowe podpowiedzi, publiczne lobby co-op, więcej języków.",
   "Saves always load after an update.": "Zapisy zawsze wczytują się po aktualizacji.",
   "Guide": "Poradnik",
   "Traps": "Pułapki",
@@ -1484,39 +1597,65 @@ export const PL = {
   "Market and barter": "Targ i wymiana",
   "Rebel camps and envoys": "Obozy buntowników i wysłannicy",
   "King talents": "Talenty Króla",
-  "Spike traps are in the Defense menu: cheap, one tile each": "Pułapki z kolcami są w menu Obrona: tanie, każda zajmuje jedno pole",
-  "Zombies walking on a trap are hurt until it breaks": "Zombie idące po pułapce otrzymują obrażenia, dopóki się nie zepsuje",
-  "Research Boiling oil: your walls scald the zombies that touch them": "Zbadaj Wrzący olej: twoje mury parzą zombie, które ich dotykają",
+  "Spike traps are in the Defense menu: cheap, one tile each":
+    "Pułapki z kolcami są w menu Obrona: tanie, każda zajmuje jedno pole",
+  "Zombies walking on a trap are hurt until it breaks":
+    "Zombie idące po pułapce otrzymują obrażenia, dopóki się nie zepsuje",
+  "Research Boiling oil: your walls scald the zombies that touch them":
+    "Zbadaj Wrzący olej: twoje mury parzą zombie, które ich dotykają",
   "A season lasts 4 waves: spring, summer, autumn, winter": "Pora roku trwa 4 fale: wiosna, lato, jesień, zima",
   "Each wave has its weather: clear, rain, fog or snow": "Każda fala ma swoją pogodę: pogodnie, deszcz, mgła lub śnieg",
   "Seasons change the light and the sounds, not the rules": "Pory roku zmieniają światło i dźwięki, nie zasady",
-  "Selling the same resource again and again pays less for a while": "Sprzedawanie w kółko tego samego surowca przez jakiś czas daje mniej",
-  "Barter swaps 50 of one resource for another at a better rate": "Wymiana zamienia 50 jednego surowca na inny po lepszym kursie",
-  "A merchant caravan passes at times: take its goods or escort it to the market": "Czasem przejeżdża karawana kupiecka: weź jej towary albo eskortuj ją na targ",
+  "Selling the same resource again and again pays less for a while":
+    "Sprzedawanie w kółko tego samego surowca przez jakiś czas daje mniej",
+  "Barter swaps 50 of one resource for another at a better rate":
+    "Wymiana zamienia 50 jednego surowca na inny po lepszym kursie",
+  "A merchant caravan passes at times: take its goods or escort it to the market":
+    "Czasem przejeżdża karawana kupiecka: weź jej towary albo eskortuj ją na targ",
   "Build an embassy, then train an envoy at the castle": "Zbuduj ambasadę, a potem wyszkol wysłannika w zamku",
-  "When rebel envoys come, take their tribute or refuse it for renown: later tributes pay more": "Gdy przybędą wysłannicy buntowników, przyjmij daninę albo odrzuć ją dla sławy: kolejne daniny dają więcej",
-  "The King gains XP when zombies die near him, after each wave and from bosses": "Król zdobywa XP, gdy zombie giną blisko niego, po każdej fali i za bossów",
+  "When rebel envoys come, take their tribute or refuse it for renown: later tributes pay more":
+    "Gdy przybędą wysłannicy buntowników, przyjmij daninę albo odrzuć ją dla sławy: kolejne daniny dają więcej",
+  "The King gains XP when zombies die near him, after each wave and from bosses":
+    "Król zdobywa XP, gdy zombie giną blisko niego, po każdej fali i za bossów",
   "Each new level gives one talent point": "Każdy nowy poziom daje jeden punkt talentu",
-  "Two branches of four talents, learned in order: the war cry or the charge": "Dwie gałęzie po cztery talenty, poznawane po kolei: okrzyk wojenny albo szarża",
+  "Two branches of four talents, learned in order: the war cry or the charge":
+    "Dwie gałęzie po cztery talenty, poznawane po kolei: okrzyk wojenny albo szarża",
   "Quest skipped: {0}": "Zadanie pominięte: {0}",
   "Skipped": "Pominięte",
   "Comfort and fixes after the big update.": "Wygoda i poprawki po dużej aktualizacji.",
-  "The Update page shows clean section titles and is translated in every language.": "Strona Aktualizacja pokazuje czyste tytuły sekcji i jest przetłumaczona na każdy język.",
-  "Video guide: sounds in the clips, five new chapters (traps, seasons, market, rebel camps, King talents) and a Guide entry in the Esc menu.": "Przewodnik wideo: dźwięki w klipach, pięć nowych rozdziałów (pułapki, pory roku, targ, obozy buntowników, talenty Króla) i pozycja Przewodnik w menu Esc.",
-  "Rebel camps now field spearmen, more of them in warlike camps. The Spearman's default key is F4.": "Obozy buntowników wystawiają teraz włóczników, więcej w obozach wojowniczych. Domyślny klawisz Włócznika to F4.",
-  "Co-op convoys: porters no longer stop short of your partner's castle, long detours are allowed, and a convoy with no land route is refused at once.": "Konwoje w kooperacji: tragarze nie zatrzymują się już przed zamkiem partnera, długie objazdy są dozwolone, a konwój bez drogi lądowej jest od razu odrzucany.",
-  "Co-op: the convoy quest is skipped when the two castles are not linked by land.": "Kooperacja: zadanie z konwojem jest pomijane, gdy dwa zamki nie są połączone lądem.",
+  "The Update page shows clean section titles and is translated in every language.":
+    "Strona Aktualizacja pokazuje czyste tytuły sekcji i jest przetłumaczona na każdy język.",
+  "Video guide: sounds in the clips, five new chapters (traps, seasons, market, rebel camps, King talents) and a Guide entry in the Esc menu.":
+    "Przewodnik wideo: dźwięki w klipach, pięć nowych rozdziałów (pułapki, pory roku, targ, obozy buntowników, talenty Króla) i pozycja Przewodnik w menu Esc.",
+  "Rebel camps now field spearmen, more of them in warlike camps. The Spearman's default key is F4.":
+    "Obozy buntowników wystawiają teraz włóczników, więcej w obozach wojowniczych. Domyślny klawisz Włócznika to F4.",
+  "Co-op convoys: porters no longer stop short of your partner's castle, long detours are allowed, and a convoy with no land route is refused at once.":
+    "Konwoje w kooperacji: tragarze nie zatrzymują się już przed zamkiem partnera, długie objazdy są dozwolone, a konwój bez drogi lądowej jest od razu odrzucany.",
+  "Co-op: the convoy quest is skipped when the two castles are not linked by land.":
+    "Kooperacja: zadanie z konwojem jest pomijane, gdy dwa zamki nie są połączone lądem.",
   "AZERTY keyboards: the number row now works without Shift.": "Klawiatury AZERTY: rząd cyfr działa teraz bez Shift.",
-  "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "Strzałka zadania nie zasłania już górnych pasków i wskazuje z krawędzi ekranu, gdy budynek jest poza ekranem.",
-  "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Szybsza symulacja hordy oraz poprawione teksty portugalskie, niemieckie, niderlandzkie, polskie i tureckie.",
-  "Co-op: putting both games back in step, a few seconds (nothing to do)": "Co-op: wyrównywanie obu gier, kilka sekund (nic nie trzeba robić)",
-  "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Co-op: czekam na: {0}, {1} s (wolne połączenie lub komputer)",
-  "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Co-op: brak odpowiedzi ({0}) od {1} s, gra ruszy, gdy wróci połączenie",
-  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Kliknij, aby postawić zamek  -  przeciągnij / {0}: ruch   Prawy przycisk: obrót   Kółko: zoom",
-  "Co-op fixes, waves that always end, and new default keys.": "Poprawki kooperacji, fale, które zawsze się kończą, i nowe domyślne klawisze.",
-  "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.": "Zombie nie utykają już w wodzie ani na klifach: każdą falę można teraz ukończyć.",
-  "Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.": "Kooperacja: po ponownej synchronizacji obie gry startują dokładnie z tego samego stanu, a czytelny jednolinijkowy komunikat mówi, co się dzieje podczas czekania.",
-  "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.": "Kooperacja: jeśli partner wyjdzie, zostajesz graczem 2 z własnym zamkiem. Zapisane gry kontynuują się teraz dokładnie tak jak oryginalna gra.",
-  "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.": "Nowe domyślne klawisze: pochodnia F6, punkt zbiórki koszar F7, leśniczy F9, gildia F3. Na AZERTY kamera jest teraz na Z Q S D.",
-  "The minimap now frames the area you explored, and banners no longer cover the event buttons.": "Minimapa pokazuje teraz zbadany obszar, a banery nie zasłaniają już przycisków zdarzeń.",
+  "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.":
+    "Strzałka zadania nie zasłania już górnych pasków i wskazuje z krawędzi ekranu, gdy budynek jest poza ekranem.",
+  "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.":
+    "Szybsza symulacja hordy oraz poprawione teksty portugalskie, niemieckie, niderlandzkie, polskie i tureckie.",
+  "Co-op: putting both games back in step, a few seconds (nothing to do)":
+    "Co-op: wyrównywanie obu gier, kilka sekund (nic nie trzeba robić)",
+  "Co-op: waiting for {0}, {1} s (slow connection or computer)":
+    "Co-op: czekam na: {0}, {1} s (wolne połączenie lub komputer)",
+  "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back":
+    "Co-op: brak odpowiedzi ({0}) od {1} s, gra ruszy, gdy wróci połączenie",
+  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom":
+    "Kliknij, aby postawić zamek  -  przeciągnij / {0}: ruch   Prawy przycisk: obrót   Kółko: zoom",
+  "Co-op fixes, waves that always end, and new default keys.":
+    "Poprawki kooperacji, fale, które zawsze się kończą, i nowe domyślne klawisze.",
+  "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.":
+    "Zombie nie utykają już w wodzie ani na klifach: każdą falę można teraz ukończyć.",
+  "Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.":
+    "Kooperacja: po ponownej synchronizacji obie gry startują dokładnie z tego samego stanu, a czytelny jednolinijkowy komunikat mówi, co się dzieje podczas czekania.",
+  "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.":
+    "Kooperacja: jeśli partner wyjdzie, zostajesz graczem 2 z własnym zamkiem. Zapisane gry kontynuują się teraz dokładnie tak jak oryginalna gra.",
+  "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.":
+    "Nowe domyślne klawisze: pochodnia F6, punkt zbiórki koszar F7, leśniczy F9, gildia F3. Na AZERTY kamera jest teraz na Z Q S D.",
+  "The minimap now frames the area you explored, and banners no longer cover the event buttons.":
+    "Minimapa pokazuje teraz zbadany obszar, a banery nie zasłaniają już przycisków zdarzeń.",
 };

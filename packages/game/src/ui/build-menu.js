@@ -1,8 +1,8 @@
-import { BCATS, BCI, HK, NAMES } from './build-catalog.js';
+import { BCATS, BCI, HK, NAMES } from "./build-catalog.js";
 export { HK, NAMES };
-import { RHAS, ROLE } from '../ai/worker-roles.js';
-import { snd } from '../audio/sound.js';
-import { build, constructionState, FORMS } from '../gameplay/construction.js';
+import { RHAS, ROLE } from "../ai/worker-roles.js";
+import { snd } from "../audio/sound.js";
+import { build, constructionState, FORMS } from "../gameplay/construction.js";
 import {
   army,
   buy,
@@ -18,256 +18,1096 @@ import {
   tradeGain,
   TRADEK,
   bastionHas,
-} from '../gameplay/economy.js';
-import { setStance } from '../gameplay/formations.js';
-import { HOMEC, LPL, playersState, setTier, stoneOn } from '../gameplay/players.js';
-import { C, CSTONE, CWOOD, RN2, ROTT, RPRE, RS, RS2, RT_TIME, RT2, rxLock, rxPair, rxPre, RXOR, T, UPC } from '../gameplay/rules.js';
-import { curB, sel, selBs, selectionState, TRB } from '../gameplay/selection.js';
-import { sessionState } from '../gameplay/session.js';
-import { groupSel, ungroupSel } from '../gameplay/squads.js';
-import { L, setClipBox, T_, TCf, tw } from '../i18n/language.js';
-import { inputState } from '../input/state.js';
-import { roleAdj, ROLEK } from '../multiplayer/commands.js';
-import { MP } from '../multiplayer/session.js';
-import { ICT, TIERK } from '../rendering/model-icons.js';
-import { canvasesState, cv } from './canvases.js';
-import { convoyPanelState } from './panel-state.js';
-import { BTNX, circ, focusRing, frame, gold, ICN, poly, rr, rrg, SLOT, SLOTH, SLOTX, tabPlate, TN } from './drawing.js';
-import { FFP } from './typography.js';
-import { rmotion } from '../core/prefs.js';
-import { hudState, idleP, inR, selIdle, U } from './hud.js';
-import { qmReg } from './quest-marker.js';
-import { hudDisplayState } from './hud-state.js';
-import { dIc, IC } from './icons.js';
-import { assignJob, JOBI, JOBK, JOBL } from './worker-controls.js';
+} from "../gameplay/economy.js";
+import { setStance } from "../gameplay/formations.js";
+import { HOMEC, LPL, playersState, setTier, stoneOn } from "../gameplay/players.js";
+import {
+  C,
+  CSTONE,
+  CWOOD,
+  RN2,
+  ROTT,
+  RPRE,
+  RS,
+  RS2,
+  RT_TIME,
+  RT2,
+  rxLock,
+  rxPair,
+  rxPre,
+  RXOR,
+  T,
+  UPC,
+} from "../gameplay/rules.js";
+import { curB, sel, selBs, selectionState, TRB } from "../gameplay/selection.js";
+import { sessionState } from "../gameplay/session.js";
+import { groupSel, ungroupSel } from "../gameplay/squads.js";
+import { L, setClipBox, T_, TCf, tw } from "../i18n/language.js";
+import { inputState } from "../input/state.js";
+import { roleAdj, ROLEK } from "../multiplayer/commands.js";
+import { MP } from "../multiplayer/session.js";
+import { ICT, TIERK } from "../rendering/model-icons.js";
+import { canvasesState, cv } from "./canvases.js";
+import { convoyPanelState } from "./panel-state.js";
+import { BTNX, circ, focusRing, frame, gold, ICN, poly, rr, rrg, SLOT, SLOTH, SLOTX, tabPlate, TN } from "./drawing.js";
+import { FFP } from "./typography.js";
+import { rmotion } from "../core/prefs.js";
+import { hudState, idleP, inR, selIdle, U } from "./hud.js";
+import { qmReg } from "./quest-marker.js";
+import { hudDisplayState } from "./hud-state.js";
+import { dIc, IC } from "./icons.js";
+import { assignJob, JOBI, JOBK, JOBL } from "./worker-controls.js";
 
 export const buildMenuState = {
   FPV: null,
   BCAT: null,
 };
 
+const TIPS = {
+  convoy: ["Convoy", "Peasants carry gold, wood, stone or food", "to your partner's castle, then come back"],
+  jw: ["Cut wood", "Sends the selected peasants to the nearest trees"],
+  js: ["Quarry stone", "Sends the selected peasants to the nearest rocks"],
+  jg: ["Mine gold", "Sends the selected peasants to the nearest gold"],
+  jf: ["Farm", "One selected peasant works the nearest free farm"],
+  jr: ["Build and repair", "Sends the selected peasants to the nearest building site", "or damaged building"],
+  repair: ["Repair", "Peasants fix the selected building", "Costs part of its wood / stone / gold"],
+  agg: ["Aggressive [1]", "Chase and attack every enemy in sight"],
+  def: ["Defensive [2]", "Fight around their post, then walk back to it"],
+  hold: ["Halt [3]", "Hold position: never move, only strike", "enemies within weapon range"],
+  stop: ["Stop [4]", "Cancel current orders and stay here"],
+  work: ["Gather", "Send these peasants back to work now"],
+  movec: ["Move castle", "Relocate your castle up to 40 tiles away", "Costs 100 gold, 150 wood"],
+  rotate: ["Rotate [R]", "Turns the selected building 90 degrees", "The castle door turns with it"],
+  academy: ["Academy", "2x2 school: all research is bought here.", "Select it to open the research menu"],
+  market: ["Market", "2x2 trading post: select it to sell", "wood, stone or food for gold, or buy them"],
+  forester: ["Forester's hut", "2x2 log cabin: its peasant plants saplings", "around it; they grow into trees (wood)"],
+  guild: [
+    "Builders' guild",
+    "2x2 workshop: select it to choose how many",
+    "peasants build, repair and reshape the land",
+  ],
+  scout: ["Scout", "Fast and fragile, sees very far", "Trained at the barracks"],
+  engineer: ["Engineer", "Repairs nearby buildings fast", "Trained at the castle"],
+  envoy: ["Envoy", "Send to a rebel camp: tribute of gold and food, once per camp", "Needs an embassy"],
+  observatory: ["Observatory", "2x2 tower with a telescope: you see", "far over the land around it"],
+  granary: ["Granary", "2x2 food store on stilts:", "+4 population limit"],
+  bell: ["Alarm bell", "2x2 bell frame: troops around it", "attack 15% faster"],
+  sanctuary: ["Sanctuary", "2x2 chapel: troops around it", "slowly heal"],
+  beacon: ["Watch beacon", "2x2 tower with a living flame: a wide", "light at night, and a far view"],
+  orchard: ["Orchard", "2x2 apple grove: a trickle of food", "without a peasant"],
+  forge: ["Royal forge", "2x2 smithy: all your troops", "deal 8% more damage"],
+  embassy: ["Embassy", "2x2 hall for rebel envoys: tribute", "and caravans bring 50% more"],
+  warroom: ["War room", "2x2 map hall: your barracks", "train units 15% faster"],
+  sappers: ["Sappers' workshop", "2x2 workshop: buildings around it", "slowly repair themselves"],
+  torch: ["Torch", "Cheap light: at night whatever stands", "outside the light is hurt by the dark"],
+  rallyc: ["Rally", "Click the map: new peasants walk there;", "on a tree, rock or gold they start working it"],
+  house: ["House [0]", "2x2 cottage: +6 population", "Your castle alone supports 18"],
+  rally: ["Rally", "Click the map: new soldiers from", "barracks walk there by themselves"],
+  steel: ["Steel weapons", "Research (60 s): soldiers hit", "another 20% harder", "Needs Iron weapons"],
+  mail: ["Chain mail", "Research (70 s): your side takes", "another 15% less damage", "Needs Plate armor"],
+  tools: ["Better tools", "Research (30 s): peasants gather", "33% faster"],
+  harvest: ["Crop rotation", "Research (40 s): farms yield 50% more food"],
+  fletch: ["Fletching", "Research (45 s): archers +25%,", "towers +40% damage"],
+  fire: ["Fire arrows", "Research (50 s, after Fletching): archers set", "zombies on fire, they burn for 3 seconds"],
+  era: [
+    "Iron age",
+    "Research (70 s, after Steel weapons or Chain mail): your units",
+    "hit 10% harder and buildings slowly mend",
+  ],
+  oil: ["Boiling oil", "Research (55 s, after Bastion walls): walls, gates", "and towers scald zombies next to them"],
+  spike: ["Spike trap", "Passable: zombies standing on it are hurt", "every half second until the spikes break"],
+  bastion: ["Bastion walls", "Research (60 s): buildings take", "28% less damage", "Needs Masonry"],
+  tier: ["Building tier [L]", "Choose wood or stone for what you build", "Stone needs Masonry"],
+  demolish: ["Demolish [P]", "Click a building: peasants tear it down", "and you recover 100% of its cost"],
+  storage: ["Storage [K]", "2x2 depot: peasants drop wood, stone", "and gold here: build it next to resources"],
+  ramp: ["Ramp [I]", "Places a ramp block that climbs 1 level", "[R] turns it - peasants build it (free)"],
+  farm: ["Farm [J]", "2x2 field worked by one peasant:", "+6 food every 6 s while he farms it"],
+  iron: ["Iron weapons", "Research (40 s): your soldiers", "and towers hit 25% harder"],
+  plate: ["Plate armor", "Research (50 s): your side takes", "22% less damage"],
+  drill: ["Drill training", "Research (35 s): units are trained", "25% faster, at the castle or barracks"],
+  peasant: ["Peasant", "Select, then right-click a tree, rock", "or gold to harvest it. Click a building to repair"],
+  knight: ["Knight", "Tough melee fighter"],
+  spearman: [
+    "Spearman",
+    "Cheap line holder with a long spear",
+    "Strikes over the front rank",
+    "Hits brutes and bosses 60% harder",
+  ],
+  archer: ["Archer", "Ranged attacker", "Right-click a wall, gate or tower", "to garrison it for more range"],
+  bannerman: [
+    "Bannerman",
+    "Heals nearby allies in a wide area",
+    "and speeds up their attacks",
+    "Keep him behind the line",
+  ],
+  captain: ["Captain", "Allies within 8 tiles hit 25% harder", "and take 20% less damage"],
+  king: [
+    "King Naraige",
+    "Summoned at the castle with his 2 royal guards - one king only",
+    "His sword cuts through the horde; allies within 10 tiles",
+    "hit 35% harder and take 20% less damage",
+  ],
+  guard: [
+    "Royal guard",
+    "A new halberdier to escort the king (2 at most)",
+    "Long reach, sweeps several zombies at once",
+  ],
+  stoneup: ["Upgrade to stone", "Rebuilds this building in stone:", "twice the hit points", "Needs Masonry"],
+  upgtool: ["Stone upgrade tool", "Click or drag over wooden buildings", "to rebuild them in stone (walls...)"],
+  cannon: [
+    "Cannon",
+    "Field gun pushed by a crew of 2 (2 population)",
+    "Its cannonballs blast whole groups of zombies",
+    "Slow, and weak up close. Needs Masonry",
+  ],
+  barracks: [
+    "Barracks [C]",
+    "2x2 building, click it to select",
+    "Units trained while it is selected",
+    "come out of it, 35% faster",
+  ],
+  upgrade: [
+    "Masonry [G]",
+    "Research (45 s): every wooden building,",
+    "castle included, becomes stone",
+    "New buildings are stone afterwards",
+  ],
+  wall: ["Wooden wall", "Cheap and links to its neighbours", "Upgrade it to stone later"],
+  gate: ["Wooden gate", "2 tiles long. R rotates it", "Your units pass, zombies must break it"],
+  tower: ["Wooden tower", "Long range: volleys of 5 arrows", "Lights the night. Archers garrison (3)"],
+  ballista: ["Ballista [B]", "Click a finished tower to mount it", "Pierces a whole line of zombies"],
+  trebuchet: ["Trebuchet [T]", "Click a finished tower to mount it", "Huge range, boulders crush a crowd"],
+  raise: [
+    "Raise ground [Y]",
+    "Paint tiles: idle or selected peasants",
+    "raise them by 1 block (free)",
+    "Click a marked tile again to cancel",
+  ],
+  dig: ["Dig ground [U]", "Paint tiles: peasants lower them by 1", "and give back 2 stone each"],
+  form: ["Formation [V]", "Cycles None / Line / Block / Wedge / Ring", "Used when you move 3+ selected soldiers"],
+  idle: ["Idle peasants [.]", "Selects peasants with no job", "and centers the camera on them"],
+  path: ["Path", "Faster travel", "Click or drag to paint"],
 
-
-const TIPS={
-convoy:['Convoy','Peasants carry gold, wood, stone or food','to your partner\'s castle, then come back'],
-jw:['Cut wood','Sends the selected peasants to the nearest trees'],
-js:['Quarry stone','Sends the selected peasants to the nearest rocks'],
-jg:['Mine gold','Sends the selected peasants to the nearest gold'],
-jf:['Farm','One selected peasant works the nearest free farm'],
-jr:['Build and repair','Sends the selected peasants to the nearest building site','or damaged building'],
-repair:['Repair','Peasants fix the selected building','Costs part of its wood / stone / gold'],
-agg:['Aggressive [1]','Chase and attack every enemy in sight'],
-def:['Defensive [2]','Fight around their post, then walk back to it'],
-hold:['Halt [3]','Hold position: never move, only strike','enemies within weapon range'],
-stop:['Stop [4]','Cancel current orders and stay here'],
-work:['Gather','Send these peasants back to work now'],
-movec:['Move castle','Relocate your castle up to 40 tiles away','Costs 100 gold, 150 wood'],
-rotate:['Rotate [R]','Turns the selected building 90 degrees','The castle door turns with it'],
-academy:['Academy','2x2 school: all research is bought here.','Select it to open the research menu'],
-market:['Market','2x2 trading post: select it to sell','wood, stone or food for gold, or buy them'],
-forester:["Forester's hut",'2x2 log cabin: its peasant plants saplings','around it; they grow into trees (wood)'],
-guild:["Builders' guild",'2x2 workshop: select it to choose how many','peasants build, repair and reshape the land'],
-scout:['Scout','Fast and fragile, sees very far','Trained at the barracks'],
-engineer:['Engineer','Repairs nearby buildings fast','Trained at the castle'],envoy:['Envoy','Send to a rebel camp: tribute of gold and food, once per camp','Needs an embassy'],
-observatory:['Observatory','2x2 tower with a telescope: you see','far over the land around it'],
-granary:['Granary','2x2 food store on stilts:','+4 population limit'],
-bell:['Alarm bell','2x2 bell frame: troops around it','attack 15% faster'],
-sanctuary:['Sanctuary','2x2 chapel: troops around it','slowly heal'],
-beacon:['Watch beacon','2x2 tower with a living flame: a wide','light at night, and a far view'],
-orchard:['Orchard','2x2 apple grove: a trickle of food','without a peasant'],
-forge:['Royal forge','2x2 smithy: all your troops','deal 8% more damage'],
-embassy:['Embassy','2x2 hall for rebel envoys: tribute','and caravans bring 50% more'],
-warroom:['War room','2x2 map hall: your barracks','train units 15% faster'],
-sappers:['Sappers\' workshop','2x2 workshop: buildings around it','slowly repair themselves'],
-torch:['Torch','Cheap light: at night whatever stands','outside the light is hurt by the dark'],
-rallyc:['Rally','Click the map: new peasants walk there;','on a tree, rock or gold they start working it'],
-house:['House [0]','2x2 cottage: +6 population','Your castle alone supports 18'],
-rally:['Rally','Click the map: new soldiers from','barracks walk there by themselves'],
-steel:['Steel weapons','Research (60 s): soldiers hit','another 20% harder','Needs Iron weapons'],
-mail:['Chain mail','Research (70 s): your side takes','another 15% less damage','Needs Plate armor'],
-tools:['Better tools','Research (30 s): peasants gather','33% faster'],
-harvest:['Crop rotation','Research (40 s): farms yield 50% more food'],
-fletch:['Fletching','Research (45 s): archers +25%,','towers +40% damage'],
-fire:['Fire arrows','Research (50 s, after Fletching): archers set','zombies on fire, they burn for 3 seconds'],
-era:['Iron age','Research (70 s, after Steel weapons or Chain mail): your units','hit 10% harder and buildings slowly mend'],
-oil:['Boiling oil','Research (55 s, after Bastion walls): walls, gates','and towers scald zombies next to them'],
-spike:['Spike trap','Passable: zombies standing on it are hurt','every half second until the spikes break'],
-bastion:['Bastion walls','Research (60 s): buildings take','28% less damage','Needs Masonry'],
-tier:['Building tier [L]','Choose wood or stone for what you build','Stone needs Masonry'],
-demolish:['Demolish [P]','Click a building: peasants tear it down','and you recover 100% of its cost'],
-storage:['Storage [K]','2x2 depot: peasants drop wood, stone','and gold here: build it next to resources'],
-ramp:['Ramp [I]','Places a ramp block that climbs 1 level','[R] turns it - peasants build it (free)'],
-farm:['Farm [J]','2x2 field worked by one peasant:','+6 food every 6 s while he farms it'],
-iron:['Iron weapons','Research (40 s): your soldiers','and towers hit 25% harder'],
-plate:['Plate armor','Research (50 s): your side takes','22% less damage'],
-drill:['Drill training','Research (35 s): units are trained','25% faster, at the castle or barracks'],
-peasant:['Peasant','Select, then right-click a tree, rock','or gold to harvest it. Click a building to repair'],
-knight:['Knight','Tough melee fighter'],
-spearman:['Spearman','Cheap line holder with a long spear','Strikes over the front rank','Hits brutes and bosses 60% harder'],
-archer:['Archer','Ranged attacker','Right-click a wall, gate or tower','to garrison it for more range'],
-bannerman:['Bannerman','Heals nearby allies in a wide area','and speeds up their attacks','Keep him behind the line'],
-captain:['Captain','Allies within 8 tiles hit 25% harder','and take 20% less damage'],
-king:['King Naraige','Summoned at the castle with his 2 royal guards - one king only','His sword cuts through the horde; allies within 10 tiles','hit 35% harder and take 20% less damage'],
-guard:['Royal guard','A new halberdier to escort the king (2 at most)','Long reach, sweeps several zombies at once'],
-stoneup:['Upgrade to stone','Rebuilds this building in stone:','twice the hit points','Needs Masonry'],
-upgtool:['Stone upgrade tool','Click or drag over wooden buildings','to rebuild them in stone (walls...)'],
-cannon:['Cannon','Field gun pushed by a crew of 2 (2 population)','Its cannonballs blast whole groups of zombies','Slow, and weak up close. Needs Masonry'],
-barracks:['Barracks [C]','2x2 building, click it to select','Units trained while it is selected','come out of it, 35% faster'],
-upgrade:['Masonry [G]','Research (45 s): every wooden building,','castle included, becomes stone','New buildings are stone afterwards'],
-wall:['Wooden wall','Cheap and links to its neighbours','Upgrade it to stone later'],
-gate:['Wooden gate','2 tiles long. R rotates it','Your units pass, zombies must break it'],
-tower:['Wooden tower','Long range: volleys of 5 arrows','Lights the night. Archers garrison (3)'],
-ballista:['Ballista [B]','Click a finished tower to mount it','Pierces a whole line of zombies'],
-trebuchet:['Trebuchet [T]','Click a finished tower to mount it','Huge range, boulders crush a crowd'],
-raise:['Raise ground [Y]','Paint tiles: idle or selected peasants','raise them by 1 block (free)','Click a marked tile again to cancel'],
-dig:['Dig ground [U]','Paint tiles: peasants lower them by 1','and give back 2 stone each'],
-form:['Formation [V]','Cycles None / Line / Block / Wedge / Ring','Used when you move 3+ selected soldiers'],
-idle:['Idle peasants [.]','Selects peasants with no job','and centers the camera on them'],
-path:['Path','Faster travel','Click or drag to paint'],
-
- army:['Select army','Selects all fighters'],'rb+':['Add a builder','A peasant who only builds new buildings','and demolishes; he waits at the guild'],'rb-':['Remove a builder','He goes back to gathering'],'rr+':['Add a repairer','Repairs damaged buildings by himself (uses','resources); stays out at night for the walls'],'rr-':['Remove a repairer','He goes back to gathering'],'rt+':['Add a terraformer','Digs, raises and builds the ramps you order;','the other peasants keep gathering'],'rt-':['Remove a terraformer','He goes back to gathering'],mode:['Mouse mode','Select: drag draws a box','Pan: drag moves the camera']};
+  army: ["Select army", "Selects all fighters"],
+  "rb+": ["Add a builder", "A peasant who only builds new buildings", "and demolishes; he waits at the guild"],
+  "rb-": ["Remove a builder", "He goes back to gathering"],
+  "rr+": [
+    "Add a repairer",
+    "Repairs damaged buildings by himself (uses",
+    "resources); stays out at night for the walls",
+  ],
+  "rr-": ["Remove a repairer", "He goes back to gathering"],
+  "rt+": ["Add a terraformer", "Digs, raises and builds the ramps you order;", "the other peasants keep gathering"],
+  "rt-": ["Remove a terraformer", "He goes back to gathering"],
+  mode: ["Mouse mode", "Select: drag draws a box", "Pan: drag moves the camera"],
+};
 
 /* shortcut badges: only the main keys (digits, '.', and the letter of "select army": Q, or A on AZERTY) are drawn on the buttons; every key stays active and is listed in Settings > Controls */
-const hkShow=k=>HK[k]!==undefined&&(/^[0-9.]$/.test(String(HK[k]))||(k==='army'&&/^[A-Z]$/.test(String(HK[k]))));
+const hkShow = (k) =>
+  HK[k] !== undefined && (/^[0-9.]$/.test(String(HK[k])) || (k === "army" && /^[A-Z]$/.test(String(HK[k]))));
 
-const RN={g:'gold',w:'wood',s:'stone',f:'food'};
+const RN = { g: "gold", w: "wood", s: "stone", f: "food" };
 
 export let CMP = false;
-const MW=34,MH=38;
+const MW = 34,
+  MH = 38;
 /* build menu in categories: the bar shows Defense / Economy / Town / Land; a click opens that category (Back or Esc to return) */
 
 /* niche buildings (2x2 bonus halls, beacon, sappers...) appear once there is an Academy or the first wave has come, or while one is being placed; their hotkeys always work.
    Stone variants appear once Masonry is researched. */
-const NICHE=new Set(['beacon','sappers','granary','orchard','embassy','observatory','bell','sanctuary','forge','warroom']);
-const nicheOn=()=>hasAcademy(LPL())||sessionState.waveN>=1;
+const NICHE = new Set([
+  "beacon",
+  "sappers",
+  "granary",
+  "orchard",
+  "embassy",
+  "observatory",
+  "bell",
+  "sanctuary",
+  "forge",
+  "warroom",
+]);
+const nicheOn = () => hasAcademy(LPL()) || sessionState.waveN >= 1;
 
-function catItems(c,_siege){return BCATS[c][1].filter(k=>!NICHE.has(k)||nicheOn()||sessionState.mode===k)}
+function catItems(c, _siege) {
+  return BCATS[c][1].filter((k) => !NICHE.has(k) || nicheOn() || sessionState.mode === k);
+}
 
-function catKeys(c,siege){const a=catItems(c,siege);return a.concat(RS.done?a.filter(k=>TIERK.has(k)).map(k=>'s:'+k):[])}
+function catKeys(c, siege) {
+  const a = catItems(c, siege);
+  return a.concat(RS.done ? a.filter((k) => TIERK.has(k)).map((k) => "s:" + k) : []);
+}
 
-function buildGroups(siege){const sg=siege&&RS.done;if(buildMenuState.BCAT&&BCATS[buildMenuState.BCAT]&&(buildMenuState.BCAT!=='siege'||sg))return[[BCATS[buildMenuState.BCAT][0],['back'].concat(catKeys(buildMenuState.BCAT,siege))]];return[['Build',['house','farm','wall','cat:def','cat:eco','cat:town','cat:land'].concat(sg?['cat:siege']:[],RS.done?['upgtool']:[],['demolish'])]]}
+function buildGroups(siege) {
+  const sg = siege && RS.done;
+  if (buildMenuState.BCAT && BCATS[buildMenuState.BCAT] && (buildMenuState.BCAT !== "siege" || sg))
+    return [[BCATS[buildMenuState.BCAT][0], ["back"].concat(catKeys(buildMenuState.BCAT, siege))]];
+  return [
+    [
+      "Build",
+      ["house", "farm", "wall", "cat:def", "cat:eco", "cat:town", "cat:land"].concat(
+        sg ? ["cat:siege"] : [],
+        RS.done ? ["upgtool"] : [],
+        ["demolish"],
+      ),
+    ],
+  ];
+}
 
-function ctxGroups(){const S=sel();if(S.length){const sol=S.some(u=>u.type!=='peasant'),pea=S.some(u=>u.type==='peasant'),G=[];
-  if(sol)G.push(['Behaviour',['agg','def','hold']]);
-  if(pea&&!sol)G.push(['Peasants',['work','stop']],['Tasks',['jw','js','jg','jf','jr']],...buildGroups(false));
-  G.push(['Group',(sol&&S.length>=2?['form']:[]).concat(['army','idle'],inputState.touch?['mode']:[])]);return G}
- const upI=b=>b&&b.tier===0&&UPC[b.type]?['stoneup']:[];
- if(selectionState.selB&&sessionState.structs.includes(selectionState.selB)&&selectionState.selB.prog>=1&&!TRB.has(selectionState.selB.type))return[['Command',upI(selBs().find(s=>s.tier===0)||selectionState.selB).concat(['repair','demolish'],ROTT.has(selectionState.selB.type)?['rotate']:[])]];
- const t=curB().type;
- if(t==='market')return[['Trade',['sellw','sells','sellf','buyw','buys','buyf']],['Barter',['xws','xwf','xsw','xsf','xfw','xfs']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
- if(t==='guild')return[['Builders',['rb-','rb+']],['Repairers',['rr-','rr+']],['Terraformers',['rt-','rt+']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
- if(t==='academy')return[['Research',['upgrade','iron','plate','steel','mail','drill','tools','harvest','fletch','fire','bastion','oil','era']],['Command',upI(curB()).concat(['repair','demolish','rotate'])]];
- if(t==='barracks')return[['Train',['knight','spearman','archer','bannerman','captain','scout'].concat(RS.done?['cannon']:[])],['Command',upI(curB()).concat(['army','idle','rally','repair','demolish','rotate','form','mode'])]];
- return[['Train',['peasant','engineer'].concat(bastionHas(HOMEC().pl|0,'embassy')?['envoy']:[]).concat(royalBtns())],...buildGroups(true),['Command',upI(HOMEC()).concat(['army','idle','rallyc','repair','rotate','movec','form','mode'])]].concat(MP.on&&sessionState.CS2?[['Co-op',['convoy']]]:[])}
+function ctxGroups() {
+  const S = sel();
+  if (S.length) {
+    const sol = S.some((u) => u.type !== "peasant"),
+      pea = S.some((u) => u.type === "peasant"),
+      G = [];
+    if (sol) G.push(["Behaviour", ["agg", "def", "hold"]]);
+    if (pea && !sol)
+      G.push(["Peasants", ["work", "stop"]], ["Tasks", ["jw", "js", "jg", "jf", "jr"]], ...buildGroups(false));
+    G.push([
+      "Group",
+      (sol && S.length >= 2 ? ["form"] : []).concat(["army", "idle"], inputState.touch ? ["mode"] : []),
+    ]);
+    return G;
+  }
+  const upI = (b) => (b && b.tier === 0 && UPC[b.type] ? ["stoneup"] : []);
+  if (
+    selectionState.selB &&
+    sessionState.structs.includes(selectionState.selB) &&
+    selectionState.selB.prog >= 1 &&
+    !TRB.has(selectionState.selB.type)
+  )
+    return [
+      [
+        "Command",
+        upI(selBs().find((s) => s.tier === 0) || selectionState.selB).concat(
+          ["repair", "demolish"],
+          ROTT.has(selectionState.selB.type) ? ["rotate"] : [],
+        ),
+      ],
+    ];
+  const t = curB().type;
+  if (t === "market")
+    return [
+      ["Trade", ["sellw", "sells", "sellf", "buyw", "buys", "buyf"]],
+      ["Barter", ["xws", "xwf", "xsw", "xsf", "xfw", "xfs"]],
+      ["Command", upI(curB()).concat(["repair", "demolish", "rotate"])],
+    ];
+  if (t === "guild")
+    return [
+      ["Builders", ["rb-", "rb+"]],
+      ["Repairers", ["rr-", "rr+"]],
+      ["Terraformers", ["rt-", "rt+"]],
+      ["Command", upI(curB()).concat(["repair", "demolish", "rotate"])],
+    ];
+  if (t === "academy")
+    return [
+      [
+        "Research",
+        [
+          "upgrade",
+          "iron",
+          "plate",
+          "steel",
+          "mail",
+          "drill",
+          "tools",
+          "harvest",
+          "fletch",
+          "fire",
+          "bastion",
+          "oil",
+          "era",
+        ],
+      ],
+      ["Command", upI(curB()).concat(["repair", "demolish", "rotate"])],
+    ];
+  if (t === "barracks")
+    return [
+      ["Train", ["knight", "spearman", "archer", "bannerman", "captain", "scout"].concat(RS.done ? ["cannon"] : [])],
+      ["Command", upI(curB()).concat(["army", "idle", "rally", "repair", "demolish", "rotate", "form", "mode"])],
+    ];
+  return [
+    [
+      "Train",
+      ["peasant", "engineer"].concat(bastionHas(HOMEC().pl | 0, "embassy") ? ["envoy"] : []).concat(royalBtns()),
+    ],
+    ...buildGroups(true),
+    ["Command", upI(HOMEC()).concat(["army", "idle", "rallyc", "repair", "rotate", "movec", "form", "mode"])],
+  ].concat(MP.on && sessionState.CS2 ? [["Co-op", ["convoy"]]] : []);
+}
 
 /* ================= tabs and NEW tags (lot D, visual only) =================
    Castle / barracks / market... menus show one group at a time (Train / Build / Command ...) behind tabs; a tab carries the number of newly unlocked slots,
    and those slots get a NEW tag until they are hovered or used. "Seen" lives in localStorage key dk_newslots (absent = fresh profile: everything
    already available is seeded as seen). Nothing here is read by the simulation or written to a save. */
-export const tabState={on:false,ids:[],cur:'',badge:{},sel:''};
-const BCATN=new Set(Object.values(BCATS).map(v=>v[0])),tabId=n=>BCATN.has(n)?'Build':n;
-const TABIC={Train:()=>IC.knight,Build:()=>IC.home,Command:()=>IC.hammer,Research:()=>IC.upgrade,Trade:()=>IC.coin,Barter:()=>IC.coin,Builders:()=>IC.hammer,Repairers:()=>IC.hammer,Terraformers:()=>IC.hammer,'Co-op':()=>IC.convoy};
-let SEEN=null;
-function seenLoad(){if(SEEN)return SEEN;SEEN=new Set();let raw=null;try{raw=localStorage.getItem('dk_newslots')}catch { /* Use fresh-session badges when storage is unavailable. */ }if(raw){try{const a=JSON.parse(raw);if(Array.isArray(a))a.forEach(k=>SEEN.add(String(k)))}catch { /* Ignore malformed badge data; this session starts with no saved badges. */ }}else SEEN.fresh=true;return SEEN}
-const seenSave=()=>{try{localStorage.setItem('dk_newslots',JSON.stringify([...SEEN]))}catch { /* Keep the seen-badge set in memory when storage is unavailable. */ }};
-export function markSeen(id){const S=seenLoad();if(id&&!S.has(id)){S.add(id);seenSave()}}
-const lockedNow=id=>(id==='cannon'&&!RS.done)||((id in RT2||id==='upgrade')&&!hasAcademy(LPL()))||((id in RT2)&&(!rxPre(id)||!!rxLock(id)));
-const newKey=id=>(id in C||id in T||(id in RT2&&id in RPRE))&&!['raise','dig','ramp','demolish','tier','upgrade'].includes(id);
-const baseNew=id=>newKey(id)&&!lockedNow(id)&&!(id in RT2&&RS2.done[id])&&!seenLoad().has(id);
-const newIn=k=>k.startsWith('cat:')?catItems(k.slice(4),true).filter(baseNew).length:k.startsWith('s:')?0:(baseNew(k)?1:0);
-const newItem=it=>it.tr!==undefined?false:it.k.startsWith('cat:')?newIn(it.k)>0:baseNew(it.id);
-const nwFn=(it,nw,f)=>nw&&!it.k.startsWith('cat:')?()=>{markSeen(it.id);f()}:f;
-function seedSeen(){const S=seenLoad();if(!S.fresh||!sessionState.started)return;S.fresh=false;for(const k of new Set([...Object.keys(C),...Object.keys(T),...Object.keys(RT2)])){if(NICHE.has(k)&&!nicheOn())continue;if(lockedNow(k))continue;S.add(k)}seenSave()}
-function tabPick(G){tabState.on=false;if(sel().length||G.length<2)return G;const ids=G.map(g=>tabId(g[0]));tabState.on=true;tabState.ids=ids;tabState.cur=ids.includes(tabState.sel)?tabState.sel:ids[0];tabState.badge={};G.forEach(g=>{tabState.badge[tabId(g[0])]=g[1].reduce((a,k)=>a+newIn(k),0)});return G.filter(g=>tabId(g[0])===tabState.cur)}
-export function setTab(id){tabState.sel=id;tabState.cur=id;snd('click')}
-export function cycleTab(d){if(!tabState.on||tabState.ids.length<2)return false;const i=tabState.ids.indexOf(tabState.cur);setTab(tabState.ids[(i+d+tabState.ids.length)%tabState.ids.length]);return true}
-export const TABH=17;
-const tabTw=id=>{const g=canvasesState.ctx;g.save();g.font='600 9.5px '+FFP;const w=g.measureText(L(id)).width;g.restore();return w};
-const tabW=id=>CMP?24:Math.ceil(tabTw(id))+30;
-export const tabsWidth=()=>tabState.ids.reduce((a,id)=>a+tabW(id)+3,-3)+(inputState.touch||CMP?0:30);
-/* the tab strip sits on the panel's top edge; the active tab opens into the panel */
-export function drawTabs(px,py,pw){const g=canvasesState.ctx;let x=px+4;const y=py-TABH+1;hudState.uiRects.push(U(px,py-TABH,Math.max(pw,tabsWidth()+8),TABH));
- for(const id of tabState.ids){const w=tabW(id),on=id===tabState.cur,n=tabState.badge[id]|0,ic=TABIC[id]&&TABIC[id]();
-  qmReg('tab:'+id,x,y,w,TABH);const hr=U(x,y,w,TABH),hvr=inR(inputState.mouse,hr);hudState.uiHits.push({...hr,fn:()=>setTab(id),tip:null});
-  g.save();tabPlate(x,y,w,TABH+1,on,hvr);
-  if(ic){g.globalAlpha=on?1:.7;dIc(ic,x+5,y+3,11)}
-  if(!CMP){g.font='600 9.5px '+FFP;g.textBaseline='middle';g.textAlign='left';g.fillStyle='rgba(0,0,0,.55)';g.fillText(L(id),x+19,y+TABH/2+1.4);g.fillStyle=on?'#ffe9a8':'#b9b3a2';g.fillText(L(id),x+19,y+TABH/2+.6)}
+export const tabState = { on: false, ids: [], cur: "", badge: {}, sel: "" };
+const BCATN = new Set(Object.values(BCATS).map((v) => v[0])),
+  tabId = (n) => (BCATN.has(n) ? "Build" : n);
+const TABIC = {
+  Train: () => IC.knight,
+  Build: () => IC.home,
+  Command: () => IC.hammer,
+  Research: () => IC.upgrade,
+  Trade: () => IC.coin,
+  Barter: () => IC.coin,
+  Builders: () => IC.hammer,
+  Repairers: () => IC.hammer,
+  Terraformers: () => IC.hammer,
+  "Co-op": () => IC.convoy,
+};
+let SEEN = null;
+function seenLoad() {
+  if (SEEN) return SEEN;
+  SEEN = new Set();
+  let raw = null;
+  try {
+    raw = localStorage.getItem("dk_newslots");
+  } catch {
+    /* Use fresh-session badges when storage is unavailable. */
+  }
+  if (raw) {
+    try {
+      const a = JSON.parse(raw);
+      if (Array.isArray(a)) a.forEach((k) => SEEN.add(String(k)));
+    } catch {
+      /* Ignore malformed badge data; this session starts with no saved badges. */
+    }
+  } else SEEN.fresh = true;
+  return SEEN;
+}
+const seenSave = () => {
+  try {
+    localStorage.setItem("dk_newslots", JSON.stringify([...SEEN]));
+  } catch {
+    /* Keep the seen-badge set in memory when storage is unavailable. */
+  }
+};
+export function markSeen(id) {
+  const S = seenLoad();
+  if (id && !S.has(id)) {
+    S.add(id);
+    seenSave();
+  }
+}
+const lockedNow = (id) =>
+  (id === "cannon" && !RS.done) ||
+  ((id in RT2 || id === "upgrade") && !hasAcademy(LPL())) ||
+  (id in RT2 && (!rxPre(id) || !!rxLock(id)));
+const newKey = (id) =>
+  (id in C || id in T || (id in RT2 && id in RPRE)) &&
+  !["raise", "dig", "ramp", "demolish", "tier", "upgrade"].includes(id);
+const baseNew = (id) => newKey(id) && !lockedNow(id) && !(id in RT2 && RS2.done[id]) && !seenLoad().has(id);
+const newIn = (k) =>
+  k.startsWith("cat:")
+    ? catItems(k.slice(4), true).filter(baseNew).length
+    : k.startsWith("s:")
+      ? 0
+      : baseNew(k)
+        ? 1
+        : 0;
+const newItem = (it) => (it.tr !== undefined ? false : it.k.startsWith("cat:") ? newIn(it.k) > 0 : baseNew(it.id));
+const nwFn = (it, nw, f) =>
+  nw && !it.k.startsWith("cat:")
+    ? () => {
+        markSeen(it.id);
+        f();
+      }
+    : f;
+function seedSeen() {
+  const S = seenLoad();
+  if (!S.fresh || !sessionState.started) return;
+  S.fresh = false;
+  for (const k of new Set([...Object.keys(C), ...Object.keys(T), ...Object.keys(RT2)])) {
+    if (NICHE.has(k) && !nicheOn()) continue;
+    if (lockedNow(k)) continue;
+    S.add(k);
+  }
+  seenSave();
+}
+function tabPick(G) {
+  tabState.on = false;
+  if (sel().length || G.length < 2) return G;
+  const ids = G.map((g) => tabId(g[0]));
+  tabState.on = true;
+  tabState.ids = ids;
+  tabState.cur = ids.includes(tabState.sel) ? tabState.sel : ids[0];
+  tabState.badge = {};
+  G.forEach((g) => {
+    tabState.badge[tabId(g[0])] = g[1].reduce((a, k) => a + newIn(k), 0);
+  });
+  return G.filter((g) => tabId(g[0]) === tabState.cur);
+}
+export function setTab(id) {
+  tabState.sel = id;
+  tabState.cur = id;
+  snd("click");
+}
+export function cycleTab(d) {
+  if (!tabState.on || tabState.ids.length < 2) return false;
+  const i = tabState.ids.indexOf(tabState.cur);
+  setTab(tabState.ids[(i + d + tabState.ids.length) % tabState.ids.length]);
+  return true;
+}
+export const TABH = 17;
+const tabTw = (id) => {
+  const g = canvasesState.ctx;
+  g.save();
+  g.font = "600 9.5px " + FFP;
+  const w = g.measureText(L(id)).width;
   g.restore();
-  if(n>0){const bx=x+w-5,by=y+1;g.fillStyle='#0b0810';g.beginPath();g.arc(bx,by,5.4,0,6.2832);g.fill();g.fillStyle='#ff9a2e';g.beginPath();g.arc(bx,by,4.4,0,6.2832);g.fill();g.fillStyle='#1b0c00';g.font='700 6.5px '+FFP;g.textAlign='center';g.textBaseline='middle';g.fillText(String(Math.min(9,n)),bx,by+.5);g.textAlign='left'}
-  x+=w+3}
- if(!inputState.touch&&!CMP&&tabState.ids.length>1){g.save();g.font='700 7px '+FFP;const kw=Math.ceil(g.measureText('PgDn').width)+8,kx=x+2,ky=y+3;g.fillStyle='rgba(0,0,0,.35)';rr(kx,ky+1,kw,11,2.5);g.fill();g.fillStyle='#303a52';rr(kx,ky,kw,11,2.5);g.fill();g.strokeStyle='#c9a24f';g.lineWidth=1;rr(kx+.5,ky+.5,kw-1,10,2.5);g.stroke();g.fillStyle='#f2e4c4';g.textBaseline='middle';g.textAlign='center';g.fillText('PgDn',kx+kw/2,ky+6);g.restore()}}
+  return w;
+};
+const tabW = (id) => (CMP ? 24 : Math.ceil(tabTw(id)) + 30);
+export const tabsWidth = () =>
+  tabState.ids.reduce((a, id) => a + tabW(id) + 3, -3) + (inputState.touch || CMP ? 0 : 30);
+/* the tab strip sits on the panel's top edge; the active tab opens into the panel */
+export function drawTabs(px, py, pw) {
+  const g = canvasesState.ctx;
+  let x = px + 4;
+  const y = py - TABH + 1;
+  hudState.uiRects.push(U(px, py - TABH, Math.max(pw, tabsWidth() + 8), TABH));
+  for (const id of tabState.ids) {
+    const w = tabW(id),
+      on = id === tabState.cur,
+      n = tabState.badge[id] | 0,
+      ic = TABIC[id] && TABIC[id]();
+    qmReg("tab:" + id, x, y, w, TABH);
+    const hr = U(x, y, w, TABH),
+      hvr = inR(inputState.mouse, hr);
+    hudState.uiHits.push({ ...hr, fn: () => setTab(id), tip: null });
+    g.save();
+    tabPlate(x, y, w, TABH + 1, on, hvr);
+    if (ic) {
+      g.globalAlpha = on ? 1 : 0.7;
+      dIc(ic, x + 5, y + 3, 11);
+    }
+    if (!CMP) {
+      g.font = "600 9.5px " + FFP;
+      g.textBaseline = "middle";
+      g.textAlign = "left";
+      g.fillStyle = "rgba(0,0,0,.55)";
+      g.fillText(L(id), x + 19, y + TABH / 2 + 1.4);
+      g.fillStyle = on ? "#ffe9a8" : "#b9b3a2";
+      g.fillText(L(id), x + 19, y + TABH / 2 + 0.6);
+    }
+    g.restore();
+    if (n > 0) {
+      const bx = x + w - 5,
+        by = y + 1;
+      g.fillStyle = "#0b0810";
+      g.beginPath();
+      g.arc(bx, by, 5.4, 0, 6.2832);
+      g.fill();
+      g.fillStyle = "#ff9a2e";
+      g.beginPath();
+      g.arc(bx, by, 4.4, 0, 6.2832);
+      g.fill();
+      g.fillStyle = "#1b0c00";
+      g.font = "700 6.5px " + FFP;
+      g.textAlign = "center";
+      g.textBaseline = "middle";
+      g.fillText(String(Math.min(9, n)), bx, by + 0.5);
+      g.textAlign = "left";
+    }
+    x += w + 3;
+  }
+  if (!inputState.touch && !CMP && tabState.ids.length > 1) {
+    g.save();
+    g.font = "700 7px " + FFP;
+    const kw = Math.ceil(g.measureText("PgDn").width) + 8,
+      kx = x + 2,
+      ky = y + 3;
+    g.fillStyle = "rgba(0,0,0,.35)";
+    rr(kx, ky + 1, kw, 11, 2.5);
+    g.fill();
+    g.fillStyle = "#303a52";
+    rr(kx, ky, kw, 11, 2.5);
+    g.fill();
+    g.strokeStyle = "#c9a24f";
+    g.lineWidth = 1;
+    rr(kx + 0.5, ky + 0.5, kw - 1, 10, 2.5);
+    g.stroke();
+    g.fillStyle = "#f2e4c4";
+    g.textBaseline = "middle";
+    g.textAlign = "center";
+    g.fillText("PgDn", kx + kw / 2, ky + 6);
+    g.restore();
+  }
+}
 /* NEW flag on a slot (a dot on small touch slots) */
-function newTag(x,y,w){const g=canvasesState.ctx,pz=rmotion()?1:.5+.5*Math.sin(performance.now()/240),nc=pz>.5?'#ffd866':'#f2b02c';g.save();if(CMP){g.globalAlpha=.3*pz;g.fillStyle='#ffc63c';g.beginPath();g.arc(x+w-3,y+3,5.2,0,6.2832);g.fill();g.globalAlpha=1;g.fillStyle='#0b0810';g.beginPath();g.arc(x+w-3,y+3,3.4,0,6.2832);g.fill();g.fillStyle=nc;g.beginPath();g.arc(x+w-3,y+3,2.5,0,6.2832);g.fill()}
- else{g.font='700 6px '+FFP;const nt=L('NEW'),tw2=Math.ceil(g.measureText(nt).width)+4;g.globalAlpha=.3*pz;g.fillStyle='#ffc63c';g.fillRect(x+w-tw2-2,y-2,tw2+4,11.5);g.globalAlpha=1;g.fillStyle='#0b0810';g.fillRect(x+w-tw2-.5,y-.5,tw2+1,8.5);g.fillStyle=nc;g.fillRect(x+w-tw2,y,tw2,7.5);g.fillStyle='#3a2400';g.textBaseline='middle';g.textAlign='center';g.fillText(nt,x+w-tw2/2,y+4.1)}g.restore()}
+function newTag(x, y, w) {
+  const g = canvasesState.ctx,
+    pz = rmotion() ? 1 : 0.5 + 0.5 * Math.sin(performance.now() / 240),
+    nc = pz > 0.5 ? "#ffd866" : "#f2b02c";
+  g.save();
+  if (CMP) {
+    g.globalAlpha = 0.3 * pz;
+    g.fillStyle = "#ffc63c";
+    g.beginPath();
+    g.arc(x + w - 3, y + 3, 5.2, 0, 6.2832);
+    g.fill();
+    g.globalAlpha = 1;
+    g.fillStyle = "#0b0810";
+    g.beginPath();
+    g.arc(x + w - 3, y + 3, 3.4, 0, 6.2832);
+    g.fill();
+    g.fillStyle = nc;
+    g.beginPath();
+    g.arc(x + w - 3, y + 3, 2.5, 0, 6.2832);
+    g.fill();
+  } else {
+    g.font = "700 6px " + FFP;
+    const nt = L("NEW"),
+      tw2 = Math.ceil(g.measureText(nt).width) + 4;
+    g.globalAlpha = 0.3 * pz;
+    g.fillStyle = "#ffc63c";
+    g.fillRect(x + w - tw2 - 2, y - 2, tw2 + 4, 11.5);
+    g.globalAlpha = 1;
+    g.fillStyle = "#0b0810";
+    g.fillRect(x + w - tw2 - 0.5, y - 0.5, tw2 + 1, 8.5);
+    g.fillStyle = nc;
+    g.fillRect(x + w - tw2, y, tw2, 7.5);
+    g.fillStyle = "#3a2400";
+    g.textBaseline = "middle";
+    g.textAlign = "center";
+    g.fillText(nt, x + w - tw2 / 2, y + 4.1);
+  }
+  g.restore();
+}
 
-export function menuItems(){CMP=cv.width/hudDisplayState.UIS<420;const L=[],G0=[];seedSeen();ctxGroups().forEach(([n,ks0])=>{let ks=inputState.touch?ks0:ks0.filter(k=>k!=='mode');if(n==='Command'&&sel().length<2)ks=ks.filter(k=>k==='stoneup'||k==='rally'||k==='rallyc'||k==='rotate'||k==='movec'||k==='repair'||(k==='demolish'&&selectionState.selB&&sessionState.structs.includes(selectionState.selB)));if(n==='Siege'&&!RS.done)return;if(!ks.length)return;G0.push([n,ks])});tabPick(G0).forEach(([n,ks])=>{if(L.length)L.push({gap:7});ks.forEach((k,i)=>{const nc=Object.keys(C[k.startsWith('s:')?k.slice(2):k]||{}).length,it={k:(k in T||k in C)?'buy':k,id:k,grp:n,first:i===0,w:CMP?25:MW+(nc>2?(nc-2)*9:0),h:CMP?25:MH};
-  if(n!=='Build'&&TIERK.has(k)&&buildMenuState.BCAT)it.tr=0;
-  if(k.startsWith('s:')){it.k='buy';it.id=k.slice(2);it.tr=1;it.first=false;it.under=L.find(o=>o.id===it.id&&o.tr===0)||null}
-  L.push(it)})});return L}
+export function menuItems() {
+  CMP = cv.width / hudDisplayState.UIS < 420;
+  const L = [],
+    G0 = [];
+  seedSeen();
+  ctxGroups().forEach(([n, ks0]) => {
+    let ks = inputState.touch ? ks0 : ks0.filter((k) => k !== "mode");
+    if (n === "Command" && sel().length < 2)
+      ks = ks.filter(
+        (k) =>
+          k === "stoneup" ||
+          k === "rally" ||
+          k === "rallyc" ||
+          k === "rotate" ||
+          k === "movec" ||
+          k === "repair" ||
+          (k === "demolish" && selectionState.selB && sessionState.structs.includes(selectionState.selB)),
+      );
+    if (n === "Siege" && !RS.done) return;
+    if (!ks.length) return;
+    G0.push([n, ks]);
+  });
+  tabPick(G0).forEach(([n, ks]) => {
+    if (L.length) L.push({ gap: 7 });
+    ks.forEach((k, i) => {
+      const nc = Object.keys(C[k.startsWith("s:") ? k.slice(2) : k] || {}).length,
+        it = {
+          k: k in T || k in C ? "buy" : k,
+          id: k,
+          grp: n,
+          first: i === 0,
+          w: CMP ? 25 : MW + (nc > 2 ? (nc - 2) * 9 : 0),
+          h: CMP ? 25 : MH,
+        };
+      if (n !== "Build" && TIERK.has(k) && buildMenuState.BCAT) it.tr = 0;
+      if (k.startsWith("s:")) {
+        it.k = "buy";
+        it.id = k.slice(2);
+        it.tr = 1;
+        it.first = false;
+        it.under = L.find((o) => o.id === it.id && o.tr === 0) || null;
+      }
+      L.push(it);
+    });
+  });
+  return L;
+}
 
-const upTarget=()=>selectionState.selB&&sessionState.structs.includes(selectionState.selB)?selectionState.selB:HOMEC();
+const upTarget = () =>
+  selectionState.selB && sessionState.structs.includes(selectionState.selB) ? selectionState.selB : HOMEC();
 
-function itemFn(it){return it.k==='convoy'?()=>{convoyPanelState.convoyOpen=!convoyPanelState.convoyOpen;snd('click')}:JOBK.has(it.k)?()=>assignJob(it.k[1]):it.k==='stoneup'?()=>{const L=selBs().filter(s=>s.tier===0&&UPC[s.type]);if(L.length){for(const s of L)build('upgrade',s.tx,s.ty);return}const b=upTarget();if(b)build('upgrade',b.tx,b.ty)}:it.k==='upgtool'?()=>{if(!RS.done){hudDisplayState.msgS='Needs Masonry';hudDisplayState.msgT=2;snd('err');return}sessionState.units.forEach(u=>u.sel=false);sessionState.mode=sessionState.mode==='upgrade'?null:'upgrade';snd('click')}:it.k.startsWith('cat:')?()=>{buildMenuState.BCAT=it.k.slice(4);snd('click')}:it.k==='back'?()=>{buildMenuState.BCAT=null;snd('click')}:ROLEK.has(it.k)?()=>roleAdj(it.k[1],it.k[2]==='+'?1:-1):STNK.has(it.k)?()=>setStance(it.k):it.k==='form'?()=>{constructionState.formType=(constructionState.formType+1)%FORMS.length;hudDisplayState.msgS='Formation: '+FORMS[constructionState.formType];hudDisplayState.msgT=2}:it.k==='idle'?selIdle:it.k==='buy'?(it.tr!==undefined?()=>tierPick(it):()=>buy(it.id)):it.k==='army'?army:it.k==='group'?groupSel:it.k==='ungroup'?ungroupSel:it.k==='mode'?()=>{inputState.panMode=!inputState.panMode}:null}
+function itemFn(it) {
+  return it.k === "convoy"
+    ? () => {
+        convoyPanelState.convoyOpen = !convoyPanelState.convoyOpen;
+        snd("click");
+      }
+    : JOBK.has(it.k)
+      ? () => assignJob(it.k[1])
+      : it.k === "stoneup"
+        ? () => {
+            const L = selBs().filter((s) => s.tier === 0 && UPC[s.type]);
+            if (L.length) {
+              for (const s of L) build("upgrade", s.tx, s.ty);
+              return;
+            }
+            const b = upTarget();
+            if (b) build("upgrade", b.tx, b.ty);
+          }
+        : it.k === "upgtool"
+          ? () => {
+              if (!RS.done) {
+                hudDisplayState.msgS = "Needs Masonry";
+                hudDisplayState.msgT = 2;
+                snd("err");
+                return;
+              }
+              sessionState.units.forEach((u) => (u.sel = false));
+              sessionState.mode = sessionState.mode === "upgrade" ? null : "upgrade";
+              snd("click");
+            }
+          : it.k.startsWith("cat:")
+            ? () => {
+                buildMenuState.BCAT = it.k.slice(4);
+                snd("click");
+              }
+            : it.k === "back"
+              ? () => {
+                  buildMenuState.BCAT = null;
+                  snd("click");
+                }
+              : ROLEK.has(it.k)
+                ? () => roleAdj(it.k[1], it.k[2] === "+" ? 1 : -1)
+                : STNK.has(it.k)
+                  ? () => setStance(it.k)
+                  : it.k === "form"
+                    ? () => {
+                        constructionState.formType = (constructionState.formType + 1) % FORMS.length;
+                        hudDisplayState.msgS = "Formation: " + FORMS[constructionState.formType];
+                        hudDisplayState.msgT = 2;
+                      }
+                    : it.k === "idle"
+                      ? selIdle
+                      : it.k === "buy"
+                        ? it.tr !== undefined
+                          ? () => tierPick(it)
+                          : () => buy(it.id)
+                        : it.k === "army"
+                          ? army
+                          : it.k === "group"
+                            ? groupSel
+                            : it.k === "ungroup"
+                              ? ungroupSel
+                              : it.k === "mode"
+                                ? () => {
+                                    inputState.panMode = !inputState.panMode;
+                                  }
+                                : null;
+}
 
-let hovK='';
+let hovK = "";
 /* four states shared by slots and pills: rest, hover (blue), pressed (1 px down, darker, ~150 ms after the click), disabled (flat, fn off); foc = keyboard focus ring */
-export function uiBtn(x,y,w,h,pal,palH,fn,tip,draw,on,dis,foc){const hit=U(x,y,w,h),hv=inR(inputState.mouse,hit)&&!dis&&!!fn;{const k=x+','+y+','+w;if(hv&&hovK!==k){hovK=k;snd('hover')}else if(!hv&&hovK===k)hovK=''}const pr=hv&&performance.now()-inputState.uiDown<150;if(pr){canvasesState.ctx.save();canvasesState.ctx.translate(0,1)}frame(x,y,w,h,dis?(pal===SLOT?SLOTX:BTNX):hv?palH:pal);if(pr){canvasesState.ctx.fillStyle='rgba(10,20,40,.12)';rr(x,y,w,h,Math.max(2,Math.min(8,w/5,h/5)));canvasesState.ctx.fill()}if(on)gold(x,y,w,h);if(draw){const c=canvasesState.ctx;c.save();c.beginPath();c.rect(x+1,y+1,w-2,h-2);c.clip();setClipBox([x,y,w,h]);draw(x,y,w,h,hv,dis);setClipBox(null);c.restore()}if(pr)canvasesState.ctx.restore();if(foc)focusRing(x,y,w,h);hudState.uiHits.push({...hit,fn:dis?null:fn,tip})}
+export function uiBtn(x, y, w, h, pal, palH, fn, tip, draw, on, dis, foc) {
+  const hit = U(x, y, w, h),
+    hv = inR(inputState.mouse, hit) && !dis && !!fn;
+  {
+    const k = x + "," + y + "," + w;
+    if (hv && hovK !== k) {
+      hovK = k;
+      snd("hover");
+    } else if (!hv && hovK === k) hovK = "";
+  }
+  const pr = hv && performance.now() - inputState.uiDown < 150;
+  if (pr) {
+    canvasesState.ctx.save();
+    canvasesState.ctx.translate(0, 1);
+  }
+  frame(x, y, w, h, dis ? (pal === SLOT ? SLOTX : BTNX) : hv ? palH : pal);
+  if (pr) {
+    canvasesState.ctx.fillStyle = "rgba(10,20,40,.12)";
+    rr(x, y, w, h, Math.max(2, Math.min(8, w / 5, h / 5)));
+    canvasesState.ctx.fill();
+  }
+  if (on) gold(x, y, w, h);
+  if (draw) {
+    const c = canvasesState.ctx;
+    c.save();
+    c.beginPath();
+    c.rect(x + 1, y + 1, w - 2, h - 2);
+    c.clip();
+    setClipBox([x, y, w, h]);
+    draw(x, y, w, h, hv, dis);
+    setClipBox(null);
+    c.restore();
+  }
+  if (pr) canvasesState.ctx.restore();
+  if (foc) focusRing(x, y, w, h);
+  hudState.uiHits.push({ ...hit, fn: dis ? null : fn, tip });
+}
 
-const tierC=it=>it.tr===undefined?C[it.id]:(RS.done&&it.tr?CSTONE:CWOOD)[it.id];
+const tierC = (it) => (it.tr === undefined ? C[it.id] : (RS.done && it.tr ? CSTONE : CWOOD)[it.id]);
 
-function tierPick(it){const t=it.tr;if(t&&!RS.done){hudDisplayState.msgS='Stone building needs Masonry (Academy)';hudDisplayState.msgT=3;snd('err');return}const same=!RS.done||playersState.BTIER===t;if(sessionState.mode===it.id&&!same){setTier(t);snd('click');return}setTier(t);buy(it.id)}
+function tierPick(it) {
+  const t = it.tr;
+  if (t && !RS.done) {
+    hudDisplayState.msgS = "Stone building needs Masonry (Academy)";
+    hudDisplayState.msgT = 3;
+    snd("err");
+    return;
+  }
+  const same = !RS.done || playersState.BTIER === t;
+  if (sessionState.mode === it.id && !same) {
+    setTier(t);
+    snd("click");
+    return;
+  }
+  setTier(t);
+  buy(it.id);
+}
 
-export function costParts(id,cc){const c=cc||C[id]||{};return Object.entries(c).map(([k,v])=>[String(v),sessionState.res[k]>=v?({g:'#ffd23c',w:'#e8b27a',s:'#d4dae6',f:'#f2c14e'})[k]:'#ff6a6a',k])}
+export function costParts(id, cc) {
+  const c = cc || C[id] || {};
+  return Object.entries(c).map(([k, v]) => [
+    String(v),
+    sessionState.res[k] >= v ? { g: "#ffd23c", w: "#e8b27a", s: "#d4dae6", f: "#f2c14e" }[k] : "#ff6a6a",
+    k,
+  ]);
+}
 
-const RIC=k=>k==='g'?IC.coin:k==='w'?IC.wood:k==='f'?IC.food:IC.stone;
+const RIC = (k) => (k === "g" ? IC.coin : k === "w" ? IC.wood : k === "f" ? IC.food : IC.stone);
 
-export function drawCost(cp,x,y,w,sc,is){const fit=q=>cp.reduce((a,p)=>a+tw(p[0],q)+is*q/sc+4,-3);while(sc>.34&&fit(sc)>w-4){sc-=.04;is-=.4}const tot=cp.reduce((a,p)=>a+tw(p[0],sc)+is+4,-3);let cx=x+(w-tot)/2;cp.forEach(p=>{dIc(RIC(p[2]),cx,y-1.5,is);cx+=is+1;T_(p[0],cx,y,p[1],sc);cx+=tw(p[0],sc)+3})}
+export function drawCost(cp, x, y, w, sc, is) {
+  const fit = (q) => cp.reduce((a, p) => a + tw(p[0], q) + (is * q) / sc + 4, -3);
+  while (sc > 0.34 && fit(sc) > w - 4) {
+    sc -= 0.04;
+    is -= 0.4;
+  }
+  const tot = cp.reduce((a, p) => a + tw(p[0], sc) + is + 4, -3);
+  let cx = x + (w - tot) / 2;
+  cp.forEach((p) => {
+    dIc(RIC(p[2]), cx, y - 1.5, is);
+    cx += is + 1;
+    T_(p[0], cx, y, p[1], sc);
+    cx += tw(p[0], sc) + 3;
+  });
+}
 
-const STNK=new Set(['agg','def','hold','stop','work']);
-function stanceOn(k){const S=sel().filter(u=>u.type!=='peasant');return S.length>0&&S.every(u=>(u.stn||'agg')===k)}
+const STNK = new Set(["agg", "def", "hold", "stop", "work"]);
+function stanceOn(k) {
+  const S = sel().filter((u) => u.type !== "peasant");
+  return S.length > 0 && S.every((u) => (u.stn || "agg") === k);
+}
 
-export function drawItem(it){qmReg(it.id,it.x,it.y,it.w,it.h);const nw=newItem(it),cat=it.k.startsWith('cat:')?it.k.slice(4):null,on=(it.k==='upgtool'&&sessionState.mode==='upgrade')||(cat&&BCATS[cat][1].includes(sessionState.mode))||(it.k==='buy'&&sessionState.mode===it.id&&(it.tr===undefined||(it.tr?stoneOn():!stoneOn())))||(it.k==='mode'&&inputState.panMode)||(it.k==='form'&&constructionState.formType>0)||(STNK.has(it.k)&&it.k!=='stop'&&it.k!=='work'&&stanceOn(it.k)),dis=it.k==='buy'&&((it.tr===1&&!RS.done)||!ok(tierC(it)||{})||sessionState.over||(it.id==='upgrade'&&(RS.done||RS.on))||(((it.id in RT2)||it.id==='upgrade')&&!hasAcademy(LPL()))||((it.id in RT2)&&(RS2.done[it.id]||RS2.on||!rxPre(it.id)||rxLock(it.id)))||(it.id in T&&it.id!=='ballista'&&it.id!=='trebuchet'&&popUsed(LPL())+popOf(it.id)>popCap(LPL()))||(it.id==='cannon'&&!RS.done))||(it.k==='stoneup'&&(()=>{const b=upTarget(),c=b&&UPC[b.type];return !RS.done||!c||!ok(c)})());
- let tip=TIPS[it.id||it.k];if(it.k==='army'&&HK.army)tip=['Select army ['+HK.army+']'].concat(tip.slice(1));if(it.k==='buy'&&C[it.id]&&!TRADEK.has(it.id))tip=[NAMES[it.id]].concat(TIPS[it.id].slice(1),['']);if(it.tr!==undefined)tip=[(it.tr?'Stone ':'Wooden ')+NAMES[it.id].toLowerCase()+(it.tr||!hkShow(it.id)?'':' ['+HK[it.id]+']'),it.tr?'Much tougher: holds the horde far longer':'Cheap and quick to build'].concat(it.tr&&!RS.done?['Locked: research Masonry at the Academy']:[],['']);if(it.k==='buy'&&tip&&((it.id in RT2)||it.id==='upgrade')){const up=it.id==='upgrade',ex=[];if(up?RS.done:RS2.done[it.id])ex.push('Already researched');else if(up?RS.on:RS2.on===it.id)ex.push('In progress: '+Math.floor(up?RS.t/RT_TIME*100:RS2.t/RT2[it.id]*100)+'%');else if(!up&&rxLock(it.id))ex.push('Closed: you chose '+RN2[rxLock(it.id)]);else if(!up&&RS2.on)ex.push('Wait: '+RN2[RS2.on]+' first');if(!up&&rxPair(it.id)>=0&&!rxLock(it.id)&&!RS2.done[it.id]){const pr=RXOR[rxPair(it.id)];ex.push('Exclusive path: closes '+RN2[pr[0]===it.id?pr[1]:pr[0]])}if(!hasAcademy(LPL()))ex.push('Needs your own Academy');if(MP.on)ex.push('Shared: helps both players');if(ex.length)tip=tip.slice(0,-1).concat(ex,[tip[tip.length-1]])}
- const ic=it.k==='stoneup'||it.k==='upgtool'?IC.upgrade:it.tr!==undefined?(ICT[it.tr][it.id]||IC[it.id]):cat?IC[BCI[cat]]:it.k==='back'?IC.back:ROLEK.has(it.k)?IC[({b:'wall',r:'repair',t:'raise'})[it.k[1]]]:STNK.has(it.k)?IC[it.k]:JOBK.has(it.k)?IC[JOBI[it.k]]:it.k==='convoy'?IC.convoy:it.k==='buy'?IC[it.id]:it.k==='army'?IC.army:it.k==='idle'?IC.idle:it.k==='form'?IC.group:inputState.panMode?IC.pan:IC.cursor;
- const nm=NAMES[it.id]||'',idleN=it.k==='idle'?idleP().length:0;
- if(it.lab&&!CMP)TN(it.grp,it.x+1,it.y-9.5,'#d6b46a',.72);
- uiBtn(it.x,it.y,it.w,it.h,SLOT,SLOTH,nwFn(it,nw,itemFn(it)),tip,(x,y,w,h,hv)=>{if(nw&&hv&&!cat)markSeen(it.id);canvasesState.ctx.globalAlpha=dis?.45:1;if(CMP){dIc(ic,x+((w-17)>>1),y+((h-17)>>1)+1,17);canvasesState.ctx.globalAlpha=1;if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+2,y+1.5,'#ffff55',.75);if(idleN)T_('!',x+w-5,y+1,'#ff6a6a',.7);return}/* look 3B: icon + cost (or state); the name is in the tooltip (touch has no hover, so it keeps the name) */
-  if(inputState.touch){dIc(ic,x+((w-16)>>1),y+4,16);TCf(nm,x+w/2,y+21,dis?'#b8b8b8':'#ffffff',.76,w-3,.5)}else dIc(ic,x+((w-18)>>1),y+6,18);canvasesState.ctx.globalAlpha=1;
-  const rdn=it.k==='buy'&&((it.id==='upgrade'&&RS.done)||((it.id in RT2)&&RS2.done[it.id])),ron=it.k==='buy'&&((it.id==='upgrade'&&RS.on)||((it.id in RT2)&&RS2.on===it.id));
-  if(rdn){canvasesState.ctx.globalAlpha=1;TCf('Done',x+w/2,y+29.5,'#6aff7a',.7,w-14,.5);canvasesState.ctx.strokeStyle='#0b0810';canvasesState.ctx.lineWidth=3.2;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-12,y+7);canvasesState.ctx.lineTo(x+w-8,y+11);canvasesState.ctx.lineTo(x+w-2.5,y+3.5);canvasesState.ctx.stroke();canvasesState.ctx.strokeStyle='#6aff7a';canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.stroke()}
-  else if(ron){const pc=Math.floor((it.id==='upgrade'?RS.t/RT_TIME:RS2.t/RT2[it.id])*100)+'%';T_(pc,x+(w-tw(pc,.7))/2,y+29.5,'#ffe066',.7);canvasesState.ctx.fillStyle='#ffe066';canvasesState.ctx.fillRect(x+3,y+h-3,(w-6)*Math.min(1,parseInt(pc)/100),1.5)}
-  else if(it.k==='buy'&&(it.id==='dig'||it.id==='raise'||it.id==='ramp'))TCf('Free',x+w/2,y+29.5,'#55ff55',.7,w-3,.5);else if(it.tr===1&&!RS.done){TCf('Locked',x+w/2,y+29.5,'#ff8a6a',.7,w-3,.5)}else if(it.k==='buy'){drawCost(costParts(it.id,tierC(it)),x,y+29.5,w,.7,7)}
-  else if(it.k==='stoneup'){const b=upTarget(),c=b&&UPC[b.type],n=Math.max(1,selBs().filter(s=>s.tier===0&&UPC[s.type]).length);if(!RS.done)TCf('Masonry',x+w/2,y+29.5,'#ff8a6a',.7,w-3,.5);else if(c)drawCost(Object.entries(c).map(([k,v])=>[String(v*n),sessionState.res[k]>=v*n?'#d4dae6':sessionState.res[k]>=v?'#f2c14e':'#ff6a6a',k]),x,y+29.5,w,.7,7)}
-  else if(it.k==='upgtool')T_('Paint',x+(w-tw('Paint',.7))/2,y+29.5,sessionState.mode==='upgrade'?'#ffff55':'#e0e0e0',.7);else if(it.k==='convoy')T_('Send',x+(w-tw('Send',.7))/2,y+29.5,convoyPanelState.convoyOpen?'#ffff55':'#e0e0e0',.7);else if(JOBK.has(it.k))T_(JOBL[it.k],x+(w-tw(JOBL[it.k],.7))/2,y+29.5,'#e0e0e0',.7);
-  else if(cat){const s=catItems(cat,true).length+' types';T_(s,x+(w-tw(s,.7))/2,y+29.5,'#d6b46a',.7)}
-  else if(it.k==='back')T_('Esc',x+(w-tw('Esc',.7))/2,y+29.5,'#ffff55',.7);
-  else if(it.k==='idle'){T_(idleN?idleN+' idle':'none',x+(w-tw(idleN?idleN+' idle':'none',.7))/2,y+29.5,idleN?'#ffff55':'#b0b0b0',.7)}
-  else if(it.k==='mode')T_(inputState.panMode?'Pan':'Select',x+(w-tw(inputState.panMode?'Pan':'Select',.7))/2,y+29.5,'#e0e0e0',.7);
-  else if(it.k==='form')T_(FORMS[constructionState.formType],x+(w-tw(FORMS[constructionState.formType],.7))/2,y+29.5,constructionState.formType?'#ffff55':'#e0e0e0',.7);
-  else if(ROLEK.has(it.k)){const r=it.k[1],p=LPL(),s=RHAS[p][r]+' / '+ROLE[p][r];T_(s,x+(w-tw(s,.7))/2,y+29.5,ROLE[p][r]?'#ffff55':'#b0b0b0',.7)}
-  if(hkShow(it.id||it.k)&&it.tr!==1)T_(HK[it.id||it.k],x+3,y+2.5,'#ffff55',.75);
-  if(it.tr===1&&!RS.done){canvasesState.ctx.globalAlpha=1;const lx=x+w-10,ly=y+3;canvasesState.ctx.strokeStyle='#e8c070';canvasesState.ctx.lineWidth=1.2;canvasesState.ctx.beginPath();canvasesState.ctx.arc(lx+3.5,ly+3.5,2.2,Math.PI,0);canvasesState.ctx.stroke();canvasesState.ctx.fillStyle='#e8c070';canvasesState.ctx.fillRect(lx,ly+3.5,7,5.5);canvasesState.ctx.fillStyle='#3a2a10';canvasesState.ctx.fillRect(lx+3,ly+5.3,1,2)}
-  if(idleN)T_('!',x+w-6,y+2,'#ff6a6a',.8);
-  if(cat){canvasesState.ctx.fillStyle='#d6b46a';canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+w-2.5,y+2.5);canvasesState.ctx.lineTo(x+w-2.5,y+8.5);canvasesState.ctx.lineTo(x+w-8.5,y+2.5);canvasesState.ctx.closePath();canvasesState.ctx.fill()}},on,dis);
- if(nw)newTag(it.x,it.y,it.w);
- if(it.k==='buy'){const hh=hudState.uiHits[hudState.uiHits.length-1];hh.price=true;hh.cost=it.id}}
+export function drawItem(it) {
+  qmReg(it.id, it.x, it.y, it.w, it.h);
+  const nw = newItem(it),
+    cat = it.k.startsWith("cat:") ? it.k.slice(4) : null,
+    on =
+      (it.k === "upgtool" && sessionState.mode === "upgrade") ||
+      (cat && BCATS[cat][1].includes(sessionState.mode)) ||
+      (it.k === "buy" && sessionState.mode === it.id && (it.tr === undefined || (it.tr ? stoneOn() : !stoneOn()))) ||
+      (it.k === "mode" && inputState.panMode) ||
+      (it.k === "form" && constructionState.formType > 0) ||
+      (STNK.has(it.k) && it.k !== "stop" && it.k !== "work" && stanceOn(it.k)),
+    dis =
+      (it.k === "buy" &&
+        ((it.tr === 1 && !RS.done) ||
+          !ok(tierC(it) || {}) ||
+          sessionState.over ||
+          (it.id === "upgrade" && (RS.done || RS.on)) ||
+          ((it.id in RT2 || it.id === "upgrade") && !hasAcademy(LPL())) ||
+          (it.id in RT2 && (RS2.done[it.id] || RS2.on || !rxPre(it.id) || rxLock(it.id))) ||
+          (it.id in T &&
+            it.id !== "ballista" &&
+            it.id !== "trebuchet" &&
+            popUsed(LPL()) + popOf(it.id) > popCap(LPL())) ||
+          (it.id === "cannon" && !RS.done))) ||
+      (it.k === "stoneup" &&
+        (() => {
+          const b = upTarget(),
+            c = b && UPC[b.type];
+          return !RS.done || !c || !ok(c);
+        })());
+  let tip = TIPS[it.id || it.k];
+  if (it.k === "army" && HK.army) tip = ["Select army [" + HK.army + "]"].concat(tip.slice(1));
+  if (it.k === "buy" && C[it.id] && !TRADEK.has(it.id)) tip = [NAMES[it.id]].concat(TIPS[it.id].slice(1), [""]);
+  if (it.tr !== undefined)
+    tip = [
+      (it.tr ? "Stone " : "Wooden ") +
+        NAMES[it.id].toLowerCase() +
+        (it.tr || !hkShow(it.id) ? "" : " [" + HK[it.id] + "]"),
+      it.tr ? "Much tougher: holds the horde far longer" : "Cheap and quick to build",
+    ].concat(it.tr && !RS.done ? ["Locked: research Masonry at the Academy"] : [], [""]);
+  if (it.k === "buy" && tip && (it.id in RT2 || it.id === "upgrade")) {
+    const up = it.id === "upgrade",
+      ex = [];
+    if (up ? RS.done : RS2.done[it.id]) ex.push("Already researched");
+    else if (up ? RS.on : RS2.on === it.id)
+      ex.push("In progress: " + Math.floor(up ? (RS.t / RT_TIME) * 100 : (RS2.t / RT2[it.id]) * 100) + "%");
+    else if (!up && rxLock(it.id)) ex.push("Closed: you chose " + RN2[rxLock(it.id)]);
+    else if (!up && RS2.on) ex.push("Wait: " + RN2[RS2.on] + " first");
+    if (!up && rxPair(it.id) >= 0 && !rxLock(it.id) && !RS2.done[it.id]) {
+      const pr = RXOR[rxPair(it.id)];
+      ex.push("Exclusive path: closes " + RN2[pr[0] === it.id ? pr[1] : pr[0]]);
+    }
+    if (!hasAcademy(LPL())) ex.push("Needs your own Academy");
+    if (MP.on) ex.push("Shared: helps both players");
+    if (ex.length) tip = tip.slice(0, -1).concat(ex, [tip[tip.length - 1]]);
+  }
+  const ic =
+    it.k === "stoneup" || it.k === "upgtool"
+      ? IC.upgrade
+      : it.tr !== undefined
+        ? ICT[it.tr][it.id] || IC[it.id]
+        : cat
+          ? IC[BCI[cat]]
+          : it.k === "back"
+            ? IC.back
+            : ROLEK.has(it.k)
+              ? IC[{ b: "wall", r: "repair", t: "raise" }[it.k[1]]]
+              : STNK.has(it.k)
+                ? IC[it.k]
+                : JOBK.has(it.k)
+                  ? IC[JOBI[it.k]]
+                  : it.k === "convoy"
+                    ? IC.convoy
+                    : it.k === "buy"
+                      ? IC[it.id]
+                      : it.k === "army"
+                        ? IC.army
+                        : it.k === "idle"
+                          ? IC.idle
+                          : it.k === "form"
+                            ? IC.group
+                            : inputState.panMode
+                              ? IC.pan
+                              : IC.cursor;
+  const nm = NAMES[it.id] || "",
+    idleN = it.k === "idle" ? idleP().length : 0;
+  if (it.lab && !CMP) TN(it.grp, it.x + 1, it.y - 9.5, "#d6b46a", 0.72);
+  uiBtn(
+    it.x,
+    it.y,
+    it.w,
+    it.h,
+    SLOT,
+    SLOTH,
+    nwFn(it, nw, itemFn(it)),
+    tip,
+    (x, y, w, h, hv) => {
+      if (nw && hv && !cat) markSeen(it.id);
+      canvasesState.ctx.globalAlpha = dis ? 0.45 : 1;
+      if (CMP) {
+        dIc(ic, x + ((w - 17) >> 1), y + ((h - 17) >> 1) + 1, 17);
+        canvasesState.ctx.globalAlpha = 1;
+        if (hkShow(it.id || it.k) && it.tr !== 1) T_(HK[it.id || it.k], x + 2, y + 1.5, "#ffff55", 0.75);
+        if (idleN) T_("!", x + w - 5, y + 1, "#ff6a6a", 0.7);
+        return;
+      } /* look 3B: icon + cost (or state); the name is in the tooltip (touch has no hover, so it keeps the name) */
+      if (inputState.touch) {
+        dIc(ic, x + ((w - 16) >> 1), y + 4, 16);
+        TCf(nm, x + w / 2, y + 21, dis ? "#b8b8b8" : "#ffffff", 0.76, w - 3, 0.5);
+      } else dIc(ic, x + ((w - 18) >> 1), y + 6, 18);
+      canvasesState.ctx.globalAlpha = 1;
+      const rdn = it.k === "buy" && ((it.id === "upgrade" && RS.done) || (it.id in RT2 && RS2.done[it.id])),
+        ron = it.k === "buy" && ((it.id === "upgrade" && RS.on) || (it.id in RT2 && RS2.on === it.id));
+      if (rdn) {
+        canvasesState.ctx.globalAlpha = 1;
+        TCf("Done", x + w / 2, y + 29.5, "#6aff7a", 0.7, w - 14, 0.5);
+        canvasesState.ctx.strokeStyle = "#0b0810";
+        canvasesState.ctx.lineWidth = 3.2;
+        canvasesState.ctx.beginPath();
+        canvasesState.ctx.moveTo(x + w - 12, y + 7);
+        canvasesState.ctx.lineTo(x + w - 8, y + 11);
+        canvasesState.ctx.lineTo(x + w - 2.5, y + 3.5);
+        canvasesState.ctx.stroke();
+        canvasesState.ctx.strokeStyle = "#6aff7a";
+        canvasesState.ctx.lineWidth = 1.8;
+        canvasesState.ctx.stroke();
+      } else if (ron) {
+        const pc = Math.floor((it.id === "upgrade" ? RS.t / RT_TIME : RS2.t / RT2[it.id]) * 100) + "%";
+        T_(pc, x + (w - tw(pc, 0.7)) / 2, y + 29.5, "#ffe066", 0.7);
+        canvasesState.ctx.fillStyle = "#ffe066";
+        canvasesState.ctx.fillRect(x + 3, y + h - 3, (w - 6) * Math.min(1, parseInt(pc) / 100), 1.5);
+      } else if (it.k === "buy" && (it.id === "dig" || it.id === "raise" || it.id === "ramp"))
+        TCf("Free", x + w / 2, y + 29.5, "#55ff55", 0.7, w - 3, 0.5);
+      else if (it.tr === 1 && !RS.done) {
+        TCf("Locked", x + w / 2, y + 29.5, "#ff8a6a", 0.7, w - 3, 0.5);
+      } else if (it.k === "buy") {
+        drawCost(costParts(it.id, tierC(it)), x, y + 29.5, w, 0.7, 7);
+      } else if (it.k === "stoneup") {
+        const b = upTarget(),
+          c = b && UPC[b.type],
+          n = Math.max(1, selBs().filter((s) => s.tier === 0 && UPC[s.type]).length);
+        if (!RS.done) TCf("Masonry", x + w / 2, y + 29.5, "#ff8a6a", 0.7, w - 3, 0.5);
+        else if (c)
+          drawCost(
+            Object.entries(c).map(([k, v]) => [
+              String(v * n),
+              sessionState.res[k] >= v * n ? "#d4dae6" : sessionState.res[k] >= v ? "#f2c14e" : "#ff6a6a",
+              k,
+            ]),
+            x,
+            y + 29.5,
+            w,
+            0.7,
+            7,
+          );
+      } else if (it.k === "upgtool")
+        T_(
+          "Paint",
+          x + (w - tw("Paint", 0.7)) / 2,
+          y + 29.5,
+          sessionState.mode === "upgrade" ? "#ffff55" : "#e0e0e0",
+          0.7,
+        );
+      else if (it.k === "convoy")
+        T_("Send", x + (w - tw("Send", 0.7)) / 2, y + 29.5, convoyPanelState.convoyOpen ? "#ffff55" : "#e0e0e0", 0.7);
+      else if (JOBK.has(it.k)) T_(JOBL[it.k], x + (w - tw(JOBL[it.k], 0.7)) / 2, y + 29.5, "#e0e0e0", 0.7);
+      else if (cat) {
+        const s = catItems(cat, true).length + " types";
+        T_(s, x + (w - tw(s, 0.7)) / 2, y + 29.5, "#d6b46a", 0.7);
+      } else if (it.k === "back") T_("Esc", x + (w - tw("Esc", 0.7)) / 2, y + 29.5, "#ffff55", 0.7);
+      else if (it.k === "idle") {
+        T_(
+          idleN ? idleN + " idle" : "none",
+          x + (w - tw(idleN ? idleN + " idle" : "none", 0.7)) / 2,
+          y + 29.5,
+          idleN ? "#ffff55" : "#b0b0b0",
+          0.7,
+        );
+      } else if (it.k === "mode")
+        T_(
+          inputState.panMode ? "Pan" : "Select",
+          x + (w - tw(inputState.panMode ? "Pan" : "Select", 0.7)) / 2,
+          y + 29.5,
+          "#e0e0e0",
+          0.7,
+        );
+      else if (it.k === "form")
+        T_(
+          FORMS[constructionState.formType],
+          x + (w - tw(FORMS[constructionState.formType], 0.7)) / 2,
+          y + 29.5,
+          constructionState.formType ? "#ffff55" : "#e0e0e0",
+          0.7,
+        );
+      else if (ROLEK.has(it.k)) {
+        const r = it.k[1],
+          p = LPL(),
+          s = RHAS[p][r] + " / " + ROLE[p][r];
+        T_(s, x + (w - tw(s, 0.7)) / 2, y + 29.5, ROLE[p][r] ? "#ffff55" : "#b0b0b0", 0.7);
+      }
+      if (hkShow(it.id || it.k) && it.tr !== 1) T_(HK[it.id || it.k], x + 3, y + 2.5, "#ffff55", 0.75);
+      if (it.tr === 1 && !RS.done) {
+        canvasesState.ctx.globalAlpha = 1;
+        const lx = x + w - 10,
+          ly = y + 3;
+        canvasesState.ctx.strokeStyle = "#e8c070";
+        canvasesState.ctx.lineWidth = 1.2;
+        canvasesState.ctx.beginPath();
+        canvasesState.ctx.arc(lx + 3.5, ly + 3.5, 2.2, Math.PI, 0);
+        canvasesState.ctx.stroke();
+        canvasesState.ctx.fillStyle = "#e8c070";
+        canvasesState.ctx.fillRect(lx, ly + 3.5, 7, 5.5);
+        canvasesState.ctx.fillStyle = "#3a2a10";
+        canvasesState.ctx.fillRect(lx + 3, ly + 5.3, 1, 2);
+      }
+      if (idleN) T_("!", x + w - 6, y + 2, "#ff6a6a", 0.8);
+      if (cat) {
+        canvasesState.ctx.fillStyle = "#d6b46a";
+        canvasesState.ctx.beginPath();
+        canvasesState.ctx.moveTo(x + w - 2.5, y + 2.5);
+        canvasesState.ctx.lineTo(x + w - 2.5, y + 8.5);
+        canvasesState.ctx.lineTo(x + w - 8.5, y + 2.5);
+        canvasesState.ctx.closePath();
+        canvasesState.ctx.fill();
+      }
+    },
+    on,
+    dis,
+  );
+  if (nw) newTag(it.x, it.y, it.w);
+  if (it.k === "buy") {
+    const hh = hudState.uiHits[hudState.uiHits.length - 1];
+    hh.price = true;
+    hh.cost = it.id;
+  }
+}
 
 export function initializeBuildMenu() {
-  for(const k of['sellw','sells','buyw','buys','sellf','buyf']){const r=k[k.length-1],sl=k[0]==='s';Object.defineProperty(TIPS,k,{get:()=>sl?['Sell 50 '+RN[r],'You get '+tradeGain(r)+' gold',(FAT[r]||0)>=2?'The market is tired of this: sales pay less for a while':'Each sale lowers the price for a while']:['Buy 50 '+RN[r],'Costs '+tradeCost(r)+' gold','Each purchase raises the price for a while'],enumerable:true,configurable:true});Object.defineProperty(NAMES,k,{get:()=>sl?'+'+tradeGain(r)+' gold':'+50 '+RN[r],enumerable:true,configurable:true})}
-  for(const k of['xws','xwf','xsw','xsf','xfw','xfs']){const a=k[1],b=k[2];Object.defineProperty(TIPS,k,{get:()=>['Swap 50 '+RN[a]+' for '+RN[b],'You get '+barterGet(a,b)+' '+RN[b],'Both prices shift a little'],enumerable:true,configurable:true});Object.defineProperty(NAMES,k,{get:()=>'+'+barterGet(a,b)+' '+RN[b],enumerable:true,configurable:true})}
-  Object.defineProperty(NAMES,'tier',{get:()=>RS.done&&playersState.BTIER?'Stone':'Wood',enumerable:true,configurable:true});
+  for (const k of ["sellw", "sells", "buyw", "buys", "sellf", "buyf"]) {
+    const r = k[k.length - 1],
+      sl = k[0] === "s";
+    Object.defineProperty(TIPS, k, {
+      get: () =>
+        sl
+          ? [
+              "Sell 50 " + RN[r],
+              "You get " + tradeGain(r) + " gold",
+              (FAT[r] || 0) >= 2
+                ? "The market is tired of this: sales pay less for a while"
+                : "Each sale lowers the price for a while",
+            ]
+          : ["Buy 50 " + RN[r], "Costs " + tradeCost(r) + " gold", "Each purchase raises the price for a while"],
+      enumerable: true,
+      configurable: true,
+    });
+    Object.defineProperty(NAMES, k, {
+      get: () => (sl ? "+" + tradeGain(r) + " gold" : "+50 " + RN[r]),
+      enumerable: true,
+      configurable: true,
+    });
+  }
+  for (const k of ["xws", "xwf", "xsw", "xsf", "xfw", "xfs"]) {
+    const a = k[1],
+      b = k[2];
+    Object.defineProperty(TIPS, k, {
+      get: () => [
+        "Swap 50 " + RN[a] + " for " + RN[b],
+        "You get " + barterGet(a, b) + " " + RN[b],
+        "Both prices shift a little",
+      ],
+      enumerable: true,
+      configurable: true,
+    });
+    Object.defineProperty(NAMES, k, {
+      get: () => "+" + barterGet(a, b) + " " + RN[b],
+      enumerable: true,
+      configurable: true,
+    });
+  }
+  Object.defineProperty(NAMES, "tier", {
+    get: () => (RS.done && playersState.BTIER ? "Stone" : "Wood"),
+    enumerable: true,
+    configurable: true,
+  });
 
-  for(const c in BCATS){NAMES['cat:'+c]=BCATS[c][0]}
-  NAMES.back='Back';
+  for (const c in BCATS) {
+    NAMES["cat:" + c] = BCATS[c][0];
+  }
+  NAMES.back = "Back";
 
-  TIPS['cat:def']=['Defense','Walls, gates, towers and torches','Wood row on top, stone row below'];
-  TIPS['cat:siege']=['Siege','Ballista and trebuchet'];
-  TIPS['cat:eco']=['Economy','Farms, forester hut, storage, market'];
-  TIPS['cat:town']=['Town','Houses, barracks, builders guild, academy'];
-  TIPS['cat:land']=['Land','Paths, raise and dig ground, ramps'];
-  TIPS.back=['Back [Esc]','Return to the building categories'];
+  TIPS["cat:def"] = ["Defense", "Walls, gates, towers and torches", "Wood row on top, stone row below"];
+  TIPS["cat:siege"] = ["Siege", "Ballista and trebuchet"];
+  TIPS["cat:eco"] = ["Economy", "Farms, forester hut, storage, market"];
+  TIPS["cat:town"] = ["Town", "Houses, barracks, builders guild, academy"];
+  TIPS["cat:land"] = ["Land", "Paths, raise and dig ground, ramps"];
+  TIPS.back = ["Back [Esc]", "Return to the building categories"];
 
-  IC.cannon=IC.cannon||ICN(g=>{rrg(g,3,6,11,4,1,'#3b3e44','#15171a',.8);circ(g,5,11,3,'#7a5532','#2a1a0c',.8);circ(g,11,11,3,'#7a5532','#2a1a0c',.8)});
+  IC.cannon =
+    IC.cannon ||
+    ICN((g) => {
+      rrg(g, 3, 6, 11, 4, 1, "#3b3e44", "#15171a", 0.8);
+      circ(g, 5, 11, 3, "#7a5532", "#2a1a0c", 0.8);
+      circ(g, 11, 11, 3, "#7a5532", "#2a1a0c", 0.8);
+    });
 
-  IC.back=ICN(g=>{poly(g,[[1.5,8],[7.5,2],[7.5,5.5],[14.5,5.5],[14.5,10.5],[7.5,10.5],[7.5,14]],'#f6e9d2','#2a303a',.9)});
+  IC.back = ICN((g) => {
+    poly(
+      g,
+      [
+        [1.5, 8],
+        [7.5, 2],
+        [7.5, 5.5],
+        [14.5, 5.5],
+        [14.5, 10.5],
+        [7.5, 10.5],
+        [7.5, 14],
+      ],
+      "#f6e9d2",
+      "#2a303a",
+      0.9,
+    );
+  });
 }
