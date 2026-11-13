@@ -41,6 +41,11 @@ python3 tools/fitcheck.py 1280 720 x 9                    # button text overflow
 python3 tools/profile.py                                  # CPU profile of 6000 sim ticks (after npm run build); hashes must not change
 python3 tools/repro.py report.json [sec] [after.png]      # opens a player's bug report (F8): errors, screenshot, replays the save
 python3 tools/addtexts.py texts.json                      # {"English": [FR, ES, DE, IT, PT]} into the block of the next version
+node tools/textaudit.mjs [--notes]                        # static text audit; --notes: every line of game/NOTES.md must be translated (release.sh runs it)
+node tools/langcheck.mjs                                  # NL, PL, TR tables (i18n/langs/*.js): missing keys, placeholders, glued plurals
+python3 tools/qa_shots.py dist/qa/NAME [steps]            # many screenshots in one page load (title, guide, quests, HUD...)
+python3 tools/announce_shots.py                           # the 4 announcement pictures, written to dist/announce-shots/
+node tools/test_all.mjs det ui                            # run tests without rebuilding (npm test rebuilds first)
 bash tools/release.sh vNN "title"                         # bump, build, test, commit, and push (see Releasing)
 bash tools/ci_status.sh [--wait]                          # GitHub Actions runs (tests, release)
 ```
@@ -48,7 +53,8 @@ bash tools/ci_status.sh [--wait]                          # GitHub Actions runs 
 Tests: `smoke` (packed build plays a wave), `det` (same game twice = same hashes), `tools` (test mode and bug report), `features` (v91 features: seasons, traps, boss, king skills, stats, goals),
 `mp8` / `mpk` (2 headless co-op clients: economy, research, waves / king, guards, fights; FIRST DIVERGENCE on a desync),
 `mp_resync` (one machine corrupted on purpose, the auto resync must fix it), `mp_convoy` (convoy delivered at the same tick on both),
-`save` (save / load round trip, slow; same0 must be true, sameCont=false is known). GitHub runs the quick suite on every push
+`mp_quests` (co-op quests paid to both, fixed world), `mp_events` (events and a resync in co-op), `quests`, `spearman`, `ui` (keys on QWERTY and AZERTY, quest arrow, banners),
+`save` (save / load round trip, rendering stubbed; same0 must be true, sameCont=false is known). GitHub runs the quick suite on every push
 touching code (`.github/workflows/test.yml`) and before every release. The packed build is deterministic (terser + zopfli).
 
 ## Releasing a version
@@ -72,7 +78,10 @@ The King chose "versions directes": code a batch, test it, release it as the nex
 - One conversation per batch; the journal and the issues carry the memory between conversations.
 - Before building: `ls node_modules/esbuild` (a stale `node_modules` makes `npm run build` fail and leaves an old `dist/`); run `npm ci` if missing.
 - CI logs (`actions/jobs/ID/logs`) can be read with `gh api`, but the `test-logs` artifact download is blocked: find the failing test in the job log (`grep -aE "PASS|FAIL"`).
-- The swarm (`gameplay/swarm.js`, `swStep`, ~20 % of sim time) is already tuned: hoisting closures gave no gain. Profile with `tools/profile.py` before touching it.
+- The swarm (`gameplay/swarm.js`, everything inside `swUpdate`) is about 65 to 70 % of the wall time of the 6000-tick profile scenario; `swStep` alone is ~35 to 40 % of script time
+  (the old "20 %" counted `(program)`). Tuned in v93 (tables, flat way points, set bits): further gains need a change of behaviour. Measure with `tools/profile.py` before touching it.
+- Headless tests that `await` must stub `renderer.render`, or every await costs a software-rendered frame. Under load a headless page load takes 2 to 4 minutes.
+- Release notes: write `game/NOTES.md`, then add each line's translations (`tools/addtexts.py` for FR ES DE IT PT, `i18n/langs/*.js` for NL PL TR), or `release.sh` refuses.
 - `mp_convoy` is real-time bound (400 s budget in `tools/test_all.mjs`): a failure on CI alone is usually the slow runner.
 - Agent shell quirks: a bare `sleep` is refused (use `timeout N bash -c 'until COND; do sleep 5; done'` or a background run);
   the gh GraphQL API may be refused (use `gh api repos/...` REST, as `tools/ci_status.sh`).
@@ -89,7 +98,8 @@ The King chose "versions directes": code a batch, test it, release it as the nex
   loads the same snapshot (`mpResApply`); command and hash messages carry an epoch (`MP.ep`). Anything that must survive a resync
   has to be in `SAVA` (the save registry) or on units / structures (saved whole).
 - Every text shown to players goes through `T_()` / `L()` with its translations (EN, FR, ES, DE, IT, PT) in `i18n/translations.js`.
-  Templates use `{0}`; `L()` also splits on ' - ', ' | ' and 3 spaces, not on ': '. French uses "vous".
+  Templates use `{0}`; `L()` also splits on ' - ', ' | ' and 3 spaces, not on ': '. French uses "vous", German "du", Portuguese is European.
+  Dutch, Polish and Turkish live in `i18n/langs/{nl,pl,tr}.js` and must get every new key too.
 - Test mode (F10) is solo only and blocks achievements and the best score (`DEVU`); the bug report (F8) only reads state.
 - Art direction approved by the King: Minecraft characters made the Blockbench way: the MC player model (8 px head,
   8x12x4 body, 4x12x4 limbs, outer layer with transparent pixels) plus 2 or 3 extra cubes per unit, the detail in pixel
