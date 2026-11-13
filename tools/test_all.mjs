@@ -36,9 +36,10 @@ const suite = {
   mp_quests: { args: ['tests/mp_quests.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   mp_convoy: { args: ['tests/mp_convoy.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   save: { args: ['tools/run.py', 'tests/save.js'], pass: /"ok":true/ },
+  mp_build: { args: ['tests/mp_build.py', 'naranxia_readable.html'], pass: /^RESULT OK/m, timeoutMs: 40 * 60 * 1000 },
   mp_resync_deep: { args: ['tests/mp_resync_deep.py', 'naranxia_readable.html', '200'], pass: /^RESULT OK/m },
 };
-const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'ui', 'waves', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy', 'mp_quests', 'mp_events', 'save'];
+const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'ui', 'waves', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_build', 'mp_kxp', 'mp_convoy', 'mp_quests', 'mp_events', 'save'];
 const args = process.argv.slice(2);
 const names = args.includes('--full')
   ? [...new Set([...quick, 'save'])]
@@ -67,7 +68,7 @@ function run(name) {
     const timer = setTimeout(() => {
       timedOut = true;
       child.kill('SIGTERM');
-    }, timeoutMs);
+    }, spec.timeoutMs || timeoutMs);
     for (const stream of [child.stdout, child.stderr]) {
       stream?.on('data', (chunk) => {
         log.write(chunk);

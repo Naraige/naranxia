@@ -23,6 +23,10 @@ c=R.get('coop')
 if c:
     bad=[h for h in c.get('hashes',[]) if h[1]!=h[2]]
     P('co-op: tick',c.get('tick'),'epoch',c.get('ep'),'desyncs',c.get('desyncs'),'partner',c.get('partner'),c.get('partnerVer'),'| hash checks',len(c.get('hashes',[])),'mismatches',bad[:5])
+    if c.get('me'):
+        P('this machine:',c.get('me'),'| window',c.get('win'),'| castles',c.get('castles'),'site2',c.get('site2'),'cx',c.get('cx'))
+        P('last building commands (tk tick, mine = sent by this machine, t type, x y tile of the command, pl sender index, ex index expected, cur player it ran for, mt tile under the sender mouse, s = [sid, tx, ty, owner] or None, bad = sender index differs from expected):')
+        for e in c.get('plog') or []:P('  ',json.dumps(e,separators=(',',':')))
 if R.get('shot'):
     out=rp.with_name(rp.stem+'_shot.jpg');out.write_bytes(base64.b64decode(R['shot'].split(',',1)[1]));P('player screenshot:',out)
 S=R.get('save')

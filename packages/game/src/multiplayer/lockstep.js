@@ -58,7 +58,7 @@ function mpWatch(){const now=performance.now();
 
 export function mpFrame(dt){if(sessionState.over)return;mpWatch();if(MP.rsy)return;MP.acc=Math.min(.3,MP.acc+dt);if(sessionState.paused){MP.acc=0;return}
  let n=0;while(MP.acc>=MPSTEP&&n<8){
-  while(MP.sent<MP.tick+MPD){MP.sent++;const c=MP.out;MP.out=[];MP.loc[MP.sent]=c;mpSend({k:'c',t:MP.sent,c,e:MP.ep})}
+  while(MP.sent<MP.tick+MPD){MP.sent++;const c=MP.out;MP.out=[];MP.loc[MP.sent]=c;if(c.length){const sl=MP.sl||(MP.sl=[]);sl.push([MP.sent,c]);while(sl.length&&sl[0][0]<MP.tick-8)sl.shift()}mpSend({k:'c',t:MP.sent,c,e:MP.ep})}
   const r=MP.rem[MP.tick];if(!r){if(!MP.stall)MP.stallAt=performance.now();MP.stall=true;break}MP.stall=false;
   const L=MP.loc[MP.tick]||[],cm=MP.host?[...L.map(c=>[c,1]),...r.map(c=>[c,0])]:[...r.map(c=>[c,0]),...L.map(c=>[c,1])];
   Math.random=MP.simR;try{mpGen();for(const[c,m]of cm)mpExec(c,m);update(MPSTEP)}finally{Math.random=REALR}
@@ -69,7 +69,7 @@ export function mpFrame(dt){if(sessionState.over)return;mpWatch();if(MP.rsy)retu
 export function mpBegin(st){hudDisplayState.msgS='Co-op: Alt+click pings the map / Shift: defend / Ctrl: gather / Shift+Ctrl: attack';hudDisplayState.msgT=12;terrainState.SEED=st.seed;terrainState.GPR=st.gpr;terrainState.CX=st.cx;terrainState.CY=st.cy;sessionState.CROT=st.cr&3;sessionState.diffI=0;swarmState.SWF=100;sessionState.SITE2={tx:st.cx2,ty:st.cy2,rot:st.cr2&3};sitePickerState.picking=false;settingsState.setupOpen=false;settingsState.settingsOpen=false;
  MP.on=true;MP.side=0;const sd=Math.floor(terrainState.SEED*1e6)+1;Math.random=rngf(sd);try{reset()}finally{Math.random=REALR}
  sessionState.inGame=false;sessionState.camSave=null;startGame();sessionState.spd=1;sessionState.paused=false;sessionState.over=false;setPl(LPL());home();
- MP.simR=rngf(sd+977);MP.tick=0;MP.sent=MPD-1;MP.acc=0;MP.out=[];MP.loc={};MP.rem={};MP.hs={};MP.hr={};MP.desync=false;MP.stall=false;MP.ep=0;MP.rsy=null;MP.rsLast=-1e9;MP.hl=[];MP.dsN=0;MP.stallAt=0;MP.rxAt=performance.now();MP.rsAt=0;
+ MP.simR=rngf(sd+977);MP.tick=0;MP.sent=MPD-1;MP.acc=0;MP.out=[];MP.sl=[];MP.plog=[];MP.loc={};MP.rem={};MP.hs={};MP.hr={};MP.desync=false;MP.stall=false;MP.ep=0;MP.rsy=null;MP.rsLast=-1e9;MP.hl=[];MP.dsN=0;MP.stallAt=0;MP.rxAt=performance.now();MP.rsAt=0;
  for(let i=0;i<MPD;i++){MP.loc[i]=[];MP.rem[i]=[]}
  MP.mine=null;MP.theirs=null;mpModal(false)}
 
