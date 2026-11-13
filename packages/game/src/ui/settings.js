@@ -34,24 +34,57 @@ export function placeInput(){if(!settingsState.nameBox||sessionState.started){nm
 
 export let uiMul=1;
 
-const KDEF={cry:'<',charge:'>',cannon:'/',peasant:'1',knight:'2',spearman:'f4',archer:'3',bannerman:'4',captain:'5',wall:'6',gate:'7',tower:'8',path:'9',ballista:'b',trebuchet:'t',raise:'y',dig:'u',army:'q',idle:'.',form:'v',rotate:'r',sound:'o',wave:'n',home:'h',map:'m',upgrade:'g',barracks:'c',farm:'j',peas:'e',storage:'k',house:'0',movec:',',academy:';',market:':',forester:'[',guild:']',torch:"'",rally:'-',rallyc:'=',ramp:'i',tier:'l',demolish:'p',pause:' ',speed:'f',up:'w',down:'s',left:'a',right:'d',rotL:'z',rotR:'x'};
+const KDEF={cry:'<',charge:'>',cannon:'/',peasant:'1',knight:'2',spearman:'f4',archer:'3',bannerman:'4',captain:'5',wall:'6',gate:'7',tower:'8',path:'9',ballista:'b',trebuchet:'t',raise:'y',dig:'u',army:'KeyQ',idle:'.',form:'v',rotate:'r',sound:'o',wave:'n',home:'h',map:'m',upgrade:'g',barracks:'c',farm:'j',peas:'e',storage:'k',house:'0',movec:',',academy:';',market:':',forester:'f9',guild:'f3',torch:'f6',rally:'f7',rallyc:'=',ramp:'i',tier:'l',demolish:'p',pause:' ',speed:'f',up:'KeyW',down:'KeyS',left:'KeyA',right:'KeyD',rotL:'KeyZ',rotR:'KeyX'};
 
 const ACTL={cry:'King: war cry',charge:'King: royal charge',king:'Summon King Naraige',guard:'Train a royal guard',cannon:'Train cannon',movec:'Move castle',rotate:'Rotate building',peasant:'Train peasant',knight:'Train knight',spearman:'Train spearman',archer:'Train archer',bannerman:'Train bannerman',captain:'Train captain',upgrade:'Masonry research',barracks:'Build barracks',farm:'Build farm',storage:'Build storage',house:'Build house',academy:'Build academy',market:'Build market',forester:'Build forester hut',guild:'Build builders guild',torch:'Build torch',rally:'Barracks rally point',rallyc:'Castle rally point',peas:'Select all peasants',tier:'Wood / stone tier',demolish:'Demolish building',ramp:'Dig a ramp',wall:'Build wall',gate:'Build gate',tower:'Build tower',path:'Build path',ballista:'Ballista',trebuchet:'Trebuchet',raise:'Raise ground',dig:'Dig ground',army:'Select army',idle:'Idle peasants',form:'Formation',sound:'Mute sound',wave:'Call wave',home:'Back to base',map:'World map',pause:'Pause',speed:'Game speed',up:'Camera up',down:'Camera down',left:'Camera left',right:'Camera right',rotL:'Turn camera left',rotR:'Turn camera right'};
 
 export let KB;
 
+/* is this action bound to a physical key by default (camera, camera turn, select army)? */
+export const kbPhys=a=>/^Key[A-Z]$/.test(KDEF[a]||'');
+
 /* is this key a binding the player chose (not the default of its action)? Asked by the keyboard handler for digit-row keys */
 export const kbCustom=k=>{for(const a in KB)if(KB[a]===k&&KDEF[a]!==k)return true;return false};
 
-export const kdisp=k=>k===' '?'Space':k.length===1?k.toUpperCase():k[0].toUpperCase()+k.slice(1);
+/* ---- physical keys (v94) ----
+   Camera, camera turn and "select army" are bound to a physical key, written as its KeyboardEvent.code ('KeyW'): the same place on every
+   keyboard, so the camera is W A S D on QWERTY and Z Q S D on AZERTY without a setting. Every other binding is the character typed
+   (lower case), as before, and a character binding always wins over a physical one (German QWERTZ: the key that types y stays "raise").
+   LAY = what each physical letter key types on this keyboard, for the labels: navigator.keyboard.getLayoutMap() when the browser has it,
+   else the last character typed with that key (kept in dk_lay), else a guess from the browser language, else the QWERTY letter. */
+export const isCode=k=>typeof k==='string'&&/^Key[A-Z]$/.test(k);
+const LAY={};
+const LAYT={azerty:{KeyQ:'a',KeyA:'q',KeyW:'z',KeyZ:'w',KeyS:'s',KeyD:'d',KeyX:'x',KeyY:'y'},qwertz:{KeyZ:'y',KeyY:'z',KeyQ:'q',KeyA:'a',KeyW:'w',KeyS:'s',KeyD:'d',KeyX:'x'},qwerty:{KeyQ:'q',KeyA:'a',KeyW:'w',KeyZ:'z',KeyS:'s',KeyD:'d',KeyX:'x',KeyY:'y'}};
+const laySave=()=>{try{localStorage.setItem('dk_lay',JSON.stringify(LAY))}catch(e){}};
+/* a letter typed with a physical key: remember it; when only one known layout types it there (A, Q, W, Z, sometimes Y), fill the other letters of that layout */
+export function layNote(code,ch){if(!isCode(code)||typeof ch!=='string'||ch.length!==1||ch.toLowerCase()===ch.toUpperCase())return;ch=ch.toLowerCase();if(LAY[code]===ch)return;
+ LAY[code]=ch;{const M=Object.keys(LAYT).filter(n=>LAYT[n][code]===ch);if(M.length===1)Object.assign(LAY,LAYT[M[0]])}
+ laySave();syncHK()}
+export function layInit(){for(const c in LAY)delete LAY[c];
+ try{const lg=String(navigator.language||'').toLowerCase();if(/^fr(-fr|-be|-mc|-lu)?$/.test(lg))Object.assign(LAY,LAYT.azerty);else if(/^de\b/.test(lg))Object.assign(LAY,LAYT.qwertz)}catch(e){}
+ try{const o=JSON.parse(localStorage.getItem('dk_lay')||'{}');for(const c in o)if(isCode(c)&&typeof o[c]==='string'&&o[c].length===1)LAY[c]=o[c]}catch(e){}
+ try{if(navigator.keyboard&&navigator.keyboard.getLayoutMap)navigator.keyboard.getLayoutMap().then(m=>{let n=0;for(let i=65;i<91;i++){const c='Key'+String.fromCharCode(i),v=m.get(c);if(typeof v==='string'&&v.length===1&&v.toLowerCase()!==v.toUpperCase()){LAY[c]=v.toLowerCase();n++}}if(n){laySave();syncHK()}}).catch(()=>{})}catch(e){}}
+/* the action a key press stands for: the character first, then the physical key, then a physical binding whose own letter was typed
+   (a keyboard where that letter sits elsewhere and its place is taken by a character binding) */
+export function kbAct(k,code){let c=null,l=null;for(const a in KB){const v=KB[a];if(v===k)return a;if(code&&v===code)c=c||a;else if(isCode(v)&&k.length===1&&v[3].toLowerCase()===k)l=l||a}return c||l}
+/* label of a key: a physical key shows what it types here, unless that character is bound to something else (then its own letter works) */
+export const kdisp=k=>{if(isCode(k)){const ch=LAY[k];if(ch){let taken=false;for(const a in KB)if(KB[a]===ch)taken=true;if(!taken)return ch.toUpperCase()}return k[3]}return k===' '?'Space':k.length===1?k.toUpperCase():k[0].toUpperCase()+k.slice(1)};
+/* the four camera keys in one word for the hints: "WASD", "ZQSD" */
+export const camKeys=()=>['up','left','down','right'].map(a=>kdisp(KB[a])).join('');
 
 function syncHK(){for(const a of['cannon','peasant','knight','spearman','archer','bannerman','captain','wall','gate','tower','path','upgrade','barracks','farm','storage','house','academy','market','forester','guild','torch','rally','rallyc','movec','rotate','ramp','tier','demolish','ballista','trebuchet','raise','dig','army','idle','form'])HK[a]=kdisp(KB[a])}
 
 /* keys: the defaults, then what the player saved. v93: the spearman default went from backslash (AltGr on AZERTY) to F4. Once per browser
-   (marker dk_keyv), saved keys that still hold the old default move to F4, unless F4 was given to another action */
+   (marker dk_keyv), saved keys that still hold the old default move to F4, unless F4 was given to another action.
+   v94 (marker 3), the same way: torch ' to F6, barracks rally - to F7, forester [ to F9, guild ] to F3 (none of the old keys has a plain
+   key on AZERTY), and camera w a s d, turn z x, army q become the physical keys KeyW ... KeyQ. A key the player changed is left alone. */
+const KMIG=[['torch',"'",'f6'],['rally','-','f7'],['forester','[','f9'],['guild',']','f3'],['up','w','KeyW'],['down','s','KeyS'],['left','a','KeyA'],['right','d','KeyD'],['rotL','z','KeyZ'],['rotR','x','KeyX'],['army','q','KeyQ']];
 export function loadKB(){KB={...KDEF};
  try{Object.assign(KB,JSON.parse(localStorage.getItem('dk_keys')||'{}'))}catch(e){}
- try{if(localStorage.getItem('dk_keyv')!=='2'){if(KB.spearman==='\\'&&!Object.keys(KB).some(a=>KB[a]==='f4')){KB.spearman='f4';if(localStorage.getItem('dk_keys'))localStorage.setItem('dk_keys',JSON.stringify(KB))}localStorage.setItem('dk_keyv','2')}}catch(e){}
+ try{const v=localStorage.getItem('dk_keyv');if(v!=='3'){let ch=false;const has=k=>Object.keys(KB).some(a=>KB[a]===k);
+  if(v!=='2'&&KB.spearman==='\\'&&!has('f4')){KB.spearman='f4';ch=true}
+  for(const[a,o,n]of KMIG)if(KB[a]===o&&!has(n)){KB[a]=n;ch=true}
+  if(ch&&localStorage.getItem('dk_keys'))localStorage.setItem('dk_keys',JSON.stringify(KB));localStorage.setItem('dk_keyv','3')}}catch(e){}
  syncHK()}
 
 export function saveKB(){try{localStorage.setItem('dk_keys',JSON.stringify(KB))}catch(e){}syncHK()}
@@ -109,6 +142,7 @@ export function initializeSettings() {
   nmI.oninput=()=>{THEME.n=nmI.value.slice(0,18)||'Nameless';saveTheme()};
   nmI.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')nmI.blur()};
   try{uiMul=+localStorage.getItem('dk_ui')||1}catch(e){}
+  layInit();
   loadKB();
   applyCB();
 }

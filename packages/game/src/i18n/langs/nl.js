@@ -1509,4 +1509,5 @@ export const NL = {
   "AZERTY keyboards: the number row now works without Shift.": "AZERTY-toetsenborden: de cijferrij werkt nu zonder Shift.",
   "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "De missiepijl blijft uit de buurt van de bovenste balken en wijst vanaf de schermrand als het gebouw buiten beeld is.",
   "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Snellere simulatie van de horde, en nagelezen Portugese, Duitse, Nederlandse, Poolse en Turkse teksten.",
+  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Klik om het kasteel te plaatsen  -  sleep / {0}: bewegen   Rechts slepen: draaien   Wiel: zoomen",
 };

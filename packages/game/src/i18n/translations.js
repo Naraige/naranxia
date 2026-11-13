@@ -853,7 +853,11 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v93 */
+  /* texts added in v94 */
+Object.assign(TRD,{
+"Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom":["Cliquez pour placer le château  -  glisser / {0} : déplacer   Glisser droit : tourner   Molette : zoom","Haz clic para colocar el castillo  -  arrastrar / {0}: mover   Arrastre derecho: girar   Rueda: zoom","Klicke, um die Burg zu setzen  -  Ziehen / {0}: bewegen   Rechts ziehen: drehen   Mausrad: Zoom","Clicca per piazzare il castello  -  trascina / {0}: muovi   Trascina destro: ruota   Rotella: zoom","Clique para colocar o castelo  -  arrastar / {0}: mover   Arrastar direito: rodar   Roda: zoom"]
+});
+/* texts added in v93 */
 Object.assign(TRD,{
 "Comfort and fixes after the big update.":["Confort et corrections après la grande mise à jour.","Comodidad y correcciones tras la gran actualización.","Komfort und Korrekturen nach dem großen Update.","Comodità e correzioni dopo il grande aggiornamento.","Conforto e correções depois da grande atualização."],
 "The Update page shows clean section titles and is translated in every language.":["La page Mise à jour affiche des titres de section propres et elle est traduite dans toutes les langues.","La página Actualización muestra títulos de sección limpios y está traducida a todos los idiomas.","Die Update-Seite zeigt saubere Abschnittstitel und ist in jede Sprache übersetzt.","La pagina Aggiornamento mostra titoli di sezione puliti ed è tradotta in ogni lingua.","A página Atualização mostra títulos de secção limpos e está traduzida em todas as línguas."],

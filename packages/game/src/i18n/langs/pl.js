@@ -1509,4 +1509,5 @@ export const PL = {
   "AZERTY keyboards: the number row now works without Shift.": "Klawiatury AZERTY: rząd cyfr działa teraz bez Shift.",
   "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "Strzałka zadania nie zasłania już górnych pasków i wskazuje z krawędzi ekranu, gdy budynek jest poza ekranem.",
   "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Szybsza symulacja hordy oraz poprawione teksty portugalskie, niemieckie, niderlandzkie, polskie i tureckie.",
+  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Kliknij, aby postawić zamek  -  przeciągnij / {0}: ruch   Prawy przycisk: obrót   Kółko: zoom",
 };

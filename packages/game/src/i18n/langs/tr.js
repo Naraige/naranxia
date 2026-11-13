@@ -1509,4 +1509,5 @@ export const TR = {
   "AZERTY keyboards: the number row now works without Shift.": "AZERTY klavyeler: rakam sırası artık Shift olmadan çalışıyor.",
   "The quest arrow stays clear of the top bars and points from the screen edge when the building is off screen.": "Görev oku artık üst çubukların üstüne gelmiyor ve bina ekran dışındayken ekran kenarından gösteriyor.",
   "Faster horde simulation, and proofread Portuguese, German, Dutch, Polish and Turkish texts.": "Daha hızlı sürü simülasyonu ve gözden geçirilmiş Portekizce, Almanca, Felemenkçe, Lehçe ve Türkçe metinler.",
+  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Kaleyi yerleştirmek için tıkla  -  sürükle / {0}: hareket   Sağ sürükle: döndür   Tekerlek: yakınlaştır",
 };
