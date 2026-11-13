@@ -3,7 +3,7 @@ import { GVER } from '../core/version.js';
 import { diagnosticsState, ERRLOG, MSGL } from './diagnostics.js';
 import { finishResearch } from '../gameplay/economy.js';
 import { mkU } from '../gameplay/entities.js';
-import { HOMEC, playersState } from '../gameplay/players.js';
+import { HOMEC, LPL, playersState } from '../gameplay/players.js';
 import { RS, RS2, T, TS } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { SW, swReset } from '../gameplay/swarm.js';
@@ -41,7 +41,11 @@ export async function bugReport(){if(bugBusy)return;bugBusy=true;hudDisplayState
    screen:[innerWidth,innerHeight,devicePixelRatio],mode:MP.on?(MP.host?'co-op host':'co-op guest'):sessionState.started?'solo':'menu',test:diagnosticsState.DEVU,seed:terrainState.SEED,time:+(+sessionState.time).toFixed(1),wave:sessionState.waveN,over:!!sessionState.over,paused:!!sessionState.paused,speed:sessionState.spd,
    units:sessionState.units.length,structs:sessionState.structs.length,swarm:SW.n,res:playersState.RESP.map(R=>({g:R.g|0,w:R.w|0,s:R.s|0,f:R.f|0})),
    cam:{x:+CAM.x.toFixed(2),z:+CAM.z.toFixed(2),dist:+CAM.dist.toFixed(1),yaw:+CAM.yaw.toFixed(2),pitch:+CAM.pitch.toFixed(2)},
-   coop:MP.on?{tick:MP.tick,ep:MP.ep|0,desync:!!MP.desync,desyncs:MP.dsN|0,partner:MP.pname||'',partnerVer:MP.pver||'',hashes:(MP.hl||[]).slice(-40)}:null,
+   coop:MP.on?{tick:MP.tick,ep:MP.ep|0,desync:!!MP.desync,desyncs:MP.dsN|0,partner:MP.pname||'',partnerVer:MP.pver||'',hashes:(MP.hl||[]).slice(-40),
+    /* placement diagnosis (issue #26): who this machine is, both castles, the window, and the last 20 building commands (see plogAdd) */
+    me:{host:!!MP.host,side:MP.side|0,lpl:LPL(),cur:playersState.CURPL,pending:(MP.out||[]).length,rsy:MP.rsy||null,rsLast:MP.rsLast>0?Math.round((performance.now()-MP.rsLast)/1000):null},
+    castles:[sessionState.CS,sessionState.CS2].map(c=>c?{tx:c.tx,ty:c.ty,pl:c.pl|0,rot:c.rot|0,hp:Math.round(c.hp)}:null),site2:sessionState.SITE2||null,cx:[terrainState.CX,terrainState.CY],
+    win:{css:[innerWidth,innerHeight],cv:[cv.width,cv.height],dpr:devicePixelRatio},plog:(MP.plog||[]).slice()}:null,
    errors:ERRLOG.slice(),messages:MSGL.slice(),save,shot};
   const d=new Date(),p2=n=>String(n).padStart(2,'0'),nm='naranxia-bug-'+GVER+'-'+d.getFullYear()+p2(d.getMonth()+1)+p2(d.getDate())+'-'+p2(d.getHours())+p2(d.getMinutes())+'.json';
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(rep)],{type:'application/json'}));a.download=nm;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},5000);

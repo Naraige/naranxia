@@ -34,6 +34,8 @@ import { MP } from './session.js';
 import { puff, setPuffHandler } from '../rendering/effects.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { confirmPick } from '../ui/site-picker.js';
+import { pickGround } from '../rendering/camera.js';
+import { inputState } from '../input/state.js';
 
 /* visual helpers must never consume the shared simulation random stream */
 let _puff;
@@ -44,6 +46,12 @@ export let _N;
 const selIds = ()=>sel().map(u=>u.uid);
 export const mpPush = c=>MP.out.push(c);
 const gated = ()=>MP.on&&!MP.ex;
+
+/* Placement log for the bug report (F8): the last 20 building commands as this machine ran them. Read only, never read by the simulation.
+   A command carries the sender's player index (pl) and the tile under the sender's mouse (mt); the executor writes who it ran it for
+   (cur), what it expected (ex), and the structure that came out (sid, tx, ty, owner). A guest placement on the wrong site shows here. */
+export function plogAdd(e){const L=MP.plog||(MP.plog=[]);L.push(e);if(L.length>20)L.shift()}
+const mouseTile=()=>{try{const m=inputState.mouse;if(!m||m.x<0)return null;const g=pickGround(m.x,m.y);return g?[Math.floor(g.x),Math.floor(g.z)]:null}catch(e){return null}};
 
 export const repairB=function(sid){if(gated()){mpPush({k:'rp',b:sid});return}return repair0(sid)};
 
@@ -61,7 +69,8 @@ function withSel(S,fn){const keep=sessionState.units.map(u=>u.sel);sessionState.
 export let mpExec = function mpExec(c,mine){const m0=hudDisplayState.msgS,mt0=hudDisplayState.msgT,sl=selectionState.selB,fm=constructionState.formType,br=constructionState.buildRot;MP.ex=true;MP.rmt=!mine;MP.note=null;setPl(mine?LPL():1-LPL());
  try{switch(c.k){
   case'o':constructionState.formType=c.f;formationsState.FORCEF=c.fa==null?null:c.fa;try{withSel(new Set(c.i),()=>{if(sel().length)_N.order({x:c.x,y:c.y})})}finally{formationsState.FORCEF=null}break;
-  case'b':{constructionState.buildRot=c.r;constructionState.gateLen=c.gl||2;selectionState.selB=c.sb!=null?(sessionState.structs.find(s=>s.sid===c.sb)||null):null;const bt0=playersState.BTIER;setTier(c.ti===undefined?1:c.ti);try{_N.build(c.t,c.x,c.y)}finally{setTier(bt0)}break}
+  case'b':{constructionState.buildRot=c.r;constructionState.gateLen=c.gl||2;selectionState.selB=c.sb!=null?(sessionState.structs.find(s=>s.sid===c.sb)||null):null;const bt0=playersState.BTIER,n0=sessionState.structs.length;setTier(c.ti===undefined?1:c.ti);try{_N.build(c.t,c.x,c.y)}finally{setTier(bt0)}
+   {const nw=sessionState.structs.length>n0?sessionState.structs[sessionState.structs.length-1]:null,xp=mine?LPL():1-LPL();plogAdd({tk:MP.tick,ep:MP.ep|0,mine:mine?1:0,t:c.t,x:c.x,y:c.y,pl:c.pl,ex:xp,cur:playersState.CURPL,mt:c.mt||null,s:nw?[nw.sid,nw.tx,nw.ty,nw.pl|0]:null,bad:c.pl!==undefined&&c.pl!==xp?1:0})}break}
   case't':selectionState.selB=sessionState.structs.find(s=>s.sid===c.b&&(s.pl|0)===playersState.CURPL)||null;_N.train(c.t);break;
   case'r':{const was=RS.on;_N.startResearch();if(!mine&&!was&&RS.on)MP.note=(MP.pname||'Your partner')+' started Masonry (shared)';break}
   case'rp':repair0(c.b);break;
@@ -95,7 +104,7 @@ export function initializeCommands() {
 
   setOrderHandler(function(w){if(gated()){mpPush({k:'o',i:selIds(),x:w.x,y:w.y,f:constructionState.formType,fa:formationsState.FORCEF});return}return _N.order(w)});
 
-  setBuildHandler(function(t,x,y){if(gated()){mpPush({k:'b',t,x,y,r:constructionState.buildRot,ti:playersState.BTIER,gl:constructionState.gateLen,sb:selectionState.selB&&sessionState.structs.includes(selectionState.selB)?selectionState.selB.sid:null});return}return _N.build(t,x,y)});
+  setBuildHandler(function(t,x,y){if(gated()){mpPush({k:'b',t,x,y,pl:LPL(),mt:mouseTile(),r:constructionState.buildRot,ti:playersState.BTIER,gl:constructionState.gateLen,sb:selectionState.selB&&sessionState.structs.includes(selectionState.selB)?selectionState.selB.sid:null});return}return _N.build(t,x,y)});
 
   setTrainHandler(function(t){if(gated()){mpPush({k:'t',t,b:curB().sid});return}return _N.train(t)});
 
