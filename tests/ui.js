@@ -47,6 +47,14 @@ async()=>{/* small interface rules (v93): the digit row is matched by the physic
   let bad=[],kinds={w:0,e:0},low=0;for(let dz=-26;dz<=26;dz+=2)for(const dx of[-30,-8,0,8,30]){CAM.x=bx+dx;CAM.z=bz+dz;const q=frame();if(!q||q[0]==='r'||!clear(q)){if(bad.length<6)bad.push([dx,dz,q&&q.map(v=>typeof v==='number'?Math.round(v):v)])}else kinds[q[0]]++}
   O.sweep=kinds;O.bad=bad;chk('sweepClear',bad.length===0&&kinds.w>0&&kinds.e>0);
   CAM.x=bx;CAM.z=bz}
+ /* ---- achievement toasts and wave banner against the bars under the top bar (v94) ---- */
+ {none();time=Math.max(time,40);evPush({k:'car',i:1,a:{g:40,w:30,s:20}});ACH.clear();TOASTS.length=0;ach('w1');ach('k1');
+  msgS='Night falls - the horde is coming. The villagers shelter in the castle; keep your soldiers in the light!';hudDisplayState.msgT=30;
+  drawUI();drawUI();const q=hudDisplayState.tq,hit=(a,b)=>a[0]<b[0]+b[2]&&a[0]+a[2]>b[0]&&a[1]<b[1]+b[3]&&a[1]+a[3]>b[1];
+  const ev=q.b.find(b=>b[3]===38),ms=q.b.find(b=>b[3]===16);O.toast=q.t.map(b=>b.map(Math.round));O.tb=q.b.length;
+  chk('toastsDrawn',q.t.length===2&&!!ev&&!!ms);chk('toastsClearBars',q.t.every(t=>q.b.every(b=>!hit(t,b)))&&!hit(q.t[0],q.t[1]));
+  bannerT=3;bannerS='WAVE 6';bannerS2='Horde from N';drawUI();drawUI();O.bny=Math.round(hudDisplayState.bny);chk('bannerUnderEventBar',!!ev&&hudDisplayState.bny>=ev[1]+ev[3]);
+  bannerT=0;hudDisplayState.msgT=0;EVS.cur=null;TOASTS.length=0}
  /* ---- video guide ---- */
  {openMenu();openGuide();guideWatch();const a=guideState.open;startGame();guideWatch();chk('guideClosesOnResume',a&&!guideState.open);
   /* the game ends under the open guide (co-op: the lockstep runs under the menu): closed, back on the game view for the end panel */

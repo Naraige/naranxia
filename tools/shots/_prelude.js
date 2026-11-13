@@ -20,4 +20,8 @@ const explore=(n)=>{for(let dx=-48;dx<=48;dx+=16)for(let dy=-48;dy<=48;dy+=16)en
  const sc=[],pts=[];for(const r of[14,30])for(let i=0;i<8;i++){const a=i*Math.PI/4+(r>20?.39:0);pts.push([cast.x+Math.cos(a)*r*TS,cast.y+Math.sin(a)*r*TS])}
  pts.forEach(q=>{const u=mkU(0,'scout',q[0],q[1]);units.push(u);sc.push(u)});
  for(let i=0;i<n;i++){sc.forEach((u,j)=>{u.x=pts[j][0];u.y=pts[j][1]});update(.1);if(i%10===9)render3D(.05)}sc.forEach(u=>{u.hp=0});update(.1)};
+/* the scene is built in seconds, so the achievements of a whole game pop at once: no toast on an announcement picture */
+const noToast=()=>{TOASTS.length=0;setInterval(()=>{TOASTS.length=0},30)};/* also those of the frames drawn until the screenshot (a toast slides in from outside the screen for a third of a second) */
+/* a kingdom some waves old: the opening hint is gone (it shows for the first 30 s) and the quest line stands at quest `id` */
+const grown=id=>{time=Math.max(time,60);QST.on=1;QST.d={};QST.last='';QST.dt=-1e9;for(const q of QUESTS){if(q.id===id)break;QST.d[q.id]=1}};
 const quiet=async ms=>{const o=renderer.render;renderer.render=function(){};await new Promise(r=>setTimeout(r,ms));renderer.render=o};

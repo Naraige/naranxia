@@ -129,6 +129,57 @@ STEPS = [
     ('72_night_forced', "()=>{clearInterval(window.__nt);CAM.dist=20;window.__live=1;for(let i=0;i<10;i++){hordeOn=true;nightLv=1;render3D(.5)}window.__live=0;return 'night '+nightLv}", {'real': 0}),
 ]
 
+# rebel camp grown as in tests/spearman.js (warlike: half of the melee fighters are spearmen), a scout of the player beside it so the fog lifts
+CAMP = """async()=>{const rr=renderer.render;renderer.render=function(){};selB=null;questPanelState.log=false;waveT=1e9;
+ const b=BASES.filter(b=>b.alive&&b.ai)[0];if(!b)return 'no camp';b.trait='warlike';b.res={g:1e5,w:1e5,s:1e5,f:1e5};
+ ensureAround(b.tx,b.ty,1);
+ for(const t of['house','house','house','house','barracks','tower','tower','farm','farm','farm','farm','storage']){const sp=campDebug.aiSpot(b,t);if(!sp)continue;const st=campDebug.aiPlace(b,t,sp[0],sp[1],sp[2]);st.prog=1;st.hp=st.max;b.proj=null}
+ for(let k=0;k<40;k++){b.trT=0;b.bT=99;campDebug.aiTick(8)}
+ for(let i=0;i<4;i++){const f=freeTile(b.tx+(i%2?7:-7),b.ty+(i<2?7:-7));const u=mkU(0,'scout',(f[0]+.5)*TS,(f[1]+.5)*TS);u.hp=u.max=9999;units.push(u)}
+ for(let i=0;i<30;i++)update(.1);
+ const sp=b.us.filter(u=>u.hp>0&&u.type==='spearman');let cx=0,cy=0;for(const u of sp){cx+=u.x;cy+=u.y}
+ CAM.x=sp.length?cx/sp.length/TS:b.tx;CAM.z=(sp.length?cy/sp.length/TS:b.ty)+1;CAM.dist=13;CAM.pitch=.8;CAM.yaw=0;renderer.render=rr;
+ return JSON.stringify({camp:campLabel(b),sp:sp.length,kn:b.us.filter(u=>u.hp>0&&u.type==='knight').length,ar:b.us.filter(u=>u.hp>0&&u.type==='archer').length})}"""
+
+# v94 QA lot (prefix 8 and 9): things v93 shipped without a look. 8x: title screens in other languages (lang = index, wheel = notches down
+# over the list); 9x: in game (needs 20_day_hud). Run with: python3 tools/qa_shots.py dist/qa/v94 8,9
+i20 = [n for n, _, _ in STEPS].index('20_day_hud')
+STEPS[i20:i20] = [
+    ('80_update_fr_top', "()=>{setLang(1);titleDebug.notes(true)}", {'real': 0}),
+    ('81_update_fr_mid', None, {'real': 0, 'wheel': 5}),
+    ('82_update_fr_bottom', None, {'real': 0, 'wheel': 40}),
+    ('83_update_tr_top', "()=>{titleDebug.notes(false);setLang(8)}", {'real': 0, 'after': "()=>{titleDebug.notes(true)}", 'wait': 600}),
+    ('84_update_tr_bottom', None, {'real': 0, 'wheel': 40}),
+    ('85_update_pl_top', "()=>{titleDebug.notes(false);setLang(7)}", {'real': 0, 'after': "()=>{titleDebug.notes(true)}", 'wait': 600}),
+    ('85b_update_pl_bottom', None, {'real': 0, 'wheel': 40}),
+    ('86a_guide_de_traps', "()=>{titleDebug.notes(false);setLang(3);openGuide()}", {'real': 0, 'guide': (9, 9.5)}),
+    ('86b_guide_de_seasons', None, {'real': 0, 'guide': (10, 14.2)}),
+    ('86c_guide_de_market', None, {'real': 0, 'guide': (11, 12.6)}),
+    ('86d_guide_de_camps', None, {'real': 0, 'guide': (12, 16.6)}),
+    ('86e_guide_de_talents', None, {'real': 0, 'guide': (13, 8.8)}),
+    ('86f_guide_de_narrow', None, {'real': 0, 'guide': (12, 5), 'vp': NARROW}),
+    ('87_back_fr', "()=>{guideState.open=false;setLang(1);return document.title}", {'real': 0, 'always': 1}),
+]
+STEPS += [
+    ('90_questlog_skipped', "()=>{__qset('research');QST.d.market=2;QST.d.guild=2;questPanelState.log=true;return JSON.stringify(QST.d)}", {'real': 0}),
+    ('90b_questlog_skipped_narrow', None, {'real': 0, 'vp': NARROW}),
+    # quest "Open for trade" with the market built and nothing selected: the marker is an arrow over the market in the world
+    ('91_arrow_on_building', "()=>{__qset('market');questPanelState.log=false;CAM.x=CX;CAM.z=CY+3;CAM.dist=24;return JSON.stringify([(qCur()||{}).id,hudDisplayState.qm])}", {}),
+    ('91b_arrow_edge_left', "()=>{CAM.x=CX+30}", {'post': "()=>JSON.stringify(hudDisplayState.qm)"}),
+    ('92_arrow_edge_down', "()=>{CAM.x=CX-4;CAM.z=CY-22}", {'post': "()=>JSON.stringify(hudDisplayState.qm)"}),
+    ('93_arrow_under_topbar', "()=>{const b=structs.find(x=>x.type==='market');CAM.x=b.tx+1;CAM.z=b.ty+13.5;CAM.dist=24;return b.tx+','+b.ty}", {'post': "()=>JSON.stringify(hudDisplayState.qm)"}),
+    ('93b_arrow_under_centrebar', "()=>{const b=structs.find(x=>x.type==='market');CAM.x=b.tx+1;CAM.z=b.ty+11;evPush({k:'car',i:1,a:{g:40,w:30,s:20}});return 1}", {'post': "()=>JSON.stringify([hudDisplayState.qm,hudDisplayState.cbar])"}),
+    # an achievement toast while a long message line shows: the toast must sit under the line, not on it
+    ('93c_toast_and_message', "()=>{CAM.x=CX;CAM.z=CY+3;ACH.clear();ach('w1');ach('k1');return TOASTS.length}", {'wait': 800, 'after': "()=>{msgS='Night falls - the horde is coming. The villagers shelter in the castle; keep your soldiers in the light!';hudDisplayState.msgT=60}"}),
+    ('93d_toast_narrow', "()=>{ACH.clear();ach('w1');ach('k1');return TOASTS.length}", {'wait': 800, 'vp': NARROW}),
+    ('93e_toast_alone', "()=>{hudDisplayState.msgT=0;time=Math.max(time,40);EVS.cur=null;ACH.clear();ach('w5');return TOASTS.length}", {'wait': 800}),
+    ('94_esc_menu', "()=>{CAM.x=CX;CAM.z=CY+3;selB=null;questPanelState.log=false;openMenu()}", {}),
+    ('94b_esc_menu_narrow', None, {'vp': NARROW}),
+    ('95_back_game', "()=>{startGame();return started}", {'real': 0}),
+    ('96_rebel_camp', CAMP, {'frames': 5, 'real': 2}),
+    ('97_rebel_camp_close', "()=>{CAM.dist=7;CAM.pitch=.7}", {'real': 2}),
+]
+
 # software WebGL draws a 1280x720 frame in tens of seconds: the screen is drawn only for the frames of a picture (window.__live),
 # small off-screen renders (icons, guide sprites) always pass
 GATE = """()=>{const rr=renderer.render;window.__live=0;renderer.render=function(){const t=renderer.getRenderTarget&&renderer.getRenderTarget();
@@ -160,7 +211,7 @@ with sync_playwright() as p:
     for name, js, o in STEPS:
         if ONLY and not any(name.startswith(x) for x in ONLY) and not o.get('always'):
             # the game scene is needed by every in-game step
-            if not (name == '20_day_hud' and any(x[:1] in '2345' for x in ONLY)):
+            if not (name == '20_day_hud' and any(x[:1] in '23459' for x in ONLY)):
                 continue
         t1 = time.time(); r = None
         try:
@@ -174,6 +225,11 @@ with sync_playwright() as p:
                     if pg.evaluate("()=>!!(window.__guide&&window.__guide.ready())"): break
                     pg.wait_for_timeout(1000)
                 pg.evaluate("([c,t])=>{window.__guide.at(c,t,true)}", [c, t])
+            if o.get('after'): frames(pg, 3); pg.evaluate(o['after'])
+            if o.get('wheel'):
+                frames(pg, 3); pg.mouse.move(want[0] // 2, want[1] // 2)
+                for _ in range(o['wheel']): pg.mouse.wheel(0, 120); frames(pg, 2)
+                pg.wait_for_timeout(500)
             if o.get('wait'): pg.wait_for_timeout(o['wait'])
             frames(pg, o.get('frames', 4))
             if o.get('real', 1): real(pg, o.get('real', 1))
@@ -182,5 +238,6 @@ with sync_playwright() as p:
             ovf = pg.evaluate("()=>{const o=[...new Set(window.__ovf||[])];window.__ovf=[];return o}")
         except Exception as e:
             print(name, 'EXC', str(e)[:300], flush=True); continue
+        if o.get('post'): r = str(r or '') + ' ' + str(pg.evaluate(o['post']))
         print(name, round(time.time() - t1), 's', r if r is not None else '', ('OVERFLOW ' + json.dumps(ovf, ensure_ascii=False)) if ovf else '', ('ERR ' + str(errs[-2:])) if errs else '', flush=True)
     print('ERRS', errs[:6]); b.close()

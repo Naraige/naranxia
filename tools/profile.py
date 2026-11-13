@@ -9,7 +9,7 @@ src=src.replace("const a=runOnce(),b=runOnce();return JSON.stringify({same:JSON.
 with sync_playwright() as p:
     b=p.chromium.launch(args=['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--enable-unsafe-swiftshader'])
     pg=b.new_page();pg.route('**/three.min.js',lambda r:r.fulfill(path=str(ROOT/'node_modules/three/build/three.min.js'),content_type='application/javascript'))
-    pg.goto((ROOT/'dist/naranxia_readable.html').as_uri(),timeout=180000);pg.wait_for_timeout(3000)
+    pg.goto((ROOT/'dist/naranxia_readable.html').as_uri(),timeout=900000);pg.wait_for_timeout(3000)
     c=pg.context.new_cdp_session(pg);c.send('Profiler.enable');c.send('Profiler.setSamplingInterval',{'interval':500});c.send('Profiler.start')
     r=pg.evaluate(src);prof=c.send('Profiler.stop')['profile']
     print(r[:200])

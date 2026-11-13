@@ -31,7 +31,7 @@ function tr0(s){const li=LANG-1;let e=TRX.get(s);if(e&&e[li])return e[li];
  if(/^[a-z]/.test(s)){e=TRX.get(s[0].toUpperCase()+s.slice(1));if(e&&e[li])return li===2?e[li]:e[li][0].toLowerCase()+e[li].slice(1)}
  return s}
 
-function setLang(i){LANG=i;TRC.clear();TWM.clear();try{localStorage.setItem('dk_lang',i)}catch(e){}try{i18nDom()}catch(e){}titleSceneState.titleDirty=true}
+export function setLang(i){LANG=i;TRC.clear();TWM.clear();try{localStorage.setItem('dk_lang',i)}catch(e){}try{i18nDom()}catch(e){}titleSceneState.titleDirty=true}
 
 /* the HTML parts (co-op lobby) follow too */
 let I18NO=null;
