@@ -31,7 +31,7 @@ import { SW } from '../gameplay/swarm.js';
 import { callWave, restT, setCallWaveHandler, wave, wavesState } from '../gameplay/waves.js';
 import { _N, mpExec, mpPush, questSwitch, roleAdj, sendConvoy, setMpExecHandler } from '../multiplayer/commands.js';
 import { convoyLinked, convoyStep, setConvoyStepHandler } from '../multiplayer/convoys.js';
-import { mpStart, mpWorldSync } from '../multiplayer/lobby.js';
+import { mpBanner, mpStart, mpWorldSync } from '../multiplayer/lobby.js';
 import { mpHash, mpMsg, setMpMsgHandler } from '../multiplayer/lockstep.js';
 import { objTick, SPK } from '../multiplayer/objectives.js';
 import { qCur, qFix, QUESTS, questsState } from '../gameplay/quests.js';
@@ -48,7 +48,7 @@ import { NAV } from '../ui/menu-nav.js';
 import { KB, loadKB, settingsDebug, settingsState } from '../ui/settings.js';
 import { titleDebug } from '../ui/title-menu.js';
 import { guideState, guideWatch, openGuide } from '../ui/video-guide.js';
-import { languageState } from '../i18n/language.js';
+import { L as dbgL, languageState } from '../i18n/language.js';
 import { FOWU } from '../rendering/fog.js';
 import { render3D, setRender3DHandler } from '../rendering/frame.js';
 import { matV } from '../rendering/materials.js';
@@ -298,6 +298,8 @@ export function installBrowserConsole() {
     openPicker: { get: () => openPicker },
     sitePickerState: { get: () => sitePickerState },
     languageState: { get: () => languageState },
+    trL: { get: () => dbgL },
+    mpBanner: { get: () => mpBanner },
     svPeek: { get: () => svPeek },
     continueLast: { get: () => continueLast },
     ter: { get: () => ter },

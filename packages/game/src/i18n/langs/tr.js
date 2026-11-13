@@ -1512,5 +1512,4 @@ export const TR = {
   "Co-op: putting both games back in step, a few seconds (nothing to do)": "Co-op: iki oyun eşitleniyor, birkaç saniye (bir şey yapman gerekmiyor)",
   "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Co-op: {0} bekleniyor, {1} sn (yavaş bağlantı veya bilgisayar)",
   "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Co-op: {0} {1} sn'dir yanıt vermiyor, bağlantı dönünce oyun devam eder",
-  "your partner": "ortağın",
 };

@@ -54,4 +54,18 @@ async()=>{/* small interface rules (v93): the digit row is matched by the physic
   openMenu();openGuide();quitGame();guideWatch();chk('guideClosesOnTitle',!guideState.open&&!inGame);
   /* opened from the title it stays, until a game starts */
   openGuide();guideWatch();const t1=guideState.open;inGame=true;guideWatch();chk('titleGuide',t1&&!guideState.open);inGame=false}
+ /* ---- co-op line on top (#28): nothing while the game runs, one clear line otherwise, gone as soon as play resumes ---- */
+ {const keep={...MP},now=1e6,B=()=>mpBanner(now);Object.assign(MP,{on:true,pname:'Mira',rsy:null,desync:false,stall:false,stallAt:0,rxAt:now,rtt:40});const was=paused;paused=false;
+  chk('bannerQuiet',B()==='');
+  MP.stall=true;MP.stallAt=now-900;chk('bannerShortWaitHidden',B()==='');
+  MP.stallAt=now-3200;const w=B();chk('bannerWaiting',w==='Co-op: waiting for Mira, 3 s (slow connection or computer)');
+  MP.rxAt=now-9000;const n=B();chk('bannerNoAnswer',n==='Co-op: no answer from Mira for 9 s, the game goes on when the connection is back');
+  MP.stall=false;chk('bannerGoneWhenPlayResumes',B()==='');
+  MP.rsy='go';const r=B();chk('bannerResync',r==='Co-op: putting both games back in step, a few seconds (nothing to do)');
+  MP.rsy=null;MP.desync=true;chk('bannerDesyncSameLine',B()===r);MP.desync=false;
+  MP.rtt=320;chk('bannerSlow',B()==='Co-op: slow connection (320 ms)');MP.rtt=40;
+  MP.pname='';MP.stall=true;MP.stallAt=now-2000;const w2=B();chk('bannerNoName',w2==='Co-op: waiting for Player, 2 s (slow connection or computer)');
+  /* every line has its translation (French here), the numbers and the name kept */
+  if(typeof trL==='function'&&languageState){const T=[w,n,r,w2].map(x=>trL(x));O.bannerFr=T;}
+  for(const k of Object.keys(MP))if(!(k in keep))delete MP[k];Object.assign(MP,keep);paused=was}
  O.ok=C.every(Boolean);return JSON.stringify(O)}

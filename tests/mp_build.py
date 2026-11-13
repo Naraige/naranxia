@@ -121,7 +121,7 @@ with sync_playwright() as p:
         R="()=>JSON.stringify([CS.rally?[Math.floor(CS.rally.x/TS),Math.floor(CS.rally.y/TS)]:null,CS2.rally?[Math.floor(CS2.rally.x/TS),Math.floor(CS2.rally.y/TS)]:null])"
         ra=json.loads(A.evaluate(R));rb=json.loads(B.evaluate(R));P('rally',ra,rb,'mouse',u)
         need(ra==rb and ra[1]==u and ra[0] is None,'castle rally of the guest: %s %s, mouse %s'%(ra,rb,u))
-    B.evaluate("()=>{mode=null;selB=CS2;train('king')}");waitT(1)
+    P('train king',B.evaluate("()=>{mode=null;selB=CS2;msgS='';train('king');return msgS+'|out '+JSON.stringify(MP.out)}"));waitT(1)
     for _ in range(60):
         if 'king' in A.evaluate("()=>units.map(u=>u.type).join()"):break
         waitT(1)

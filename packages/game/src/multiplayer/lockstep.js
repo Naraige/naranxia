@@ -52,8 +52,8 @@ function mpGen(){let n=0;while(terrainState.GI<terrainState.GORD.length&&n<2){co
 /* a resync that does not finish (a lost message, a failed load) or that the host put off (8 s between two) is started again, so the two
    games never stay apart and the banner never stays on "back in step" for good */
 function mpWatch(){const now=performance.now();
- if(MP.host){if(MP.rsy==='sent'&&now-MP.rsLast>25000){MP.rsy=null;MP.rsTxt=null}if(MP.desync&&!MP.rsy&&now-MP.rsLast>=8000)mpResync()}
- else if((MP.rsy==='recv'||MP.rsy==='go')&&now-(MP.rsAt||0)>25000){MP.rsy=null;MP.rsBuf=null;MP.rsAt=now;mpSend({k:'rsq',e:MP.ep})}
+ if(MP.host){if(MP.rsy==='sent'&&now-MP.rsLast>60000){MP.rsy=null;MP.rsTxt=null;MP.desync=true}if(MP.desync&&!MP.rsy&&now-MP.rsLast>=8000)mpResync()}
+ else if((MP.rsy==='recv'||MP.rsy==='go')&&now-(MP.rsAt||0)>60000){MP.rsy=null;MP.rsBuf=null;MP.rsAt=now;MP.desync=true;mpSend({k:'rsq',e:MP.ep,f:1})}
  else if(MP.desync&&!MP.rsy&&now-(MP.rsAt||0)>10000){MP.rsAt=now;mpSend({k:'rsq',e:MP.ep})}}
 
 export function mpFrame(dt){if(sessionState.over)return;mpWatch();if(MP.rsy)return;MP.acc=Math.min(.3,MP.acc+dt);if(sessionState.paused){MP.acc=0;return}

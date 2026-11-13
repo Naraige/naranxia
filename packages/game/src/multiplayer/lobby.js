@@ -20,7 +20,7 @@ export function mpConnected(){registryHide();MP.conn=true;MP.mine=null;MP.theirs
 
 /* the one line on top during a co-op game: what is happening and what the player has to do. Nothing while the game runs: a short wait
    (under 1.5 s) for the partner's commands is not shown, and the line goes as soon as the game moves again */
-export function mpBanner(now){const nm=MP.pname||'your partner',ws=MP.stall&&!sessionState.paused?(now-(MP.stallAt||now))/1000:0,quiet=(now-(MP.rxAt||now))/1000;
+export function mpBanner(now){const nm=MP.pname||'Player',ws=MP.stall&&!sessionState.paused?(now-(MP.stallAt||now))/1000:0,quiet=(now-(MP.rxAt||now))/1000;
  if(MP.rsy||MP.desync)return 'Co-op: putting both games back in step, a few seconds (nothing to do)';
  if(ws>=1.5&&quiet>=6)return 'Co-op: no answer from '+nm+' for '+Math.round(quiet)+' s, the game goes on when the connection is back';
  if(ws>=1.5)return 'Co-op: waiting for '+nm+', '+Math.round(ws)+' s (slow connection or computer)';
