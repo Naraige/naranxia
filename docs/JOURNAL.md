@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-13 · v94
+
+- Released as the batch the King asked for after playing v93 in co-op (his list: guest buildings on player 1's site, zombies lost in water so the wave never ends, unclear sync message) plus "continue de tout tester / améliorer" and "oui fait tout".
+- In: wave-end fix (#27), co-op determinism lot (resync and load restore every state the simulation reads, #5 fixed, #28 sync line, guest keeps player 2 after the partner leaves), keys F6/F7/F9/F3 and camera on physical keys (ZQSD on AZERTY), minimap framed on the explored area, QA fixes of v93 (banners vs event bar, top bar), CLAUDE.md update.
+- Verified: CI quick suite green on 683ae79 (26 tests, mp_build, waves, ui, save with sameCont true included); det references: 1st of 8 hashes unchanged, 7 changed by the wave routing fix (see the wave-end entry).
+- Not reproduced: #26 (guest placement on 2 connected machines), #3, #4; only the "alone after partner left" fault was found and fixed. Ask for an F8 report from the guest if it happens again.
+- Not verified: a real AZERTY keyboard, F3/F6/F7/F9 in the Electron launcher, a real internet link between two machines, later waves (bosses, miners) with the new lane rules, real GPU.
+- Open for the King: wave safety net delays (32 s, 80 s), zombies now wade lakes, safety net for miners and bosses, sync line thresholds (1.5 s, 6 s), minimap minimum frame (180 tiles), old keys ' [ ] - now unbound by default.
+
 ## 2026-11-13 · v94 lot "keys and minimap" (hd-menu-ux worktree, not merged, not released)
 
 - King: "oui fait tout". Nothing under `game/` or `announce/`, no push. Interface and input only; nothing in SAVA, the lockstep or the simulation (`det` unaffected by construction).
