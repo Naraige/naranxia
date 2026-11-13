@@ -27,7 +27,8 @@ import { selectionState } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { simulationState } from '../gameplay/simulation.js';
 import { gstBest, sbRec, setUpdateHandler, statisticsState, update } from '../gameplay/statistics.js';
-import { SW } from '../gameplay/swarm.js';
+import { SW, swarmState, SWD } from '../gameplay/swarm.js';
+import { laneFieldQ, LFLD } from '../ai/zombie-lanes.js';
 import { callWave, restT, setCallWaveHandler, wave, wavesState } from '../gameplay/waves.js';
 import { _N, mpExec, mpPush, questSwitch, roleAdj, sendConvoy, setMpExecHandler } from '../multiplayer/commands.js';
 import { convoyLinked, convoyStep, setConvoyStepHandler } from '../multiplayer/convoys.js';
@@ -79,7 +80,7 @@ import {
   setConfirmPickHandler,
   sitePickerState,
 } from '../ui/site-picker.js';
-import { gOK } from '../world/routes.js';
+import { FD, gOK } from '../world/routes.js';
 import {
   HT,
   occ,
@@ -94,7 +95,7 @@ import {
   terrainState,
   TFL,
 } from '../world/terrain.js';
-import { bfsW, freeTile } from '../world/traversal.js';
+import { bfsW, canStep, canStepZ, freeTile, fv, solid } from '../world/traversal.js';
 
 // Browser automation and the in-repo preview tools evaluate these names in the page.
 // Gameplay code uses imports and never reads through this console interface.
@@ -186,6 +187,7 @@ export function installBrowserConsole() {
     forester: { get: () => forester },
     formType: { get: () => constructionState.formType, set: value => { constructionState.formType = value; } },
     bfsW: { get: () => bfsW },
+    swDbg: { get: () => ({ FD, swarmState, SWD, laneFieldQ, LFLD, fv, canStep, canStepZ, solid, wavesState }) },
     freeTile: { get: () => freeTile },
     gOK: { get: () => gOK },
     gstBest: { get: () => gstBest },

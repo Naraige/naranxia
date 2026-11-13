@@ -4,7 +4,7 @@ import { hyp, rnd } from '../core/math.js';
 import { ach } from './achievements.js';
 import { target } from './combat.js';
 import { ALERTS, economyState } from './economy.js';
-import { LC, nearC, playersState } from './players.js';
+import { aliveC, LC, playersState } from './players.js';
 import { H, RS2, T, TH, TS, TW, W } from './rules.js';
 import { sessionState } from './session.js';
 import { blood, puff } from '../rendering/effects.js';
@@ -31,7 +31,12 @@ const SWSP = 31;
 
 export const SW={n:0,acc:0,step:0,fxN:0,gacc:[0,0],q:[],
  x:new Float32Array(SWMAX),y:new Float32Array(SWMAX),px:new Float32Array(SWMAX),py:new Float32Array(SWMAX),hp:new Float32Array(SWMAX),cd:new Float32Array(SWMAX),
- ln:new Int8Array(SWMAX),ph:new Uint16Array(SWMAX),ri:new Uint16Array(SWMAX),k:new Uint8Array(SWMAX),ti:new Int32Array(SWMAX),fa:new Float32Array(SWMAX),ta:new Float32Array(SWMAX),mx:new Float32Array(SWMAX),my:new Float32Array(SWMAX),sd:new Uint16Array(SWMAX),id:new Uint32Array(SWMAX),st:new Uint8Array(SWMAX),nid:0};
+ ln:new Int8Array(SWMAX),ph:new Uint16Array(SWMAX),ri:new Uint16Array(SWMAX),k:new Uint8Array(SWMAX),ti:new Int32Array(SWMAX),fa:new Float32Array(SWMAX),ta:new Float32Array(SWMAX),mx:new Float32Array(SWMAX),my:new Float32Array(SWMAX),sd:new Uint16Array(SWMAX),id:new Uint32Array(SWMAX),st:new Uint8Array(SWMAX),sa:new Int32Array(SWMAX),sk:new Uint8Array(SWMAX),nid:0};
+/* a zombie that cannot go on: every SWCK steps (3.2 s) each zombie is looked at; one that bites nothing and has not left the 3x3 tiles around the tile noted in sa
+   counts one more look in sk. At SWGH looks (32 s) it gives up its path and walks straight at the nearest castle over any ground, as the horde already does
+   where a lane has no way through (buildings still stop it, and it bites them): earth works, cliffs and water delay the horde but never keep it out.
+   A zombie that still stands SWRM looks later (80 s more) is taken away without gold or a kill. sa and sk are saved with the swarm. */
+const SWCK=64,SWGH=10,SWRM=25;
 
 export let SWD;
 export let SWH;
@@ -91,31 +96,43 @@ function fv1(S,tx,ty){if(S.list)return fv(S,tx,ty);const lx=tx-S.x0,ly=ty-S.y0;r
 function swSpawn(){for(let qi=SW.q.length-1;qi>=0;qi--){const q=SW.q[qi];let m=Math.min(q.left,Math.ceil(q.rate*SWDT));q.left-=m;
   while(m-->0&&SW.n<SWMAX){let x=0,y=0,ok=false;for(let t=0;t<4&&!ok;t++){x=(q.x+rnd(-5,5))*TS;y=(q.y+rnd(-5,5))*TS;ok=!solidAt(x,y)}if(!ok)continue;
    const i=SW.n++;SW.x[i]=SW.px[i]=x;SW.y[i]=SW.py[i]=y;const ti=((SW.y[i]/TS)|0)*TW+((SW.x[i]/TS)|0);SW.hp[i]=q.hp;SW.cd[i]=Math.random();SW.ln[i]=q.ln;SW.ph[i]=q.ph;SW.ri[i]=q.ph*3;
-   SW.k[i]=Math.random()<.72?0:1;SW.ti[i]=ti;SW.id[i]=++SW.nid;SW.st[i]=0;SW.fa[i]=SW.ta[i]=0;SW.sd[i]=(Math.random()*65536)|0;SWD[ti]++}
+   SW.k[i]=Math.random()<.72?0:1;SW.ti[i]=ti;SW.id[i]=++SW.nid;SW.st[i]=0;SW.sa[i]=ti;SW.sk[i]=0;SW.fa[i]=SW.ta[i]=0;SW.sd[i]=(Math.random()*65536)|0;SWD[ti]++}
   if(q.left<=0)SW.q.splice(qi,1)}}
 
 export function swUpdate(dt){if(!SW.n&&!SW.q.length){if(swarmState.SWARMS.length)swarmState.SWARMS=[];SW.acc=0;return}SW.acc+=dt;let g=0;while(SW.acc>=SWDT&&g++<4){SW.acc-=SWDT;swStep()}if(SW.acc>SWDT)SW.acc=SWDT}
 
-function swStep(){SW.step++;SW.fxN=0;zombieLanesState.lfBud=Math.max(zombieLanesState.lfBud,2);swSpawn();const sX=SW.x,sY=SW.y,sPX=SW.px,sPY=SW.py,sHP=SW.hp,sCD=SW.cd,sLN=SW.ln,sPH=SW.ph,sST=SW.st,sTA=SW.ta,sSD=SW.sd,sK=SW.k,sMX=SW.mx,sMY=SW.my,sTI=SW.ti;const n=SW.n,gs=terrainState.gateSolid;terrainState.gateSolid=true;
+function swStep(){if(!SW.sk||!SW.sa){SW.sk=new Uint8Array(SWMAX);SW.sa=new Int32Array(SWMAX)}SW.step++;SW.fxN=0;zombieLanesState.lfBud=Math.max(zombieLanesState.lfBud,2);swSpawn();const sX=SW.x,sY=SW.y,sPX=SW.px,sPY=SW.py,sHP=SW.hp,sCD=SW.cd,sLN=SW.ln,sPH=SW.ph,sST=SW.st,sTA=SW.ta,sSD=SW.sd,sK=SW.k,sMX=SW.mx,sMY=SW.my,sTI=SW.ti,sSA=SW.sa,sSK=SW.sk,sID=SW.id,stp=SW.step;const n=SW.n,gs=terrainState.gateSolid;terrainState.gateSolid=true;
  /* units the swarm can bite: flag their 3x3 tiles */
  const UM=new Map(),flg=[];for(const u of sessionState.units){if(u.t===1||u.hp<=0||u.gar)continue;const tx=(u.x/TS)|0,ty=(u.y/TS)|0,k=ty*TW+tx;let a=UM.get(k);
   if(!a){UM.set(k,a=[]);for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const q=k+j*TW+i;if(q>=0&&q<TW*TH&&!(UNF[q]&1)){UNF[q]|=1;flg.push(q)}}}a.push(u)}
  const sfl=[];for(const s of sessionState.structs){if(s.t!==0||s.hp<=0||!s.tiles)continue;for(const[a,b]of s.tiles)for(let j=-1;j<=1;j++)for(let q=-1;q<=1;q++){const k=(b+j)*TW+a+q;if(k>=0&&k<TW*TH&&!(UNF[k]&2)){UNF[k]|=2;sfl.push(k)}}}
  const hitS=new Set(),R46=(46*TS)**2,R62=(62*TS)**2,ZA=FD[0]&&FD[0].list?FD[0].list:FD[0]?[FD[0]]:[],ZZ=swarmState.FZ&&swarmState.FZ.list?swarmState.FZ.list:swarmState.FZ?[swarmState.FZ]:[];swLanes();
+ const AC=aliveC(),CS0=sessionState.CS,hasC=(tx,ty)=>{for(const S of ZA)if(S&&fv1(S,tx,ty)<65535)return true;for(const S of ZZ)if(S&&fv1(S,tx,ty)<65535)return true;return false};
  for(let i=0;i<n;i++){const x=sX[i],y=sY[i],o=sSD[i];sPX[i]=x;sPY[i]=y;if(sHP[i]<=0)continue;sCD[i]-=SWDT;
   const tx=(x/TS)|0,ty=(y/TS)|0,ti=ty*TW+tx,fl=UNF[ti];
+  if(((stp+sID[i])&(SWCK-1))===0){const s0=sST[i],a=sSA[i];let k=sSK[i];
+   if(s0===1||s0===7||Math.abs(a%TW-tx)>1||Math.abs(((a/TW)|0)-ty)>1){sSA[i]=ti;k=k<SWGH?0:SWGH}else if(k<255)k++;
+   sSK[i]=k;if(k>=SWGH+SWRM){sHP[i]=0;sST[i]=9;continue}}
+  const gho=sSK[i]>=SWGH;
   if(fl&1){let bu=null,bd=1e9;for(let j=-1;j<=1;j++)for(let q=-1;q<=1;q++){const a=UM.get(ti+j*TW+q);if(!a)continue;for(const u of a){const d=hyp(u.x-x,u.y-y)-T[u.type].r;if(d<bd){bd=d;bu=u}}}
    if(bu&&bd<=18){sST[i]=1;sTA[i]=Math.atan2(bu.x-x,bu.y-y);if(sCD[i]<=0){sCD[i]=.9+(sSD[i]&7)*.06;bu.swh=(bu.swh||0)+1;hitS.add(bu)}continue}}
   if(fl&2){let bs=null;for(const[dx,dy]of D9N){const s=occ.get(ti+dy*TW+dx);if(s&&s.t===0&&s.hp>0){bs=s;break}}
    if(bs){sST[i]=7;sTA[i]=Math.atan2(bs.x-x,bs.y-y);if(sCD[i]<=0){sCD[i]=.9+(o&7)*.06;bs.swh=(bs.swh||0)+1;hitS.add(bs)}continue}}
   const L=sLN[i],C=LCA[L]||LC(L),dcx=C.x-x,dcy=C.y-y,dc2=dcx*dcx+dcy*dcy;
   let gx=0,gy=0,has=false,dir=-2,ph=false;
-  if(dc2<=R46)sPH[i]=65535;if(dc2>R46&&sPH[i]!==65535){const Wp=terrainState.ROUTES[L].wps,WX=LWX[L],WY=LWY[L],WL=WX.length;let p=sPH[i];while(p<WL&&Math.abs(WX[p]-x)<TS2&&Math.abs(WY[p]-y)<TS2)p++;
-   if(p<Wp.length){let S=laneFieldQ(L,(p/LSEG)|0),v=S?fv1(S,tx,ty):65535;if(S&&v<=3&&S.tg+1>p){p=Math.min(Wp.length,S.tg+1);if(p<Wp.length){S=laneFieldQ(L,(p/LSEG)|0);v=S?fv1(S,tx,ty):65535}}sPH[i]=p;
-    if(p<Wp.length){sST[i]=2;if(S&&v<65535){dir=swPick(S,tx,ty,false,o);if(dir===-1){const g=Wp[S.tg];gx=g[0]*TS;gy=g[1]*TS;has=true}}else{ph=true;sST[i]=3;const g=Wp[p];gx=g[0]*TS;gy=g[1]*TS;has=true}}}}
-  if(dir===-2&&!has){let bs=null,bv=65535;for(const S of ZA){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}
-   if(bs){dir=swPick(bs,tx,ty,false,o);sST[i]=4}else{for(const S of ZZ){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}if(bs){dir=swPick(bs,tx,ty,true,o);sST[i]=5}}
-   if(dir<0){const hc=nearC(x,y);gx=hc.x;gy=hc.y;has=true;if(!bs)sST[i]=6}}
+  /* the lane is left for the castle's own path fields 46 tiles from the castle, but only from a tile these fields reach: across a river or below a closed ledge the lane goes on */
+  if(sPH[i]!==65535&&(gho||(dc2<=R46&&hasC(tx,ty))))sPH[i]=65535;
+  if(sPH[i]!==65535){const Wp=terrainState.ROUTES[L].wps,WX=LWX[L],WY=LWY[L],WL=WX.length;let p=sPH[i];while(p<WL&&Math.abs(WX[p]-x)<TS2&&Math.abs(WY[p]-y)<TS2)p++;
+   if(p<Wp.length){let S=laneFieldQ(L,(p/LSEG)|0),v=S?fv1(S,tx,ty):65535;if(S&&v<=3&&S.tg+1>p){p=Math.min(Wp.length,S.tg+1);if(p<Wp.length){S=laneFieldQ(L,(p/LSEG)|0);v=S?fv1(S,tx,ty):65535}}
+    /* the way points left in this stretch lie in rock or water (its field ends behind this zombie): over land to the castle when its fields reach this tile, else on to the next stretch */
+    else if(S&&v<=3){if(hasC(tx,ty))p=65535;else{p=Math.min(Wp.length,(((p/LSEG)|0)+1)*LSEG);if(p<Wp.length){S=laneFieldQ(L,(p/LSEG)|0);v=S?fv1(S,tx,ty):65535}}}
+    sPH[i]=p;
+    if(p<Wp.length){sST[i]=2;if(S&&v<65535){dir=swPick(S,tx,ty,false,o);if(dir===-1){const g=Wp[S.tg];gx=g[0]*TS;gy=g[1]*TS;has=true}}else{ph=true;sST[i]=3;const g=Wp[p];gx=g[0]*TS;gy=g[1]*TS;has=true}}}
+   else sPH[i]=p}
+  if(dir===-2&&!has){let bs=null,bv=65535;if(!gho)for(const S of ZA){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}
+   if(bs){dir=swPick(bs,tx,ty,false,o);sST[i]=4}else if(!gho){for(const S of ZZ){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}if(bs){dir=swPick(bs,tx,ty,true,o);sST[i]=5}}
+   /* no path: straight at the nearest castle; from a tile of water, rock or wood (reached where a lane had no way through), or once it has given up (gho), over any ground */
+   if(dir<0){let hc=CS0,hd=1e12;for(const c of AC){const d=(c.x-x)*(c.x-x)+(c.y-y)*(c.y-y);if(d<hd){hd=d;hc=c}}gx=hc.x;gy=hc.y;has=true;if(!bs){sST[i]=6;if(gho||ter[ti]>0)ph=true}}}
   if(dir>=0){gx=(tx+DX8[dir]+.5)*TS+SWJ[o&255];gy=(ty+DY8[dir]+.5)*TS+SWJ[(o>>8)&255]}
   let vx=gx-x,vy=gy-y;const l=hyp(vx,vy);if(l>.5){vx/=l;vy/=l}else{vx=0;vy=0}
   const D0=SWD[ti];let jam=1;if(D0>1&&tx>0&&ty>0&&tx<TW-1&&ty<TH-1){const h0=HT[ti];let dl=D0,dr=D0,du=D0,dd=D0,q=ti-1;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dl=SWD[q];q=ti+1;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dr=SWD[q];q=ti-TW;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))du=SWD[q];q=ti+TW;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dd=SWD[q];
@@ -143,8 +160,8 @@ function swStep(){SW.step++;SW.fxN=0;zombieLanesState.lfBud=Math.max(zombieLanes
  terrainState.gateSolid=gs;swCompact();swCells();if(SW.step%10===0||!SW.n)swRear()}
 
 function swCompact(){const n=SW.n;let w=0,dead=0;
- for(let i=0;i<n;i++){if(SW.hp[i]>0){if(w!==i){SW.x[w]=SW.x[i];SW.y[w]=SW.y[i];SW.px[w]=SW.px[i];SW.py[w]=SW.py[i];SW.hp[w]=SW.hp[i];SW.cd[w]=SW.cd[i];SW.ln[w]=SW.ln[i];SW.ph[w]=SW.ph[i];SW.ri[w]=SW.ri[i];SW.k[w]=SW.k[i];SW.ti[w]=SW.ti[i];SW.fa[w]=SW.fa[i];SW.ta[w]=SW.ta[i];SW.mx[w]=SW.mx[i];SW.my[w]=SW.my[i];SW.sd[w]=SW.sd[i];SW.id[w]=SW.id[i];SW.st[w]=SW.st[i]}w++;continue}
-  dead++;SWD[SW.ti[i]]--;SW.gacc[sessionState.SITE2&&SW.ln[i]>=3?1:0]+=.06;
+ for(let i=0;i<n;i++){if(SW.hp[i]>0){if(w!==i){SW.x[w]=SW.x[i];SW.y[w]=SW.y[i];SW.px[w]=SW.px[i];SW.py[w]=SW.py[i];SW.hp[w]=SW.hp[i];SW.cd[w]=SW.cd[i];SW.ln[w]=SW.ln[i];SW.ph[w]=SW.ph[i];SW.ri[w]=SW.ri[i];SW.k[w]=SW.k[i];SW.ti[w]=SW.ti[i];SW.fa[w]=SW.fa[i];SW.ta[w]=SW.ta[i];SW.mx[w]=SW.mx[i];SW.my[w]=SW.my[i];SW.sd[w]=SW.sd[i];SW.id[w]=SW.id[i];SW.st[w]=SW.st[i];SW.sa[w]=SW.sa[i];SW.sk[w]=SW.sk[i]}w++;continue}
+  SWD[SW.ti[i]]--;if(SW.st[i]===9)continue;dead++;SW.gacc[sessionState.SITE2&&SW.ln[i]>=3?1:0]+=.06;
   if(SW.fxN<44){SW.fxN++;const x=SW.x[i],y=SW.y[i];puff(x,y,'#efefef',3,26,{T:.6,z:.3,vz:1.3,g:-.6,s:.1});if(SW.fxN<20)puff(x,y,'#b8f040',1,20,{T:1,z:.3,vz:2.2,g:3.4,s:.07})}}
  SW.n=w;
  if(dead){const k0=sessionState.kills;sessionState.kills+=dead;if(k0<1)ach('k1');if(k0<100&&sessionState.kills>=100)ach('k100');if(k0<500&&sessionState.kills>=500)ach('k500');snd('die',SW.x[0]||0,SW.y[0]||0)}

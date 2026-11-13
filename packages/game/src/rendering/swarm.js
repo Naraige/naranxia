@@ -14,7 +14,7 @@ import { gh } from './terrain.js';
 import { THREE } from './three.js';
 import { angd, UNITK } from './unit-animation.js';
 import { _uFr, GLTOON } from './unit-instances.js';
-import { HT } from '../world/terrain.js';
+import { HT, ter, WLV } from '../world/terrain.js';
 
 export const swarmRenderingState = {
   ZEYN: 0,
@@ -88,7 +88,7 @@ export function swRender(dt){if(!SWR.meshes)swInitR();const M=SWR.meshes,cnt=SWR
    {const X=x1/TS,Y=HT[SW.ti[i]]+.5,Z=y1/TS;let out=false;for(let q=0;q<6;q++)if(Fa[q]*X+Fb[q]*Y+Fc[q]*Z+Fd[q]<0){out=true;break}if(out)continue}
    if(!fowVisAt(x1,y1)){if(nightK>.25&&ng<500){ng++;let ta=SW.ta[i];if(ta!==ta)ta=Math.atan2(SW.mx[i],SW.my[i]);swEyes(i,x1/TS,y1/TS,gh(x1/TS,y1/TS),ta,Math.min(1,nightK*1.3))}continue}const kd=SW.k[i],vi=swVar(SW.sd[i]),j=cnt[vi];if(j>=SWR.cap)continue;
    const x=SW.px[i]+(x1-SW.px[i])*al,y=SW.py[i]+(y1-SW.py[i])*al;let fa=SW.fa[i],ta=SW.ta[i];if(ta!==ta)ta=Math.atan2(SW.mx[i],SW.my[i]);fa+=angd(fa,ta)*k;SW.fa[i]=fa;
-   const sd=SW.sd[i],D=SWD[SW.ti[i]];let h=gh(x/TS,y/TS);if(D>3)h+=((sd>>4)&15)/15*Math.min(1.5,(D-3)*.045);
+   const sd=SW.sd[i],D=SWD[SW.ti[i]];let h=gh(x/TS,y/TS);if(h<WLV-.75&&ter[SW.ti[i]]===1)h=WLV-.75;if(D>3)h+=((sd>>4)&15)/15*Math.min(1.5,(D-3)*.045);
    const m=M[vi],P=m.pos,A=m.anim;P[j*4]=x/TS;P[j*4+1]=h;P[j*4+2]=y/TS;P[j*4+3]=fa;if(nightK>.25&&ng<500){const ea=darkA(x/TS,y/TS);if(ea>.03){ng++;swEyes(i,x/TS,y/TS,h,fa,ea)}}A[j*3]=(sd&1023)*.00614;A[j*3+1]=(kd?1.12:.98)*(.92+((sd>>10)&7)*.024)*UNITK;A[j*3+2]=(5.4+((sd>>6)&7)*.3)*1.25; cnt[vi]=j+1}}
  for(let q=0;q<M.length;q++){const m=M[q],c=cnt[q];m.geo.instanceCount=c;m.mesh.visible=c>0;if(c){m.ip.updateRange.offset=0;m.ip.updateRange.count=c*4;m.ip.needsUpdate=true;m.ia.updateRange.offset=0;m.ia.updateRange.count=c*3;m.ia.needsUpdate=true}}}
 
