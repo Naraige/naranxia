@@ -1,49 +1,27 @@
 import { fb, hs, hyp } from '../core/math.js';
 import { N, TH, TS, TW } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
-import { markP, markT } from '../rendering/terrain.js';
+import { markP, markT } from './terrain-invalidation.js';
 import { cvs } from '../ui/canvases.js';
 import { mmChunk, mmTile } from './minimap.js';
-import { GF } from './pathfinding.js';
+import { GF } from './pathfinding-state.js';
+import { setTerrainRectPreparer } from './chunk-provider.js';
 import { carveRamps, D4, D8, fixAccess, mkRoutes, RAMPT, tryRamp } from './routes.js';
-import { canStep } from './traversal.js';
+import { canStep } from './traversal-rules.js';
+import {
+  CAMPS, CH, FLG, HT, LAND, BED, WLV, ROCKH,
+  NCX, NCY, occ, stairs, ter, amt, pth, genF, TFL, mg,
+  RAWD, smDone, SEALD, RUINS, terrainState,
+  setTerrainGridState, setTerrainCacheState,
+} from './terrain-state.js';
 
-export const terrainState = {
-  CX: undefined,
-  CY: undefined,
-  GORD: [],
-  GI: 0,
-  genN: 0,
-  SEED: 0,
-  GPR: {},
-  ROUTES: [],
-  RCH: new Map(),
-  gateSolid: true,
-  FP: null,
-};
+export {
+  terrainState, CH, NCX, NCY, LAND, BED, WLV, ROCKH, SNOW,
+  HT, ter, amt, pth, FLG, genF, occ, stairs, CAMPS, RUINS, TFL,
+  mc, mg, RAWD, smDone, SEALD,
+} from './terrain-state.js';
 
 /* ================= WORLD (lazy chunks) ================= */
-export const CH = 32;
-export let NCX;
-export let NCY;
-
-export const LAND=12,BED=7,WLV=LAND-.08,ROCKH=LAND+11,SNOW=LAND+21;
-
-export let HT;
-export let ter;
-export let amt;
-export let pth;
-export let FLG;
-export let genF;
-
-export const occ = new Map();
-export const stairs = new Map();
-export const CAMPS = new Map();
-export const RUINS = new Map();
-export let TFL;
-
-export let mc;
-export let mg;
 function mkGord(){const o=[],ccx=terrainState.CX/CH,ccy=terrainState.CY/CH;for(let j=0;j<NCY;j++)for(let i=0;i<NCX;i++)o.push([Math.min(hyp(i+.5-ccx,j+.5-ccy),sessionState.SITE2?hyp(i+.5-sessionState.SITE2.tx/CH,j+.5-sessionState.SITE2.ty/CH):1e9),j*NCX+i]);o.sort((a,b)=>a[0]-b[0]);terrainState.GORD=o.map(a=>a[1])}
 
 export function bgGen(ms){const t0=performance.now();while(terrainState.GI<terrainState.GORD.length&&performance.now()-t0<ms){const k=terrainState.GORD[terrainState.GI++];if(!genF[k])genChunk(k%NCX,(k/NCX)|0)}}
@@ -54,13 +32,10 @@ function mkRuin(cx,cy,k){const dc=Math.max(Math.abs(cx*CH+16-terrainState.CX),Ma
   let ok=true;for(let dy=-1;dy<=1&&ok;dy++)for(let dx=-1;dx<=1;dx++){const j=i+dy*TW+dx;if(ter[j]!==0||FLG[j]||stairs.has(j)||HT[j]!==HT[i]){ok=false;break}}if(!ok)continue;
   RUINS.set(k,{x:(x+.5)*TS,y:(y+.5)*TS,tx:x,ty:y,h:HT[i],d:Math.round(dc),done:false,cx,cy,v:(hs(cx,cy,terrainState.SEED+173)*3)|0});return}}
 
-function mkCamp(cx,cy,k){return;const dc=Math.max(Math.abs(cx*CH+16-terrainState.CX),Math.abs(cy*CH+16-terrainState.CY));if(dc<70||hs(cx,cy,terrainState.SEED+77)>.42)return;
- for(let t=0;t<12;t++){const x=cx*CH+3+((hs(cx,cy,terrainState.SEED+78+t)*(CH-6))|0),y=cy*CH+3+((hs(cx,cy,terrainState.SEED+90+t)*(CH-6))|0),i=y*TW+x;if(ter[i]!==0||FLG[i]||stairs.has(i)||HT[i]<=WLV+1)continue;
-  const n=2+((hs(cx,cy,terrainState.SEED+79)*4)|0)+Math.min(8,((dc-70)/70)|0);CAMPS.set(k,{x:(x+.5)*TS,y:(y+.5)*TS,n,act:false,us:[],cx,cy});return}}
 
 export let _bwat=false;
 
-export function baseHW(x,y){const sd=terrainState.SEED,P=terrainState.GPR,wx=x+(fb(x*.011,y*.011,sd+700)-.5)*34,wy=y+(fb(x*.011,y*.011,sd+710)-.5)*34,e=fb(wx*.035,wy*.035,sd),mm=fb(wx*P.fq,wy*P.fq,sd+400),r=1-Math.abs(fb(wx*.02,wy*.02,sd+300)*2-1),dt=fb(x*.2,y*.2,sd+500),bn=fb(x*.02,y*.02,sd+20);
+export function baseHW(x,y){const sd=terrainState.SEED,P=terrainState.GPR,wx=x+(fb(x*.011,y*.011,sd+700)-.5)*34,wy=y+(fb(x*.011,y*.011,sd+710)-.5)*34,mm=fb(wx*P.fq,wy*P.fq,sd+400),r=1-Math.abs(fb(wx*.02,wy*.02,sd+300)*2-1),dt=fb(x*.2,y*.2,sd+500),bn=fb(x*.02,y*.02,sd+20);
   const up=Math.max(0,mm-P.mt),u=Math.min(1.25,up/.22),E=Math.max(0,u*Math.sqrt(Math.sqrt(u))*P.am*17+Math.max(0,r-P.rg)*P.am*55+(dt-.5)*2*Math.min(1,u*3));
   const h=LAND+(bn<.36?-1:bn>.64?1:0)+(E<4?Math.round(E):4+2*Math.round((E-4)/2));
   const lk=fb(x*.0042,y*.0042,sd+1300),rv1=Math.abs(fb(x*.0065,y*.0065,sd+900)-.5),rv2=Math.abs(fb(x*.011,y*.011,sd+950)-.5),rw=.012+P.rv*.5;
@@ -78,10 +53,8 @@ function CSITEH(x,y){const k=terrainState.SEED+':'+x+':'+y;let v=CSITEHC.get(k);
 let RAWH;
 let RAWF;
 let RAWL;
-export let RAWD;
 let SMH;
 let SMF;
-export let smDone;
 const FT = 56;
 
 function rawAt(x,y){const i=y*TW+x;if(RAWD[i])return i;RAWD[i]=1;
@@ -151,7 +124,6 @@ function tfFlat(x0,y0,x1,y1){const wx0=Math.max(0,x0-FT),wy0=Math.max(0,y0-FT),w
   if(!(f&19)&&h<ROCKH){const id0=lab[(y-wy0)*ww+x-wx0];if(id0&&!big(id0)){const t=target(id0);if(t>=0)h=Math.min(t,RAWL[i])}}
   HT[i]=h;ter[i]=f&16?1:h>=ROCKH?5:0;FLG[i]=f&15;pth[i]=0;amt[i]=0}}
 
-export let SEALD;
 
 function sealAround(cx,cy){for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const x=cx+i,y=cy+j;if(x<0||y<0||x>=NCX||y>=NCY)continue;const k=y*NCX+x;if(SEALD[k]||!genF[k])continue;let all=true;
   for(let b=-1;b<=1&&all;b++)for(let a=-1;a<=1;a++){const xx=x+a,yy=y+b;if(xx>=0&&yy>=0&&xx<NCX&&yy<NCY&&!genF[yy*NCX+xx]){all=false;break}}if(all){SEALD[k]=1;seal(x,y);seal(x,y)}}}
@@ -216,7 +188,7 @@ export function genChunk(cx,cy){if(cx<0||cy<0||cx>=NCX||cy>=NCY)return;const k=c
   if(al>=4&&hs(x,y,sd+16)<.004*P.gd){ter[i]=4;amt[i]=40;continue}
   if(al>=3&&hs(x,y,sd+19)<.006+.002*al){ter[i]=3;amt[i]=8}}
  for(const[i,v]of starterTiles()){const x=i%TW,y=(i/TW)|0;if(x<x0||y<y0||x>=x1||y>=y1||ter[i]===1||ter[i]===5)continue;ter[i]=v[0];amt[i]=v[1]}
- carveRamps(cx,cy);fixAccess(cx,cy);mkCamp(cx,cy,k);mkRuin(cx,cy,k);mmChunk(cx,cy);sealAround(cx,cy)}
+ carveRamps(cx,cy);fixAccess(cx,cy);mkRuin(cx,cy,k);mmChunk(cx,cy);sealAround(cx,cy)}
 
 export function ensureAround(tx,ty,r){const cx=(tx/CH)|0,cy=(ty/CH)|0;for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++)genChunk(cx+i,cy+j)}
 
@@ -231,26 +203,29 @@ export function setRollWorldHandler(handler) {
 }
 
 export function initializeTerrain() {
-  NCX = Math.ceil(TW/CH);
-  NCY = Math.ceil(TH/CH);
-  HT = new Uint8Array(N);
-  ter = new Uint8Array(N);
-  amt = new Uint8Array(N);
-  pth = new Uint8Array(N);
-  FLG = new Uint8Array(N);
-  genF = new Uint8Array(NCX*NCY);
-  TFL = new Uint8Array(N);
-  mc = cvs(TW,TH);
-  mg = mc.getContext('2d');
+  const ncx = Math.ceil(TW/CH);
+  const ncy = Math.ceil(TH/CH);
+  const height = new Uint8Array(N);
+  const terrain = new Uint8Array(N);
+  const amount = new Uint8Array(N);
+  const paths = new Uint8Array(N);
+  const flags = new Uint8Array(N);
+  const generated = new Uint8Array(ncx*ncy);
+  const terraform = new Uint8Array(N);
+  const canvas = cvs(TW,TH);
+  const context = canvas.getContext('2d');
+  setTerrainGridState(ncx,ncy,height,terrain,amount,paths,flags,generated,terraform,canvas,context);
   terrainState.CX = TW>>1;
   terrainState.CY = TH>>1;
   mkGord();
   RAWH = new Uint8Array(N);
   RAWF = new Uint8Array(N);
   RAWL = new Uint8Array(N);
-  RAWD = new Uint8Array(N);
+  const raw = new Uint8Array(N);
   SMH = new Uint8Array(N);
   SMF = new Uint8Array(N);
-  smDone = new Uint8Array(NCX*NCY);
-  SEALD = new Uint8Array(NCX*NCY);
+  const done = new Uint8Array(ncx*ncy);
+  const sealed = new Uint8Array(ncx*ncy);
+  setTerrainCacheState(raw,done,sealed);
+  setTerrainRectPreparer(ensureRect);
 }

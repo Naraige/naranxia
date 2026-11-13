@@ -1,18 +1,14 @@
-import { mus, musBench, musTick } from './music.js';
+import { mus, musBench, musTick, setMusicAudioState } from './music.js';
 import { hyp } from '../core/math.js';
 import { REALR } from '../core/random.js';
 import { TS } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
-import { languageState } from '../i18n/language.js';
+import { languageState } from '../i18n/language-state.js';
 import { dayK } from '../rendering/lighting.js';
 import { CAM } from '../rendering/scene.js';
 import { seasonIdx, WX } from '../rendering/weather.js';
-import { convoyPanelState } from '../ui/convoy-panel.js';
 import { hudDisplayState } from '../ui/hud-state.js';
-import { modeState } from '../ui/mode-select.js';
-import { saveMenuState } from '../ui/save-menu.js';
-import { settingsState } from '../ui/settings.js';
-import { troopPanelState } from '../ui/troop-panel.js';
+import { convoyPanelState, modeState, saveMenuState, settingsState, troopPanelState } from '../ui/panel-state.js';
 
 /* slider positions 0..1 (Settings > Display & sound), saved in dk_vol. The gain is the square of the position (a slider that feels even). */
 export const soundState = {
@@ -25,7 +21,7 @@ const MUSK=1.7,SFXK=.85,TRIM=.45,FADE=1.6;
 /* every random draw of the audio code: the real generator, never the seeded one of the simulation */
 const R=()=>(REALR||Math.random)(),ri=n=>(R()*n)|0;
 
-export function saveVol(){try{localStorage.setItem('dk_vol',JSON.stringify({m:soundState.vM,s:soundState.vS}))}catch(e){}}
+export function saveVol(){try{localStorage.setItem('dk_vol',JSON.stringify({m:soundState.vM,s:soundState.vS}))}catch { /* Keep the current volume for this session when storage is unavailable. */ }}
 
 const musG=()=>soundState.vM*soundState.vM*MUSK,sfxG=()=>soundState.vS*soundState.vS*SFXK;
 export function applyVol(){if(!AC)return;const t=AC.currentTime;MB.gain.setTargetAtTime(musG(),t,.03);SB.gain.setTargetAtTime(sfxG(),t,.03)}
@@ -47,7 +43,7 @@ export let sndOn = true;
 export let nbuf = null;
 let lastS = {};
 let lastP = {};
-let lastA = {};
+const lastA = {};
 let VO = [];
 let bud = 0;
 let budT = 0;
@@ -55,6 +51,15 @@ let WIND = null;
 let woke = false;
 /* offline measurement: BENCH on, BT = time of the sound being scheduled */
 export let BENCH = false;
+
+const musicAudioState = {
+  get AC() { return AC },
+  get BENCH() { return BENCH },
+  get MB() { return MB },
+  get nbuf() { return nbuf },
+  get sndOn() { return sndOn },
+  audioWake,
+};
 let BT = 0;
 /* per-sound variation, set by snd(): pitch factor, name */
 let PV = 1;
@@ -84,9 +89,9 @@ export function audioWake(){if(woke||!AC||AC.state!=='running')return;woke=true;
 
 export function aInit(){if(AC){if(AC.state==='suspended')AC.resume();return}try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;AC=new A();graph();
  AC.onstatechange=audioWake;const res=()=>{if(AC&&AC.state==='suspended')AC.resume().catch(()=>{})};setInterval(res,400);['pointerdown','keydown','touchstart','touchend','click'].forEach(ev=>addEventListener(ev,res,{passive:true}));
- setInterval(ambTick,900);setInterval(musTick,50);setInterval(uiWatch,90)}catch(e){AC=null}}
+ setInterval(ambTick,900);setInterval(musTick,50);setInterval(uiWatch,90)}catch {AC=null}}
 
-export function toggleSound(){sndOn=!sndOn;try{localStorage.setItem('dk_snd',sndOn?'1':'0')}catch(e){}aInit();if(MG){const t=AC.currentTime;woke=woke||AC.state==='running';MG.gain.cancelScheduledValues(t);MG.gain.setTargetAtTime(sndOn?1:0,t,sndOn?.25:.05);if(sndOn){MF.gain.cancelScheduledValues(t);MF.gain.setValueAtTime(0,t);MF.gain.linearRampToValueAtTime(1,t+FADE);mus.next=t+.2}}
+export function toggleSound(){sndOn=!sndOn;try{localStorage.setItem('dk_snd',sndOn?'1':'0')}catch { /* The mute toggle still applies for this session if storage is unavailable. */ }aInit();if(MG){const t=AC.currentTime;woke=woke||AC.state==='running';MG.gain.cancelScheduledValues(t);MG.gain.setTargetAtTime(sndOn?1:0,t,sndOn?.25:.05);if(sndOn){MF.gain.cancelScheduledValues(t);MF.gain.setValueAtTime(0,t);MF.gain.linearRampToValueAtTime(1,t+FADE);mus.next=t+.2}}
  hudDisplayState.msgS='Sound '+(sndOn?'on':'off');hudDisplayState.msgT=1.5}
 
 /* ---- synthesis kit (PV: pitch variation of the sound being played) ---- */
@@ -194,7 +199,7 @@ export let snd = function snd(n,x,y){if(!AC||!sndOn||!SFX[n])return;if(!BENCH){i
  /* pitch: random within the range of the sound, pushed away from the last one played */
  {const r=M[3];let p=(R()*2-1)*r;const l=lastP[n]||0;if(r&&Math.abs(p-l)<r*.3)p=(l>0?-1:1)*r*(.35+R()*.65);lastP[n]=p;PV=1+p}
  CUR=n;const g=AC.createGain();g.gain.value=v;const dst=c<2?UIB:FXB;if(pan&&AC.createStereoPanner){const p=AC.createStereoPanner();p.pan.value=pan;g.connect(p);p.connect(dst)}else g.connect(dst);
- if(c===1)duck(M[2]);OUT=g;try{SFX[n]()}catch(e){ERRN++}OUT=FXB;PV=1;return g};
+ if(c===1)duck(M[2]);OUT=g;try{SFX[n]()}catch {ERRN++}OUT=FXB;PV=1;return g};
 
 /* ambience: wind always, birds by day, crickets / owls / distant wolves by night */
 function ambTick(){if(!AC||!sndOn||BENCH||AC.state!=='running')return;OUT=FXB;PV=1;const on=sessionState.started&&!sessionState.paused;if(WIND)WIND.forEach((g,i)=>g.gain.setTargetAtTime(on?(i?.016:.045)*(1.2-dayK*.4):.02,AC.currentTime,1.2));if(!on)return;
@@ -206,7 +211,7 @@ function ambTick(){if(!AC||!sndOn||BENCH||AC.state!=='running')return;OUT=FXB;PV
 
 /* windows opening and closing: read from the menu flags (never written here), so the menus need no sound code of their own */
 let UW0=-1;
-function uiWatch(){if(BENCH)return;let n=0;try{for(const x of[settingsState.settingsOpen,settingsState.setupOpen,languageState.langOpen,saveMenuState.saveOpen,modeState.open,troopPanelState.troopsOpen,convoyPanelState.convoyOpen,sessionState.showMap])if(x)n++}catch(e){return}
+function uiWatch(){if(BENCH)return;let n=0;try{for(const x of[settingsState.settingsOpen,settingsState.setupOpen,languageState.langOpen,saveMenuState.saveOpen,modeState.open,troopPanelState.troopsOpen,convoyPanelState.convoyOpen,sessionState.showMap])if(x)n++}catch {return}
  if(UW0>=0&&n!==UW0)snd(n>UW0?'open':'close');UW0=n}
 
 export function setSndHandler(handler) {
@@ -227,10 +232,11 @@ export async function audioBench(sc,sec){const keep=[AC,MG,SB,MB,MF,FXB,UIB,RV,n
  const db=x=>(20*Math.log10(Math.max(1e-9,x))).toFixed(1);return sc+' '+sec+'s: peak '+db(pk)+' dBFS, RMS '+db(Math.sqrt(ss/n))+', RMS first 3s '+db(Math.sqrt(s3/n3))+', loudest 0.4s RMS '+db(Math.sqrt(mx/wn))}
 
 export function initializeSound() {
+  setMusicAudioState(musicAudioState);
   /* the levels and the slider curve changed: old saved volumes and an old mute are dropped once */
-  try{if(localStorage.getItem('dk_aud')!=='2'){localStorage.removeItem('dk_vol');localStorage.removeItem('dk_snd');localStorage.setItem('dk_aud','2')}}catch(e){}
-  try{const v=JSON.parse(localStorage.getItem('dk_vol')||'{}');if(typeof v.m==='number')soundState.vM=Math.max(0,Math.min(1,v.m));if(typeof v.s==='number')soundState.vS=Math.max(0,Math.min(1,v.s))}catch(e){}
+  try{if(localStorage.getItem('dk_aud')!=='2'){localStorage.removeItem('dk_vol');localStorage.removeItem('dk_snd');localStorage.setItem('dk_aud','2')}}catch { /* Audio preference migration is best-effort when browser storage is blocked. */ }
+  try{const v=JSON.parse(localStorage.getItem('dk_vol')||'{}');if(typeof v.m==='number')soundState.vM=Math.max(0,Math.min(1,v.m));if(typeof v.s==='number')soundState.vS=Math.max(0,Math.min(1,v.s))}catch { /* Ignore malformed or unavailable volume data and keep the current defaults. */ }
 
-  try{sndOn=localStorage.getItem('dk_snd')!=='0'}catch(e){}
-  try{window.__abench=audioBench;window.__audio={mus,snd:n=>snd(n),names:()=>Object.keys(SFX),state:()=>AC?AC.state:'none',errs:()=>ERRN,resume:()=>AC&&AC.resume()}}catch(e){}
+  try{sndOn=localStorage.getItem('dk_snd')!=='0'}catch { /* If storage is unavailable, keep the default sound-enabled state. */ }
+  try{window.__abench=audioBench;window.__audio={mus,snd:n=>snd(n),names:()=>Object.keys(SFX),state:()=>AC?AC.state:'none',errs:()=>ERRN,resume:()=>AC&&AC.resume()}}catch { /* Debug hooks are optional when the page does not allow window properties. */ }
 }

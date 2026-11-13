@@ -12,14 +12,15 @@ import { pxCannon } from './models/unit-accessories.js';
 import { gearSig } from './models/gear-style.js';
 import { alv, PXON } from './models/units.js';
 import { scene, SHADOWS } from './scene.js';
-import { gh, unitG } from './terrain.js';
+import { gh } from '../world/terrain-queries.js';
+import { unitG } from './terrain.js';
 import { THREE } from './three.js';
 import { buildUnitGroup, CARRYG, uiUMW, UL } from './unit-instances.js';
 
 /* units are drawn at 76% so a man stands about a quarter of a house high (the title screen keeps its own framing) */
 export const UNITK=.76;
 
-const T_C=u=>T.cannon.cdt;
+const T_C=_u=>T.cannon.cdt;
 
 export function cannonG(){if(PXON)return pxCannon();const G=newG(),WD='#5e4026',WL='#7a5532',IR='#9a7438',IR2='#c09048',BR='#2c2e33';
  for(const sx of[-1,1]){const x=sx*.27;bxc(G,x,.02,.36,.07,.4,.16,WD);bxc(G,x,.14,.36,.07,.16,.4,WD);bxc(G,x,.07,.36,.07,.3,.3,WL);bxc(G,x+sx*.04,.17,.36,.05,.1,.1,IR)}
@@ -41,7 +42,7 @@ export function mkUnit(u){const g=buildUnitGroup(u.type==='cannon'?'gunner':u.ty
 export const angd=(a,b)=>{let d=b-a;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;return d};
 
 const ATKT = .35;
-const lerp = (a,b,t)=>a+(b-a)*t;
+
 export const sat = t=>Math.max(0,Math.min(1,t));
 export const easeO = t=>1-(1-t)*(1-t);
 const CHOPC = {t:'#9d7a50',w:'#8b5a2b',s:'#cfd6e2',g:'#ffd23c',f:'#8a6a3a',p:'#6a5a3a'};
@@ -55,7 +56,7 @@ export function animUnit(u,dt,anyDmg,frame){let g=u.m;if(g&&!u.ttl&&(u.mt!==u.t|
  const k=Math.min(1,dt*16),sw=wl?Math.sin(u.ap)*(z?(fast?.95:.55):armored?.65:.85):0,ab=wl?Math.abs(Math.sin(u.ap)):0;
  /* attack / work phases */
  const atk=u.atk>0?1-u.atk/ATKT:-1,work=ty==='peasant'&&(!u.t||u.t===2)&&!wl&&!u.carry&&(u.job==='r'?anyDmg&&!u.o:u.work>0&&!u.o);
- let ar=0,al=0,lean=0,twist=0,lunge=0,headX=0,headY=0,headZ=0,sway=0,wr=0;
+ let ar,al,lean,headX,headZ;let twist=0,lunge=0,headY=0,sway=0,wr=0;
  if(wl){ar=sw*.85;al=-sw*.85;sway=Math.sin(u.ap)*(z?.1:.045);lean=z?.2:fast?.26:heavy?.12:.06;twist=Math.sin(u.ap)*.1;headX=z?.3:.02;headZ=z?Math.sin(u.ap*.5)*.2+.18:0}
  else{ar=Math.sin(T*1.3)*.05;al=-Math.sin(T*1.3)*.05;lean=z?.18:0;headY=Math.sin(T*.6)*.3*(atk<0?1:0);headX=z?.34+Math.sin(T*1.7)*.05:Math.sin(T*.9)*.03;headZ=z?.22:0}
  if(z){ar=-1.45+(wl?Math.sin(u.ap*.9)*.18:Math.sin(T*1.8)*.1);al=-1.35-(wl?Math.sin(u.ap*.9+1)*.18:Math.sin(T*1.6)*.1);const zr=(u.uid*2654435761)>>>0;ar+=((zr&15)/15-.5)*.36;al+=(((zr>>4)&15)/15-.5)*.36;if((zr>>8)%9===0)al=-.28+Math.sin(T*1.6)*.06;else if((zr>>12)%11===0)ar=-.24+Math.sin(T*1.4)*.06;headZ+=(((zr>>16)&15)/15-.5)*.34}

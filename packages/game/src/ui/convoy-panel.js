@@ -8,11 +8,10 @@ import { BTN, BTNH, frame, GRN, GRNH, PAN, TN } from './drawing.js';
 import { hudState, U } from './hud.js';
 import { dIc, IC } from './icons.js';
 import { pill } from './minimap.js';
-import { settingsState } from './settings.js';
+import { convoyPanelState } from './panel-state.js';
+import { settingsState } from './panel-state.js';
 
-export const convoyPanelState = {
-  convoyOpen: false,
-};
+export { convoyPanelState };
 
 /* ---- convoy panel: choose how much of each resource goes to the partner ---- */
 export const CVA={g:0,w:0,s:0,f:0};

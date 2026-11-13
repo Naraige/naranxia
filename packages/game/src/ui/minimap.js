@@ -19,7 +19,7 @@ import { hudDisplayState } from './hud-state.js';
 import { dIc, IC } from './icons.js';
 import { PAL, THEME } from './kingdom-theme.js';
 import { FFP } from './typography.js';
-import { mc, NCX, NCY, RUINS, terrainState } from '../world/terrain.js';
+import { mc, NCX, NCY, RUINS, terrainState } from '../world/terrain-state.js';
 
 export const minimapState = {
   mmT: -9,
@@ -69,7 +69,7 @@ export function mmLook(snap){const V=mmView;V.look=sessionState.clockT;const b=m
  /* nothing of the new frame in the old one (another game): no glide */
  if(snap||!V.ok||V.tx>V.x+V.w||V.tx+V.tw<V.x||V.ty>V.y+V.h||V.ty+V.tw*TH/TW<V.y){V.x=V.tx;V.y=V.ty;V.w=V.tw;V.h=V.w*TH/TW;V.mv=false}V.ok=true}
 /* once per minimap draw: look once a second (not while the player drags on the minimap), glide toward the chosen frame */
-function mmStep(){const V=mmView,t=sessionState.clockT;let dt=t-V.last;V.last=t;if(!V.ok||dt<0||dt>5){mmLook(true);return}
+function mmStep(){const V=mmView,t=sessionState.clockT,dt=t-V.last;V.last=t;if(!V.ok||dt<0||dt>5){mmLook(true);return}
  if((t-V.look>1||t<V.look)&&!hudState.mmDrag)mmLook(false);
  const dx=V.tx-V.x,dy=V.ty-V.y,dw=V.tw-V.w;if(Math.abs(dx)<.2&&Math.abs(dy)<.2&&Math.abs(dw)<.2){V.x=V.tx;V.y=V.ty;V.w=V.tw;V.h=V.w*TH/TW;V.mv=false;return}
  const k=1-Math.exp(-dt*4.5);V.x+=dx*k;V.y+=dy*k;V.w+=dw*k;V.h=V.w*TH/TW;V.mv=true}
@@ -132,7 +132,7 @@ export function drawMapModal(UW,UH){canvasesState.ctx.fillStyle='rgba(5,8,16,.8)
  dIc(IC.map,px+8,py+7,15);TTL('World map',px+26,py+8,1.22);
  let lx=px+pw-8-18-6;const leg=[['Your base',IC.home,null],['Spawn',IC.skull,null],['Next zombie route',null,cb('#ff3b3b','#ffb000')]];
  for(const[t,ic,col]of leg.slice().reverse()){const w=tw(t,.85)+(ic?12:14);lx-=w+8;if(lx<px+40+twH('World map',1.22))break;if(ic)dIc(ic,lx,py+9,10);else{canvasesState.ctx.fillStyle=col;canvasesState.ctx.fillRect(lx,py+13,10,2.4)}T_(t,lx+13,py+10.5,'#ead8ba',.85)}
- uiBtn(px+pw-8-18,py+6,18,18,RDB,RDB,()=>{sessionState.showMap=false},['Close [M]'],(x,y,w,h)=>dIc(IC.close,x+3,y+3,12));
+ uiBtn(px+pw-8-18,py+6,18,18,RDB,RDB,()=>{sessionState.showMap=false},['Close [M]'],(x,y,_w,_h)=>dIc(IC.close,x+3,y+3,12));
  frame(mx-2,my-2,mw+4,mh+4,['#0b0f1a','#1a2236','#070a12'],UIT.rad.small);
  drawWorld(mx,my,mw,mh,true);
  hudState.uiHits.push({...U(mx,my,mw,mh),fn:()=>{CAM.x=Math.max(2,Math.min(TW-2,(inputState.mouse.x-mx*hudDisplayState.UIS)/(mw*hudDisplayState.UIS)*TW));CAM.z=Math.max(2,Math.min(TH-2,(inputState.mouse.y-my*hudDisplayState.UIS)/(mh*hudDisplayState.UIS)*TH));sessionState.showMap=false},tip:null});

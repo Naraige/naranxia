@@ -126,10 +126,10 @@ export function barracksGeo(m){return mdBarracks(true,m)}
 export function woodBarracksGeo(m){return mdBarracks(false,m)}
 
 /* ---- academy: limestone library with arched glowing windows, a portico and a copper roof; its tower becomes a hextech observatory when merged ---- */
-export function academyGeo(m){m=m||0;const G=newG(),{N,E,S,W,sk,nw}=mBits(m),alongX=!((N||S)&&!(E||W)),tw=!m||nw;
+export function academyGeo(m){m=m||0;const G=newG(),{N,E,S,W,nw}=mBits(m),alongX=!((N||S)&&!(E||W)),tw=!m||nw;
  const x0=W?0:.16,x1=E?2:1.84,z0=N?0:.3,z1=S?2:1.66;qPlinth(G,1,0,1,2,2,.16);
  qStone(G,(x0+x1)/2,.2,(z0+z1)/2,x1-x0,z1-z0,1.1);if(!m)qQuoin(G,x0,z0,x1,z1,.2,1.1);qCornice(G,(x0+x1)/2,1.3,(z0+z1)/2,x1-x0+.06,z1-z0+.06,.08);
- const top=alongX?qRoof(G,(x0+x1)/2,(z0+z1)/2,x1-x0,z1-z0,1.38,QCU,true,{ov0:W?0:.1,ov1:E?0:.1,g0:!W,g1:!E,side:(N||S)?0:.08,stone:1,fill:QS[2],fin:1}):qRoof(G,(x0+x1)/2,(z0+z1)/2,z1-z0,x1-x0,1.38,QCU,false,{ov0:N?0:.1,ov1:S?0:.1,g0:!N,g1:!S,side:(E||W)?0:.08,stone:1,fill:QS[2],fin:1});
+ alongX?qRoof(G,(x0+x1)/2,(z0+z1)/2,x1-x0,z1-z0,1.38,QCU,true,{ov0:W?0:.1,ov1:E?0:.1,g0:!W,g1:!E,side:(N||S)?0:.08,stone:1,fill:QS[2],fin:1}):qRoof(G,(x0+x1)/2,(z0+z1)/2,z1-z0,x1-x0,1.38,QCU,false,{ov0:N?0:.1,ov1:S?0:.1,g0:!N,g1:!S,side:(E||W)?0:.08,stone:1,fill:QS[2],fin:1});
  const wins=(n,ax,fixed,a0,a1)=>{for(let a=a0;a<=a1+1e-6;a+=.42){qWin(G,ax?a:fixed,.5,ax?fixed:a,ax,n,{glow:1,w:.18,h:.42})}};
  if(!S){wins(1,true,z1+.016,.36,.6);wins(1,true,z1+.016,1.4,1.64);bS(G,1,.2,z1+.12,.62,.06,.24,QTR);bS(G,1,.26,z1+.08,.52,.06,.16,QTR);
   for(const x of[.74,1.26]){bS(G,x,.32,z1+.14,.1,.9,.1,QTR);bS(G,x,1.2,z1+.14,.14,.06,.14,QTR)}bS(G,1,1.26,z1+.14,.68,.08,.18,QTR);qPyr(G,1,z1+.12,1.34,.72,.24,[QTR,QS[2]],.1,.08);
@@ -173,7 +173,7 @@ export function guildGeo(hm){hm=hm|0;const G=newG();
  if(hm&2)wing(1.31,2,.32,.9,true);if(hm&8)wing(0,.19,.32,.9,true);if(hm&1)wing(.95,1.3,0,.24,false);if(hm&4)wing(.95,1.3,1.26,2,false);qPlinth(G,1,0,1,2,2,.1);bS(G,1,.1,1,1.9,.03,1.9,QS[2]);
  const x0=.15,x1=1.35,z0=.2,z1=1.3,xc=(x0+x1)/2,zc=(z0+z1)/2;qStone(G,xc,.13,zc,x1-x0,z1-z0,.42);qQuoin(G,x0,z0,x1,z1,.13,.42);
  qTimber(G,x0,z0,x1,z1,.55,1.25,{brace:true,fill:'#e8d6b0'});bW(G,xc,1.25,zc,x1-x0+.08,.06,z1-z0+.08,QW2);qTimber(G,x0-.04,z0-.04,x1+.04,z1+.04,1.31,1.86,{fill:'#efe3c6',skip:'N'});
- const rt=qRoof(G,xc,zc,x1-x0+.08,z1-z0+.08,1.86,QSL,true,{rise:.2,run:.15,ov0:.12,ov1:.12,fin:1});
+ qRoof(G,xc,zc,x1-x0+.08,z1-z0+.08,1.86,QSL,true,{rise:.2,run:.15,ov0:.12,ov1:.12,fin:1});
  qDoor(G,.55,z1+.016,true,1,{y:.13,w:.36,h:.62,wood:1,lamp:1});if(!(hm&4))qWin(G,1.08,.36,z1+.016,true,1,{wood:1,shut:1,box:1,w:.18,h:.18});
  qWin(G,.45,1.5,z1+.056,true,1,{wood:1,glow:1});qWin(G,1.05,1.5,z1+.056,true,1,{wood:1,glow:1});qWin(G,x1+.056,1.5,zc,false,1,{wood:1,glow:1});if(!(hm&2))qWin(G,x1+.016,.85,zc,false,1,{wood:1,shut:1});
  /* guild sign: crossed hammer and trowel over the door */

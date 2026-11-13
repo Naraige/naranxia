@@ -18,7 +18,8 @@ import { puff } from '../rendering/effects.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { mmss } from '../ui/minimap.js';
 import { saveGame } from '../ui/save-menu.js';
-import { ensureAround, terrainState } from '../world/terrain.js';
+import { ensureAround } from '../world/terrain.js';
+import { terrainState } from '../world/terrain-state.js';
 import { freeTile, solid, solidAt } from '../world/traversal.js';
 
 export const wavesState = {

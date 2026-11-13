@@ -10,7 +10,7 @@ export function initializeClaudeIntro() {
   if (!box || !boot || boot.classList.contains('skip')) return;
   try {
     anim = lottie.loadAnimation({ container: box, renderer: 'svg', loop: false, autoplay: false, animationData, rendererSettings: { preserveAspectRatio: 'xMidYMid meet' } });
-  } catch (e) { boot.classList.add('nolottie') }
+  } catch { boot.classList.add('nolottie') }
 }
 
 export function playClaudeIntro() {

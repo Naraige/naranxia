@@ -3,17 +3,18 @@ import { fb, hs } from '../core/math.js';
 import { TH, TW } from '../gameplay/rules.js';
 import { MP } from '../multiplayer/session.js';
 import { BK, blocksState } from './blocks.js';
-import { geometryState, newG, quad, shade, toGeo, tri } from './geometry.js';
+import { geometryState, newG, quad, shade, toGeo } from './geometry.js';
 import { matT, matWater } from './materials.js';
 import { CAM, scene, SHADOWS } from './scene.js';
 import { buildProps } from './terrain-props.js';
 import { THREE } from './three.js';
 import { gOK } from '../world/routes.js';
+import { genChunk } from '../world/terrain.js';
+import { markP, markT, setTerrainInvalidationHandlers } from '../world/terrain-invalidation.js';
 import {
   BED,
   CH,
   FLG,
-  genChunk,
   genF,
   HT,
   LAND,
@@ -27,21 +28,22 @@ import {
   terrainState,
   TFL,
   WLV,
-} from '../world/terrain.js';
+} from '../world/terrain-state.js';
 
-export function gh(x,z){const tx=Math.max(0,Math.min(TW-1,x|0)),ty=Math.max(0,Math.min(TH-1,z|0)),i=ty*TW+tx;
- if(stairs.size){const s=stairs.get(i);if(s){const f=s.ax?z-ty:x-tx,t=s.sg>0?f:1-f;return s.lo+(s.hi-s.lo)*Math.max(0,Math.min(1,t))}}return HT[i]}
+export { gh } from '../world/terrain-queries.js';
 
 /* ---- terrain chunk meshes ---- */
 export const unitG=new Map(),CHK=new Map(),dirtyT=new Set(),dirtyP=new Set(),RM=3;
 
 export const keyOf=(cx,cy)=>cy*NCX+cx;
 
-export function markT(tx,ty){const cx=(tx/CH)|0,cy=(ty/CH)|0;dirtyT.add(keyOf(cx,cy));const ex=tx%CH,ey=ty%CH;if(ex===0&&cx>0)dirtyT.add(keyOf(cx-1,cy));if(ex===CH-1&&cx<NCX-1)dirtyT.add(keyOf(cx+1,cy));if(ey===0&&cy>0)dirtyT.add(keyOf(cx,cy-1));if(ey===CH-1&&cy<NCY-1)dirtyT.add(keyOf(cx,cy+1))}
+function markTImpl(tx,ty){const cx=(tx/CH)|0,cy=(ty/CH)|0;dirtyT.add(keyOf(cx,cy));const ex=tx%CH,ey=ty%CH;if(ex===0&&cx>0)dirtyT.add(keyOf(cx-1,cy));if(ex===CH-1&&cx<NCX-1)dirtyT.add(keyOf(cx+1,cy));if(ey===0&&cy>0)dirtyT.add(keyOf(cx,cy-1));if(ey===CH-1&&cy<NCY-1)dirtyT.add(keyOf(cx,cy+1))}
 
 /* block world: canopies reach half a tile into the neighbours, so a prop change next to a chunk border also rebuilds the neighbour */
-export function markP(tx,ty){const cx=(tx/CH)|0,cy=(ty/CH)|0;dirtyP.add(keyOf(cx,cy));if(!blocksState.D)return;const ex=tx%CH,ey=ty%CH,ax=ex===0&&cx>0?-1:ex===CH-1&&cx<NCX-1?1:0,ay=ey===0&&cy>0?-1:ey===CH-1&&cy<NCY-1?1:0;
+function markPImpl(tx,ty){const cx=(tx/CH)|0,cy=(ty/CH)|0;dirtyP.add(keyOf(cx,cy));if(!blocksState.D)return;const ex=tx%CH,ey=ty%CH,ax=ex===0&&cx>0?-1:ex===CH-1&&cx<NCX-1?1:0,ay=ey===0&&cy>0?-1:ey===CH-1&&cy<NCY-1?1:0;
  if(ax)dirtyP.add(keyOf(cx+ax,cy));if(ay)dirtyP.add(keyOf(cx,cy+ay));if(ax&&ay)dirtyP.add(keyOf(cx+ax,cy+ay))}
+
+export { markP, markT };
 
 export const DIRT = [.53,.38,.26];
 export const GRASS = [.37,.6,.25];
@@ -101,7 +103,7 @@ function pathTop(G,i,x,y,h,gc){const st=pth[i]===2,m=.17,H=h+.012;gc=gc||GRASS;
  let tr=0,wa=0,rk=0,ho=0;for(let b=-2;b<=2;b++)for(let a=-2;a<=2;a++){const xx=x+a,yy=y+b;if(xx<0||yy<0||xx>=TW||yy>=TH)continue;const j=yy*TW+xx,t=ter[j];if(t===2)tr++;else if(t===1)wa++;else if(t===3||t===5)rk++;const o=occ.get(j);if(o&&o.t===0&&o.type!=='wall'&&o.type!=='gate')ho++}
  const spots=[];for(let k=0;k<6;k++){const side=(hs(x,y,80+k)*4)|0,t=.1+hs(x+k,y,90)*.8,d=.03+hs(x,y+k,95)*(m-.06);let px,pz;
   if(side===0){if(N&&t>m&&t<1-m)continue;px=x+t;pz=y+d}else if(side===1){if(S&&t>m&&t<1-m)continue;px=x+t;pz=y+1-d}else if(side===2){if(Wd&&t>m&&t<1-m)continue;px=x+d;pz=y+t}else{if(E&&t>m&&t<1-m)continue;px=x+1-d;pz=y+t}spots.push([px,pz,k])}
- for(const[px,pz,k]of spots){const r=hs(px*13,pz*17,99);
+ for(const[px,pz]of spots){const r=hs(px*13,pz*17,99);
   if(wa>2&&r<.6){const hh=.14+r*.2;pbox(G,px-.012,h,pz-.012,px+.012,h+hh,pz+.012,[.35,.55,.22]);pbox(G,px+.02,h,pz-.01,px+.04,h+hh*.8,pz+.01,[.42,.6,.25]);if(r<.2)pbox(G,px-.018,h+hh,pz-.018,px+.018,h+hh+.05,pz+.018,[.45,.3,.15])}
   else if(tr>3&&r<.55){if(r<.18){pbox(G,px-.012,h,pz-.012,px+.012,h+.05,pz+.012,[.9,.88,.8]);pbox(G,px-.035,h+.05,pz-.035,px+.035,h+.075,pz+.035,r<.09?[.8,.18,.15]:[.62,.45,.3])}else{const c=r<.36?[.75,.45,.15]:[.55,.32,.12];quad(G,[px-.04,h+.004,pz-.03],[px-.03,h+.004,pz+.04],[px+.04,h+.004,pz+.03],[px+.03,h+.004,pz-.04],[0,1,0],c,c,c,c)}}
   else if(rk>2&&r<.6){const s=.025+r*.04;pbox(G,px-s,h,pz-s,px+s,h+s*1.2,pz+s*.8,shade([.58,.58,.6],.85+r*.3))}
@@ -131,12 +133,7 @@ function buildChunk0(cx,cy){const G=newG(),WG=newG(),x0=cx*CH,y0=cy*CH,x1=Math.m
      if(nz<0)quad(G,[x,yb,rz],[x,yt,rz],[x+1,yt,rz],[x+1,yb,rz],[0,0,-1],shade(rc,.75),gc,gc,shade(rc,.75));else quad(G,[x+1,yb,rz],[x+1,yt,rz],[x,yt,rz],[x,yb,rz],[0,0,1],shade(rc,.75),gc,gc,shade(rc,.75));
      for(const sd of[0,1]){const nb=nh(x+(sd?1:-1),y,h);if(nb>=yt)continue;const xx=x+sd,yb2=Math.max(h,nb);if(sd)quad(G,[xx,yb2,y+p0],[xx,yt,y+p0],[xx,yt,y+p1],[xx,yb2,y+p1],[1,0,0],rc,rc,rc,rc);else quad(G,[xx,yb2,y+p1],[xx,yt,y+p1],[xx,yt,y+p0],[xx,yb2,y+p0],[-1,0,0],rc,rc,rc,rc)}}}
    {const bxn=ax===0?(sg?x+1:x-1):x,byn=ax===0?y:(sg?y+1:y-1),nb=nh(bxn,byn,h);if(nb<hh2){const yb2=Math.max(h,nb),s=shade(rc,.85);if(ax===0){const X=sg?x+1:x;if(sg)quad(G,[X,yb2,y],[X,hh2,y],[X,hh2,y+1],[X,yb2,y+1],[1,0,0],s,s,s,s);else quad(G,[X,yb2,y+1],[X,hh2,y+1],[X,hh2,y],[X,yb2,y],[-1,0,0],s,s,s,s)}else{const Z=sg?y+1:y;if(sg)quad(G,[x+1,yb2,Z],[x+1,hh2,Z],[x,hh2,Z],[x,yb2,Z],[0,0,1],s,s,s,s);else quad(G,[x,yb2,Z],[x,hh2,Z],[x+1,hh2,Z],[x+1,yb2,Z],[0,0,-1],s,s,s,s)}}}
-   if(false){
-const hl=rs.lo,hh2=rs.hi,sg=rs.sg>0,a0=sg?hl:hh2,a1=sg?hh2:hl,nn=rs.ax===0?[-(a1-a0),1,0]:[0,1,-(a1-a0)],nl=Math.hypot(...nn),n2=nn.map(v=>v/nl),c2=shade(c,.97);
-   if(rs.ax===0)quad(G,[x,a0,y],[x,a0,y+1],[x+1,a1,y+1],[x+1,a1,y],n2,c2,c2,c2,c2);else quad(G,[x,a0,y],[x,a1,y+1],[x+1,a1,y+1],[x+1,a0,y],n2,c2,c2,c2,c2);
-   const sc=shade(DIRT,.85*(.9+.2*hs(x,y,5)));
-   for(const sd of[0,1]){if(rs.ax===0){const z=y+sd,nb=nh(x,y+(sd?1:-1),h);if(nb>=hh2)continue;const xl=sg?x:x+1,xh=sg?x+1:x,nz=sd?1:-1;tri(G,[xl,h,z],[xh,h,z],[xh,hh2,z],[0,0,nz],sc)}
-    else{const xx=x+sd,nb=nh(x+(sd?1:-1),y,h);if(nb>=hh2)continue;const zl=sg?y:y+1,zh=sg?y+1:y,nx=sd?1:-1;tri(G,[xx,h,zl],[xx,h,zh],[xx,hh2,zh],[nx,0,0],sc)}}}}
+   }
   else if(isP&&!BL)pathTop(G,i,x,y,h,topCol(i,x,y,1));
   else{const oc=(xx,yy)=>gOK(xx,yy)&&HT[yy*TW+xx]>h?1:0,av=(a,b,cn)=>a&&b?3:a+b+cn,L=oc(x-1,y),Rr=oc(x+1,y),U=oc(x,y-1),D=oc(x,y+1),a0=av(L,U,oc(x-1,y-1)),a1=av(L,D,oc(x-1,y+1)),a2=av(Rr,D,oc(x+1,y+1)),a3=av(Rr,U,oc(x+1,y-1));
    if(a0|a1|a2|a3){const c0=shade(c,AOK[a0]),c1=shade(c,AOK[a1]),c2=shade(c,AOK[a2]),c3=shade(c,AOK[a3]);if(a0+a2>a1+a3)quad(G,[x,h,y+1],[x+1,h,y+1],[x+1,h,y],[x,h,y],[0,1,0],c1,c2,c3,c0);else quad(G,[x,h,y],[x,h,y+1],[x+1,h,y+1],[x+1,h,y],[0,1,0],c0,c1,c2,c3)}
@@ -175,6 +172,7 @@ export function updateChunks(ms){const t0=performance.now(),cx0=(CAM.x/CH)|0,cy0
  for(const[k]of CHK){const cx=k%NCX,cy=(k/NCX)|0;if(Math.abs(cx-cx0)>RM+1||Math.abs(cy-cy0)>RM+1)dropChunk(k)}}
 
 export function initializeTerrainRendering() {
+  setTerrainInvalidationHandlers(markTImpl,markPImpl);
   SKB = BED-4;
   /* block world switch flipped: every loaded chunk is drawn again (terrain and props) */
   blocksState.onChange=()=>{for(const k of CHK.keys()){dirtyT.add(k);dirtyP.add(k)}};

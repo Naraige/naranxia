@@ -12,7 +12,7 @@ const I = window.__nxIntro || (window.__nxIntro = { t0: performance.now(), skip:
 const el = document.getElementById('boot');
 const AUTO = !!navigator.webdriver && !window.__nxBootReal;
 let RM = false;
-try { RM = matchMedia('(prefers-reduced-motion: reduce)').matches } catch (e) { /* no matchMedia */ }
+try { RM = matchMedia('(prefers-reduced-motion: reduce)').matches } catch { /* no matchMedia */ }
 /* card 1: its entrance animation, its minimum time on screen, its fade; card 2: hold until its fade starts, full length (boot.css) */
 const C1_ANIM = RM ? 450 : 1900, C1_MIN = RM ? 1000 : 2000, C1_OUT = 440, C2_HOLD = RM ? 780 : 2260, C2_LEN = RM ? 1000 : 2900;
 const SLICE = 30;
@@ -24,7 +24,7 @@ let stage = 0, stageT = 0, loaded = false, looping = false, loopT = 0, frames = 
 /* input reaches the game only once the splash is leaving: a click or a key during the cards skips them and nothing else */
 const EVS = ['pointerdown', 'pointerup', 'pointermove', 'mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu', 'wheel', 'keydown', 'keyup', 'keypress', 'touchstart', 'touchmove', 'touchend'];
 const guard = e => { e.stopImmediatePropagation() };
-function guardOn(on) { for (const n of EVS) try { if (on) addEventListener(n, guard, true); else removeEventListener(n, guard, true) } catch (e) { /* old browser */ } }
+function guardOn(on) { for (const n of EVS) try { if (on) addEventListener(n, guard, true); else removeEventListener(n, guard, true) } catch { /* old browser */ } }
 
 const post = (() => {
   if (typeof MessageChannel === 'undefined') return f => setTimeout(f, 0);
@@ -77,7 +77,7 @@ export function bootFrame(ms) {
   if (stage < 4 || frames < 4) return;
   if (fast < 2 && frames < 12 && performance.now() - loopT < 3000) return;
   stage = 5; clearTimeout(timer); dots(false); guardOn(false); setPref('seen', true);
-  try { removeEventListener('pointerdown', I.ev, true); removeEventListener('keydown', I.ev, true) } catch (e) { /* none */ }
+  try { removeEventListener('pointerdown', I.ev, true); removeEventListener('keydown', I.ev, true) } catch { /* none */ }
   T.title = Math.round(performance.now());
   if (el) { el.classList.add('done'); setTimeout(() => el.remove(), 1300) }
 }

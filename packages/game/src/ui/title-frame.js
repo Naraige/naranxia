@@ -1,6 +1,6 @@
-import { pref, rmotion } from '../core/prefs.js';
+import { rmotion } from '../core/prefs.js';
 import { L } from '../i18n/language.js';
-import { sessionState } from '../gameplay/session.js';
+import '../gameplay/session.js';
 import { SEAS } from '../rendering/weather.js';
 import { canvasesState, cvs } from './canvases.js';
 import { hudDisplayState } from './hud-state.js';
@@ -20,7 +20,7 @@ export function titleBlur(on) {
     if (!g3) return;
     g3.style.filter = on ? 'blur(1.2px) brightness(.86)' : '';
     g3.style.transform = on ? 'scale(1.025)' : '';
-  } catch (e) { }
+  } catch { /* The title screen remains usable without this optional transform. */ }
 }
 
 export function titleVignette(UW, UH) {

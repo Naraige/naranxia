@@ -16,12 +16,12 @@ import { targetZ } from './swarm.js';
 import { MP } from '../multiplayer/session.js';
 import { puff } from '../rendering/effects.js';
 import { gtopOf } from '../rendering/models/fortifications.js';
-import { NAMES } from '../ui/build-menu.js';
+import { NAMES } from '../ui/build-catalog.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { reachLong, sameComp } from '../world/connectivity.js';
 import { mkG } from '../world/pathfinding.js';
 import { D4, gOK } from '../world/routes.js';
-import { occ, ter } from '../world/terrain.js';
+import { occ, ter } from '../world/terrain-state.js';
 import { solid, solidAt } from '../world/traversal.js';
 
 export const formationsState = {
@@ -92,7 +92,7 @@ export let order = function order(w){const S0=sel();if(!S0.length)return;if(simu
   else{let given=false;P.forEach(u=>{u.role=null;u.job=rj;u.lastT=ti;u.stk2=0;const ux=Math.floor(u.x/TS),uy=Math.floor(u.y/TS);let t=-1;if(!given&&D4.some(([dx,dy])=>!solid(tx+dx,ty+dy)&&sameComp(ux,uy,tx+dx,ty+dy))){t=ti;given=true;CLM.set(ti,u)}u.tl=t;u.o=null;leaveSquad(u)});used=P;puff((tx+.5)*TS,(ty+.5)*TS,rj==='g'?'#ffd23c':rj==='w'?'#8bd06a':'#cfd6e2',8,40)}}
  else if(P.length&&st&&st.t===0&&(st.pl|0)===(playersState.CURPL|0)&&st.prog>=1&&WKT.has(st.type)&&(!wkOf(st)||st.hp>=st.max)){const u=P.find(q=>q.wk===st)||P[0];wkSet(u,st);if(simulationState.shelOn)u.nso=1;used=P;if(playersState.CURPL===LPL()){hudDisplayState.msgS='A peasant now works the '+NAMES[st.type].toLowerCase();hudDisplayState.msgT=3}}
  else if(P.length&&st&&st.t===0&&(st.pl|0)===(playersState.CURPL|0)&&(st.hp<st.max||st.prog<1)){P.forEach(u=>{u.job='r';u.o=null;u.rb=st;u.rk=1;u.tl=-1});used=P;if(st.prog>=1&&playersState.CURPL===LPL()){hudDisplayState.msgS='Repairing the '+NAMES[st.type]+' (uses resources)';hudDisplayState.msgT=3}}
- const AR=S0.filter(u=>u.type==='archer'||(u.type==='cannon'&&st&&(st.type==='wall'||st.type==='tower'||st.type==='gate')));let gused=[];
+ const AR=S0.filter(u=>u.type==='archer'||(u.type==='cannon'&&st&&(st.type==='wall'||st.type==='tower'||st.type==='gate')));const gused=[];
  if(AR.length&&st&&st.t===0&&st.prog>=1&&GCAP[st.type]&&(st.pl|0)===(playersState.CURPL|0)){let room=GCAP[st.type]-(st.garr||[]).length-sessionState.units.filter(v=>v.goG===st&&!AR.includes(v)).length,n=0;
   for(const u of AR){if(u.gar===st){gused.push(u);continue}if(room<=0)break;room--;n++;gused.push(u);if(u.gar)ungar(u);leaveSquad(u);u.goG=st;u.goT=0;const tp=garTarget(st,u);u.goR=tp.r;u.o={x:tp.x,y:tp.y,g:mkG(Math.floor(tp.x/TS),Math.floor(tp.y/TS),u.x/TS,u.y/TS),f:1}}
   if(playersState.CURPL===LPL()){if(n){hudDisplayState.msgS=(AR.some(u=>u.type==='cannon')?'Crews':'Archers')+' walking to the '+NAMES[st.type];hudDisplayState.msgT=3;puff(st.x,st.y,'#9fe870',6,40)}else{hudDisplayState.msgS=NAMES[st.type]+' is full';hudDisplayState.msgT=3}}}
@@ -109,7 +109,7 @@ export let order = function order(w){const S0=sel();if(!S0.length)return;if(simu
 
 /* group behaviour: aggressive / defensive / halt, stop, peasants back to work */
 export let setStance = function setStance(st){const S=sel();if(!S.length)return;let n=0;
- for(const u of S){if(u.t!==0)continue;if(u.type==='peasant'){if(simulationState.shelOn)u.nso=1;u.role=null;if(st==='stop'){u.job=null;u.tl=-1;u.o=null;u.carry=u.carry;u.work=0;u.idle=-25;n++}else if(st==='work'){u.o=null;u.job=null;u.tl=-1;u.idle=99;n++}continue}
+ for(const u of S){if(u.t!==0)continue;if(u.type==='peasant'){if(simulationState.shelOn)u.nso=1;u.role=null;if(st==='stop'){u.job=null;u.tl=-1;u.o=null;u.work=0;u.idle=-25;n++}else if(st==='work'){u.o=null;u.job=null;u.tl=-1;u.idle=99;n++}continue}
   u.fg=null;if(st==='stop')u.fpos=null;if(st==='work')continue;if(st==='stop'){u.o=null;u.ret=false;u.gx=u.x;u.gy=u.y;n++;continue}
   u.stn=st;u.ret=false;u.gx=u.x;u.gy=u.y;if(st==='hold'){u.o=null;if(u.cap)leaveSquad(u)}n++}
  if(n&&(!MP.on||playersState.CURPL===LPL())){hudDisplayState.msgS={agg:'Aggressive: chase every enemy in sight',def:'Defensive: guard this spot',hold:'Halt: hold position',stop:'Stopped',work:'Back to work'}[st]+' ('+n+')';hudDisplayState.msgT=2.5;snd('order')}};

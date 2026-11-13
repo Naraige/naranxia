@@ -15,9 +15,11 @@ import { fxTitleSeen } from './menu-fx.js';
 import { hudState, U } from './hud.js';
 import { dIc, IC } from './icons.js';
 import { pill } from './minimap.js';
-import { camKeys, KB, settingsState } from './settings.js';
+import { camKeys, KB } from './settings.js';
+import { settingsState } from './panel-state.js';
 import { dailyMap } from '../world/daily-map.js';
-import { _bwat, baseHW, LAND, ROCKH, rollWorld, SNOW, terrainState } from '../world/terrain.js';
+import { _bwat, baseHW, rollWorld } from '../world/terrain.js';
+import { LAND, ROCKH, SNOW, terrainState } from '../world/terrain-state.js';
 
 export const sitePickerState = {
   picking: false,

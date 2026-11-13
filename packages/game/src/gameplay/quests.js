@@ -71,7 +71,7 @@ const OLD1=['wood','ore','house','farm','barracks','knights','archers','walls','
 
 /* the player's choice (Settings, quest log) is the default of the next new SOLO game; a co-op game always starts with the line on,
    because a local preference must not make the two machines differ */
-export const questsPref=()=>{try{return localStorage.getItem('dk_quests')!=='0'}catch(e){return true}};
+export const questsPref=()=>{try{return localStorage.getItem('dk_quests')!=='0'}catch {return true}};
 
 const fresh=on=>({v:2,on:on?1:0,d:{},a:[0,0,0],e:{tr:0,cv:0},dt:-1e9,last:'',ct:-1e9});
 

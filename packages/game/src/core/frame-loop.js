@@ -23,7 +23,7 @@ import { POST } from '../rendering/post-processing.js';
 import { drsTick, rs } from '../rendering/resolution.js';
 import { CAM, DRS, renderer, SHADOWS } from '../rendering/scene.js';
 import { renderPick } from '../rendering/site-picker.js';
-import { gh } from '../rendering/terrain.js';
+import { gh } from '../world/terrain-queries.js';
 import { renderTitle } from '../rendering/title-scene.js';
 import { canvasesState, cv, cw, cwx } from '../ui/canvases.js';
 import { drawBars, drawUI } from '../ui/hud.js';
@@ -31,7 +31,8 @@ import { minimapState, refreshMM } from '../ui/minimap.js';
 import { KB, placeInput } from '../ui/settings.js';
 import { sitePickerState } from '../ui/site-picker.js';
 import { btnReset } from '../ui/typography.js';
-import { bgGen, genChunk, genF, NCX, NCY, rollWorld, terrainState } from '../world/terrain.js';
+import { bgGen, genChunk, rollWorld } from '../world/terrain.js';
+import { genF, NCX, NCY, terrainState } from '../world/terrain-state.js';
 
 export const frameLoopState = {
   CWD: 1,
@@ -78,6 +79,6 @@ export function* initializeFrameLoop() {
 export function warmFrame() {
   frame(performance.now(), true);
   /* WebGL queues its work: read one pixel back so the shader compilation is really over before the cards move on */
-  try { const gl = renderer.getContext(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4)) } catch (e) { /* context lost */ }
+  try { const gl = renderer.getContext(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4)) } catch { /* context lost */ }
 }
 export function startFrameLoop() { requestAnimationFrame(loop) }

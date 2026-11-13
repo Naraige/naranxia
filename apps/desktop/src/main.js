@@ -19,7 +19,7 @@ const newer = (a, b) => { const x = vnum(a), y = vnum(b); for (let i = 0; i < 3;
 const verOfHtml = html => { const m = html.match(/<title>Naranxia (v[\d.]+)/); return m ? m[1] : 'v0'; };
 
 function readInstalled() {
-  try { return JSON.parse(fs.readFileSync(path.join(GDIR(), 'version.json'), 'utf8')); } catch (e) { return null; }
+  try { return JSON.parse(fs.readFileSync(path.join(GDIR(), 'version.json'), 'utf8')); } catch { return null; }
 }
 // writes a game build into app-data, pointing three.js at the bundled offline copy
 function install(html, ver) {
@@ -66,7 +66,7 @@ async function checkUpdate(curVer) {
 }
 
 function createWindow() {
-  try { CFG = Object.assign(CFG, JSON.parse(fs.readFileSync(path.join(UD(), 'config.json'), 'utf8'))); } catch (e) {}
+  try { CFG = Object.assign(CFG, JSON.parse(fs.readFileSync(path.join(UD(), 'config.json'), 'utf8'))); } catch { /* Missing or invalid user config keeps the packaged defaults. */ }
   win = new BrowserWindow({
     width: 1400, height: 860, minWidth: 900, minHeight: 560, backgroundColor: '#0d1220', show: false,
     title: 'Naranxia', icon: path.join(__dirname, 'icon.png'),
@@ -78,7 +78,7 @@ function createWindow() {
   win.loadFile(path.join(__dirname, 'launcher.html'));
   win.webContents.on('before-input-event', (e, i) => { if (i.type === 'keyDown' && i.key === 'F11') { win.setFullScreen(!win.isFullScreen()); e.preventDefault(); } });
   win.webContents.once('did-finish-load', async () => {
-    let ver = ensureInstalled(), info = null;
+    let ver = ensureInstalled(), info;
     status('Checking for updates...', .2);
     try { info = await checkUpdate(ver); } catch (e) { info = { ok: false, why: e.message }; }
     if (info && info.updated) { ver = info.latest; status('Updated to ' + ver, 1); await new Promise(r => setTimeout(r, 900)); }
@@ -88,7 +88,7 @@ function createWindow() {
     if (process.env.NARX_TEST_JS) win.webContents.once('did-finish-load', () => setTimeout(async () => {
       let r; try { r = await win.webContents.executeJavaScript(fs.readFileSync(process.env.NARX_TEST_JS, 'utf8')); } catch (e) { r = 'ERR ' + e.message; }
       fs.appendFileSync(process.env.NARX_TEST, 'JS ' + r + '\n');
-      try { const img = await win.webContents.capturePage(); fs.writeFileSync(process.env.NARX_TEST + '.png', img.toPNG()); } catch (e) {}
+      try { const img = await win.webContents.capturePage(); fs.writeFileSync(process.env.NARX_TEST + '.png', img.toPNG()); } catch { /* A captured test screenshot is optional; the game result is already recorded. */ }
       app.quit();
     }, 6000));
   });
@@ -97,9 +97,9 @@ function createWindow() {
 // ---- save files: one JSON file per slot in <app-data>/saves ----
 const slotFile = n => path.join(SDIR(), String(n).replace(/[^\w\- ]/g, '_').slice(0, 60) + '.nxs');
 ipcMain.handle('save:write', (e, name, data) => { fs.mkdirSync(SDIR(), { recursive: true }); const f = slotFile(name); fs.writeFileSync(f + '.tmp', data); fs.renameSync(f + '.tmp', f); return true; });
-ipcMain.handle('save:read', (e, name) => { try { return fs.readFileSync(slotFile(name), 'utf8'); } catch (err) { return null; } });
-ipcMain.handle('save:list', () => { try { return fs.readdirSync(SDIR()).filter(f => f.endsWith('.nxs')).map(f => { const s = fs.statSync(path.join(SDIR(), f)); return { name: f.slice(0, -4), t: s.mtimeMs, size: s.size }; }).sort((a, b) => b.t - a.t); } catch (err) { return []; } });
-ipcMain.handle('save:del', (e, name) => { try { fs.unlinkSync(slotFile(name)); } catch (err) {} return true; });
+ipcMain.handle('save:read', (e, name) => { try { return fs.readFileSync(slotFile(name), 'utf8'); } catch { return null; } });
+ipcMain.handle('save:list', () => { try { return fs.readdirSync(SDIR()).filter(f => f.endsWith('.nxs')).map(f => { const s = fs.statSync(path.join(SDIR(), f)); return { name: f.slice(0, -4), t: s.mtimeMs, size: s.size }; }).sort((a, b) => b.t - a.t); } catch { return []; } });
+ipcMain.handle('save:del', (e, name) => { try { fs.unlinkSync(slotFile(name)); } catch { /* Deletion is best-effort; list still exposes a file that remains. */ } return true; });
 ipcMain.handle('save:folder', () => { fs.mkdirSync(SDIR(), { recursive: true }); shell.openPath(SDIR()); return true; });
 ipcMain.handle('app:info', () => ({ version: (readInstalled() || {}).version, launcher: app.getVersion(), platform: process.platform }));
 

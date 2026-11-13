@@ -5,11 +5,11 @@ import { sel, selectionState, TRB } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { scr } from '../rendering/camera.js';
 import { CAM } from '../rendering/scene.js';
-import { LAND } from '../world/terrain.js';
+import { LAND } from '../world/terrain-state.js';
 import { canvasesState } from './canvases.js';
 import { hudState } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
-import { settingsState } from './settings.js';
+import { settingsState } from './panel-state.js';
 
 /* ================= QUEST MARKER (display only) =================
    Shows which button to press for the active quest: a pulsing gold outline and a small bouncing arrow on the button, or an arrow over
@@ -100,7 +100,7 @@ export function questMarker(UW,UH,logOpen){let t=null;
  const c0=scr(CAM.x,LAND,CAM.z),c1=scr(CAM.x+dx*2,LAND,CAM.z+dz*2);let vx=c1.x-c0.x,vy=c1.y-c0.y;const vl=Math.hypot(vx,vy);if(!(vl>.01))return;vx/=vl;vy/=vl;
  /* where the ray from the middle of the free band leaves it */
  const x0=16,x1=UW-16,y0=top+16,y1=UH-16,mx=UW/2,my=(y0+y1)/2,kx=vx>0?(x1-mx)/vx:vx<0?(x0-mx)/vx:1e9,ky=vy>0?(y1-my)/vy:vy<0?(y0-my)/vy:1e9,kk=Math.min(kx,ky);
- let ex=mx+vx*kk,ey=my+vy*kk;
+ const ex=mx+vx*kk;let ey=my+vy*kk;
  /* pushed out of the HUD: up from what stands in the lower half (menu, its tabs, minimap), down from what stands at the top (bars, quest panel) */
  for(let n=0;n<8;n++){const r=inHud(ex,ey);if(!r)break;ey=r.y+r.h/2>UH*K/2?r.y/K-10:(r.y+r.h)/K+10}
  if(ey<under(ex)+10)ey=under(ex)+10;

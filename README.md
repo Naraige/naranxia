@@ -4,10 +4,11 @@ Naranxia is a browser strategy and tower defense game with solo play and two-pla
 
 ## Development
 
-Run these commands from the repository root. CI uses Node.js 20.
+Run these commands from the repository root. Quality tooling requires Node.js 20.19 or newer; CI uses Node.js 20.
 
 ```sh
 npm ci
+npm run quality
 npm run dev
 npm run build
 npm run build:release
@@ -24,6 +25,10 @@ npm test -- --full
 ```
 
 Pass test names to run a subset, for example `npm test -- det save`. Test logs are in `dist/test-logs/`.
+
+`npm run quality` checks JavaScript formatting, ESLint rules, and architectural dependencies. Use `npm run format` to apply formatting. The line-oriented translation table retains its tooling-compatible layout.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for coding and verification conventions, [the architecture guide](docs/ARCHITECTURE.md) for system ownership, and [the cleanup audit](docs/CLEANUP_AUDIT.md) for scope, evidence, and remaining limitations.
 
 ## Source layout
 

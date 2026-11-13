@@ -1,4 +1,3 @@
-import { AC, BENCH, MB, nbuf, sndOn, audioWake } from './sound.js';
 import { REALR } from '../core/random.js';
 import { TS } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
@@ -7,6 +6,9 @@ import { wavesState } from '../gameplay/waves.js';
 import { dayK } from '../rendering/lighting.js';
 import { CAM } from '../rendering/scene.js';
 import { seasonIdx } from '../rendering/weather.js';
+
+let AUDIO = null;
+export function setMusicAudioState(audio) { AUDIO = audio }
 
 /* ---------------- music: generative score ----------------
    Seven themes (menu, calm, night, battle, boss, triumph, defeat). Each theme has several chord progressions; a "phrase" is one pass over a
@@ -45,35 +47,35 @@ const KP=[[0,10],[0,6,10],[0,3,10]],BAC=[0,3,6,8,11,14];
 /* ---- buses: one per theme pass, cross-faded ---- */
 let BUS=null,B=null,P=null;
 const ST={};
-function mkBus(t,lv,fade){const g=AC.createGain(),d=AC.createGain();d.connect(g);g.connect(MB);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(lv,t+fade);return{g,d}}
-function dropBus(o,t,tc){try{if(o.g.gain.cancelAndHoldAtTime)o.g.gain.cancelAndHoldAtTime(t);else o.g.gain.cancelScheduledValues(t);o.g.gain.setTargetAtTime(0,t,tc)}catch(e){}if(!mus.force)setTimeout(()=>{try{o.g.disconnect()}catch(e){}},(tc*5+4)*1000)}
+function mkBus(t,lv,fade){const g=AUDIO.AC.createGain(),d=AUDIO.AC.createGain();d.connect(g);g.connect(AUDIO.MB);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(lv,t+fade);return{g,d}}
+function dropBus(o,t,tc){try{if(o.g.gain.cancelAndHoldAtTime)o.g.gain.cancelAndHoldAtTime(t);else o.g.gain.cancelScheduledValues(t);o.g.gain.setTargetAtTime(0,t,tc)}catch { /* If a gain node has been detached, skip its fade and continue with cleanup. */ }if(!mus.force)setTimeout(()=>{try{o.g.disconnect()}catch { /* Disconnect is best-effort because WebAudio may already have released the node. */ }},(tc*5+4)*1000)}
 
 /* ---- instruments (all on the current bus B; d = side-chained by the kick) ---- */
-function vo(f,t,d,type,v,lp,det,att,dk,rel){const o=AC.createOscillator(),g=AC.createGain(),fl=AC.createBiquadFilter();o.type=type;o.frequency.value=f;if(det)o.detune.value=det;fl.type='lowpass';fl.frequency.value=lp||2000;
+function vo(f,t,d,type,v,lp,det,att,dk,rel){const o=AUDIO.AC.createOscillator(),g=AUDIO.AC.createGain(),fl=AUDIO.AC.createBiquadFilter();o.type=type;o.frequency.value=f;if(det)o.detune.value=det;fl.type='lowpass';fl.frequency.value=lp||2000;
  const a=att||.02,r=rel||.12;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.setValueAtTime(v,t+Math.max(a,d-r));g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(fl);fl.connect(g);g.connect(dk?B.d:B.g);o.start(t);o.stop(t+d+.05)}
-function nz(t,d,v,type,f,q){const s=AC.createBufferSource();s.buffer=nbuf;const fl=AC.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q||1;const g=AC.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(fl);fl.connect(g);g.connect(B.g);s.start(t,R()*1.5,d+.05)}
+function nz(t,d,v,type,f,q){const s=AUDIO.AC.createBufferSource();s.buffer=AUDIO.nbuf;const fl=AUDIO.AC.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q||1;const g=AUDIO.AC.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(fl);fl.connect(g);g.connect(B.g);s.start(t,R()*1.5,d+.05)}
 function strings(n,t,d,v,lp){for(const det of[-9,0,8])vo(mf(n),t,d,'sawtooth',v*.38,lp||1200,det,Math.min(.45,d*.3),1,Math.min(.5,d*.35))}
-function choir(n,t,d,v){const o=AC.createOscillator(),out=AC.createGain();o.type='sawtooth';o.frequency.value=mf(n);const vb=AC.createOscillator(),vg=AC.createGain();vb.frequency.value=4.6;vg.gain.value=mf(n)*.008;vb.connect(vg);vg.connect(o.frequency);
- for(const[ff,qq,gg]of[[700,6,1],[1150,8,.55],[2600,10,.18]]){const b=AC.createBiquadFilter();b.type='bandpass';b.frequency.value=ff;b.Q.value=qq;const g=AC.createGain();g.gain.value=gg;o.connect(b);b.connect(g);g.connect(out)}
+function choir(n,t,d,v){const o=AUDIO.AC.createOscillator(),out=AUDIO.AC.createGain();o.type='sawtooth';o.frequency.value=mf(n);const vb=AUDIO.AC.createOscillator(),vg=AUDIO.AC.createGain();vb.frequency.value=4.6;vg.gain.value=mf(n)*.008;vb.connect(vg);vg.connect(o.frequency);
+ for(const[ff,qq,gg]of[[700,6,1],[1150,8,.55],[2600,10,.18]]){const b=AUDIO.AC.createBiquadFilter();b.type='bandpass';b.frequency.value=ff;b.Q.value=qq;const g=AUDIO.AC.createGain();g.gain.value=gg;o.connect(b);b.connect(g);g.connect(out)}
  out.gain.setValueAtTime(0,t);out.gain.linearRampToValueAtTime(v,t+d*.35);out.gain.setValueAtTime(v,t+d*.7);out.gain.exponentialRampToValueAtTime(.0001,t+d);out.connect(B.d);o.start(t);o.stop(t+d+.05);vb.start(t);vb.stop(t+d+.05)}
 function pluck(n,t,v,d){d=d||1.2;t+=R()*.008;const f=mf(n);vo(f,t,d,'triangle',v,3200,0,.004,0,d*.9);vo(f*2,t,d*.5,'sine',v*.35,4000,0,.004,0,d*.45);vo(f*3,t,d*.25,'sine',v*.12,5000,0,.003,0,d*.22)}
 function bell(n,t,v){const f=mf(n);for(const[k,g,d]of[[1,1,1.6],[2.76,.45,.9],[5.4,.22,.5],[8.9,.1,.3]])vo(f*k,t,d,'sine',v*g,9000,0,.003,0,d*.9)}
 function bassN(n,t,d,v,lp){const f=mf(n);vo(f,t,d,'sine',v,400,0,.008,1,.06);vo(f,t,d,'sawtooth',v*.45,lp||520,0,.008,1,.06)}
 function cello(n,t,d,v){const f=mf(n);vo(f,t,d,'sawtooth',v,750,-4,.12,1,.3);vo(f,t,d,'triangle',v*.7,1000,5,.12,1,.3)}
-function brass(n,t,d,v){const f=mf(n),o1=AC.createOscillator(),o2=AC.createOscillator(),lp=AC.createBiquadFilter(),g=AC.createGain();o1.type=o2.type='sawtooth';o1.frequency.value=f;o2.frequency.value=f;o1.detune.value=-6;o2.detune.value=7;
+function brass(n,t,d,v){const f=mf(n),o1=AUDIO.AC.createOscillator(),o2=AUDIO.AC.createOscillator(),lp=AUDIO.AC.createBiquadFilter(),g=AUDIO.AC.createGain();o1.type=o2.type='sawtooth';o1.frequency.value=f;o2.frequency.value=f;o1.detune.value=-6;o2.detune.value=7;
  lp.type='lowpass';lp.frequency.setValueAtTime(500,t);lp.frequency.linearRampToValueAtTime(2200,t+.09);lp.frequency.setTargetAtTime(1300,t+.1,.25);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.06);g.gain.setValueAtTime(v*.85,t+Math.max(.08,d-.12));g.gain.exponentialRampToValueAtTime(.0001,t+d);
  o1.connect(lp);o2.connect(lp);lp.connect(g);g.connect(B.g);o1.start(t);o2.start(t);o1.stop(t+d+.05);o2.stop(t+d+.05)}
-function flute(n,t,d,v){const f=mf(n),o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain(),g2=AC.createGain(),vb=AC.createOscillator(),vg=AC.createGain();o.type='sine';o2.type='triangle';o.frequency.value=f;o2.frequency.value=f*2;g2.gain.value=.16;
+function flute(n,t,d,v){const f=mf(n),o=AUDIO.AC.createOscillator(),o2=AUDIO.AC.createOscillator(),g=AUDIO.AC.createGain(),g2=AUDIO.AC.createGain(),vb=AUDIO.AC.createOscillator(),vg=AUDIO.AC.createGain();o.type='sine';o2.type='triangle';o.frequency.value=f;o2.frequency.value=f*2;g2.gain.value=.16;
  vb.frequency.value=4.6+R();vg.gain.setValueAtTime(0,t);vg.gain.linearRampToValueAtTime(f*.006,t+Math.min(.5,d*.6));vb.connect(vg);vg.connect(o.frequency);
  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.07);g.gain.setValueAtTime(v*.9,t+Math.max(.08,d-.1));g.gain.exponentialRampToValueAtTime(.0001,t+d+.1);o.connect(g);o2.connect(g2);g2.connect(g);g.connect(B.g);
  for(const x of[o,o2,vb]){x.start(t);x.stop(t+d+.16)}nz(t,.08,v*.2,'bandpass',f*2,2)}
-function kick(t,v){const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(160,t);o.frequency.exponentialRampToValueAtTime(42,t+.16);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+.42);o.connect(g);g.connect(B.g);o.start(t);o.stop(t+.45);
+function kick(t,v){const o=AUDIO.AC.createOscillator(),g=AUDIO.AC.createGain();o.frequency.setValueAtTime(160,t);o.frequency.exponentialRampToValueAtTime(42,t+.16);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+.42);o.connect(g);g.connect(B.g);o.start(t);o.stop(t+.45);
  nz(t,.02,v*.25,'highpass',3000);B.d.gain.cancelScheduledValues(t);B.d.gain.setValueAtTime(.5,t);B.d.gain.linearRampToValueAtTime(1,t+.22)}
 function snare(t,v){nz(t,.2,v,'bandpass',1900,.8);vo(190,t,.1,'triangle',v*.55,1200,0,.002,0,.08)}
 function hat(t,v,open){nz(t,open?.22:.045,v,'highpass',8000)}
-function taiko(t,v){const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(52,t+.3);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+.7);o.connect(g);g.connect(B.g);o.start(t);o.stop(t+.75);nz(t,.25,v*.5,'lowpass',700)}
-function riser(t,d,v){const s=AC.createBufferSource();s.buffer=nbuf;s.loop=true;const f=AC.createBiquadFilter();f.type='bandpass';f.Q.value=1.2;f.frequency.setValueAtTime(300,t);f.frequency.exponentialRampToValueAtTime(5000,t+d);
- const g=AC.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+d);g.gain.exponentialRampToValueAtTime(.0001,t+d+.3);s.connect(f);f.connect(g);g.connect(B.g);s.start(t,R());s.stop(t+d+.35)}
+function taiko(t,v){const o=AUDIO.AC.createOscillator(),g=AUDIO.AC.createGain();o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(52,t+.3);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+.7);o.connect(g);g.connect(B.g);o.start(t);o.stop(t+.75);nz(t,.25,v*.5,'lowpass',700)}
+function riser(t,d,v){const s=AUDIO.AC.createBufferSource();s.buffer=AUDIO.nbuf;s.loop=true;const f=AUDIO.AC.createBiquadFilter();f.type='bandpass';f.Q.value=1.2;f.frequency.setValueAtTime(300,t);f.frequency.exponentialRampToValueAtTime(5000,t+d);
+ const g=AUDIO.AC.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+d);g.gain.exponentialRampToValueAtTime(.0001,t+d+.3);s.connect(f);f.connect(g);g.connect(B.g);s.start(t,R());s.stop(t+d+.35)}
 
 function lead(n,len,t,sp,v){const d=len*sp;v=hv(v);switch(P.lead){
  case'brass':brass(n-12,t,d,v);brass(n,t,d,v*.66);if(len>=6)bell(n+12,t,v*.45);break;
@@ -139,7 +141,7 @@ function advance(){const t=mus.next,now=t;
  B=BUS;STEP[mus.cur](mus.step,t,sp);mus.next+=sp;mus.step++;mus.gs++;
  if(mus.step>=P.bars*16){mus.step=0;mus.rest=breath(mus.cur);if(mus.cur==='triumph')mus.tri=0;P=newPhrase(mus.cur)}}
 
-export function musTick(){if(!AC||!sndOn||BENCH||AC.state!=='running')return;audioWake();const now=AC.currentTime;if(!mus.run){mus.run=1;mus.next=now+.3}
+export function musTick(){const A=AUDIO;if(!A||!A.AC||!A.sndOn||A.BENCH||A.AC.state!=='running')return;A.audioWake();const now=A.AC.currentTime;if(!mus.run){mus.run=1;mus.next=now+.3}
  if(sessionState.paused&&sessionState.started){mus.next=now+.1;return}
  if(mus.next<now-.25)mus.next=now+.1; /* the tab slept: never schedule a burst of late notes */
  let n=0;while(mus.next<now+.3&&n++<12)advance()}

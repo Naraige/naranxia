@@ -1,23 +1,23 @@
-import { L, T_, TC, TTL, tw } from '../i18n/language.js';
+import { T_, TC, tw } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { mpOpen, mpOpenJoin } from '../multiplayer/lobby.js';
-import { settingsState } from './settings.js';
 import { canvasesState } from './canvases.js';
 import { focusRing } from './drawing.js';
 import { footH, menuFooter } from './menu-footer.js';
 import { bevelBtn, KC, kitEnd, kitHitAdd, kitScreen, kitTabs, pxText } from './menu-kit.js';
 import { NAV, navAdd, navBegin, navPoll } from './menu-nav.js';
 import { inR, U } from './hud.js';
+import { modeState, settingsState } from './panel-state.js';
 
 /* ================= game mode choice (lot C): three cards with check / cross lines, keyboard and gamepad navigable =================
    The lines are what the code really does: solo = pause + speed, manual and auto saves, records and achievements, no second player;
    co-op = 2 players on one world (host seed), chat, automatic resync (mpResync), and NO saving (saveGame / autosave refuse while MP.on);
    join = type the host's code, the world is the host's seed, chat, the guest cannot pick the world. */
-export const modeState = { open: false };
+export { modeState };
 
 export function openModes() { modeState.open = true; NAV.sel = 0 }
 
-const hostCoop = () => { mpOpen(); try { document.getElementById('mpBH').click() } catch (e) { } };
+const hostCoop = () => { mpOpen(); try { document.getElementById('mpBH').click() } catch { /* Leave the co-op modal open if its host button is unavailable. */ } };
 
 const CARDS = [
   { id: 'solo', name: 'Solo', sub: 'You alone against the horde', btn: 'Play', go: () => { modeState.open = false; settingsState.setupOpen = true },
@@ -32,10 +32,10 @@ const CARDS = [
    the button inside a card starts that mode at once. Never read by the simulation. */
 let MODE = null;
 export function curMode() {
-  if (MODE === null) { try { MODE = localStorage.getItem('dk_mode') } catch (e) { } if (!CARDS.some(c => c.id === MODE)) MODE = 'solo' }
+  if (MODE === null) { try { MODE = localStorage.getItem('dk_mode') } catch { /* The fallback below selects solo mode when storage cannot be read. */ } if (!CARDS.some(c => c.id === MODE)) MODE = 'solo' }
   return CARDS.find(c => c.id === MODE);
 }
-export function setMode(id) { MODE = id; try { localStorage.setItem('dk_mode', id) } catch (e) { } }
+export function setMode(id) { MODE = id; try { localStorage.setItem('dk_mode', id) } catch { /* Keep the selected mode for this session when storage is unavailable. */ } }
 export function playMode() { curMode().go() }
 export function modeIcon(id, cx, cy, u) { icon(id, cx, cy, u) }
 
@@ -64,7 +64,7 @@ function mark(x, y, ok) {
 }
 
 export function drawModes(UW, UH, cx, back) {
-  const g = canvasesState.ctx, fh = footH(UH), narrow = UW < 520;
+  const fh = footH(UH),narrow = UW < 520;
   NAV.onEsc = back; navBegin(true); NAV.horiz = true; navPoll();
   const b = kitScreen(UW, UH, { key: 'mod', title: 'Choose your game', close: back, fh, maxW: 620 }), low = b.h < 220;
   let y = b.y + 1;

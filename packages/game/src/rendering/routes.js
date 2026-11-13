@@ -8,7 +8,7 @@ import { scene } from './scene.js';
 import { CHK, keyOf } from './terrain.js';
 import { THREE } from './three.js';
 import { gOK } from '../world/routes.js';
-import { CH, HT, LAND, ter, terrainState, WLV } from '../world/terrain.js';
+import { CH, HT, LAND, ter, terrainState, WLV } from '../world/terrain-state.js';
 
 /* ---- zombie route lines: a glowing ribbon with chevrons flowing toward the castle, drawn only ahead of a living horde ---- */
 let routeMat;
@@ -47,7 +47,7 @@ let tfMesh=null,tfT=-9,tfN=-1;
 
 function updateTf(){if(sessionState.clockT-tfT<.25)return;tfT=sessionState.clockT;let dn=0;for(const s of sessionState.structs)if(s.dem)dn++;const tot=tfo.size+dn;if(!tot&&tfN===0)return;tfN=tot;if(tfMesh){scene.remove(tfMesh);tfMesh.geometry.dispose();tfMesh=null}if(!tot)return;const G=newG();
  for(const s of sessionState.structs)if(s.dem){const bx0=s.x/TS,bz0=s.y/TS,hb=HT[s.tiles[0][1]*TW+s.tiles[0][0]]+((s.bh||0));for(const[x,y]of s.tiles){const h=HT[y*TW+x]+.08;quad(G,[x+.05,h,y+.05],[x+.05,h,y+.95],[x+.95,h,y+.95],[x+.95,h,y+.05],[0,1,0],[1,.2,.15],[1,.2,.15],[1,.2,.15],[1,.2,.15])}bxc(G,bx0,hb+2.6+Math.sin(sessionState.clockT*4)*.12,bz0,.5,.5,.5,[1,.3,.2])}
- for(const[i,o]of tfo){const x=i%TW,y=(i/TW)|0,h=HT[i]+.06,c=o.t==='raise'?[1,.82,.24]:o.t==='ramp'?[.45,.72,1]:o.t==='unramp'?[1,.25,.2]:[.7,.42,.2];quad(G,[x+.08,h,y+.08],[x+.08,h,y+.92],[x+.92,h,y+.92],[x+.92,h,y+.08],[0,1,0],c,c,c,c);const d=[.2,.14,.06];bxc(G,x+.5,h,y+.5,.2,.5,.2,o.t==='raise'?[1,1,.6]:[.5,.3,.15])}
+ for(const[i,o]of tfo){const x=i%TW,y=(i/TW)|0,h=HT[i]+.06,c=o.t==='raise'?[1,.82,.24]:o.t==='ramp'?[.45,.72,1]:o.t==='unramp'?[1,.25,.2]:[.7,.42,.2];quad(G,[x+.08,h,y+.08],[x+.08,h,y+.92],[x+.92,h,y+.92],[x+.92,h,y+.08],[0,1,0],c,c,c,c);bxc(G,x+.5,h,y+.5,.2,.5,.2,o.t==='raise'?[1,1,.6]:[.5,.3,.15])}
  tfMesh=new THREE.Mesh(toGeo(G),new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:.75,depthWrite:false}));tfMesh.frustumCulled=false;tfMesh.renderOrder=3;scene.add(tfMesh)}
 
 export function pulseRoutes(){updateTf();updateRoutes();routeMat.uniforms.uT.value=sessionState.clockT;beamMat.uniforms.uT.value=sessionState.clockT}

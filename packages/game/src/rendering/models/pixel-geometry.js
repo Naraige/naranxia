@@ -76,35 +76,16 @@ export const shadeHex=(c,k)=>{const h=hex(c);return '#'+h.map(q=>Math.max(0,Math
 /* palettes are written as the colour you see; PD turns them into albedo (the toon light lifts lit faces by about 1.4) */
 export const PD=h=>shadeHex(h,.704),PDP=a=>a.map(PD);
 
-let PXST;
-let PXGO;
 export let PXLE;
 export let PXDK;
 
 export const teamPal=c=>[shadeHex(c,.42),shadeHex(c,.62),shadeHex(c,.82),c,lighten(c,.28)];
 
 /* clean bevel: light top row, dark bottom lip, flat base; light top face, dark underside */
-const pBv=(P,o)=>{o=o||{};return(f,u,v,W,H)=>{if(f==='T')return o.top||P[3];if(f==='D')return P[1];if(H>=2&&v===H-1)return P[3];if(H>=3&&v===0)return o.lip||P[1];return P[2]}};
-
-const pFl=c=>()=>c;
-
-/* a ring of plate (or cloth) around a limb: bright top row, dark lip, a few worn pixels */
-const pRing=(P,o)=>{o=o||{};return(f,u,v,W,H)=>{if(f==='T')return P[3];if(f==='D')return P[0];if(v===H-1)return o.hi?P[4]:P[3];if(H>=2&&v===0)return P[1];
- if(o.ln){if(o.ln.indexOf(v)>=0)return P[1];if(o.ln.indexOf(v-1)>=0)return P[3]}if(o.fr&&f==='F'&&(u===Math.floor(W/2)))return P[3];if(o.fg&&f==='F'&&v<=1)return u%2?P[1]:P[3];
- if(o.n!==false){const n=pxN(f,u,v,o.s||0);if(n<.13)return P[1];if(n>.91)return P[3]}return P[2]}};
-
 export const pxN=(f,u,v,s)=>{const x=Math.sin(u*12.9898+v*78.233+f.charCodeAt(0)*37.719+s*11.3)*43758.5453;return x-Math.floor(x)};
-
-/* rings stacked down a limb (4px limb centred on x=z=0): each [y0, height, inflate, palette, options] */
-function pxRings(T,L){for(const r of L){const[y0,h,inf,Pl,o]=r;pxBox(T,-2-inf,y0,-2-inf,4+2*inf,h,4+2*inf,pRing(Pl,o),{mat:o&&o.mat!==undefined?o.mat:4})}}
-
-let PXWR;
 
 export function initializePixelGeometry() {
   PXAD = (()=>{const N=14,r=[];for(let i=0;i<N;i++){const z=Math.sqrt(1-(i+.5)/N),q=Math.sqrt(1-z*z),a=i*2.39996;r.push([q*Math.cos(a),q*Math.sin(a),z])}return r})();
-  PXST = PDP(['#3f4651','#6b7380','#99a0aa','#c4c9d0','#e6e9ed']);
-  PXGO = PDP(['#7d5410','#b8861c','#ecbd3a','#ffdc6e','#fff2bc']);
   PXLE = PDP(['#3c220e','#5e381c','#86522c','#a96c3c','#c88a54']);
   PXDK = PD('#15171c');
-  PXWR = PDP(['#6e6250','#948670','#b8a98e','#d4c6aa','#e6dcc4']);
 }

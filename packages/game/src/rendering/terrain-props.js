@@ -2,13 +2,13 @@ import { fb, hs } from '../core/math.js';
 import { rngf } from '../core/random.js';
 import { TH, TW } from '../gameplay/rules.js';
 import { blocksState } from './blocks.js';
-import { bxc, newG, rgb, toGeo } from './geometry.js';
+import { bxc, newG, toGeo } from './geometry.js';
 import { buildPropsB } from './terrain-props-blocks.js';
 import { matV } from './materials.js';
 import { scene, SHADOWS } from './scene.js';
 import { THREE } from './three.js';
 import { gOK } from '../world/routes.js';
-import { CH, FLG, HT, LAND, occ, pth, stairs, ter, terrainState } from '../world/terrain.js';
+import { CH, FLG, HT, LAND, occ, pth, stairs, ter, terrainState } from '../world/terrain-state.js';
 
 /* ---- props (trees, rocks, gold, flowers) merged per chunk ---- */
 const LEAF=[['#3f7f2a','#4a8e32','#336f22','#5a9c3a'],['#46862e','#549638','#3a7626','#62a442'],['#3a7a34','#468a3e','#2f6a2a','#56984a']],PINEC=[['#2f7a4a','#3d8f58','#276a3e','#4ea068'],['#2a6e48','#37835a','#215c3a','#46966a']],BIRCH=['#a8c85a','#bcd86a','#92b04a','#d0e684'];
@@ -41,11 +41,11 @@ function birchGeo(v){const G=newG(),R=rngf(v*511+3),s=.95+v*.1;
  for(let k=0;k<4;k++){bxc(G,0,k*MC_*s,0,MC_*s,MC_*s,MC_*s,'#e8e4d8');if(k%2===0)bxc(G,.03,k*MC_*s+.05,MC_*s/2,.12,.06,.03,'#2a2a2a')}
  mcLeaves(G,R,[BIRCH[0],BIRCH[1],BIRCH[2]],[[.9,'sq'],[1.2,'sq'],[1.5,'plus'],[1.8,'one']],s);return toGeo(G)}
 
-function rockGeo(v){const G=newG(),R=rngf(v*331+9),C=[['#9aa1ac','#a9b0bb','#7e8590'],['#868d98','#9ea5b0','#6a717e'],['#a8aeb8','#b8bec8','#8c929e'],['#707784','#868d9a','#5a606c'],['#9c9a92','#adab9f','#7f7d74'],['#8a9098','#9aa0aa','#6f757f']][v%6];
+function rockGeo(v){const G=newG(),C=[['#9aa1ac','#a9b0bb','#7e8590'],['#868d98','#9ea5b0','#6a717e'],['#a8aeb8','#b8bec8','#8c929e'],['#707784','#868d9a','#5a606c'],['#9c9a92','#adab9f','#7f7d74'],['#8a9098','#9aa0aa','#6f757f']][v%6];
  bxc(G,0,0,0,.75,.4,.75,C[0]);bxc(G,.18,.4,.1,.42,.3,.42,C[1]);bxc(G,-.25,0,-.3,.34,.3,.34,C[2]);if(v%2)bxc(G,-.28,.3,-.28,.2,.14,.2,C[0]);bxc(G,-.3,.4,.2,.2,.08,.22,'#5d8a4a');
  [[.2,.2,.38],[-.2,.1,.38],[.38,.25,-.1]].forEach(([x,y,z])=>bxc(G,x,y,z,.14,.14,.05,C[2]));return toGeo(G)}
 
-function goldGeo(v){const G=newG();bxc(G,0,0,0,.8,.8,.8,'#7d7d7d');
+function goldGeo(_v){const G=newG();bxc(G,0,0,0,.8,.8,.8,'#7d7d7d');
  [[-.2,.2,.41],[.2,.5,.41],[0,.62,.41],[.41,.3,-.1],[.41,.55,.2],[-.41,.4,.0],[-.15,.82,.1],[.1,.82,-.2],[-.1,.1,-.41],[.25,.35,-.41]].forEach(([x,y,z],k)=>{const q=k%3?.18:.24;bxc(G,x,y,z,Math.abs(x)>.4?.06:q,q,Math.abs(z)>.4?.06:q,k%2?'#ffd23c':'#f0b020')});
  bxc(G,0,.8,0,.5,.04,.5,'#8d8d8d');return toGeo(G)}
 
@@ -56,13 +56,13 @@ function bushGeo(v){const G=newG(),L=LEAF[v%3];bxc(G,0,0,0,.44,.38,.44,L[0]);bxc
 
 function flowerGeo(v){const G=newG(),C=[['#f0f0e8','#e8c020'],['#f0d020','#e8a010'],['#c8282a','#2a2a2a'],['#4a6ad8','#2a3a8a'],['#b060d8','#7a2a9a']][v%5];[[0,0],[.2,.14],[-.16,.12]].forEach(([x,z],k)=>{const h=.18+.05*(k%2);bxc(G,x,0,z,.03,h,.03,'#3f7f2a');bxc(G,x+.04,h*.4,z,.06,.03,.03,'#4a8e32');bxc(G,x,h,z,.1,.08,.1,C[0]);bxc(G,x,h+.03,z,.04,.06,.04,C[1])});return toGeo(G)}
 
-function tuftGeo(v){const G=newG(),c=['#4a8e32','#5a9c3a','#3f7f2a'];[[0,0,.32],[.07,.05,.24],[-.07,.04,.28],[.03,-.07,.22],[-.04,-.06,.2],[.1,-.02,.18]].forEach(([x,z,h],k)=>bxc(G,x,0,z,.03,h,.03,c[k%3]));return toGeo(G)}
+function tuftGeo(_v){const G=newG(),c=['#4a8e32','#5a9c3a','#3f7f2a'];[[0,0,.32],[.07,.05,.24],[-.07,.04,.28],[.03,-.07,.22],[-.04,-.06,.2],[.1,-.02,.18]].forEach(([x,z,h],k)=>bxc(G,x,0,z,.03,h,.03,c[k%3]));return toGeo(G)}
 
-function mushGeo(v){const G=newG();bxc(G,0,0,0,.06,.12,.06,'#e8e0d0');bxc(G,0,.12,0,.18,.08,.18,'#c8282a');[[.05,.2,.05],[-.05,.2,-.04]].forEach(([x,y,z])=>bxc(G,x,y,z,.04,.01,.04,'#ffffff'));bxc(G,.15,0,.1,.04,.08,.04,'#e8e0d0');bxc(G,.15,.08,.1,.1,.04,.1,'#9a6a4a');return toGeo(G)}
+function mushGeo(_v){const G=newG();bxc(G,0,0,0,.06,.12,.06,'#e8e0d0');bxc(G,0,.12,0,.18,.08,.18,'#c8282a');[[.05,.2,.05],[-.05,.2,-.04]].forEach(([x,y,z])=>bxc(G,x,y,z,.04,.01,.04,'#ffffff'));bxc(G,.15,0,.1,.04,.08,.04,'#e8e0d0');bxc(G,.15,.08,.1,.1,.04,.1,'#9a6a4a');return toGeo(G)}
 
-function reedGeo(v){const G=newG();[[0,0,.75],[.11,.06,.9],[-.09,.08,.6]].forEach(([x,z,h])=>{for(let y=0;y<h;y+=.15){bxc(G,x,y,z,.05,.14,.05,'#94c86a');bxc(G,x,y+.13,z,.06,.02,.06,'#6a9a48')}bxc(G,x+.04,h*.6,z,.06,.02,.03,'#a8d878')});return toGeo(G)}
+function reedGeo(_v){const G=newG();[[0,0,.75],[.11,.06,.9],[-.09,.08,.6]].forEach(([x,z,h])=>{for(let y=0;y<h;y+=.15){bxc(G,x,y,z,.05,.14,.05,'#94c86a');bxc(G,x,y+.13,z,.06,.02,.06,'#6a9a48')}bxc(G,x+.04,h*.6,z,.06,.02,.03,'#a8d878')});return toGeo(G)}
 
-function logGeo(v){const G=newG();bxc(G,0,0,0,.8,.24,.24,'#5b4326');bxc(G,.4,0,0,.02,.24,.24,'#a88a52');bxc(G,-.4,0,0,.02,.24,.24,'#a88a52');bxc(G,.4,.08,0,.025,.08,.08,'#8a6a3a');bxc(G,-.1,.24,.02,.2,.03,.14,'#4a8e32');return toGeo(G)}
+function logGeo(_v){const G=newG();bxc(G,0,0,0,.8,.24,.24,'#5b4326');bxc(G,.4,0,0,.02,.24,.24,'#a88a52');bxc(G,-.4,0,0,.02,.24,.24,'#a88a52');bxc(G,.4,.08,0,.025,.08,.08,'#8a6a3a');bxc(G,-.1,.24,.02,.2,.03,.14,'#4a8e32');return toGeo(G)}
 
 export let DEC;
 
@@ -70,8 +70,8 @@ function mergeVar(G,geo,x,y,z,rk,sc,sy){const p=geo.attributes.position.array,n=
  for(let k=0;k<p.length;k+=3){const px=p[k]*sc,pz=p[k+2]*sc;G.P.push(x+px*cs+pz*sn,y+p[k+1]*sy,z-px*sn+pz*cs);G.N.push(n[k]*cs+n[k+2]*sn,n[k+1],-n[k]*sn+n[k+2]*cs);G.C.push(c[k],c[k+1],c[k+2])}
  for(let k=0;k<ix.length;k++)G.I.push(ix[k]+o)}
 
-let FCOL;
-let TUFT;
+
+
 
 export function buildProps(cx,cy){if(blocksState.D)return buildPropsB(cx,cy);const G=newG(),x0=cx*CH,y0=cy*CH,x1=Math.min(TW,x0+CH),y1=Math.min(TH,y0+CH);
  for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){const i=y*TW+x,v=ter[i],h=hs(x,y,4),hh=HT[i],al=hh-LAND;
@@ -97,6 +97,6 @@ export function initializeTerrainProps() {
   FOR = [0,1,2,3,4,5].map(forestGeo);
   VAR = {t:[0,1,2,3,4,5].map(oakGeo).concat([0,1,2,3].map(pineGeo)).concat([0,1,2].map(birchGeo)),r:[0,1,2,3,4,5].map(rockGeo),g:[0,1,2].map(goldGeo)};
   DEC = {b:[0,1,2].map(bushGeo),f:[0,1,2,3,4].map(flowerGeo),t:[0,1].map(tuftGeo),m:[mushGeo(0)],r:[reedGeo(0)],l:[logGeo(0)]};
-  FCOL = ['#ffffff','#ffe14a','#ff8fb8','#ff5a5a','#b48cff'].map(rgb);
-  TUFT = rgb('#3f8a38');
+
+
 }

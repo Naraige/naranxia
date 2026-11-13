@@ -15,8 +15,8 @@ const HINTS={
  pop:['Population limit reached: build houses in the Town menu',()=>{const p=LPL();return popUsed(p)>=popCap(p)}],
  idle:['Idle peasants? Press [.] to select them, then right-click a resource',()=>idleFor>=20],
  wave:['A wave is about to start: gather your troops near the castle and walls',()=>!wavesState.waveOn&&sessionState.waveT<=20&&sessionState.waveN<=1]};
-const hintSeen=id=>{try{return localStorage.getItem('dk_hint_'+id)==='1'}catch(e){return false}};
-const hintMark=id=>{try{localStorage.setItem('dk_hint_'+id,'1')}catch(e){}};
+const hintSeen=id=>{try{return localStorage.getItem('dk_hint_'+id)==='1'}catch {return false}};
+const hintMark=id=>{try{localStorage.setItem('dk_hint_'+id,'1')}catch{/* If storage is unavailable, the hint may appear again next launch. */}};
 let hintCur=null,hintT0=0,idleFor=0,idleAt=0;
 
 export function hintBar(UW,y){if(sessionState.over||MP.on||diagnosticsState.DEVU||!sessionState.inGame||!sessionState.started)return 0;

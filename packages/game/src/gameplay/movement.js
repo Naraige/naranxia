@@ -4,7 +4,7 @@ import { sessionState } from './session.js';
 import { dust, SLOWK } from '../rendering/effects.js';
 import { mkG } from '../world/pathfinding.js';
 import { D8, gOK } from '../world/routes.js';
-import { HT, occ, pth, terrainState } from '../world/terrain.js';
+import { HT, occ, pth, terrainState } from '../world/terrain-state.js';
 import { blk, fv, solid, solidAt } from '../world/traversal.js';
 
 export function moveTo(u,x,y,dt){let dx=x-u.x,dy=y-u.y;const d=hyp(dx,dy);if(d<1)return;u.mv=true;u.walk=.25;if(Math.random()<.02)dust(u.x,u.y);u.face=Math.atan2(dx,dy);

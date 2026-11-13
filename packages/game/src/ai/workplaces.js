@@ -6,12 +6,12 @@ import { FARMT, FARMY, RS2, TH, TS, TW } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { leaveSquad } from '../gameplay/squads.js';
 import { puff } from '../rendering/effects.js';
-import { markP } from '../rendering/terrain.js';
+import { markP } from '../world/terrain-invalidation.js';
 import { ringOf, sameComp } from '../world/connectivity.js';
 import { mmTile } from '../world/minimap.js';
 import { gField } from '../world/pathfinding.js';
 import { D4, gOK } from '../world/routes.js';
-import { amt, occ, pth, stairs, ter } from '../world/terrain.js';
+import { amt, occ, pth, stairs, ter } from '../world/terrain-state.js';
 import { solid } from '../world/traversal.js';
 
 export const workplacesState = {

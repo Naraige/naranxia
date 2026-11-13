@@ -30,7 +30,7 @@ async()=>{/* King XP and talents: xp sources, levels, talent choice, skill inter
  kg.sk_cry=0;kn.wcT=0;kingSkill0('cry');chk('cryWide',kn.wcT>0&&kskLeft(kg,'cry')>44);
  const far=mkU(0,'knight',kx+TS*13,ky,null,-1);units.push(far);kg.sk_cry=0;kingSkill0('cry');chk('cryRange15',far.wcT>time);
  /* plate: 20 % less damage taken and slow regeneration */
- kingTick(.05);chk('plate',kg.kdr===.8);const h0=kg.hp=100;kingTick(1);chk('regen',kg.hp>100.5&&kg.hp<101.5);
+ kingTick(.05);chk('plate',kg.kdr===.8);kg.hp=100;kingTick(1);chk('regen',kg.hp>100.5&&kg.hp<101.5);
  /* charge: heavy charge reaches 4 tiles and hits harder */
  const zc=mkU(1,'zombie',kx+TS*3.6,ky,null,-1);zc.hp=500;units.push(zc);const zh=zc.hp;kg.sk_charge=0;kingSkill0('charge');chk('heavyCharge',zh-zc.hp>=(60+waveN*2)*1.5-.01&&kg.chT>time+3.9&&kg.chT<time+4.1);
  /* the same level-5 King with all talents: force the remaining bits to test the rest */

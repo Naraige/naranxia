@@ -6,7 +6,8 @@ import { sessionState } from '../gameplay/session.js';
 import { SW } from '../gameplay/swarm.js';
 import { longField } from '../world/connectivity.js';
 import { FD, gOK } from '../world/routes.js';
-import { ensureAround, terrainState } from '../world/terrain.js';
+import { ensureAround } from '../world/terrain.js';
+import { terrainState } from '../world/terrain-state.js';
 import { bfsW, fv, solid } from '../world/traversal.js';
 
 export const zombieLanesState = {
@@ -27,12 +28,12 @@ export let LFQT;
 
 export function laneFieldQ(L,sg){if(L<0||L>5||sg>127)return laneField(L,sg);const k=L*128+sg;if(LFQT[k]===SW.step)return LFQS[k];const S=laneField(L,sg);LFQS[k]=S;LFQT[k]=SW.step;return S}
 
-function laneField(L,sg){const key=L*4096+sg,E=LFLD.get(key);if(E&&(E.v===sessionState.ver||zombieLanesState.lfBud<=0))return E.S;if(E){zombieLanesState.lfBud--;LFLD.delete(key)}let S;
+function laneField(L,sg){const key=L*4096+sg,E=LFLD.get(key);if(E&&(E.v===sessionState.ver||zombieLanesState.lfBud<=0))return E.S;if(E){zombieLanesState.lfBud--;LFLD.delete(key)}
  const Wp=terrainState.ROUTES[L].wps,a=Math.min(Wp.length-1,sg*LSEG),b=Math.min(Wp.length-1,a+LSEG+2);let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
  for(let i=a;i<=b;i++){const p=Wp[i];x0=Math.min(x0,p[0]);y0=Math.min(y0,p[1]);x1=Math.max(x1,p[0]);y1=Math.max(y1,p[1])}
- x0=Math.floor(x0)-14;y0=Math.floor(y0)-14;x1=Math.ceil(x1)+14;y1=Math.ceil(y1)+14;let seeds=[],tg=b;
+ x0=Math.floor(x0)-14;y0=Math.floor(y0)-14;x1=Math.ceil(x1)+14;y1=Math.ceil(y1)+14;const seeds=[];let tg=b;
  for(let k=b;k>a&&!seeds.length;k--){const p=Wp[k],cx=p[0]|0,cy=p[1]|0;ensureAround(cx,cy,1);for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++)if(!solid(cx+i,cy+j))seeds.push([cx+i,cy+j]);tg=k}
- S=seeds.length?bfsW(seeds,false,x0,y0,x1-x0,y1-y0):null;if(S)S.tg=tg;LFLD.set(key,{S,v:sessionState.ver});if(LFLD.size>260)LFLD.delete(LFLD.keys().next().value);return S}
+ const S=seeds.length?bfsW(seeds,false,x0,y0,x1-x0,y1-y0):null;if(S)S.tg=tg;LFLD.set(key,{S,v:sessionState.ver});if(LFLD.size>260)LFLD.delete(LFLD.keys().next().value);return S}
 
 export function laneWalk(u,dt){const Wp=terrainState.ROUTES[u.lane].wps;while(u.ph<Wp.length&&dist(u.x,u.y,Wp[u.ph][0]*TS,Wp[u.ph][1]*TS)<TS*2)u.ph++;if(u.ph>=Wp.length)return false;
  const S=laneField(u.lane,Math.floor(u.ph/LSEG)),tx=Math.floor(u.x/TS),ty=Math.floor(u.y/TS);

@@ -22,5 +22,5 @@ export function initializeBuildShortcuts() {
   addEventListener('keydown',e=>{if((e.key==='Delete'||e.key==='Backspace')&&sessionState.inGame&&!sessionState.over&&selectionState.selB&&sessionState.structs.includes(selectionState.selB)&&selectionState.selB.t===0&&selectionState.selB.type!=='castle'&&document.activeElement===document.body){e.preventDefault();build('demolish',selectionState.selB.tx,selectionState.selB.ty)}});
 
 
-  addEventListener('keydown',e=>{if(!sessionState.started||sessionState.over||document.activeElement===nmI)return;});
+  addEventListener('keydown',_e=>{if(!sessionState.started||sessionState.over||document.activeElement===nmI)return;});
 }

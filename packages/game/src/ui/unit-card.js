@@ -2,7 +2,8 @@ import { C, CSTONE, CWOOD, T, TRAIN, BT, GCAP, GRNG } from '../gameplay/rules.js
 import { sel, selectionState } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { L, T_, TTL, tw } from '../i18n/language.js';
-import { costParts, drawCost, NAMES } from './build-menu.js';
+import { costParts, drawCost } from './build-menu.js';
+import { NAMES } from './build-catalog.js';
 import { canvasesState } from './canvases.js';
 import { menuPanel } from './drawing.js';
 import { hudState, U } from './hud.js';

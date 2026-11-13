@@ -8,10 +8,11 @@ import { aliveC, LC, playersState } from './players.js';
 import { H, RS2, T, TH, TS, TW, W } from './rules.js';
 import { sessionState } from './session.js';
 import { blood, puff } from '../rendering/effects.js';
-import { NAMES } from '../ui/build-menu.js';
+import { NAMES } from '../ui/build-catalog.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { D4, D8, FD, gOK } from '../world/routes.js';
-import { CH, ensureRect, genChunk, genF, HT, NCX, occ, ter, terrainState } from '../world/terrain.js';
+import { ensureRect, genChunk } from '../world/terrain.js';
+import { CH, genF, HT, NCX, occ, ter, terrainState } from '../world/terrain-state.js';
 import { blk, canStepZ, fv, solidAt } from '../world/traversal.js';
 
 export const swarmState = {
@@ -106,7 +107,7 @@ function swStep(){if(!SW.sk||!SW.sa){SW.sk=new Uint8Array(SWMAX);SW.sa=new Int32
  const UM=new Map(),flg=[];for(const u of sessionState.units){if(u.t===1||u.hp<=0||u.gar)continue;const tx=(u.x/TS)|0,ty=(u.y/TS)|0,k=ty*TW+tx;let a=UM.get(k);
   if(!a){UM.set(k,a=[]);for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const q=k+j*TW+i;if(q>=0&&q<TW*TH&&!(UNF[q]&1)){UNF[q]|=1;flg.push(q)}}}a.push(u)}
  const sfl=[];for(const s of sessionState.structs){if(s.t!==0||s.hp<=0||!s.tiles)continue;for(const[a,b]of s.tiles)for(let j=-1;j<=1;j++)for(let q=-1;q<=1;q++){const k=(b+j)*TW+a+q;if(k>=0&&k<TW*TH&&!(UNF[k]&2)){UNF[k]|=2;sfl.push(k)}}}
- const hitS=new Set(),R46=(46*TS)**2,R62=(62*TS)**2,ZA=FD[0]&&FD[0].list?FD[0].list:FD[0]?[FD[0]]:[],ZZ=swarmState.FZ&&swarmState.FZ.list?swarmState.FZ.list:swarmState.FZ?[swarmState.FZ]:[];swLanes();
+ const hitS=new Set(),R46=(46*TS)**2,ZA=FD[0]&&FD[0].list?FD[0].list:FD[0]?[FD[0]]:[],ZZ=swarmState.FZ&&swarmState.FZ.list?swarmState.FZ.list:swarmState.FZ?[swarmState.FZ]:[];swLanes();
  const AC=aliveC(),CS0=sessionState.CS,hasC=(tx,ty)=>{for(const S of ZA)if(S&&fv1(S,tx,ty)<65535)return true;for(const S of ZZ)if(S&&fv1(S,tx,ty)<65535)return true;return false};
  for(let i=0;i<n;i++){const x=sX[i],y=sY[i],o=sSD[i];sPX[i]=x;sPY[i]=y;if(sHP[i]<=0)continue;sCD[i]-=SWDT;
   const tx=(x/TS)|0,ty=(y/TS)|0,ti=ty*TW+tx,fl=UNF[ti];
@@ -132,7 +133,7 @@ function swStep(){if(!SW.sk||!SW.sa){SW.sk=new Uint8Array(SWMAX);SW.sa=new Int32
   if(dir===-2&&!has){let bs=null,bv=65535;if(!gho)for(const S of ZA){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}
    if(bs){dir=swPick(bs,tx,ty,false,o);sST[i]=4}else if(!gho){for(const S of ZZ){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}if(bs){dir=swPick(bs,tx,ty,true,o);sST[i]=5}}
    /* no path: straight at the nearest castle; from a tile of water, rock or wood (reached where a lane had no way through), or once it has given up (gho), over any ground */
-   if(dir<0){let hc=CS0,hd=1e12;for(const c of AC){const d=(c.x-x)*(c.x-x)+(c.y-y)*(c.y-y);if(d<hd){hd=d;hc=c}}gx=hc.x;gy=hc.y;has=true;if(!bs){sST[i]=6;if(gho||ter[ti]>0)ph=true}}}
+   if(dir<0){let hc=CS0,hd=1e12;for(const c of AC){const d=(c.x-x)*(c.x-x)+(c.y-y)*(c.y-y);if(d<hd){hd=d;hc=c}}gx=hc.x;gy=hc.y;if(!bs){sST[i]=6;if(gho||ter[ti]>0)ph=true}}}
   if(dir>=0){gx=(tx+DX8[dir]+.5)*TS+SWJ[o&255];gy=(ty+DY8[dir]+.5)*TS+SWJ[(o>>8)&255]}
   let vx=gx-x,vy=gy-y;const l=hyp(vx,vy);if(l>.5){vx/=l;vy/=l}else{vx=0;vy=0}
   const D0=SWD[ti];let jam=1;if(D0>1&&tx>0&&ty>0&&tx<TW-1&&ty<TH-1){const h0=HT[ti];let dl=D0,dr=D0,du=D0,dd=D0,q=ti-1;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dl=SWD[q];q=ti+1;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dr=SWD[q];q=ti-TW;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))du=SWD[q];q=ti+TW;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dd=SWD[q];

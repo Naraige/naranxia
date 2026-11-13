@@ -53,7 +53,7 @@ export function pxZombie(type,ZV,P){
  /* ---- clothes (outer layer): torn hems and holes from the seed ---- */
  const torn=(f,u,r,k,lim)=>{const n=nz('t'+f+k,u,r);return r>=lim-((n*3)|0)};
  const hole=(f,u,r,p)=>nz('o'+f,u,r)<p;
- let jacket=null,sleeve=null,pants=null;const sh=(c,f)=>f==='T'?c:(f==='D'?null:c);
+ let jacket=null,sleeve=null,pants=null;
  if(o==='tunic'||o==='peasant'||o==='rags'||o==='gambeson'||o==='hooded'){const qu=o==='gambeson',rag=o==='rags'?.3:.07,BELT=o==='peasant'?C('#c8a868'):C('#4a3622');
   jacket=(f,u,v,W,H)=>{const r=H-1-v;if(f==='D')return null;if(f==='T')return TC;if(torn(f,u,r,'j',11))return null;if(hole(f,u,r,rag))return null;if(r===6&&o!=='rags')return BELT;
    if(qu)return ((u+r)%3===0)?TD:TC;if(o==='peasant'&&nz('pa'+f,u>>1,r>>1)>.85)return lighten(TC,.1);return nz('c'+f,u,r)<.15?TD:TC};
@@ -102,18 +102,18 @@ export function pxZombie(type,ZV,P){
   for(let i=0;i<S.arrows;i++){const ax=-2.5+5*nz('ar',i,1),ay=15+6*nz('ar',i,2),z0=-2*tT[2]+tT[4];
    pxBox(P.G,ax-.25,ay-.25,z0-5.5,.5,.5,6.2,()=>C('#8a6a3a'),{mat:0,grid:[1,1,6],ao:false});pxBox(P.G,ax-.1,ay-.9,z0-5.6,.2,1.8,1.4,()=>C('#efe9d6'),{mat:0,grid:[1,2,1],ao:false})}
   /* the bomber's powder keg, fuse and spark; the acid spitter's glowing sacs */
-  const zB=-2.25*tT[2]+tT[4],xW=4.25*tT[0];
-  if(type==='bomber'){const W2=6,yk=(13-12)*tT[1]+12;pxBox(P.G,-W2/2,yk,zB-5,W2,8,5,(f,u,v,W,H)=>{if(f==='T'||f==='D')return (u+v)%3?RWD[2]:RWD[1];if(v===1||v===6)return RDS[1];return u%2?RWD[2]:RWD[3]},{mat:0,grid:[6,8,5]});
+  const zB=-2.25*tT[2]+tT[4];
+  if(type==='bomber'){const W2=6,yk=(13-12)*tT[1]+12;pxBox(P.G,-W2/2,yk,zB-5,W2,8,5,(f,u,v,_W,_H)=>{if(f==='T'||f==='D')return (u+v)%3?RWD[2]:RWD[1];if(v===1||v===6)return RDS[1];return u%2?RWD[2]:RWD[3]},{mat:0,grid:[6,8,5]});
    pxBox(P.G,-.3,yk+8,zB-2.8,.6,2,.6,()=>C('#3a2a1a'),{mat:0,grid:[1,2,1],ao:false});pxBox(P.G,-.45,yk+10,zB-2.95,.9,.9,.9,()=>C('#ffb02a'),{mat:5,grid:[1,1,1],ao:false})}
   if(type==='acid')for(const[sx,sy,sz,s]of[[-2.6,19,0,3.4],[1.4,16,-.6,2.8],[-.4,21.2,-.2,2.4]])pxBox(P.G,sx,sy*tT[1]+(1-tT[1])*12,zB-s*.75+sz,s,s,s,(f,u,v)=>((u+v)%2?C('#9ae030'):C('#c8ff60')),{mat:5,grid:[2,2,2],ao:false});
   if(V2){const IR=PDP(['#2a2422','#4a403a','#6e625a','#8e8278']),RP=[C('#a08a5a'),C('#7a6840')],bone2=(f,u,v,W,H)=>f==='T'||v===H-1?BN:(v===0?BND:BN2),sold=hint==='knight'||hint==='spearman'||hint==='captain'||hint==='bannerman'||hint==='king'||hint==='guard';
    if(type==='zombie'&&!sold){const pr=sd%3+1;
     if(pr===1){zb('T',P.G,-3.1,22.8,-2.7,6.2,1.5,5.4,(f,u,v)=>RP[(u+v)%2],{mat:0,grid:[6,1,5]});zb('T',P.G,1.1,18,2.3,1.1,5,.9,(f,u,v)=>RP[v%2],{mat:0,grid:[1,5,1],ao:false})}
-    if(pr===2){zb('T',P.G,-1.6,17.2,-6.4,1,1.7,11.4,(f,u,v,W,H)=>f==='F'?ST[3]:(u%4===3?RU:ST[2]),{mat:4,grid:[1,1,8]});zb('T',P.G,-3.4,16.6,-5.4,4.6,2.9,.9,()=>RU,{mat:0,grid:[4,1,1]})}
+    if(pr===2){zb('T',P.G,-1.6,17.2,-6.4,1,1.7,11.4,(f,u,_v,_W,_H)=>f==='F'?ST[3]:(u%4===3?RU:ST[2]),{mat:4,grid:[1,1,8]});zb('T',P.G,-3.4,16.6,-5.4,4.6,2.9,.9,()=>RU,{mat:0,grid:[4,1,1]})}
     if(pr===3)zb('T',P.G,-5,16.6,-3.5,10,7.6,1.1,(f,u,v,W,H)=>(v<2&&nz('ck',u,v)<.5)||(v<4&&nz('cl',u,v)<.2)?null:(v===H-1?T2:nz('cm',u,v)<.2?T2D:T2),{mat:0,grid:[10,8,1],ao:false})}
    if(type==='husk'){zb('H',P.HG,2,19.5,-5,1.6,6.5,.8,(f,u,v)=>v%2?WR:WR2,{mat:0,grid:[1,6,1],ao:false});zb('H',P.HG,-3.4,22,-5,1.4,4,.8,(f,u,v)=>v%2?WR2:WR,{mat:0,grid:[1,4,1],ao:false})}
-   if(type==='runner'){const HB=C(['#a8332a','#b8862a','#2a6a8a'][sd%3]),HBD=shadeHex(HB,.72);zb('H',P.HG,-4.4,28.4,-4.4,8.8,1.4,8.8,(f,u,v)=>f==='T'||f==='D'?null:(u%4===1?HBD:HB),{mat:0,grid:[8,1,8],ao:false});
-    zb('H',P.HG,.6,25.6,-7,1.4,3.6,2.6,(f,u,v,W,H)=>v===0?HBD:HB,{mat:0,grid:[1,3,2],ao:false});zb('H',P.HG,-2.2,26.8,-6.4,1.4,2.4,2,(f,u,v,W,H)=>v===0?HBD:HB,{mat:0,grid:[1,2,2],ao:false})}
+   if(type==='runner'){const HB=C(['#a8332a','#b8862a','#2a6a8a'][sd%3]),HBD=shadeHex(HB,.72);zb('H',P.HG,-4.4,28.4,-4.4,8.8,1.4,8.8,(f,u,_v)=>f==='T'||f==='D'?null:(u%4===1?HBD:HB),{mat:0,grid:[8,1,8],ao:false});
+    zb('H',P.HG,.6,25.6,-7,1.4,3.6,2.6,(f,u,v,_W,_H)=>v===0?HBD:HB,{mat:0,grid:[1,3,2],ao:false});zb('H',P.HG,-2.2,26.8,-6.4,1.4,2.4,2,(f,u,v,_W,_H)=>v===0?HBD:HB,{mat:0,grid:[1,2,2],ao:false})}
    if(type==='brute'){zb('T',P.G,-3.7,22.4,-3.1,7.4,2.2,6.2,(f,u,v,W,H)=>f==='T'?IR[2]:(v===H-1?IR[3]:(u%3===1?IR[0]:IR[1])),{mat:4,grid:[7,2,6]});
     for(let i=0;i<3;i++)zb('T',P.G,-.7,20.6-i*3.3,-4.1,1.4,1.8,2.2,bone2,{mat:0,grid:[1,2,2]})}
    if(type==='bomber')for(const x of[-3.7,1.3]){zb('T',P.G,x,12.4,2.1,2.4,2.4,2.3,(f,u,v,W,H)=>f==='T'||(u===0&&v===H-1)?IR[3]:IR[1],{mat:4,grid:[2,2,2]});zb('T',P.G,x+.8,14.8,2.9,.8,1.1,.8,()=>C('#ffb02a'),{mat:5,grid:[1,1,1],ao:false})}
@@ -131,7 +131,7 @@ export function pxZombie(type,ZV,P){
   ab(-lw/2,-12,-lw/2,lw,12,lw,limb(R==='AR'?S.armR:S.armL,R),{mat:0,grid:[4,12,4]});
   if(sleeve&&!skel)ab(-2.25,-12.25,-2.25,4.5,12.5,4.5,sleeve,{mat:o==='soldier'?4:0,grid:[4,12,4],ao:false});
   if(type==='brute'&&R==='AR')for(const[x,z,h]of[[-.8,-1,3.4],[.6,.9,2.6]])ab(x,0,z,1.2,h,1.2,(f)=>f==='T'?BN2:BN,{mat:0,grid:[1,3,1]});
-  if(type==='brute'&&R==='AL'){ab(-2.6,-9.6,-2.6,5.2,1.8,5.2,(f,u,v)=>f==='T'||f==='D'?ST[1]:(u%2?ST[2]:ST[1]),{mat:4,grid:[5,2,5]});for(let i=0;i<3;i++)ab(-.5,-11.2-i*1.4,2.4,1,1.2,.6,()=>ST[i%2?1:2],{mat:4,grid:[1,1,1],ao:false})}
+  if(type==='brute'&&R==='AL'){ab(-2.6,-9.6,-2.6,5.2,1.8,5.2,(f,u,_v)=>f==='T'||f==='D'?ST[1]:(u%2?ST[2]:ST[1]),{mat:4,grid:[5,2,5]});for(let i=0;i<3;i++)ab(-.5,-11.2-i*1.4,2.4,1,1.2,.6,()=>ST[i%2?1:2],{mat:4,grid:[1,1,1],ao:false})}
   if(V2){const IR=PDP(['#2a2422','#4a403a','#6e625a','#8e8278']),sold=hint==='knight'||hint==='spearman'||hint==='captain'||hint==='bannerman'||hint==='king'||hint==='guard';
    if(type==='runner')for(const[x,z,l]of[[-1.7,-.5,3.4],[.8,.4,2.8]])ab(x,-12-l,z,.9,l+.4,.9,(f,u,v)=>v===0?BND:BN,{mat:0,grid:[1,3,1],ao:false});
    if((type==='brute'&&R==='AL')||(boss&&R==='AR')||(type==='zombie'&&sold&&R==='AL')){ab(-2.9,-1.5,-2.9,5.8,3.1,5.8,(f,u,v,W,H)=>f==='T'?((u===1||u===3)&&(v===1||v===3)?IR[3]:IR[2]):(v===H-1?IR[3]:v===0?IR[0]:IR[1]),{mat:4,grid:[5,3,5]});

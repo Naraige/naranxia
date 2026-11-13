@@ -15,7 +15,7 @@ import { DIRT, dirtyT, GRASS } from './terrain.js';
 import { THREE } from './three.js';
 import { cvs } from '../ui/canvases.js';
 import { D4, gOK } from '../world/routes.js';
-import { CH, genF, HT, LAND, NCX } from '../world/terrain.js';
+import { CH, genF, HT, LAND, NCX } from '../world/terrain-state.js';
 
 export const buildPreviewState = {
   GHO: null,
@@ -53,7 +53,7 @@ function tgRamp(G,d){const[dx,dy]=D4[d],ax=dx?0:1,sg=(dx+dy)>0,ns=2,st=.5,c=GRAS
  const s=shade(rc,.85);if(ax===0){if(sg)quad(G,[1,0,0],[1,1,0],[1,1,1],[1,0,1],[1,0,0],s,s,s,s);else quad(G,[0,0,1],[0,1,1],[0,1,0],[0,0,0],[-1,0,0],s,s,s,s)}
  else{if(sg)quad(G,[1,0,1],[1,1,1],[0,1,1],[0,0,1],[0,0,1],s,s,s,s);else quad(G,[0,0,0],[0,1,0],[1,1,0],[1,0,0],[0,0,-1],s,s,s,s)}}
 
-function tgGeo(k){let q=TGEO[k];if(q)return q;const G=newG();
+function tgGeo(k){const q=TGEO[k];if(q)return q;const G=newG();
  if(k==='block')tgBlock(G,0,1,GRASS,DIRT);else if(k==='path1'||k==='path2'){const c=k==='path2'?[.56,.56,.57]:[.6,.49,.3];tgBlock(G,0,.08,c,shade(c,.8))}else tgRamp(G,+k.slice(4));
  return TGEO[k]=toGeo(G)}
 

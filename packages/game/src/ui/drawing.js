@@ -27,7 +27,7 @@ function lgc(k,y,h,a,b,c,d,e,f){k+='|'+y+'|'+h;let g=LGC.get(k);if(g===undefined
 export function arcDia(cx,cy,r,c){canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(cx,cy-r-1);canvasesState.ctx.lineTo(cx+r+1,cy);canvasesState.ctx.lineTo(cx,cy+r+1);canvasesState.ctx.lineTo(cx-r-1,cy);canvasesState.ctx.closePath();canvasesState.ctx.fillStyle='#07060b';canvasesState.ctx.fill();
  const g=canvasesState.ctx.createLinearGradient(0,cy-r,0,cy+r);g.addColorStop(0,shd(c,.5));g.addColorStop(.5,c);g.addColorStop(1,shd(c,-.5));canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(cx,cy-r);canvasesState.ctx.lineTo(cx+r,cy);canvasesState.ctx.lineTo(cx,cy+r);canvasesState.ctx.lineTo(cx-r,cy);canvasesState.ctx.closePath();canvasesState.ctx.fillStyle=g;canvasesState.ctx.fill()}
 
-export function frame(x,y,w,h,p,r){if(p===SLOT||p===SLOTH||p===SLOTX){mcSlot(x,y,w,h,p);return}if(p===TIPP){mcTip(x,y,w,h);return}if(MS.on&&menuFrame(x,y,w,h,p))return;
+export function frame(x,y,w,h,p,_r){if(p===SLOT||p===SLOTH||p===SLOTX){mcSlot(x,y,w,h,p);return}if(p===TIPP){mcTip(x,y,w,h);return}if(MS.on&&menuFrame(x,y,w,h,p))return;
  x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);
  if(p===CHAT){canvasesState.ctx.fillStyle='rgba(12,17,26,.74)';canvasesState.ctx.fillRect(x,y,w,h);
   if(y<0&&w>200){const gl=canvasesState.ctx.createLinearGradient(x,0,x+w,0);gl.addColorStop(0,'rgba(120,210,255,0)');gl.addColorStop(.08,'rgba(120,210,255,.55)');gl.addColorStop(.92,'rgba(120,210,255,.55)');gl.addColorStop(1,'rgba(120,210,255,0)');canvasesState.ctx.fillStyle='rgba(5,4,8,.75)';canvasesState.ctx.fillRect(x,y+h,w,1);canvasesState.ctx.fillStyle=gl;canvasesState.ctx.fillRect(x,y+h-1,w,1)}return}
@@ -101,7 +101,7 @@ function bev(x,y,w,h,s){const g=canvasesState.ctx,t=s*2;g.beginPath();
 /* the one keyboard / gamepad focus ring (slots, pills, rows): dark keyline, bright amber ring */
 export function focusRing(x,y,w,h){const g=canvasesState.ctx,Rd=Math.max(2,Math.min(7,w/4,h/4));g.save();g.lineWidth=3.4;g.strokeStyle='rgba(8,10,16,.8)';rr(x-.5,y-.5,w+1,h+1,Rd+1);g.stroke();g.lineWidth=1.8;g.strokeStyle='#ffd86b';rr(x-.5,y-.5,w+1,h+1,Rd+1);g.stroke();g.restore()}
 
-export function gold(x,y,w,h,r){const Rd=Math.max(1,Math.min(3.5,w/5,h/5));canvasesState.ctx.save();canvasesState.ctx.shadowColor='rgba(47,125,246,.6)';canvasesState.ctx.shadowBlur=7;canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.strokeStyle='#2f7df6';rr(x+.9,y+.9,w-1.8,h-1.8,Rd);canvasesState.ctx.stroke();canvasesState.ctx.restore()}
+export function gold(x,y,w,h,_r){const Rd=Math.max(1,Math.min(3.5,w/5,h/5));canvasesState.ctx.save();canvasesState.ctx.shadowColor='rgba(47,125,246,.6)';canvasesState.ctx.shadowBlur=7;canvasesState.ctx.lineWidth=1.8;canvasesState.ctx.strokeStyle='#2f7df6';rr(x+.9,y+.9,w-1.8,h-1.8,Rd);canvasesState.ctx.stroke();canvasesState.ctx.restore()}
 
 /* ---- vector icons (16x16 design space, drawn at any size) ---- */
 export const ICO_N=160,ICO_RT=320;
@@ -119,7 +119,7 @@ export function arcIcon(src,N){N=N||ICO_N;const pad=Math.round(N*.1),w=N-2*pad,a
  /* rim light: the silhouette minus itself shifted toward the light, kept inside the shape */
  const rim=cvs(N,N),gr2=rim.getContext('2d'),rr2=Math.max(1,N/90);gr2.drawImage(sil('rgba(255,244,214,.55)'),0,0);gr2.globalCompositeOperation='destination-out';gr2.drawImage(a,rr2*1.4,rr2*1.4);gr2.globalCompositeOperation='destination-in';gr2.drawImage(a,0,0);
  const ink=sil('#0b0810'),o=cvs(N,N),go=o.getContext('2d'),r=Math.max(1.6,N/30);
- try{go.filter='blur('+(N/40).toFixed(1)+'px)';go.globalAlpha=.45;go.drawImage(ink,N/36,N/26);go.filter='none';go.globalAlpha=1}catch(e){}
+  try{go.filter='blur('+(N/40).toFixed(1)+'px)';go.globalAlpha=.45;go.drawImage(ink,N/36,N/26);go.filter='none';go.globalAlpha=1}catch{/* Render the icon without blur styling on canvases that lack filter support. */}
  for(let i=0;i<24;i++){const t=i/24*6.2832;go.drawImage(ink,Math.cos(t)*r,Math.sin(t)*r)}go.drawImage(a,0,0);go.drawImage(rim,0,0);o.__hd=true;return o}
 
 /* pixel art -> smooth shapes: two EPX passes (16 -> 64 px) before the painted finish */
@@ -129,7 +129,7 @@ export function epx(src){const w=src.width,h=src.height,d=src.getContext('2d').g
  go.putImageData(im,0,0);return o}
 
 
-function mcSlot(x,y,w,h,p){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);const g=canvasesState.ctx,X=p===SLOTX,H=p===SLOTH,Rd=Math.max(2,Math.min(8,w/5,h/5));
+function mcSlot(x,y,w,h,p){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.round(h);const g=canvasesState.ctx,X=p===SLOTX,H=p===SLOTH;
  g.fillStyle='rgba(20,35,60,.12)';bev(x,y+2,w,h,bs(w,h));g.fill();
  btnAdd(x,y,w,h);g.fillStyle=X?'rgba(235,239,245,.62)':H?lgc('slh',y,h,0,'rgba(47,125,246,.22)',1,'rgba(47,125,246,.12)'):lgc('sl',y,h,0,'rgba(255,255,255,.7)',1,'rgba(240,244,250,.5)');bev(x,y,w,h,bs(w,h));g.fill();
  g.save();if(H){g.shadowColor='rgba(47,125,246,.45)';g.shadowBlur=7}
@@ -141,12 +141,12 @@ function mcTip(x,y,w,h){x=Math.round(x);y=Math.round(y);w=Math.round(w);h=Math.r
 
 export function TN(s,x,y,col,sc){sc=sc||1;s=L(String(s));canvasesState.ctx.font='500 '+Math.max(9,Math.round(9*sc*1.25*.88)+2)+'px '+FFP;canvasesState.ctx.textBaseline='top';canvasesState.ctx.textAlign='left';canvasesState.ctx.fillStyle=inBtn(x+1,y+1)?ink(col||'#d6b46a'):(col||'#d6b46a');canvasesState.ctx.fillText(s,x,y)}
 
-const HRT=['.KKK.KKK.','KRRWKRRRK','KRWRRRRRK','KRRRRRRRK','.KRRRRRK.','..KRRRK..','...KRK...','....K....'];
 
-function heart(x,y,kind,ps){const H=(c1,c2)=>{canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+4.5,y+7.6);canvasesState.ctx.bezierCurveTo(x+1.2,y+5.4,x-.2,y+3.4,x+.4,y+1.9);canvasesState.ctx.bezierCurveTo(x+1,y+.2,x+3.5,y-.1,x+4.5,y+1.7);canvasesState.ctx.bezierCurveTo(x+5.5,y-.1,x+8,y+.2,x+8.6,y+1.9);canvasesState.ctx.bezierCurveTo(x+9.2,y+3.4,x+7.8,y+5.4,x+4.5,y+7.6);canvasesState.ctx.closePath()};
+
+function heart(x,y,kind,_ps){const H=(_c1,_c2)=>{canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(x+4.5,y+7.6);canvasesState.ctx.bezierCurveTo(x+1.2,y+5.4,x-.2,y+3.4,x+.4,y+1.9);canvasesState.ctx.bezierCurveTo(x+1,y+.2,x+3.5,y-.1,x+4.5,y+1.7);canvasesState.ctx.bezierCurveTo(x+5.5,y-.1,x+8,y+.2,x+8.6,y+1.9);canvasesState.ctx.bezierCurveTo(x+9.2,y+3.4,x+7.8,y+5.4,x+4.5,y+7.6);canvasesState.ctx.closePath()};
  {canvasesState.ctx.save();const g=canvasesState.ctx.createLinearGradient(x,y,x+9,y+8);g.addColorStop(0,'#ff8a7a');g.addColorStop(.5,'#d8262a');g.addColorStop(1,'#7a0c14');H();canvasesState.ctx.fillStyle=kind?g:'#3a1418';canvasesState.ctx.fill();
   if(kind===1){canvasesState.ctx.save();H();canvasesState.ctx.clip();canvasesState.ctx.fillStyle='#3a1418';canvasesState.ctx.fillRect(x+4.5,y-1,6,10);canvasesState.ctx.restore()}if(kind){canvasesState.ctx.fillStyle='rgba(255,230,220,.55)';canvasesState.ctx.beginPath();canvasesState.ctx.ellipse(x+2.6,y+2.4,1,.7,-.6,0,6.283);canvasesState.ctx.fill()}H();canvasesState.ctx.lineWidth=1.2;canvasesState.ctx.strokeStyle='#120608';canvasesState.ctx.stroke();canvasesState.ctx.restore();return}
- ps=ps||1;ps=ps||1;for(let r=0;r<8;r++)for(let c=0;c<9;c++){const ch=HRT[r][c];if(ch==='.')continue;let col=ch==='K'?'#1a0606':'';if(!col){const full=kind===2||(kind===1&&c<=4);col=full?(ch==='W'?'#ffb0b0':'#e81c1c'):(ch==='W'?'#5a1414':'#3a0a0a')}canvasesState.ctx.fillStyle=col;canvasesState.ctx.fillRect(x+c*ps,y+r*ps,ps,ps)}}
+ }
 
 export function hearts(x,y,f,n){n=n||10;const hv=Math.round(Math.max(0,Math.min(1,f))*n*2);for(let i=0;i<n;i++)heart(x+i*8,y,hv>=2*i+2?2:hv===2*i+1?1:0,1)}
 

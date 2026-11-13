@@ -10,7 +10,7 @@ import { hudDisplayState } from './hud-state.js';
 import { kitFrame } from './menu-kit.js';
 import { pill } from './minimap.js';
 import { questMarker } from './quest-marker.js';
-import { settingsState } from './settings.js';
+import { settingsState } from './panel-state.js';
 import { btnReset } from './typography.js';
 
 /* ================= QUEST PANEL AND QUEST LOG (display only) =================
@@ -21,8 +21,8 @@ import { btnReset } from './typography.js';
 export const questPanelState = { log: false };
 
 let hide=null;
-const hidden=()=>{if(hide===null){try{hide=localStorage.getItem('dk_qhide')==='1'}catch(e){hide=false}}return hide};
-const setHidden=v=>{hide=!!v;try{localStorage.setItem('dk_qhide',v?'1':'0')}catch(e){}};
+const hidden=()=>{if(hide===null){try{hide=localStorage.getItem('dk_qhide')==='1'}catch {hide=false}}return hide};
+const setHidden=v=>{hide=!!v;try{localStorage.setItem('dk_qhide',v?'1':'0')}catch { /* Keep the hidden flag for this session when storage is unavailable. */ }};
 
 const RWN={g:'gold',w:'wood',s:'stone',f:'food'},RWC={g:'#ffd23c',w:'#e8b27a',s:'#d4dae6',f:'#f2c14e'};
 const rwd=q=>{for(const k in q.r)return ['+'+q.r[k]+' '+RWN[k],RWC[k]];return ['','#fff']};
@@ -39,7 +39,7 @@ function pbar(x,y,w,h,f,col){const g=canvasesState.ctx;g.fillStyle='#000';g.fill
 
 const count=(LS,Q)=>{let n=0;for(const q of LS)if(Q.d[q.id])n++;return n};
 
-export function questPanel(UW,UH){hudDisplayState.qbox=null;if(!qActive()||sessionState.over||sessionState.showMap||questPanelState.log)return;
+export function questPanel(UW,_UH){hudDisplayState.qbox=null;if(!qActive()||sessionState.over||sessionState.showMap||questPanelState.log)return;
  const Q=questsState.Q,LS=qList(),N=LS.length,nd=count(LS,Q),x=4,y=settingsState.TOPH+Math.max(38,hudDisplayState.barsH|0),lastQ=Q.last?qById(Q.last):null,just=!!lastQ&&sessionState.time-Q.dt<5&&sessionState.time>=Q.dt,cur=qCur();
  if(hidden()||(!cur&&!just)){const lab='Quests '+nd+'/'+N,w=tw(lab,.75)+14;hudDisplayState.qbox=[x,y,w,15];hudState.uiRects.push(U(x,y,w,15));pill(x,y,w,15,lab,BTN,BTNH,()=>{questPanelState.log=true;snd('click')},null,.75);return}
  const w=Math.min(184,UW-8),q=just?lastQ:cur,num=Math.max(0,LS.indexOf(q))+1,dl=wrap(q.d,.75,w-14).slice(0,3),h=30+dl.length*10+(just?13:22);

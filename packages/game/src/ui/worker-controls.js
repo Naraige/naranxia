@@ -10,7 +10,7 @@ import { MP } from '../multiplayer/session.js';
 import { hudDisplayState } from './hud-state.js';
 import { reachLong } from '../world/connectivity.js';
 import { gOK } from '../world/routes.js';
-import { amt, ter } from '../world/terrain.js';
+import { amt, ter } from '../world/terrain-state.js';
 
 /* ---- tasks for the selected peasants: the nearest target of that kind, then an ordinary order (a command in co-op) ---- */
 export const JOBK=new Set(['jw','js','jg','jf','jr']),JOBI={jw:'wood',js:'stone',jg:'coin',jf:'farm',jr:'repair'},JOBL={jw:'Wood',js:'Stone',jg:'Gold',jf:'Farm',jr:'Build'};

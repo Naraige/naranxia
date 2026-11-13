@@ -1,5 +1,5 @@
 import { newG, toGeo } from '../geometry.js';
-import { bC, bM, bP, bS, bW, bL, bR, qAnvil, qBan, qBarrel, qChim, qCone, qCornice, qCrate, qDoor, qFire, qFlag, qGrind, qLadder, qLamp, qMerl, qPlinth, qPost, qPyr, qQuoin, qRing, qRoof, qRound, qSack, qSign, qSlit, qStone, qTimber, qTree, qWheel, qWin, QBR, QBR2, QHX, QIR, QLOG, QLOGT, QS, QSD, QSL, QTC, QTR, QW1, QW2, QW3 } from './building-parts.js';
+import { bC, bM, bP, bS, bW, bL, bR, qAnvil, qBan, qBarrel, qCone, qCornice, qCrate, qDoor, qFire, qFlag, qGrind, qLadder, qLamp, qMerl, qPlinth, qPost, qPyr, qQuoin, qRing, qRoof, qRound, qSack, qSign, qSlit, qStone, qTimber, qTree, qWheel, qWin, QBR, QBR2, QHX, QIR, QLOG, QLOGT, QS, QSD, QSL, QTR, QW1, QW2, QW3 } from './building-parts.js';
 import { HAYC, ROPE, structureModelsState } from './structures.js';
 
 /* ---- last-bastion buildings (2x2 tiles, front = +z). Each one is told apart by its outline first (dome and telescope, stilts and
@@ -128,7 +128,7 @@ export function orchardGeo() {
 export function forgeGeo() {
   const G = newG(), x0 = .2, x1 = 1.22, z0 = .22, z1 = 1.24, xc = (x0 + x1) / 2, zc = (z0 + z1) / 2; grass(G, '#6a7a48'); flags(G, 1.1, 1.62, 1.7, .64, 6);
   qStone(G, xc, .13, zc, x1 - x0, z1 - z0, .84, { moss: 1 }); qQuoin(G, x0, z0, x1, z1, .13, .84);
-  const rt = qRoof(G, xc, zc, z1 - z0, x1 - x0, .97, QSL, false, { rise: .2, run: .15, ov0: .08, ov1: .1, side: .08, fill: QS[2] });
+  qRoof(G, xc, zc, z1 - z0, x1 - x0, .97, QSL, false, { rise: .2, run: .15, ov0: .08, ov1: .1, side: .08, fill: QS[2] });
   for (let k = 0; k < 11; k++) bS(G, .44, .13 + k * .2, .42, k < 5 ? .46 : .36, .2, k < 5 ? .46 : .36, k % 2 ? '#9a5442' : '#87493a');
   bS(G, .44, 2.33, .42, .44, .06, .44, QTR); bP(G, .44, 2.39, .42, .24, .05, .24, '#262222'); bL(G, .44, 2.4, .42, .14, .04, .14, '#ff7a1a'); (G.chim || (G.chim = [])).push([.44, 2.5, .42]);
   qDoor(G, .62, z1 + .016, true, 1, { y: .13, w: .28, h: .5, wood: 1, lamp: 1 }); qWin(G, 1.0, .5, z1 + .016, true, 1, { glow: 1, w: .16, h: .2 }); qWin(G, x0 - .016, .5, .9, false, -1, { wood: 1, w: .14, h: .2 });
@@ -192,7 +192,7 @@ export function warRoomGeo() {
   bP(G, 1.72, .39, .7, .045, .06, .045, '#b83a3a'); bP(G, 1.84, .39, .78, .045, .06, .045, '#b83a3a'); bP(G, 1.76, .39, .98, .045, .06, .045, '#2f6ea8'); bM(G, 1.86, .39, .62, .04, .08, .04, QBR2);
   /* yard: spear rack, war drum, a banner pole */
   for (const x of [.24, .7]) bW(G, x, .13, 1.74, .05, .5, .05, QW2); bW(G, .47, .55, 1.74, .56, .04, .05, QW2); bW(G, .47, .3, 1.74, .56, .04, .05, QW2);
-  [.32, .44, .56, .66].forEach((x, k) => { bW(G, x, .15, 1.78, .025, .68, .025, '#b08a58'); bM(G, x, .83, 1.78, .05, .1, .02, '#dadde4') });
+  [.32, .44, .56, .66].forEach((x, _k) => { bW(G, x, .15, 1.78, .025, .68, .025, '#b08a58'); bM(G, x, .83, 1.78, .05, .1, .02, '#dadde4') });
   bW(G, 1.2, .13, 1.72, .26, .2, .26, QW1); bC(G, 1.2, .33, 1.72, .28, .03, .28, '#e8dcc0'); bC(G, 1.2, .2, 1.72, .28, .05, .28, '#a8322c'); bW(G, 1.36, .36, 1.66, .16, .025, .025, QW3);
   bP(G, 1.5, .13, 1.84, .045, 1.1, .045, QIR); bM(G, 1.5, 1.23, 1.84, .08, .06, .08, QBR2); bC(G, 1.5, .8, 1.87, .22, .4, .02, B); bC(G, 1.5, .74, 1.87, .1, .06, .02, B); bC(G, 1.5, .94, 1.885, .14, .04, .012, '#f4ecd8'); bC(G, 1.5, .88, 1.885, .04, .16, .012, '#f4ecd8');
   return toGeo(G);

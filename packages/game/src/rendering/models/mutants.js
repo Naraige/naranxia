@@ -52,7 +52,7 @@ export function pxMutant(kind,type,ZV,P){
    /* small head sunk into the chest on the weak side: heavy brow, underbite with tusks, one big eye */
    b(HG,-4.6,22.6,.6,1.6,28.6,7,over(skin,(f,u,v,W,H,r)=>{if(f==='F'){if(r===2&&u>=3&&u<=4)return DK;if(r===2&&u===1)return DK;if(r>=4)return u%2?DK:FL[0]}if(f==='T'&&(u+v)%4===0)return FL[1]}));
    b(HG,-4.9,27.2,6.4,1.9,28.6,7.8,dskin,{g:[7,1,1]});
-   b(HG,-5.1,20.6,2.6,2.1,23.4,8.2,over(dskin,(f,u,v,W,H,r)=>f==='T'&&v<=1?DK:undefined));
+   b(HG,-5.1,20.6,2.6,2.1,23.4,8.2,over(dskin,(f,u,v,_W,_H,_r)=>f==='T'&&v<=1?DK:undefined));
    b(HG,-4.9,23.4,7,-3.7,26.2,8.2,bone);b(HG,.7,23.4,7,1.9,25.6,8.2,bone);
    b(HG,-1.4,25.4,7,.4,26.9,7.16,flat(C('#ffb02a')),{m:5});b(HG,-3.7,25.8,7,-2.9,26.6,7.14,flat(EYE),{m:5});
    /* thick legs, clawed feet */
@@ -72,7 +72,7 @@ export function pxMutant(kind,type,ZV,P){
   return}
 
  /* ---------------- BOSS ---------------- */
- if(kind==='boss'){const SK=PP(['#342f3c','#544c5e','#766c84']),SKD=[shadeHex(SK[0],.78),SK[0],SK[1]],skin=tone(SK,K),dskin=tone(SKD,K+5),VI=C('#b04aff'),VL=C('#e2b0ff'),VD=C('#5a1e8a'),
+ if(kind==='boss'){const SK=PP(['#342f3c','#544c5e','#766c84']),SKD=[shadeHex(SK[0],.78),SK[0],SK[1]],skin=tone(SK,K),dskin=tone(SKD,K+5),VI=C('#b04aff'),VL=C('#e2b0ff'),
    GO=PP(['#7a5a14','#c49a2e','#f0cc5c']),FLG=C(['#8a1c1c','#5a2a7a','#1c5a4a','#8a5a1c','#2a3a7a','#6a1c4a'][(ZV&&ZV.v|0)%6]),FLD=shadeHex(FLG,.7),
    vein=(k,p)=>(f,u,v)=>f==='F'&&N(k,u>>1,v)<p&&N(k+1,u,v)<.6?VI:null;
   pxScene(()=>{
@@ -80,7 +80,7 @@ export function pxMutant(kind,type,ZV,P){
    b(G,-7.6,15,-4,7.6,25.6,4.6,skin);
    /* the second maw: lips of raw flesh, a glowing gullet, teeth closing from both sides */
    b(G,-3.8,15.2,4.4,-2.2,24.6,5.3,tone(FL,K+3),{g:[2,9,1]});b(G,2.2,15.2,4.4,3.8,24.6,5.3,tone(FL,K+4),{g:[2,9,1]});
-   b(G,-2.2,15.6,4.5,2.2,24.2,4.9,flat(DK),{g:[1,1,1],ao:false});b(G,-1,16.6,4.9,1,23.2,5.1,(f,u,v,W,H)=>v%3===1?VL:VI,{m:5,g:[2,7,1]});
+   b(G,-2.2,15.6,4.5,2.2,24.2,4.9,flat(DK),{g:[1,1,1],ao:false});b(G,-1,16.6,4.9,1,23.2,5.1,(f,u,v,_W,_H)=>v%3===1?VL:VI,{m:5,g:[2,7,1]});
    for(let i=0;i<4;i++){b(G,-2.6,16.4+i*2,4.6,-.6,17.4+i*2,6.2,bone,{g:[2,1,1]});b(G,.6,17.4+i*2,4.6,2.6,18.4+i*2,6.2,bone,{g:[2,1,1]})}
    b(G,-7.6,15,4.62,7.6,25.6,4.7,vein(K+11,.2),{m:5,g:[15,10,1]});
    /* rib claws arching over the shoulders, spine spikes, the torn banner of the fallen leader */
@@ -114,7 +114,7 @@ export function pxMutant(kind,type,ZV,P){
    /* long skull carried low and forward: snout, hanging split jaw, back-swept quills */
    b(HG,-3,22.4,5,3,28,11.6,over(skin,(f,u,v,W,H,r)=>{if(f==='T'&&u>=2&&u<=3)return BN[1];if((f==='R'||f==='L')&&r===2&&u>=1&&u<=2)return DK}));
    b(HG,-2.2,22.4,11.6,2.2,25.6,15.4,over(tone([SK[0],SK[1],SK[2]],K+4),(f,u,v,W,H,r)=>f!=='T'&&f!=='B'&&r===H-1?(u%2?BN[2]:DK):f==='F'&&r===0?DK:undefined));
-   pxRot(HG,()=>{b(HG,-2,20.6,8,2,22.2,14.6,over(tone(BL,K+5),(f,u,v,W,H,r)=>f==='T'?(u===0||u===W-1||v===0?BN[2]:BL[0]):undefined))},[.5,0,0],[0,22.4,8]);
+   pxRot(HG,()=>{b(HG,-2,20.6,8,2,22.2,14.6,over(tone(BL,K+5),(f,u,v,W,_H,_r)=>f==='T'?(u===0||u===W-1||v===0?BN[2]:BL[0]):undefined))},[.5,0,0],[0,22.4,8]);
    for(const s of[-1,1])b(HG,s>0?1.2:-2.6,25.7,11.6,s>0?2.6:-1.2,26.8,11.76,flat(C('#ff3a2a')),{m:5});
    b(HG,-.6,27.4,1.4,.6,29,6.4,bone);b(HG,-2.4,26.4,2.4,-1.4,27.6,5.6,bone);b(HG,1.4,26.4,2.4,2.4,27.6,5.6,bone);
    /* stilt legs: thigh, thin shin, knee spur, long clawed foot */
@@ -128,7 +128,7 @@ export function pxMutant(kind,type,ZV,P){
 
  /* ---------------- BOMBER ---------------- */
  if(kind==='bomber'){const SK=sk3('#cc8478',.78),skin=tone(SK,K),CH=PP(['#1c1410','#3a2a22','#5a4034']),OR=C('#ff8a1e'),YL=C('#ffe27a'),RD=C('#d83a12'),
-   swell=over(skin,(f,u,v,W,H,r)=>{const n=N(K+6,u>>1,v>>1);if(n>.9)return CH[1];if(f!=='T'&&N(K+7,u,v)>.93)return C('#e8b070')}),
+   swell=over(skin,(f,u,v,_W,_H,_r)=>{const n=N(K+6,u>>1,v>>1);if(n>.9)return CH[1];if(f!=='T'&&N(K+7,u,v)>.93)return C('#e8b070')}),
    crack=(k,th)=>(f,u,v,W,H)=>{if(f!=='F')return null;const c=W/2+Math.sin(v*1.3+k)*W*.22,d=Math.abs(u+.5-c),br=Math.abs(v-H*.5)<1&&Math.abs(u+.5-W/2)<W*.36;return d<th*.5?YL:d<th||br?OR:d<th+1&&N(k,u,v)<.5?RD:null};
   pxScene(()=>{
    /* a bloated barrel of a body hanging over the hips */
@@ -139,7 +139,7 @@ export function pxMutant(kind,type,ZV,P){
    b(G,-.4,23,-7.2,.4,26.4,-6.4,flat(CH[0]),{ao:false});b(G,-.8,26.4,-7.6,.8,28,-6,(f,u,v)=>(u+v)%2?YL:OR,{m:5,g:[2,2,2]});
    /* the unstable core shows through the split belly and the sides */
    b(G,-5,11,7.62,5,21,7.72,crack(K,1.3),{m:5,g:[10,10,1]});
-   b(G,7.2,13.6,-.6,7.34,19.4,3.4,(f,u,v,W,H)=>f==='R'&&Math.abs(u-1.5-Math.sin(v+K))<.8?OR:null,{m:5,g:[1,6,4]});b(G,-7.34,13.6,-.6,-7.2,19.4,3.4,(f,u,v,W,H)=>f==='L'&&Math.abs(u-1.5-Math.sin(v*1.4+K))<.8?OR:null,{m:5,g:[1,6,4]});
+   b(G,7.2,13.6,-.6,7.34,19.4,3.4,(f,u,v,_W,_H)=>f==='R'&&Math.abs(u-1.5-Math.sin(v+K))<.8?OR:null,{m:5,g:[1,6,4]});b(G,-7.34,13.6,-.6,-7.2,19.4,3.4,(f,u,v,_W,_H)=>f==='L'&&Math.abs(u-1.5-Math.sin(v*1.4+K))<.8?OR:null,{m:5,g:[1,6,4]});
    b(G,-6,23.02,-4.6,6,23.12,5.6,(f,u,v,W,H)=>{if(f!=='T')return null;const d=Math.abs(v+.5-(H/2+Math.sin(u*1.1+K)*H*.28));return d<.6?YL:d<1.3?OR:null},{m:5,g:[12,1,10]});
    b(G,3,20.4,4.4,6.4,23.8,7,glw(OR,YL,K),{m:5});b(G,-6.6,19.6,1,-4.2,22.6,4.4,glw(OR,YL,K+1),{m:5});b(G,-2.4,22.6,2.4,0,24.4,5,glw(RD,OR,K+2),{m:5,g:[2,2,2]});
    /* small swollen head sunk between the shoulders, the fire behind its teeth */
@@ -163,7 +163,7 @@ export function pxMutant(kind,type,ZV,P){
    /* the head: a wide skull with no lower face, the jaw hanging a hand lower, acid pooling in it and running down in strands */
    b(HG,-4,24,1.6,4,29.6,9,over(skin,(f,u,v,W,H,r)=>{if(f==='F'&&r>=4)return u%2?DK:C('#3e4a16');if(f==='F'&&r===1&&(u===1||u===2||u===5||u===6))return DK}));
    b(HG,-3,23.2,8.5,3,24,9.1,(f,u)=>u%2?null:BN[2],{g:[6,1,1],ao:false});
-   b(HG,-3.6,19.4,3.4,3.6,21.4,10,over(skin,(f,u,v,W,H)=>f==='T'?(u===0||u===W-1||v===0?(u%2?BN[2]:SK[0]):AD):undefined));
+   b(HG,-3.6,19.4,3.4,3.6,21.4,10,over(skin,(f,u,v,W,_H)=>f==='T'?(u===0||u===W-1||v===0?(u%2?BN[2]:SK[0]):AD):undefined));
    b(HG,-2.6,21.4,4.6,2.6,22,9.4,(f,u,v)=>(u+v)%2?AL:AC,{m:5,g:[5,1,5]});
    for(const s of[-1,1])b(HG,s>0?3:-3.8,21.4,3,s>0?3.8:-3,24,4.6,tone([SK[0],SK[0],SK[1]],K+4),{g:[1,3,2]});
    b(HG,-2.3,16.4,9.4,-1.6,19.4,10,flat(AC),{m:5});b(HG,1,17.4,9.4,1.7,19.4,10,flat(AL),{m:5});b(HG,-.3,14.8,9.3,.3,19.4,9.9,(f,u,v)=>v?AC:AL,{m:5,g:[1,5,1]});
@@ -185,9 +185,9 @@ export function pxMutant(kind,type,ZV,P){
     b(G,-2.2,25,-5.6,-.6,30.4,-4,cry,{m:5});b(G,.4,25,-4.6,1.8,28,-3.2,cry,{m:5});b(G,-4.2,21.6,-8.2,-2.8,23.2,-6.4,cry,{m:5});b(G,5,27.6,-1.2,6.4,31.4,.2,cry,{m:5});b(G,6.6,27.6,.8,7.6,29.4,1.8,cry,{m:5})},[a,0,0],[0,12,0]);
    /* the head: iron cap rusted on, a stone jaw, and one lantern where the face was */
    b(HG,-4,23.4,-.6,4,31.4,7,over(skin,(f,u,v,W,H,r)=>{if(f!=='T'&&r>=5)return (u%3===2&&r<7)?ST[0]:ST[r===5?2:1];if(f==='F'&&r===5&&u>=1&&u<=6)return u%2?DK:ST[2]}));
-   b(HG,-4.6,29.2,-1.2,4.6,30.2,7.6,(f,u,v,W,H)=>f==='T'?IR[1]:(N(K+5,u,v)<.2?RS:IR[2]),{m:4,g:[9,1,9]});b(HG,-3.6,30.2,-.2,3.6,32.6,6.6,(f,u,v,W,H)=>N(K+5,u>>1,(v>>1)+f.charCodeAt(0))<.22?RS:f==='T'?IR[1]:v===0?IR[0]:IR[2],{m:4,g:[7,2,7]});
-   b(HG,-1.8,25.2,6.4,1.8,29.2,11,(f,u,v,W,H)=>u===1&&v===1?AML:(u+v)%2?AM:AMD,{m:5,g:[3,3,3]});b(HG,-1.4,29.2,6.2,1.4,30,10.4,iron,{m:4,g:[3,1,3]});b(HG,-2.1,24.5,6.2,2.1,25.2,11.3,iron,{m:4,g:[3,1,3]});
-   b(LG,-2,-12,-2,2,0,2,over(tone(LE,K+6),(f,u,v,W,H,r)=>undefined));b(LG,-2.6,-12,-2.6,2.6,-8.4,3.2,stone);ground()});
+   b(HG,-4.6,29.2,-1.2,4.6,30.2,7.6,(f,u,v,_W,_H)=>f==='T'?IR[1]:(N(K+5,u,v)<.2?RS:IR[2]),{m:4,g:[9,1,9]});b(HG,-3.6,30.2,-.2,3.6,32.6,6.6,(f,u,v,_W,_H)=>N(K+5,u>>1,(v>>1)+f.charCodeAt(0))<.22?RS:f==='T'?IR[1]:v===0?IR[0]:IR[2],{m:4,g:[7,2,7]});
+   b(HG,-1.8,25.2,6.4,1.8,29.2,11,(f,u,v,_W,_H)=>u===1&&v===1?AML:(u+v)%2?AM:AMD,{m:5,g:[3,3,3]});b(HG,-1.4,29.2,6.2,1.4,30,10.4,iron,{m:4,g:[3,1,3]});b(HG,-2.1,24.5,6.2,2.1,25.2,11.3,iron,{m:4,g:[3,1,3]});
+   b(LG,-2,-12,-2,2,0,2,over(tone(LE,K+6),(_f,_u,_v,_W,_H,_r)=>undefined));b(LG,-2.6,-12,-2.6,2.6,-8.4,3.2,stone);ground()});
   arms2(P,T=>{/* the right forearm turned to stone, a pick grown out of the wrist */
     b(T,-2,-7,-2,2,-1,2,over(skin,(f,u,v,W,H,r)=>f!=='T'&&r<=2?LE[1]:undefined));b(T,-2.6,-14,-2.6,2.6,-6.4,2.6,stone);
     b(T,-1,-17.6,-1,1,-14,1,PK,{m:4});b(T,-1,-19.2,-7.6,1,-16.6,7.6,PK,{m:4,g:[2,2,8]});
@@ -200,7 +200,7 @@ export function pxMutant(kind,type,ZV,P){
  /* ---------------- HUSK ---------------- */
  {const SK=sk3('#7a5a3c',.55),skin=tone(SK,K),EP=C('#c8f0ff'),a=.3,
    wrapd=over(skin,(f,u,v,W,H,r)=>{if(f==='T'||f==='D')return undefined;const n=N(K+9,(u>>1)+f.charCodeAt(0),r);if(r%3===1&&n<.7)return LN[N(K+3,u,r)<.25?0:1];if(r%3===2&&n<.25)return LN[2]}),
-   linen=tone(LN,K+4,{bl:.25}),astrip=(f,u,v)=>LN[(u+v)%2?1:2],strip=(f,u,v,W,H)=>v===0&&N(K+5,u,W)<.5?null:LN[v%3===0?0:v%3===1?1:2];
+   linen=tone(LN,K+4,{bl:.25}),astrip=(f,u,v)=>LN[(u+v)%2?1:2],strip=(f,u,v,W,_H)=>v===0&&N(K+5,u,W)<.5?null:LN[v%3===0?0:v%3===1?1:2];
   pxScene(()=>{
    pxRot(G,()=>{/* split from the collar to the hips: two dried halves that no longer line up, the spine between them, ribs across the gap */
     b(G,-3,11.4,-1.6,3,13.6,1.6,linen);

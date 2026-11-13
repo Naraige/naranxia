@@ -34,7 +34,7 @@ import { puff } from '../rendering/effects.js';
 import { icoPart } from '../rendering/pixel-icons.js';
 import { buildStructMesh, refreshNear } from '../rendering/structures.js';
 import { hudDisplayState } from '../ui/hud-state.js';
-import { occ } from '../world/terrain.js';
+import { occ } from '../world/terrain-state.js';
 
 export const economyState = {
   priceT: 0,
@@ -93,15 +93,15 @@ export const ALERTS=[];
 
 export let startResearch2 = function startResearch2(k){if(sessionState.over||RS2.done[k])return;if(RS2.on){hudDisplayState.msgS='One research at a time: '+RN2[RS2.on]+' is in progress';hudDisplayState.msgT=3;snd('err');return}if(!hasAcademy(playersState.CURPL)){hudDisplayState.msgS='Build an Academy to research';hudDisplayState.msgT=3;snd('err');return}if(!rxPre(k)){hudDisplayState.msgS=RN2[k]+' needs '+(RPRE[k]==='masonry'?'Masonry':RN2[RPRE[k]]);hudDisplayState.msgT=3;snd('err');return}const lk=rxLock(k);if(lk){hudDisplayState.msgS=RN2[k]+' is closed: you chose '+RN2[lk];hudDisplayState.msgT=3;snd('err');return}if(!ok(C[k])){hudDisplayState.msgS=RN2[k]+' is too expensive';hudDisplayState.msgT=3;snd('err');return}pay(C[k]);RS2.on=k;RS2.t=0;{const xi=rxPair(k);if(xi>=0){if(!RS2.ch)RS2.ch={};RS2.ch[xi]=k}}snd('build');hudDisplayState.msgS='Researching '+RN2[k]+'...';hudDisplayState.msgT=3};
 
-function farmCount(p){let n=0;for(const s of sessionState.structs)if(s.t===0&&s.type==='farm'&&s.prog>=1&&(p===undefined||(s.pl|0)===p))n++;return n}
+
 
 export function extraSim(dt){{for(const s of sessionState.structs)if(s.rally&&s.t===0&&(s.pl|0)===LPL()&&(s.type!=='barracks'||s===selectionState.selB)&&REALR()<dt*.9)puff(s.rally.x,s.rally.y,'#7dffa0',2,26)}if(economyState.alertT>0)economyState.alertT-=dt;for(let i=ALERTS.length-1;i>=0;i--){ALERTS[i].t-=dt;if(ALERTS[i].t<=0)ALERTS.splice(i,1)}
- if(RS2.on){RS2.t+=dt;if(RS2.t>=RT2[RS2.on]){const k=RS2.on;RS2.done[k]=true;if(k==='plate'||k==='mail')setTimeout(()=>{try{icoPart('units')}catch(e){}},0);ach('res');RS2.on=null;snd('fanfare');sessionState.bannerT=4;sessionState.bannerS=RN2[k].toUpperCase();sessionState.bannerS2=({iron:'Your soldiers hit 25% harder',plate:'Your side takes 22% less damage',drill:'Units train 25% faster',steel:'Your soldiers hit 20% harder again',mail:'Your side takes 15% less damage again',tools:'Peasants gather 33% faster',harvest:'Farms yield 50% more food',fletch:'Archers and towers hit 25-40% harder',fire:'Archers set zombies on fire',bastion:'Buildings have 40% more strength',oil:'Walls, gates and towers scald zombies next to them',era:'Iron age: your units hit 10% harder, buildings slowly mend'})[k]}else{hudDisplayState.msgS='Researching '+RN2[RS2.on]+' '+Math.floor(RS2.t/RT2[RS2.on]*100)+'%';hudDisplayState.msgT=1}}
+ if(RS2.on){RS2.t+=dt;if(RS2.t>=RT2[RS2.on]){const k=RS2.on;RS2.done[k]=true;if(k==='plate'||k==='mail')setTimeout(()=>{try{icoPart('units')}catch{/* Icon refresh is optional; the research state is already committed. */}},0);ach('res');RS2.on=null;snd('fanfare');sessionState.bannerT=4;sessionState.bannerS=RN2[k].toUpperCase();sessionState.bannerS2=({iron:'Your soldiers hit 25% harder',plate:'Your side takes 22% less damage',drill:'Units train 25% faster',steel:'Your soldiers hit 20% harder again',mail:'Your side takes 15% less damage again',tools:'Peasants gather 33% faster',harvest:'Farms yield 50% more food',fletch:'Archers and towers hit 25-40% harder',fire:'Archers set zombies on fire',bastion:'Buildings have 40% more strength',oil:'Walls, gates and towers scald zombies next to them',era:'Iron age: your units hit 10% harder, buildings slowly mend'})[k]}else{hudDisplayState.msgS='Researching '+RN2[RS2.on]+' '+Math.floor(RS2.t/RT2[RS2.on]*100)+'%';hudDisplayState.msgT=1}}
 }
 
 export let startResearch = function startResearch(){if(RS.done||RS.on||sessionState.over)return;if(!hasAcademy(playersState.CURPL)){hudDisplayState.msgS='Build an Academy to research';hudDisplayState.msgT=3;snd('err');return}if(!ok(C.upgrade)){hudDisplayState.msgS='Masonry needs 200 stone and 100 wood';hudDisplayState.msgT=3;snd('err');return}pay(C.upgrade);RS.on=true;RS.t=0;snd('build');hudDisplayState.msgS='Researching Masonry...';hudDisplayState.msgT=3};
 
-export function finishResearch(){ach('res');RS.done=true;RS.on=false;Object.assign(C,playersState.BTIER?CSTONE:CWOOD);setTimeout(()=>{try{icoPart('tier')}catch(e){}},0);snd('horn');sessionState.bannerT=5;sessionState.bannerS='STONE AGE';sessionState.bannerS2='Select a building and press Upgrade, or use the Stone upgrade tool'}
+export function finishResearch(){ach('res');RS.done=true;RS.on=false;Object.assign(C,playersState.BTIER?CSTONE:CWOOD);setTimeout(()=>{try{icoPart('tier')}catch{/* Icon refresh is optional; the research state is already committed. */}},0);snd('horn');sessionState.bannerT=5;sessionState.bannerS='STONE AGE';sessionState.bannerS2='Select a building and press Upgrade, or use the Stone upgrade tool'}
 
 export function doUpgrade(tx,ty){const o=occ.get(ty*TW+tx);if(!o||o.t!==0||o.tier!==0||o.prog<1)return;if(!RS.done){hudDisplayState.msgS='Stone upgrades need Masonry (Academy)';hudDisplayState.msgT=3;snd('err');return}const c=UPC[o.type];if(!c)return;if(!ok(c)){hudDisplayState.msgS='Not enough resources to upgrade';hudDisplayState.msgT=2;snd('err');return}pay(c);const r=o.hp/o.max;o.max=SH[o.type];o.hp=Math.round(o.max*r);o.tier=1;buildStructMesh(o);refreshNear(o);puff(o.x,o.y,'#d9d9d9',12,80);snd('build',o.x,o.y)}
 

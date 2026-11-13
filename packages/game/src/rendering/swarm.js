@@ -10,11 +10,11 @@ import { swGeoV, SWV, swVar } from './models/swarm.js';
 import { mut2, MUT2_EYE } from './models/mutant-style.js';
 import { zSpec } from './models/zombies.js';
 import { CAM, scene } from './scene.js';
-import { gh } from './terrain.js';
+import { gh } from '../world/terrain-queries.js';
 import { THREE } from './three.js';
 import { angd, UNITK } from './unit-animation.js';
 import { _uFr, GLTOON } from './unit-instances.js';
-import { HT, ter, WLV } from '../world/terrain.js';
+import { HT, ter, WLV } from '../world/terrain-state.js';
 
 export const swarmRenderingState = {
   ZEYN: 0,

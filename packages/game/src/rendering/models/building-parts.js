@@ -4,10 +4,6 @@ import { structureModelsState } from './structures.js';
 
 /* ================= Medieval Minecraft buildings: timber frames, stone bricks, steep roofs =================
    (these declarations replace the earlier building models; footprints, door sides and heights are unchanged) */
-const MDK='#3b2a1a',MDK2='#4a3523',MSP='#6a4e2e',MSP2='#5a4126',MOK='#a6844f',MOK2='#977648',MPL='#e9e1cc',
- MSB=['#8f8f8f','#848484','#999999','#8a8a8a'],MSB2='#6e6e6e',MCB=['#7b7b7b','#8a8a8a','#6c6c6c','#828282'],MMS=['#6a8a52','#5d7d48'],
- MSL=['#4c4e57','#42444c','#575963'],MRF=['#3f2c1c','#4b3522'],MPU=['#5b3d8a','#4c3175'],MBK=['#904c3b','#7f4233'],MGL='#bfe0f0',MLT='#ffd36a',MIR='#38383f',MLOG='#5a4128',MLOGT='#9c7a48',MBAR='#5b5e66';
-
 /* ---- kit ---- */
 
 /* steep stair roof with plaster gables and a dark ridge beam; returns the ridge top */

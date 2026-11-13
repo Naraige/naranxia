@@ -27,7 +27,7 @@ async()=>{/* v91 features: seasons and weather, spike trap, boiling oil, boss, k
  kingSkill0('cry');chk('cry',kn.wcT>t0+7&&kskLeft(kg,'cry')>40);const w1=kn.wcT;kingSkill0('cry');chk('cryCooldown',kn.wcT===w1);
  kingSkill0('charge');kingTick();chk('charge',kg.chT>t0+3&&kg.spdK>2);update(.05);chk('buff',kn.buff>=1.35&&kg.buff>=1.8);
  /* stats: a kill credited to the unit that struck last, resources earned, units lost */
- const k0=kills,kz=mkU(1,'zombie',(CS.tx+8)*TS,(CS.ty+8)*TS,null,-1);units.push(kz);LH.set(kz,'knight');kz.hp=0;const gp=GST.g;RESP[0].g+=0;update(.05);
+ const k0=kills,kz=mkU(1,'zombie',(CS.tx+8)*TS,(CS.ty+8)*TS,null,-1);units.push(kz);LH.set(kz,'knight');kz.hp=0;update(.05);
  chk('statKill',kills===k0+1&&GST.k.knight===1);chk('statBest',!!gstBest()&&gstBest()[1]>=1);
  /* record by map */
  waveN=12;kills=40;sbRec();chk('record',SBR&&SBR.top[0].s===1240&&SBR.rank===0);

@@ -13,12 +13,12 @@ import { objectivesState, SPK } from '../multiplayer/objectives.js';
 import { MP } from '../multiplayer/session.js';
 import { puff } from '../rendering/effects.js';
 import { scene } from '../rendering/scene.js';
-import { gh } from '../rendering/terrain.js';
+import { gh } from '../world/terrain-queries.js';
 import { THREE } from '../rendering/three.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { IC } from '../ui/icons.js';
 import { gOK } from '../world/routes.js';
-import { occ, ter } from '../world/terrain.js';
+import { occ, ter } from '../world/terrain-state.js';
 
 /* tile -> hp */
 /* ================= SPIKE TRAPS AND BOILING OIL (#9) =================

@@ -11,5 +11,5 @@ export const thp=()=>PAL[THEME.c][1],ths=()=>PAL[THEME.c][2],thd=()=>{const h=he
 export function initializeKingdomTheme() {
   THEME = {n:KNAMES[(Math.random()*KNAMES.length)|0],c:0,e:0,c2:10,p:0};
 
-  try{const t=JSON.parse(localStorage.getItem('dk_theme')||'null');if(t&&typeof t.n==='string')THEME={n:t.n.slice(0,18),c:Math.abs(t.c|0)%PAL.length,e:Math.abs(t.e|0)%16,c2:t.c2==null?10:Math.abs(t.c2|0)%PAL.length,p:Math.abs(t.p|0)%8}}catch(e){}
+  try{const t=JSON.parse(localStorage.getItem('dk_theme')||'null');if(t&&typeof t.n==='string')THEME={n:t.n.slice(0,18),c:Math.abs(t.c|0)%PAL.length,e:Math.abs(t.e|0)%16,c2:t.c2==null?10:Math.abs(t.c2|0)%PAL.length,p:Math.abs(t.p|0)%8}}catch{/* Malformed or unavailable storage leaves the default kingdom theme. */}
 }

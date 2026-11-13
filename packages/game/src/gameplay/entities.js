@@ -4,7 +4,7 @@ import { playersState, stoneOn } from './players.js';
 import { BT, C, ROTT, SH, T, TS, TW } from './rules.js';
 import { sessionState } from './session.js';
 import { hudDisplayState } from '../ui/hud-state.js';
-import { occ, terrainState } from '../world/terrain.js';
+import { occ, terrainState } from '../world/terrain-state.js';
 import { fv, solid, solidAt } from '../world/traversal.js';
 
 export function mk(t,type,tx,ty,sz,done,ax,gl){gl=type==='gate'?(gl||2):0;const tiles=tilesFor(type,tx,ty,sz,ax,gl),g=type==='gate',s={sid:++sessionState.SID,pl:playersState.CURPL,t,type,tx,ty,sz,tiles,ax:ax||0,gl,rot:t===0&&type!=='castle'&&ROTT.has(type)?(constructionState.buildRot&3):0,rad:g?20*gl:sz*20,x:g?(tx+(ax?.5:gl/2))*TS:(tx+sz/2)*TS,y:g?(ty+(ax?gl/2:.5))*TS:(ty+sz/2)*TS,hp:SH[type],max:SH[type],cd:0,prog:done?1:0,bt:BT[type]||1};

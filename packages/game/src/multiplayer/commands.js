@@ -50,7 +50,7 @@ export const repairB=function(sid){if(gated()){mpPush({k:'rp',b:sid});return}ret
 export const sendConvoy=function(c){if(gated()){mpPush({k:'cv',g:c.g|0,w:c.w|0,s:c.s|0,f:c.f|0});return}return sendConvoy0(c)};
 
 /* quest line on / off: shared in co-op, so it is a command; the solo choice is also the default of the next solo game */
-export const questSwitch=function(on){if(gated()){mpPush({k:'qs',on:on?1:0});return}if(!MP.on){try{localStorage.setItem('dk_quests',on?'1':'0')}catch(e){}}return qSetOn0(on)};
+export const questSwitch=function(on){if(gated()){mpPush({k:'qs',on:on?1:0});return}if(!MP.on){try{localStorage.setItem('dk_quests',on?'1':'0')}catch{/* The choice still applies to this run when storage is unavailable. */}}return qSetOn0(on)};
 
 export const cancelTrain=function(sid,i){if(gated()){mpPush({k:'cq',b:sid,i:i|0});return}return cancelTrain0(sid,i)};
 

@@ -41,8 +41,8 @@ function apply(){const S=blocksState;S.T=S.on&&S.terrain;S.D=S.on&&S.decor;BLKU.
 export function setBlocks(on,opts){blocksState.on=!!on;if(typeof opts==='number'&&opts>0)blocksState.BLK=blocksState.DBLK=opts;else if(opts&&typeof opts==='object')for(const k of['BLK','DBLK','terrain','decor','build','seasons'])if(k in opts)blocksState[k]=opts[k];
  apply();if(blocksState.onChange)blocksState.onChange()}
 
-export function initializeBlocks(){let v=null;try{v=localStorage.getItem('dk_blocks')}catch(e){}
- if(v==='1')blocksState.on=true;else if(v&&v[0]==='{'){try{const o=JSON.parse(v);blocksState.on=o.on!==false;for(const k of['BLK','DBLK','terrain','decor','build','seasons'])if(k in o)blocksState[k]=o[k]}catch(e){}}
+export function initializeBlocks(){let v=null;try{v=localStorage.getItem('dk_blocks')}catch{/* A blocked store leaves the default block-rendering settings active. */}
+ if(v==='1')blocksState.on=true;else if(v&&v[0]==='{'){try{const o=JSON.parse(v);blocksState.on=o.on!==false;for(const k of['BLK','DBLK','terrain','decor','build','seasons'])if(k in o)blocksState[k]=o[k]}catch{/* Ignore malformed saved graphics options and keep initialized defaults. */}}
  apply()}
 
 /* GLSL: pixel texture of a block face. m = block kind, c = base colour, pc = pixel coordinates (16 per block),

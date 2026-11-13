@@ -8,9 +8,10 @@ import { mpBegin, mpSend } from './lockstep.js';
 import { registryHide, registryList, registryOn } from './registry.js';
 import { MP } from './session.js';
 import { THEME } from '../ui/kingdom-theme.js';
-import { settingsState } from '../ui/settings.js';
+import { settingsState } from '../ui/panel-state.js';
 import { openPicker, setConfirmPickHandler, sitePickerState } from '../ui/site-picker.js';
-import { rollWorld, setRollWorldHandler, terrainState } from '../world/terrain.js';
+import { rollWorld, setRollWorldHandler } from '../world/terrain.js';
+import { terrainState } from '../world/terrain-state.js';
 
 /* the two castles may stand side by side: only their 5x5 walls and the 3 tiles in front of each door must not overlap */
 export const sitesFar=(a,b)=>!a||!b||Math.max(Math.abs(a.tx-b.tx),Math.abs(a.ty-b.ty))>=10;
@@ -48,7 +49,7 @@ export function mpModal(v){mpEl.style.display=v?'flex':'none'}
 
 export function lobbyNote(t){mpStatus(t)}
 
-export function mpFallback(v){}
+export function mpFallback(_v){}
 
 function pubLabel(){const on=$m('mpPub').checked;$m('mpPubT').textContent=(on?'\uD83C\uDF10 ':'\uD83D\uDD12 ')+L(on?'Public game: listed in the lobby':'Private game: only with the code')}
 
@@ -85,7 +86,7 @@ function pubBack(){$m('mpPubP').style.display='none';$m('mpJoinP').style.display
 
 export async function pubRefresh(){const box=$m('mpPubL'),note=t=>{box.textContent='';const d=document.createElement('div');d.className='none';d.textContent=L(t);box.appendChild(d)};
  if(!registryOn()){note('The public lobby is not set up yet: join with a code.');return}
- note('Loading...');let list;try{list=await registryList()}catch(e){note('Could not reach the lobby. Check your connection and try again.');return}
+ note('Loading...');let list;try{list=await registryList()}catch {note('Could not reach the lobby. Check your connection and try again.');return}
  if(!list.length){note('No public game right now: host one!');return}
  box.textContent='';for(const g of list){const r=document.createElement('div');r.className='pg';const n=document.createElement('span');n.className='nm';n.textContent=g.name||L('Nameless');const c=document.createElement('span');c.className='cd2';c.textContent=g.code+(g.ver&&g.ver!==GVER?'  ('+g.ver+')':'');const b=document.createElement('button');b.className='pri';b.textContent=L('Join');b.onclick=()=>{$m('mpPubP').style.display='none';lobbyJoin(g.code)};r.append(n,c,b);box.appendChild(r)}}
 

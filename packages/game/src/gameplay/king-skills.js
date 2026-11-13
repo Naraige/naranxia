@@ -31,7 +31,7 @@ export const kNext=(k,b)=>{for(let i=0;i<4;i++)if(!kHas(k,b*4+i))return b*4+i;re
 function kNote(k){const G=rulesState.GST;if(!G)return;G.kl=Math.max(G.kl|0,kxLevel(k));G.kn=Math.max(G.kn|0,kCount(k))}
 export function kingXp(k,a){if(!k||!(a>0))return;const l0=kxLevel(k);k.kxp=Math.min(99999,(k.kxp|0)+a);const l1=kxLevel(k);kNote(k);
  if(l1>l0){const mh=T.king.hp;k.hp=Math.min(mh,k.hp+mh*.25);ring(k.x,k.y,'#ffe066',26,260);puff(k.x,k.y,'#ffe066',10,60);snd('horn',k.x,k.y);if((k.pl|0)===LPL()){hudDisplayState.msgS='King level '+l1+'!';hudDisplayState.msgT=3}}}
-export function kingKillXp(z){let w=z.boss?12:z.type==='brute'?3:z.type==='acid'||z.type==='bomber'?2:1;
+export function kingKillXp(z){const w=z.boss?12:z.type==='brute'?3:z.type==='acid'||z.type==='bomber'?2:1;
  for(const k of sessionState.units)if(k.t===0&&k.type==='king'&&k.hp>0&&!k.kdead&&(z.boss||dist(k.x,k.y,z.x,z.y)<TS*10))kingXp(k,w)}
 export function kingWaveXp(){for(const k of sessionState.units)if(k.t===0&&k.type==='king'&&k.hp>0&&!k.kdead)kingXp(k,3)}
 export function kingTalent0(b){const k=kingOf(playersState.CURPL|0);if(!k||(b!==0&&b!==1)||kPoints(k)<1)return;const i=kNext(k,b);if(i<0)return;k.kt=(k.kt|0)|1<<i;kNote(k);

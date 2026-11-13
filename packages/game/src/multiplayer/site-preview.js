@@ -5,7 +5,7 @@ import { PK, pkBuild, PKS, PKU, renderPick, setRenderPickHandler } from '../rend
 import { THREE } from '../rendering/three.js';
 import { PVH, PVS, PVW, sitePickerState } from '../ui/site-picker.js';
 import { FFT } from '../ui/typography.js';
-import { LAND, terrainState, WLV } from '../world/terrain.js';
+import { LAND, terrainState, WLV } from '../world/terrain-state.js';
 
 export const sitePreviewState = {
   _pcT: 0,

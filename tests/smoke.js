@@ -7,4 +7,5 @@ async()=>{let s=4*7919+13;const rnd0=()=>{s=(s*16807)%2147483647;return (s-1)/21
  O.z=units.filter(u=>u.t===1).length;O.pud=PUD.length;O.scorch=SCRT.size;
  Math.random=RR;
  for(let i=0;i<40;i++){render3D(.05);await new Promise(r=>setTimeout(r,15))}
+ O.ok=/^v\d+$/.test(O.ver)&&O.rest===600&&O.st===9&&O.rampPath===1&&O.z>0;
  return JSON.stringify(O)}

@@ -23,13 +23,13 @@ let pGo;
 
 const pGem=P=>(f,u,v,W,H)=>{if(f==='D')return P[0];if(W>=3&&H>=3){if(u===0||v===0||u===W-1||v===H-1)return P[1];return (u===1&&v===H-2)?P[3]:P[2]}return (u===0&&v===H-1)?P[3]:((u===W-1||v===0)?P[0]:P[1])};
 
-const pWrap=P=>(f,u,v,W,H)=>{if(f==='T'||f==='D')return P[2];const q=(f==='F'||f==='B')?v:u;return (q+v)%2?P[1]:P[3]};
+const pWrap=P=>(f,u,v,_W,_H)=>{if(f==='T'||f==='D')return P[2];const q=(f==='F'||f==='B')?v:u;return (q+v)%2?P[1]:P[3]};
 
 const gx=(G,x,y,z,w,h,d,p,o)=>pxBox(G,x,y,z,w,h,d,p,Object.assign({mat:4},o||{}));
 
 const gem=(G,x,y,z,w,h,d,P)=>gx(G,x,y,z,w,h,d,pGem(P||RRU),{mat:5,grid:[Math.max(2,Math.round(w*2)),Math.max(2,Math.round(h*2)),Math.max(2,Math.round(d*2))]});
 
-const GSC=.72,gScale=(geo,k)=>{geo.scale(k,k,k);return geo};
+const gScale=(geo,k)=>{geo.scale(k,k,k);return geo};
 
 const teamGem=()=>{const T=teamPal(thp());return[T[0],T[2],T[3],T[4]]};
 
@@ -79,12 +79,12 @@ function pxMcShield(art,pal,AL,g2){const G=newG(),IR=g2?g2.R:(AL>=2?SHG:SHI0),SH
  /* u 1..10 across, r 1..20 down; the rivet, its shadow below and a darker pixel to its right */
  const face=(u,r,f,front)=>{const c=chAt(u,r,front),b=base(u,r,f,front);if(!isField(c))return b;
   if(riv(u,r))return front?SHI[3]:SHI[2];if(riv(u,r-1)&&isField(chAt(u,r-1,front)))return shadeHex(b,.62);if(riv(u-1,r)&&isField(chAt(u-1,r,front)))return shadeHex(b,.84);return b};
- const rim=side=>(f,u,v,W,H)=>{if(f==='T')return IR[3];if(f==='D')return IR[0];
+ const rim=side=>(f,u,v,W,_H)=>{if(f==='T')return IR[3];if(f==='D')return IR[0];
   if(f==='F'||f==='B'){if(side==='t')return (u===0||u===W-1)?IR[4]:IR[3];if(side==='b')return (u===0||u===W-1)?IR[2]:IR[1];return g2&&side==='l'?IR[3]:IR[2]}
   return IR[2]};
  pxScene(()=>{
   /* planks: front painted, back bare */
-  gx(G,-5,-10,-.5,10,20,1,(f,u,v,W,H)=>face(u+1,20-v,f,f==='F'),{mat:0,grid:[10,20,1],no:'RLTD'});
+  gx(G,-5,-10,-.5,10,20,1,(f,u,v,_W,_H)=>face(u+1,20-v,f,f==='F'),{mat:0,grid:[10,20,1],no:'RLTD'});
   /* iron rim, a little thicker than the wood */
   gx(G,-6,10,-.65,12,1,1.3,rim('t'),{grid:[12,1,1]});gx(G,-6,-11,-.65,12,1,1.3,rim('b'),{grid:[12,1,1]});
   gx(G,-6,-10,-.65,1,20,1.3,rim('l'),{grid:[1,20,1]});gx(G,5,-10,-.65,1,20,1.3,rim('r'),{grid:[1,20,1]});
@@ -135,7 +135,6 @@ export function pxGuardShield(AL,vr){const art=vr==='0'?null:(({A:ART_GUARD_A,B:
    a Blockbench voxel weapon: every pixel is a cube one shaft-thickness wide. A spear point with two lugs, a crescent axe
    with a hollow and two horns, a back hook, a deep steel socket block, a brass collar with a small team tassel, a banded
    wooden shaft, a wrapped leather grip and a steel foot. Rows are drawn top first, the shaft is column 6. */
-const pInPoly=(P,x,y)=>{let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,yi]=P[i],[xj,yj]=P[j];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c}return c};
 
 const HALB=[
  '.......L.......','.......L.......','.......L.......','.......L.......','......LMD......','......LMD......','....L.L.D......','...LM..K.......',
@@ -156,8 +155,6 @@ export function pxHalberd(){const G=newG(),V=1.4,Tm=teamPal(thp()),N=52,G0=37,
   gx(G,-V,-V,zc(19)-V/2,2*V,2*V,V,pGo,{grid:[2,2,1]});
  });return gScale(toGeo(G),1.0)}
 
-let RST;
-const pGrip = (f,u,v)=>{const Tm=teamPal(thp()),q=(f==='T'||f==='D')?v:u;return q%2?Tm[1]:Tm[3]};
 
 /* ---------------- bow ----------------
    recurve limbs made of three straight wooden segments each (3D, rotated), brass rings at the joints, a leather grip with
@@ -219,5 +216,4 @@ export function initializeWeapons() {
   SHK0 = PDP(['#262a31','#363c46','#4c5560','#66707c']);
   ART_GUARD_A = ART_CROWN.concat(['TTTTTTTTTT','YYYYYYYYYY','..........','..........','..........','..........','..........','..........','..........','..........','..........','..........']);
   ART_GUARD_B = ART_CROWN.concat(['TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','YYYYYYYYYY','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT','TTTTTTTTTT']);
-  RST = RSV;
 }

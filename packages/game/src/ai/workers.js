@@ -14,17 +14,17 @@ import { sessionState } from '../gameplay/session.js';
 import { doTf, nearestTf } from '../gameplay/terraforming.js';
 import { convoyStep } from '../multiplayer/convoys.js';
 import { puff } from '../rendering/effects.js';
-import { markP } from '../rendering/terrain.js';
-import { NAMES } from '../ui/build-menu.js';
+import { markP } from '../world/terrain-invalidation.js';
+import { NAMES } from '../ui/build-catalog.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { atDepot, depBest, depFieldAt, DSIDE, reachTile, sameComp } from '../world/connectivity.js';
 import { mmTile } from '../world/minimap.js';
 import { gField, mkG } from '../world/pathfinding.js';
 import { D8, gOK } from '../world/routes.js';
-import { amt, ter } from '../world/terrain.js';
+import { amt, ter } from '../world/terrain-state.js';
 import { canStep, fv, solid } from '../world/traversal.js';
 
-export function peasant(u,dt){if(u.cv){convoyStep(u,dt);return}const px=u.x,py=u.y,hadO=!!u.o;peasant0(u,dt);
+export function peasant(u,dt){if(u.cv){convoyStep(u,dt);return}const hadO=!!u.o;peasant0(u,dt);
  if(u.role&&u.gwT===sessionState.time){u.skt=0;return}
  if(!u.o&&!u.carry&&u.tl<0&&(u.noT||0)>1&&(u.job==='w'||u.job==='s'||u.job==='g')){const tx=Math.floor(u.x/TS),ty=Math.floor(u.y/TS),S=depFieldAt(tx,ty);if(fv(S,tx,ty)>=65535){const f=reachTile(S,tx,ty);if(f){puff(u.x,u.y,'#e8e8e8',5,30);u.x=(f[0]+.5)*TS;u.y=(f[1]+.5)*TS;u.lx=u.x;u.ly=u.y;u.noT=0;return}}}
  if(hadO||u.o||u.work>0||!(u.carry||u.job)||u.wlk!==sessionState.time){u.skt=0;return}

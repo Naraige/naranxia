@@ -4,7 +4,7 @@ async()=>{/* exclusive research paths, market fatigue, envoy tribute cap */
  const O={},C0=[];const chk=(n,v)=>{O[n]=v;C0.push(!!v)};
  const R=RESP[0];R.g=9000;R.w=900;R.s=900;R.f=900;CURPL=0;
  const put=t=>{for(let a=0;a<40;a++){const n0=structs.length,f=freeTile(CS.tx+7+(a%5)*4,CS.ty+7+(a/5|0)*4);build(t,f[0],f[1]);if(structs.length>n0){const m=structs[structs.length-1];m.prog=1;m.hp=m.max;return m}}return null};
- const ac=put('academy'),mk=put('market');
+ const ac=put('academy');put('market');
  const clr=()=>{RS2.on=null;RS2.t=0;delete RS2.ch;for(const k in RS2.done)RS2.done[k]=false;RS2.done.iron=true;RS2.done.plate=true;RS2.done.fletch=true;RS.done=true};
  /* path 1: steel closes chain mail, iron age opens after either */
  clr();selB=ac;buy('steel');
@@ -26,7 +26,7 @@ async()=>{/* exclusive research paths, market fatigue, envoy tribute cap */
  buy('drill');chk('drillFree',RS2.on==='drill'&&rxLock('drill')===null);
  /* the choice survives a save round trip of RS2 (SAVA assigns the whole object) */
  const snap=JSON.parse(JSON.stringify(RS2));svAssign('RS2',snap);chk('chKept',RS2.ch&&RS2.ch[2]==='harvest');
- svAssign('RS2',(({ch,...r})=>r)(snap));chk('chAbsentOk',RS2.ch===undefined&&rxLock('tools')==='harvest');
+ const snapWithoutChoice={...snap};delete snapWithoutChoice.ch;svAssign('RS2',snapWithoutChoice);chk('chAbsentOk',RS2.ch===undefined&&rxLock('tools')==='harvest');
  RS2.ch={};RS2.on=null;
  /* market fatigue: selling the same resource in a row drops the price harder each time */
  Object.assign(PRICE,PBASE);FAT.w=FAT.s=FAT.f=0;R.w=900;
@@ -39,15 +39,14 @@ async()=>{/* exclusive research paths, market fatigue, envoy tribute cap */
  /* barter out counts too */
  R.f=900;buy('xfs');chk('barterFat',FAT.f===1);
  /* recovery is slower under fatigue, then complete, deterministic */
- const lo=PRICE.w;Object.assign(PRICE,PBASE);PRICE.w=.5;PRICE.s=.5;FAT.w=8;FAT.s=0;
+ Object.assign(PRICE,PBASE);PRICE.w=.5;PRICE.s=.5;FAT.w=8;FAT.s=0;
  economyState.priceT=0;for(let i=0;i<6;i++){priceTick(5)}
  chk('slowRecovery',PRICE.s>PRICE.w&&PRICE.w>.5&&FAT.w<8);
  for(let i=0;i<400;i++)priceTick(5);chk('fullRecovery',Math.abs(PRICE.w-1)<.01&&FAT.w===0);
- const h1=JSON.stringify([PRICE,FAT]);
  /* envoy tribute: degressive per camp and capped in all */
  const bs=BASES.filter(b=>b.alive);if(!bs.length){Math.random=RR;return JSON.stringify({ok:false,why:'no base'})}
- const b=bs[0];delete b.envN;delete b.envG;delete b.envF;R.g=0;R.f=0;const gains=[];let used=0;
- for(let i=0;i<8;i++){const g0=R.g,f0=R.f;b.envT=0;const u=mkU(0,'envoy',b.x+TS,b.y);units.push(u);for(let k=0;k<6;k++)update(.05);if(u.hp<=0)used++;gains.push([R.g-g0,R.f-f0])}
+ const b=bs[0];delete b.envN;delete b.envG;delete b.envF;R.g=0;R.f=0;const gains=[];
+ for(let i=0;i<8;i++){const g0=R.g,f0=R.f;b.envT=0;const u=mkU(0,'envoy',b.x+TS,b.y);units.push(u);for(let k=0;k<6;k++)update(.05);gains.push([R.g-g0,R.f-f0])}
  chk('firstFull',gains[0][0]===80+8*Math.min(waveN,20)&&gains[0][0]>0);
  chk('degressive',gains[1][0]<gains[0][0]&&gains[2][0]<gains[1][0]);
  b.envN=9;b.envG=690;b.envF=340;b.envT=0;R.g=0;R.f=0;{const u=mkU(0,'envoy',b.x+TS,b.y);units.push(u);for(let k=0;k<6;k++)update(.05);chk('capped',R.g===10&&R.f===10&&b.envG===700&&b.envF===350&&u.hp<=0)}

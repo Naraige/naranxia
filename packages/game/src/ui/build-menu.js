@@ -1,3 +1,5 @@
+import { BCATS, BCI, HK, NAMES } from './build-catalog.js';
+export { HK, NAMES };
 import { RHAS, ROLE } from '../ai/worker-roles.js';
 import { snd } from '../audio/sound.js';
 import { build, constructionState, FORMS } from '../gameplay/construction.js';
@@ -23,13 +25,13 @@ import { C, CSTONE, CWOOD, RN2, ROTT, RPRE, RS, RS2, RT_TIME, RT2, rxLock, rxPai
 import { curB, sel, selBs, selectionState, TRB } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { groupSel, ungroupSel } from '../gameplay/squads.js';
-import { L, setClipBox, T_, TC, TCf, tw } from '../i18n/language.js';
+import { L, setClipBox, T_, TCf, tw } from '../i18n/language.js';
 import { inputState } from '../input/state.js';
 import { roleAdj, ROLEK } from '../multiplayer/commands.js';
 import { MP } from '../multiplayer/session.js';
 import { ICT, TIERK } from '../rendering/model-icons.js';
 import { canvasesState, cv } from './canvases.js';
-import { convoyPanelState } from './convoy-panel.js';
+import { convoyPanelState } from './panel-state.js';
 import { BTNX, circ, focusRing, frame, gold, ICN, poly, rr, rrg, SLOT, SLOTH, SLOTX, tabPlate, TN } from './drawing.js';
 import { FFP } from './typography.js';
 import { rmotion } from '../core/prefs.js';
@@ -44,118 +46,7 @@ export const buildMenuState = {
   BCAT: null,
 };
 
-export const NAMES={
-king:'King Naraige',
-guard:'Royal guard',
-stoneup:'Upgrade',
-upgtool:'Stone tool',
-cannon:'Cannon',
-repair:'Repair',
-agg:'Attack',
-def:'Defend',
-hold:'Halt',
-stop:'Stop',
-work:'Gather',
-keep:'Keep',
-movec:'Move castle',
-rotate:'Rotate',
-peasant:'Peasant',
-knight:'Knight',
-spearman:'Spearman',
-archer:'Archer',
-bannerman:'Bannerman',
-scout:'Scout',
-engineer:'Engineer',envoy:'Envoy',
-captain:'Captain',
-wall:'Wall',
-gate:'Gate',
-tower:'Tower',
-ballista:'Ballista',
-trebuchet:'Trebuchet',
-path:'Path',
-army:'Select army',
-idle:'Idle peasants',
-form:'Formation',
-mode:'Mode',
-raise:'Raise',
-dig:'Dig',
-upgrade:'Masonry',
-barracks:'Barracks',
-farm:'Farm',
-storage:'Storage',
-ramp:'Ramp',
-demolish:'Demolish',
-iron:'Iron weapons',
-plate:'Plate armor',
-drill:'Drill',
-steel:'Steel weapons',
-mail:'Chain mail',
-tools:'Better tools',
-harvest:'Crop rotation',
-fletch:'Fletching',
-fire:'Fire arrows',
-oil:'Boiling oil',era:'Iron age',spike:'Spike trap',
-bastion:'Bastion walls',
-house:'House',
-academy:'Academy',
-market:'Market',
-forester:'Forester',
-guild:'Guild',
-observatory:'Observatory',
-granary:'Granary',
-bell:'Alarm bell',
-sanctuary:'Sanctuary',
-beacon:'Watch beacon',
-orchard:'Orchard',
-forge:'Royal forge',
-embassy:'Embassy',
-warroom:'War room',
-sappers:'Sappers\' workshop',
-'rb+':'+1',
-'rb-':'-1',
-'rr+':'+1',
-'rr-':'-1',
-'rt+':'+1',
-'rt-':'-1',
-torch:'Torch',
-rally:'Rally',
-rallyc:'Rally'
-},HK={agg:'1',
-def:'2',
-hold:'3',
-stop:'4',
-house:'0',
-academy:';',
-market:':',
-forester:'[',
-guild:']',
-torch:"'",
-rally:'-',
-rallyc:'=',
-peasant:1,
-knight:2,
-archer:3,
-bannerman:4,
-captain:5,
-wall:6,
-gate:7,
-tower:8,
-path:9,
-ballista:'B',
-trebuchet:'T',
-raise:'Y',
-dig:'U',
-army:'Q',
-idle:'.',
-form:'V',
-upgrade:'G',
-barracks:'C',
-farm:'J',
-storage:'K',
-ramp:'I',
-tier:'L',
-demolish:'P'
-};
+
 
 const TIPS={
 convoy:['Convoy','Peasants carry gold, wood, stone or food','to your partner\'s castle, then come back'],
@@ -244,14 +135,13 @@ const RN={g:'gold',w:'wood',s:'stone',f:'food'};
 export let CMP = false;
 const MW=34,MH=38;
 /* build menu in categories: the bar shows Defense / Economy / Town / Land; a click opens that category (Back or Esc to return) */
-const BCATS={def:['Defense',['wall','gate','tower','torch','beacon','sappers','spike']],eco:['Economy',['farm','forester','storage','market','granary','orchard','embassy']],town:['Town',['house','barracks','guild','academy','observatory','bell','sanctuary','forge','warroom']],land:['Land',['path','raise','dig','ramp']],siege:['Siege',['ballista','trebuchet']]},BCI={def:'tower',eco:'farm',town:'house',land:'raise',siege:'ballista'};
 
 /* niche buildings (2x2 bonus halls, beacon, sappers...) appear once there is an Academy or the first wave has come, or while one is being placed; their hotkeys always work.
    Stone variants appear once Masonry is researched. */
 const NICHE=new Set(['beacon','sappers','granary','orchard','embassy','observatory','bell','sanctuary','forge','warroom']);
 const nicheOn=()=>hasAcademy(LPL())||sessionState.waveN>=1;
 
-function catItems(c,siege){return BCATS[c][1].filter(k=>!NICHE.has(k)||nicheOn()||sessionState.mode===k)}
+function catItems(c,_siege){return BCATS[c][1].filter(k=>!NICHE.has(k)||nicheOn()||sessionState.mode===k)}
 
 function catKeys(c,siege){const a=catItems(c,siege);return a.concat(RS.done?a.filter(k=>TIERK.has(k)).map(k=>'s:'+k):[])}
 
@@ -278,8 +168,8 @@ export const tabState={on:false,ids:[],cur:'',badge:{},sel:''};
 const BCATN=new Set(Object.values(BCATS).map(v=>v[0])),tabId=n=>BCATN.has(n)?'Build':n;
 const TABIC={Train:()=>IC.knight,Build:()=>IC.home,Command:()=>IC.hammer,Research:()=>IC.upgrade,Trade:()=>IC.coin,Barter:()=>IC.coin,Builders:()=>IC.hammer,Repairers:()=>IC.hammer,Terraformers:()=>IC.hammer,'Co-op':()=>IC.convoy};
 let SEEN=null;
-function seenLoad(){if(SEEN)return SEEN;SEEN=new Set();let raw=null;try{raw=localStorage.getItem('dk_newslots')}catch(e){}if(raw){try{const a=JSON.parse(raw);if(Array.isArray(a))a.forEach(k=>SEEN.add(String(k)))}catch(e){}}else SEEN.fresh=true;return SEEN}
-const seenSave=()=>{try{localStorage.setItem('dk_newslots',JSON.stringify([...SEEN]))}catch(e){}};
+function seenLoad(){if(SEEN)return SEEN;SEEN=new Set();let raw=null;try{raw=localStorage.getItem('dk_newslots')}catch { /* Use fresh-session badges when storage is unavailable. */ }if(raw){try{const a=JSON.parse(raw);if(Array.isArray(a))a.forEach(k=>SEEN.add(String(k)))}catch { /* Ignore malformed badge data; this session starts with no saved badges. */ }}else SEEN.fresh=true;return SEEN}
+const seenSave=()=>{try{localStorage.setItem('dk_newslots',JSON.stringify([...SEEN]))}catch { /* Keep the seen-badge set in memory when storage is unavailable. */ }};
 export function markSeen(id){const S=seenLoad();if(id&&!S.has(id)){S.add(id);seenSave()}}
 const lockedNow=id=>(id==='cannon'&&!RS.done)||((id in RT2||id==='upgrade')&&!hasAcademy(LPL()))||((id in RT2)&&(!rxPre(id)||!!rxLock(id)));
 const newKey=id=>(id in C||id in T||(id in RT2&&id in RPRE))&&!['raise','dig','ramp','demolish','tier','upgrade'].includes(id);

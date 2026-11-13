@@ -52,7 +52,7 @@ function icoObj(k){
  case 'heart':{const G=newG();[[0,1,3],[-1,.4,1],[1,.4,1]].forEach(()=>0);const rows=['.XX.XX.','XXXXXXX','XXXXXXX','.XXXXX.','..XXX..','...X...'];rows.forEach((r,j)=>{for(let i=0;i<7;i++)if(r[i]==='X')bxc(G,(i-3)*.3,(5-j)*.3,0,.3,.3,.3,j<2&&i>0&&i<3&&j===0?'#ff9a9a':'#e03a4a')});return icoMesh(G)}
  case 'sword':{const G=newG();vsp(G,sprites().sword,0,0,0,.1);return icoMesh(G)}
  case 'hammer':{return icoObj('upgrade')}
- case 'army':{const w=new THREE.Group();[[-.9,0],[0,0],[.9,0]].forEach(([x,z],i)=>{const u=icoUnit('knight');u.position.set(x*.8,0,i===1?-.7:0);w.add(u)});return w}
+ case 'army':{const w=new THREE.Group();[[-.9,0],[0,0],[.9,0]].forEach(([x,_z],i)=>{const u=icoUnit('knight');u.position.set(x*.8,0,i===1?-.7:0);w.add(u)});return w}
  case 'group':{const w=new THREE.Group();[[-.8,0],[.8,0],[0,-.8]].forEach(([x,z])=>{const u=icoUnit('knight');u.position.set(x,0,z);w.add(u)});return w}
  case 'ungroup':{const w=new THREE.Group();[[-.9,0],[.9,0]].forEach(([x,z])=>{const u=icoUnit('knight');u.position.set(x,0,z);w.add(u)});return w}
  }return null}

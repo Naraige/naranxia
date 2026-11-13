@@ -28,14 +28,14 @@ import {
 } from './fortifications.js';
 import { PAL, thp } from '../../ui/kingdom-theme.js';
 import { gOK } from '../../world/routes.js';
-import { occ } from '../../world/terrain.js';
+import { occ } from '../../world/terrain-state.js';
 
 export const structureModelsState = {
   BLU: undefined,
 };
 
 /* ---- structures: connected voxel models ---- */
-const ST='#7f7f7f',ST2='#8b8b8b',ST3='#979797',STD='#5f5f5f',STL='#b3b3b3',DK='#1b1b22',RED='#9b3b2e',WOOD='#9c7a46',IRON='#4a4a52';
+const ST3='#979797',STD='#5f5f5f',IRON='#4a4a52';
 
 export const isW=(tx,ty)=>{const o=occ.get(ty*TW+tx);return !!o&&(o.type==='wall'||o.type==='gate'||o.type==='tower'||o.type==='castle'||o.type==='keep')};
 
@@ -48,13 +48,7 @@ export const pMask=s=>{const x=s.tx,y=s.ty,q=(a,b)=>{const o=occ.get(b*TW+a);ret
 
 export const WH = 1.7;
 export const WT = .3;
-const CRS = [ST,ST2,ST3,ST2];
-
-
 export const DIRS=[[1,0,-1],[2,1,0],[4,0,1],[8,-1,0]];
-
-/* box along an arm: t = distance along the arm, l = lateral */
-const ab=(G,dx,dz,t,l,y,a,b,h,c)=>bxc(G,dx!==0?dx*t:l,y,dz!==0?dz*t:l,dx!==0?a:b,h,dx!==0?b:a,c);
 
 
 /* gate: 2 tiles long (local x -1..1), depth .8 */
@@ -79,7 +73,7 @@ export function ballHead(){const G=newG();
 
 export function trebBase(){const G=newG();
  [.34,1.66].forEach(x=>{bxc(G,x,0,1,.16,.14,1.8,WD2);bxc(G,x,.14,.3,.12,.12,.4,WD);bxc(G,x,.14,1.7,.12,.12,.4,WD);
-  [[.3,-1],[1.7,1]].forEach(([z,sg])=>{bxc(G,x,.14,z*.5+1*.5,.14,.1,.14,WD)});
+  [[.3,-1],[1.7,1]].forEach(([z,_sg])=>{bxc(G,x,.14,z*.5+1*.5,.14,.1,.14,WD)});
   for(let k=0;k<5;k++){const t=k/4;bxc(G,x,.14+t*1.55,.55+t*.45*(1)-.02,.12,.4,.12,WD);bxc(G,x,.14+t*1.55,1.45-t*.45+.02,.12,.4,.12,WD)}
   bxc(G,x,1.5,1,.2,.34,.34,IRON)});
  bxc(G,1,0,.28,1.5,.12,.14,WD2);bxc(G,1,0,1.72,1.5,.12,.14,WD2);bxc(G,1,.14,1,1.4,.1,.1,WD);bxc(G,1,.7,.78,1.3,.08,.08,WD);bxc(G,1,.7,1.22,1.3,.08,.08,WD);
@@ -100,29 +94,14 @@ export const GEO={};
 
 
 /* ---- wooden tier models ---- */
-const LG1 = '#6b4f2e';
-const LG2 = '#5b4326';
-const LG3 = '#b8945f';
-const LGD = '#3f2d1a';
-const THA = '#7a5a34';
-const THB = '#6a4c2a';
-const THC = '#573e22';
 export const ROPE = '#d9c28a';
 
 
 /* ================= Minecraft-style small buildings (cobble, planks, logs, glass, stair roofs) ================= */
-const COBL = ['#7d7d7d','#8c8c8c','#6e6e6e','#838383'];
-const PLKL = ['#b8945f','#a98450'];
-const SPRL = ['#6e5230','#5f4527'];
-const LGM = '#5b4326';
-const GLS = '#bfe3f2';
 export const HAYC = '#d8b23a';
 
 
 /* houses merge with aligned neighbours (bits: 1 N, 2 E, 4 S, 8 W): shared walls, one continuous roof */
-
-const RF0='#9b3b2e',RF1='#8a3228';
-
 
 export const CONNT=new Set(['storage','barracks','academy','market']);
 
@@ -134,7 +113,7 @@ export function scafGeo(w,d,h){const G=newG(),P='#9a6a38',Q='#6f4a24',B='#c9a36a
  [[-x,-z],[x,-z],[-x,z],[x,z]].forEach(([a,b])=>bxc(G,a,0,b,.1,h,.1,Q));
  for(let y=.55;y<h;y+=.65){bxc(G,0,y,z,2*x,.06,.07,P);bxc(G,0,y,-z,2*x,.06,.07,P);bxc(G,x,y,0,.07,.06,2*z,P);bxc(G,-x,y,0,.07,.06,2*z,P)}
  for(let y=1.1;y<h;y+=1.3){bxc(G,0,y,z+.06,2*x,.05,.18,B);bxc(G,0,y,-z-.06,2*x,.05,.18,B)}
- const dz=z+.01;for(let y=0;y+1.3<h;y+=1.3){const n=Math.max(2,Math.round(x*2/.5));for(let k=0;k<n;k++){const a=-x+(k+.5)*2*x/n,f=k%2?-1:1;bxc(G,a,y+.55,dz,.05,.7,.05,P);}}
+ const dz=z+.01;for(let y=0;y+1.3<h;y+=1.3){const n=Math.max(2,Math.round(x*2/.5));for(let k=0;k<n;k++){const a=-x+(k+.5)*2*x/n;bxc(G,a,y+.55,dz,.05,.7,.05,P);}}
  return toGeo(G)}
 
 

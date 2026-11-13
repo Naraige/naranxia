@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const version = readFileSync(path.join(root, 'game', 'VERSION'), 'utf8').trim();
 let notes = '';
-try { notes = readFileSync(path.join(root, 'game', 'NOTES.md'), 'utf8').trim() } catch (e) {}
+try { notes = readFileSync(path.join(root, 'game', 'NOTES.md'), 'utf8').trim() } catch { /* The dev title page works with no release notes. */ }
 
 export default defineConfig({
   root: path.join(root, 'packages', 'game'),

@@ -92,7 +92,7 @@ function* spGen() {
 function sprites() {
   const sig = THEME ? THEME.c + '|' + THEME.c2 : ''; if (spSig === sig) return; spSig = sig; spDone = false;
   const it = spGen(), step = () => {
-    if (spSig !== sig) return; let d = true; const m = Math.random; Math.random = REALR;
+    if (spSig !== sig) return; let d; const m = Math.random; Math.random = REALR;
     try { const t0 = performance.now(); do d = it.next().done; while (!d && performance.now() - t0 < 10) } catch (e) { d = true; console.error('guide', e) } finally { Math.random = m }
     if (d) spDone = true; else setTimeout(step, 0);
   };
@@ -220,7 +220,7 @@ function cArmy(t) {
 }
 const ROAD = [[330, 96], [230, 96], [150, 100], [84, 110]], WY = [40, 52, 64, 76, 112, 124, 136, 148, 160], WX = 206;
 function cWalls(t) {
-  hud(RES(300 - num(t, WY.map((y, i) => [2 + (y - 36) / 120 * 3.2, 10])), 200 - num(t, [[10.5, 80]]), 250 - num(t, [[7.5, 40]]), 90, '12/20'));
+  hud(RES(300 - num(t, WY.map((y, _i) => [2 + (y - 36) / 120 * 3.2, 10])), 200 - num(t, [[10.5, 80]]), 250 - num(t, [[7.5, 40]]), 90, '12/20'));
   route(t, ROAD); B('castle', 50, 106, 82); tree(120, 40); tree(290, 40); tree(300, 160); tree(110, 168);
   WY.forEach(y => { const a = 2 + (y - 36) / 120 * 3.2; if (t > a) B('wall', WX, y, 22, { pr: lin(t, a, a + 1.2) }) });
   if (t > 7.5) B('gate', WX, 96, 32, { pr: lin(t, 7.5, 8.6) }); if (t > 10.5) B('tower', 184, 70, 46, { pr: lin(t, 10.5, 11.6) });
@@ -251,7 +251,7 @@ function cRes(t) {
   hud(RES(180, 220 - num(t, [[3, 100]]), 500 - num(t, [[3, 150], [11.5, 200]]), 120, '14/20'));
   B('castle', 56, 106, 86); B('academy', 150, 90, 54); tree(20, 166); tree(300, 30);
   [46, 58, 70, 82, 94, 106, 118, 130, 142, 154].forEach((y, i) => { const a = 9 + i * .2; B('wall', 264, y, 22, { ic: ICT[t > a ? 1 : 0].wall }); ringFx(t, a, 264, y - 6, 12, '#ffffff', .5) });
-  [[228, 98], [234, 114]].forEach(([x, y], i) => { unit('knight', at([[0, x, y]], t), { ring: t > 15 && t < 15.8 ? '#ffe08a' : 0 }); ringFx(t, 15, x, y - 8, 16, '#ffe08a') });
+  [[228, 98], [234, 114]].forEach(([x, y], _i) => { unit('knight', at([[0, x, y]], t), { ring: t > 15 && t < 15.8 ? '#ffe08a' : 0 }); ringFx(t, 15, x, y - 8, 16, '#ffe08a') });
   const r1 = t > 3 && t < 9, r2 = t > 11.5 && t < 15;
   if (r1 || r2) Q.push([930, () => { bar(150, 38, 34, r1 ? lin(t, 3, 9) : lin(t, 11.5, 15), '#7ec8ff'); const ic = IC[r1 ? 'upgrade' : 'steel']; if (ic) G.drawImage(ic, 124, 32, 10, 10) }]);
   ringFx(t, 9, 150, 80, 34, '#7ec8ff'); ringFx(t, 15, 150, 80, 34, '#7ec8ff');
@@ -401,7 +401,7 @@ function cTalents(t) {
 const rp = (a, b, d, n) => { const r = []; for (let x = a; x < b; x += d) r.push([x, n]); return r };
 const ev = (...A) => { const r = []; for (const a of A) if (typeof a[0] === 'number') r.push(a); else r.push(...a); return r };
 const SV = [];
-function hush() { for (const g of SV) { try { g.gain.cancelScheduledValues(0); g.gain.setTargetAtTime(0, g.context.currentTime, .02) } catch (e) { } } SV.length = 0 }
+function hush() { for (const g of SV) { try { g.gain.cancelScheduledValues(0); g.gain.setTargetAtTime(0, g.context.currentTime, .02) } catch { /* Ignore voices whose audio context has already closed while the guide is closing. */ } } SV.length = 0 }
 function sfx(a, b) { const E = CH[ch][5]; if (!E) return; for (const [x, n] of E) if (x > a && x <= b) { const g = snd(n); if (g && g.gain) { g.gain.value *= .7; SV.push(g); if (SV.length > 24) SV.shift() } } }
 
 /* chapter: [title, duration (s, title card included), captions [[scene time, text], ...], clip, road of the ground, sounds] */

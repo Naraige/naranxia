@@ -1,6 +1,6 @@
 async()=>{/* small interface rules (v93, v94: physical letter keys, new default keys, minimap framed on the explored land): the digit row is matched by the physical key (AZERTY types & é " ' ( - è _ ç à there), the video guide
    closes with the screen it was opened from, the quest arrow stays off the HUD and goes to the screen edge when its building is out of view */
- try{renderer.render=()=>{}}catch(e){}
+ try{renderer.render=()=>{}}catch { /* Preserve the real renderer if its render hook cannot be replaced. */ }
  const O={},C=[];const chk=(n,v)=>{O[n]=v;C.push(!!v)};const RR=Math.random;
  const LS=localStorage,k0=LS.getItem('dk_keys'),v0=LS.getItem('dk_keyv'),l0=LS.getItem('dk_lay');LS.removeItem('dk_keys');LS.removeItem('dk_lay');layInit();loadKB();
  let s=41;Math.random=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};
@@ -76,12 +76,12 @@ async()=>{/* small interface rules (v93, v94: physical letter keys, new default 
    let S=mig({farm:'é'},'2');O.mig1=[KB.torch,KB.rally,KB.forester,KB.guild,KB.up,KB.left,KB.rotL,KB.army,KB.farm,LS.getItem('dk_keyv'),S.torch,S.up].join();
    chk('migrateDefaults',O.mig1==='f6,f7,f9,f3,KeyW,KeyA,KeyZ,KeyQ,é,3,f6,KeyW');
    /* a key the player chose stays; a new key already given to something else is not taken */
-   S=mig({torch:'ù',wave:'f7',up:'z',rotL:'w',left:'q',army:'a'},'2');O.mig2=[KB.torch,KB.rally,KB.wave,KB.up,KB.rotL,KB.left,KB.army,KB.down,KB.forester].join();
+   mig({torch:'ù',wave:'f7',up:'z',rotL:'w',left:'q',army:'a'},'2');O.mig2=[KB.torch,KB.rally,KB.wave,KB.up,KB.rotL,KB.left,KB.army,KB.down,KB.forester].join();
    chk('migrateKeepsChoices',O.mig2==="ù,-,f7,z,w,q,a,KeyS,f9");chk('savedAzertyCamera',tap('z','KeyW')==='up'&&tap('w','KeyZ')==='rotL'&&tap('q','KeyA')==='left'&&armyOn('a','KeyQ'));
    /* from before v93 (no marker): the spearman moves too */
-   S=mig({spearman:'\\'},null);chk('migrateFromOld',KB.spearman==='f4'&&KB.torch==='f6'&&LS.getItem('dk_keyv')==='3');
+   mig({spearman:'\\'},null);chk('migrateFromOld',KB.spearman==='f4'&&KB.torch==='f6'&&LS.getItem('dk_keyv')==='3');
    /* already migrated: a player who puts the torch back on the apostrophe keeps it */
-   S=mig({},'3');chk('migrateOnce',KB.torch==="'"&&KB.up==='w'&&tap('w','KeyW')==='up')}
+   mig({},'3');chk('migrateOnce',KB.torch==="'"&&KB.up==='w'&&tap('w','KeyW')==='up')}
   units.splice(units.indexOf(kn),1)}
  if(k0===null)LS.removeItem('dk_keys');else LS.setItem('dk_keys',k0);if(v0!==null)LS.setItem('dk_keyv',v0);else LS.removeItem('dk_keyv');if(l0!==null)LS.setItem('dk_lay',l0);else LS.removeItem('dk_lay');layInit();loadKB();
  /* ---- minimap framed on the explored land (v94) ---- */
@@ -120,7 +120,7 @@ async()=>{/* small interface rules (v93, v94: physical letter keys, new default 
   CAM.x=bx+90;CAM.z=bz;const l=frame();CAM.x=bx-90;const r=frame();O.edge=[l,r].map(q=>q&&q.map(v=>typeof v==='number'?Math.round(v*100)/100:v));
   chk('edgeArrow',!!l&&!!r&&l[0]==='e'&&r[0]==='e'&&l[3]<-.7&&r[3]>.7&&l[1]<UW*.2&&r[1]>UW*.8&&clear(l)&&clear(r));
   /* sweep the camera around the building: there is always an arrow and its tip is never on the HUD */
-  let bad=[],kinds={w:0,e:0},low=0;for(let dz=-26;dz<=26;dz+=2)for(const dx of[-30,-8,0,8,30]){CAM.x=bx+dx;CAM.z=bz+dz;const q=frame();if(!q||q[0]==='r'||!clear(q)){if(bad.length<6)bad.push([dx,dz,q&&q.map(v=>typeof v==='number'?Math.round(v):v)])}else kinds[q[0]]++}
+  let bad=[],kinds={w:0,e:0};for(let dz=-26;dz<=26;dz+=2)for(const dx of[-30,-8,0,8,30]){CAM.x=bx+dx;CAM.z=bz+dz;const q=frame();if(!q||q[0]==='r'||!clear(q)){if(bad.length<6)bad.push([dx,dz,q&&q.map(v=>typeof v==='number'?Math.round(v):v)])}else kinds[q[0]]++}
   O.sweep=kinds;O.bad=bad;chk('sweepClear',bad.length===0&&kinds.w>0&&kinds.e>0);
   CAM.x=bx;CAM.z=bz}
  /* ---- achievement toasts and wave banner against the bars under the top bar (v94) ---- */

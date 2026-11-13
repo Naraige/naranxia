@@ -16,13 +16,14 @@ import { CAM } from '../rendering/scene.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { calcFD } from '../world/connectivity.js';
 import { GF } from '../world/pathfinding.js';
-import { initWorld, RAWD, smDone, terrainState } from '../world/terrain.js';
+import { initWorld } from '../world/terrain.js';
+import { RAWD, smDone, terrainState } from '../world/terrain-state.js';
 
 const RSCH=48000;
 
 export async function mpResync(){if(!MP.on||!MP.host||MP.rsy||sessionState.over)return;if(performance.now()-MP.rsLast<8000)return;MP.rsy='pack';MP.rsLast=performance.now();
  const T=MP.tick,M={ep:MP.ep+1,t:T,sd:(Math.imul(T+1,2654435761)^Math.floor(terrainState.SEED*1e6))>>>0};let txt;
- try{txt=JSON.stringify(await svEncode())}catch(e){MP.rsy=null;return}
+ try{txt=JSON.stringify(await svEncode())}catch {MP.rsy=null;return}
  const n=Math.ceil(txt.length/RSCH);mpSend({k:'rs0',ep:M.ep,t:T,n,sd:M.sd});for(let i=0;i<n;i++)mpSend({k:'rs1',ep:M.ep,i,d:txt.slice(i*RSCH,(i+1)*RSCH)});
  MP.rsTxt=txt;MP.rsMeta=M;MP.rsy='sent'}
 
@@ -45,7 +46,7 @@ async function mpResApply(txt,M){const cam={...CAM},keep=new Set(sessionState.un
   sessionState.SITE2=null;for(const q of sessionState.structs||[])rmStruct(q);initWorld();for(const k in SAVA)if(!(k in D)&&!SAVA[k][1])svAssign(k,undefined);for(const k of['QST','fdT','fdDirty','lastFm'])if(!(k in D))svAssign(k,undefined);for(const k in D)svAssign(k,D[k]);RAWD.fill(0);smDone.fill(0);
   for(const u of sessionState.units)u.m=null;for(const q of sessionState.structs)q.o3=null;
   GF.clear();LFLD.clear();LFQT.fill(-1);LFQS.fill(null);SEPM.clear&&SEPM.clear();setPl(LPL());{const fd=sessionState.fdDirty;calcFD();sessionState.fdDirty=fd}sessionState.ver++;rebuildOwn(true);
-  fogState.fowTm=-9;fowT.needsUpdate=true;build3D();svMini();try{icoPart('tier');icoPart('units')}catch(e){}}
+  fogState.fowTm=-9;fowT.needsUpdate=true;build3D();svMini();try{icoPart('tier');icoPart('units')}catch{/* The snapshot is applied; refreshing toolbar icons is best-effort. */}}
  finally{Math.random=R0}
  Object.assign(CAM,cam);/* build3D() ends with home(): the view jumped back to the castle at every resync */
  for(const u of sessionState.units)u.sel=keep.has(u.uid);selectionState.selB=sb!=null?sessionState.structs.find(q=>q.sid===sb)||null:null;selectionState.castleSel=cs;selectionState.SELBS=[];

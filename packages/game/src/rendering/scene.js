@@ -1,5 +1,5 @@
 import { THREE } from './three.js';
-import { LAND, terrainState } from '../world/terrain.js';
+import { LAND, terrainState } from '../world/terrain-state.js';
 
 export const sceneState = {
   GQ: 1,
@@ -28,7 +28,7 @@ export let CAM;
 
 export function initializeScene() {
   g3 = document.getElementById('g3');
-  try{const v=localStorage.getItem('dk_gfx');if(v!==null)sceneState.GQ=+v?1:0}catch(e){}
+  try{const v=localStorage.getItem('dk_gfx');if(v!==null)sceneState.GQ=+v?1:0}catch{/* Storage denial keeps the default graphics quality. */}
   GQU = {value:sceneState.GQ};
   renderer = new THREE.WebGLRenderer({canvas:g3,antialias:false,stencil:false,powerPreference:'high-performance'});
   renderer.toneMapping=THREE.ACESFilmicToneMapping;

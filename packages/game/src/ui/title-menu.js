@@ -45,8 +45,8 @@ const TIPN = (Date.now() / 864e5 | 0) % TIPS.length;
 
 /* "What's new" keeps its NEW pill until the notes of this version were opened once (localStorage dk_seenver; visual only) */
 let seenVer;
-const notesNew = () => { if (seenVer === undefined) { try { seenVer = localStorage.getItem('dk_seenver') } catch (e) { seenVer = null } } return !!GNOTES && seenVer !== GVER };
-const openNotes = () => { notesOpen = true; seenVer = GVER; try { localStorage.setItem('dk_seenver', GVER) } catch (e) { } };
+const notesNew = () => { if (seenVer === undefined) { try { seenVer = localStorage.getItem('dk_seenver') } catch { seenVer = null } } return !!GNOTES && seenVer !== GVER };
+const openNotes = () => { notesOpen = true; seenVer = GVER; try { localStorage.setItem('dk_seenver', GVER) } catch { /* Keep the read marker for this session if storage is unavailable. */ } };
 
 function titleBack(UW,UH){const g=canvasesState.ctx,gr=g.createLinearGradient(0,0,0,UH);gr.addColorStop(0,'rgba(5,8,18,.5)');gr.addColorStop(.3,'rgba(5,8,18,.1)');gr.addColorStop(.6,'rgba(5,8,18,.14)');gr.addColorStop(1,'rgba(5,8,18,.72)');g.fillStyle=gr;g.fillRect(0,0,UW,UH);
  titleVignette(UW,UH)}
@@ -104,7 +104,7 @@ function drawLobby(UW,UH){const g=canvasesState.ctx,nar=UW<480,low=UH<300,m=nar?
  /* --- bottom left: Continue, mode band, Play --- */
  const pw=nar?UW-2*m:Math.min(214,Math.max(170,UW*.33)),px=nar?m:m+6,ph=low?30:nar?34:40,
   key=[['Load game','l',()=>{saveMenuState.saveOpen=true;saveMenuState.svList=null}],['Tutorial','t',openGuide],['Options','o',()=>{settingsState.settingsOpen=true}],[sndOn?'Sound: on':'Sound: off','',()=>{toggleSound()}],['','',()=>{languageState.langOpen=true},1]];
- if(window.NARX&&NARX.desktop)key.push(['Exit to desktop','',()=>window.close()]);
+ if(window.NARX&&window.NARX.desktop)key.push(['Exit to desktop','',()=>window.close()]);
  /* compact buttons: measured, then flowed in rows (right-aligned on wide screens, two columns on narrow ones) */
  const kh=low?18:20,kg=4,avail=nar?UW-2*m:UW-m-6-(px+pw+14),kw=key.map(k=>k[3]?Math.ceil(tw(LANGS[LANG][0],.85))+36:Math.ceil(pxW(k[0],10))+18+(k[1]&&!inputState.touch?20:0)),rows=[];
  if(nar){const hw=Math.floor((avail-kg)/2);for(let i=0;i<key.length;i+=2)rows.push(key.slice(i,i+2).map((k,j,a)=>[k,a.length===1?avail:j?avail-hw-kg:hw]))}
@@ -173,7 +173,7 @@ function drawGameMenu(UW,UH,fh){NAV.onEsc=startGame;navBegin(!MP.on);NAV.first=f
 /* ================= Records ================= */
 /* the ten best games stored on this device (dk_sb), best score first */
 let TOPR=null,TOPS=null;
-function topRuns(){let raw='';try{raw=localStorage.getItem('dk_sb')||''}catch(e){}if(TOPR&&raw===TOPS)return TOPR;const runs=[];try{const all=JSON.parse(raw||'{}');for(const k in all)for(const e of all[k])if(e&&e.w>=0)runs.push(e)}catch(e){}
+function topRuns(){let raw='';try{raw=localStorage.getItem('dk_sb')||''}catch{/* Without storage, show no saved leaderboard for this session. */}if(TOPR&&raw===TOPS)return TOPR;const runs=[];try{const all=JSON.parse(raw||'{}');for(const k in all)for(const e of all[k])if(e&&e.w>=0)runs.push(e)}catch{/* Ignore malformed saved records and keep the visible list empty. */}
  runs.sort((a,b2)=>b2.s-a.s);TOPS=raw;return TOPR=runs.slice(0,10)}
 function drawRecords(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'rec',title:'Leaderboard',close:back,fh,maxW:460}),l=listBegin('rec',b.x,b.y,b.w,b.h),bs=sessionState.best,r=lastRun();
  const runs=topRuns();
@@ -208,13 +208,13 @@ const MCSPL=['Survive the night!','Also try Co-op!','Hold the line!','100% block
 function drawSetup(UW,UH,fh,back){const b=kitScreen(UW,UH,{key:'new',title:'New kingdom',close:back,fh,maxW:440}),small=b.h<190,pw=b.w,cx=b.x+pw/2;let y=b.y+2;
  const eh=small?86:138;kitCard(b.x,y,pw,eh);const bnx=b.x+10,bnh=eh-14,bnw=bnh*2/3;canvasesState.ctx.imageSmoothingEnabled=true;canvasesState.ctx.drawImage(bannerIcon(1),bnx,y+7,bnw,bnh);
  const ex=bnx+bnw+10,ew=b.x+pw-10-ex;T_('Your kingdom',ex,y+5,'#c4a37a',.8);
- const fy=y+15;settingsState.nameBox={x:ex,y:fy,w:ew-24,h:15};uiBtn(ex+ew-22,fy,22,15,BTN,BTNH,()=>{THEME.n=KNAMES[(Math.random()*KNAMES.length)|0];nmI.value=THEME.n;saveTheme()},['Random name'],(x,yy,w)=>dIc(IC.dice,x+4,yy+1.5,12));
+ const fy=y+15;settingsState.nameBox={x:ex,y:fy,w:ew-24,h:15};uiBtn(ex+ew-22,fy,22,15,BTN,BTNH,()=>{THEME.n=KNAMES[(Math.random()*KNAMES.length)|0];nmI.value=THEME.n;saveTheme()},['Random name'],(x,yy,_w)=>dIc(IC.dice,x+4,yy+1.5,12));
  const LW=small?0:58,rx=ex+LW,rw=ew-LW,row=(lab,n,yy,sz,draw,sel,pick,tip)=>{if(LW)T_(lab,ex,yy+(sz-9*.72)/2,'#c4a37a',.72);const per=Math.max(1,Math.floor((rw+2.5)/(sz+2.5)));for(let i=0;i<n;i++){const sx2=rx+(i%per)*(sz+2.5),sy=yy+((i/per)|0)*(sz+3);draw(sx2,sy,sz,i);if(i===sel)gold(sx2-1,sy-1,sz+2,sz+2,4);hudState.uiHits.push({...U(sx2,sy,sz,sz),fn:()=>{pick(i);saveTheme();retheme()},tip:tip(i)})}return Math.ceil(n/per)*(sz+3)};
  let ry=fy+20;const sw=Math.max(8,Math.min(15,(rw+2.5)/PAL.length-2.5));
  ry+=row('Colour',PAL.length,ry,sw,(x,yy,sz,i)=>gemSwatch(x,yy,sz,PAL[i][1]),THEME.c,i=>{THEME.c=i},i=>[PAL[i][0]+' colours']);
  if(!small)ry+=row('2nd colour',PAL.length,ry,sw,(x,yy,sz,i)=>{gemSwatch(x,yy,sz,PAL[i][1]);canvasesState.ctx.save();canvasesState.ctx.beginPath();canvasesState.ctx.arc(x+sz/2,yy+sz/2,sz/2-.3,0,6.283);canvasesState.ctx.clip();canvasesState.ctx.fillStyle=PAL[THEME.c][1];canvasesState.ctx.fillRect(x,yy,sz/2,sz);canvasesState.ctx.restore();canvasesState.ctx.beginPath();canvasesState.ctx.arc(x+sz/2,yy+sz/2,sz/2-.3,0,6.283);canvasesState.ctx.lineWidth=.9;canvasesState.ctx.strokeStyle='#c99a3a';canvasesState.ctx.stroke()},THEME.c2,i=>{THEME.c2=i},i=>['Pattern colour: '+PAL[i][0]]);
  if(!small)ry+=row('Pattern',8,ry,sw+3,(x,yy,sz,i)=>shieldTile(x,yy,sz,(X,Y,W,H)=>{canvasesState.ctx.translate(X,Y);bannerPattern(canvasesState.ctx,W,H,i,PAL[THEME.c2][1])}),THEME.p|0,i=>{THEME.p=i},i=>[['Plain','Per pale','Chevron','Bend','Quarterly','Fess','Bordure','Saltire'][i]]);
- ry+=row('Emblem',EMB.length,ry,sw+3,(x,yy,sz,i)=>shieldTile(x,yy,sz,(X,Y,W,H)=>drawEmblemR(X+W*.14,Y+H*.1,W*.72,i)),THEME.e,i=>{THEME.e=i},()=>['Emblem']);
+ row('Emblem',EMB.length,ry,sw+3,(x,yy,sz,i)=>shieldTile(x,yy,sz,(X,Y,W,H)=>drawEmblemR(X+W*.14,Y+H*.1,W*.72,i)),THEME.e,i=>{THEME.e=i},()=>['Emblem']);
  y+=eh+8;
  {const s='Long calm between waves, then a slow swarm. It grows stronger each wave.';let sc=.85;while(sc>.64&&tw(s,sc)>pw)sc-=.03;if(tw(s,sc)<=pw){TC(s,cx,y+2,'#c4a37a',sc);y+=18}else{const q=s.split('. ');TC(q[0]+'.',cx,y,'#c4a37a',.8);TC(q[1],cx,y+11,'#c4a37a',.8);y+=26}}
  const bh=small?22:28,byy=Math.min(b.y+b.h-bh-2,y+4),bw1=Math.round(pw*.3),bw2=pw-bw1-8;

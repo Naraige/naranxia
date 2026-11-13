@@ -4,14 +4,15 @@ import { createWriteStream, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { testPassed } from './test_result.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const logDir = path.join(root, 'dist', 'test-logs');
 mkdirSync(logDir, { recursive: true });
 const python = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
 const suite = {
-  smoke: { args: ['tools/run.py', 'tests/smoke.js', '-', '1280', '720', '300', 'naranxia.html'], pass: /^ERRS \[\]/m },
-  det: { args: ['tools/run.py', 'tests/det.js'], pass: /"same":true/ },
+  smoke: { args: ['tools/run.py', 'tests/smoke.js', '-', '1280', '720', '300', 'naranxia.html'], pass: /"ok":true/ },
+  det: { args: ['tools/run.py', 'tests/det.js'], pass: /"ok":true/ },
   tools: { args: ['tests/tools.py'], pass: /^RESULT OK/m },
   features: { args: ['tools/run.py', 'tests/features.js'], pass: /"ok":true/ },
   spearman: { args: ['tools/run.py', 'tests/spearman.js'], pass: /"ok":true/ },
@@ -36,12 +37,16 @@ const suite = {
   mp_quests: { args: ['tests/mp_quests.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   mp_convoy: { args: ['tests/mp_convoy.py', 'naranxia_readable.html', '400'], pass: /^RESULT OK/m },
   save: { args: ['tools/run.py', 'tests/save.js'], pass: /"ok":true/ },
+  mp_build: { args: ['tests/mp_build.py', 'naranxia_readable.html'], pass: /^RESULT OK$/m },
   mp_resync_deep: { args: ['tests/mp_resync_deep.py', 'naranxia_readable.html', '200'], pass: /^RESULT OK/m },
+  mp_soak: { args: ['tests/mp_soak.py', 'naranxia_readable.html', '6000'], pass: /^RESULT OK/m },
+  runner: { command: process.execPath, args: ['tests/test_runner.mjs'], pass: /^runner contracts PASS$/m },
+  desktop: { command: process.execPath, args: ['tests/desktop_bridge.cjs'], pass: /^desktop bridge PASS$/m },
 };
-const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'ui', 'waves', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy', 'mp_quests', 'mp_events', 'save'];
+const quick = ['smoke', 'det', 'tools', 'features', 'spearman', 'traps', 'kingxp', 'compat', 'ruins', 'envoy', 'bossabil', 'bastion', 'market', 'research', 'quests', 'ui', 'waves', 'events', 'mp8', 'mpk', 'mp_resync', 'mp_kxp', 'mp_convoy', 'mp_quests', 'mp_events', 'mp_build', 'save', 'runner', 'desktop'];
 const args = process.argv.slice(2);
 const names = args.includes('--full')
-  ? [...new Set([...quick, 'save'])]
+  ? [...new Set([...quick, 'mp_resync_deep', 'mp_soak'])]
   : args.filter((name) => name !== '--full');
 const selected = names.length ? names : quick;
 const unknown = selected.filter((name) => !suite[name]);
@@ -61,7 +66,7 @@ function run(name) {
     const started = Date.now();
     const logPath = path.join(logDir, `${name}.log`);
     const log = createWriteStream(logPath);
-    const child = spawn(python, spec.args, { cwd: root, windowsHide: true });
+    const child = spawn(spec.command || python, spec.args, { cwd: root, windowsHide: true });
     let output = '';
     let timedOut = false;
     const timer = setTimeout(() => {
@@ -78,8 +83,7 @@ function run(name) {
     child.on('close', (code) => {
       clearTimeout(timer);
       log.end();
-      const clean = !/^Traceback|^EXC|FIRST DIVERGENCE|^ERRS \['|^ERRS \[\] \['|"ds":true/m.test(output);
-      const passed = !timedOut && code === 0 && clean && spec.pass.test(output);
+      const passed = testPassed(code, timedOut, output, spec.pass);
       if (!passed) failures++;
       const seconds = Math.floor((Date.now() - started) / 1000);
       console.log(`${passed ? 'PASS' : 'FAIL'} ${name.padEnd(10)} ${String(seconds).padStart(4)}s`);

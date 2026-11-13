@@ -3,13 +3,12 @@ import { HOMEC, LPL } from '../gameplay/players.js';
 import { TH, TS, TW } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { inputState } from '../input/state.js';
-import { MP } from '../multiplayer/session.js';
 import { effectsState } from './effects.js';
 import { CAM, camera, scene, SHADOWS, sun } from './scene.js';
-import { gh } from './terrain.js';
+import { gh } from '../world/terrain-queries.js';
 import { THREE } from './three.js';
 import { cv } from '../ui/canvases.js';
-import { LAND } from '../world/terrain.js';
+import { LAND } from '../world/terrain-state.js';
 
 /* ---- camera & picking ---- */
 export function updateCamera(dt){CAM.x=Math.max(2,Math.min(TW-2,CAM.x));CAM.z=Math.max(2,Math.min(TH-2,CAM.z));
@@ -19,7 +18,7 @@ export function updateCamera(dt){CAM.x=Math.max(2,Math.min(TW-2,CAM.x));CAM.z=Ma
  scene.fog.near=d*.55+6;scene.fog.far=d*1.9+38;
  if(SHADOWS){const e=Math.round(Math.min(70,Math.max(26,d*.95+14))),sc=sun.shadow.camera;if(sc.right!==e){sc.left=-e;sc.right=e;sc.top=e;sc.bottom=-e;sc.far=e*4+60;sc.updateProjectionMatrix()}}
  {/* shadow map snapped to its texel grid: no shadow crawling when the camera moves */
-  const e=SHADOWS?sun.shadow.camera.right:30,tex=2*e/2048,Lz=_LD,Lx=_LR,Ly=_LU;let tx=CAM.x,ty=CAM.y,tz=CAM.z;const a=tx*Lx[0]+ty*Lx[1]+tz*Lx[2],b=tx*Ly[0]+ty*Ly[1]+tz*Ly[2],da=Math.round(a/tex)*tex-a,db=Math.round(b/tex)*tex-b;
+  const e=SHADOWS?sun.shadow.camera.right:30,tex=2*e/2048,Lx=_LR,Ly=_LU;let tx=CAM.x,ty=CAM.y,tz=CAM.z;const a=tx*Lx[0]+ty*Lx[1]+tz*Lx[2],b=tx*Ly[0]+ty*Ly[1]+tz*Ly[2],da=Math.round(a/tex)*tex-a,db=Math.round(b/tex)*tex-b;
   tx+=da*Lx[0]+db*Ly[0];ty+=da*Lx[1]+db*Ly[1];tz+=da*Lx[2]+db*Ly[2];sun.position.set(tx-24,ty+44,tz+18);sun.target.position.set(tx,ty,tz);sun.target.updateMatrixWorld()}}
 
 let _LD;

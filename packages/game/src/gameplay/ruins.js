@@ -1,5 +1,5 @@
 import { snd } from '../audio/sound.js';
-import { RUINS } from '../world/terrain.js';
+import { RUINS } from '../world/terrain-state.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { playersState } from './players.js';
 import { TS } from './rules.js';

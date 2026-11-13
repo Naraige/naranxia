@@ -3,7 +3,7 @@ import { playersState } from '../gameplay/players.js';
 import { TW } from '../gameplay/rules.js';
 import { CONNT } from './models/structures.js';
 import { gOK } from '../world/routes.js';
-import { occ } from '../world/terrain.js';
+import { occ } from '../world/terrain-state.js';
 
 /* houses / farms snap onto a neighbour's grid so they line up and merge */
 export function snapM(type,tx,ty){if(type!=='house'&&type!=='farm'&&!CONNT.has(type))return[tx,ty];const fits=(x,y)=>tilesFor(type,x,y,2).every(([a,b])=>gOK(a,b)&&valid(a,b));let best=null,bd=9;

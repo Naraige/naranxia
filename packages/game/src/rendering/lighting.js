@@ -15,11 +15,11 @@ let SKYU;
 let _sk;
 let SUND;
 let SUNU;
-let _sc;
+
 
 export let nightK = 0;
 let lampT = 0;
-let lampN = 0;
+
 
 function nightTarget(){if(!sessionState.inGame||!sessionState.started)return 0;return nightSim()}
 
@@ -70,7 +70,7 @@ export function initializeSceneLighting() {
   _sk = new THREE.Color();
   SUND = new THREE.Color(0xe6f0ff);
   SUNU = new THREE.Color(0xff9a60);
-  _sc = new THREE.Color();
+
   for(let i=0;i<6;i++){const l=new THREE.PointLight(0xff9a48,0,17,2);l.position.set(0,-50,0);scene.add(l);LP.push(l)}
   LAMPM = new THREE.InstancedMesh(new THREE.OctahedronGeometry(1,0),new THREE.MeshBasicMaterial({color:0xffc070}),400);
   HALOM = new THREE.InstancedMesh(new THREE.SphereGeometry(1,8,6),new THREE.MeshBasicMaterial({color:0xff9a40,transparent:true,opacity:.2,depthWrite:false,blending:THREE.AdditiveBlending}),400);

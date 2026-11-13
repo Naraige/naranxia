@@ -1,6 +1,6 @@
 /* small yes/no player options kept in localStorage (key dk_<name>) */
-export const pref=(k,d)=>{try{const v=localStorage.getItem('dk_'+k);return v===null?d:v==='1'}catch(e){return d}};
-export const setPref=(k,v)=>{try{localStorage.setItem('dk_'+k,v?'1':'0')}catch(e){}};
+export const pref=(k,d)=>{try{const v=localStorage.getItem('dk_'+k);return v===null?d:v==='1'}catch {return d}};
+export const setPref=(k,v)=>{try{localStorage.setItem('dk_'+k,v?'1':'0')}catch{/* Storage is optional; keep the preference in memory for this session. */}};
 
 /* reduce motion, cached for the per-frame callers (camera shake, weather particles, fireflies, lightning) */
 let _rm=false,_rmT=-1e9;

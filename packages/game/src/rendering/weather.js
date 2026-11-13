@@ -6,7 +6,7 @@ import { dayK } from './lighting.js';
 import { setSeasons } from './blocks.js';
 import { LMU } from './materials.js';
 import { CAM, hemi, scene, sun } from './scene.js';
-import { gh } from './terrain.js';
+import { gh } from '../world/terrain-queries.js';
 import { THREE } from './three.js';
 
 /* ================= SEASONS AND WEATHER (#6) =================
@@ -66,15 +66,15 @@ export function weatherTick(dt){if(!sessionState.inGame||!sessionState.started){
  /* particles in a box around the camera target */
  const R=Math.max(14,Math.min(30,CAM.dist*.85)),top=CAM.y+15,cx=CAM.x,cz=CAM.z;
  const nr=rmotion()?0:Math.floor(NRD*Math.min(1,rain)*(R/30+.3)),rp=WX.rp;rp.visible=nr>8;
- if(rp.visible){const P=rp.geometry.attributes.position.array,X=WX.rx;for(let i=0;i<nr;i++){let x=cx+(X[i*3]-.5)*2*R,y=top-X[i*3+1]*15,z=cz+(X[i*3+2]-.5)*2*R;
-   y-=22*dt;let gy=gh(x,z);if(y<gy){X[i*3]=REALR();X[i*3+2]=REALR();X[i*3+1]=REALR()*.15;y=top-X[i*3+1]*15}X[i*3+1]=(top-y)/15;
+ if(rp.visible){const P=rp.geometry.attributes.position.array,X=WX.rx;for(let i=0;i<nr;i++){const x=cx+(X[i*3]-.5)*2*R;let y=top-X[i*3+1]*15;const z=cz+(X[i*3+2]-.5)*2*R;
+   y-=22*dt;const gy=gh(x,z);if(y<gy){X[i*3]=REALR();X[i*3+2]=REALR();X[i*3+1]=REALR()*.15;y=top-X[i*3+1]*15}X[i*3+1]=(top-y)/15;
    const o=i*6;P[o]=x;P[o+1]=y;P[o+2]=z;P[o+3]=x-.07;P[o+4]=y+.6;P[o+5]=z}
   rp.geometry.setDrawRange(0,nr*2);rp.geometry.attributes.position.needsUpdate=true}
  /* snow flakes, and in the other cases the season's drift: petals (spring), pollen (summer), leaves (autumn) */
  let ns_=snow,sz=.17,col=0xffffff;if(snow<.25){const q=1-snow;if(s===0&&rain<.5){ns_=.12*q;col=0xffc2d6;sz=.2}else if(s===1&&rain<.5){ns_=.07*q;col=0xffe9a0;sz=.1}else if(s===2){ns_=.2*q;col=0xe0782c;sz=.24}}
  const nn=rmotion()?0:Math.floor(NSN*Math.min(1,ns_)*(R/30+.3)),sp=WX.sp;sp.visible=nn>6;
  if(sp.visible){WX.pc.lerp(_wg.setHex(col),Math.min(1,dt*2));sp.material.color.copy(WX.pc);sp.material.size=sz;const P=sp.geometry.attributes.position.array,X=WX.sx,fall=snow>.25?1.1:.8;
-  for(let i=0;i<nn;i++){const o=i*4;X[o+3]+=dt*(1.2+X[o]);let x=cx+(X[o]-.5)*2*R+Math.sin(X[o+3])*.7,y=top-X[o+1]*15,z=cz+(X[o+2]-.5)*2*R+Math.cos(X[o+3]*.8)*.5;
+  for(let i=0;i<nn;i++){const o=i*4;X[o+3]+=dt*(1.2+X[o]);const x=cx+(X[o]-.5)*2*R+Math.sin(X[o+3])*.7;let y=top-X[o+1]*15;const z=cz+(X[o+2]-.5)*2*R+Math.cos(X[o+3]*.8)*.5;
    y-=fall*(.6+X[o]*.8)*dt;const gy=gh(x,z);if(y<gy+.05){X[o]=REALR();X[o+2]=REALR();X[o+1]=REALR()*.2;y=top-X[o+1]*15}X[o+1]=(top-y)/15;
    P[i*3]=x;P[i*3+1]=y;P[i*3+2]=z}
   sp.geometry.setDrawRange(0,nn);sp.geometry.attributes.position.needsUpdate=true}

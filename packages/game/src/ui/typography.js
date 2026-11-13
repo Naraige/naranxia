@@ -7,13 +7,13 @@ export const FFP='"Pixelify Sans","Inter","Segoe UI",system-ui,-apple-system,Ari
 
 export const fontOf=sz=>{const px=sz*1.25;return px>=16?'700 '+Math.round(px*.8)+'px '+FFT:'500 '+Math.round(px*.88)+'px '+FF};
 
-export const setF=(sz,w)=>{canvasesState.ctx.font=fontOf(sz)};
+export const setF=(sz,_w)=>{canvasesState.ctx.font=fontOf(sz)};
 
 export const TWM=new Map();
 
 export function initializeTypography() {
-  try{document.fonts&&document.fonts.load('500 16px Inter','0');document.fonts.load('700 16px "Pixelify Sans"','A')}catch(e){}
-  try{if(document.fonts){document.fonts.addEventListener('loadingdone',()=>TWM.clear());document.fonts.ready.then(()=>TWM.clear())}}catch(e){}
+  try{document.fonts&&document.fonts.load('500 16px Inter','0');document.fonts.load('700 16px "Pixelify Sans"','A')}catch{/* Keep the browser's fallback fonts when font loading is unavailable. */}
+  try{if(document.fonts){document.fonts.addEventListener('loadingdone',()=>TWM.clear());document.fonts.ready.then(()=>TWM.clear())}}catch{/* Font load notifications are optional; retain the current text measurement cache. */}
 }
 
 /* light theme: UI text is authored for dark panels, so light colors are mapped to dark inks (hue kept for colored text) */

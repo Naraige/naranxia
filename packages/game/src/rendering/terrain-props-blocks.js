@@ -5,7 +5,7 @@ import { newG, rgb, toGeo } from './geometry.js';
 import { matV } from './materials.js';
 import { scene, SHADOWS } from './scene.js';
 import { THREE } from './three.js';
-import { CH, FLG, HT, LAND, occ, pth, stairs, ter, terrainState } from '../world/terrain.js';
+import { CH, FLG, HT, LAND, occ, pth, stairs, ter, terrainState } from '../world/terrain-state.js';
 
 /* ================= BLOCK WORLD PROPS (switch `blocksState.on` + `decor`) =================
    Trees, rocks, ore, bushes and stumps are voxels on the world block grid (one block = blocksState.DBLK world units);

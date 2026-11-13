@@ -22,14 +22,13 @@ const fc=(F,o)=>{o=o||{};bad(F,8,12);if(o.B)bad(o.B,8,12);if(o.R)bad(o.R,4,12);r
 /* a limb layer: the same art on the four sides unless a back is given */
 const lim=(F,B,o)=>{o=o||{};bad(F,4,12);if(B)bad(B,4,12);return{F,B:B||F,R:o.R||F,L:o.R?'~R':F,T:o.T===undefined?rep(F[0],4):o.T,D:o.D===undefined?rep(F[11],4):o.D}};
 const MAILA=lim(['....','....','....','....','xyxy','....','....','yxyx','....','....','....','....']),MAILL=lim(['....','....','....','xyxy','....','....','....','yxyx','....','....','....','....']);
-const SKIN8={F:rep('ssssssss',8),B:'F',R:'F',L:'F',T:'F',D:'F'};
 /* a pixel cut-out (wings): rows top first, '.' = gap */
 const cut=(G,rows,map,o)=>{const H=rows.length,W=rows[0].length;pxSpriteF(G,W,H,(u,v)=>{const c=rows[H-1-v][u];return c==='.'?null:map[c]},o)};
 /* plain cube painters */
 const bev=(top,mid,low)=>(f,u,v,W,H)=>f==='T'?top:f==='D'?low:(H>=2&&v===H-1)?top:(H>=3&&v===0)?low:mid;
 /* pauldron with a rim, and the lame under it (both arms through pxArms) */
 function pauldrons(T,m,a,b,c,rim,rimL){pxBox(T,-3.3,-1.3,-3.3,6.6,3.3,6.6,(f,u,v,W,H)=>f==='D'?m[1]:f==='T'?((u===0||u===W-1||v===0||v===H-1)?b:a):v===H-1?a:v===0?((u===0||u===W-1)?rim:rimL):b,{mat:4,grid:[6,3,6]});
- pxBox(T,-2.85,-3.2,-2.85,5.7,2,5.7,(f,u,v,W,H)=>f==='T'?b:f==='D'?m[1]:v===0?rim:c,{mat:4,grid:[5,2,5]})}
+ pxBox(T,-2.85,-3.2,-2.85,5.7,2,5.7,(f,u,v,_W,_H)=>f==='T'?b:f==='D'?m[1]:v===0?rim:c,{mat:4,grid:[5,2,5]})}
 /* fauld: armour skirt around the hips, the tabard (cols 2..6 front and back) runs over it */
 function fauld(P,m,a,b,c,tab,tabD,rim){pxBox(P.G,-4.7,9.7,-2.8,9.4,3,5.6,(f,u,v,W,H)=>f==='T'?a:f==='D'?m[1]:((f==='F'||f==='B')&&u>=2&&u<=6)?(v===0?tabD:tab):v===H-1?a:v===0?(rim||c):b,{mat:4,grid:[9,3,6]})}
 
@@ -55,7 +54,7 @@ export function px2Peasant(P){const pv=zombiesState.ZVAR&&zombiesState.ZVAR.hint
   if(hat===0){pxBox(P.HG,-4.25,31.75,-4.25,8.5,2.6,8.5,(f,u,v,W,H)=>f==='T'?((u*3+v)%5===0?m.y:m.Z):v===0?m.R:v===H-1?m.y:(u+v)%3===0?m.z:m.Z,{mat:0,grid:[8,3,8]});
    pxBox(P.HG,-6.5,31.2,-6.5,13,.8,13,(f,u,v,W,H)=>f==='T'?((u===0||v===0||u===W-1||v===H-1)?m.z:(u*5+v*3)%11===0?m.y:m.Z):m.z,{mat:0,grid:[13,1,13]})}
   if(hat===1)pxBox(P.HG,-3,29.7,4.5,6,.8,2,f=>f==='T'?m.l:m.k,{mat:0,grid:[6,1,2]});
-  if(hat===3)pxBox(P.HG,-4.4,29.4,-4.4,8.8,1.3,8.8,(f,u,v,W,H)=>f==='T'||f==='D'?null:(u%3===1?m.F:m.R),{mat:0,grid:[8,1,8]});
+  if(hat===3)pxBox(P.HG,-4.4,29.4,-4.4,8.8,1.3,8.8,(f,u,_v,_W,_H)=>f==='T'||f==='D'?null:(u%3===1?m.F:m.R),{mat:0,grid:[8,1,8]});
   /* belt pouch, wicker basket with the day's load */
   pxBox(P.G,-4.9,8.6,2.2,2.6,3,1.3,(f,u,v,W,H)=>v===H-1?m.B:(f==='F'&&u===1&&v===1?m.g:m.b),{mat:0,grid:[3,3,1]});
   pxBox(P.G,-3.2,13.4,-5.8,6.4,7.2,3.6,(f,u,v,W,H)=>f==='T'?((u+v)%3===0?m.F:m.f):f==='D'?m.i:v===H-1?m.i:(v%2?m.j:(u%3===1?m.i:m.J)),{mat:0,grid:[6,7,3]})});
@@ -80,7 +79,7 @@ export function px2Archer(P){const m=mp({h:'#6b3e1e',r:'#4a2a14',H:'#8e5a30',e:'
   pants:lim(rep('....',6).concat(['BBBB','bbbb','bNbb','bbbb','bbbb','nNNn']),null,{T:null})},'arm',[3,1,5],['F'],'y');
  pxScene(()=>{pxSkin(P,K,m);
   /* hood tip hanging behind the head */
-  pxBox(P.HG,-2,26.8,-6.3,4,4.2,1.9,(f,u,v,W,H)=>f==='T'?m.l:v===0?m.q:m.d,{mat:7,grid:[4,4,2]});pxBox(P.HG,-1,25.2,-7.3,2,2.6,1.5,(f,u,v,W,H)=>v===0?m.Q:m.q,{mat:7,grid:[2,3,1]});
+  pxBox(P.HG,-2,26.8,-6.3,4,4.2,1.9,(f,u,v,_W,_H)=>f==='T'?m.l:v===0?m.q:m.d,{mat:7,grid:[4,4,2]});pxBox(P.HG,-1,25.2,-7.3,2,2.6,1.5,(f,u,v,_W,_H)=>v===0?m.Q:m.q,{mat:7,grid:[2,3,1]});
   /* cowl: wide shoulders, kingdom hem, gold clasp */
   pxBox(P.G,-5.4,20.6,-3,10.8,3.7,6,(f,u,v,W,H)=>f==='T'?((u+v)%4===0?m.l:m.d):f==='D'?m.Q:v===0?m.U:(f==='F'&&v===2&&(u===5))?m.y:v===H-1?m.l:(u+v)%5===0?m.q:m.d,{mat:7,grid:[11,4,6]});
   /* quiver across the back, arrows fletched white and kingdom colour */
@@ -106,7 +105,7 @@ export function px2Knight(P,AL){const m=mp({x:'#2e3138',y:'#474b55',R:'#c0392b',
   leg:MAILL,
   pants:lim(['4444','3333','2332','....','5555','4554','3443','....','4334','3443','bBBb','2332'],['3333','2222','1221','....','3333','3333','2222','....','3333','2222','bbbb','1221'],{T:rep('3333',4),D:rep('1111',4)})},'sleeve',[4,6,8],['F','R','B'],'G');
  pxScene(()=>{pxSkin(P,K,m);
-  pxBox(P.HG,-.6,32.5,-4.25,1.2,1.8,8.5,(f,u,v,W,H)=>f==='T'?m.R:v===0?m.Q:m.R,{mat:4,grid:[1,2,8]});
+  pxBox(P.HG,-.6,32.5,-4.25,1.2,1.8,8.5,(f,u,v,_W,_H)=>f==='T'?m.R:v===0?m.Q:m.R,{mat:4,grid:[1,2,8]});
   if(AL>=2){pxBox(P.HG,-.6,34.3,-3,1.2,2,4.4,pxPaint({F:['Y','U'],B:['T','t'],R:['YUUU','TTTT'],L:'R',T:['Y','U','U','U'],D:['t','t','t','t']},m),{mat:7,grid:[1,2,4]});pxBox(P.HG,-.6,32,-5.8,1.2,3,2,pxPaint({F:['U','T','t'],B:'F',R:['UT','TT','tt'],L:'R',T:['U','T'],D:['t','t']},m),{mat:7,grid:[1,3,2]})}
   fauld(P,m,m[5],m[4],m[3],m.U,m.t,AL>=1?m.g:m[2])});
  pxArms(P,T=>{pxSkinArms(T,K,m);pauldrons(T,m,m[5],m[4],m[3],AL>=1?m.o:m[2],AL>=1?m.g:m[3])});
@@ -130,12 +129,12 @@ export function px2Spearman(P,AL){const m=mp({h:'#5a3a1a',r:'#3a2410',H:'#7a5226
  pxScene(()=>{pxSkin(P,K,m);
   /* kettle helmet: wide brim, low crown */
   pxBox(P.HG,-6.5,29.2,-6.5,13,.8,13,(f,u,v,W,H)=>f==='T'?((u===0||v===0||u===W-1||v===H-1)?m[5]:m[4]):(f==='D'?m[1]:m[2]),{mat:4,grid:[13,1,13]});
-  pxBox(P.HG,-3,32.5,-3,6,.8,6,(f,u,v,W,H)=>f==='T'?m[5]:m[3],{mat:4,grid:[6,1,6]});
-  if(AL>=2)pxBox(P.HG,-4.7,30,-4.7,9.4,.8,9.4,(f,u,v,W,H)=>f==='T'?m.G:(u%3===1?m.G:m.g),{mat:4,grid:[9,1,9]});
+  pxBox(P.HG,-3,32.5,-3,6,.8,6,(f,_u,_v,_W,_H)=>f==='T'?m[5]:m[3],{mat:4,grid:[6,1,6]});
+  if(AL>=2)pxBox(P.HG,-4.7,30,-4.7,9.4,.8,9.4,(f,u,_v,_W,_H)=>f==='T'?m.G:(u%3===1?m.G:m.g),{mat:4,grid:[9,1,9]});
   /* padded arming collar */
-  pxBox(P.G,-4.8,22.5,-2.8,9.6,1.8,5.6,(f,u,v,W,H)=>f==='T'?m.a:f==='D'?m.A:v===0?m.T:(u%2?m.a:m.A),{mat:0,grid:[10,2,6]});
+  pxBox(P.G,-4.8,22.5,-2.8,9.6,1.8,5.6,(f,u,v,_W,_H)=>f==='T'?m.a:f==='D'?m.A:v===0?m.T:(u%2?m.a:m.A),{mat:0,grid:[10,2,6]});
   /* bedroll strapped across the back */
-  pxBox(P.G,-3.5,13.4,-4.4,7,2.2,2.2,(f,u,v,W,H)=>(f==='B'||f==='T'||f==='D')&&(u===1||u===5)?m.n:f==='T'?m.a:f==='D'?m.A:(v===0?m.A:m.a),{mat:0,grid:[7,2,2]})});
+  pxBox(P.G,-3.5,13.4,-4.4,7,2.2,2.2,(f,u,v,_W,_H)=>(f==='B'||f==='T'||f==='D')&&(u===1||u===5)?m.n:f==='T'?m.a:f==='D'?m.A:(v===0?m.A:m.a),{mat:0,grid:[7,2,2]})});
  pxArms(P,T=>{pxSkinArms(T,K,m);if(AL>=1)pxBox(T,-2.8,-1.6,-2.8,5.6,2.4,5.6,bev(m[5],m[4],m[2]),{mat:4,grid:[5,2,5]})});
 }
 
@@ -179,7 +178,7 @@ export function px2Bannerman(P){const m=mp({h:'#5a3a1a',r:'#3a2410',H:'#7a5226',
   pxBox(P.HG,-6,29.4,-6,12,.8,12,(f,u,v,W,H)=>f==='T'?((u===0||v===0||u===W-1||v===H-1)?m[5]:m[4]):(f==='D'?m[1]:m[2]),{mat:4,grid:[12,1,12]});
   pxBox(P.G,-5.4,20.7,-3,10.8,3.6,6,(f,u,v,W,H)=>f==='T'?m.U:f==='D'?m.V:v===0?m.g:v===1?m.t:v===H-1?m.Y:(f==='F'&&u===5&&v===2)?m.G:m.U,{mat:7,grid:[11,4,6]});
   /* horn at the hip */
-  pxBox(P.G,-5.6,8.3,-.4,1.4,1.5,3.6,(f,u,v,W,H)=>f==='F'?m.N:(f==='R'||f==='L')&&(u===1)?m.y:m.i,{mat:0,grid:[1,1,4]});pxBox(P.G,-5.6,9.8,-1.6,1.4,2.2,1.4,(f,u,v,W,H)=>v===H-1?m.y:m.I,{mat:0,grid:[1,2,1]})});
+  pxBox(P.G,-5.6,8.3,-.4,1.4,1.5,3.6,(f,u,_v,_W,_H)=>f==='F'?m.N:(f==='R'||f==='L')&&(u===1)?m.y:m.i,{mat:0,grid:[1,1,4]});pxBox(P.G,-5.6,9.8,-1.6,1.4,2.2,1.4,(f,u,v,W,H)=>v===H-1?m.y:m.I,{mat:0,grid:[1,2,1]})});
  pxArms(P,T=>pxSkinArms(T,K,m));
 }
 
@@ -227,7 +226,7 @@ export function px2Guard(P){const m=mp({x:'#2e3138',y:'#474b55',R:'#a62832',r:'#
 /* ---------------- KING: the current royal skin (crown, great helm, ermine), shaded in tones, plus a gilded fauld and the lame under each pauldron ---------------- */
 export function px2King(P,AL){const m=mp({R:'#a62832',X:'#6c111b'},thp());pxKing(P,AL);
  pxScene(()=>fauld(P,m,m.G,m.U,m.T,m.R,m.X,m.g));
- pxArms(P,T=>pxBox(T,-2.85,-3.3,-2.85,5.7,2,5.7,(f,u,v,W,H)=>f==='T'?m[4]:f==='D'?m[1]:v===0?m.g:m[3],{mat:4,grid:[5,2,5]}));
+ pxArms(P,T=>pxBox(T,-2.85,-3.3,-2.85,5.7,2,5.7,(f,u,v,_W,_H)=>f==='T'?m[4]:f==='D'?m[1]:v===0?m.g:m[3],{mat:4,grid:[5,2,5]}));
 }
 
 export const PX2={peasant:px2Peasant,archer:px2Archer,knight:px2Knight,spearman:px2Spearman,captain:px2Captain,bannerman:px2Bannerman,gunner:px2Gunner,gunner2:px2Gunner,guard:px2Guard,king:px2King,

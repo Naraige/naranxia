@@ -12,7 +12,7 @@ export const unitPartsState = {
 };
 
 /* ---- unit models: voxel characters with separate head / both arms / tools (1 voxel = .05 tile) ---- */
-export let NOWEAP=false;
+export const NOWEAP=false;
 export const VX=.05,UM={};
 
 export function vb(G,cx,y0,cz,w,h,d,c){let T2=G;if(unitPartsState.RT&&G===unitPartsState.RT.G){if(cx<=-(unitPartsState.RT.lax||3.2)&&y0>=1.8&&y0<13)T2=unitPartsState.RT.LA;else if(y0>=unitPartsState.RT.hy&&Math.abs(cx)<3.6&&cz>-2.9&&y0<24)T2=unitPartsState.RT.HG}bxc(T2,cx*VX,y0*VX,cz*VX,w*VX,h*VX,d*VX,c)}
@@ -33,7 +33,7 @@ export function sprites(){if(SPR.pick)return SPR;
  {const g=sprGrid();stick(g,0,15,10,5);for(let s=-5;s<=5;s++){const c=s*s*.07,x=Math.round(10+s*.707-.707*c),y=Math.round(5+s*.707+.707*c);if(x>=0&&x<16&&y>=0&&y<16){g[y][x]=s<-1?'w':s<3?'i':'d';if(x+1<16&&g[y][x+1]==='.')g[y][x+1]=s<1?'i':'d'}}SPR.pick=sprOutline(g)}
  {const g=sprGrid();stick(g,0,15,9,6);[[1,9,12],[2,8,13],[3,8,14],[4,8,14],[5,9,13],[6,10,12]].forEach(([y,a,b])=>{for(let x=a;x<=b;x++)g[y][x]=y<=2?'w':y>=5?'d':'i'});for(let y=2;y<=4;y++)g[y][14]='d';SPR.axe=sprOutline(g)}
  {const g=sprGrid();stick(g,0,15,9,6);for(let y=2;y<=6;y++)for(let x=8;x<=12;x++)if(x-8+ (y-2)>=1&&x-8+(y-2)<=7)g[y][x]=(x+y)%5===0?'d':'i';g[2][11]='w';g[3][12]='w';g[2][12]='w';SPR.hammer=sprOutline(g)}
- const sword=(w,i,d,hl)=>{const g=sprGrid();sprLine(g,3,12,14,1,k=>'i');sprLine(g,4,12,14,2,k=>'d');sprLine(g,3,11,13,1,k=>'w');sprLine(g,1,10,5,14,(k)=>'b');sprLine(g,0,15,3,12,k=>k?'B':'g');g[14][1]='b';g[15][0]='g';return sprOutline(g.map(r=>r.map(c=>c==='i'?i:c==='d'?d:c==='w'?w:c==='b'&&hl?'h':c)))};
+ const sword=(w,i,d,hl)=>{const g=sprGrid();sprLine(g,3,12,14,1,_k=>'i');sprLine(g,4,12,14,2,_k=>'d');sprLine(g,3,11,13,1,_k=>'w');sprLine(g,1,10,5,14,(_k)=>'b');sprLine(g,0,15,3,12,k=>k?'B':'g');g[14][1]='b';g[15][0]='g';return sprOutline(g.map(r=>r.map(c=>c==='i'?i:c==='d'?d:c==='w'?w:c==='b'&&hl?'h':c)))};
  SPR.sword=sword('w','i','d',0);SPR.gsword=sword('G','g','h',1);
  {const g=sprGrid();for(let a=-70;a<=70;a+=5){const r=a*Math.PI/180,x=Math.round(Math.cos(r)*8),y=Math.round(8+Math.sin(r)*7.6);if(x>=0&&x<16&&y>=0&&y<16)g[y][x]=a%10?'B':'b'}sprLine(g,3,1,3,15,()=>'S');SPR.bow=sprOutline(g)}
  return SPR}
@@ -95,11 +95,10 @@ export function mkModel(type,z){if(z>=20){const sv=THEME.c;THEME.c=z-20;try{retu
 
 
 /* ================= Minecraft-style characters: 8x8x8 head, 8x12x4 torso, 4x12x4 limbs (1 px = .46 voxel) ================= */
-const MP_=.46,mp=n=>n*MP_;
 
 function mcFace(G,skin,o){o=o||{};const e1=o.eye||'#ffffff',e2=o.pupil||'#3a3a9a',y=12.55;
  vb(G,-.9,y,1.86,.95,.5,.12,e1);vb(G,.9,y,1.86,.95,.5,.12,e1);vb(G,-.62,y,1.9,.5,.5,.12,e2);vb(G,.62,y,1.9,.5,.5,.12,e2);
- vb(G,0,12.0,1.88,.5,.5,.12,lighten(skin,-.12>0?0:0));vb(G,0,11.35,1.86,1.2,.28,.12,o.mouth||'#7a4a3a')}
+ vb(G,0,12.0,1.88,.5,.5,.12,lighten(skin,0));vb(G,0,11.35,1.86,1.2,.28,.12,o.mouth||'#7a4a3a')}
 
 export function mcHead(G,skin,hair,o){o=o||{};vb(G,0,11,0,3.7,3.7,3.7,skin);
  if(hair){vb(G,0,14.05,0,3.85,.7,3.85,hair);vb(G,0,12.9,-1.75,3.85,1.9,.4,hair);vb(G,-1.8,13,0,.4,1.4,3.8,hair);vb(G,1.8,13,0,.4,1.4,3.8,hair);vb(G,0,13.6,1.8,3.85,.55,.3,hair)}

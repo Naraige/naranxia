@@ -11,7 +11,7 @@ import { leaveSquad } from './squads.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { DSIDE, longField, ringOf } from '../world/connectivity.js';
 import { gOK } from '../world/routes.js';
-import { terrainState } from '../world/terrain.js';
+import { terrainState } from '../world/terrain-state.js';
 import { fv, solid } from '../world/traversal.js';
 
 /* night shelter. A villager given an order during the night (or sent to repair) stays out until it is idle again.
@@ -37,7 +37,7 @@ function shelIn(u,c){if(u.carry){playersState.RESP[u.pl|0][u.cj]+=GET[u.cj];u.ca
  u.sj=u.job?{job:u.job,tl:u.tl,rb:u.rb,rk:u.rk,wk:u.wk}:null;u.job=null;u.tl=-1;u.rb=null;u.rk=0;u.o=null;u.work=0;u.si=0;u.idle=0;
  leaveSquad(u);u.shel=c;u.gar=c;u.sel=false;u.dk=false;u.walk=0;u.x=c.x;u.y=c.y}
 
-export function shelTick(u,dt){const c=u.shel;u.walk=0;if(c.hp<=0||!sessionState.structs.includes(c)){shelOut(u,c,true);return}u.x=c.x;u.y=c.y;
+export function shelTick(u,_dt){const c=u.shel;u.walk=0;if(c.hp<=0||!sessionState.structs.includes(c)){shelOut(u,c,true);return}u.x=c.x;u.y=c.y;
  if(!simulationState.shelOn&&simulationState.shelRel>=.15){simulationState.shelRel-=.15;shelOut(u,c,false)}}
 
 export function shelOut(u,c,hurt){u.shel=null;u.gar=null;const D=doorTiles(c,1).filter(([x,y])=>gOK(x,y)&&!solid(x,y)),Q=D.length?D:ringOf(c);

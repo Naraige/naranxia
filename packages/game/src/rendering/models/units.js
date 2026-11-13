@@ -17,7 +17,7 @@ export const unitsState = {
   RKB: 0,
 };
 
-export let PXON = true;
+export const PXON = true;
 let SHZ;
 export const alv=()=>unitsState.ALF!=null?unitsState.ALF:(RS2.done.plate?1:0)+(RS2.done.mail?1:0);
 
@@ -28,7 +28,7 @@ function hkPut(Gx,m){return(x,y,z,w,h,d,c)=>{const o=geometryState.BMAT;geometry
 function humanKit(type,AL,P){
  const{G,HG,LA,LG,AG}=P,t=hkPut(G,0),tm=hkPut(G,4),tc=hkPut(G,7),tg=hkPut(G,5),hd=hkPut(HG,0),hm=hkPut(HG,4),hc=hkPut(HG,7),hg=hkPut(HG,5),k=hkPut(LG,0),km=hkPut(LG,4),
   A=(m,dx,y,z,w,h,d,c)=>{hkPut(AG,m)(dx,y,z,w,h,d,c);hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c)},AE=(m,dx,y,z,w,h,d,c)=>hkPut(AG,m)(dx,y,z,w,h,d,c),AW=(m,dx,y,z,w,h,d,c)=>hkPut(LA,m)(-2.76-dx,y+10.45,z,w,h,d,c),
-  L=(m,x,y,z,w,h,d,c)=>hkPut(LA,m)(x,y,z,w,h,d,c),P1=thp(),P2=ths(),PD=thd(),skin='#c68a5e';
+  P1=thp(),P2=ths(),PD=thd(),skin='#c68a5e';
  /* units board, look B (unit-style.js): new skins, same parts and anchors */
  if(PXON&&uv2(type)&&PX2[type]){skinV2.on=1;try{PX2[type](P,AL)}finally{skinV2.on=0}if(type==='gunner2'){AE(0,0,-4.65,1.6,.3,.3,7.4,'#8a6a3a');AE(0,0,-4.85,5.5,.68,.68,1.0,'#4a3a2a');AE(0,0,-4.75,-2.3,.4,.4,.4,'#5a4428')}return null}
  if(PXON&&(type==='king'||type==='captain'||type==='bannerman')){({king:pxKing,captain:pxCaptain,bannerman:pxBannerman})[type](P,AL);return null}
@@ -163,9 +163,8 @@ function humanKit(type,AL,P){
   if(ban){hm(0,14.3,0,5.06,.1,5.06,HA.gd);tg(0,14.65,1.86,.4,.4,.06,HA.hx)}}
  return null}
 
-function mcModel(type,z){
- const G=newG(),HG=newG(),LA=newG(),LG=newG(),AG=newG(),P0={G,HG,LA,hy:11,lax:2.2};unitPartsState.RT=P0;let sc=1.35,h=15.6,parts=null,X=null;
- const skin='#c68a5e',hair='#3a2410';
+function mcModel(type,_z){
+ const G=newG(),HG=newG(),LA=newG(),LG=newG(),AG=newG(),P0={G,HG,LA,hy:11,lax:2.2};unitPartsState.RT=P0;let sc=1.35,h=15.6,parts=null;
  if(type==='zombie'||type==='husk'||type==='runner'||type==='brute'||type==='bomber'||type==='acid'||type==='miner'){
   sc={zombie:1.35,husk:1.0,runner:1.2,brute:2.15,bomber:1.5,acid:1.3,miner:1.35}[type];if(type==='brute')h=18;zombieKit(type,zombiesState.ZVAR,{G,HG,LA,LG,AG});
  }else if(type==='peasant'||type==='archer'||type==='gunner'||type==='gunner2'){humanKit(type,unitsState.ALB,{G,HG,LA,LG,AG})}

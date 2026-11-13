@@ -31,7 +31,7 @@ import { thp, ths } from '../ui/kingdom-theme.js';
    items  -> 16x16 pixel sprites with a dark outline (ingot, sword, armour, wheat, clock, map...)
    blocks -> isometric cubes (log, cobblestone, stone bricks, grass, TNT, piston, stairs, path)
    units  -> mob-head style heads; buildings -> isometric renders of the real medieval models */
-function pc16(fn,ol){const c=cvs(16,16),g=c.getContext('2d'),P=(x,y,col)=>{if(x<0||y<0||x>15||y>15)return;g.fillStyle=col;g.fillRect(x|0,y|0,1,1)},R=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)},
+function pc16(fn,_ol){const c=cvs(16,16),g=c.getContext('2d'),P=(x,y,col)=>{if(x<0||y<0||x>15||y>15)return;g.fillStyle=col;g.fillRect(x|0,y|0,1,1)},R=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)},
  L=(x0,y0,x1,y1,col)=>{const n=Math.max(Math.abs(x1-x0),Math.abs(y1-y0))||1;for(let k=0;k<=n;k++)P(Math.round(x0+(x1-x0)*k/n),Math.round(y0+(y1-y0)*k/n),typeof col==='function'?col(k,n):col)},
  Gd=(rows,pal,x0,y0)=>rows.forEach((r,j)=>{for(let i=0;i<r.length;i++){const ch=r[i];if(ch!=='.'&&pal[ch])P(x0+i,y0+j,pal[ch])}}),
  C=(cx,cy,f)=>{for(let y=0;y<16;y++)for(let x=0;x<16;x++){const dx=x+.5-cx,dy=y+.5-cy,col=f(hyp(dx,dy),Math.atan2(dy,dx),dx,dy);if(col)P(x,y,col)}};
@@ -50,7 +50,7 @@ function miShot(o,yaw,pitch){return icoShot(o,yaw==null?MI_ISO[0]:yaw,pitch==nul
 
 /* building renders: brighter light, slightly finer pixels so timber frames and roofs stay readable */
 let MI_AMB=null;
-function miShotB(obj,yaw,pitch,n){const R=ICR,cam=R.cam;if(!MI_AMB){MI_AMB=new THREE.AmbientLight(0xffffff,.5);MI_AMB.visible=false;R.sc.add(MI_AMB)}MI_AMB.visible=true;
+function miShotB(obj,yaw,pitch,_n){const R=ICR,cam=R.cam;if(!MI_AMB){MI_AMB=new THREE.AmbientLight(0xffffff,.5);MI_AMB.visible=false;R.sc.add(MI_AMB)}MI_AMB.visible=true;
  R.sc.add(obj);obj.updateMatrixWorld(true);const bb=new THREE.Box3().setFromObject(obj),sp=bb.getBoundingSphere(new THREE.Sphere()),c=sp.center,r=Math.max(.01,sp.radius),d=r/Math.sin(cam.fov*Math.PI/360)*.98;
  cam.position.set(c.x+Math.sin(yaw)*Math.cos(pitch)*d,c.y+Math.sin(pitch)*d,c.z+Math.cos(yaw)*Math.cos(pitch)*d);cam.near=d*.05;cam.far=d*4;cam.updateProjectionMatrix();cam.lookAt(c);
  const oc=new THREE.Color();renderer.getClearColor(oc);const oa=renderer.getClearAlpha();const fw0=FOWU.fowP.value.w,fz0=FOWU.fowP.value.z;FOWU.fowP.value.w=0;FOWU.fowP.value.z=0;renderer.setClearColor(0x000000,0);renderer.setRenderTarget(R.rt);renderer.clear();renderer.render(R.sc,cam);renderer.readRenderTargetPixels(R.rt,0,0,ICO_RT,ICO_RT,R.buf);renderer.setRenderTarget(null);renderer.setClearColor(oc,oa);FOWU.fowP.value.w=fw0;FOWU.fowP.value.z=fz0;R.sc.remove(obj);MI_AMB.visible=false;
@@ -93,7 +93,7 @@ function* mcIconsSteps(){if(!ICR)icoInit();const SW=sprites(),IC2={};
  IC2.zoomIn=pc16(({C,R})=>mag(C,R,true));IC2.zoomOut=pc16(({C,R})=>mag(C,R,false));
  const arc=(C,R,P,dir)=>{C(8,9.5,(r,a)=>{if(r<3.3||r>4.9)return null;const deg=a*180/Math.PI;return deg<-12&&deg>-168?'#f0f0f0':null});if(dir<0){R(2,9,5,1,'#f0f0f0');R(3,10,3,1,'#f0f0f0');P(4,11,'#f0f0f0')}else{R(9,9,5,1,'#f0f0f0');R(10,10,3,1,'#f0f0f0');P(11,11,'#f0f0f0')}};
  IC2.rotL=pc16(({C,R,P})=>arc(C,R,P,-1));IC2.rotR=pc16(({C,R,P})=>arc(C,R,P,1));
- IC2.rotate=pc16(({C,R,P})=>{C(8,8,(r,a)=>{if(r<3.6||r>5.2)return null;const deg=a*180/Math.PI;return deg>-60||deg<-100?'#f0f0f0':null});R(8,1,1,6,'#f0f0f0');R(9,2,1,4,'#f0f0f0');R(10,3,1,2,'#f0f0f0')});
+ IC2.rotate=pc16(({C,R,P: _P})=>{C(8,8,(r,a)=>{if(r<3.6||r>5.2)return null;const deg=a*180/Math.PI;return deg>-60||deg<-100?'#f0f0f0':null});R(8,1,1,6,'#f0f0f0');R(9,2,1,4,'#f0f0f0');R(10,3,1,2,'#f0f0f0')});
  IC2.close=pc16(({R})=>{for(let k=0;k<9;k++){R(3+k,3+k,2,2,'#ff5555');R(11-k,3+k,2,2,'#ff5555')}});
  IC2.cursor=pc16(({Gd})=>Gd(["w.......","ww......","www.....","wwww....","wwwww...","wwwwww..","wwwwwww.","wwwwwwww","wwwww...","ww.ww...","w...ww..","....ww..",".....ww."],{w:'#ffffff'},4,1));
  IC2.pan=pc16(({R,P})=>{const c='#f0f0f0';R(7,4,2,8,c);R(4,7,8,2,c);P(7,2,c);P(8,2,c);R(6,3,4,1,c);R(5,4,6,1,c);R(5,11,6,1,c);R(6,12,4,1,c);P(7,13,c);P(8,13,c);R(4,5,1,6,c);R(3,6,1,4,c);P(2,7,c);P(2,8,c);R(11,5,1,6,c);R(12,6,1,4,c);P(13,7,c);P(13,8,c)});
@@ -106,7 +106,7 @@ function* mcIconsSteps(){if(!ICR)icoInit();const SW=sprites(),IC2={};
 IC2.plus=pc16(({R})=>{R(7,3,2,10,'#f0f0f0');R(3,7,10,2,'#f0f0f0')});IC2.minus=pc16(({R})=>R(3,7,10,2,'#f0f0f0'));
  IC2.ff=pc16(({R})=>{for(let y=3;y<=12;y++){const w=Math.round(Math.min(y-3,12-y)*1.0)+1;R(2,y,w,1,'#f0f0f0');R(8,y,w,1,'#f0f0f0')}});
  IC2.clock=IC2.drill;IC2.crown=pc16(({R,P})=>{R(2,7,12,5,'#ffd23c');R(2,11,12,1,'#c8962a');for(const x of[2,7,12]){R(x,4,2,3,'#ffd23c');P(x,3,'#ffe060')}P(4,6,'#ffd23c');P(10,6,'#ffd23c');R(4,9,2,1,'#c8282a');R(10,9,2,1,'#3a6fd0');R(7,9,2,1,'#55e070')});
-IC2.agg=pc16(({Gd,P})=>{Gd(SW.sword,{...SPAL,w:'#ffe0e0',i:'#ff7a6a',d:'#c03a2a'},0,0)},false);
+IC2.agg=pc16(({Gd,P: _P})=>{Gd(SW.sword,{...SPAL,w:'#ffe0e0',i:'#ff7a6a',d:'#c03a2a'},0,0)},false);
  IC2.def=IC2.shield;
  IC2.hold=pc16(({Gd})=>Gd(["...h..h.....","h..h..h.....","h..h..h..h..","h..h..h..h..","hh.hh.hh.h..","hhhhhhhhhh.h","hhhhhhhhhhhh","hhhhhhhhhhh.","hhhhhhhhhhh.",".hhhhhhhhhh.",".hhhhhhhhh..","..hhhhhhhh..","..hhhhhhh...","...dddddd..."],{h:'#e8b88a',d:'#a8744a'},2,1));
  IC2.stop=pc16(({C,R})=>{C(8,8,(r,a,dx,dy)=>Math.abs(dx)<6.4&&Math.abs(dy)<6.4&&Math.abs(dx)+Math.abs(dy)<9?(Math.abs(dx)+Math.abs(dy)>7.6||Math.abs(dx)>5.6||Math.abs(dy)>5.6?'#8a1010':'#e02a2a'):null);R(4,7,8,2,'#ffffff')});
@@ -149,7 +149,7 @@ export let icoPart = function icoPart(kind,i){if(!ICR)icoInit();i=i|0;const set=
    ()=>set('barracks',B(st('barracks',0,tr))),()=>{set('home',B(st('castle',0,tr),.42));IC.castle=IC.home},()=>set('keep',B(st('keep',0,tr)))]}
  else J=['knight','spearman','archer','captain','bannerman','scout','engineer','envoy','king','guard'].map(k=>()=>set(k,miHead(k,0)));
  /* one icon per task so the redraw never holds a frame for long */
- if(i<J.length){J[i]();if(i+1<J.length)setTimeout(()=>{try{icoPart(kind,i+1)}catch(e){}},20)}};
+ if(i<J.length){J[i]();if(i+1<J.length)setTimeout(()=>{try{icoPart(kind,i+1)}catch{/* One optional icon can fail without blocking the remaining refreshes. */}},20)}};
 
 export function setIcoPartHandler(handler) {
   icoPart = handler;
@@ -159,7 +159,7 @@ export function* initializePixelIcons() {
   MI_ISO = [Math.PI/4,.58];
 
   /* every later 3D-icon refresh (research done, new kingdom colour) re-applies the Minecraft set */
-  {const _i3=icons3D;setIcons3DHandler(function(){try{_i3()}catch(e){}try{mcIcons()}catch(e){console.error('mcIcons',e)}})}
+  {const _i3=icons3D;setIcons3DHandler(function(){try{_i3()}catch{/* Continue with the Minecraft icon refresh if the previous refresh fails. */}try{mcIcons()}catch(e){console.error('mcIcons',e)}})}
 
   try{yield* mcIconsSteps()}catch(e){console.error('mcIcons',e)}
 

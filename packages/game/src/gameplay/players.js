@@ -29,5 +29,3 @@ export const LC=l=>l>=3&&sessionState.CS2?sessionState.CS2:sessionState.CS;
 
 export const fdist=(x,y)=>{if(!MP.on)return dist(CAM.x*TS,CAM.z*TS,x,y);let m=1e12;for(const q of aliveC())m=Math.min(m,dist(q.x,q.y,x,y));return m};
 export const focus=()=>MP.on?{x:sessionState.CS.x,y:sessionState.CS.y}:{x:CAM.x*TS,y:CAM.z*TS};
-
-const myTerr=(tx,ty)=>!MP.on||!sessionState.CS2||nearC((tx+.5)*TS,(ty+.5)*TS)===HOMEC()||!aliveC().includes(HOMEC());

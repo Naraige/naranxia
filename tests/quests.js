@@ -1,6 +1,6 @@
 async()=>{/* quest line: order, rewards, gather counters, new quests (market, guild, siege, envoy), off switch, test mode inert, same run twice = same state,
    co-op (shared line, switch command, snapshot round trip), save round trip, saves of the first version (16 quests by index) and saves without quests */
- try{renderer.render=()=>{}}catch(e){}
+ try{renderer.render=()=>{}}catch{/* Rendering is optional for quest assertions; continue with the live renderer. */}
  const O={},C=[];const chk=(n,v)=>{O[n]=v;C.push(!!v)};const RR=Math.random;const cur=()=>{const q=qCur();return q?q.id:'END'};
  const run=()=>{let s=41;Math.random=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};
   rollWorld();randomSite();pickPos={tx:pickPos.tx,ty:pickPos.ty,ok:true};confirmPick();waveT=1e9;const R=RESP[0],log=[];
@@ -41,13 +41,13 @@ async()=>{/* quest line: order, rewards, gather counters, new quests (market, gu
   QST=qFix({v:1,on:0,i:3});chk('lot1Off',QST.on===0&&cur()==='farm');QST=qFix({v:2,on:1,d:{wood:1,gone:1,ore:7}});chk('unknownIds',Object.keys(QST.d).join()==='wood')}
  /* co-op (one machine, as det does): the line runs, starts on whatever the local preference says, same run twice = same hashes and state,
     the switch is a command, a snapshot (what a resync sends) carries the state */
- {let pref=null;try{pref=localStorage.getItem('dk_quests');localStorage.setItem('dk_quests','0')}catch(e){}
+ {let pref=null;try{pref=localStorage.getItem('dk_quests');localStorage.setItem('dk_quests','0')}catch{/* The game can still test quest state when storage is unavailable. */}
   const co=()=>{MP.on=true;MP.host=true;SEED=123.456;GPR={fq:.012,wl:.3,mt:.55,rv:.012,rg:.95,am:.9,tr:.6,gd:1,tc:.006};SITE2=null;Math.random=rngf(777);randomSite();CX=pickPos.tx;CY=pickPos.ty;reset();inGame=true;started=false;waveT=1e9;Math.random=rngf(999);
    const on0=QST.on,hs=[];for(let k=0;k<1400;k++){update(1/30);if(k%350===349)hs.push(mpHash()+':'+cur()+':'+RESP.map(R=>Math.round(R.g)+'/'+Math.round(R.w)).join(','))}return {on0,hs,q:JSON.stringify(QST)}};
   const c1=co(),c2=co();O.coop=c1.hs;chk('coopOnByDefault',c1.on0===1);chk('coopMoves',!/:wood:/.test(c1.hs[c1.hs.length-1]));chk('coopSame',JSON.stringify(c1)===JSON.stringify(c2));
-  let lp='x';try{lp=localStorage.getItem('dk_quests')}catch(e){}
+  let lp='x';try{lp=localStorage.getItem('dk_quests')}catch{/* The assertion below reports when persistence is unavailable. */}
   const n0=MP.out.length;questSwitch(false);const sent=MP.out[MP.out.length-1];chk('switchIsCommand',MP.out.length===n0+1&&sent&&sent.k==='qs'&&sent.on===0&&QST.on===1);MP.out.length=n0;
-  mpExec({k:'qs',on:0},false);const off=QST.on;const h0=mpHash();mpExec({k:'qs',on:1},true);chk('switchExec',off===0&&QST.on===1&&h0!==mpHash());let lp2='y';try{lp2=localStorage.getItem('dk_quests')}catch(e){}chk('coopKeepsPref',lp===lp2);
+  mpExec({k:'qs',on:0},false);const off=QST.on;const h0=mpHash();mpExec({k:'qs',on:1},true);chk('switchExec',off===0&&QST.on===1&&h0!==mpHash());let lp2='y';try{lp2=localStorage.getItem('dk_quests')}catch{/* Keep the distinct sentinel so the persistence assertion fails clearly. */}chk('coopKeepsPref',lp===lp2);
   paused=true;const q0=JSON.stringify(QST),hq=mpHash(),txt=await svPack();QST.d={};QST.on=0;QST.a=[7,7,7];await svApply(txt);chk('snapshotKeeps',JSON.stringify(QST)===q0&&mpHash()===hq);
   /* convoy quest (co-op only): it stays while the two castles are linked by land and is looked at again only every 30 s (QST.ct, kept by
      a snapshot); with no land route (here a closed ring of walls around the partner's castle) it is skipped for both, without reward;
@@ -66,5 +66,5 @@ async()=>{/* quest line: order, rewards, gather counters, new quests (market, gu
    chk('convoyLinkedStays',a.cs2&&a.l0===true&&a.cur0==='convoy'&&a.ct&&a.wait==='convoy'&&a.ctKept);
    chk('convoySkipped',a.l1===false&&a.d===2&&a.cur==='wave10'&&a.gain.every(v=>v<25)&&/^Quest skipped/.test(a.msg));
    chk('convoyPaidFirst',a.paid==='1:30,30');chk('convoySame',JSON.stringify(a)===JSON.stringify(b))}
-  MP.on=false;MP.host=false;try{if(pref===null)localStorage.removeItem('dk_quests');else localStorage.setItem('dk_quests',pref)}catch(e){}}
+  MP.on=false;MP.host=false;try{if(pref===null)localStorage.removeItem('dk_quests');else localStorage.setItem('dk_quests',pref)}catch{/* This test page is discarded after the preference restore attempt. */}}
  Math.random=RR;O.ok=C.every(Boolean);return JSON.stringify(O)}

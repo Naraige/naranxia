@@ -7,7 +7,7 @@ async()=>{window.requestAnimationFrame=()=>0;await new Promise(r=>setTimeout(r,3
  const cam=new THREE.PerspectiveCamera(24,1,.05,500),rt=new THREE.WebGLRenderTarget(N,N),buf=new Uint8Array(N*N*4);
  const NG=matV.userData&&matV.userData.NGU;
  const setNight=n=>{hl.intensity=(.3+.32*(1-n))*1.06;dl.intensity=(.12+.66*(1-n))*1.19;gm.color.set(n?0x2c4630:0x5f8a3c);if(NG)NG.value=n;renderer.setClearColor(n?0x141c3c:0xb9d2ee,1)};
- const mk=(q)=>{const[key,type,tier,sz,ex]=q,g=new THREE.Group();
+ const mk=(q)=>{const[,type,tier,sz,ex]=q,g=new THREE.Group();
   if(type==='wallrun'){[[-1,2],[0,10],[1,8]].forEach(([x,m])=>{const s={type:'wall',t:0,tier,sz:1,tiles:[],tx:0,ty:0,pl:0,rot:0};const me=new THREE.Mesh(sGeo(s,m),matV);me.position.x=x;g.add(me)});return g}
   const s=Object.assign({type,t:0,tier,sz,tiles:[],tx:0,ty:0,x:0,y:0,pl:0,hm:0,rot:0,o3:new THREE.Group()},ex||{});
   buildStructMesh(s);s.o3.position.set(0,0,0);s.o3.rotation.y=0;g.add(s.o3);return g};

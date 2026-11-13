@@ -67,14 +67,14 @@ export function initializeMenuNav() {
 }
 
 export function padOn() {
-  try { const l = navigator.getGamepads ? navigator.getGamepads() : []; for (const p of l) if (p && p.connected) return true } catch (e) { }
+  try { const l = navigator.getGamepads ? navigator.getGamepads() : []; for (const p of l) if (p && p.connected) return true } catch { /* Unsupported or denied gamepad access means no pad is connected. */ }
   return false;
 }
 
 /* gamepad: called once per drawn frame while the menu is shown */
 export function navPoll() {
   let g = null;
-  try { const l = navigator.getGamepads ? navigator.getGamepads() : []; for (const p of l) if (p && p.connected) { g = p; break } } catch (e) { return }
+  try { const l = navigator.getGamepads ? navigator.getGamepads() : []; for (const p of l) if (p && p.connected) { g = p; break } } catch { return }
   if (!g) return;
   const b = i => !!(g.buttons[i] && g.buttons[i].pressed), ax = g.axes[1] || 0, ax0 = NAV.horiz ? (g.axes[0] || 0) : 0, P = NAV.pad;
   const up = b(12) || ax < -.6 || (NAV.horiz && (b(14) || ax0 < -.6)), dn = b(13) || ax > .6 || (NAV.horiz && (b(15) || ax0 > .6)), ok = b(0), bk = b(1);

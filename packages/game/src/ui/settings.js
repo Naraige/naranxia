@@ -1,5 +1,5 @@
 import { cbOn, cbSet, pref, setPref } from '../core/prefs.js';
-import { applyVol, saveVol, snd, sndOn, soundState, toggleSound } from '../audio/sound.js';
+import { applyVol, saveVol, snd, soundState } from '../audio/sound.js';
 import { startGame } from '../gameplay/lifecycle.js';
 import { sessionState } from '../gameplay/session.js';
 import { questsPref, questsState } from '../gameplay/quests.js';
@@ -10,23 +10,16 @@ import { saveTheme } from '../rendering/kingdom-banner.js';
 import { rs } from '../rendering/resolution.js';
 import { DRS, GQU, renderer, sceneState, SHADOWS, sun } from '../rendering/scene.js';
 import { bugReport } from '../debug/tools.js';
-import { HK } from './build-menu.js';
+import { HK } from './build-catalog.js';
 import { canvasesState } from './canvases.js';
 import { applyCB } from './drawing.js';
 import { bevelBtn, keyChip, kitRow, kitScreen, listBegin, listEnd } from './menu-kit.js';
 import { hudDisplayState } from './hud-state.js';
+import { settingsState } from './panel-state.js';
 import { THEME } from './kingdom-theme.js';
 import { FF, FFP } from './typography.js';
 
-export const settingsState = {
-  nameBox: null,
-  TOPH: 28,
-  fromGame: false,
-  setupOpen: false,
-  settingsOpen: false,
-  rebind: null,
-  sliderDrag: null,
-};
+export { settingsState };
 
 export let nmI;
 
@@ -55,15 +48,15 @@ export const kbCustom=k=>{for(const a in KB)if(KB[a]===k&&KDEF[a]!==k)return tru
 export const isCode=k=>typeof k==='string'&&/^Key[A-Z]$/.test(k);
 const LAY={};
 const LAYT={azerty:{KeyQ:'a',KeyA:'q',KeyW:'z',KeyZ:'w',KeyS:'s',KeyD:'d',KeyX:'x',KeyY:'y'},qwertz:{KeyZ:'y',KeyY:'z',KeyQ:'q',KeyA:'a',KeyW:'w',KeyS:'s',KeyD:'d',KeyX:'x'},qwerty:{KeyQ:'q',KeyA:'a',KeyW:'w',KeyZ:'z',KeyS:'s',KeyD:'d',KeyX:'x',KeyY:'y'}};
-const laySave=()=>{try{localStorage.setItem('dk_lay',JSON.stringify(LAY))}catch(e){}};
+const laySave=()=>{try{localStorage.setItem('dk_lay',JSON.stringify(LAY))}catch { /* Keep the detected layout in memory for this session. */ }};
 /* a letter typed with a physical key: remember it; when only one known layout types it there (A, Q, W, Z, sometimes Y), fill the other letters of that layout */
 export function layNote(code,ch){if(!isCode(code)||typeof ch!=='string'||ch.length!==1||ch.toLowerCase()===ch.toUpperCase())return;ch=ch.toLowerCase();if(LAY[code]===ch)return;
  LAY[code]=ch;{const M=Object.keys(LAYT).filter(n=>LAYT[n][code]===ch);if(M.length===1)Object.assign(LAY,LAYT[M[0]])}
  laySave();syncHK()}
 export function layInit(){for(const c in LAY)delete LAY[c];
- try{const lg=String(navigator.language||'').toLowerCase();if(/^fr(-fr|-be|-mc|-lu)?$/.test(lg))Object.assign(LAY,LAYT.azerty);else if(/^de\b/.test(lg))Object.assign(LAY,LAYT.qwertz)}catch(e){}
- try{const o=JSON.parse(localStorage.getItem('dk_lay')||'{}');for(const c in o)if(isCode(c)&&typeof o[c]==='string'&&o[c].length===1)LAY[c]=o[c]}catch(e){}
- try{if(navigator.keyboard&&navigator.keyboard.getLayoutMap)navigator.keyboard.getLayoutMap().then(m=>{let n=0;for(let i=65;i<91;i++){const c='Key'+String.fromCharCode(i),v=m.get(c);if(typeof v==='string'&&v.length===1&&v.toLowerCase()!==v.toUpperCase()){LAY[c]=v.toLowerCase();n++}}if(n){laySave();syncHK()}}).catch(()=>{})}catch(e){}}
+ try{const lg=String(navigator.language||'').toLowerCase();if(/^fr(-fr|-be|-mc|-lu)?$/.test(lg))Object.assign(LAY,LAYT.azerty);else if(/^de\b/.test(lg))Object.assign(LAY,LAYT.qwertz)}catch { /* Use saved or QWERTY labels if the browser language is unavailable. */ }
+ try{const o=JSON.parse(localStorage.getItem('dk_lay')||'{}');for(const c in o)if(isCode(c)&&typeof o[c]==='string'&&o[c].length===1)LAY[c]=o[c]}catch { /* Keep browser-language guesses when saved layout data is malformed or unavailable. */ }
+ try{if(navigator.keyboard&&navigator.keyboard.getLayoutMap)navigator.keyboard.getLayoutMap().then(m=>{let n=0;for(let i=65;i<91;i++){const c='Key'+String.fromCharCode(i),v=m.get(c);if(typeof v==='string'&&v.length===1&&v.toLowerCase()!==v.toUpperCase()){LAY[c]=v.toLowerCase();n++}}if(n){laySave();syncHK()}}).catch(()=>{/* Keep saved or guessed labels if the browser cannot provide its layout map. */})}catch { /* Layout-map lookup is optional; retain saved or guessed labels. */ }}
 /* the action a key press stands for: the character first, then the physical key, then a physical binding whose own letter was typed
    (a keyboard where that letter sits elsewhere and its place is taken by a character binding) */
 export function kbAct(k,code){let c=null,l=null;for(const a in KB){const v=KB[a];if(v===k)return a;if(code&&v===code)c=c||a;else if(isCode(v)&&k.length===1&&v[3].toLowerCase()===k)l=l||a}return c||l}
@@ -80,16 +73,16 @@ function syncHK(){for(const a of['cannon','peasant','knight','spearman','archer'
    key on AZERTY), and camera w a s d, turn z x, army q become the physical keys KeyW ... KeyQ. A key the player changed is left alone. */
 const KMIG=[['torch',"'",'f6'],['rally','-','f7'],['forester','[','f9'],['guild',']','f3'],['up','w','KeyW'],['down','s','KeyS'],['left','a','KeyA'],['right','d','KeyD'],['rotL','z','KeyZ'],['rotR','x','KeyX'],['army','q','KeyQ']];
 export function loadKB(){KB={...KDEF};
- try{Object.assign(KB,JSON.parse(localStorage.getItem('dk_keys')||'{}'))}catch(e){}
+ try{Object.assign(KB,JSON.parse(localStorage.getItem('dk_keys')||'{}'))}catch { /* Keep default key bindings when saved data is malformed or storage is unavailable. */ }
  try{const v=localStorage.getItem('dk_keyv');if(v!=='3'){let ch=false;const has=k=>Object.keys(KB).some(a=>KB[a]===k);
   if(v!=='2'&&KB.spearman==='\\'&&!has('f4')){KB.spearman='f4';ch=true}
   for(const[a,o,n]of KMIG)if(KB[a]===o&&!has(n)){KB[a]=n;ch=true}
-  if(ch&&localStorage.getItem('dk_keys'))localStorage.setItem('dk_keys',JSON.stringify(KB));localStorage.setItem('dk_keyv','3')}}catch(e){}
+  if(ch&&localStorage.getItem('dk_keys'))localStorage.setItem('dk_keys',JSON.stringify(KB));localStorage.setItem('dk_keyv','3')}}catch { /* Key migration is best-effort when storage is unavailable; the current key map remains active. */ }
  syncHK()}
 
-export function saveKB(){try{localStorage.setItem('dk_keys',JSON.stringify(KB))}catch(e){}syncHK()}
+export function saveKB(){try{localStorage.setItem('dk_keys',JSON.stringify(KB))}catch { /* Keyboard changes remain active for this session when storage is unavailable. */ }syncHK()}
 
-function setGfx(v){sceneState.GQ=v?1:0;GQU.value=sceneState.GQ;try{localStorage.setItem('dk_gfx',sceneState.GQ)}catch(e){}DRS.lv=0;DRS.sum=DRS.cs=DRS.n=DRS.t=DRS.ok=DRS.chk=0;DRS.noDn=DRS.noUp=0;rs();if(SHADOWS){const ss=sceneState.GQ?2048:1024;sun.shadow.mapSize.set(ss,ss);if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null}renderer.shadowMap.needsUpdate=true}}
+function setGfx(v){sceneState.GQ=v?1:0;GQU.value=sceneState.GQ;try{localStorage.setItem('dk_gfx',sceneState.GQ)}catch { /* Keep the graphics setting for this session when storage is unavailable. */ }DRS.lv=0;DRS.sum=DRS.cs=DRS.n=DRS.t=DRS.ok=DRS.chk=0;DRS.noDn=DRS.noUp=0;rs();if(SHADOWS){const ss=sceneState.GQ?2048:1024;sun.shadow.mapSize.set(ss,ss);if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null}renderer.shadowMap.needsUpdate=true}}
 
 let setTab=0;
 
@@ -112,13 +105,13 @@ export function drawSettings(UW,UH,fh,back){const tb=setTab===2?1:setTab,TABS=[[
   l.row({label:'Sound effects',slider:{val:soundState.vS,set:v=>{soundState.vS=v;applyVol();saveVol();snd('tick')}}});
   l.section('Display');
   l.row({label:'Graphics',opts:[['Ultra HD',1],['Fast',0]].map(([n,v])=>[n,sceneState.GQ===v,()=>setGfx(v)]),fn:()=>setGfx(sceneState.GQ?0:1)});
-  {const SZ=[['Small',.8],['Normal',1],['Large',1.25],['Huge',1.6]],set=v=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch(e){}rs()},ci=Math.max(0,SZ.findIndex(z=>Math.abs(uiMul-z[1])<.01));
+  {const SZ=[['Small',.8],['Normal',1],['Large',1.25],['Huge',1.6]],set=v=>{uiMul=v;try{localStorage.setItem('dk_ui',v)}catch { /* Apply the interface scale for this session when storage is unavailable. */ }rs()},ci=Math.max(0,SZ.findIndex(z=>Math.abs(uiMul-z[1])<.01));
    l.row({label:'Interface size',opts:SZ.map(([n,v],i)=>[n,i===ci,()=>set(v)]),fn:()=>set(SZ[(ci+1)%SZ.length][1])})}
   
   tog(l,'Colour-blind mode',cbOn(),v=>{cbSet(v);applyCB()})}
  else{l.section('General');
   l.row({label:'Language',value:LANGS[LANG][0],raw:false,fn:()=>{languageState.langOpen=true;settingsState.settingsOpen=false}});
-  tog(l,'Quests',questsState.Q&&sessionState.inGame?!!questsState.Q.on:questsPref(),on=>{if(sessionState.inGame)questSwitch(on);else{try{localStorage.setItem('dk_quests',on?'1':'0')}catch(e){}}});prow(l,'Pause when away','ap',true);prow(l,'Autosave','as',true);
+  tog(l,'Quests',questsState.Q&&sessionState.inGame?!!questsState.Q.on:questsPref(),on=>{if(sessionState.inGame)questSwitch(on);else{try{localStorage.setItem('dk_quests',on?'1':'0')}catch { /* Quest preferences cannot persist outside a game when storage is unavailable. */ }}});prow(l,'Pause when away','ap',true);prow(l,'Autosave','as',true);
   {const on=pref('qi',false);l.row({label:'Studio intro',opts:[['First launch only',on,()=>setPref('qi',true)],['Every launch',!on,()=>setPref('qi',false)]],fn:()=>setPref('qi',!on)})}
   l.section('Accessibility');prow(l,'Reduce motion','rm',false);
   l.section('Help');
@@ -141,7 +134,7 @@ export function initializeSettings() {
   nmI.value=THEME.n;
   nmI.oninput=()=>{THEME.n=nmI.value.slice(0,18)||'Nameless';saveTheme()};
   nmI.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')nmI.blur()};
-  try{uiMul=+localStorage.getItem('dk_ui')||1}catch(e){}
+  try{uiMul=+localStorage.getItem('dk_ui')||1}catch { /* Keep the default interface scale when saved preferences cannot be read. */ }
   layInit();
   loadKB();
   applyCB();

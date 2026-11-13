@@ -9,14 +9,14 @@ import { update0 } from './simulation.js';
 import { eraTick, trapTick } from './traps.js';
 import { objTick } from '../multiplayer/objectives.js';
 import { qBegin, qTick } from './quests.js';
-import { terrainState } from '../world/terrain.js';
+import { terrainState } from '../world/terrain-state.js';
 
 export const statisticsState = {
   OBJ: {w:1,k:1},
   SBR: null,
 };
 
-export function saveBest(){if(diagnosticsState.DEVU)return;sbRec();try{localStorage.setItem('dk_last',JSON.stringify({w:sessionState.waveN,k:sessionState.kills}))}catch(e){}try{if(sessionState.waveN>sessionState.best.w||(sessionState.waveN===sessionState.best.w&&sessionState.kills>sessionState.best.k)){sessionState.best={w:sessionState.waveN,k:sessionState.kills};localStorage.setItem('dk_best',JSON.stringify(sessionState.best))}}catch(e){}}
+export function saveBest(){if(diagnosticsState.DEVU)return;sbRec();try{localStorage.setItem('dk_last',JSON.stringify({w:sessionState.waveN,k:sessionState.kills}))}catch{/* Recent-run persistence is optional; in-memory score state remains available. */}try{if(sessionState.waveN>sessionState.best.w||(sessionState.waveN===sessionState.best.w&&sessionState.kills>sessionState.best.k)){sessionState.best={w:sessionState.waveN,k:sessionState.kills};localStorage.setItem('dk_best',JSON.stringify(sessionState.best))}}catch{/* Keep the updated best score in memory when storage is unavailable. */}}
 /* ================= END-OF-GAME STATS (#18) =================
    Counted for the local player only and never read by the simulation: the update wrapper measures what the sim added to the
    resources, hit() records who hit last (LH) so a kill is credited to a unit type, everything else is "Towers and cannons". */
@@ -32,13 +32,13 @@ export function gstBest(){let b=null,n=0;for(const k in rulesState.GST.k)if(rule
 
 const sbKey=()=>(+terrainState.SEED).toFixed(4);
 
-const sbLoad=()=>{try{return JSON.parse(localStorage.getItem('dk_sb')||'{}')}catch(e){return{}}};
+const sbLoad=()=>{try{return JSON.parse(localStorage.getItem('dk_sb')||'{}')}catch {return{}}};
 
-function sbDaily(){try{const d=Math.floor(Date.now()/864e5);return Math.abs(rngf(d*2654435761%4294967296)()*500-terrainState.SEED)<1e-6}catch(e){return false}}
+function sbDaily(){try{const d=Math.floor(Date.now()/864e5);return Math.abs(rngf(d*2654435761%4294967296)()*500-terrainState.SEED)<1e-6}catch {return false}}
 
 export function sbRec(){statisticsState.SBR=null;try{const all=sbLoad(),k=sbKey(),a=all[k]||[],sc=sessionState.waveN*100+sessionState.kills,r={w:sessionState.waveN,k:sessionState.kills,s:sc,d:Date.now(),n:String(THEME&&THEME.n||'').slice(0,24)};a.push(r);a.sort((x,y)=>y.s-x.s||x.d-y.d);const top=a.slice(0,3);all[k]=top;
   const ks=Object.keys(all);if(ks.length>60){ks.sort((x,y)=>all[y][0].d-all[x][0].d);for(const q of ks.slice(60))delete all[q]}
-  localStorage.setItem('dk_sb',JSON.stringify(all));statisticsState.SBR={top,rank:top.indexOf(r),daily:sbDaily()}}catch(e){}}
+  localStorage.setItem('dk_sb',JSON.stringify(all));statisticsState.SBR={top,rank:top.indexOf(r),daily:sbDaily()}}catch{/* If storage is denied, keep current-run statistics without a saved leaderboard. */}}
 
 export function setUpdateHandler(handler) {
   update = handler;

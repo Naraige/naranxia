@@ -8,7 +8,7 @@ import { focusRing } from './drawing.js';
 import { hudState, inR, U } from './hud.js';
 import { hudDisplayState } from './hud-state.js';
 import { NAV, navAdd } from './menu-nav.js';
-import { settingsState } from './settings.js';
+import { settingsState } from './panel-state.js';
 import { FFP } from './typography.js';
 
 /* ================= menu kit (revamp): the full-screen menu template and its parts =================

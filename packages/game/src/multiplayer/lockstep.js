@@ -8,7 +8,7 @@ import { reset } from '../gameplay/reset.js';
 import { FAT, PBASE, PRICE } from '../gameplay/economy.js';
 import { eventsState } from '../gameplay/events.js';
 import { BASES } from '../ai/kingdoms.js';
-import { RUINS } from '../world/terrain.js';
+import { RUINS } from '../world/terrain-state.js';
 import { questsState } from '../gameplay/quests.js';
 import { sessionState } from '../gameplay/session.js';
 import { update } from '../gameplay/statistics.js';
@@ -19,9 +19,10 @@ import { mpResMsg, mpResync } from './resync.js';
 import { MP } from './session.js';
 import { home } from '../rendering/camera.js';
 import { hudDisplayState } from '../ui/hud-state.js';
-import { settingsState } from '../ui/settings.js';
+import { settingsState } from '../ui/panel-state.js';
 import { openPicker, sitePickerState } from '../ui/site-picker.js';
-import { genChunk, genF, NCX, terrainState } from '../world/terrain.js';
+import { genChunk } from '../world/terrain.js';
+import { genF, NCX, terrainState } from '../world/terrain-state.js';
 
 /* ================= Co-op: peer to peer lockstep (WebRTC, manual code exchange) ================= */
 export const MPD = 6;
@@ -29,7 +30,7 @@ const MPSTEP = 1/30;
 
 export function setPause(v){sessionState.paused=v;backgroundLoopState.autoPaused=false;if(MP.on)mpSend({k:'p',v})}
 
-export function mpSend(o){try{if(MP.dc&&MP.dc.readyState==='open')MP.dc.send(JSON.stringify(o))}catch(e){}}
+export function mpSend(o){try{if(MP.dc&&MP.dc.readyState==='open')MP.dc.send(JSON.stringify(o))}catch { /* A notification send is best-effort and must not interrupt the caller. */ }}
 
 export function mpHash(){let h=(sessionState.units.length*7+sessionState.structs.length*13+sessionState.queue.length*3+playersState.RESP.reduce((a,R,i)=>Math.imul(a,131)+Math.round(R.g)*3+Math.round(R.w)*5+Math.round(R.s)*11+Math.round(R.f||0)*17+i,0))|0;
  for(const u of sessionState.units)h=(Math.imul(h,31)+((u.x*8)|0)+Math.imul((u.y*8)|0,7)+(u.hp|0)+(u.kxp|0)*3+(u.kt|0)*5)|0;h=(Math.imul(h,31)+SW.n)|0;for(let i=0;i<SW.n;i+=17)h=(Math.imul(h,31)+((SW.x[i]*8)|0)+Math.imul((SW.y[i]*8)|0,7))|0;return mpHashX(h)}

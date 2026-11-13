@@ -6,22 +6,22 @@ import { doUpgrade, ok, pay } from './economy.js';
 import { mk } from './entities.js';
 import { ungar } from './formations.js';
 import { HOMEC, LPL, playersState, stoneOn } from './players.js';
-import { C, DIR4, GCAP, GTOP, ROTT, RS, SH, SZ, TS, TW } from './rules.js';
+import { C, DIR4, GCAP, GTOP, ROTT, RS, SH, TS, TW } from './rules.js';
 import { selectionState } from './selection.js';
 import { sessionState } from './session.js';
 import { demolish, rampGroup, tfOrder } from './terraforming.js';
 import { placeSpike } from './traps.js';
 import { MP } from '../multiplayer/session.js';
 import { puff } from '../rendering/effects.js';
-import { CONNT, isW } from '../rendering/models/structures.js';
+import { CONNT } from '../rendering/models/structures.js';
 import { snapM } from '../rendering/render-settings.js';
 import { addStruct, buildStructMesh, refreshNear, rmStruct } from '../rendering/structures.js';
-import { markT } from '../rendering/terrain.js';
-import { NAMES } from '../ui/build-menu.js';
+import { markT } from '../world/terrain-invalidation.js';
+import { NAMES } from '../ui/build-catalog.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { mmTile } from '../world/minimap.js';
 import { gOK } from '../world/routes.js';
-import { HT, occ, pth, stairs, ter, terrainState } from '../world/terrain.js';
+import { HT, occ, pth, stairs, ter, terrainState } from '../world/terrain-state.js';
 import { levelGround, solid } from '../world/traversal.js';
 
 export const constructionState = {
@@ -36,13 +36,13 @@ export let HEAL_R;
 export const HEAL_RATE = 5;
 
 
-let gateAx = 0;
+
 export const FORMS=['None','Line','Block','Wedge','Ring'];
 
 export const tfo=new Map();
 
 
-export function gateAxAt(tx,ty){return constructionState.buildRot&1;const w=(x,y)=>isW(x,y);if(w(tx-1,ty)||w(tx+2,ty)||w(tx-1,ty)&&w(tx+2,ty))if(!(w(tx,ty-1)||w(tx,ty+1)))return 0;if(w(tx,ty-1)||w(tx,ty+2))if(!(w(tx-1,ty)||w(tx+1,ty)))return 1;return constructionState.buildRot&1}
+export function gateAxAt(_tx,_ty){return constructionState.buildRot&1}
 
 export function tilesFor(type,tx,ty,sz,ax,gl){if(type==='gate'){gl=gl||constructionState.gateLen;const t=[];for(let k=0;k<gl;k++)t.push(ax?[tx,ty+k]:[tx+k,ty]);return t}const t=[];for(let j=0;j<sz;j++)for(let i=0;i<sz;i++)t.push([tx+i,ty+j]);return t}
 
@@ -68,7 +68,7 @@ export let build = function build(type,tx,ty){if(type==='spike'){placeSpike(tx,t
  if(type==='tower'){const t=tilesFor('tower',tx,ty,2);if(!t.every(([x,y])=>gOK(x,y)&&(valid(x,y)||wallAt(x,y))))return;const hs=t.map(([x,y])=>HT[y*TW+x]);if(Math.max(...hs)-Math.min(...hs)>2)return;
   let rep=0;for(const[x,y]of t){const w=wallAt(x,y);if(!w)continue;rep++;if(w.garr)w.garr.slice().forEach(ungar);const Rr=playersState.RESP[w.pl|0];for(const k in(w.cost||{}))Rr[k]+=w.cost[k];w.hp=-1;w.noCrumble=true;rmStruct(w);for(const[a,b]of w.tiles)if(occ.get(b*TW+a)===w)occ.delete(b*TW+a);sessionState.structs.splice(sessionState.structs.indexOf(w),1);refreshNear(w)}
   if(rep){sessionState.fdDirty=true;if(!MP.on||playersState.CURPL===LPL()){hudDisplayState.msgS='Walls replaced by the tower (refunded)';hudDisplayState.msgT=3}}
-  pay(C.tower);levelGround(tx,ty,2,Math.max(...hs));const s=mk(0,'tower',tx,ty,2,false);if(rep){s.prog=.3;s.hp=Math.max(s.hp,s.max*.3)}addStruct(s);refreshNear(s);puff(s.x,s.y,'#c9c4b6',10,70,{soft:1,T:1,s:.4,z:.3,vz:.7,g:-.3});snd('build',s.x,s.y);return}if((type==='ballista'||type==='trebuchet')&&!RS.done){hudDisplayState.msgS='Siege weapons need Masonry';hudDisplayState.msgT=3;snd('err');return}if(type==='upgrade'){doUpgrade(tx,ty);return}const i=ty*TW+tx;const wRep=type==='tower'?wallAt(tx,ty):null;if(type==='ballista'||type==='trebuchet'||type==='raise'||type==='dig'||type==='ramp'||type==='demolish'||type==='rallyc'||type==='rotate'||type==='movec'||wRep){}else if(type==='path'){if(!pathOK(tx,ty))return}else if(!valid(tx,ty))return;
+  pay(C.tower);levelGround(tx,ty,2,Math.max(...hs));const s=mk(0,'tower',tx,ty,2,false);if(rep){s.prog=.3;s.hp=Math.max(s.hp,s.max*.3)}addStruct(s);refreshNear(s);puff(s.x,s.y,'#c9c4b6',10,70,{soft:1,T:1,s:.4,z:.3,vz:.7,g:-.3});snd('build',s.x,s.y);return}if((type==='ballista'||type==='trebuchet')&&!RS.done){hudDisplayState.msgS='Siege weapons need Masonry';hudDisplayState.msgT=3;snd('err');return}if(type==='upgrade'){doUpgrade(tx,ty);return}const i=ty*TW+tx;const wRep=type==='tower'?wallAt(tx,ty):null;if(type==='ballista'||type==='trebuchet'||type==='raise'||type==='dig'||type==='ramp'||type==='demolish'||type==='rallyc'||type==='rotate'||type==='movec'||wRep){/* These tools and wall replacement apply their own placement checks below. */}else if(type==='path'){if(!pathOK(tx,ty))return}else if(!valid(tx,ty))return;
  if(type==='rotate'){rotateB(occ.get(i));return}
  if(type==='movec'){moveCastle(tx,ty);return}
  if(type==='ballista'||type==='trebuchet'){const o=occ.get(i);if(!o||o.type!=='tower'||o.t!==0||o.prog<1){hudDisplayState.msgS='Mount it on a finished tower';hudDisplayState.msgT=3;snd('err');return}if(o.weapon){hudDisplayState.msgS='This tower already has a siege weapon';hudDisplayState.msgT=3;snd('err');return}pay(C[type]);o.weapon=type;o.aim=constructionState.buildRot*Math.PI/2;o.wcd=2;buildStructMesh(o);puff(o.x,o.y,'#c9c9c9',10,70);snd('build',o.x,o.y);return}
@@ -76,9 +76,9 @@ export let build = function build(type,tx,ty){if(type==='spike'){placeSpike(tx,t
  if(type==='demolish'&&!occ.get(i)&&pth[i]){pth[i]=0;const Rr=playersState.RESP[playersState.CURPL|0];for(const k in C.path)Rr[k]+=C.path[k];mmTile(i);markT(tx,ty);puff((tx+.5)*TS,(ty+.5)*TS,'#b9a68a',3,30);snd('click');if(playersState.CURPL===LPL()){hudDisplayState.msgS='Path removed';hudDisplayState.msgT=2}return}
  if(type==='demolish'&&!occ.get(i)&&stairs.has(i)){const G=rampGroup(i);const q=G.find(k=>tfo.has(k));if(q!==undefined){tfo.delete(q);snd('click');return}tfo.set(i,{t:'unramp',w:0});snd('click');hudDisplayState.msgS='Peasants will remove this ramp';hudDisplayState.msgT=3;return}
  if(type==='demolish'){const o=occ.get(i);if(!o||o.t!==0||o===sessionState.CS||o===sessionState.CS2||o.type==='castle'||(MP.on&&(o.pl|0)!==playersState.CURPL)){hudDisplayState.msgS='Click one of your buildings (not the castle)';hudDisplayState.msgT=2;snd('err');return}if(o.prog<1){demolish(o);if(playersState.CURPL===LPL()){hudDisplayState.msgS='Construction cancelled: resources refunded';hudDisplayState.msgT=3}return}o.dem=!o.dem;o.dp=0;snd('click');if(o.dem){hudDisplayState.msgS='Peasants will tear it down and recover 100% of the cost';hudDisplayState.msgT=3}return}
- if(false){const sz=SZ[type],t=tilesFor(type,tx,ty,sz),h0=Math.max(...t.map(([x,y])=>HT[y*TW+x]));pay(C[type]);levelGround(tx,ty,sz,h0);const s=mk(0,type,tx,ty,sz,false);addStruct(s);refreshNear(s);puff(s.x,s.y,'#c9c4b6',10,70,{soft:1,T:1,s:.4,z:.3,vz:.7,g:-.3});return}
+
  if(type==='rally'||type==='rallyc'){const w={x:(tx+.5)*TS,y:(ty+.5)*TS};const rs=type==='rallyc'&&({2:1,3:1,4:1})[ter[ty*TW+tx]];if(!gOK(tx,ty)||(solid(tx,ty)&&!rs))return;
-  let rb=null;if(type==='rallyc')rb=selectionState.selB&&selectionState.selB.type==='castle'&&sessionState.structs.includes(selectionState.selB)?selectionState.selB:HOMEC();
+  let rb;if(type==='rallyc')rb=selectionState.selB&&selectionState.selB.type==='castle'&&sessionState.structs.includes(selectionState.selB)?selectionState.selB:HOMEC();
   else{rb=selectionState.selB&&selectionState.selB.type==='barracks'&&sessionState.structs.includes(selectionState.selB)&&(selectionState.selB.pl|0)===(playersState.CURPL|0)?selectionState.selB:null;if(!rb){let bd=1e12;for(const s of sessionState.structs)if(s.t===0&&s.type==='barracks'&&s.prog>=1&&(s.pl|0)===(playersState.CURPL|0)){const d=dist(s.x,s.y,w.x,w.y);if(d<bd){bd=d;rb=s}}}}
   if(!rb){if(playersState.CURPL===LPL()){hudDisplayState.msgS='Build a barracks first';hudDisplayState.msgT=3;snd('err')}return}rb.rally=w;
   if(playersState.CURPL===LPL()){hudDisplayState.msgS=type==='rally'?'Rally point set for this barracks':rs?'Castle rally: new peasants gather this resource':'Castle rally point set';hudDisplayState.msgT=3;sessionState.mode=null}snd('order');puff(w.x,w.y,'#7dffa0',10,50);return}
@@ -107,7 +107,7 @@ function rotateB(s){if(!s||s.t!==0||!sessionState.structs.includes(s)||!ROTT.has
  buildStructMesh(s);snd('click');hudDisplayState.msgS=NAMES[s.type]+' rotated';hudDisplayState.msgT=1.5}
 
 export function moveOK(tx,ty){const c=HOMEC();if(!c||c.hp<=0||!sessionState.structs.includes(c))return false;const x0=tx-2,y0=ty-2,nt=tilesFor('castle',x0,y0,5),own=new Set(c.tiles.map(([x,y])=>y*TW+x));
- if(hyp(x0-c.tx,y0-c.ty)>40)return false;const ty0=c.type;c.type='castle_';let r=false;try{r=nt.every(([x,y])=>gOK(x,y)&&(own.has(y*TW+x)||valid(x,y)));
+ if(hyp(x0-c.tx,y0-c.ty)>40)return false;const ty0=c.type;c.type='castle_';let r;try{r=nt.every(([x,y])=>gOK(x,y)&&(own.has(y*TW+x)||valid(x,y)));
   if(r){const hs=nt.map(([x,y])=>HT[y*TW+x]);if(Math.max(...hs)-Math.min(...hs)>2)r=false}
   if(r){const f={tx:x0,ty:y0,rot:c.rot|0};r=doorTiles(f,1).every(([x,y])=>gOK(x,y)&&(own.has(y*TW+x)||(!solid(x,y)&&!stairs.has(y*TW+x))))}}finally{c.type=ty0}return r}
 

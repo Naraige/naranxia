@@ -27,14 +27,16 @@ import { rs } from '../rendering/resolution.js';
 import { CAM, camera } from '../rendering/scene.js';
 import { PK, pkSet, PKU } from '../rendering/site-picker.js';
 import { pickStruct } from '../rendering/structures.js';
-import { buildMenuState, cycleTab, NAMES } from '../ui/build-menu.js';
+import { buildMenuState, cycleTab } from '../ui/build-menu.js';
+import { BK, NAMES } from '../ui/build-catalog.js';
 import { cv } from '../ui/canvases.js';
 import { hudState, inR, mmRect, selIdle, selPeas } from '../ui/hud.js';
 import { hudDisplayState } from '../ui/hud-state.js';
-import { isCode, KB, kbAct, kbCustom, kbPhys, layNote, nmI, saveKB, settingsState } from '../ui/settings.js';
+import { isCode, KB, kbAct, kbCustom, kbPhys, layNote, nmI, saveKB } from '../ui/settings.js';
 import { mmToWorld } from '../ui/minimap.js';
+import { settingsState } from '../ui/panel-state.js';
 import { confirmPick, openPicker, pkRotate, PVH, PVW, sitePickerState } from '../ui/site-picker.js';
-import { occ } from '../world/terrain.js';
+import { occ } from '../world/terrain-state.js';
 
 /* ---- input ---- */
 const pos=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*cv.width/r.width,y:(e.clientY-r.top)*cv.height/r.height}};
@@ -53,13 +55,12 @@ export function pickUnit(p){let b=null,bd=(inputState.touch?34:20)*inputState.DP
 let lastClk=0,lastTy='';
 /* touch hit slop: small buttons get a 44 css px target; among several, the nearest centre wins. Hits with a tip wait for the finger to lift (a long press shows the tip instead). */
 const TMIN=44;
-export function touchHit(p){const m=TMIN*inputState.DPR,hs=hudState.uiHits;let ex=hs.find(h=>h.fn&&inR(p,h));if(ex)return ex;
+export function touchHit(p){const m=TMIN*inputState.DPR,hs=hudState.uiHits;const ex=hs.find(h=>h.fn&&inR(p,h));if(ex)return ex;
  let b=null,bd=1e9;for(const h of hs){if(!h.fn||(h.w>=m&&h.h>=m))continue;const w=Math.max(h.w,m),hh=Math.max(h.h,m),cx=h.x+h.w/2,cy=h.y+h.h/2;if(Math.abs(p.x-cx)<=w/2&&Math.abs(p.y-cy)<=hh/2){const dd=Math.hypot(p.x-cx,p.y-cy);if(dd<bd){bd=dd;b=h}}}return b}
 const lpClear=()=>{const l=inputState.lp;if(l)clearTimeout(l.to);inputState.lp=null};
 const hitKey=h=>(h.x|0)+','+(h.y|0)+','+(h.w|0);
 const paint=()=>{const w=wpos(),tx=Math.floor(w.x/TS),ty=Math.floor(w.y/TS);if((sessionState.mode==='raise'||sessionState.mode==='dig')&&tfo.has(ty*TW+tx))return;build(sessionState.mode,tx,ty)};
 
-const BK=['cannon','peasant','knight','spearman','archer','bannerman','captain','wall','gate','tower','path'];
 
 export function initializeDesktopInput() {
   cv.oncontextmenu=e=>e.preventDefault();

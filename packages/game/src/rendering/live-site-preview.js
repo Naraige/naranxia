@@ -18,7 +18,8 @@ import { KB } from '../ui/settings.js';
 import { PVS, PVW, siteMaskGet, siteOK, sitePickerState } from '../ui/site-picker.js';
 import { FFT } from '../ui/typography.js';
 import { gOK } from '../world/routes.js';
-import { CH, genF, HT, initWorld, LAND, NCX, NCY, terrainState } from '../world/terrain.js';
+import { initWorld } from '../world/terrain.js';
+import { CH, genF, HT, LAND, NCX, NCY, terrainState } from '../world/terrain-state.js';
 
 /* ---- live castle placement: the real generated world, game camera, castle ghost like any building ---- */
 export const PKL={on:false,seed:-1,hit:null,beam:null};

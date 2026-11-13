@@ -11,7 +11,7 @@ import { CAM } from '../rendering/scene.js';
 import { pickStruct } from '../rendering/structures.js';
 import { cv } from '../ui/canvases.js';
 import { hudState } from '../ui/hud.js';
-import { occ } from '../world/terrain.js';
+import { occ } from '../world/terrain-state.js';
 
 /* ================= TOUCH MODE (#17) =================
    Pointer events already give taps and drags. Added here for a finger (capture phase, before the mouse handlers):

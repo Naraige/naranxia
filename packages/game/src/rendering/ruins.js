@@ -2,7 +2,7 @@ import { bxc, geometryState, newG, toGeo } from './geometry.js';
 import { matV } from './materials.js';
 import { scene, SHADOWS } from './scene.js';
 import { THREE } from './three.js';
-import { RUINS } from '../world/terrain.js';
+import { RUINS } from '../world/terrain-state.js';
 
 /* meshes for the ancient ruins (placeholder look: broken pillars on a worn slab; looted ruins lose their standing pillar and chest) */
 const M = new Map();

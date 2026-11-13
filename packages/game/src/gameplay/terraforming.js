@@ -11,17 +11,17 @@ import { sessionState } from './session.js';
 import { simulationState } from './simulation.js';
 import { MP } from '../multiplayer/session.js';
 import { puff } from '../rendering/effects.js';
-import { markP, markT } from '../rendering/terrain.js';
+import { markP, markT } from '../world/terrain-invalidation.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { mmTile } from '../world/minimap.js';
 import { GF } from '../world/pathfinding.js';
 import { D4, gOK } from '../world/routes.js';
-import { amt, BED, HT, LAND, occ, pth, ROCKH, stairs, ter, TFL, WLV } from '../world/terrain.js';
+import { amt, BED, HT, LAND, occ, pth, ROCKH, stairs, ter, TFL, WLV } from '../world/terrain-state.js';
 import { freeTile } from '../world/traversal.js';
 
 export function tfOK(tx,ty,rmp){if(!gOK(tx,ty))return false;const i=ty*TW+tx;if(rmp&&stairs.has(i)&&!occ.has(i))return true;if(ter[i]>1&&ter[i]!==5||occ.has(i)||stairs.has(i))return false;return !D4.some(([dx,dy])=>{const s=stairs.get(i+dy*TW+dx);return s&&!s.blk})}
 
-export function tfOrder(type,tx,ty){const i=ty*TW+tx;if(tfo.has(i)){const o=tfo.get(i);tfo.delete(i);snd('click');return}
+export function tfOrder(type,tx,ty){const i=ty*TW+tx;if(tfo.has(i)){tfo.delete(i);snd('click');return}
  if(type==='ramp'?!rampOK(tx,ty):!tfOK(tx,ty,true)){hudDisplayState.msgS=type==='ramp'?'No ramp here: free flat ground only':'Cannot reshape this tile';hudDisplayState.msgT=2;snd('err');return}
  if(type==='raise'&&HT[i]>=LAND+14){hudDisplayState.msgS='Too high';hudDisplayState.msgT=2;snd('err');return}
  if(type==='dig'&&ter[i]===1){hudDisplayState.msgS='Already water';hudDisplayState.msgT=2;snd('err');return}
@@ -44,7 +44,7 @@ function flood(i0){if(ter[i0]!==0||HT[i0]>=WLV||!D4.some(([dx,dy])=>{const x=i0%
  const FS=new Set(F);for(const u of sessionState.units){if(u.hp<=0||u.gar)continue;const tx=Math.floor(u.x/TS),ty=Math.floor(u.y/TS);if(!FS.has(ty*TW+tx))continue;const ft=freeTile(tx,ty);if(ft){u.x=(ft[0]+.5)*TS;u.y=(ft[1]+.5)*TS}}
  sessionState.fdDirty=true;GF.clear();sessionState.ver++;const x=i0%TW,y=(i0/TW)|0;puff((x+.5)*TS,(y+.5)*TS,'#8fc4e8',14,70,{T:.8,z:.2,vz:1.6,g:6,s:.12});snd('splash',(x+.5)*TS,(y+.5)*TS)}
 
-function tfNear(tx,ty){return true}
+function tfNear(_tx,_ty){return true}
 
 function rampFree(i){return ter[i]===0&&!occ.has(i)&&!stairs.has(i)&&HT[i]<LAND+14}
 

@@ -29,7 +29,8 @@ import { icoPart } from '../rendering/pixel-icons.js';
 import { build3D } from '../rendering/structures.js';
 import { calcFD } from '../world/connectivity.js';
 import { GF } from '../world/pathfinding.js';
-import { ensureAround, initWorld, terrainState } from '../world/terrain.js';
+import { ensureAround, initWorld } from '../world/terrain.js';
+import { terrainState } from '../world/terrain-state.js';
 import { LVO } from '../world/traversal.js';
 
 export function pickLanes(){const n=Math.min(3,1+(sessionState.waveN>2?1:0)+(sessionState.waveN>6?1:0)+(Math.random()<.25?1:0)),A=[0,1,2].sort(()=>Math.random()-.5).slice(0,n);if(!sessionState.SITE2)return A;const n2=Math.min(3,1+(sessionState.waveN>2?1:0)+(sessionState.waveN>6?1:0)+(Math.random()<.25?1:0));return A.concat([3,4,5].sort(()=>Math.random()-.5).slice(0,n2))}

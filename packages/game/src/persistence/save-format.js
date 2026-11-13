@@ -23,7 +23,7 @@ import { SPK } from '../multiplayer/objectives.js';
 import { fowHi, fowLo, fowRA, fowSeen, fowTex, fowVis } from '../rendering/fog.js';
 import { THREE } from '../rendering/three.js';
 import { mkG } from '../world/pathfinding.js';
-import { amt, CAMPS, RUINS, FLG, genF, HT, occ, pth, SEALD, stairs, ter, terrainState, TFL } from '../world/terrain.js';
+import { amt, CAMPS, RUINS, FLG, genF, HT, occ, pth, SEALD, stairs, ter, terrainState, TFL } from '../world/terrain-state.js';
 import { LVO } from '../world/traversal.js';
 
 /* ================= SAVE / LOAD =================

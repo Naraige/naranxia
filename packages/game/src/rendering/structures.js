@@ -30,13 +30,13 @@ import { cv, cvs } from '../ui/canvases.js';
 import { thIcons } from '../ui/icons.js';
 import { thp } from '../ui/kingdom-theme.js';
 import { D8 } from '../world/routes.js';
-import { CH, HT, occ } from '../world/terrain.js';
+import { CH, HT, occ } from '../world/terrain-state.js';
 
 export const structuresState = {
   BPLOFF: false,
 };
 
-let flagMat;
+
 const structO = new Set();
 const stairO = new Set();
 
@@ -47,7 +47,7 @@ const PLG = {};
 const bpl=(w,h,x,y,z,ry)=>{if(structuresState.BPLOFF)return new THREE.Object3D();const k=w+'x'+h,g=PLG[k]||(PLG[k]=new THREE.PlaneGeometry(w,h)),m=new THREE.Mesh(g,bannerMat);m.position.set(x,y,z);m.rotation.y=ry||0;return m};
 
 export function retheme(){structureModelsState.BLU=thp();for(const k in GEO)delete GEO[k];for(const k in UM)delete UM[k];thIcons();icons3D();drawBanner();bannerTex.needsUpdate=true;
- for(const s of sessionState.structs)if(s.o3)buildStructMesh(s);for(const[u,g]of unitG){scene.remove(g)}unitG.clear();for(const u of sessionState.units)u.m=null;titleSceneState.titleDirty=true}
+ for(const s of sessionState.structs)if(s.o3)buildStructMesh(s);for(const[,g]of unitG){scene.remove(g)}unitG.clear();for(const u of sessionState.units)u.m=null;titleSceneState.titleDirty=true}
 
 export let buildStructMesh = function buildStructMesh(s){structuresState.BPLOFF=s.t===2||s.tier===0;try{buildStructMesh0(s)}finally{structuresState.BPLOFF=false}};
 
@@ -73,7 +73,7 @@ export function buildStructMesh0(s){const g=s.o3;while(g.children.length)g.remov
 let _rcS;
 let _v2S;
 
-export function pickStruct(p){try{_v2S.set(p.x/cv.width*2-1,1-p.y/cv.height*2);_rcS.setFromCamera(_v2S,camera);const L=[],M=new Map();for(const s of sessionState.structs){if(!s.o3||s.hp<=0)continue;s.o3.traverse(o=>{if(o.isMesh&&o.visible){L.push(o);M.set(o,s)}})}const h=_rcS.intersectObjects(L,false);return h.length?M.get(h[0].object):null}catch(e){return null}}
+export function pickStruct(p){try{_v2S.set(p.x/cv.width*2-1,1-p.y/cv.height*2);_rcS.setFromCamera(_v2S,camera);const L=[],M=new Map();for(const s of sessionState.structs){if(!s.o3||s.hp<=0)continue;s.o3.traverse(o=>{if(o.isMesh&&o.visible){L.push(o);M.set(o,s)}})}const h=_rcS.intersectObjects(L,false);return h.length?M.get(h[0].object):null}catch {return null}}
 
 export let addStruct = function addStruct(s){const g=new THREE.Group();s.o3=g;structO.add(g);buildStructMesh(s);scene.add(g)};
 
@@ -109,7 +109,8 @@ export function setAddStairsHandler(handler) {
 }
 
 export function initializeStructures() {
-  flagMat = new THREE.MeshLambertMaterial({vertexColors:true,side:THREE.DoubleSide});
+  // Preserve Three.js allocation order and UUID random draws.
+  new THREE.MeshLambertMaterial({vertexColors:true,side:THREE.DoubleSide});
   BANNER = cvs(128,192);
   bannerTex = new THREE.CanvasTexture(BANNER);
   bannerMat = new THREE.MeshBasicMaterial({map:bannerTex,transparent:true,alphaTest:.25,side:THREE.DoubleSide});

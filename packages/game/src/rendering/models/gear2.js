@@ -40,7 +40,7 @@ const wrap=P=>(f,u,v,W,H)=>{const d=zi(f,u,v,W,H)%2===1;return f==='D'?(d?P[0]:P
 const haft=(P,s)=>(f,u,v,W,H)=>{const n=pxN('S',zi(f,u,v,W,H),0,s||3),k=n>.78?1:n<.22?-1:0;return f==='T'?P[k>0?4:3]:f==='D'?P[k<0?0:1]:P[2+k]};
 
 /* a wooden pole standing along y */
-const pole=(P,s)=>(f,u,v,W,H)=>{if(f==='T')return P[3];if(f==='D')return P[0];const n=pxN('S',v,0,s||3);return n>.8?P[3]:n<.2?P[1]:(u===0?P[3]:P[2])};
+const pole=(P,s)=>(f,u,v,_W,_H)=>{if(f==='T')return P[3];if(f==='D')return P[0];const n=pxN('S',v,0,s||3);return n>.8?P[3]:n<.2?P[1]:(u===0?P[3]:P[2])};
 
 const gemP=P=>(f,u,v,W,H)=>(u===0&&v===H-1)?P[3]:((u===W-1||v===0)?P[1]:P[2]);
 
@@ -202,10 +202,10 @@ export function g2Pole(G){const m=gearPal(),s=1/PXV,Z=-3*s,ZB=-3.42*s,TB=31.6*s;
   bx(G,-.9,2*s,Z-.9,1.8,34.4*s,1.8,pole(m.WL,3),0,[2,38,2]);
   for(const y of[12.2,21.4,28.8])bx(G,-1.2,y*s,Z-1.2,2.4,1.1,2.4,g2Tone(m.GO,2),4,[2,1,2]);
   bx(G,-.95,8.4*s,Z-.95,1.9,3.2*s,1.9,(f,u,v)=>v%2?m.LE[1]:m.LE[3],0,[2,6,2]);
-  bx(G,-13.5,TB,ZB-.8,27,1.6,1.6,(f,u,v,W,H)=>f==='T'?m.WL[4]:f==='D'?m.WL[0]:(pxN('C',u,0,2)>.7?m.WL[3]:m.WL[2]),0,[14,1,1]);
+  bx(G,-13.5,TB,ZB-.8,27,1.6,1.6,(f,u,_v,_W,_H)=>f==='T'?m.WL[4]:f==='D'?m.WL[0]:(pxN('C',u,0,2)>.7?m.WL[3]:m.WL[2]),0,[14,1,1]);
   for(const sg of[-1,1]){bx(G,sg*14.3-1.15,TB-.4,ZB-1.15,2.3,2.4,2.3,g2Tone(m.GO,3),4,[2,2,2]);bx(G,sg*14.3-.5,TB+2,ZB-.5,1,1,1,()=>m.GO[4],4,[1,1,1])}
   bx(G,-1.4,36.3*s,Z-1.4,2.8,2.4,2.8,g2Tone(m.GO,4),4,[3,2,3]);bx(G,-.9,37.35*s,Z-.9,1.8,1.1,1.8,()=>m.GO[3],4,[2,1,2]);
-  bx(G,-1.2,37.85*s,Z-.5,2.4,2.6,1,(f,u,v,W,H)=>f==='F'||f==='B'?(u===0?m.ST[4]:m.ST[2]):m.ST[3],4,[2,2,1]);
+  bx(G,-1.2,37.85*s,Z-.5,2.4,2.6,1,(f,u,_v,_W,_H)=>f==='F'||f==='B'?(u===0?m.ST[4]:m.ST[2]):m.ST[3],4,[2,2,1]);
   bx(G,-.8,39*s,Z-.4,1.6,2.4,.8,(f,u)=>f==='F'||f==='B'?(u===0?m.ST[4]:m.ST[3]):m.ST[3],4,[2,2,1]);bx(G,-.4,40.05*s,Z-.3,.8,2,.6,()=>m.ST[4],4,[1,2,1]);
   bx(G,-.9,9*s,-2.3*s-1.3,1.8,1.8,2.6,g2Tone(m.LE,5),0,[2,2,2]);
  })}

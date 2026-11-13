@@ -1,33 +1,7 @@
-import { PD, PDP, pxArms, pxBox, PXDK, PXLE, pxN, pxRot, pxScene, shadeHex, teamPal } from './pixel-geometry.js';
+import { PD, pxArms, pxBox, pxN, pxRot, pxScene, shadeHex, teamPal } from './pixel-geometry.js';
 import { zombiesState } from './zombies.js';
 import { unitsState } from './units.js';
 import { thp } from '../../ui/kingdom-theme.js';
-
-/* ---- faces: skin, eyes, brows, hair; hair styles: 0 short, 1 fringe, 2 long, 3 none ---- */
-const SKINS=[['#a8664c','#c98262','#e8a684'],['#8f5a40','#b57452','#d4946e'],['#6e4430','#93603f','#b07a54'],['#b27a5c','#d69c78','#f0bc96']];
-
-function pxHead(P,o){const Sk=PDP(SKINS[o.skin||0]),Hr=o.hair?PDP(o.hair):null,st=o.hs||0,EY=PD(o.eye||'#3fa65a'),WH=PD('#f4f4f4'),BR=Hr?Hr[0]:PD('#4a3020'),MO=PD('#8e4a3c'),Bd=o.beard?PDP(o.beard):null;
- pxBox(P.HG,-4,24,-4,8,8,8,(f,u,v,W,H)=>{
-  if(f==='T')return Hr?((u+v)%3===0?Hr[2]:Hr[1]):Sk[1];if(f==='D')return Sk[0];
-  if(f==='F'){if(Hr){if(v===7)return Hr[1];if(v===6&&(st===1?(u!==5):(u<=1||u>=6||u===3)))return u===3?Hr[2]:Hr[1];if(v===5&&(u===0||u===7)&&st!==3)return Hr[0]}
-   if(v===4&&(u===1||u===2||u===5||u===6))return BR;if(v===3){if(u===1||u===6)return WH;if(u===2||u===5)return EY}
-   if(Bd&&v<=2&&!(v>=1&&(u===3||u===4))&&!(v===2&&u>=2&&u<=5))return v===0?Bd[0]:Bd[1];
-   if(v===2&&(u===3||u===4))return Sk[1];if(v===1&&(u===3||u===4))return MO;return v===0?Sk[1]:Sk[2]}
-  const back=(f==='B')||(f==='R'&&u>=4)||(f==='L'&&u<=3);
-  if(Hr){if(v>=6)return Hr[1];if(back&&v>=(st===2?1:3))return v===3&&st!==2?Hr[0]:Hr[1];if(st===2&&(f==='R'?u>=2:f==='L'?u<=5:false)&&v>=2)return Hr[1]}
-  if((f==='R'&&u===3||f==='L'&&u===4)&&v===3)return Sk[0];return Sk[1]},{mat:0})}
-
-/* ---- the body underneath: shirt (sleeves), bare forearms, trousers, boots ---- */
-function pxBody(P,o){const Sh=PDP(o.shirt||['#283c5e','#3a5788','#4b6fa8','#6a8cc4']),Pa=PDP(o.pants||['#1d2a42','#2a3b5c','#344a72']),Bt=o.boots?PDP(o.boots):PXLE;
- pxBox(P.G,-4,12,-2,8,12,4,(f,u,v,W,H)=>{if(f==='T')return Sh[2];if(f==='D')return Sh[0];if(v===H-1)return Sh[3];if(v<=1)return Sh[1];return Sh[2]},{mat:0});
- pxBox(P.LG,-2,-12,-2,4,12,4,(f,u,v,W,H)=>{if(f==='T')return Pa[2];if(f==='D')return Bt[0];if(v<=3)return v===3?Bt[3]:(v===0?Bt[1]:Bt[2]);return v===4?Pa[0]:Pa[1+(v>9?1:0)]},{mat:0});
- pxBox(P.LG,-30,-40,-30,60,28,60,()=>PXDK,{only:true})}
-
-function pxArm0(T,o){const Sk=PDP(SKINS[o.skin||0]),Sh=PDP(o.shirt||['#283c5e','#3a5788','#4b6fa8','#6a8cc4']),bare=o.bare!==false,sl=o.sleeve||6;
- pxBox(T,-2,-12,-2,4,12,4,(f,u,v,W,H)=>{if(f==='T')return Sh[2];if(f==='D')return Sk[0];if(!bare||v>=12-sl)return v===12-sl?Sh[1]:Sh[2];return v<=1?Sk[1]:Sk[2]},{mat:0})}
-
-
-const pE=(u,v,W,H)=>Math.min(u,v,W-1-u,H-1-v);
 
 /* ================= BLOCKBENCH-STYLE SKINS =================
    Each unit is the plain Minecraft player model: six base cubes and six outer-layer cubes (hat +0.5px, jacket / sleeves /
@@ -45,7 +19,7 @@ export const pxTone=(paint,kind,sd)=>!kind?paint:(f,u,v,W,H)=>{const c=paint(f,u
  if(kind===2)return v===0&&H>=8?tnC(c,.88):c;let k=1;if(H>=8){if(v<=1)k=.87;else if(v>=H-2)k=1.06}const n=pxN(f,u,v,sd||0);if(n<.06)k*=.92;return tnC(c,Math.round(k*100)/100)};
 const tk=(m,on)=>on?(m===4?2:1):0;
 
-export function pxSkin(P,K,map,o){o=o||{};const V=skinV2.on,B=(Gx,x,y,z,w,h,d,spec,g,m,ao,kd)=>{if(spec)pxBox(Gx,x,y,z,w,h,d,pxTone(pxPaint(spec,map),kd,7),{mat:m||0,grid:g,ao:ao!==false});else if(spec===0)pxBox(Gx,x,y,z,w,h,d,()=>null,{only:true})};
+export function pxSkin(P,K,map,_options){const V=skinV2.on,B=(Gx,x,y,z,w,h,d,spec,g,m,ao,kd)=>{if(spec)pxBox(Gx,x,y,z,w,h,d,pxTone(pxPaint(spec,map),kd,7),{mat:m||0,grid:g,ao:ao!==false});else if(spec===0)pxBox(Gx,x,y,z,w,h,d,()=>null,{only:true})};
  B(P.HG,-4,24,-4,8,8,8,K.head,null,0);B(P.HG,-4.5,23.5,-4.5,9,9,9,K.hat,[8,8,8],K.hatMat||0,false,tk(K.hatMat,V));
  B(P.G,-4,12,-2,8,12,4,K.body,null,0,true,tk(K.bodyMat,V));B(P.G,-4.25,11.75,-2.25,8.5,12.5,4.5,K.jacket,[8,12,4],K.jacketMat||0,false,tk(K.jacketMat,V));
  B(P.LG,-2,-12,-2,4,12,4,K.leg,null,0,true,tk(K.legMat,V));B(P.LG,-2.25,-12.25,-2.25,4.5,12.5,4.5,K.pants,[4,12,4],K.pantsMat||0,false,tk(K.pantsMat,V));
@@ -91,7 +65,7 @@ const SK_KNIGHT={hatMat:4,jacketMat:4,sleeveMat:4,pantsMat:4,
   B:['llll','mmmm','dmmd','....','llll','mmmm','dmmd','....','llll','mmmm','bbbb','dddd'],T:['llll','llll','llll','llll'],D:['dddd','dddd','dddd','dddd']}};
 
 export function pxKnight(P,AL){const map=pxMap({k:'#141519',d:'#2c2e34',m:'#4a4d55',l:'#6d717a',h:'#949aa3',w:'#c4c8ce',x:'#1d1e22',y:'#2c2e33',
-  g:'#d4a234',G:'#f0cc5c',o:'#9a6e1e',b:'#6e4826',B:'#8d6136',n:'#4a2e16',s:'#c98262'},thp()),K=pxRankK(SK_KNIGHT,'sleeve',[4,6,8],['F','R','B'],'G'),S=n=>map[n];
+  g:'#d4a234',G:'#f0cc5c',o:'#9a6e1e',b:'#6e4826',B:'#8d6136',n:'#4a2e16',s:'#c98262'},thp()),K=pxRankK(SK_KNIGHT,'sleeve',[4,6,8],['F','R','B'],'G');
  pxScene(()=>{pxSkin(P,K,map);
   pxBox(P.HG,-.5,32.5,-4.25,1,1,8.5,pxPaint({F:['q'],B:['Q'],R:['qqqqqqqq'],L:'R',T:['Q','q','q','q','q','q','q','Q'],D:['Q','Q','Q','Q','Q','Q','Q','Q']},{q:PD('#c0392b'),Q:PD('#8a2a20')}),{mat:4,grid:[1,1,8]});
   if(AL>=2){pxBox(P.HG,-.5,33.5,-3,1,2,4,pxPaint({F:['U','T'],B:['T','t'],R:['UUUU','TTTT'],L:'R',T:['U','U','U','U'],D:['t','t','t','t']},map),{mat:7,grid:[1,2,4]});pxBox(P.HG,-.5,32,-5.6,1,2.5,2,pxPaint({F:['T','T','t'],B:'F',R:['TT','TT','tt'],L:'R',T:['T','T'],D:['t','t']},map),{mat:7,grid:[1,3,2]})}});
@@ -102,7 +76,7 @@ export function pxKnight(P,AL){const map=pxMap({k:'#141519',d:'#2c2e34',m:'#4a4d
 /* ---------------- ROYAL GUARD ---------------- */
 let SK_GUARD;
 
-export function pxGuard(P,AL){const map=pxMap({k:'#141519',d:'#2c2e34',m:'#4a4d55',l:'#6d717a',h:'#949aa3',w:'#c4c8ce',x:'#1d1e22',y:'#2c2e33',
+export function pxGuard(P,_AL){const map=pxMap({k:'#141519',d:'#2c2e34',m:'#4a4d55',l:'#6d717a',h:'#949aa3',w:'#c4c8ce',x:'#1d1e22',y:'#2c2e33',
   g:'#d4a234',G:'#f0cc5c',o:'#9a6e1e',b:'#6e4826',B:'#8d6136',n:'#4a2e16',s:'#c98262',R:'#a62832',r:'#7a1a24',Q:'#c94450'},thp()),K=SK_GUARD;
  pxScene(()=>{pxSkin(P,K,map);
   pxBox(P.HG,-.6,32.5,-2.5,1.2,3,3,pxPaint({F:['Q','R','r'],B:'F',R:['QQQ','RRR','rrr'],L:'R',T:['Q','Q','Q'],D:['r','r','r']},map),{mat:7,grid:[1,3,3]});
@@ -129,7 +103,7 @@ const SK_ARCHER={hatMat:7,jacketMat:0,
  leg:{F:['PPPP','PPPP','PPPP','pPPp','PPPP','PPPP','pPPp','PPPP','bbbb','bbbb','bbbb','nnnn'],B:'F',R:'F',L:'F',T:['PPPP','PPPP','PPPP','PPPP'],D:['nnnn','nnnn','nnnn','nnnn']},
  pants:{F:['....','....','....','....','....','....','BBBB','bbbb','bnbb','bbbb','bbbb','nnnn'],R:['....','....','....','....','....','....','BBBB','bbbb','bbnb','bbbb','bbbb','nnnn'],L:'~R',B:'R',T:null,D:['nnnn','nnnn','nnnn','nnnn']}};
 
-export function pxArcher(P,AL){const map=pxMap({s:'#e8a684',S:'#c98262',h:'#6b3e1e',r:'#4a2a14',e:'#3fa65a',w:'#f4f4f4',m:'#8e4a3c',
+export function pxArcher(P,_AL){const map=pxMap({s:'#e8a684',S:'#c98262',h:'#6b3e1e',r:'#4a2a14',e:'#3fa65a',w:'#f4f4f4',m:'#8e4a3c',
   G:'#58a852',g:'#3f8a3e',q:'#2f6a30',V:'#3f8a3e',v:'#2f6a30',b:'#86522c',B:'#a96c3c',n:'#5e381c',y:'#ecbd3a',P:'#4e3a26',p:'#3a2a1a'}),K=pxRankK(SK_ARCHER,'arm',[3,1,5],['F'],'y');
  pxScene(()=>{pxSkin(P,K,map);
   pxBox(P.HG,-1.5,26.5,-5.75,3,3.5,1.25,pxPaint({F:['ggg','ggg','qqq'],B:['GGG','ggg','qqq'],R:['G','g','q'],L:'R',T:['GGG'],D:['qqq']},map),{mat:7,grid:[3,3,1]});
@@ -140,7 +114,7 @@ export function pxArcher(P,AL){const map=pxMap({s:'#e8a684',S:'#c98262',h:'#6b3e
 }
 
 /* ---------------- PEASANT (six variants: hat, skin, hair, beard, tunic colour) ---------------- */
-export function pxPeasant(P,AL){const pv=zombiesState.ZVAR&&zombiesState.ZVAR.hint==='p'?zombiesState.ZVAR.v%6:0;
+export function pxPeasant(P,_AL){const pv=zombiesState.ZVAR&&zombiesState.ZVAR.hint==='p'?zombiesState.ZVAR.v%6:0;
  const SH=[['#6e4424','#8a5a32'],['#56642c','#6e7e3e'],['#6a3a32','#7c4a42'],['#3e4e62','#55667a'],['#6e6038','#8a7a52'],['#563a54','#6a4a6a']][pv],
   HR=[['#5a3a1a','#3a2410'],['#2a1a10','#160e08'],['#8a6a3a','#6a5028'],['#1e1a18','#120f0e'],['#a0522d','#6e3216'],['#6a6a62','#4a4a44']][pv],
   SK=[['#e8a684','#c98262'],['#f0bc96','#d69c78'],['#d4946e','#b57452'],['#e8a684','#c98262'],['#b07a54','#93603f'],['#f0bc96','#d69c78']][pv],hat=[0,2,0,1,3,0][pv],beard=pv===3||pv===5;

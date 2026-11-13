@@ -11,7 +11,7 @@ import { DEC, FOR, VAR } from './terrain-props.js';
 import { THREE } from './three.js';
 import { animUnit } from './unit-animation.js';
 import { matUI } from './unit-instances.js';
-import { cv, cvs } from '../ui/canvases.js';
+import { cvs } from '../ui/canvases.js';
 
 export const titleSceneState = {
   titleDirty: true,
@@ -26,7 +26,7 @@ export let TARMY = [];
 let THORDE = [];
 let TARR = [];
 let TCLOUDS = [];
-let TFLAMES = [];
+const TFLAMES = [];
 let TLH = null;
 let TLFL = null;
 let TBOLT = null;
@@ -34,8 +34,8 @@ let TFLASH = 0;
 let TFLN = 6;
 let TASH = null;
 let TASHP = null;
-let TFIRES = [];
-let TSMOKE = [];
+const TFIRES = [];
+const TSMOKE = [];
 let TEMB = null;
 let TEMBP = null;
 
@@ -107,7 +107,7 @@ function initTitle(){titleInit=true;TS3.background=gradTex();TS3.fog=new THREE.F
  buildArmy()}
 
 export let _tm;
-let TSH = {i:0,t:0};
+const TSH = {i:0,t:0};
 export let TFADE = 1;
 let TEYE = null;
 
@@ -126,10 +126,10 @@ export function prepTitle(){if(!titleInit)initTitle()}
 
 export function renderTitle(dt){if(!titleInit)initTitle();if(titleSceneState.titleDirty){buildArmy();titleSceneState.titleDirty=false}TT+=dt;
  /* camera: slow dolly with sway, scene shifted right on wide screens so the menu sits left */
- const wide=cv.width/cv.height>1.25,sh=0,t=TT;
+ const t=TT;
  TSH.t+=dt;let S=TSHOTS[TSH.i];if(TSH.t>=S.d){TSH.t-=S.d;TSH.i=(TSH.i+1)%TSHOTS.length;S=TSHOTS[TSH.i];if(TSH.i===4&&TARR)TARR.next=.3}
  TFADE=TSH.t<.7?1-TSH.t/.7:TSH.t>S.d-.7?(TSH.t-(S.d-.7))/.7:0;const cm=S.f(TSH.t,t);camera.position.set(cm.p[0],cm.p[1],cm.p[2]);camera.lookAt(cm.l[0],cm.l[1],cm.l[2]);
- if(window.__cam){camera.position.set(...__cam.p);camera.lookAt(...__cam.l)}
+ if(window.__cam){camera.position.set(...window.__cam.p);camera.lookAt(...window.__cam.l)}
  /* army idle + occasional volleys */
  frameState.frameN++;
  for(const u of TARMY){u.walk=0;

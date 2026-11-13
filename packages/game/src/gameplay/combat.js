@@ -24,11 +24,11 @@ import {
 } from './spatial-index.js';
 import { SW, swLine, swNear, swSplash } from './swarm.js';
 import { blood, puff, ring, shake, spark, vflash } from '../rendering/effects.js';
-import { gh } from '../rendering/terrain.js';
-import { NAMES } from '../ui/build-menu.js';
+import { gh } from '../world/terrain-queries.js';
+import { NAMES } from '../ui/build-catalog.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { D4 } from '../world/routes.js';
-import { LAND, terrainState } from '../world/terrain.js';
+import { LAND, terrainState } from '../world/terrain-state.js';
 import { fv, solid } from '../world/traversal.js';
 
 export function target(u,range,tt){const C=u._tc;if(C&&C.tt===tt&&C.r===range&&((simulationState.SIMTK+(u.uid||u.sid||0))%3)!==0&&C.tk>=simulationState.SIMTK-2){const e=C.b;

@@ -25,7 +25,7 @@ const FACE2=(mid,low,R)=>skinV2.on&&!R?pxHead2({plain:1,mid,low}):({F:['hhhhhhhh
 function pxCut(G,rows,map,o){const H=rows.length,W=rows[0].length;pxSpriteF(G,W,H,(u,v)=>{const c=rows[H-1-v][u];return c==='.'?null:map[c]},o)}
 
 /* ---------------- KING NARAIGE: A open face, beard and crown / B royal great helm under the crown ---------------- */
-export function pxKing(P,AL){const vr=(window.__KV||'B'),helm=vr==='B',
+export function pxKing(P,_AL){const vr=(window.__KV||'B'),helm=vr==='B',
   map=pxMap2({h:'#7a4422',r:'#4e2a12',E:'#f3efe6',q:'#d6d0c2',x:'#18181c',R:'#a62832',Q:'#c94450',X:'#6c111b',j:'#e8303a',z:'#3a7aff'},thp());
  const K={hatMat:4,jacketMat:0,sleeveMat:4,pantsMat:4,
   head:FACE2('shhmmhhs','hhhhhhhh',['hhhhhhhh','hhhhhhhh','sssshhhh','sssshhhh','ssSshhhh','sssshhhh','hhsshhhh','hhhhhhhh']),
@@ -57,7 +57,7 @@ export function pxKing(P,AL){const vr=(window.__KV||'B'),helm=vr==='B',
 }
 
 /* ---------------- CAPTAIN: gilded breastplate, red officer sash, team skirt, open bascinet, gold pauldrons ---------------- */
-export function pxCaptain(P,AL){const map=pxMap2({h:'#4a2c16',r:'#2e1a0c',R:'#b8323c',Q:'#de5a62',X:'#7a1a24'},thp());
+export function pxCaptain(P,_AL){const map=pxMap2({h:'#4a2c16',r:'#2e1a0c',R:'#b8323c',Q:'#de5a62',X:'#7a1a24'},thp());
  const K={hatMat:4,jacketMat:4,sleeveMat:4,pantsMat:4,
   head:FACE2('shhmmhhs'),
   hat:{F:['44444444','3gggggg3','3......3','3......3','3......3','3......3','33....33','33....33'],
@@ -81,7 +81,7 @@ export function pxCaptain(P,AL){const map=pxMap2({h:'#4a2c16',r:'#2e1a0c',R:'#b8
 }
 
 /* ---------------- BANNERMAN: kettle hat, quilted gambeson, team tabard with a white cross, steel vambraces ---------------- */
-export function pxBannerman(P,AL){const map=pxMap2({h:'#5a3a1a',r:'#3a2410',a:'#ddd0ae',A:'#b4a682',c:'#f2ecdc',y:'#d9a83a',P:'#433824',p:'#2e2618'},thp());
+export function pxBannerman(P,_AL){const map=pxMap2({h:'#5a3a1a',r:'#3a2410',a:'#ddd0ae',A:'#b4a682',c:'#f2ecdc',y:'#d9a83a',P:'#433824',p:'#2e2618'},thp());
  const Q8=Array.from({length:12},(_,i)=>i%2?'aaAaaaAa':'aAaaaAaa'),Q4=Q8.map(r=>r.slice(0,4));
  const K={hatMat:4,jacketMat:0,sleeveMat:4,
   head:FACE2(),
@@ -100,7 +100,7 @@ export function pxBannerman(P,AL){const map=pxMap2({h:'#5a3a1a',r:'#3a2410',a:'#
 }
 
 /* ---------------- GUNNERS: team doublet, brass buttons, leather apron, bandolier of flasks, cap with a white feather ---------------- */
-export function pxGunner(P,AL){const map=pxMap2({h:'#3a2410',r:'#24160a',y:'#d9a83a',z:'#f2cc66',c:'#f2efe6',C:'#cfcabc',P:'#3e3a36',p:'#2a2622'},thp());
+export function pxGunner(P,_AL){const map=pxMap2({h:'#3a2410',r:'#24160a',y:'#d9a83a',z:'#f2cc66',c:'#f2efe6',C:'#cfcabc',P:'#3e3a36',p:'#2a2622'},thp());
  const K={jacketMat:0,
   head:FACE2('shhhhhhs','sssmmsss'),
   hat:{F:['UUUUUUUU','yyyyyyyy','........','........','........','........','........','........'],R:'F',L:'F',B:'F',
@@ -126,7 +126,7 @@ const fl=c=>()=>c;
 const handItems=(P,fn)=>{const T=newG();pxScene(()=>fn(T));pxCat(P.AG,T)};
 
 /* ---------------- SCOUT: beige long coat, red scarf, flat brown cap with goggles pushed up, tall frame pack with a bedroll, spyglass ---------------- */
-export function pxScout(P,AL){const map=pxMap2({h:'#5a3a1a',r:'#3a2410',C:'#cdb98f',D:'#a8946c',E:'#b8a47c',R:'#8a3a32',Q:'#5e2620',a:'#8a7a58',A:'#6e6046',P:'#5a4a32',p:'#463a26',z:'#3a2a18',H:'#5a3a1a',I:'#3f2812',k:'#3a3a40',l:'#9ad8ff',q:'#7a5a34',f:'#a89a74'});
+export function pxScout(P,_AL){const map=pxMap2({h:'#5a3a1a',r:'#3a2410',C:'#cdb98f',D:'#a8946c',E:'#b8a47c',R:'#8a3a32',Q:'#5e2620',a:'#8a7a58',A:'#6e6046',P:'#5a4a32',p:'#463a26',z:'#3a2a18',H:'#5a3a1a',I:'#3f2812',k:'#3a3a40',l:'#9ad8ff',q:'#7a5a34',f:'#a89a74'});
  const coat=(n)=>['RRRRRRRR','QRRRRRRQ','CDaaaaDC','CCDaaDCC','CCCDDCCC','CCCDDCCC','nnnggnnn','CCCDDCCC','CCDDDCCC','CCCDDCCC','CCCDDCCC','DDDDDDDD'].slice(0,n);
  const side=['RRRR','RRRR','CCCC','CCCC','CCCC','CCCC','nnnn','CCCC','CCCC','CCCC','CCCC','DDDD'];
  const K={jacketMat:0,
@@ -155,7 +155,7 @@ export function pxScout(P,AL){const map=pxMap2({h:'#5a3a1a',r:'#3a2410',C:'#cdb9
   pxBox(T,-.65,.6,1.95,1.3,.35,1.3,fl(map.l),{mat:5,grid:[1,1,1]})})}
 
 /* ---------------- ENGINEER: yellow hard hat with a lamp, leather apron with steel rivets, tool belt, huge hammer on the back, wrench ---------------- */
-export function pxEngineer(P,AL){const map=pxMap2({h:'#4a2e16',r:'#2e1c0e',a:'#6a5a46',A:'#524634',P:'#4a4038',p:'#3a322a',z:'#2a2018',X:'#7a4e2c',x:'#5e3a1e',J:'#d8b04a',K:'#e0bc58',M:'#fff2b0',k:'#2a2a30',l:'#9ad8ff',q:'#8a6a3a'});
+export function pxEngineer(P,_AL){const map=pxMap2({h:'#4a2e16',r:'#2e1c0e',a:'#6a5a46',A:'#524634',P:'#4a4038',p:'#3a322a',z:'#2a2018',X:'#7a4e2c',x:'#5e3a1e',J:'#d8b04a',K:'#e0bc58',M:'#fff2b0',k:'#2a2a30',l:'#9ad8ff',q:'#8a6a3a'});
  const K={jacketMat:0,
   head:FACE2(),
   hat:{F:['JJJJJJJJ','JKJJJJKJ','kllkkllk','........','........','........','........','........'],R:['JJJJJJJJ','JJJJJJJJ','kkkkkkkk','........','........','........','........','........'],L:'R',B:'R',T:rep2('JJJJJJJJ',8)},
@@ -177,10 +177,10 @@ export function pxEngineer(P,AL){const map=pxMap2({h:'#4a2e16',r:'#2e1c0e',a:'#6
   pxBox(P.G,-1.3,29,-6.1,7,4.8,4.2,(f,u,v,W,H)=>f==='T'?map[5]:f==='D'?map[2]:f==='R'||f==='L'?(u>0&&u<W-1&&v>0&&v<H-1?map[3]:map[4]):v===H-1?map[4]:f==='B'?map[2]:map[3],{mat:4,grid:[7,5,4]})});
  pxArms(P,T=>pxSkinArms(T,K,map));
  handItems(P,T=>{pxBox(T,-.65,-12.6,1.1,1.3,14.3,1.3,(f,u,v)=>f==='T'?map[4]:v%5===0?map[2]:map[3],{mat:4,grid:[1,14,1]});
-  pxBox(T,-1.6,1.1,.7,3.3,3.9,1.8,(f,u,v,W,H)=>f==='F'&&u===1&&v<2?null:f==='T'?map[5]:map[4],{mat:4,grid:[3,4,2]})})}
+  pxBox(T,-1.6,1.1,.7,3.3,3.9,1.8,(f,u,v,_W,_H)=>f==='F'&&u===1&&v<2?null:f==='T'?map[5]:map[4],{mat:4,grid:[3,4,2]})})}
 
 /* ---------------- ENVOY: cream robe, red scarf wrapped high with two long tails down the back, red cap, big unrolled sheet in hand ---------------- */
-export function pxEnvoy(P,AL){const map=pxMap2({h:'#6a4a2a',r:'#442d16',O:'#e4dccb',N:'#b8b09c',W:'#a83232',Z:'#7c2222',c:'#f4f0e0',d:'#cfc6aa',i:'#8a7a5a',P:'#6a6254',p:'#4e463a',z:'#3a2a18'});
+export function pxEnvoy(P,_AL){const map=pxMap2({h:'#6a4a2a',r:'#442d16',O:'#e4dccb',N:'#b8b09c',W:'#a83232',Z:'#7c2222',c:'#f4f0e0',d:'#cfc6aa',i:'#8a7a5a',P:'#6a6254',p:'#4e463a',z:'#3a2a18'});
  const K={jacketMat:0,
   head:FACE2(),
   hat:{F:['WWWWWWWW','WZWWWWZW'].concat(rep2('........',6)),R:['WWWWWWWW','WWWWWWWW'].concat(rep2('........',6)),L:'R',B:'R',T:rep2('WWWWWWWW',8)},
@@ -190,10 +190,10 @@ export function pxEnvoy(P,AL){const map=pxMap2({h:'#6a4a2a',r:'#442d16',O:'#e4dc
   leg:{F:rep2('PPPP',9).concat(['pppp','zzzz','zzzz']),B:'F',R:'F',L:'F',T:rep2('PPPP',4),D:rep2('zzzz',4)},
   pants:{F:rep2('OOOO',4).concat(['NNNN'],rep2('....',7)),R:'F',L:'F',B:'F',T:null,D:null}};
  K.arm.F[6]='OOOO';K.arm.F[7]='NNNN';
- const tail=(c,d)=>(f,u,v,W,H)=>f==='T'?c:v<2?d:(f==='F'||f==='B')&&v%7===3&&u===1?d:c;
+ const tail=(c,d)=>(f,u,v,_W,_H)=>f==='T'?c:v<2?d:(f==='F'||f==='B')&&v%7===3&&u===1?d:c;
  pxScene(()=>{pxSkin(P,K,map);
-  pxBox(P.G,-5.1,20.4,-2.9,10.2,3.3,5.9,(f,u,v,W,H)=>f==='T'||f==='D'?map.W:v===0?map.Z:(u+v)%4===0?map.Z:map.W,{mat:0,grid:[10,3,6]});
-  pxBox(P.HG,-3.7,32.5,-3.7,7.4,1.3,7.4,f=>map.Z,{mat:0,grid:[7,1,7]});
+  pxBox(P.G,-5.1,20.4,-2.9,10.2,3.3,5.9,(f,u,v,_W,_H)=>f==='T'||f==='D'?map.W:v===0?map.Z:(u+v)%4===0?map.Z:map.W,{mat:0,grid:[10,3,6]});
+  pxBox(P.HG,-3.7,32.5,-3.7,7.4,1.3,7.4,_f=>map.Z,{mat:0,grid:[7,1,7]});
   pxBox(P.G,1.4,3,-3.6,2.8,19.6,1.2,tail(map.W,map.Z),{mat:0,grid:[3,20,1]});
   pxBox(P.G,-3.6,7,-3.6,2.8,15.2,1.2,tail(map.W,map.Z),{mat:0,grid:[3,15,1]});
   pxBox(P.G,1.4,3,-3.6,2.8,.8,1.2,fl(map.Z),{mat:0,grid:[3,1,1]})});

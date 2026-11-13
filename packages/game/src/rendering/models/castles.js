@@ -128,8 +128,6 @@ export function qTowR(G,x,z,y0,h,D,o){o=o||{};const n=Math.max(1,Math.round(h/.2
 export function qSpire(G,x,z,y0,D,H,cols,o){o=o||{};const n=Math.max(3,Math.round(H/.1)),q=H/n,b=o.band||2;qCyl(G,bR,x,z,y0-.05,.07,D+.1,o.eave||cols[0]);
  for(let k=0;k<n;k++){const w=Math.max(.05,D*(1-(k+.35)/n)),c=cols[((k/b)|0)%cols.length];if(o.sq)bR(G,x,y0+k*q,z,w,q,w,c);else qCyl(G,bR,x,z,y0+k*q,q,w,c)}return y0+H}
 
-function qMerlR(G,x,z,y,D,n,h){for(let k=0;k<n;k++){const a=(k+.5)/n*6.2832,r=D/2-.065,px=x+Math.cos(a)*r,pz=z+Math.sin(a)*r;bS(G,px,y,pz,.13,h,.13,QS[k%2]);bS(G,px,y+h,pz,.15,.03,.15,QTR)}}
-
 export function qCorbR(G,x,z,y,D,n){for(let k=0;k<n;k++){const a=(k+.5)/n*6.2832,r=D/2-.01,px=x+Math.cos(a)*r,pz=z+Math.sin(a)*r;bS(G,px,y-.13,pz,.09,.13,.09,QSD);bS(G,px,y-.2,pz,.06,.07,.06,QSD2)}}
 
 export function qMerlL(G,x0,z0,x1,z1,y,h,step){const L=Math.hypot(x1-x0,z1-z0),n=Math.max(1,Math.round(L/step));for(let k=0;k<=n;k+=2){const t=k/n,px=x0+(x1-x0)*t,pz=z0+(z1-z0)*t;bS(G,px,y,pz,.14,h,.14,QS[(k/2)%2]);bS(G,px,y+h,pz,.16,.03,.16,QTR)}}
@@ -140,7 +138,7 @@ export function castleGeo(){const G=newG();qPlinth(G,1.5,0,1.5,3,3,.2);
  for(let i=0;i<6;i++)for(let j=0;j<6;j++)bS(G,.25+i*.5,.2,.25+j*.5,.49,.025,.49,QS[(i*3+j*5)%4]);
  const WT=2.3;
  /* curtain walls between the towers (the gatehouse closes the front) */
- const cw=(x,z,w,d,ax)=>{qStone(G,x,.2,z,w,d,WT-.2,{moss:1});qCornice(G,x,WT,z,w+.05,d+.05,.07);bS(G,x,WT+.07,z,w,.025,d,QSD2)};
+ const cw=(x,z,w,d,_ax)=>{qStone(G,x,.2,z,w,d,WT-.2,{moss:1});qCornice(G,x,WT,z,w+.05,d+.05,.07);bS(G,x,WT+.07,z,w,.025,d,QSD2)};
  cw(1.5,.2,1.3,.3);cw(.2,1.5,.3,1.3);cw(2.8,1.5,.3,1.3);
  qMerlL(G,.9,.09,2.1,.09,WT+.07,.22,.15);qMerlL(G,.09,.9,.09,2.1,WT+.07,.22,.15);qMerlL(G,2.91,.9,2.91,2.1,WT+.07,.22,.15);
  for(const z of[1.2,1.8])qSlit(G,.045,1.2,z,false),qSlit(G,2.955,1.2,z,false);

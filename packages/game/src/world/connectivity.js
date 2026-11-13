@@ -5,7 +5,7 @@ import { TH, TS, TW } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
 import { bfsT, ringT, swarmState } from '../gameplay/swarm.js';
 import { D4, FD, gOK } from './routes.js';
-import { terrainState } from './terrain.js';
+import { terrainState } from './terrain-state.js';
 import { bfsW, canStep, fv, solid } from './traversal.js';
 
 export const DSIDE=3000;

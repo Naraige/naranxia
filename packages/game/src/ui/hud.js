@@ -32,15 +32,17 @@ import { CAM } from '../rendering/scene.js';
 import { bannerIcon } from '../rendering/banner-icon.js';
 import { UNITK } from '../rendering/unit-animation.js';
 import { SEASC, seasonIdx, wxLabel } from '../rendering/weather.js';
-import { CMP, costParts, drawCost, drawItem, drawTabs, menuItems, NAMES, TABH, tabsWidth, tabState, uiBtn } from './build-menu.js';
+import { CMP, costParts, drawCost, drawItem, drawTabs, menuItems, TABH, tabsWidth, tabState, uiBtn } from './build-menu.js';
+import { NAMES } from './build-catalog.js';
 import { canvasesState, cv } from './canvases.js';
 import { convoyPanelState, drawConvoy } from './convoy-panel.js';
 import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, RDB, SLOT, TIPP, UIT } from './drawing.js';
 import { hudDisplayState, topBox } from './hud-state.js';
 import { dIc, IC } from './icons.js';
 import { THEME } from './kingdom-theme.js';
-import { bar, drawMapModal, drawWorld, mmss, pill } from './minimap.js';
-import { KB, kdisp, settingsState } from './settings.js';
+import { bar, drawMapModal, drawWorld, mmss } from './minimap.js';
+import { KB, kdisp } from './settings.js';
+import { settingsState } from './panel-state.js';
 import { drawPicker, sitePickerState } from './site-picker.js';
 import { drawTitle } from './title-menu.js';
 import { guideWatch } from './video-guide.js';
@@ -53,7 +55,8 @@ import { drawTroops, PLUN, troopPanelState } from './troop-panel.js';
 import { hintBar } from './tutorial.js';
 import { questLog, questPanel } from './quest-panel.js';
 import { FF } from './typography.js';
-import { LAND, rollWorld, terrainState } from '../world/terrain.js';
+import { rollWorld } from '../world/terrain.js';
+import { LAND, terrainState } from '../world/terrain-state.js';
 
 export const hudState = {
   uiHits: [],
@@ -66,7 +69,7 @@ export let mmRect = {x:0,y:0,w:0,h:0};
 
 export const U=(x,y,w,h)=>({x:x*hudDisplayState.UIS,y:y*hudDisplayState.UIS,w:w*hudDisplayState.UIS,h:h*hudDisplayState.UIS}),inR=(p,r)=>p.x>=r.x&&p.x<r.x+r.w&&p.y>=r.y&&p.y<r.y+r.h;
 
-function flow(L,x0,y0,w,noLab){let x=x0,y=y0+(CMP||noLab?0:9),rh=0,mx=0,rowStart=true;for(const it of L){if(it.under){it.x=it.under.x;it.y=it.under.y+it.under.h+3;it.lab=false;rh=Math.max(rh,it.y+it.h-y);continue}if(it.br){x=x0+9999}if(it.gap!==undefined){x+=it.gap;continue}if(x+it.w>x0+w&&x>x0){x=x0;y+=rh+(CMP?3:12);rh=0;rowStart=true}it.x=x;it.y=y;it.lab=it.first&&!noLab;rowStart=false;x+=it.w+3;rh=Math.max(rh,it.h);mx=Math.max(mx,x-3)}return{h:y+rh-y0,w:mx-x0}}
+function flow(L,x0,y0,w,noLab){let x=x0,y=y0+(CMP||noLab?0:9),rh=0,mx=0;for(const it of L){if(it.under){it.x=it.under.x;it.y=it.under.y+it.under.h+3;it.lab=false;rh=Math.max(rh,it.y+it.h-y);continue}if(it.br){x=x0+9999}if(it.gap!==undefined){x+=it.gap;continue}if(x+it.w>x0+w&&x>x0){x=x0;y+=rh+(CMP?3:12);rh=0}it.x=x;it.y=y;it.lab=it.first&&!noLab;x+=it.w+3;rh=Math.max(rh,it.h);mx=Math.max(mx,x-3)}return{h:y+rh-y0,w:mx-x0}}
 
 export const idleP=()=>sessionState.units.filter(u=>u.t===0&&(!MP.on||(u.pl|0)===playersState.CURPL)&&u.type==='peasant'&&!u.job&&!u.o&&!u.carry&&u.hp>0&&!u.shel);
 
@@ -110,7 +113,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  titleBlur(false);if(NAV.active){navBegin(false);NAV.onEsc=null}
  frame(-3,-3,UW+6,27,CHAT,0);hudState.uiRects.push(U(0,0,UW,24));
  /* right cluster: menu / pause / speed */
- let rx=UW-5;const tb=(w,ic,fn,tip,on)=>{rx-=w;uiBtn(rx,3,w,17,BTN,BTNH,fn,tip,(x,y,W2,H2)=>dIc(ic,x+(W2-12)/2,y+2.5,12),on);rx-=3};
+ let rx=UW-5;const tb=(w,ic,fn,tip,on)=>{rx-=w;uiBtn(rx,3,w,17,BTN,BTNH,fn,tip,(x,y,W2,_H2)=>dIc(ic,x+(W2-12)/2,y+2.5,12),on);rx-=3};
  tb(18,IC.menu,openMenu,['Main menu [Esc]']);tb(18,IC.army,()=>{troopPanelState.troopsOpen=!troopPanelState.troopsOpen;snd('click')},['Troops [F2]','Every unit and what it is doing'],troopPanelState.troopsOpen);tb(18,IC.gear,()=>{openMenu();settingsState.settingsOpen=true;settingsState.fromGame=true},['Settings']);tb(18,sessionState.paused?IC.play:IC.pause,()=>{setPause(!sessionState.paused)},['Pause [Space]'],sessionState.paused);tb(18,sndOn?IC.sound:IC.mute,toggleSound,['Sound on/off [O]']);
  rx-=21;uiBtn(rx,3,21,17,BTN,BTNH,()=>{if(!MP.on)sessionState.spd=sessionState.spd%3+1},['Game speed [F]'],(x,y,W2)=>TC('x'+sessionState.spd,x+W2/2,y+4,sessionState.spd>1?'#ffd23c':'#fff',.95),sessionState.spd>1);rx-=6;
  const wp=[['Wave '+sessionState.waveN,'#d9b8ff'],[wavesState.waveOn?(wavesState.nightLv>=.5?'Night':(wavesState.hordeD<5000?'Horde '+Math.round(wavesState.hordeD)+' tiles':'Horde')):'Next '+mmss(sessionState.waveT),wavesState.waveOn?(wavesState.nightLv>=.5?'#9fb4ff':'#ffb38a'):sessionState.waveT<10&&((sessionState.clockT*3)|0)%2?'#ff8a8a':'#ffffff'],[sessionState.nextL.map(L=>terrainState.ROUTES[L].dir).join(' '),'#ff7a7a'],[wxLabel(),SEASC[seasonIdx()]]];const WPV=wavePreview();if(WPV.ev.length)wp.push([WPV.ev[0],'#ffcf6a']);
@@ -139,8 +142,8 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  const mx2=UW-mw-9,my2=narrow?py-mh-9:UH-mh-9;
  frame(mx2-4,my2-4,mw+8,mh+8,MAPF,5);drawWorld(mx2,my2,mw,mh,false);mmRect=U(mx2,my2,mw,mh);hudState.uiRects.push(U(mx2-3,my2-3,mw+6,mh+6));
  const bw2=(mw+6-3)/2,ya=my2-3-19;
- uiBtn(mx2-3,ya,bw2,17,GRN,GRNH,home,['Back to base [H]','Centers the camera on your castle'],(x,y,w)=>{dIc(IC.compass,x+4,y+2.5,12);T_('Base',x+19,y+4,'#fff',.95)});
- uiBtn(mx2-3+bw2+3,ya,bw2,17,BTN,BTNH,()=>{sessionState.showMap=true},['World map [M]','See the whole world, spawns and routes'],(x,y,w)=>{dIc(IC.map,x+4,y+2.5,12);T_('Map',x+19,y+4,'#fff',.95)});
+ uiBtn(mx2-3,ya,bw2,17,GRN,GRNH,home,['Back to base [H]','Centers the camera on your castle'],(x,y,_w)=>{dIc(IC.compass,x+4,y+2.5,12);T_('Base',x+19,y+4,'#fff',.95)});
+ uiBtn(mx2-3+bw2+3,ya,bw2,17,BTN,BTNH,()=>{sessionState.showMap=true},['World map [M]','See the whole world, spawns and routes'],(x,y,_w)=>{dIc(IC.map,x+4,y+2.5,12);T_('Map',x+19,y+4,'#fff',.95)});
  const qw=(mw+6-9)/4,yb=ya-19;[[IC.zoomIn,()=>camZoom(-1),'Zoom in'],[IC.zoomOut,()=>camZoom(1),'Zoom out'],[IC.rotL,()=>{CAM.yaw+=.4},'Turn camera left ['+kdisp(KB.rotL)+']'],[IC.rotR,()=>{CAM.yaw-=.4},'Turn camera right ['+kdisp(KB.rotR)+']']].forEach(([ic,fn,t],i)=>uiBtn(mx2-3+i*(qw+3),yb,qw,17,BTN,BTNH,fn,[t],(x,y,w)=>dIc(ic,x+(w-12)/2,y+2.5,12)));
  if(!narrow)drawUnitCard(UW,UH,settingsState.TOPH+18,yb-8);
  /* touch: floating camera (one-finger pan on/off) and cancel (build mode, selection) buttons, 44 css px, left edge */
@@ -156,13 +159,13 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  hudDisplayState.barsH=bossY>0&&Math.min(184,UW-8)+10>UW/2-116?bossY+20:0;
  /* the band taken by those centre bars (the quest marker keeps its arrows off it) */
  hudDisplayState.cbar=bossY>0?[UW/2-125,settingsState.TOPH,250,bossY]:null;
- if(!sessionState.over){let msg=sessionState.mode?'Place '+NAMES[sessionState.mode]+(sessionState.mode==='gate'?' - 3 tiles: two towers and a passage, [R] rotates':sessionState.mode==='movec'?' - click the new centre of your castle':sessionState.mode==='ballista'||sessionState.mode==='trebuchet'?' on a tower - [R] sets facing':sessionState.mode==='raise'||sessionState.mode==='dig'?' - paint tiles':sessionState.mode==='ramp'?' - one block that climbs 1 level, [R] turns it':sessionState.mode==='demolish'?' - click a building':sessionState.mode==='upgrade'?' - click or drag over wood buildings':'')+' - click a tile - right-click or Esc cancels':hudDisplayState.msgT>0?hudDisplayState.msgS:sessionState.time<30?'Select peasants, then right-click a tree, rock or gold to harvest':'';
+ if(!sessionState.over){const msg=sessionState.mode?'Place '+NAMES[sessionState.mode]+(sessionState.mode==='gate'?' - 3 tiles: two towers and a passage, [R] rotates':sessionState.mode==='movec'?' - click the new centre of your castle':sessionState.mode==='ballista'||sessionState.mode==='trebuchet'?' on a tower - [R] sets facing':sessionState.mode==='raise'||sessionState.mode==='dig'?' - paint tiles':sessionState.mode==='ramp'?' - one block that climbs 1 level, [R] turns it':sessionState.mode==='demolish'?' - click a building':sessionState.mode==='upgrade'?' - click or drag over wood buildings':'')+' - click a tile - right-click or Esc cancels':hudDisplayState.msgT>0?hudDisplayState.msgS:sessionState.time<30?'Select peasants, then right-click a tree, rock or gold to harvest':'';
   if(hudDisplayState.msgT>0&&hudDisplayState.msgS&&hudDisplayState.msgS!==MSGL[MSGL.length-1]){MSGL.push(hudDisplayState.msgS);if(MSGL.length>25)MSGL.shift()}
   if(msg&&sessionState.bannerT<=0){canvasesState.ctx.globalAlpha=sessionState.mode||hudDisplayState.msgT>0?1:Math.min(1,(18-sessionState.time)/3);const my=settingsState.TOPH+bossY,qb=hudDisplayState.qbox,lx=qb&&my<qb[1]+qb[3]+2&&my+16>qb[1]-2&&UW-qb[0]-qb[2]>=210?qb[0]+qb[2]+3:0;/* beside the quest panel when it would cover it */let ms=.95;while(ms>.55&&tw(msg,ms)+16>UW-6-lx)ms-=.05;const w=tw(msg,ms)+16,mx=Math.max(Math.round((UW-w)/2),lx);frame(mx,my,w,16,CHAT,8);TC(msg,mx+w/2,my+4,'#ffffff',ms);canvasesState.ctx.globalAlpha=1;topBox(mx,my,w,16)}
   if(sessionState.bannerT>0){canvasesState.ctx.globalAlpha=Math.min(1,sessionState.bannerT*1.2);let bs=3.4;while(bs>1.6&&tw(sessionState.bannerS,bs)>UW-20)bs-=.2;let b2=1.15;while(b2>.6&&tw(sessionState.bannerS2,b2)>UW-20)b2-=.05;/* under the raid bars and the event bar (a caravan or envoys come with the wave: the banner used to lie on their two buttons) */let yb=Math.max(settingsState.TOPH+8,UH*.2);for(const b of hudDisplayState.tbox)if(b[3]>=30&&b[1]<yb+9*bs&&b[1]+b[3]+5>yb)yb=b[1]+b[3]+5;hudDisplayState.bny=yb;TC(sessionState.bannerS,UW/2,yb,'#ff5555',bs);TC(sessionState.bannerS2,UW/2,yb+9*bs+6,'#ffff55',b2);canvasesState.ctx.globalAlpha=1}
   if(sessionState.paused){canvasesState.ctx.fillStyle='rgba(0,0,0,.35)';canvasesState.ctx.fillRect(0,0,UW,UH);TC('Game Paused',UW/2,UH*.36,'#ffffff',2.2);TC(backgroundLoopState.autoPaused?'Click anywhere or press Space to resume':'Press Space to resume',UW/2,UH*.36+28,'#a0a0a0',.95)}}
  const hv=inputState.touch?(hudState.tipKey&&performance.now()<hudState.tipT?hudState.uiHits.find(h=>h.tip&&((h.x|0)+','+(h.y|0)+','+(h.w|0))===hudState.tipKey):null):hudState.uiHits.find(h=>h.tip&&inR(inputState.mouse,h));
- if(hv&&!sessionState.over&&!sessionState.showMap){const ln=hv.tip,cpp=hv.cost?costParts(hv.cost):null,cw0=cpp?cpp.reduce((q,p)=>q+tw(p[0],.9)+12,0):0,w=Math.max(cw0,...ln.map(s=>tw(s,.9)))+14,h=ln.length*11+8;let tx=Math.min(UW-w-2,Math.max(2,Math.round(hv.x/hudDisplayState.UIS))),ty=Math.round(hv.y/hudDisplayState.UIS)-h-4;if(ty<26)ty=Math.round((hv.y+hv.h)/hudDisplayState.UIS)+4;
+ if(hv&&!sessionState.over&&!sessionState.showMap){const ln=hv.tip,cpp=hv.cost?costParts(hv.cost):null,cw0=cpp?cpp.reduce((q,p)=>q+tw(p[0],.9)+12,0):0,w=Math.max(cw0,...ln.map(s=>tw(s,.9)))+14,h=ln.length*11+8;const tx=Math.min(UW-w-2,Math.max(2,Math.round(hv.x/hudDisplayState.UIS)));let ty=Math.round(hv.y/hudDisplayState.UIS)-h-4;if(ty<26)ty=Math.round((hv.y+hv.h)/hudDisplayState.UIS)+4;
   frame(tx,ty,w,h,TIPP,UIT.rad.small);ln.forEach((s,i)=>{if(cpp&&i===ln.length-1){drawCost(cpp,tx+7,ty+5+i*11,w-14,.9,9)}else T_(s,tx+7,ty+5+i*11,i?'#aaaaaa':'#ffffff',.9)})}
  drawToasts(UW);
  fxGameIn(UW,UH);

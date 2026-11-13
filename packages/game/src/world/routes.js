@@ -1,8 +1,8 @@
 import { fb, hs } from '../core/math.js';
 import { TH, TW } from '../gameplay/rules.js';
 import { sessionState } from '../gameplay/session.js';
-import { amt, CH, FLG, genF, HT, NCX, NCY, occ, stairs, ter, terrainState } from './terrain.js';
-import { canStep } from './traversal.js';
+import { amt, CH, FLG, genF, HT, NCX, NCY, occ, stairs, ter, terrainState } from './terrain-state.js';
+import { canStep } from './traversal-rules.js';
 
 export const D4=[[1,0],[-1,0],[0,1],[0,-1]],D8=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]],FD=[null];
 
@@ -32,7 +32,7 @@ export function carveRamps(cx,cy){const x0=cx*CH,y0=cy*CH,x1=Math.min(TW,x0+CH),
      if(bx<x0||by<y0||bx>=x1||by>=y1||ux<x0||uy<y0||ux>=x1||uy>=y1){acc=false;break}
      if(!fl(by*TW+bx,lo)||!fl(ty2*TW+tx2,hi)||!fl(uy*TW+ux,hi))acc=false}
     if(!acc)continue}
-   for(const[ii,k,t]of T1){const lk=lo+k*step,hk=Math.min(hi,lk+step);HT[ii]=lk;ter[ii]=0;amt[ii]=0;stairs.set(ii,{ax:dx?0:1,sg:(dx+dy)>0?1:-1,lo:lk,hi:hk,nat:1});
+   for(const[ii,k]of T1){const lk=lo+k*step,hk=Math.min(hi,lk+step);HT[ii]=lk;ter[ii]=0;amt[ii]=0;stairs.set(ii,{ax:dx?0:1,sg:(dx+dy)>0?1:-1,lo:lk,hi:hk,nat:1});
     for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)used.add(ii+b*TW+a)}
    for(let k=-3;k<=n+3;k++)for(let t=-4;t<=6;t++){const ii=(y+dy*(k+1)+my*t)*TW+x+dx*(k+1)+mx*t;used.add(ii)}
    used.add(P);used.add(P2);used.add(P3);break}}}

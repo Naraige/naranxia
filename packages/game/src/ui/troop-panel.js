@@ -5,15 +5,15 @@ import { sessionState } from '../gameplay/session.js';
 import { canvasesState } from './canvases.js';
 import { L, T_, tw } from '../i18n/language.js';
 import { MP } from '../multiplayer/session.js';
-import { NAMES, uiBtn } from './build-menu.js';
+import { uiBtn } from './build-menu.js';
+import { NAMES } from './build-catalog.js';
 import { BTN, BTNH, BTNX, frame, PAN, TN } from './drawing.js';
 import { hudState, U } from './hud.js';
 import { dIc, IC } from './icons.js';
-import { settingsState } from './settings.js';
+import { troopPanelState } from './panel-state.js';
+import { settingsState } from './panel-state.js';
 
-export const troopPanelState = {
-  troopsOpen: false,
-};
+export { troopPanelState };
 
 /* ---- troops panel: all your units by type, and what each group is doing; click a line or a task to select them ---- */
 export const PLUN={peasant:'Peasants',knight:'Knights',spearman:'Spearmen',archer:'Archers',bannerman:'Bannermen',captain:'Captains',cannon:'Cannons',guard:'Royal guards',scout:'Scouts',engineer:'Engineers',envoy:'Envoys'};
@@ -26,7 +26,7 @@ const TROOPO=['peasant','knight','spearman','archer','bannerman','captain','scou
 
 function selectUnits(L){sessionState.units.forEach(u=>u.sel=false);for(const u of L)if(u.hp>0)u.sel=true;selectionState.selB=null;selectionState.castleSel=false;selectionState.SELBS=[];sessionState.mode=null;snd('select')}
 
-export function drawTroops(UW,UH){const mine=sessionState.units.filter(u=>u.t===0&&u.hp>0&&(!MP.on||(u.pl|0)===LPL()));const byT=new Map();
+export function drawTroops(UW,_UH){const mine=sessionState.units.filter(u=>u.t===0&&u.hp>0&&(!MP.on||(u.pl|0)===LPL()));const byT=new Map();
  for(const u of mine){let m=byT.get(u.type);if(!m){m=new Map();byT.set(u.type,m)}const k=unitTask(u);if(!m.has(k))m.set(k,[]);m.get(k).push(u)}
  const types=[...byT.keys()].sort((a,b)=>(TROOPO.indexOf(a)+99)%99-(TROOPO.indexOf(b)+99)%99),WM=Math.min(300,UW-20),x=8,y0=settingsState.TOPH+40,ttl='Troops ('+mine.length+')';
  /* look 2C: one card per type (icon, name, big count; click: select all of them) with one chip per task under it (click: select those). Real data only. */

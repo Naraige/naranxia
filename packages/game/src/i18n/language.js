@@ -4,13 +4,12 @@ import { titleSceneState } from '../rendering/title-scene.js';
 import { uiBtn } from '../ui/build-menu.js';
 import { canvasesState } from '../ui/canvases.js';
 import { kitScreen, listBegin, listEnd } from '../ui/menu-kit.js';
-import { BTN, BTNH, frame, GRN, GRNH, PAN } from '../ui/drawing.js';
-import { pill } from '../ui/minimap.js';
+import { BTN, BTNH, GRN, GRNH } from '../ui/drawing.js';
+import '../ui/minimap.js';
 import { FFP, fontOf, ink, inBtn, setF, TWM } from '../ui/typography.js';
+import { languageState } from './language-state.js';
 
-export const languageState = {
-  langOpen: false,
-};
+export { languageState };
 
 /* ================= LANGUAGES =================
    Every text drawn by the interface goes through L(): exact phrases, then templates ("Wave {0}", "{0} has fallen to the horde"),
@@ -31,7 +30,7 @@ function tr0(s){const li=LANG-1;let e=TRX.get(s);if(e&&e[li])return e[li];
  if(/^[a-z]/.test(s)){e=TRX.get(s[0].toUpperCase()+s.slice(1));if(e&&e[li])return li===2?e[li]:e[li][0].toLowerCase()+e[li].slice(1)}
  return s}
 
-export function setLang(i){LANG=i;TRC.clear();TWM.clear();try{localStorage.setItem('dk_lang',i)}catch(e){}try{i18nDom()}catch(e){}titleSceneState.titleDirty=true}
+export function setLang(i){LANG=i;TRC.clear();TWM.clear();try{localStorage.setItem('dk_lang',i)}catch { /* Keep the selected language in memory when storage is unavailable. */ }try{i18nDom()}catch { /* Translation DOM refresh is best-effort; the selected language remains active. */ }titleSceneState.titleDirty=true}
 
 /* the HTML parts (co-op lobby) follow too */
 let I18NO=null;
@@ -92,10 +91,10 @@ export function TTL(s,x,y,sc,al){s=L(String(s));const S=TTS(sc);canvasesState.ct
 export function twH(s,sc){canvasesState.ctx.font='700 '+TTS(sc)+'px '+FFP;return canvasesState.ctx.measureText(L(String(s))).width}
 
 export function initializeLanguage() {
-  let saved=null;try{saved=localStorage.getItem('dk_lang')}catch(e){}
+  let saved=null;try{saved=localStorage.getItem('dk_lang')}catch { /* Keep the default language when saved preferences cannot be read. */ }
   if(saved!==null)LANG=Math.max(0,Math.min(LANGS.length-1,+saved|0));
   else{/* first launch: the browser language, when we have it */
-   try{const c=String((navigator.languages&&navigator.languages[0])||navigator.language||'en').slice(0,2).toLowerCase(),i=LANGS.findIndex(l=>l[1]===c);if(i>0)LANG=i}catch(e){}}
+   try{const c=String((navigator.languages&&navigator.languages[0])||navigator.language||'en').slice(0,2).toLowerCase(),i=LANGS.findIndex(l=>l[1]===c);if(i>0)LANG=i}catch { /* Keep the default language when browser language data is unavailable. */ }}
 }
 
 export function initializeTranslationLookup() {

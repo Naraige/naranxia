@@ -12,12 +12,12 @@ import { FOWU, LITN, litT, litTex } from './fog.js';
 import { nightK } from './lighting.js';
 import { gtopOf } from './models/fortifications.js';
 import { CAM, scene } from './scene.js';
-import { gh } from './terrain.js';
+import { gh } from '../world/terrain-queries.js';
 import { THREE } from './three.js';
 import { cvs } from '../ui/canvases.js';
 import { hudState, inR } from '../ui/hud.js';
 import { gOK } from '../world/routes.js';
-import { HT, LAND, occ, ter } from '../world/terrain.js';
+import { HT, LAND, occ, ter } from '../world/terrain-state.js';
 
 export const effectsState = {
   shakeT: 0,

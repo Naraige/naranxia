@@ -32,7 +32,7 @@ export let UNITSH = function UNITSH(sh){sh.uniforms.uLMax=LMU;sh.vertexShader=sh
 
 export let matUI;
 
-let cubeG;
+
 
 const RINGS={};
 function ringGeo(s){if(RINGS[s])return RINGS[s];const G=newG(),c=[1,.88,.29],t=.05;
@@ -89,7 +89,7 @@ function uiAdd(g){const d=g.userData;if(!d.ip)return;const c=d.mat.color,e=d.mat
 export function uiUMW(force){if(this.visible)THREE.Object3D.prototype.updateMatrixWorld.call(this,force)}
 
 export function uiFlush(){for(const b of UIB.values())b.n=0;
- for(const[u,g]of unitG)if(g.userData.frame===frameState.frameN&&g.visible)uiAdd(g);
+ for(const[,g]of unitG)if(g.userData.frame===frameState.frameN&&g.visible)uiAdd(g);
  for(const c of CORPSES)uiAdd(c.g);
  for(const b of UIB.values()){if(!b.mesh)continue;b.mesh.count=b.n;b.mesh.visible=b.n>0;if(b.n){b.mesh.instanceMatrix.needsUpdate=true;b.mesh.instanceColor.needsUpdate=true;b.em.needsUpdate=true}}}
 
@@ -99,7 +99,8 @@ export function setUNITSHHandler(handler) {
 
 export function initializeUnitInstances() {
   matUI = (()=>{const m=matV.clone();m.onBeforeCompile=UNITSH;return m})();
-  cubeG = new THREE.BoxGeometry(1,1,1);
+  // Preserve Three.js allocation order and UUID random draws.
+  new THREE.BoxGeometry(1,1,1);
   ringMat = new THREE.MeshBasicMaterial({vertexColors:true});
   const CARRY0 = (()=>{const mk=f=>{const G=newG();f(G);return toGeo(G)};return{
    w:mk(G=>{[[0,0,.0],[.01,.11,.1],[.01,.11,-.1]].forEach(([x,y,z],k)=>bxc(G,x,y,z,.46,.12,.12,k?'#a8723a':'#8a5a2a'));bxc(G,0,.05,0,.1,.2,.36,'#5a3a1a')}),

@@ -8,7 +8,7 @@ import { sessionState } from '../gameplay/session.js';
 import { shelOut } from '../gameplay/shelter.js';
 import { simulationState } from '../gameplay/simulation.js';
 import { leaveSquad } from '../gameplay/squads.js';
-import { NAMES } from '../ui/build-menu.js';
+import { NAMES } from '../ui/build-catalog.js';
 import { hudDisplayState } from '../ui/hud-state.js';
 import { gField } from '../world/pathfinding.js';
 

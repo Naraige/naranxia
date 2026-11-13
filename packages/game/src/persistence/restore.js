@@ -11,13 +11,13 @@ import { fogState, fowT } from '../rendering/fog.js';
 import { icoPart } from '../rendering/pixel-icons.js';
 import { build3D, rmStruct } from '../rendering/structures.js';
 import { hudDisplayState } from '../ui/hud-state.js';
-import { saveMenuState } from '../ui/save-menu.js';
-import { settingsState } from '../ui/settings.js';
+import { saveMenuState, settingsState } from '../ui/panel-state.js';
 import { sitePickerState } from '../ui/site-picker.js';
 import { calcFD } from '../world/connectivity.js';
 import { mmRGB } from '../world/minimap.js';
 import { GF } from '../world/pathfinding.js';
-import { CH, genF, initWorld, mg, NCX, NCY, RAWD, smDone, terrainState } from '../world/terrain.js';
+import { initWorld } from '../world/terrain.js';
+import { CH, genF, mg, NCX, NCY, RAWD, smDone, terrainState } from '../world/terrain-state.js';
 
 export async function svApply(txt){const S=svMigrate(JSON.parse(txt));
  sessionState.paused=true;MP.on=false;MP.side=0;sitePickerState.picking=false;settingsState.setupOpen=false;settingsState.settingsOpen=false;saveMenuState.saveOpen=false;sessionState.mode=null;selectionState.selB=null;
@@ -27,7 +27,7 @@ export async function svApply(txt){const S=svMigrate(JSON.parse(txt));
  for(const u of sessionState.units)u.m=null;for(const s of sessionState.structs)s.o3=null;
  GF.clear();LFLD.clear();LFQT.fill(-1);LFQS.fill(null);SEPM.clear&&SEPM.clear();setPl(0);{const fd=sessionState.fdDirty;calcFD();sessionState.fdDirty=fd}sessionState.ver++;rebuildOwn(true);
  fogState.fowTm=-9;fowT.needsUpdate=true;sessionState.inGame=true;sessionState.started=true;sessionState.paused=false;sessionState.showMap=false;sessionState.camSave=null;
- build3D();svMini();try{icoPart('tier');icoPart('units')}catch(e){}
+ build3D();svMini();try{icoPart('tier');icoPart('units')}catch { /* The restored game remains active if the optional icon refresh fails. */ }
  hudDisplayState.msgS='Game loaded - wave '+sessionState.waveN;hudDisplayState.msgT=3}
 
 /* redraw the minimap for every chunk already generated */

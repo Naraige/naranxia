@@ -39,9 +39,9 @@ export function drawBanner(){const g=BANNER.getContext('2d'),W=128,H=192,p=PAL[T
  {const rg=g.createLinearGradient(0,0,0,9);rg.addColorStop(0,'#fff1b0');rg.addColorStop(.5,'#c8922a');rg.addColorStop(1,'#7a5410');g.fillStyle=rg;g.fillRect(2,1,W-4,7);g.strokeStyle='#3a2406';g.lineWidth=1;g.strokeRect(2.5,1.5,W-5,6);
   for(const fx of[4,W-4]){const fg=g.createRadialGradient(fx-1.5,3,1,fx,4.5,5);fg.addColorStop(0,'#fff6c8');fg.addColorStop(1,'#a8741a');g.beginPath();g.arc(fx,4.5,4.6,0,6.283);g.fillStyle=fg;g.fill();g.stroke()}}}
 
-export function saveTheme(){try{localStorage.setItem('dk_theme',JSON.stringify(THEME))}catch(e){}}
+export function saveTheme(){try{localStorage.setItem('dk_theme',JSON.stringify(THEME))}catch{/* The selected banner theme remains active in memory for this session. */}}
 
-function drawEmblem(x,y,s,e,col){canvasesState.ctx.save();canvasesState.ctx.translate(x,y);canvasesState.ctx.scale(s/16,s/16);canvasesState.ctx.fillStyle=col;EMB[e](canvasesState.ctx);canvasesState.ctx.restore()}
+
 
 const EMBC={};
 const embMetal=c=>c===3||c===10||c===11?'s':'g';

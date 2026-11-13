@@ -7,7 +7,7 @@ import { mpSend } from './lockstep.js';
 import { MP } from './session.js';
 import { scr, wpos } from '../rendering/camera.js';
 import { canvasesState, cv } from '../ui/canvases.js';
-import { HT } from '../world/terrain.js';
+import { HT } from '../world/terrain-state.js';
 
 export const PINGS=[];
 
@@ -22,5 +22,5 @@ export function drawPings(){if(!sessionState.started||!PINGS.length)return;canva
   if(p.p){canvasesState.ctx.save();canvasesState.ctx.scale(k,k);const lab=PNGT[p.p][0],w=tw(lab,.8)+10,lx=q.x/k-w/2,ly=q.y/k-34;canvasesState.ctx.fillStyle='rgba(20,14,8,.78)';canvasesState.ctx.fillRect(lx,ly,w,13);canvasesState.ctx.fillStyle=PNGT[p.p][1];canvasesState.ctx.fillRect(lx,ly+12,w,1.5);T_(lab,lx+5,ly+3,'#ffffff',.8);canvasesState.ctx.restore()}}}
 
 export function initializePings() {
-  cv.addEventListener('pointerdown',e=>{if(e.altKey&&MP.conn&&sessionState.started){const w=wpos(),pt=(e.shiftKey?1:0)+(e.ctrlKey?2:0)+(e.shiftKey&&e.ctrlKey?0:0),pp=e.shiftKey&&e.ctrlKey?3:e.shiftKey?1:e.ctrlKey?2:0;mpSend({k:'ping',x:w.x,y:w.y,p:pp});addPing(w.x,w.y,true,pp);e.stopImmediatePropagation();e.preventDefault()}},true);
+  cv.addEventListener('pointerdown',e=>{if(e.altKey&&MP.conn&&sessionState.started){const w=wpos(),pp=e.shiftKey&&e.ctrlKey?3:e.shiftKey?1:e.ctrlKey?2:0;mpSend({k:'ping',x:w.x,y:w.y,p:pp});addPing(w.x,w.y,true,pp);e.stopImmediatePropagation();e.preventDefault()}},true);
 }

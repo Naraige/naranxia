@@ -17,7 +17,7 @@ let key = '';
 export function lastRun() {
   if (last === undefined) {
     last = null;
-    try { last = JSON.parse(localStorage.getItem('dk_last') || 'null') } catch (e) { last = null }
+    try { last = JSON.parse(localStorage.getItem('dk_last') || 'null') } catch { last = null }
     if (!last || !(last.w >= 0)) last = null;
   }
   return last;
