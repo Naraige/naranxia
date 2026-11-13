@@ -15,7 +15,7 @@ import { fxTitleSeen } from './menu-fx.js';
 import { hudState, U } from './hud.js';
 import { dIc, IC } from './icons.js';
 import { pill } from './minimap.js';
-import { KB, settingsState } from './settings.js';
+import { camKeys, KB, settingsState } from './settings.js';
 import { dailyMap } from '../world/daily-map.js';
 import { _bwat, baseHW, LAND, ROCKH, rollWorld, SNOW, terrainState } from '../world/terrain.js';
 
@@ -71,7 +71,7 @@ function drawPickerIn(UW,UH){if(!sessionState.inGame)fxTitleSeen();settingsState
  if(pw>=560&&!(MP.conn&&!MP.host))pill(px+8+(bw+5)*3,by,bw,18,'Daily map',BTN,BTNH,()=>{dailyMap();randomSite();pkFocus();sitePickerState.pickMsg=''},IC.map,.85);
  const sw=Math.max(44,Math.min(140,pw-16-(bw+5)*(pw>=560?4:3)));bevelBtn(px+pw-8-sw,by-1,sw,20,MP.conn?'Place my castle':'Found kingdom','go',confirmPick,{nav:false,sc:.9,dis:!(sitePickerState.pickPos&&sitePickerState.pickPos.ok)});
  const hv=PKL.on?PKL.hit:PK&&PK.hit;T_(sitePickerState.pickMsg||(hv?(hv.ok?'Good site - click to place your castle here':'Not suitable: needs dry, gentle land away from the edge'):'Map #'+((terrainState.SEED*1000)|0)),px+8,py+31,sitePickerState.pickMsg?'#ff9a9a':hv&&hv.ok?'#9ff0b0':'#b59773',.8);
- T_(PKL.on?'Click to place the castle  -  drag / WASD: move   Right drag: rotate   Wheel: zoom':'Left drag: move   Right drag: rotate   Wheel: zoom',px+8,py+40,'#b59773',.7)}
+ T_(PKL.on?'Click to place the castle  -  drag / '+camKeys()+': move   Right drag: rotate   Wheel: zoom':'Left drag: move   Right drag: rotate   Wheel: zoom',px+8,py+40,'#b59773',.7)}
 
 /* turn the castle a quarter turn while choosing its site (its door faces the new side) */
 export function pkRotate(){sessionState.PKROT=(sessionState.PKROT+1)&3;snd('click');sitePickerState.pickMsg=''}

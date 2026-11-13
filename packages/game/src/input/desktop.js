@@ -31,14 +31,16 @@ import { buildMenuState, cycleTab, NAMES } from '../ui/build-menu.js';
 import { cv } from '../ui/canvases.js';
 import { hudState, inR, mmRect, selIdle, selPeas } from '../ui/hud.js';
 import { hudDisplayState } from '../ui/hud-state.js';
-import { KB, kbCustom, nmI, saveKB, settingsState } from '../ui/settings.js';
+import { isCode, KB, kbAct, kbCustom, kbPhys, layNote, nmI, saveKB, settingsState } from '../ui/settings.js';
+import { mmToWorld } from '../ui/minimap.js';
 import { confirmPick, openPicker, pkRotate, PVH, PVW, sitePickerState } from '../ui/site-picker.js';
 import { occ } from '../world/terrain.js';
 
 /* ---- input ---- */
 const pos=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*cv.width/r.width,y:(e.clientY-r.top)*cv.height/r.height}};
 
-function mmGo(p){CAM.x=Math.max(2,Math.min(TW-2,(p.x-mmRect.x)/mmRect.w*TW));CAM.z=Math.max(2,Math.min(TH-2,(p.y-mmRect.y)/mmRect.h*TH))}
+/* a point of the minimap (canvas pixels) to the world tile it shows: the minimap is framed on the explored land (ui/minimap.js) */
+export function mmGo(p){const w=mmToWorld((p.x-mmRect.x)/mmRect.w,(p.y-mmRect.y)/mmRect.h);CAM.x=Math.max(2,Math.min(TW-2,w.x));CAM.z=Math.max(2,Math.min(TH-2,w.y))}
 
 let hovHit='';
 export function camZoom(d){CAM.dist=Math.max(7,Math.min(80,CAM.dist*(d>0?1.18:1/1.18)))}
@@ -97,18 +99,26 @@ export function initializeDesktopInput() {
   /* The digit row is matched by the physical key (e.code Digit1..Digit0), not by the character: on AZERTY the row types & é " ' ( - è _ ç à
      and the digits need Shift, which belongs to the control groups. dg = the digit of an unshifted digit-row key. In game it stands for the
      key unless the typed character is itself a binding the player chose (a key saved from an AZERTY keyboard keeps working); when
-     rebinding, a digit-row key that types a sign is stored as its digit, so the settings show the digit printed on the key. */
-  addEventListener('keydown',e=>{aInit();if(document.activeElement===nmI)return;let k=e.key.toLowerCase();
+     rebinding, a digit-row key that types a sign is stored as its digit, so the settings show the digit printed on the key.
+     Letters (v94): camera, camera turn and select army are bound to physical keys ('KeyW'), every other action to the character typed;
+     kbAct() finds the action (character first, then physical key). keys[] holds the characters held down and, for a physical binding,
+     its code, which is what the camera reads (keys[KB.up]). A bound F key never reaches the browser (F3 find, F6 address bar, F7 caret).
+     Hard-wired beside the settings, only when the key is bound to no action: p = pan mode, + and = zoom in, - zoom out, , idle workers. */
+  addEventListener('keydown',e=>{aInit();if(document.activeElement===nmI)return;let k=e.key.toLowerCase();const c=e.code||'';
+   if(!e.ctrlKey&&!e.altKey&&!e.metaKey)layNote(c,e.key);
+   if(/^f\d+$/.test(k)&&kbAct(k,c))e.preventDefault();
    const dg=!e.shiftKey&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&/^Digit\d$/.test(e.code||'')?e.code[5]:'';
-   if(settingsState.rebind){e.preventDefault();if(dg&&!/^[a-z0-9]$/.test(k))k=dg;if(k==='escape'){settingsState.rebind=null;return}const old=KB[settingsState.rebind];for(const a in KB)if(a!==settingsState.rebind&&KB[a]===k)KB[a]=old;KB[settingsState.rebind]=k;settingsState.rebind=null;saveKB();return}
-   keys[k]=true;
+   if(settingsState.rebind){e.preventDefault();if(dg&&!/^[a-z0-9]$/.test(k))k=dg;if(k==='escape'){settingsState.rebind=null;return}if(['shift','control','alt','altgraph','meta','dead','capslock','os','unidentified','process'].includes(k))return;
+    const R=settingsState.rebind,old=KB[R],nv=kbPhys(R)&&isCode(c)?c:k;for(const a in KB)if(a!==R&&(KB[a]===k||KB[a]===c))KB[a]=old;KB[R]=nv;settingsState.rebind=null;saveKB();return}
+   keys[k]=true;{const a0=kbAct(k,c);if(a0&&isCode(KB[a0]))keys[KB[a0]]=true}
    if(!sessionState.started){if(k==='escape'){if(settingsState.settingsOpen){settingsState.settingsOpen=false;if(settingsState.fromGame){settingsState.fromGame=false;startGame()}}else if(sitePickerState.picking){sitePickerState.picking=false;if(MP.conn)lobbyShow()}else if(settingsState.setupOpen)settingsState.setupOpen=false}else if(k==='enter'&&!settingsState.settingsOpen){e.preventDefault();if(NAV.active&&!sitePickerState.picking)return;if(sitePickerState.picking)confirmPick();else if(settingsState.setupOpen)openPicker();else if(sessionState.inGame)startGame();else settingsState.setupOpen=true}else if(sitePickerState.picking&&k===KB.rotate&&!settingsState.settingsOpen)pkRotate();return}
    if(sessionState.over)return;
    if(dg&&k!==dg&&!kbCustom(k))k=dg;
    if((k==='pagedown'||k==='pageup')&&!e.ctrlKey&&!e.altKey&&!e.metaKey){if(cycleTab(k==='pagedown'?1:-1))e.preventDefault();return}
    if(k==='escape'){if(questPanelState.log)questPanelState.log=false;else if(sessionState.showMap)sessionState.showMap=false;else if(sessionState.mode||sel().length){sessionState.mode=null;sessionState.units.forEach(u=>u.sel=false)}else if(buildMenuState.BCAT)buildMenuState.BCAT=null;else openMenu();return}
    if(!e.ctrlKey&&!e.shiftKey&&!e.metaKey&&['1','2','3','4'].includes(k)&&sel().some(u=>u.type!=='peasant')){setStance(['agg','def','hold','stop'][+k-1]);return}
-   const a=Object.keys(KB).find(x=>KB[x]===k);if(!a)return;if((k.length===1&&!/[a-z0-9]/.test(k))||/^f\d+$/.test(k))e.preventDefault();
+   const a=kbAct(k,c);if(!a){if(sessionState.showMap)return;if(k==='p'){inputState.panMode=!inputState.panMode;hudDisplayState.msgS=inputState.panMode?'Pan mode: drag moves the camera':'Select mode: drag draws a box';hudDisplayState.msgT=2}else if(k==='+'||k==='=')camZoom(-1);else if(k==='-')camZoom(1);else if(k===',')selIdle();return}
+   if((k.length===1&&!/[a-z0-9]/.test(k))||/^f\d+$/.test(k))e.preventDefault();
    if(a==='map'){sessionState.showMap=!sessionState.showMap;return}
    if(a==='cry'||a==='charge'){kingSkill(a);return}
    if(sessionState.showMap)return;
@@ -116,10 +126,9 @@ export function initializeDesktopInput() {
    if(a==='rotate'){if(sessionState.mode){constructionState.buildRot=(constructionState.buildRot+1)&3;hudDisplayState.msgS='Rotated '+constructionState.buildRot*90+' deg';hudDisplayState.msgT=1.5}else if(selectionState.selB&&selectionState.selB.t===0&&ROTT.has(selectionState.selB.type))build('rotate',selectionState.selB.tx,selectionState.selB.ty)}
    else if(a==='form'){constructionState.formType=(constructionState.formType+1)%FORMS.length;hudDisplayState.msgS='Formation: '+FORMS[constructionState.formType];hudDisplayState.msgT=2}
    else if(a==='sound')toggleSound();else if(a==='idle')selIdle();else if(a==='wave')callWave();else if(a==='home')home();else if(a==='army')army();else if(a==='peas')selPeas();
-   else if(a==='pause'){setPause(!sessionState.paused);e.preventDefault()}else if(a==='speed'){if(!MP.on)sessionState.spd=sessionState.spd%3+1}
-   if(k==='p'){inputState.panMode=!inputState.panMode;hudDisplayState.msgS=inputState.panMode?'Pan mode: drag moves the camera':'Select mode: drag draws a box';hudDisplayState.msgT=2}if(k==='+'||k==='=')camZoom(-1);if(k==='-')camZoom(1);if(k===','){selIdle()}});
+   else if(a==='pause'){setPause(!sessionState.paused);e.preventDefault()}else if(a==='speed'){if(!MP.on)sessionState.spd=sessionState.spd%3+1}});
 
-  addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+  addEventListener('keyup',e=>{const k=e.key.toLowerCase(),c=e.code||'';keys[k]=false;if(c)keys[c]=false;const a0=kbAct(k,c);if(a0&&isCode(KB[a0]))keys[KB[a0]]=false});
 
   addEventListener('resize',rs);
 }

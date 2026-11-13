@@ -38,6 +38,10 @@ const fowIdx=(x,y)=>Math.min(FH-1,Math.max(0,(y/TS/FWC)|0))*FW+Math.min(FW-1,Mat
 
 export const fowVisAt=(x,y)=>fowTex[fowIdx(x,y)]>=190,fowSeenAt=(x,y)=>fowSeen[fowIdx(x,y)]>0;
 
+/* the box (in tiles: x0, y0, x1, y1) of everything seen so far, or null: frames the minimap (ui/minimap.js), read once a second */
+export function fowBox(){let x0=FW,x1=-1,y0=FH,y1=-1;for(let j=0;j<FH;j++){const o=j*FW;let a=-1;for(let i=0;i<FW;i++)if(fowSeen[o+i]){a=i;break}if(a<0)continue;let b=a;for(let i=FW-1;i>a;i--)if(fowSeen[o+i]){b=i;break}if(a<x0)x0=a;if(b>x1)x1=b;if(j<y0)y0=j;y1=j}
+ return x1<0?null:[x0*FWC,y0*FWC,(x1+1)*FWC,(y1+1)*FWC]}
+
 export let fowRA;
 export let fowLo;
 export let fowHi;

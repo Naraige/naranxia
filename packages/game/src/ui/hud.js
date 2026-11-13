@@ -40,7 +40,7 @@ import { hudDisplayState, topBox } from './hud-state.js';
 import { dIc, IC } from './icons.js';
 import { THEME } from './kingdom-theme.js';
 import { bar, drawMapModal, drawWorld, mmss, pill } from './minimap.js';
-import { settingsState } from './settings.js';
+import { KB, kdisp, settingsState } from './settings.js';
 import { drawPicker, sitePickerState } from './site-picker.js';
 import { drawTitle } from './title-menu.js';
 import { guideWatch } from './video-guide.js';
@@ -141,7 +141,7 @@ export function drawUI(){canvasesState.ctx.setTransform(hudDisplayState.UIS,0,0,
  const bw2=(mw+6-3)/2,ya=my2-3-19;
  uiBtn(mx2-3,ya,bw2,17,GRN,GRNH,home,['Back to base [H]','Centers the camera on your castle'],(x,y,w)=>{dIc(IC.compass,x+4,y+2.5,12);T_('Base',x+19,y+4,'#fff',.95)});
  uiBtn(mx2-3+bw2+3,ya,bw2,17,BTN,BTNH,()=>{sessionState.showMap=true},['World map [M]','See the whole world, spawns and routes'],(x,y,w)=>{dIc(IC.map,x+4,y+2.5,12);T_('Map',x+19,y+4,'#fff',.95)});
- const qw=(mw+6-9)/4,yb=ya-19;[[IC.zoomIn,()=>camZoom(-1),'Zoom in'],[IC.zoomOut,()=>camZoom(1),'Zoom out'],[IC.rotL,()=>{CAM.yaw+=.4},'Rotate left [Z]'],[IC.rotR,()=>{CAM.yaw-=.4},'Rotate right [X]']].forEach(([ic,fn,t],i)=>uiBtn(mx2-3+i*(qw+3),yb,qw,17,BTN,BTNH,fn,[t],(x,y,w)=>dIc(ic,x+(w-12)/2,y+2.5,12)));
+ const qw=(mw+6-9)/4,yb=ya-19;[[IC.zoomIn,()=>camZoom(-1),'Zoom in'],[IC.zoomOut,()=>camZoom(1),'Zoom out'],[IC.rotL,()=>{CAM.yaw+=.4},'Turn camera left ['+kdisp(KB.rotL)+']'],[IC.rotR,()=>{CAM.yaw-=.4},'Turn camera right ['+kdisp(KB.rotR)+']']].forEach(([ic,fn,t],i)=>uiBtn(mx2-3+i*(qw+3),yb,qw,17,BTN,BTNH,fn,[t],(x,y,w)=>dIc(ic,x+(w-12)/2,y+2.5,12)));
  if(!narrow)drawUnitCard(UW,UH,settingsState.TOPH+18,yb-8);
  /* touch: floating camera (one-finger pan on/off) and cancel (build mode, selection) buttons, 44 css px, left edge */
  if(inputState.touch&&!sessionState.showMap&&!sessionState.over){const fz=Math.max(24,Math.ceil(44*inputState.DPR/hudDisplayState.UIS)),fy0=Math.round(UH*.36),can=!!(sessionState.mode||sel().length);

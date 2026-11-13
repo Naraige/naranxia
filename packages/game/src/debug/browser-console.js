@@ -22,7 +22,7 @@ import { kingOf, kingSkill, kingTalent, kingSkill0, kingTick, kskLeft, kingXp, k
 import { openMenu, quitGame, setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
 import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
 import { reset } from '../gameplay/reset.js';
-import { C, LH, RS, RS2, RT2, rulesState, rxLock, T, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
+import { C, LH, RS, RS2, RT2, rulesState, rxLock, T, TH, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
 import { selectionState } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
 import { simulationState } from '../gameplay/simulation.js';
@@ -37,7 +37,7 @@ import { mpHash, mpMsg, setMpMsgHandler } from '../multiplayer/lockstep.js';
 import { objTick, SPK } from '../multiplayer/objectives.js';
 import { qCur, qFix, QUESTS, questsState } from '../gameplay/quests.js';
 import { questPanelState } from '../ui/quest-panel.js';
-import { tabState } from '../ui/build-menu.js';
+import { HK, tabState } from '../ui/build-menu.js';
 import { MP } from '../multiplayer/session.js';
 import { svApply } from '../persistence/restore.js';
 import { SAVA, svAssign, svPack } from '../persistence/save-format.js';
@@ -46,7 +46,7 @@ import { bannerIcon } from '../rendering/banner-icon.js';
 import { drawBanner } from '../rendering/kingdom-banner.js';
 import { THEME } from '../ui/kingdom-theme.js';
 import { NAV } from '../ui/menu-nav.js';
-import { KB, loadKB, settingsDebug, settingsState } from '../ui/settings.js';
+import { KB, kdisp, layInit, layNote, loadKB, settingsDebug, settingsState } from '../ui/settings.js';
 import { titleDebug } from '../ui/title-menu.js';
 import { guideState, guideWatch, openGuide } from '../ui/video-guide.js';
 import { languageState, setLang } from '../i18n/language.js';
@@ -73,8 +73,10 @@ import { seasonIdx, weatherTick, WX, wxKind, wxLabel } from '../rendering/weathe
 import { cv } from '../ui/canvases.js';
 import { convoyPanelState, CVA } from '../ui/convoy-panel.js';
 import { hudDisplayState } from '../ui/hud-state.js';
-import { inputState } from '../input/state.js';
-import { drawUI, hudState } from '../ui/hud.js';
+import { inputState, keys } from '../input/state.js';
+import { mmGo } from '../input/desktop.js';
+import { mmLook, mmToWorld, mmView } from '../ui/minimap.js';
+import { drawUI, hudState, mmRect } from '../ui/hud.js';
 import {
   buildPreview,
   confirmPick,
@@ -162,6 +164,9 @@ export function installBrowserConsole() {
     TRAIN: { get: () => TRAIN },
     TS: { get: () => TS },
     TW: { get: () => TW },
+    TH: { get: () => TH },
+    HK: { get: () => HK },
+    clockT: { get: () => sessionState.clockT, set: value => { sessionState.clockT = value; } },
     RUINS: { get: () => RUINS },
     BASES: { get: () => BASES },
     C: { get: () => C },
@@ -229,6 +234,15 @@ export function installBrowserConsole() {
     campDebug: { get: () => campDebug },
     KB: { get: () => KB },
     loadKB: { get: () => loadKB },
+    kdisp: { get: () => kdisp },
+    layInit: { get: () => layInit },
+    layNote: { get: () => layNote },
+    keys: { get: () => keys },
+    mmGo: { get: () => mmGo },
+    mmRect: { get: () => mmRect },
+    mmLook: { get: () => mmLook },
+    mmToWorld: { get: () => mmToWorld },
+    mmView: { get: () => mmView },
     kskLeft: { get: () => kskLeft },
     matUI: { get: () => matUI },
     matV: { get: () => matV },

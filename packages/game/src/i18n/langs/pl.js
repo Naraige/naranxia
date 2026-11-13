@@ -1512,4 +1512,5 @@ export const PL = {
   "Co-op: putting both games back in step, a few seconds (nothing to do)": "Co-op: wyrównywanie obu gier, kilka sekund (nic nie trzeba robić)",
   "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Co-op: czekam na: {0}, {1} s (wolne połączenie lub komputer)",
   "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Co-op: brak odpowiedzi ({0}) od {1} s, gra ruszy, gdy wróci połączenie",
+  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Kliknij, aby postawić zamek  -  przeciągnij / {0}: ruch   Prawy przycisk: obrót   Kółko: zoom",
 };

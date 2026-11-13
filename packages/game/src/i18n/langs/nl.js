@@ -1512,4 +1512,5 @@ export const NL = {
   "Co-op: putting both games back in step, a few seconds (nothing to do)": "Coöp: beide spellen worden gelijkgezet, een paar seconden (je hoeft niets te doen)",
   "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Coöp: wachten op {0}, {1} s (trage verbinding of computer)",
   "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Coöp: geen antwoord van {0} sinds {1} s, het spel gaat verder zodra de verbinding terug is",
+  "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Klik om het kasteel te plaatsen  -  sleep / {0}: bewegen   Rechts slepen: draaien   Wiel: zoomen",
 };
