@@ -1513,4 +1513,10 @@ export const TR = {
   "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Co-op: {0} bekleniyor, {1} sn (yavaş bağlantı veya bilgisayar)",
   "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Co-op: {0} {1} sn'dir yanıt vermiyor, bağlantı dönünce oyun devam eder",
   "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Kaleyi yerleştirmek için tıkla  -  sürükle / {0}: hareket   Sağ sürükle: döndür   Tekerlek: yakınlaştır",
+  "Co-op fixes, waves that always end, and new default keys.": "Eşli oyun düzeltmeleri, her zaman biten dalgalar ve yeni varsayılan tuşlar.",
+  "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.": "Zombiler artık suda veya uçurumlarda sıkışmıyor: her dalga artık bitirilebilir.",
+  "Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.": "Eşli oyun: yeniden eşitlemeden sonra iki oyun da tam olarak aynı durumdan devam eder ve tek satırlık net bir mesaj beklerken ne olduğunu söyler.",
+  "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.": "Eşli oyun: ortağınız ayrılırsa kendi kalenizle 2. oyuncu olarak kalırsınız. Kayıtlı oyunlar artık tam olarak asıl oyun gibi devam eder.",
+  "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.": "Yeni varsayılan tuşlar: meşale F6, kışla toplanma noktası F7, ormancı F9, lonca F3. AZERTY'de kamera artık Z Q S D üzerinde.",
+  "The minimap now frames the area you explored, and banners no longer cover the event buttons.": "Mini harita artık keşfedilen alanı gösteriyor ve afişler olay düğmelerini artık kapatmıyor.",
 };

@@ -1513,4 +1513,10 @@ export const NL = {
   "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Coöp: wachten op {0}, {1} s (trage verbinding of computer)",
   "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Coöp: geen antwoord van {0} sinds {1} s, het spel gaat verder zodra de verbinding terug is",
   "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Klik om het kasteel te plaatsen  -  sleep / {0}: bewegen   Rechts slepen: draaien   Wiel: zoomen",
+  "Co-op fixes, waves that always end, and new default keys.": "Coöp-verbeteringen, golven die altijd eindigen en nieuwe standaardtoetsen.",
+  "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.": "Zombies blijven niet meer vastzitten in water of op kliffen: elke golf kan nu worden uitgespeeld.",
+  "Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.": "Coöp: na een hersynchronisatie starten beide spellen precies in dezelfde toestand, en een duidelijke regel zegt wat er gebeurt terwijl je wacht.",
+  "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.": "Coöp: als je partner weggaat, blijf je speler 2 met je eigen kasteel. Opgeslagen spellen gaan nu precies verder zoals het oorspronkelijke spel.",
+  "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.": "Nieuwe standaardtoetsen: fakkel F6, verzamelpunt van de kazerne F7, boswachter F9, gilde F3. Op AZERTY zit de camera nu op Z Q S D.",
+  "The minimap now frames the area you explored, and banners no longer cover the event buttons.": "De minimap toont nu het verkende gebied, en banners bedekken de gebeurtenisknoppen niet meer.",
 };

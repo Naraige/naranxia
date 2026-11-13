@@ -1513,4 +1513,10 @@ export const PL = {
   "Co-op: waiting for {0}, {1} s (slow connection or computer)": "Co-op: czekam na: {0}, {1} s (wolne połączenie lub komputer)",
   "Co-op: no answer from {0} for {1} s, the game goes on when the connection is back": "Co-op: brak odpowiedzi ({0}) od {1} s, gra ruszy, gdy wróci połączenie",
   "Click to place the castle  -  drag / {0}: move   Right drag: rotate   Wheel: zoom": "Kliknij, aby postawić zamek  -  przeciągnij / {0}: ruch   Prawy przycisk: obrót   Kółko: zoom",
+  "Co-op fixes, waves that always end, and new default keys.": "Poprawki kooperacji, fale, które zawsze się kończą, i nowe domyślne klawisze.",
+  "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.": "Zombie nie utykają już w wodzie ani na klifach: każdą falę można teraz ukończyć.",
+  "Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.": "Kooperacja: po ponownej synchronizacji obie gry startują dokładnie z tego samego stanu, a czytelny jednolinijkowy komunikat mówi, co się dzieje podczas czekania.",
+  "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.": "Kooperacja: jeśli partner wyjdzie, zostajesz graczem 2 z własnym zamkiem. Zapisane gry kontynuują się teraz dokładnie tak jak oryginalna gra.",
+  "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.": "Nowe domyślne klawisze: pochodnia F6, punkt zbiórki koszar F7, leśniczy F9, gildia F3. Na AZERTY kamera jest teraz na Z Q S D.",
+  "The minimap now frames the area you explored, and banners no longer cover the event buttons.": "Minimapa pokazuje teraz zbadany obszar, a banery nie zasłaniają już przycisków zdarzeń.",
 };
