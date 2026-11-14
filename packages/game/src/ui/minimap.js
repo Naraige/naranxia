@@ -9,6 +9,7 @@ import { inputState } from '../input/state.js';
 import { pickGround } from '../rendering/camera.js';
 import { fowBox, FOWC, fowSeenAt, fowVisAt } from '../rendering/fog.js';
 import { LANE_REAR, visLanes } from '../rendering/routes.js';
+import { laneSpawnIdx } from '../ai/zombie-lanes.js';
 import { CAM } from '../rendering/scene.js';
 import { uiBtn } from './build-menu.js';
 import { canvasesState, cv, cvs } from './canvases.js';
@@ -73,9 +74,9 @@ function mmStep(){const V=mmView,t=sessionState.clockT;let dt=t-V.last;V.last=t;
  if((t-V.look>1||t<V.look)&&!hudState.mmDrag)mmLook(false);
  const dx=V.tx-V.x,dy=V.ty-V.y,dw=V.tw-V.w;if(Math.abs(dx)<.2&&Math.abs(dy)<.2&&Math.abs(dw)<.2){V.x=V.tx;V.y=V.ty;V.w=V.tw;V.h=V.w*TH/TW;V.mv=false;return}
  const k=1-Math.exp(-dt*4.5);V.x+=dx*k;V.y+=dy*k;V.w+=dw*k;V.h=V.w*TH/TW;V.mv=true}
-/* where a zombie route comes into the frame: its start when that is in view, else the point where it crosses the edge (m tiles inside) */
-function mmEntry(P,V,m){const inV=(px,py)=>px>=V.x+m&&px<=V.x+V.w-m&&py>=V.y+m&&py<=V.y+V.h-m;if(inV(P[0][0],P[0][1]))return P[0];
- for(let i=1;i<P.length;i++){if(!inV(P[i][0],P[i][1]))continue;const a=P[i-1],b=P[i];let lo=0,hi=1;for(let n=0;n<10;n++){const md=(lo+hi)/2;if(inV(a[0]+(b[0]-a[0])*md,a[1]+(b[1]-a[1])*md))hi=md;else lo=md}return[a[0]+(b[0]-a[0])*hi,a[1]+(b[1]-a[1])*hi]}
+/* where a zombie route comes into the frame: its spawn point (laneSpawnIdx) when that is in view, else the point where it crosses the edge (m tiles inside) */
+function mmEntry(P,V,m,s0){s0|=0;const inV=(px,py)=>px>=V.x+m&&px<=V.x+V.w-m&&py>=V.y+m&&py<=V.y+V.h-m;if(inV(P[s0][0],P[s0][1]))return P[s0];
+ for(let i=s0+1;i<P.length;i++){if(!inV(P[i][0],P[i][1]))continue;const a=P[i-1],b=P[i];let lo=0,hi=1;for(let n=0;n<10;n++){const md=(lo+hi)/2;if(inV(a[0]+(b[0]-a[0])*md,a[1]+(b[1]-a[1])*md))hi=md;else lo=md}return[a[0]+(b[0]-a[0])*hi,a[1]+(b[1]-a[1])*hi]}
  return null}
 
 export function drawWorld(x,y,w,h,big){
@@ -90,7 +91,7 @@ export function drawWorld(x,y,w,h,big){
   const cs=big?13:9;for(const c0 of CASTLES())dIc(IC.home,ox+c0.x/TS*sx-cs/2,oy+c0.y/TS*sy-cs/2-1,cs);
  for(const u of sessionState.units)if(u.cv&&u.hp>0)circ(canvasesState.ctx,ox+u.x/TS*sx,oy+u.y/TS*sy,big?3.4:2.4,u.cv.back?'#c9a060':'#ffd23c','#2a1a08',1);
  for(const r of RUINS.values()){if(!fowSeenAt(r.x,r.y))continue;const X=ox+r.x/TS*sx,Y=oy+r.y/TS*sy,q=big?4.5:3;canvasesState.ctx.beginPath();canvasesState.ctx.moveTo(X,Y-q);canvasesState.ctx.lineTo(X+q,Y);canvasesState.ctx.lineTo(X,Y+q);canvasesState.ctx.lineTo(X-q,Y);canvasesState.ctx.closePath();canvasesState.ctx.fillStyle=r.done?'#8a8a8a':'#f0c040';canvasesState.ctx.fill();canvasesState.ctx.strokeStyle='#2a1a08';canvasesState.ctx.lineWidth=1;canvasesState.ctx.stroke()}
- terrainState.ROUTES.forEach((R,k)=>{if(!VL.has(k))return;const r=big?6:4,p=big?R.pts[0]:mmEntry(R.pts,V,(r+1.5)/sx);if(!p)return;const X=ox+p[0]*sx,Y=oy+p[1]*sy;circ(canvasesState.ctx,X,Y,r,sessionState.nextL.includes(k)?cb('#c01f2f','#e69f00'):cb('#6a1a22','#7a5200'),'#fff',1);if(big)dIc(IC.skull,X-5,Y-5.5,10);else{canvasesState.ctx.fillStyle='#fff';canvasesState.ctx.fillRect(X-1,Y-1,2,2)}});
+ terrainState.ROUTES.forEach((R,k)=>{if(!VL.has(k))return;const r=big?6:4,si=laneSpawnIdx(k).i,p=big?R.pts[si]:mmEntry(R.pts,V,(r+1.5)/sx,si);if(!p)return;const X=ox+p[0]*sx,Y=oy+p[1]*sy;circ(canvasesState.ctx,X,Y,r,sessionState.nextL.includes(k)?cb('#c01f2f','#e69f00'):cb('#6a1a22','#7a5200'),'#fff',1);if(big)dIc(IC.skull,X-5,Y-5.5,10);else{canvasesState.ctx.fillStyle='#fff';canvasesState.ctx.fillRect(X-1,Y-1,2,2)}});
  canvasesState.ctx.restore()}
 
 /* colour-blind mode: camps differ by shape too (own = circle, zombies = diamond, rival kingdoms = square); k: 'c' | 'd' | else square */

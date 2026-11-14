@@ -2,7 +2,7 @@ import { bastionHas } from './economy.js';
 import { baseTrait, BASES, campLabel } from '../ai/kingdoms.js';
 import { evPush } from './events.js';
 import { bossSpawn } from '../ai/wave-boss.js';
-import { WSPN, zcount } from '../ai/zombie-lanes.js';
+import { laneSpawnIdx, zcount } from '../ai/zombie-lanes.js';
 import { snd } from '../audio/sound.js';
 import { hyp, rnd } from '../core/math.js';
 import { ach } from './achievements.js';
@@ -47,7 +47,7 @@ export function wave(){const L0=sessionState.nextL.slice();wave0();if(!MP.on&&se
  if(wn===30||wn===50){const dm=wn===30?'The sky pales in the east. Dawn may still come: hold the bastion.':'Fifty waves. Even the rebels light fires in your honor.';hudDisplayState.msgS=(hudDisplayState.msgT>0?hudDisplayState.msgS+'  --  ':'')+dm;hudDisplayState.msgT=Math.max(hudDisplayState.msgT,10)}
  wavesState.WAVEZ=SW.n+swPending();for(const u of sessionState.units)if(u.t===1&&u.lane>=0)wavesState.WAVEZ++}
 
-export function spawnAnchor(L){const R=terrainState.ROUTES[L],P=R.pts;let rem=0,i0=0;for(let i=P.length-1;i>0;i--){rem+=Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]);if(rem>=WSPN){i0=i-1;break}}i0-=i0&1;for(let i=i0;i<R.pts.length;i+=2){const p=R.pts[i];ensureAround(p[0]|0,p[1]|0,1);const f=freeTile(p[0]|0,p[1]|0);if(f&&!solid(f[0],f[1])&&(f[0]-(p[0]|0))**2+(f[1]-(p[1]|0))**2<=16)return{p:[f[0]+.5,f[1]+.5],ph:Math.ceil(i/3)}}return{p:R.pts[0],ph:0}}
+export function spawnAnchor(L){const R=terrainState.ROUTES[L],i0=laneSpawnIdx(L).i;for(let i=i0;i<R.pts.length;i+=2){const p=R.pts[i];ensureAround(p[0]|0,p[1]|0,1);const f=freeTile(p[0]|0,p[1]|0);if(f&&!solid(f[0],f[1])&&(f[0]-(p[0]|0))**2+(f[1]-(p[1]|0))**2<=16)return{p:[f[0]+.5,f[1]+.5],ph:Math.ceil(i/3)}}return{p:R.pts[0],ph:0}}
 
 const laneK=(L,Ls)=>{const n=Math.max(1,Ls.filter(q=>(q>=3)===(L>=3)).length),b=Math.min(2.2,1+.15*(sessionState.waveN-1));return b/n*(1+.15*(n-1))};
 
