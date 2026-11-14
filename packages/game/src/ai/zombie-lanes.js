@@ -20,7 +20,19 @@ export const zcount=()=>{let n=0;for(const u of sessionState.units)if(u.t===1)n+
 
 /* far from the castle a horde follows its lane through a chain of local path fields (one per few waypoints), so cliffs, lakes and woods no longer trap it at its spawn;
    where no path exists at all the zombies clamber over the obstacle */
-export const WSPN=110,LSEG=8,LFLD=new Map();
+export const WSPN=150,WSEE=130,LSEG=8,LFLD=new Map();
+
+/* where a horde of lane L appears: the far end of its route (the start of the map), as far as WSPN tiles of path from the castle the route leaves.
+   It must lie at least WSEE straight tiles from every castle of both players (the widest camera zoom shows about 90): when the point at WSPN is nearer,
+   the search goes on outward to the map edge, then inward, and takes the first point that is far enough (else the farthest one).
+   Pure geometry (route + castle tiles, no terrain, no RNG), so every client and pickLanes agree. Returns {i: route index (even), d: straight distance to the nearest castle, rem: path left} */
+export function laneSpawnIdx(L){const RT=terrainState.ROUTES[L],P=RT.pts,n=P.length,C=[[terrainState.CX,terrainState.CY]];if(sessionState.SITE2)C.push([sessionState.SITE2.tx,sessionState.SITE2.ty]);
+ const ck=C.join(',');if(RT.spk===ck)return RT.spv;
+ const dm=i=>{let d=1e9;for(const c of C){const q=Math.hypot(P[i][0]-c[0],P[i][1]-c[1]);if(q<d)d=q}return d},R=new Float64Array(n);for(let i=n-2;i>=0;i--)R[i]=R[i+1]+Math.hypot(P[i+1][0]-P[i][0],P[i+1][1]-P[i][1]);
+ let i0=0;while(i0<n-2&&R[i0]>WSPN)i0++;i0-=i0&1;let bi=i0,bd=-1;
+ for(let i=i0;i>=0;i-=2){const d=dm(i);if(d>=WSEE)return(RT.spk=ck,RT.spv={i,d,rem:R[i]});if(d>bd){bd=d;bi=i}}
+ for(let i=i0+2;i<n;i+=2){const d=dm(i);if(d>=WSEE)return(RT.spk=ck,RT.spv={i,d,rem:R[i]});if(d>bd){bd=d;bi=i}}
+ return(RT.spk=ck,RT.spv={i:bi,d:bd,rem:R[bi]})}
 
 export let LFQS;
 export let LFQT;

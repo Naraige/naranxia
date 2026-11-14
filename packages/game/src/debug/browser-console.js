@@ -21,7 +21,7 @@ import { formationsState, order, setOrderHandler } from '../gameplay/formations.
 import { kingOf, kingSkill, kingTalent, kingSkill0, kingTick, kskLeft, kingXp, kingTalent0, kxLevel, kPoints, kHas, KXL } from '../gameplay/king-skills.js';
 import { openMenu, quitGame, setStartGameHandler, startGame } from '../gameplay/lifecycle.js';
 import { LPL, playersState, setPl, setTier } from '../gameplay/players.js';
-import { reset } from '../gameplay/reset.js';
+import { pickLanes, reset } from '../gameplay/reset.js';
 import { C, LH, RS, RS2, RT2, rulesState, rxLock, T, TH, TRAIN, TS, TW, UPC } from '../gameplay/rules.js';
 import { selectionState } from '../gameplay/selection.js';
 import { sessionState } from '../gameplay/session.js';
@@ -29,7 +29,7 @@ import { simulationState } from '../gameplay/simulation.js';
 import { gstBest, sbRec, setUpdateHandler, statisticsState, update } from '../gameplay/statistics.js';
 import { SW, swarmState, SWD } from '../gameplay/swarm.js';
 import { laneFieldQ, LFLD } from '../ai/zombie-lanes.js';
-import { callWave, restT, setCallWaveHandler, wave, wavesState } from '../gameplay/waves.js';
+import { callWave, restT, setCallWaveHandler, spawnAnchor, wave, wavesState } from '../gameplay/waves.js';
 import { _N, mpExec, mpPush, questSwitch, roleAdj, sendConvoy, setMpExecHandler } from '../multiplayer/commands.js';
 import { convoyLinked, convoyStep, setConvoyStepHandler } from '../multiplayer/convoys.js';
 import { mpBanner, mpStart, mpWorldSync } from '../multiplayer/lobby.js';
@@ -343,6 +343,8 @@ export function installBrowserConsole() {
     valid: { get: () => valid },
     ver: { get: () => sessionState.ver, set: value => { sessionState.ver = value; } },
     wave: { get: () => wave },
+    spawnAnchor: { get: () => spawnAnchor },
+    pickLanes: { get: () => pickLanes },
     waveN: { get: () => sessionState.waveN, set: value => { sessionState.waveN = value; } },
     waveOn: { get: () => wavesState.waveOn, set: value => { wavesState.waveOn = value; } },
     waveST: { get: () => wavesState.waveST, set: value => { wavesState.waveST = value; } },
