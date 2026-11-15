@@ -273,7 +273,7 @@ function icoObj(k) {
         [-0.9, 0],
         [0, 0],
         [0.9, 0],
-      ].forEach(([x, z], i) => {
+      ].forEach(([x, _z], i) => {
         const u = icoUnit("knight");
         u.position.set(x * 0.8, 0, i === 1 ? -0.7 : 0);
         w.add(u);

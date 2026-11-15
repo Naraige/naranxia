@@ -11,12 +11,12 @@ import { sessionState } from "./session.js";
 import { simulationState } from "./simulation.js";
 import { MP } from "../multiplayer/session.js";
 import { puff } from "../rendering/effects.js";
-import { markP, markT } from "../rendering/terrain.js";
+import { markP, markT } from "../world/terrain-invalidation.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { mmTile } from "../world/minimap.js";
 import { GF } from "../world/pathfinding.js";
 import { D4, gOK } from "../world/routes.js";
-import { amt, BED, HT, LAND, occ, pth, ROCKH, stairs, ter, TFL, WLV } from "../world/terrain.js";
+import { amt, BED, HT, LAND, occ, pth, ROCKH, stairs, ter, TFL, WLV } from "../world/terrain-state.js";
 import { freeTile } from "../world/traversal.js";
 
 export function tfOK(tx, ty, rmp) {
@@ -33,7 +33,6 @@ export function tfOK(tx, ty, rmp) {
 export function tfOrder(type, tx, ty) {
   const i = ty * TW + tx;
   if (tfo.has(i)) {
-    const o = tfo.get(i);
     tfo.delete(i);
     snd("click");
     return;
@@ -247,7 +246,7 @@ function flood(i0) {
   snd("splash", (x + 0.5) * TS, (y + 0.5) * TS);
 }
 
-function tfNear(tx, ty) {
+function tfNear(_tx, _ty) {
   return true;
 }
 

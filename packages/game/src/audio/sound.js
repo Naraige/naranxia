@@ -1,18 +1,14 @@
-import { mus, musBench, musTick } from "./music.js";
+import { mus, musBench, musTick, setMusicAudioState } from "./music.js";
 import { hyp } from "../core/math.js";
 import { REALR } from "../core/random.js";
 import { TS } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
-import { languageState } from "../i18n/language.js";
+import { languageState } from "../i18n/language-state.js";
 import { dayK } from "../rendering/lighting.js";
 import { CAM } from "../rendering/scene.js";
 import { seasonIdx, WX } from "../rendering/weather.js";
-import { convoyPanelState } from "../ui/convoy-panel.js";
 import { hudDisplayState } from "../ui/hud-state.js";
-import { modeState } from "../ui/mode-select.js";
-import { saveMenuState } from "../ui/save-menu.js";
-import { settingsState } from "../ui/settings.js";
-import { troopPanelState } from "../ui/troop-panel.js";
+import { convoyPanelState, modeState, saveMenuState, settingsState, troopPanelState } from "../ui/panel-state.js";
 
 /* slider positions 0..1 (Settings > Display & sound), saved in dk_vol. The gain is the square of the position (a slider that feels even). */
 export const soundState = {
@@ -32,7 +28,9 @@ const R = () => (REALR || Math.random)(),
 export function saveVol() {
   try {
     localStorage.setItem("dk_vol", JSON.stringify({ m: soundState.vM, s: soundState.vS }));
-  } catch (e) {}
+  } catch {
+    /* Keep the current volume for this session when storage is unavailable. */
+  }
 }
 
 const musG = () => soundState.vM * soundState.vM * MUSK,
@@ -61,7 +59,7 @@ export let sndOn = true;
 export let nbuf = null;
 let lastS = {};
 let lastP = {};
-let lastA = {};
+const lastA = {};
 let VO = [];
 let bud = 0;
 let budT = 0;
@@ -69,6 +67,25 @@ let WIND = null;
 let woke = false;
 /* offline measurement: BENCH on, BT = time of the sound being scheduled */
 export let BENCH = false;
+
+const musicAudioState = {
+  get AC() {
+    return AC;
+  },
+  get BENCH() {
+    return BENCH;
+  },
+  get MB() {
+    return MB;
+  },
+  get nbuf() {
+    return nbuf;
+  },
+  get sndOn() {
+    return sndOn;
+  },
+  audioWake,
+};
 let BT = 0;
 /* per-sound variation, set by snd(): pitch factor, name */
 let PV = 1;
@@ -212,7 +229,7 @@ export function aInit() {
     setInterval(ambTick, 900);
     setInterval(musTick, 50);
     setInterval(uiWatch, 90);
-  } catch (e) {
+  } catch {
     AC = null;
   }
 }
@@ -221,7 +238,9 @@ export function toggleSound() {
   sndOn = !sndOn;
   try {
     localStorage.setItem("dk_snd", sndOn ? "1" : "0");
-  } catch (e) {}
+  } catch {
+    /* The mute toggle still applies for this session if storage is unavailable. */
+  }
   aInit();
   if (MG) {
     const t = AC.currentTime;
@@ -862,7 +881,7 @@ export let snd = function snd(n, x, y) {
   OUT = g;
   try {
     SFX[n]();
-  } catch (e) {
+  } catch {
     ERRN++;
   }
   OUT = FXB;
@@ -935,7 +954,7 @@ function uiWatch() {
       sessionState.showMap,
     ])
       if (x) n++;
-  } catch (e) {
+  } catch {
     return;
   }
   if (UW0 >= 0 && n !== UW0) snd(n > UW0 ? "open" : "close");
@@ -1038,6 +1057,7 @@ export async function audioBench(sc, sec) {
 }
 
 export function initializeSound() {
+  setMusicAudioState(musicAudioState);
   /* the levels and the slider curve changed: old saved volumes and an old mute are dropped once */
   try {
     if (localStorage.getItem("dk_aud") !== "2") {
@@ -1045,16 +1065,22 @@ export function initializeSound() {
       localStorage.removeItem("dk_snd");
       localStorage.setItem("dk_aud", "2");
     }
-  } catch (e) {}
+  } catch {
+    /* Audio preference migration is best-effort when browser storage is blocked. */
+  }
   try {
     const v = JSON.parse(localStorage.getItem("dk_vol") || "{}");
     if (typeof v.m === "number") soundState.vM = Math.max(0, Math.min(1, v.m));
     if (typeof v.s === "number") soundState.vS = Math.max(0, Math.min(1, v.s));
-  } catch (e) {}
+  } catch {
+    /* Ignore malformed or unavailable volume data and keep the current defaults. */
+  }
 
   try {
     sndOn = localStorage.getItem("dk_snd") !== "0";
-  } catch (e) {}
+  } catch {
+    /* If storage is unavailable, keep the default sound-enabled state. */
+  }
   try {
     window.__abench = audioBench;
     window.__audio = {
@@ -1065,5 +1091,7 @@ export function initializeSound() {
       errs: () => ERRN,
       resume: () => AC && AC.resume(),
     };
-  } catch (e) {}
+  } catch {
+    /* Debug hooks are optional when the page does not allow window properties. */
+  }
 }

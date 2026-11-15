@@ -28,14 +28,16 @@ const HINTS = {
 const hintSeen = (id) => {
   try {
     return localStorage.getItem("dk_hint_" + id) === "1";
-  } catch (e) {
+  } catch {
     return false;
   }
 };
 const hintMark = (id) => {
   try {
     localStorage.setItem("dk_hint_" + id, "1");
-  } catch (e) {}
+  } catch {
+    /* If storage is unavailable, the hint may appear again next launch. */
+  }
 };
 let hintCur = null,
   hintT0 = 0,

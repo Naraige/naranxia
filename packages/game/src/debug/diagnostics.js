@@ -48,8 +48,12 @@ export function initializeDiagnostics() {
               .join(" ")
               .slice(0, 700),
         });
-      } catch (e) {}
+      } catch {
+        /* Keep forwarding console errors if diagnostic capture fails. */
+      }
       return ce.apply(console, a);
     };
-  } catch (e) {}
+  } catch {
+    /* Diagnostics are optional; leave the game running if hooks cannot be installed. */
+  }
 }

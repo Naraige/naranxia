@@ -4,13 +4,12 @@ import { titleSceneState } from "../rendering/title-scene.js";
 import { uiBtn } from "../ui/build-menu.js";
 import { canvasesState } from "../ui/canvases.js";
 import { kitScreen, listBegin, listEnd } from "../ui/menu-kit.js";
-import { BTN, BTNH, frame, GRN, GRNH, PAN } from "../ui/drawing.js";
-import { pill } from "../ui/minimap.js";
+import { BTN, BTNH, GRN, GRNH } from "../ui/drawing.js";
+import "../ui/minimap.js";
 import { FFP, fontOf, ink, inBtn, setF, TWM } from "../ui/typography.js";
+import { languageState } from "./language-state.js";
 
-export const languageState = {
-  langOpen: false,
-};
+export { languageState };
 
 /* ================= LANGUAGES =================
    Every text drawn by the interface goes through L(): exact phrases, then templates ("Wave {0}", "{0} has fallen to the horde"),
@@ -85,10 +84,14 @@ export function setLang(i) {
   TWM.clear();
   try {
     localStorage.setItem("dk_lang", i);
-  } catch (e) {}
+  } catch {
+    /* Keep the selected language in memory when storage is unavailable. */
+  }
   try {
     i18nDom();
-  } catch (e) {}
+  } catch {
+    /* Translation DOM refresh is best-effort; the selected language remains active. */
+  }
   titleSceneState.titleDirty = true;
 }
 
@@ -395,7 +398,9 @@ export function initializeLanguage() {
   let saved = null;
   try {
     saved = localStorage.getItem("dk_lang");
-  } catch (e) {}
+  } catch {
+    /* Keep the default language when saved preferences cannot be read. */
+  }
   if (saved !== null) LANG = Math.max(0, Math.min(LANGS.length - 1, +saved | 0));
   else {
     /* first launch: the browser language, when we have it */
@@ -405,7 +410,9 @@ export function initializeLanguage() {
           .toLowerCase(),
         i = LANGS.findIndex((l) => l[1] === c);
       if (i > 0) LANG = i;
-    } catch (e) {}
+    } catch {
+      /* Keep the default language when browser language data is unavailable. */
+    }
   }
 }
 

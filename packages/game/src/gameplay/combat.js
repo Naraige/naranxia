@@ -9,11 +9,11 @@ import { simulationState } from "./simulation.js";
 import { SGC, sgFresh, SGH, SGHt, SGN, SGU, SGW, UGC, ugFresh, UGH, UGHt, UGN, UGU, UGW } from "./spatial-index.js";
 import { SW, swLine, swNear, swSplash } from "./swarm.js";
 import { blood, puff, ring, shake, spark, vflash } from "../rendering/effects.js";
-import { gh } from "../rendering/terrain.js";
-import { NAMES } from "../ui/build-menu.js";
+import { gh } from "../world/terrain-queries.js";
+import { NAMES } from "../ui/build-catalog.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { D4 } from "../world/routes.js";
-import { LAND, terrainState } from "../world/terrain.js";
+import { LAND, terrainState } from "../world/terrain-state.js";
 import { fv, solid } from "../world/traversal.js";
 
 export function target(u, range, tt) {

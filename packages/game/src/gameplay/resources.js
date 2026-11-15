@@ -5,7 +5,7 @@ import { CODE, TH, TS, TW } from "./rules.js";
 import { sessionState } from "./session.js";
 import { reachLong, sameComp } from "../world/connectivity.js";
 import { D4, gOK } from "../world/routes.js";
-import { ter, terrainState } from "../world/terrain.js";
+import { ter, terrainState } from "../world/terrain-state.js";
 import { fv, solid } from "../world/traversal.js";
 
 export const RL = {};
@@ -16,7 +16,7 @@ function resList(j, pl) {
     cx = H.tx,
     cy = H.ty,
     K = j + (pl ? "_1" : "");
-  let L = RL[K];
+  const L = RL[K];
   if (L && sessionState.time - L.t < 4) return L.a;
   const a = [];
   const x0 = Math.max(0, cx - 160),

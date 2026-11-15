@@ -68,7 +68,7 @@ export function kingXp(k, a) {
   }
 }
 export function kingKillXp(z) {
-  let w = z.boss ? 12 : z.type === "brute" ? 3 : z.type === "acid" || z.type === "bomber" ? 2 : 1;
+  const w = z.boss ? 12 : z.type === "brute" ? 3 : z.type === "acid" || z.type === "bomber" ? 2 : 1;
   for (const k of sessionState.units)
     if (k.t === 0 && k.type === "king" && k.hp > 0 && !k.kdead && (z.boss || dist(k.x, k.y, z.x, z.y) < TS * 10))
       kingXp(k, w);

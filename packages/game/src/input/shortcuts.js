@@ -77,7 +77,7 @@ export function initializeBuildShortcuts() {
     }
   });
 
-  addEventListener("keydown", (e) => {
+  addEventListener("keydown", (_e) => {
     if (!sessionState.started || sessionState.over || document.activeElement === nmI) return;
   });
 }

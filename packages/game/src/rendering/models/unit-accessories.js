@@ -1,6 +1,5 @@
 import { newG, toGeo } from "../geometry.js";
 import { PD, PDP, pxBox, pxScene, PXV, teamPal } from "./pixel-geometry.js";
-import { VX } from "./unit-parts.js";
 import { pBev, RDS, RWD } from "./weapons.js";
 import { thp } from "../../ui/kingdom-theme.js";
 import { gear2 } from "./gear-style.js";
@@ -46,7 +45,7 @@ export function pxCapes(type, P0) {
       },
       { mat: 0, grid: [W, H, 1] },
     );
-  const fold = (u, W) => (u % 3 === 1 ? 1 : u % 3 === 2 ? 2 : 0);
+  const fold = (u, _W) => (u % 3 === 1 ? 1 : u % 3 === 2 ? 2 : 0);
   const sun = (u, r, u0, r0) => {
     const du = u - u0,
       dr = r - r0;
@@ -81,7 +80,7 @@ export function pxCapes(type, P0) {
     X.cape = newG();
     X.cape2 = newG();
     const erm = (u, r, W) => (u === 0 || u === W - 1 ? (r % 3 === 1 ? Ex : E) : null);
-    cape(X.cape, 5.6 * s, 5 * s, -0.67 * s, 12, 11, (f, u, r, W, H) => {
+    cape(X.cape, 5.6 * s, 5 * s, -0.67 * s, 12, 11, (f, u, r, W, _H) => {
       const e = erm(u, r, W);
       if (e) return e;
       if (r <= 1) return r === 1 && u % 3 === 1 ? Ex : E;
@@ -173,8 +172,7 @@ export function pxBanner(X) {
 export function pxCannon() {
   if (gear2("cannon")) return g2Cannon();
   const G = newG(),
-    BZ = PDP(["#5a3a10", "#8a5a1e", "#b8822e", "#dca84a", "#f2cc6a"]),
-    k = 1 / (PXV * VX);
+    BZ = PDP(["#5a3a10", "#8a5a1e", "#b8822e", "#dca84a", "#f2cc6a"]);
   const wood = (f, u, v) => ((u + v) % 5 === 0 ? RWD[1] : f === "T" ? RWD[3] : RWD[2]),
     iron = (f) => (f === "T" ? RDS[3] : RDS[1]);
   pxScene(() => {
@@ -216,7 +214,6 @@ export function pxCannon() {
       (f, u, v, W, H) => {
         if (f === "F") return u >= 2 && u <= 4 && v >= 2 && v <= 4 ? RDS[0] : BZ[3];
         if (f === "B") return BZ[1];
-        const q = f === "T" || f === "D" ? v : u;
         return f === "T" ? BZ[3] : v === H - 1 ? BZ[3] : BZ[2];
       },
       { grid: [7, 7, 28] },

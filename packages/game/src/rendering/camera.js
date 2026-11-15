@@ -3,13 +3,12 @@ import { HOMEC, LPL } from "../gameplay/players.js";
 import { TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { inputState } from "../input/state.js";
-import { MP } from "../multiplayer/session.js";
 import { effectsState } from "./effects.js";
 import { CAM, camera, scene, SHADOWS, sun } from "./scene.js";
-import { gh } from "./terrain.js";
+import { gh } from "../world/terrain-queries.js";
 import { THREE } from "./three.js";
 import { cv } from "../ui/canvases.js";
-import { LAND } from "../world/terrain.js";
+import { LAND } from "../world/terrain-state.js";
 
 /* ---- camera & picking ---- */
 export function updateCamera(dt) {
@@ -65,7 +64,6 @@ export function updateCamera(dt) {
     /* shadow map snapped to its texel grid: no shadow crawling when the camera moves */
     const e = SHADOWS ? sun.shadow.camera.right : 30,
       tex = (2 * e) / 2048,
-      Lz = _LD,
       Lx = _LR,
       Ly = _LU;
     let tx = CAM.x,

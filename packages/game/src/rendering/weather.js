@@ -6,7 +6,7 @@ import { dayK } from "./lighting.js";
 import { setSeasons } from "./blocks.js";
 import { LMU } from "./materials.js";
 import { CAM, hemi, scene, sun } from "./scene.js";
-import { gh } from "./terrain.js";
+import { gh } from "../world/terrain-queries.js";
 import { THREE } from "./three.js";
 
 /* ================= SEASONS AND WEATHER (#6) =================
@@ -215,11 +215,11 @@ export function weatherTick(dt) {
     const P = rp.geometry.attributes.position.array,
       X = WX.rx;
     for (let i = 0; i < nr; i++) {
-      let x = cx + (X[i * 3] - 0.5) * 2 * R,
-        y = top - X[i * 3 + 1] * 15,
-        z = cz + (X[i * 3 + 2] - 0.5) * 2 * R;
+      const x = cx + (X[i * 3] - 0.5) * 2 * R;
+      let y = top - X[i * 3 + 1] * 15;
+      const z = cz + (X[i * 3 + 2] - 0.5) * 2 * R;
       y -= 22 * dt;
-      let gy = gh(x, z);
+      const gy = gh(x, z);
       if (y < gy) {
         X[i * 3] = REALR();
         X[i * 3 + 2] = REALR();
@@ -271,9 +271,9 @@ export function weatherTick(dt) {
     for (let i = 0; i < nn; i++) {
       const o = i * 4;
       X[o + 3] += dt * (1.2 + X[o]);
-      let x = cx + (X[o] - 0.5) * 2 * R + Math.sin(X[o + 3]) * 0.7,
-        y = top - X[o + 1] * 15,
-        z = cz + (X[o + 2] - 0.5) * 2 * R + Math.cos(X[o + 3] * 0.8) * 0.5;
+      const x = cx + (X[o] - 0.5) * 2 * R + Math.sin(X[o + 3]) * 0.7;
+      let y = top - X[o + 1] * 15;
+      const z = cz + (X[o + 2] - 0.5) * 2 * R + Math.cos(X[o + 3] * 0.8) * 0.5;
       y -= fall * (0.6 + X[o] * 0.8) * dt;
       const gy = gh(x, z);
       if (y < gy + 0.05) {

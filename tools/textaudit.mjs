@@ -49,7 +49,9 @@ let noteBad = 0;
   let md = "";
   try {
     md = readFileSync(path.join(root, "game/NOTES.md"), "utf8");
-  } catch (e) {}
+  } catch {
+    /* Source-only snapshots may omit release notes; audit them as an empty draft. */
+  }
   const lines = notesLines(md);
   for (const l of lines) {
     noteKeys.add(l.t);

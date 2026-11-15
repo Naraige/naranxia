@@ -9,13 +9,9 @@ import { bannerIcon } from "../rendering/banner-icon.js";
 import { canvasesState } from "./canvases.js";
 import { hudDisplayState } from "./hud-state.js";
 import { bevelBtn, kitScreen, listBegin, listEnd } from "./menu-kit.js";
+import { saveMenuState } from "./panel-state.js";
 
-export const saveMenuState = {
-  saveOpen: false,
-  svList: null,
-  delAsk: null,
-  last: undefined,
-};
+export { saveMenuState };
 
 let svBusy = "";
 let svSel = -1;
@@ -42,7 +38,7 @@ const svName = () => {
 async function svRefresh() {
   try {
     saveMenuState.svList = await SVST.list();
-  } catch (e) {
+  } catch {
     saveMenuState.svList = [];
     svBusy = "Saves are not available here";
   }
@@ -54,7 +50,7 @@ export async function svPeek() {
   try {
     const l = await SVST.list();
     saveMenuState.last = (l && l[0]) || null;
-  } catch (e) {
+  } catch {
     saveMenuState.last = null;
   }
 }
@@ -209,9 +205,16 @@ export function drawSaves(UW, UH, fh, back) {
   });
   listEnd();
   if (fold)
-    bevelBtn(b.x, b.y + b.h - fold - 12, Math.min(150, b.w), 18, "Open saves folder", "dark", () => NARX.openFolder(), {
-      sc: 0.85,
-    });
+    bevelBtn(
+      b.x,
+      b.y + b.h - fold - 12,
+      Math.min(150, b.w),
+      18,
+      "Open saves folder",
+      "dark",
+      () => window.NARX.openFolder(),
+      { sc: 0.85 },
+    );
   {
     const t = ig ? "The autosave keeps your latest game." : "Select a save, then Load or Delete.";
     let sc = 0.75;
@@ -225,7 +228,11 @@ export function initializeSaveMenu() {
     setTimeout(() => {
       try {
         i18nDom();
-      } catch (e) {}
+      } catch {
+        /* Skip deferred localization if the timer API is unavailable. */
+      }
     }, 0);
-  } catch (e) {}
+  } catch {
+    /* Save-menu setup can continue without this localization refresh. */
+  }
 }

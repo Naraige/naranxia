@@ -85,7 +85,9 @@ export const questSwitch = function (on) {
   if (!MP.on) {
     try {
       localStorage.setItem("dk_quests", on ? "1" : "0");
-    } catch (e) {}
+    } catch {
+      /* The choice still applies to this run when storage is unavailable. */
+    }
   }
   return qSetOn0(on);
 };

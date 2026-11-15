@@ -2,13 +2,13 @@ import { fb, hs } from "../core/math.js";
 import { rngf } from "../core/random.js";
 import { TH, TW } from "../gameplay/rules.js";
 import { blocksState } from "./blocks.js";
-import { bxc, newG, rgb, toGeo } from "./geometry.js";
+import { bxc, newG, toGeo } from "./geometry.js";
 import { buildPropsB } from "./terrain-props-blocks.js";
 import { matV } from "./materials.js";
 import { scene, SHADOWS } from "./scene.js";
 import { THREE } from "./three.js";
 import { gOK } from "../world/routes.js";
-import { CH, FLG, HT, LAND, occ, pth, stairs, ter, terrainState } from "../world/terrain.js";
+import { CH, FLG, HT, LAND, occ, pth, stairs, ter, terrainState } from "../world/terrain-state.js";
 
 /* ---- props (trees, rocks, gold, flowers) merged per chunk ---- */
 const LEAF = [
@@ -178,7 +178,6 @@ function birchGeo(v) {
 
 function rockGeo(v) {
   const G = newG(),
-    R = rngf(v * 331 + 9),
     C = [
       ["#9aa1ac", "#a9b0bb", "#7e8590"],
       ["#868d98", "#9ea5b0", "#6a717e"],
@@ -200,7 +199,7 @@ function rockGeo(v) {
   return toGeo(G);
 }
 
-function goldGeo(v) {
+function goldGeo(_v) {
   const G = newG();
   bxc(G, 0, 0, 0, 0.8, 0.8, 0.8, "#7d7d7d");
   [
@@ -263,7 +262,7 @@ function flowerGeo(v) {
   return toGeo(G);
 }
 
-function tuftGeo(v) {
+function tuftGeo(_v) {
   const G = newG(),
     c = ["#4a8e32", "#5a9c3a", "#3f7f2a"];
   [
@@ -277,7 +276,7 @@ function tuftGeo(v) {
   return toGeo(G);
 }
 
-function mushGeo(v) {
+function mushGeo(_v) {
   const G = newG();
   bxc(G, 0, 0, 0, 0.06, 0.12, 0.06, "#e8e0d0");
   bxc(G, 0, 0.12, 0, 0.18, 0.08, 0.18, "#c8282a");
@@ -290,7 +289,7 @@ function mushGeo(v) {
   return toGeo(G);
 }
 
-function reedGeo(v) {
+function reedGeo(_v) {
   const G = newG();
   [
     [0, 0, 0.75],
@@ -306,7 +305,7 @@ function reedGeo(v) {
   return toGeo(G);
 }
 
-function logGeo(v) {
+function logGeo(_v) {
   const G = newG();
   bxc(G, 0, 0, 0, 0.8, 0.24, 0.24, "#5b4326");
   bxc(G, 0.4, 0, 0, 0.02, 0.24, 0.24, "#a88a52");
@@ -335,9 +334,6 @@ function mergeVar(G, geo, x, y, z, rk, sc, sy) {
   }
   for (let k = 0; k < ix.length; k++) G.I.push(ix[k] + o);
 }
-
-let FCOL;
-let TUFT;
 
 export function buildProps(cx, cy) {
   if (blocksState.D) return buildPropsB(cx, cy);
@@ -424,6 +420,4 @@ export function initializeTerrainProps() {
     r: [reedGeo(0)],
     l: [logGeo(0)],
   };
-  FCOL = ["#ffffff", "#ffe14a", "#ff8fb8", "#ff5a5a", "#b48cff"].map(rgb);
-  TUFT = rgb("#3f8a38");
 }

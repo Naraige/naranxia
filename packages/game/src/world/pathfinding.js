@@ -2,8 +2,12 @@ import { nearC } from "../gameplay/players.js";
 import { TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { D4 } from "./routes.js";
-import { ensureRect, pth, terrainState } from "./terrain.js";
+import { prepareTerrainRect } from "./chunk-provider.js";
+import { pth, terrainState } from "./terrain-state.js";
 import { bfsW, canStep, freeTile, fv, solid } from "./traversal.js";
+import { GF } from "./pathfinding-state.js";
+
+export { GF } from "./pathfinding-state.js";
 
 /* order fields: Dijkstra over the walk grid where roads are cheaper (dirt 4, stone 3, grass 6), searched in a window that grows when
    the detour leaves it; an unreachable target sends the group to the closest tile they can actually reach (alt) */
@@ -12,7 +16,7 @@ function dijW(seeds, pl, x0, y0, w, h) {
   y0 = Math.max(0, y0);
   w = Math.min(w, TW - x0);
   h = Math.min(h, TH - y0);
-  ensureRect(x0, y0, w, h);
+  prepareTerrainRect(x0, y0, w, h);
   terrainState.gateSolid = !pl;
   const F = new Uint16Array(w * h).fill(65535),
     B = [[], [], [], [], [], [], [], []];
@@ -120,7 +124,6 @@ export function mkG(tx, ty, sx, sy, quick) {
   };
 }
 
-export const GF = new Map();
 let gfVer = -1;
 
 export function gField(key, tx, ty, sz) {

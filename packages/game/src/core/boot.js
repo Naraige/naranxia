@@ -14,7 +14,7 @@ const AUTO = !!navigator.webdriver && !window.__nxBootReal;
 let RM = false;
 try {
   RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
-} catch (e) {
+} catch {
   /* no matchMedia */
 }
 /* card 1: its entrance animation, its minimum time on screen, its fade; card 2: hold until its fade starts, full length (boot.css) */
@@ -64,7 +64,7 @@ function guardOn(on) {
     try {
       if (on) addEventListener(n, guard, true);
       else removeEventListener(n, guard, true);
-    } catch (e) {
+    } catch {
       /* old browser */
     }
 }
@@ -182,7 +182,7 @@ export function bootFrame(ms) {
   try {
     removeEventListener("pointerdown", I.ev, true);
     removeEventListener("keydown", I.ev, true);
-  } catch (e) {
+  } catch {
     /* none */
   }
   T.title = Math.round(performance.now());

@@ -2,9 +2,13 @@
 // run from the repo root (tools/build.sh --dist does it)
 import fs from "fs";
 import zlib from "zlib";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { minify } from "terser";
 import zopfli from "@gfx/zopfli";
-const html = fs.readFileSync("dist/naranxia_readable.html", "utf8");
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."),
+  dist = path.join(root, "dist");
+const html = fs.readFileSync(path.join(dist, "naranxia_readable.html"), "utf8");
 const open = "<script>\n",
   i0 = html.indexOf(open),
   i1 = html.lastIndexOf("</script>");
@@ -12,7 +16,7 @@ if (i0 < 0 || i1 < i0) throw new Error("readable build is missing its inline gam
 const head = html.slice(0, i0),
   code = html.slice(i0 + open.length, i1),
   tail = html.slice(i1);
-const V = fs.readFileSync("game/VERSION", "utf8").trim();
+const V = fs.readFileSync(path.join(root, "game", "VERSION"), "utf8").trim();
 if (!/^v\d+$/.test(V)) throw new Error(`Invalid game/VERSION: ${V}`);
 const r = await minify(code, {
   ecma: 2020,
@@ -40,12 +44,12 @@ const headMin = head.replace(
   '<html lang="en">',
   '<html lang="en"><!-- Naranxia ' + V + " - optimized build. Readable source: Naranxia_" + V + "_source.html -->",
 );
-fs.writeFileSync("dist/naranxia_min.html", headMin + open + min + "\n" + tail);
+fs.writeFileSync(path.join(dist, "naranxia_min.html"), headMin + open + min + "\n" + tail);
 // zopfli gzip (better ratio than zlib -9), checked by a round trip
 let gz;
 try {
   gz = Buffer.from(await zopfli.gzipAsync(Buffer.from(min, "utf8"), { numiterations: 15 }));
-} catch (e) {
+} catch {
   gz = zlib.gzipSync(min, { level: 9 });
 }
 if (zlib.gunzipSync(gz).toString("utf8") !== min) throw new Error("gzip round trip failed");
@@ -67,16 +71,16 @@ const headPack = head.replace(
     "_source.html -->",
 );
 fs.writeFileSync(
-  "dist/naranxia.html",
+  path.join(dist, "naranxia.html"),
   headPack + '<script type="text/plain" id="nxz">' + b64 + "</script>\n<script>" + loader + "</script></body></html>\n",
 );
-const sz = (f) => fs.statSync(f).size;
+const sz = (f) => fs.statSync(path.join(dist, f)).size;
 console.log(
   JSON.stringify({
     version: V,
-    readable: sz("dist/naranxia_readable.html"),
-    minified: sz("dist/naranxia_min.html"),
-    packed: sz("dist/naranxia.html"),
+    readable: sz("naranxia_readable.html"),
+    minified: sz("naranxia_min.html"),
+    packed: sz("naranxia.html"),
     code: code.length,
     min: min.length,
     gzip: gz.length,

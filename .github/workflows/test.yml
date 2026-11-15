@@ -3,18 +3,18 @@
 name: tests
 on:
   push:
-    paths: [packages/game/**, tests/**, tools/**, game/VERSION, package.json, package-lock.json, .github/workflows/**]
+    paths: [packages/game/**, apps/desktop/**, tests/**, tools/**, docs/**/*.js, docs/**/*.mjs, game/VERSION, package.json, package-lock.json, .github/workflows/**, eslint.config.mjs, .prettierrc.json, .prettierignore, .editorconfig, .gitattributes]
   pull_request:
   workflow_dispatch:
     inputs:
       full:
-        description: also run the save / load round trip (slow)
+        description: include deep resync and 6000-tick multiplayer soak
         type: boolean
         default: false
   workflow_call:
     inputs:
       full:
-        description: also run the save / load round trip
+        description: include deep resync and 6000-tick multiplayer soak
         type: boolean
         default: false
 concurrency:
@@ -38,6 +38,8 @@ jobs:
         run: |
           npm ci
           pip install playwright==1.56.0
+      - name: Quality
+        run: npm run quality
       - name: Cache Chromium
         id: pw
         uses: actions/cache@v4

@@ -8,9 +8,10 @@ import { mpBegin, mpSend } from "./lockstep.js";
 import { registryHide, registryList, registryOn } from "./registry.js";
 import { MP } from "./session.js";
 import { THEME } from "../ui/kingdom-theme.js";
-import { settingsState } from "../ui/settings.js";
+import { settingsState } from "../ui/panel-state.js";
 import { openPicker, setConfirmPickHandler, sitePickerState } from "../ui/site-picker.js";
-import { rollWorld, setRollWorldHandler, terrainState } from "../world/terrain.js";
+import { rollWorld, setRollWorldHandler } from "../world/terrain.js";
+import { terrainState } from "../world/terrain-state.js";
 
 /* the two castles may stand side by side: only their 5x5 walls and the 3 tiles in front of each door must not overlap */
 export const sitesFar = (a, b) => !a || !b || Math.max(Math.abs(a.tx - b.tx), Math.abs(a.ty - b.ty)) >= 10;
@@ -106,7 +107,7 @@ export function lobbyNote(t) {
   mpStatus(t);
 }
 
-export function mpFallback(v) {}
+export function mpFallback(_v) {}
 
 function pubLabel() {
   const on = $m("mpPub").checked;
@@ -236,7 +237,7 @@ export async function pubRefresh() {
   let list;
   try {
     list = await registryList();
-  } catch (e) {
+  } catch {
     note("Could not reach the lobby. Check your connection and try again.");
     return;
   }

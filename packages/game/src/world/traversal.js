@@ -1,7 +1,11 @@
 import { TH, TS, TW } from "../gameplay/rules.js";
-import { markT } from "../rendering/terrain.js";
+import { markT } from "./terrain-invalidation.js";
+import { prepareTerrainRect } from "./chunk-provider.js";
 import { D4, gOK } from "./routes.js";
-import { ensureRect, HT, occ, pth, stairs, ter, terrainState, TFL } from "./terrain.js";
+import { canStep, canStepZ } from "./traversal-rules.js";
+import { HT, occ, pth, stairs, ter, terrainState, TFL } from "./terrain-state.js";
+
+export { canStep, canStepZ };
 
 /* ---- passability ---- */
 export const solid = (x, y) => {
@@ -14,40 +18,9 @@ export const solid = (x, y) => {
 
 export const solidAt = (x, y) => solid(Math.floor(x / TS), Math.floor(y / TS));
 
-function stairOK(s, d, h) {
-  const ax = Math.abs(d) === 1 ? 0 : 1;
-  return ax === s.ax && (h === s.hi || h === s.lo);
-}
-
 /* a change of level needs a ramp (stairs). TFL marks terrain reshaped by the game: 1 = levelling around buildings and camps,
    bomb craters (anyone may step 1 level there), 2 = steps cut by zombie miners (only zombies climb them),
    3 = blocks raised or dug by the player (nobody climbs them: build a ramp). canStep is for our units, canStepZ for zombies. */
-export function canStep(a, b) {
-  const ha = HT[a],
-    hb = HT[b];
-  if (ha === hb) return true;
-  if ((TFL[a] === 1 || TFL[b] === 1) && Math.abs(ha - hb) <= 1) return true;
-  return rampStep(a, b, ha, hb);
-}
-
-export function canStepZ(a, b) {
-  const ha = HT[a],
-    hb = HT[b];
-  if (ha === hb) return true;
-  const fa = TFL[a],
-    fb = TFL[b];
-  if (((fa && fa < 3) || (fb && fb < 3)) && Math.abs(ha - hb) <= 1) return true;
-  return rampStep(a, b, ha, hb);
-}
-
-function rampStep(a, b, ha, hb) {
-  if (!stairs.size) return false;
-  const d = b - a;
-  let s = stairs.get(a);
-  if (s && stairOK(s, d, hb)) return true;
-  s = stairs.get(b);
-  return !!(s && stairOK(s, -d, ha));
-}
 
 export function blk(tx, ty, i, j) {
   if (solid(i, j)) return true;
@@ -63,7 +36,7 @@ export function bfsW(seeds, pl, x0, y0, w, h) {
   y0 = Math.max(0, y0);
   w = Math.min(w, TW - x0);
   h = Math.min(h, TH - y0);
-  ensureRect(x0, y0, w, h);
+  prepareTerrainRect(x0, y0, w, h);
   terrainState.gateSolid = !pl;
   const F = new Uint16Array(w * h).fill(65535),
     Q = new Int32Array(w * h);
@@ -141,7 +114,6 @@ export function stairInfo(tx, ty) {
 export const LVO = new Map();
 
 export function levelGround(tx, ty, sz, h0) {
-  const adj = (x, y) => D4.some(([dx, dy]) => stairs.has((y + dy) * TW + x + dx));
   for (let j = ty - 1; j <= ty + sz; j++)
     for (let i = tx - 1; i <= tx + sz; i++) {
       const k = j * TW + i;

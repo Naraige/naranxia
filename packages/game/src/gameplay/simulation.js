@@ -35,14 +35,16 @@ import { effectsState, ember, puff, ring, shake, smoke, spark, vflash } from "..
 import { fowUpdate, VRN, vsnOf } from "../rendering/fog.js";
 import { gtopOf } from "../rendering/models/fortifications.js";
 import { refreshNear, rmStruct } from "../rendering/structures.js";
-import { gh, markP, markT } from "../rendering/terrain.js";
+import { gh } from "../world/terrain-queries.js";
+import { markP, markT } from "../world/terrain-invalidation.js";
 import { mcCorpse } from "../rendering/unit-animation.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { calcFD } from "../world/connectivity.js";
 import { mmTile } from "../world/minimap.js";
 import { GF, mkG } from "../world/pathfinding.js";
 import { gOK } from "../world/routes.js";
-import { CH, ensureAround, HT, LAND, NCX, occ, stairs, ter } from "../world/terrain.js";
+import { ensureAround } from "../world/terrain.js";
+import { CH, HT, LAND, NCX, occ, stairs, ter } from "../world/terrain-state.js";
 import { LVO } from "../world/traversal.js";
 
 export const simulationState = {
@@ -806,6 +808,7 @@ export function update0(dt) {
         u.base = null;
         u.hh = null;
       } else if (u.nokill) {
+        /* No-kill removals intentionally skip death effects, rewards, and statistics. */
       } else {
         if (!(typeof mcCorpse === "function" && mcCorpse(u)))
           puff(u.x, u.y, "#efefef", 8, 30, { T: 0.8, z: 0.35, vz: 1.4, g: -0.7, s: 0.12 });

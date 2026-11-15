@@ -96,7 +96,7 @@ export function arcDia(cx, cy, r, c) {
   canvasesState.ctx.fill();
 }
 
-export function frame(x, y, w, h, p, r) {
+export function frame(x, y, w, h, p, _r) {
   if (p === SLOT || p === SLOTH || p === SLOTX) {
     mcSlot(x, y, w, h, p);
     return;
@@ -425,7 +425,7 @@ export function focusRing(x, y, w, h) {
   g.restore();
 }
 
-export function gold(x, y, w, h, r) {
+export function gold(x, y, w, h, _r) {
   const Rd = Math.max(1, Math.min(3.5, w / 5, h / 5));
   canvasesState.ctx.save();
   canvasesState.ctx.shadowColor = "rgba(47,125,246,.6)";
@@ -514,7 +514,9 @@ export function arcIcon(src, N) {
     go.drawImage(ink, N / 36, N / 26);
     go.filter = "none";
     go.globalAlpha = 1;
-  } catch (e) {}
+  } catch {
+    /* Render the icon without blur styling on canvases that lack filter support. */
+  }
   for (let i = 0; i < 24; i++) {
     const t = (i / 24) * 6.2832;
     go.drawImage(ink, Math.cos(t) * r, Math.sin(t) * r);
@@ -570,8 +572,7 @@ function mcSlot(x, y, w, h, p) {
   h = Math.round(h);
   const g = canvasesState.ctx,
     X = p === SLOTX,
-    H = p === SLOTH,
-    Rd = Math.max(2, Math.min(8, w / 5, h / 5));
+    H = p === SLOTH;
   g.fillStyle = "rgba(20,35,60,.12)";
   bev(x, y + 2, w, h, bs(w, h));
   g.fill();
@@ -624,10 +625,8 @@ export function TN(s, x, y, col, sc) {
   canvasesState.ctx.fillText(s, x, y);
 }
 
-const HRT = [".KKK.KKK.", "KRRWKRRRK", "KRWRRRRRK", "KRRRRRRRK", ".KRRRRRK.", "..KRRRK..", "...KRK...", "....K...."];
-
-function heart(x, y, kind, ps) {
-  const H = (c1, c2) => {
+function heart(x, y, kind, _ps) {
+  const H = (_c1, _c2) => {
     canvasesState.ctx.beginPath();
     canvasesState.ctx.moveTo(x + 4.5, y + 7.6);
     canvasesState.ctx.bezierCurveTo(x + 1.2, y + 5.4, x - 0.2, y + 3.4, x + 0.4, y + 1.9);
@@ -666,20 +665,6 @@ function heart(x, y, kind, ps) {
     canvasesState.ctx.restore();
     return;
   }
-  ps = ps || 1;
-  ps = ps || 1;
-  for (let r = 0; r < 8; r++)
-    for (let c = 0; c < 9; c++) {
-      const ch = HRT[r][c];
-      if (ch === ".") continue;
-      let col = ch === "K" ? "#1a0606" : "";
-      if (!col) {
-        const full = kind === 2 || (kind === 1 && c <= 4);
-        col = full ? (ch === "W" ? "#ffb0b0" : "#e81c1c") : ch === "W" ? "#5a1414" : "#3a0a0a";
-      }
-      canvasesState.ctx.fillStyle = col;
-      canvasesState.ctx.fillRect(x + c * ps, y + r * ps, ps, ps);
-    }
 }
 
 export function hearts(x, y, f, n) {

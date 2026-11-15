@@ -4,7 +4,7 @@ import { sessionState } from "./session.js";
 import { dust, SLOWK } from "../rendering/effects.js";
 import { mkG } from "../world/pathfinding.js";
 import { D8, gOK } from "../world/routes.js";
-import { HT, occ, pth, terrainState } from "../world/terrain.js";
+import { HT, occ, pth, terrainState } from "../world/terrain-state.js";
 import { blk, fv, solid, solidAt } from "../world/traversal.js";
 
 export function moveTo(u, x, y, dt) {

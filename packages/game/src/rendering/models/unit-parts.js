@@ -23,7 +23,7 @@ export const unitPartsState = {
 };
 
 /* ---- unit models: voxel characters with separate head / both arms / tools (1 voxel = .05 tile) ---- */
-export let NOWEAP = false;
+export const NOWEAP = false;
 export const VX = 0.05,
   UM = {};
 
@@ -134,10 +134,10 @@ export function sprites() {
   }
   const sword = (w, i, d, hl) => {
     const g = sprGrid();
-    sprLine(g, 3, 12, 14, 1, (k) => "i");
-    sprLine(g, 4, 12, 14, 2, (k) => "d");
-    sprLine(g, 3, 11, 13, 1, (k) => "w");
-    sprLine(g, 1, 10, 5, 14, (k) => "b");
+    sprLine(g, 3, 12, 14, 1, (_k) => "i");
+    sprLine(g, 4, 12, 14, 2, (_k) => "d");
+    sprLine(g, 3, 11, 13, 1, (_k) => "w");
+    sprLine(g, 1, 10, 5, 14, (_k) => "b");
     sprLine(g, 0, 15, 3, 12, (k) => (k ? "B" : "g"));
     g[14][1] = "b";
     g[15][0] = "g";
@@ -402,8 +402,6 @@ export function mkModel(type, z) {
 }
 
 /* ================= Minecraft-style characters: 8x8x8 head, 8x12x4 torso, 4x12x4 limbs (1 px = .46 voxel) ================= */
-const MP_ = 0.46,
-  mp = (n) => n * MP_;
 
 function mcFace(G, skin, o) {
   o = o || {};
@@ -414,7 +412,7 @@ function mcFace(G, skin, o) {
   vb(G, 0.9, y, 1.86, 0.95, 0.5, 0.12, e1);
   vb(G, -0.62, y, 1.9, 0.5, 0.5, 0.12, e2);
   vb(G, 0.62, y, 1.9, 0.5, 0.5, 0.12, e2);
-  vb(G, 0, 12.0, 1.88, 0.5, 0.5, 0.12, lighten(skin, -0.12 > 0 ? 0 : 0));
+  vb(G, 0, 12.0, 1.88, 0.5, 0.5, 0.12, lighten(skin, 0));
   vb(G, 0, 11.35, 1.86, 1.2, 0.28, 0.12, o.mouth || "#7a4a3a");
 }
 

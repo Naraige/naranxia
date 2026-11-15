@@ -1,5 +1,4 @@
 async () => {
-  const T0 = performance.now();
   /* software WebGL: the live loop draws a frame (seconds each) at every await of pack / load; that made tPack / tLoad look like minutes (1 to 2 s without it) */ const REND =
     renderer.render;
   renderer.render = function () {};
@@ -104,11 +103,15 @@ async () => {
   reset();
   startGame();
   for (let k = 0; k < 50; k++) update(0.05);
+  const terrainKeys = ["HT", "ter", "amt", "pth", "FLG", "TFL", "genF", "stairs", "occ", "CAMPS", "RUINS"];
+  const terrainRefs = terrainKeys.map((k) => SAVA[k][0]());
   const t2 = performance.now();
   await svApply(txt);
   const tLoad = performance.now() - t2;
   rc = 0;
   const D2 = dg();
+  const sameTerrainRefs = terrainRefs.every((v, i) => v === SAVA[terrainKeys[i]][0]());
+  if (!sameTerrainRefs) throw new Error("terrain arrays or collections were replaced during save restore");
   seedR(77);
   for (let k = 0; k < 400; k++) update(0.05);
   const B = dg();
@@ -118,12 +121,13 @@ async () => {
   const w = {};
   for (const x of window.__svw) w[x] = (w[x] || 0) + 1;
   return JSON.stringify({
-    ok: D1 === D2 && A === B,
+    ok: D1 === D2 && A === B && sameTerrainRefs,
     len: txt.length,
     tPack: Math.round(tPack),
     tLoad: Math.round(tLoad),
     same0: D1 === D2,
     sameCont: A === B,
+    sameTerrainRefs,
     w,
   });
 };

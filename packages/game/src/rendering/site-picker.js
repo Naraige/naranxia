@@ -13,7 +13,8 @@ import { THREE } from "./three.js";
 import { cv } from "../ui/canvases.js";
 import { hudState, inR } from "../ui/hud.js";
 import { buildPreview, pvH, PVH, PVS, pvW, PVW, siteMaskGet, siteOK, sitePickerState } from "../ui/site-picker.js";
-import { BED, CH, genChunk, LAND, NCX, NCY, ROCKH, SNOW, terrainState, WLV } from "../world/terrain.js";
+import { genChunk } from "../world/terrain.js";
+import { BED, CH, LAND, NCX, NCY, ROCKH, SNOW, terrainState, WLV } from "../world/terrain-state.js";
 
 /* ---- 3D castle site picker ---- */
 export let PK = null;
@@ -165,7 +166,6 @@ export function pkBuild() {
       col[k * 3 + 1] = c[1];
       col[k * 3 + 2] = c[2];
       if (!wt) {
-        const r = hs(tx, ty, 31);
         if (code === 2) TR.push([i * PKU, y, j * PKU, al >= 8 ? 1 : 0, 0.8 + hs(tx, ty, 32) * 0.5]);
         else if (code === 3) ROC.push([i * PKU, y, j * PKU, (hs(tx, ty, 33) * 6) | 0]);
         else if (code === 4) GLD.push([i * PKU, y, j * PKU, (hs(tx, ty, 34) * 3) | 0]);
@@ -279,7 +279,7 @@ function pkProps() {
 
 /* real generated world around the chosen site: the game's own chunk meshes (terrain, trees, rocks, gold) + the castle */
 const PKR = 3;
-let PKD = { x: -1, y: -1, grp: null, t: 0 };
+const PKD = { x: -1, y: -1, grp: null, t: 0 };
 
 function pkDetail(tx, ty) {
   if (!PK || !PK.idx) return;
@@ -289,7 +289,7 @@ function pkDetail(tx, ty) {
   sessionState.CROT = sessionState.PKROT & 3;
   try {
     reset();
-  } catch (e) {
+  } catch {
     return;
   }
   if (PKD.grp) {

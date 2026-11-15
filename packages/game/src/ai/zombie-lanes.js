@@ -6,7 +6,8 @@ import { sessionState } from "../gameplay/session.js";
 import { SW } from "../gameplay/swarm.js";
 import { longField } from "../world/connectivity.js";
 import { FD, gOK } from "../world/routes.js";
-import { ensureAround, terrainState } from "../world/terrain.js";
+import { ensureAround } from "../world/terrain.js";
+import { terrainState } from "../world/terrain-state.js";
 import { bfsW, fv, solid } from "../world/traversal.js";
 
 export const zombieLanesState = {
@@ -108,7 +109,6 @@ function laneField(L, sg) {
     zombieLanesState.lfBud--;
     LFLD.delete(key);
   }
-  let S;
   const Wp = terrainState.ROUTES[L].wps,
     a = Math.min(Wp.length - 1, sg * LSEG),
     b = Math.min(Wp.length - 1, a + LSEG + 2);
@@ -127,8 +127,8 @@ function laneField(L, sg) {
   y0 = Math.floor(y0) - 14;
   x1 = Math.ceil(x1) + 14;
   y1 = Math.ceil(y1) + 14;
-  let seeds = [],
-    tg = b;
+  const seeds = [];
+  let tg = b;
   for (let k = b; k > a && !seeds.length; k--) {
     const p = Wp[k],
       cx = p[0] | 0,
@@ -138,7 +138,7 @@ function laneField(L, sg) {
       for (let i = -2; i <= 2; i++) if (!solid(cx + i, cy + j)) seeds.push([cx + i, cy + j]);
     tg = k;
   }
-  S = seeds.length ? bfsW(seeds, false, x0, y0, x1 - x0, y1 - y0) : null;
+  const S = seeds.length ? bfsW(seeds, false, x0, y0, x1 - x0, y1 - y0) : null;
   if (S) S.tg = tg;
   LFLD.set(key, { S, v: sessionState.ver });
   if (LFLD.size > 260) LFLD.delete(LFLD.keys().next().value);

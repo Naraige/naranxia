@@ -8,7 +8,7 @@ import { reset } from "../gameplay/reset.js";
 import { FAT, PBASE, PRICE } from "../gameplay/economy.js";
 import { eventsState } from "../gameplay/events.js";
 import { BASES } from "../ai/kingdoms.js";
-import { RUINS } from "../world/terrain.js";
+import { RUINS } from "../world/terrain-state.js";
 import { questsState } from "../gameplay/quests.js";
 import { sessionState } from "../gameplay/session.js";
 import { update } from "../gameplay/statistics.js";
@@ -19,9 +19,10 @@ import { mpResMsg, mpResync } from "./resync.js";
 import { MP } from "./session.js";
 import { home } from "../rendering/camera.js";
 import { hudDisplayState } from "../ui/hud-state.js";
-import { settingsState } from "../ui/settings.js";
+import { settingsState } from "../ui/panel-state.js";
 import { openPicker, sitePickerState } from "../ui/site-picker.js";
-import { genChunk, genF, NCX, terrainState } from "../world/terrain.js";
+import { genChunk } from "../world/terrain.js";
+import { genF, NCX, terrainState } from "../world/terrain-state.js";
 
 /* ================= Co-op: peer to peer lockstep (WebRTC, manual code exchange) ================= */
 export const MPD = 6;
@@ -36,7 +37,9 @@ export function setPause(v) {
 export function mpSend(o) {
   try {
     if (MP.dc && MP.dc.readyState === "open") MP.dc.send(JSON.stringify(o));
-  } catch (e) {}
+  } catch {
+    /* A notification send is best-effort and must not interrupt the caller. */
+  }
 }
 
 export function mpHash() {

@@ -11,7 +11,7 @@ export const fontOf = (sz) => {
   return px >= 16 ? "700 " + Math.round(px * 0.8) + "px " + FFT : "500 " + Math.round(px * 0.88) + "px " + FF;
 };
 
-export const setF = (sz, w) => {
+export const setF = (sz, _w) => {
   canvasesState.ctx.font = fontOf(sz);
 };
 
@@ -21,13 +21,17 @@ export function initializeTypography() {
   try {
     document.fonts && document.fonts.load("500 16px Inter", "0");
     document.fonts.load('700 16px "Pixelify Sans"', "A");
-  } catch (e) {}
+  } catch {
+    /* Keep the browser's fallback fonts when font loading is unavailable. */
+  }
   try {
     if (document.fonts) {
       document.fonts.addEventListener("loadingdone", () => TWM.clear());
       document.fonts.ready.then(() => TWM.clear());
     }
-  } catch (e) {}
+  } catch {
+    /* Font load notifications are optional; retain the current text measurement cache. */
+  }
 }
 
 /* light theme: UI text is authored for dark panels, so light colors are mapped to dark inks (hue kept for colored text) */

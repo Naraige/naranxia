@@ -23,7 +23,7 @@ export function lastRun() {
     last = null;
     try {
       last = JSON.parse(localStorage.getItem("dk_last") || "null");
-    } catch (e) {
+    } catch {
       last = null;
     }
     if (!last || !(last.w >= 0)) last = null;

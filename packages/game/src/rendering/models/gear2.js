@@ -56,7 +56,7 @@ const haft = (P, s) => (f, u, v, W, H) => {
 };
 
 /* a wooden pole standing along y */
-const pole = (P, s) => (f, u, v, W, H) => {
+const pole = (P, s) => (f, u, v, _W, _H) => {
   if (f === "T") return P[3];
   if (f === "D") return P[0];
   const n = pxN("S", v, 0, s || 3);
@@ -588,7 +588,7 @@ export function g2Pole(G) {
       27,
       1.6,
       1.6,
-      (f, u, v, W, H) => (f === "T" ? m.WL[4] : f === "D" ? m.WL[0] : pxN("C", u, 0, 2) > 0.7 ? m.WL[3] : m.WL[2]),
+      (f, u, _v, _W, _H) => (f === "T" ? m.WL[4] : f === "D" ? m.WL[0] : pxN("C", u, 0, 2) > 0.7 ? m.WL[3] : m.WL[2]),
       0,
       [14, 1, 1],
     );
@@ -606,7 +606,7 @@ export function g2Pole(G) {
       2.4,
       2.6,
       1,
-      (f, u, v, W, H) => (f === "F" || f === "B" ? (u === 0 ? m.ST[4] : m.ST[2]) : m.ST[3]),
+      (f, u, _v, _W, _H) => (f === "F" || f === "B" ? (u === 0 ? m.ST[4] : m.ST[2]) : m.ST[3]),
       4,
       [2, 2, 1],
     );

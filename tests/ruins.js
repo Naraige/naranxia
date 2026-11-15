@@ -15,7 +15,6 @@ async () => {
       ensureAround(Math.max(1, Math.min(TW - 2, CX + dx)), Math.max(1, Math.min(TW - 2, CY + dy)), 1);
   const n = RUINS.size,
     r = [...RUINS.values()][0];
-  const O = { n };
   if (!r) {
     Math.random = RR;
     return JSON.stringify({ ok: false, n });

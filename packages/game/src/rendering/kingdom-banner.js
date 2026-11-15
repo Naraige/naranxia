@@ -454,16 +454,9 @@ export function drawBanner() {
 export function saveTheme() {
   try {
     localStorage.setItem("dk_theme", JSON.stringify(THEME));
-  } catch (e) {}
-}
-
-function drawEmblem(x, y, s, e, col) {
-  canvasesState.ctx.save();
-  canvasesState.ctx.translate(x, y);
-  canvasesState.ctx.scale(s / 16, s / 16);
-  canvasesState.ctx.fillStyle = col;
-  EMB[e](canvasesState.ctx);
-  canvasesState.ctx.restore();
+  } catch {
+    /* The selected banner theme remains active in memory for this session. */
+  }
 }
 
 const EMBC = {};

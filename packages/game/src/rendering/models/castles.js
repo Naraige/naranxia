@@ -356,17 +356,6 @@ export function qSpire(G, x, z, y0, D, H, cols, o) {
   return y0 + H;
 }
 
-function qMerlR(G, x, z, y, D, n, h) {
-  for (let k = 0; k < n; k++) {
-    const a = ((k + 0.5) / n) * 6.2832,
-      r = D / 2 - 0.065,
-      px = x + Math.cos(a) * r,
-      pz = z + Math.sin(a) * r;
-    bS(G, px, y, pz, 0.13, h, 0.13, QS[k % 2]);
-    bS(G, px, y + h, pz, 0.15, 0.03, 0.15, QTR);
-  }
-}
-
 export function qCorbR(G, x, z, y, D, n) {
   for (let k = 0; k < n; k++) {
     const a = ((k + 0.5) / n) * 6.2832,
@@ -399,7 +388,7 @@ export function castleGeo() {
     for (let j = 0; j < 6; j++) bS(G, 0.25 + i * 0.5, 0.2, 0.25 + j * 0.5, 0.49, 0.025, 0.49, QS[(i * 3 + j * 5) % 4]);
   const WT = 2.3;
   /* curtain walls between the towers (the gatehouse closes the front) */
-  const cw = (x, z, w, d, ax) => {
+  const cw = (x, z, w, d, _ax) => {
     qStone(G, x, 0.2, z, w, d, WT - 0.2, { moss: 1 });
     qCornice(G, x, WT, z, w + 0.05, d + 0.05, 0.07);
     bS(G, x, WT + 0.07, z, w, 0.025, d, QSD2);

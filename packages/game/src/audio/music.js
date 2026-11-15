@@ -1,4 +1,3 @@
-import { AC, BENCH, MB, nbuf, sndOn, audioWake } from "./sound.js";
 import { REALR } from "../core/random.js";
 import { TS } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
@@ -7,6 +6,11 @@ import { wavesState } from "../gameplay/waves.js";
 import { dayK } from "../rendering/lighting.js";
 import { CAM } from "../rendering/scene.js";
 import { seasonIdx } from "../rendering/weather.js";
+
+let AUDIO = null;
+export function setMusicAudioState(audio) {
+  AUDIO = audio;
+}
 
 /* ---------------- music: generative score ----------------
    Seven themes (menu, calm, night, battle, boss, triumph, defeat). Each theme has several chord progressions; a "phrase" is one pass over a
@@ -169,10 +173,10 @@ let BUS = null,
   P = null;
 const ST = {};
 function mkBus(t, lv, fade) {
-  const g = AC.createGain(),
-    d = AC.createGain();
+  const g = AUDIO.AC.createGain(),
+    d = AUDIO.AC.createGain();
   d.connect(g);
-  g.connect(MB);
+  g.connect(AUDIO.MB);
   g.gain.setValueAtTime(0.0001, t);
   g.gain.linearRampToValueAtTime(lv, t + fade);
   return { g, d };
@@ -182,13 +186,17 @@ function dropBus(o, t, tc) {
     if (o.g.gain.cancelAndHoldAtTime) o.g.gain.cancelAndHoldAtTime(t);
     else o.g.gain.cancelScheduledValues(t);
     o.g.gain.setTargetAtTime(0, t, tc);
-  } catch (e) {}
+  } catch {
+    /* If a gain node has been detached, skip its fade and continue with cleanup. */
+  }
   if (!mus.force)
     setTimeout(
       () => {
         try {
           o.g.disconnect();
-        } catch (e) {}
+        } catch {
+          /* Disconnect is best-effort because WebAudio may already have released the node. */
+        }
       },
       (tc * 5 + 4) * 1000,
     );
@@ -196,9 +204,9 @@ function dropBus(o, t, tc) {
 
 /* ---- instruments (all on the current bus B; d = side-chained by the kick) ---- */
 function vo(f, t, d, type, v, lp, det, att, dk, rel) {
-  const o = AC.createOscillator(),
-    g = AC.createGain(),
-    fl = AC.createBiquadFilter();
+  const o = AUDIO.AC.createOscillator(),
+    g = AUDIO.AC.createGain(),
+    fl = AUDIO.AC.createBiquadFilter();
   o.type = type;
   o.frequency.value = f;
   if (det) o.detune.value = det;
@@ -217,13 +225,13 @@ function vo(f, t, d, type, v, lp, det, att, dk, rel) {
   o.stop(t + d + 0.05);
 }
 function nz(t, d, v, type, f, q) {
-  const s = AC.createBufferSource();
-  s.buffer = nbuf;
-  const fl = AC.createBiquadFilter();
+  const s = AUDIO.AC.createBufferSource();
+  s.buffer = AUDIO.nbuf;
+  const fl = AUDIO.AC.createBiquadFilter();
   fl.type = type;
   fl.frequency.value = f;
   fl.Q.value = q || 1;
-  const g = AC.createGain();
+  const g = AUDIO.AC.createGain();
   g.gain.setValueAtTime(v, t);
   g.gain.exponentialRampToValueAtTime(0.0001, t + d);
   s.connect(fl);
@@ -236,12 +244,12 @@ function strings(n, t, d, v, lp) {
     vo(mf(n), t, d, "sawtooth", v * 0.38, lp || 1200, det, Math.min(0.45, d * 0.3), 1, Math.min(0.5, d * 0.35));
 }
 function choir(n, t, d, v) {
-  const o = AC.createOscillator(),
-    out = AC.createGain();
+  const o = AUDIO.AC.createOscillator(),
+    out = AUDIO.AC.createGain();
   o.type = "sawtooth";
   o.frequency.value = mf(n);
-  const vb = AC.createOscillator(),
-    vg = AC.createGain();
+  const vb = AUDIO.AC.createOscillator(),
+    vg = AUDIO.AC.createGain();
   vb.frequency.value = 4.6;
   vg.gain.value = mf(n) * 0.008;
   vb.connect(vg);
@@ -251,11 +259,11 @@ function choir(n, t, d, v) {
     [1150, 8, 0.55],
     [2600, 10, 0.18],
   ]) {
-    const b = AC.createBiquadFilter();
+    const b = AUDIO.AC.createBiquadFilter();
     b.type = "bandpass";
     b.frequency.value = ff;
     b.Q.value = qq;
-    const g = AC.createGain();
+    const g = AUDIO.AC.createGain();
     g.gain.value = gg;
     o.connect(b);
     b.connect(g);
@@ -301,10 +309,10 @@ function cello(n, t, d, v) {
 }
 function brass(n, t, d, v) {
   const f = mf(n),
-    o1 = AC.createOscillator(),
-    o2 = AC.createOscillator(),
-    lp = AC.createBiquadFilter(),
-    g = AC.createGain();
+    o1 = AUDIO.AC.createOscillator(),
+    o2 = AUDIO.AC.createOscillator(),
+    lp = AUDIO.AC.createBiquadFilter(),
+    g = AUDIO.AC.createGain();
   o1.type = o2.type = "sawtooth";
   o1.frequency.value = f;
   o2.frequency.value = f;
@@ -329,12 +337,12 @@ function brass(n, t, d, v) {
 }
 function flute(n, t, d, v) {
   const f = mf(n),
-    o = AC.createOscillator(),
-    o2 = AC.createOscillator(),
-    g = AC.createGain(),
-    g2 = AC.createGain(),
-    vb = AC.createOscillator(),
-    vg = AC.createGain();
+    o = AUDIO.AC.createOscillator(),
+    o2 = AUDIO.AC.createOscillator(),
+    g = AUDIO.AC.createGain(),
+    g2 = AUDIO.AC.createGain(),
+    vb = AUDIO.AC.createOscillator(),
+    vg = AUDIO.AC.createGain();
   o.type = "sine";
   o2.type = "triangle";
   o.frequency.value = f;
@@ -360,8 +368,8 @@ function flute(n, t, d, v) {
   nz(t, 0.08, v * 0.2, "bandpass", f * 2, 2);
 }
 function kick(t, v) {
-  const o = AC.createOscillator(),
-    g = AC.createGain();
+  const o = AUDIO.AC.createOscillator(),
+    g = AUDIO.AC.createGain();
   o.frequency.setValueAtTime(160, t);
   o.frequency.exponentialRampToValueAtTime(42, t + 0.16);
   g.gain.setValueAtTime(v, t);
@@ -383,8 +391,8 @@ function hat(t, v, open) {
   nz(t, open ? 0.22 : 0.045, v, "highpass", 8000);
 }
 function taiko(t, v) {
-  const o = AC.createOscillator(),
-    g = AC.createGain();
+  const o = AUDIO.AC.createOscillator(),
+    g = AUDIO.AC.createGain();
   o.frequency.setValueAtTime(110, t);
   o.frequency.exponentialRampToValueAtTime(52, t + 0.3);
   g.gain.setValueAtTime(v, t);
@@ -396,15 +404,15 @@ function taiko(t, v) {
   nz(t, 0.25, v * 0.5, "lowpass", 700);
 }
 function riser(t, d, v) {
-  const s = AC.createBufferSource();
-  s.buffer = nbuf;
+  const s = AUDIO.AC.createBufferSource();
+  s.buffer = AUDIO.nbuf;
   s.loop = true;
-  const f = AC.createBiquadFilter();
+  const f = AUDIO.AC.createBiquadFilter();
   f.type = "bandpass";
   f.Q.value = 1.2;
   f.frequency.setValueAtTime(300, t);
   f.frequency.exponentialRampToValueAtTime(5000, t + d);
-  const g = AC.createGain();
+  const g = AUDIO.AC.createGain();
   g.gain.setValueAtTime(0.0001, t);
   g.gain.exponentialRampToValueAtTime(v, t + d);
   g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.3);
@@ -663,9 +671,10 @@ function advance() {
 }
 
 export function musTick() {
-  if (!AC || !sndOn || BENCH || AC.state !== "running") return;
-  audioWake();
-  const now = AC.currentTime;
+  const A = AUDIO;
+  if (!A || !A.AC || !A.sndOn || A.BENCH || A.AC.state !== "running") return;
+  A.audioWake();
+  const now = A.AC.currentTime;
   if (!mus.run) {
     mus.run = 1;
     mus.next = now + 0.3;

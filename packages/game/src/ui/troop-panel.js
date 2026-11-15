@@ -5,15 +5,15 @@ import { sessionState } from "../gameplay/session.js";
 import { canvasesState } from "./canvases.js";
 import { L, T_, tw } from "../i18n/language.js";
 import { MP } from "../multiplayer/session.js";
-import { NAMES, uiBtn } from "./build-menu.js";
+import { uiBtn } from "./build-menu.js";
+import { NAMES } from "./build-catalog.js";
 import { BTN, BTNH, BTNX, frame, PAN, TN } from "./drawing.js";
 import { hudState, U } from "./hud.js";
 import { dIc, IC } from "./icons.js";
-import { settingsState } from "./settings.js";
+import { troopPanelState } from "./panel-state.js";
+import { settingsState } from "./panel-state.js";
 
-export const troopPanelState = {
-  troopsOpen: false,
-};
+export { troopPanelState };
 
 /* ---- troops panel: all your units by type, and what each group is doing; click a line or a task to select them ---- */
 export const PLUN = {
@@ -90,7 +90,7 @@ function selectUnits(L) {
   snd("select");
 }
 
-export function drawTroops(UW, UH) {
+export function drawTroops(UW, _UH) {
   const mine = sessionState.units.filter((u) => u.t === 0 && u.hp > 0 && (!MP.on || (u.pl | 0) === LPL()));
   const byT = new Map();
   for (const u of mine) {

@@ -1,5 +1,5 @@
 import { cbOn, cbSet, pref, setPref } from "../core/prefs.js";
-import { applyVol, saveVol, snd, sndOn, soundState, toggleSound } from "../audio/sound.js";
+import { applyVol, saveVol, snd, soundState } from "../audio/sound.js";
 import { startGame } from "../gameplay/lifecycle.js";
 import { sessionState } from "../gameplay/session.js";
 import { questsPref, questsState } from "../gameplay/quests.js";
@@ -10,23 +10,16 @@ import { saveTheme } from "../rendering/kingdom-banner.js";
 import { rs } from "../rendering/resolution.js";
 import { DRS, GQU, renderer, sceneState, SHADOWS, sun } from "../rendering/scene.js";
 import { bugReport } from "../debug/tools.js";
-import { HK } from "./build-menu.js";
+import { HK } from "./build-catalog.js";
 import { canvasesState } from "./canvases.js";
 import { applyCB } from "./drawing.js";
 import { bevelBtn, keyChip, kitRow, kitScreen, listBegin, listEnd } from "./menu-kit.js";
 import { hudDisplayState } from "./hud-state.js";
+import { settingsState } from "./panel-state.js";
 import { THEME } from "./kingdom-theme.js";
 import { FF, FFP } from "./typography.js";
 
-export const settingsState = {
-  nameBox: null,
-  TOPH: 28,
-  fromGame: false,
-  setupOpen: false,
-  settingsOpen: false,
-  rebind: null,
-  sliderDrag: null,
-};
+export { settingsState };
 
 export let nmI;
 
@@ -183,7 +176,9 @@ const LAYT = {
 const laySave = () => {
   try {
     localStorage.setItem("dk_lay", JSON.stringify(LAY));
-  } catch (e) {}
+  } catch {
+    /* Keep the detected layout in memory for this session. */
+  }
 };
 /* a letter typed with a physical key: remember it; when only one known layout types it there (A, Q, W, Z, sometimes Y), fill the other letters of that layout */
 export function layNote(code, ch) {
@@ -204,11 +199,15 @@ export function layInit() {
     const lg = String(navigator.language || "").toLowerCase();
     if (/^fr(-fr|-be|-mc|-lu)?$/.test(lg)) Object.assign(LAY, LAYT.azerty);
     else if (/^de\b/.test(lg)) Object.assign(LAY, LAYT.qwertz);
-  } catch (e) {}
+  } catch {
+    /* Use saved or QWERTY labels if the browser language is unavailable. */
+  }
   try {
     const o = JSON.parse(localStorage.getItem("dk_lay") || "{}");
     for (const c in o) if (isCode(c) && typeof o[c] === "string" && o[c].length === 1) LAY[c] = o[c];
-  } catch (e) {}
+  } catch {
+    /* Keep browser-language guesses when saved layout data is malformed or unavailable. */
+  }
   try {
     if (navigator.keyboard && navigator.keyboard.getLayoutMap)
       navigator.keyboard
@@ -228,8 +227,12 @@ export function layInit() {
             syncHK();
           }
         })
-        .catch(() => {});
-  } catch (e) {}
+        .catch(() => {
+          /* Keep saved or guessed labels if the browser cannot provide its layout map. */
+        });
+  } catch {
+    /* Layout-map lookup is optional; retain saved or guessed labels. */
+  }
 }
 /* the action a key press stands for: the character first, then the physical key, then a physical binding whose own letter was typed
    (a keyboard where that letter sits elsewhere and its place is taken by a character binding) */
@@ -322,7 +325,9 @@ export function loadKB() {
   KB = { ...KDEF };
   try {
     Object.assign(KB, JSON.parse(localStorage.getItem("dk_keys") || "{}"));
-  } catch (e) {}
+  } catch {
+    /* Keep default key bindings when saved data is malformed or storage is unavailable. */
+  }
   try {
     const v = localStorage.getItem("dk_keyv");
     if (v !== "3") {
@@ -340,14 +345,18 @@ export function loadKB() {
       if (ch && localStorage.getItem("dk_keys")) localStorage.setItem("dk_keys", JSON.stringify(KB));
       localStorage.setItem("dk_keyv", "3");
     }
-  } catch (e) {}
+  } catch {
+    /* Key migration is best-effort when storage is unavailable; the current key map remains active. */
+  }
   syncHK();
 }
 
 export function saveKB() {
   try {
     localStorage.setItem("dk_keys", JSON.stringify(KB));
-  } catch (e) {}
+  } catch {
+    /* Keyboard changes remain active for this session when storage is unavailable. */
+  }
   syncHK();
 }
 
@@ -356,7 +365,9 @@ function setGfx(v) {
   GQU.value = sceneState.GQ;
   try {
     localStorage.setItem("dk_gfx", sceneState.GQ);
-  } catch (e) {}
+  } catch {
+    /* Keep the graphics setting for this session when storage is unavailable. */
+  }
   DRS.lv = 0;
   DRS.sum = DRS.cs = DRS.n = DRS.t = DRS.ok = DRS.chk = 0;
   DRS.noDn = DRS.noUp = 0;
@@ -517,7 +528,9 @@ export function drawSettings(UW, UH, fh, back) {
           uiMul = v;
           try {
             localStorage.setItem("dk_ui", v);
-          } catch (e) {}
+          } catch {
+            /* Apply the interface scale for this session when storage is unavailable. */
+          }
           rs();
         },
         ci = Math.max(
@@ -551,7 +564,9 @@ export function drawSettings(UW, UH, fh, back) {
       else {
         try {
           localStorage.setItem("dk_quests", on ? "1" : "0");
-        } catch (e) {}
+        } catch {
+          /* Quest preferences cannot persist outside a game when storage is unavailable. */
+        }
       }
     });
     prow(l, "Pause when away", "ap", true);
@@ -626,7 +641,9 @@ export function initializeSettings() {
   };
   try {
     uiMul = +localStorage.getItem("dk_ui") || 1;
-  } catch (e) {}
+  } catch {
+    /* Keep the default interface scale when saved preferences cannot be read. */
+  }
   layInit();
   loadKB();
   applyCB();

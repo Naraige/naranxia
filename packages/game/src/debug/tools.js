@@ -21,8 +21,8 @@ import { hudState, U } from "../ui/hud.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { dIc, IC } from "../ui/icons.js";
 import { pill } from "../ui/minimap.js";
-import { settingsState } from "../ui/settings.js";
-import { terrainState } from "../world/terrain.js";
+import { settingsState } from "../ui/panel-state.js";
+import { terrainState } from "../world/terrain-state.js";
 import { freeTile } from "../world/traversal.js";
 
 /* ================= TOOLS: bug report (F8) and test mode (F10, solo) ================= */
@@ -45,7 +45,7 @@ export function bugCapture() {
     x.drawImage(cw, 0, 0, c.width, c.height);
     x.drawImage(cv, 0, 0, c.width, c.height);
     q(c.toDataURL("image/jpeg", 0.72));
-  } catch (e) {
+  } catch {
     q(null);
   }
 }
@@ -78,14 +78,16 @@ export async function bugReport() {
       const gl = renderer.getContext(),
         d = gl.getExtension("WEBGL_debug_renderer_info");
       gpu = d ? String(gl.getParameter(d.UNMASKED_RENDERER_WEBGL)) : "";
-    } catch (e) {}
+    } catch {
+      /* GPU details are optional; keep the bug report usable without WebGL diagnostics. */
+    }
     const rep = {
       game: "Naranxia",
       kind: "bug report",
       ver: GVER,
       date: new Date().toISOString(),
       ua: navigator.userAgent,
-      desktop: !!(window.NARX && NARX.desktop),
+      desktop: !!(window.NARX && window.NARX.desktop),
       lang: LANGS[LANG][0],
       gpu,
       screen: [innerWidth, innerHeight, devicePixelRatio],
@@ -184,7 +186,9 @@ export async function bugReport() {
               .join("\n")
           : "");
       navigator.clipboard.writeText(sm).catch(() => {});
-    } catch (e) {}
+    } catch {
+      /* Clipboard permission is optional because the report file was already saved. */
+    }
     window.__bug = rep;
     hudDisplayState.msgS = "Bug report saved: " + nm + " - send it on Discord with a few words";
     hudDisplayState.msgT = 8;
@@ -251,7 +255,9 @@ export function devAct(k) {
     setTimeout(() => {
       try {
         icoPart("units");
-      } catch (e) {}
+      } catch {
+        /* The research unlock remains applied if the optional icon refresh fails. */
+      }
     }, 0);
     m = "All research done";
   } else if (k === "wave") {
@@ -295,7 +301,7 @@ export function devAct(k) {
   snd("click");
 }
 
-export function drawDev(UW, UH) {
+export function drawDev(UW, _UH) {
   if (!devOK()) {
     diagnosticsState.devOpen = false;
     return;

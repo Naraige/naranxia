@@ -33,8 +33,9 @@ A list from the King goes into issues first (one per item, labels below), then i
 npm run dev                    # load ES modules from the development server
 npm run build                  # build dist/naranxia_readable.html
 npm run build:release          # also build dist/naranxia.html for releases
+npm run quality                # ESLint, Prettier and architectural dependency checks
 npm test                       # quick suite, logs in dist/test-logs/
-npm test -- --full             # quick suite plus save round trip
+npm test -- --full             # quick suite plus deep resync and 6000-tick co-op soak
 npm test -- det mp8            # select tests by name
 python3 tools/run.py X.js [out.png|-] [W H wait] [html]   # evaluates the JS function in X.js inside the loaded game
 python3 tools/fitcheck.py 1280 720 x 9                    # button text overflow in every language (after npm run build; slow, run in background)
@@ -54,8 +55,11 @@ Tests: `smoke` (packed build plays a wave), `det` (same game twice = same hashes
 `mp8` / `mpk` (2 headless co-op clients: economy, research, waves / king, guards, fights; FIRST DIVERGENCE on a desync),
 `mp_resync` (one machine corrupted on purpose, the auto resync must fix it), `mp_convoy` (convoy delivered at the same tick on both),
 `mp_quests` (co-op quests paid to both, fixed world), `mp_events` (events and a resync in co-op), `quests`, `spearman`, `ui` (keys on QWERTY and AZERTY, quest arrow, banners),
-`save` (save / load round trip, rendering stubbed; same0 must be true, sameCont=false is known). GitHub runs the quick suite on every push
-touching code (`.github/workflows/test.yml`) and before every release. The packed build is deterministic (terser + zopfli).
+`save` (save / load round trip and continuation must match; shared terrain references must survive restore), `waves` (routing and stuck-wave safety),
+`mp_build` (guest/host placement and ownership), `runner` (test-result contracts), `desktop` (preload/save bridge).
+`--full` also runs `mp_resync_deep` (five corruption/recovery cases) and `mp_soak` (6000 ticks without divergence or resync).
+GitHub runs quality checks and the quick suite on every push touching code (`.github/workflows/test.yml`) and before every release.
+The packed build is deterministic (terser + zopfli). See `CONTRIBUTING.md` and `docs/ARCHITECTURE.md` for coding and ownership rules.
 
 ## Releasing a version
 

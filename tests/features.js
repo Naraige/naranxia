@@ -120,8 +120,6 @@ async () => {
   units.push(kz);
   LH.set(kz, "knight");
   kz.hp = 0;
-  const gp = GST.g;
-  RESP[0].g += 0;
   update(0.05);
   chk("statKill", kills === k0 + 1 && GST.k.knight === 1);
   chk("statBest", !!gstBest() && gstBest()[1] >= 1);

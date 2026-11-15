@@ -2,7 +2,7 @@ import { REALR } from "../core/random.js";
 import { $m, lobbyRender, lobbyShow, mpConnected, mpFallback, mpStatus } from "./lobby.js";
 import { mpLost, mpMsg } from "./lockstep.js";
 import { THEME } from "../ui/kingdom-theme.js";
-import { registryHide, registryShow } from "./registry.js";
+import { registryShow } from "./registry.js";
 import { MP } from "./session.js";
 
 /* ---- connection 1: short room code through the free PeerJS broker ---- */
@@ -35,7 +35,9 @@ function attach(c) {
   c.on("data", (d) => {
     try {
       mpMsg(typeof d === "string" ? JSON.parse(d) : d);
-    } catch (e) {}
+    } catch {
+      /* Ignore malformed or stale peer messages; later lockstep messages can still arrive. */
+    }
   });
   c.on("close", mpLost);
   c.on("error", mpLost);
@@ -57,14 +59,14 @@ export async function lobbyHost(custom, tries) {
   mpStatus("Creating your room...");
   try {
     await loadPeer();
-  } catch (e) {
+  } catch {
     mpStatus("Could not reach the matchmaking service. Check your connection and try again.");
     mpFallback(true);
     return;
   }
   MP.host = true;
   MP.code = custom || rcode();
-  const peer = new Peer("nrx-" + MP.code, PCFG);
+  const peer = new window.Peer("nrx-" + MP.code, PCFG);
   MP.peer = peer;
   peer.on("open", () => {
     lobbyRender();
@@ -105,16 +107,16 @@ export async function lobbyJoin(code) {
   mpStatus("Joining room " + code + "...");
   try {
     await loadPeer();
-  } catch (e) {
+  } catch {
     mpStatus("Could not reach the matchmaking service. Check your connection and try again.");
     mpFallback(true);
     return;
   }
   MP.host = false;
   MP.code = code;
-  const peer = new Peer(PCFG);
+  const peer = new window.Peer(PCFG);
   MP.peer = peer;
-  let t = setTimeout(() => {
+  const t = setTimeout(() => {
     if (!MP.conn) mpStatus("Room " + code + " not found. Check the code with the host.");
   }, 9000);
   peer.on("open", () => {
@@ -132,9 +134,6 @@ export async function lobbyJoin(code) {
 }
 
 /* ---- connection 2 (fallback): manual WebRTC codes, no server at all ---- */
-
-const enc = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o)))),
-  dec = (s) => JSON.parse(decodeURIComponent(escape(atob(s.replace(/\s+/g, "")))));
 
 export function initializeConnection() {
   PCFG = window.MP_PEER_CFG || {};

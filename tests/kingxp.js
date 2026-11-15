@@ -97,7 +97,7 @@ async () => {
   /* plate: 20 % less damage taken and slow regeneration */
   kingTick(0.05);
   chk("plate", kg.kdr === 0.8);
-  const h0 = (kg.hp = 100);
+  kg.hp = 100;
   kingTick(1);
   chk("regen", kg.hp > 100.5 && kg.hp < 101.5);
   /* charge: heavy charge reaches 4 tiles and hits harder */

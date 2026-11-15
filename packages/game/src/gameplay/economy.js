@@ -34,7 +34,7 @@ import { puff } from "../rendering/effects.js";
 import { icoPart } from "../rendering/pixel-icons.js";
 import { buildStructMesh, refreshNear } from "../rendering/structures.js";
 import { hudDisplayState } from "../ui/hud-state.js";
-import { occ } from "../world/terrain.js";
+import { occ } from "../world/terrain-state.js";
 
 export const economyState = {
   priceT: 0,
@@ -356,13 +356,6 @@ export let startResearch2 = function startResearch2(k) {
   hudDisplayState.msgT = 3;
 };
 
-function farmCount(p) {
-  let n = 0;
-  for (const s of sessionState.structs)
-    if (s.t === 0 && s.type === "farm" && s.prog >= 1 && (p === undefined || (s.pl | 0) === p)) n++;
-  return n;
-}
-
 export function extraSim(dt) {
   {
     for (const s of sessionState.structs)
@@ -389,7 +382,9 @@ export function extraSim(dt) {
         setTimeout(() => {
           try {
             icoPart("units");
-          } catch (e) {}
+          } catch {
+            /* Icon refresh is optional; the research state is already committed. */
+          }
         }, 0);
       ach("res");
       RS2.on = null;
@@ -447,7 +442,9 @@ export function finishResearch() {
   setTimeout(() => {
     try {
       icoPart("tier");
-    } catch (e) {}
+    } catch {
+      /* Icon refresh is optional; the research state is already committed. */
+    }
   }, 0);
   snd("horn");
   sessionState.bannerT = 5;

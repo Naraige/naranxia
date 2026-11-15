@@ -33,7 +33,7 @@ const verOfHtml = (html) => {
 function readInstalled() {
   try {
     return JSON.parse(fs.readFileSync(path.join(GDIR(), "version.json"), "utf8"));
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -108,7 +108,9 @@ async function checkUpdate(curVer) {
 function createWindow() {
   try {
     CFG = Object.assign(CFG, JSON.parse(fs.readFileSync(path.join(UD(), "config.json"), "utf8")));
-  } catch (e) {}
+  } catch {
+    /* Missing or invalid user config keeps the packaged defaults. */
+  }
   win = new BrowserWindow({
     width: 1400,
     height: 860,
@@ -135,7 +137,7 @@ function createWindow() {
   });
   win.webContents.once("did-finish-load", async () => {
     let ver = ensureInstalled(),
-      info = null;
+      info;
     status("Checking for updates...", 0.2);
     try {
       info = await checkUpdate(ver);
@@ -162,7 +164,9 @@ function createWindow() {
           try {
             const img = await win.webContents.capturePage();
             fs.writeFileSync(process.env.NARX_TEST + ".png", img.toPNG());
-          } catch (e) {}
+          } catch {
+            /* A captured test screenshot is optional; the game result is already recorded. */
+          }
           app.quit();
         }, 6000),
       );
@@ -187,7 +191,7 @@ ipcMain.handle("save:write", (e, name, data) => {
 ipcMain.handle("save:read", (e, name) => {
   try {
     return fs.readFileSync(slotFile(name), "utf8");
-  } catch (err) {
+  } catch {
     return null;
   }
 });
@@ -201,14 +205,16 @@ ipcMain.handle("save:list", () => {
         return { name: f.slice(0, -4), t: s.mtimeMs, size: s.size };
       })
       .sort((a, b) => b.t - a.t);
-  } catch (err) {
+  } catch {
     return [];
   }
 });
 ipcMain.handle("save:del", (e, name) => {
   try {
     fs.unlinkSync(slotFile(name));
-  } catch (err) {}
+  } catch {
+    /* Deletion is best-effort; list still exposes a file that remains. */
+  }
   return true;
 });
 ipcMain.handle("save:folder", () => {

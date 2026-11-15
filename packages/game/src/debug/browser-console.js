@@ -99,20 +99,8 @@ import {
   sitePickerState,
 } from "../ui/site-picker.js";
 import { FD, gOK } from "../world/routes.js";
-import {
-  HT,
-  occ,
-  pth,
-  rollWorld,
-  RUINS,
-  ensureAround,
-  setRollWorldHandler,
-  stairs,
-  starterTiles,
-  ter,
-  terrainState,
-  TFL,
-} from "../world/terrain.js";
+import { rollWorld, ensureAround, setRollWorldHandler, starterTiles } from "../world/terrain.js";
+import { HT, occ, pth, RUINS, stairs, ter, terrainState, TFL } from "../world/terrain-state.js";
 import { bfsW, canStep, canStepZ, freeTile, fv, solid } from "../world/traversal.js";
 
 // Browser automation and the in-repo preview tools evaluate these names in the page.

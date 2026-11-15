@@ -445,7 +445,7 @@ export function woodBarracksGeo(m) {
 export function academyGeo(m) {
   m = m || 0;
   const G = newG(),
-    { N, E, S, W, sk, nw } = mBits(m),
+    { N, E, S, W, nw } = mBits(m),
     alongX = !((N || S) && !(E || W)),
     tw = !m || nw;
   const x0 = W ? 0 : 0.16,
@@ -456,7 +456,7 @@ export function academyGeo(m) {
   qStone(G, (x0 + x1) / 2, 0.2, (z0 + z1) / 2, x1 - x0, z1 - z0, 1.1);
   if (!m) qQuoin(G, x0, z0, x1, z1, 0.2, 1.1);
   qCornice(G, (x0 + x1) / 2, 1.3, (z0 + z1) / 2, x1 - x0 + 0.06, z1 - z0 + 0.06, 0.08);
-  const top = alongX
+  alongX
     ? qRoof(G, (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0, z1 - z0, 1.38, QCU, true, {
         ov0: W ? 0 : 0.1,
         ov1: E ? 0 : 0.1,
@@ -692,7 +692,7 @@ export function guildGeo(hm) {
   qTimber(G, x0, z0, x1, z1, 0.55, 1.25, { brace: true, fill: "#e8d6b0" });
   bW(G, xc, 1.25, zc, x1 - x0 + 0.08, 0.06, z1 - z0 + 0.08, QW2);
   qTimber(G, x0 - 0.04, z0 - 0.04, x1 + 0.04, z1 + 0.04, 1.31, 1.86, { fill: "#efe3c6", skip: "N" });
-  const rt = qRoof(G, xc, zc, x1 - x0 + 0.08, z1 - z0 + 0.08, 1.86, QSL, true, {
+  qRoof(G, xc, zc, x1 - x0 + 0.08, z1 - z0 + 0.08, 1.86, QSL, true, {
     rise: 0.2,
     run: 0.15,
     ov0: 0.12,

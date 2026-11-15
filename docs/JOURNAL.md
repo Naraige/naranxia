@@ -4,9 +4,9 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
-## 2026-11-15 · v94 release (the King said go)
+## 2026-11-15 · v94 ready, merged with main (formatting PR #29), not yet published
 
-- Released the whole branch as v94: co-op fixes, waves always end, new default keys, minimap, far wave spawn (`WSPN` 150 / `WSEE` 130), horde pile-up fix (`SWJAM` 0.75, `SWBW` 3.5), swarm at 10 Hz, placement log `MP.plog`, command resend after resync, mp_build prune fix.
+- Prepared the whole branch as v94 (not published): co-op fixes, waves always end, new default keys, minimap, far wave spawn (`WSPN` 150 / `WSEE` 130), horde pile-up fix (`SWJAM` 0.75, `SWBW` 3.5), swarm at 10 Hz, placement log `MP.plog`, command resend after resync, mp_build prune fix.
 - Notes: 2 lines added (far spawn, pile-up and smoother big waves), translated in 8 languages (`docs/studio-texts/notes-v94b.json`, nl/pl/tr).
 - CI green on 0481ccc (full quick suite). Smoke test run by `release.sh`; the release workflow runs the full suite.
 - Not verified: real two-machine co-op, real AZERTY keyboard, F-keys in the launcher, old saves mid-wave. #26 #3 #4 stay open until a guest F8 report.
@@ -45,6 +45,15 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Behaviour step: swarm at 10 Hz (`SWDT` .1, look every 32 steps = still 3.2 s, bite cap per step x2, `swRear` every 5 steps; render already interpolates). Swarm share excluding `(program)`: 43.9 / 45.6 %, swarm time about 16 to 24 s instead of 25 to 36 s. det hashes change (new ones identical on two runs).
 - Waves on worlds 0, 1, 2, 9 (probe, wave 3, perfect defence): end 461/808/508/493 s before, 463/793/505/490 after; kills equal within 20 (6931/10506/6126/11287 vs 6932/10523/6131/11289); no stuck zombie for 60 s, none in water.
 - Not verified: by eye in a real browser, bosses and miners at 10 Hz, real GPU.
+## 2026-11-13 · codebase cleanup (unreleased, pinned v94)
+
+- Integrated the cleanup with fetched v94 `4a57714017d38c8d5294445e20962eb4b1e76c11`; this verification stays pinned by request. No release/version/notes change.
+- Added ESLint, Prettier, LF conventions, architectural checks and CI gates; all 240 maintained JS syntax trees remain identical through the formatting-only pass. Removed verified dead private code and unused bindings while retaining exported names, arities and effect/RNG evaluation.
+- Established language/panel/catalog and terrain/query/traversal/cache owners, explicit synchronous chunk/invalidation registration and music audio-state injection. Removed 331 cyclic edges from v94, added none; one 121-module component with 811 cyclic edges remains under a ratchet.
+- Verified `npm run quality`, translation/notes checks, all 31 full-suite scenarios without retries, strict save continuation/shared references, five deep resync recoveries and a 6010-compared-tick multiplayer soak. Disconnected-map regression and caller-relative CLI check also pass.
+- Baseline/candidate parity: all 146 model signatures and six audio peak/RMS summaries match; three 6000-tick simulation profiles match, median 13508 -> 13522 ms (about 0.1%). PCM bytes are nondeterministic in unchanged Chromium baseline renders and are diagnostic only.
+- Windows/Linux packages build and embedded resource hashes match. Actual preload/save IPC contract passes with Electron mocked. Title/update/settings/desktop/narrow screenshots inspected; no observed visual regression or page error.
+- Guidance/evidence/limits: `CONTRIBUTING.md`, `docs/ARCHITECTURE.md`, `docs/CLEANUP_AUDIT.md`; local reports under `dist/cleanup-review/`. Remaining work includes legacy SCC boundaries; native installers/macOS, physical input, real GPUs and internet co-op were not exercised. Remote CI has not run for these local changes.
 
 ## 2026-11-13 · v94
 

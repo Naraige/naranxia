@@ -82,7 +82,7 @@ const notesNew = () => {
   if (seenVer === undefined) {
     try {
       seenVer = localStorage.getItem("dk_seenver");
-    } catch (e) {
+    } catch {
       seenVer = null;
     }
   }
@@ -93,7 +93,9 @@ const openNotes = () => {
   seenVer = GVER;
   try {
     localStorage.setItem("dk_seenver", GVER);
-  } catch (e) {}
+  } catch {
+    /* Keep the read marker for this session if storage is unavailable. */
+  }
 };
 
 function titleBack(UW, UH) {
@@ -407,7 +409,7 @@ function drawLobby(UW, UH) {
         1,
       ],
     ];
-  if (window.NARX && NARX.desktop) key.push(["Exit to desktop", "", () => window.close()]);
+  if (window.NARX && window.NARX.desktop) key.push(["Exit to desktop", "", () => window.close()]);
   /* compact buttons: measured, then flowed in rows (right-aligned on wide screens, two columns on narrow ones) */
   const kh = low ? 18 : 20,
     kg = 4,
@@ -685,13 +687,17 @@ function topRuns() {
   let raw = "";
   try {
     raw = localStorage.getItem("dk_sb") || "";
-  } catch (e) {}
+  } catch {
+    /* Without storage, show no saved leaderboard for this session. */
+  }
   if (TOPR && raw === TOPS) return TOPR;
   const runs = [];
   try {
     const all = JSON.parse(raw || "{}");
     for (const k in all) for (const e of all[k]) if (e && e.w >= 0) runs.push(e);
-  } catch (e) {}
+  } catch {
+    /* Ignore malformed saved records and keep the visible list empty. */
+  }
   runs.sort((a, b2) => b2.s - a.s);
   TOPS = raw;
   return (TOPR = runs.slice(0, 10));
@@ -876,7 +882,7 @@ function drawSetup(UW, UH, fh, back) {
       saveTheme();
     },
     ["Random name"],
-    (x, yy, w) => dIc(IC.dice, x + 4, yy + 1.5, 12),
+    (x, yy, _w) => dIc(IC.dice, x + 4, yy + 1.5, 12),
   );
   const LW = small ? 0 : 58,
     rx = ex + LW,
@@ -959,7 +965,7 @@ function drawSetup(UW, UH, fh, back) {
       },
       (i) => [["Plain", "Per pale", "Chevron", "Bend", "Quarterly", "Fess", "Bordure", "Saltire"][i]],
     );
-  ry += row(
+  row(
     "Emblem",
     EMB.length,
     ry,

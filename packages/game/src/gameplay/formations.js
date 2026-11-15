@@ -16,12 +16,12 @@ import { targetZ } from "./swarm.js";
 import { MP } from "../multiplayer/session.js";
 import { puff } from "../rendering/effects.js";
 import { gtopOf } from "../rendering/models/fortifications.js";
-import { NAMES } from "../ui/build-menu.js";
+import { NAMES } from "../ui/build-catalog.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { reachLong, sameComp } from "../world/connectivity.js";
 import { mkG } from "../world/pathfinding.js";
 import { D4, gOK } from "../world/routes.js";
-import { occ, ter } from "../world/terrain.js";
+import { occ, ter } from "../world/terrain-state.js";
 import { solid, solidAt } from "../world/traversal.js";
 
 export const formationsState = {
@@ -483,7 +483,7 @@ export let order = function order(w) {
       u.type === "archer" ||
       (u.type === "cannon" && st && (st.type === "wall" || st.type === "tower" || st.type === "gate")),
   );
-  let gused = [];
+  const gused = [];
   if (AR.length && st && st.t === 0 && st.prog >= 1 && GCAP[st.type] && (st.pl | 0) === (playersState.CURPL | 0)) {
     let room =
         GCAP[st.type] -
@@ -635,7 +635,6 @@ export let setStance = function setStance(st) {
         u.job = null;
         u.tl = -1;
         u.o = null;
-        u.carry = u.carry;
         u.work = 0;
         u.idle = -25;
         n++;

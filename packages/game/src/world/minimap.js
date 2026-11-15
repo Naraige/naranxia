@@ -1,5 +1,5 @@
 import { TH, TW } from "../gameplay/rules.js";
-import { CH, FLG, HT, LAND, mg, pth, SNOW, ter } from "./terrain.js";
+import { CH, FLG, HT, LAND, mg, pth, SNOW, ter } from "./terrain-state.js";
 
 export function mmRGB(i) {
   const v = ter[i],

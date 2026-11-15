@@ -72,7 +72,6 @@ const lim = (F, B, o) => {
 };
 const MAILA = lim(["....", "....", "....", "....", "xyxy", "....", "....", "yxyx", "....", "....", "....", "...."]),
   MAILL = lim(["....", "....", "....", "xyxy", "....", "....", "....", "yxyx", "....", "....", "....", "...."]);
-const SKIN8 = { F: rep("ssssssss", 8), B: "F", R: "F", L: "F", T: "F", D: "F" };
 /* a pixel cut-out (wings): rows top first, '.' = gap */
 const cut = (G, rows, map, o) => {
   const H = rows.length,
@@ -117,10 +116,17 @@ function pauldrons(T, m, a, b, c, rim, rimL) {
               : b,
     { mat: 4, grid: [6, 3, 6] },
   );
-  pxBox(T, -2.85, -3.2, -2.85, 5.7, 2, 5.7, (f, u, v, W, H) => (f === "T" ? b : f === "D" ? m[1] : v === 0 ? rim : c), {
-    mat: 4,
-    grid: [5, 2, 5],
-  });
+  pxBox(
+    T,
+    -2.85,
+    -3.2,
+    -2.85,
+    5.7,
+    2,
+    5.7,
+    (f, u, v, _W, _H) => (f === "T" ? b : f === "D" ? m[1] : v === 0 ? rim : c),
+    { mat: 4, grid: [5, 2, 5] },
+  );
 }
 /* fauld: armour skirt around the hips, the tabard (cols 2..6 front and back) runs over it */
 function fauld(P, m, a, b, c, tab, tabD, rim) {
@@ -344,7 +350,7 @@ export function px2Peasant(P) {
         8.8,
         1.3,
         8.8,
-        (f, u, v, W, H) => (f === "T" || f === "D" ? null : u % 3 === 1 ? m.F : m.R),
+        (f, u, _v, _W, _H) => (f === "T" || f === "D" ? null : u % 3 === 1 ? m.F : m.R),
         { mat: 0, grid: [8, 1, 8] },
       );
     /* belt pouch, wicker basket with the day's load */
@@ -470,11 +476,11 @@ export function px2Archer(P) {
   pxScene(() => {
     pxSkin(P, K, m);
     /* hood tip hanging behind the head */
-    pxBox(P.HG, -2, 26.8, -6.3, 4, 4.2, 1.9, (f, u, v, W, H) => (f === "T" ? m.l : v === 0 ? m.q : m.d), {
+    pxBox(P.HG, -2, 26.8, -6.3, 4, 4.2, 1.9, (f, u, v, _W, _H) => (f === "T" ? m.l : v === 0 ? m.q : m.d), {
       mat: 7,
       grid: [4, 4, 2],
     });
-    pxBox(P.HG, -1, 25.2, -7.3, 2, 2.6, 1.5, (f, u, v, W, H) => (v === 0 ? m.Q : m.q), { mat: 7, grid: [2, 3, 1] });
+    pxBox(P.HG, -1, 25.2, -7.3, 2, 2.6, 1.5, (f, u, v, _W, _H) => (v === 0 ? m.Q : m.q), { mat: 7, grid: [2, 3, 1] });
     /* cowl: wide shoulders, kingdom hem, gold clasp */
     pxBox(
       P.G,
@@ -620,7 +626,7 @@ export function px2Knight(P, AL) {
   );
   pxScene(() => {
     pxSkin(P, K, m);
-    pxBox(P.HG, -0.6, 32.5, -4.25, 1.2, 1.8, 8.5, (f, u, v, W, H) => (f === "T" ? m.R : v === 0 ? m.Q : m.R), {
+    pxBox(P.HG, -0.6, 32.5, -4.25, 1.2, 1.8, 8.5, (f, u, v, _W, _H) => (f === "T" ? m.R : v === 0 ? m.Q : m.R), {
       mat: 4,
       grid: [1, 2, 8],
     });
@@ -749,9 +755,9 @@ export function px2Spearman(P, AL) {
         f === "T" ? (u === 0 || v === 0 || u === W - 1 || v === H - 1 ? m[5] : m[4]) : f === "D" ? m[1] : m[2],
       { mat: 4, grid: [13, 1, 13] },
     );
-    pxBox(P.HG, -3, 32.5, -3, 6, 0.8, 6, (f, u, v, W, H) => (f === "T" ? m[5] : m[3]), { mat: 4, grid: [6, 1, 6] });
+    pxBox(P.HG, -3, 32.5, -3, 6, 0.8, 6, (f, _u, _v, _W, _H) => (f === "T" ? m[5] : m[3]), { mat: 4, grid: [6, 1, 6] });
     if (AL >= 2)
-      pxBox(P.HG, -4.7, 30, -4.7, 9.4, 0.8, 9.4, (f, u, v, W, H) => (f === "T" ? m.G : u % 3 === 1 ? m.G : m.g), {
+      pxBox(P.HG, -4.7, 30, -4.7, 9.4, 0.8, 9.4, (f, u, _v, _W, _H) => (f === "T" ? m.G : u % 3 === 1 ? m.G : m.g), {
         mat: 4,
         grid: [9, 1, 9],
       });
@@ -764,7 +770,7 @@ export function px2Spearman(P, AL) {
       9.6,
       1.8,
       5.6,
-      (f, u, v, W, H) => (f === "T" ? m.a : f === "D" ? m.A : v === 0 ? m.T : u % 2 ? m.a : m.A),
+      (f, u, v, _W, _H) => (f === "T" ? m.a : f === "D" ? m.A : v === 0 ? m.T : u % 2 ? m.a : m.A),
       { mat: 0, grid: [10, 2, 6] },
     );
     /* bedroll strapped across the back */
@@ -776,7 +782,7 @@ export function px2Spearman(P, AL) {
       7,
       2.2,
       2.2,
-      (f, u, v, W, H) =>
+      (f, u, v, _W, _H) =>
         (f === "B" || f === "T" || f === "D") && (u === 1 || u === 5)
           ? m.n
           : f === "T"
@@ -1022,7 +1028,7 @@ export function px2Bannerman(P) {
       1.4,
       1.5,
       3.6,
-      (f, u, v, W, H) => (f === "F" ? m.N : (f === "R" || f === "L") && u === 1 ? m.y : m.i),
+      (f, u, _v, _W, _H) => (f === "F" ? m.N : (f === "R" || f === "L") && u === 1 ? m.y : m.i),
       { mat: 0, grid: [1, 1, 4] },
     );
     pxBox(P.G, -5.6, 9.8, -1.6, 1.4, 2.2, 1.4, (f, u, v, W, H) => (v === H - 1 ? m.y : m.I), {
@@ -1275,7 +1281,7 @@ export function px2King(P, AL) {
       5.7,
       2,
       5.7,
-      (f, u, v, W, H) => (f === "T" ? m[4] : f === "D" ? m[1] : v === 0 ? m.g : m[3]),
+      (f, u, v, _W, _H) => (f === "T" ? m[4] : f === "D" ? m[1] : v === 0 ? m.g : m[3]),
       { mat: 4, grid: [5, 2, 5] },
     ),
   );

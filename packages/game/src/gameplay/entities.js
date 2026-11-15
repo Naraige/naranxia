@@ -4,7 +4,7 @@ import { playersState, stoneOn } from "./players.js";
 import { BT, C, ROTT, SH, T, TS, TW } from "./rules.js";
 import { sessionState } from "./session.js";
 import { hudDisplayState } from "../ui/hud-state.js";
-import { occ, terrainState } from "../world/terrain.js";
+import { occ, terrainState } from "../world/terrain-state.js";
 import { fv, solid, solidAt } from "../world/traversal.js";
 
 export function mk(t, type, tx, ty, sz, done, ax, gl) {

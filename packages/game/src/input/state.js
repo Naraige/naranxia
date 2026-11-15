@@ -9,11 +9,11 @@ export const inputState = {
   touch: (() => {
     try {
       return matchMedia("(pointer:coarse)").matches;
-    } catch (e) {
+    } catch {
       return false;
     }
   })(),
   lp: null,
 };
 
-export let keys = {};
+export const keys = {};

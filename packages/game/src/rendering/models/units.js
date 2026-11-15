@@ -17,7 +17,7 @@ export const unitsState = {
   RKB: 0,
 };
 
-export let PXON = true;
+export const PXON = true;
 let SHZ;
 export const alv = () => (unitsState.ALF != null ? unitsState.ALF : (RS2.done.plate ? 1 : 0) + (RS2.done.mail ? 1 : 0));
 
@@ -71,7 +71,6 @@ function humanKit(type, AL, P) {
     },
     AE = (m, dx, y, z, w, h, d, c) => hkPut(AG, m)(dx, y, z, w, h, d, c),
     AW = (m, dx, y, z, w, h, d, c) => hkPut(LA, m)(-2.76 - dx, y + 10.45, z, w, h, d, c),
-    L = (m, x, y, z, w, h, d, c) => hkPut(LA, m)(x, y, z, w, h, d, c),
     P1 = thp(),
     P2 = ths(),
     PD = thd(),
@@ -645,7 +644,7 @@ function humanKit(type, AL, P) {
   return null;
 }
 
-function mcModel(type, z) {
+function mcModel(type, _z) {
   const G = newG(),
     HG = newG(),
     LA = newG(),
@@ -655,10 +654,7 @@ function mcModel(type, z) {
   unitPartsState.RT = P0;
   let sc = 1.35,
     h = 15.6,
-    parts = null,
-    X = null;
-  const skin = "#c68a5e",
-    hair = "#3a2410";
+    parts = null;
   if (
     type === "zombie" ||
     type === "husk" ||

@@ -10,7 +10,7 @@ import { hudDisplayState } from "./hud-state.js";
 import { kitFrame } from "./menu-kit.js";
 import { pill } from "./minimap.js";
 import { questMarker } from "./quest-marker.js";
-import { settingsState } from "./settings.js";
+import { settingsState } from "./panel-state.js";
 import { btnReset } from "./typography.js";
 
 /* ================= QUEST PANEL AND QUEST LOG (display only) =================
@@ -25,7 +25,7 @@ const hidden = () => {
   if (hide === null) {
     try {
       hide = localStorage.getItem("dk_qhide") === "1";
-    } catch (e) {
+    } catch {
       hide = false;
     }
   }
@@ -35,7 +35,9 @@ const setHidden = (v) => {
   hide = !!v;
   try {
     localStorage.setItem("dk_qhide", v ? "1" : "0");
-  } catch (e) {}
+  } catch {
+    /* Keep the hidden flag for this session when storage is unavailable. */
+  }
 };
 
 const RWN = { g: "gold", w: "wood", s: "stone", f: "food" },
@@ -103,7 +105,7 @@ const count = (LS, Q) => {
   return n;
 };
 
-export function questPanel(UW, UH) {
+export function questPanel(UW, _UH) {
   hudDisplayState.qbox = null;
   if (!qActive() || sessionState.over || sessionState.showMap || questPanelState.log) return;
   const Q = questsState.Q,

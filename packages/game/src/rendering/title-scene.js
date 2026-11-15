@@ -11,7 +11,7 @@ import { DEC, FOR, VAR } from "./terrain-props.js";
 import { THREE } from "./three.js";
 import { animUnit } from "./unit-animation.js";
 import { matUI } from "./unit-instances.js";
-import { cv, cvs } from "../ui/canvases.js";
+import { cvs } from "../ui/canvases.js";
 
 export const titleSceneState = {
   titleDirty: true,
@@ -26,7 +26,7 @@ export let TARMY = [];
 let THORDE = [];
 let TARR = [];
 let TCLOUDS = [];
-let TFLAMES = [];
+const TFLAMES = [];
 let TLH = null;
 let TLFL = null;
 let TBOLT = null;
@@ -34,8 +34,8 @@ let TFLASH = 0;
 let TFLN = 6;
 let TASH = null;
 let TASHP = null;
-let TFIRES = [];
-let TSMOKE = [];
+const TFIRES = [];
+const TSMOKE = [];
 let TEMB = null;
 let TEMBP = null;
 
@@ -518,7 +518,7 @@ function initTitle() {
 }
 
 export let _tm;
-let TSH = { i: 0, t: 0 };
+const TSH = { i: 0, t: 0 };
 export let TFADE = 1;
 let TEYE = null;
 
@@ -596,9 +596,7 @@ export function renderTitle(dt) {
   }
   TT += dt;
   /* camera: slow dolly with sway, scene shifted right on wide screens so the menu sits left */
-  const wide = cv.width / cv.height > 1.25,
-    sh = 0,
-    t = TT;
+  const t = TT;
   TSH.t += dt;
   let S = TSHOTS[TSH.i];
   if (TSH.t >= S.d) {
@@ -612,8 +610,8 @@ export function renderTitle(dt) {
   camera.position.set(cm.p[0], cm.p[1], cm.p[2]);
   camera.lookAt(cm.l[0], cm.l[1], cm.l[2]);
   if (window.__cam) {
-    camera.position.set(...__cam.p);
-    camera.lookAt(...__cam.l);
+    camera.position.set(...window.__cam.p);
+    camera.lookAt(...window.__cam.l);
   }
   /* army idle + occasional volleys */
   frameState.frameN++;

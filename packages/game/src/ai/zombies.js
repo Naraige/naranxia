@@ -13,13 +13,14 @@ import { RS2, T, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { swSplash } from "../gameplay/swarm.js";
 import { puff, ring, shake, vflash } from "../rendering/effects.js";
-import { gh, markP, markT } from "../rendering/terrain.js";
+import { gh } from "../world/terrain-queries.js";
+import { markP, markT } from "../world/terrain-invalidation.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { longField } from "../world/connectivity.js";
 import { mmTile } from "../world/minimap.js";
 import { GF } from "../world/pathfinding.js";
 import { D4, D8, FD, gOK } from "../world/routes.js";
-import { amt, HT, LAND, occ, pth, ROCKH, stairs, ter, TFL } from "../world/terrain.js";
+import { amt, HT, LAND, occ, pth, ROCKH, stairs, ter, TFL } from "../world/terrain-state.js";
 import { canStepZ, fv, solidAt } from "../world/traversal.js";
 
 /* bomber: walks up to a building or a soldier, lights its fuse (1.1 s) and blows up; killed, it blows up where it falls (in the horde too) */
@@ -154,7 +155,7 @@ function crater(tx, ty) {
 /* acid spitter: stops at 3.5 tiles and spits; the acid burns men and buildings for a few seconds and leaves a puddle that burns whoever walks in it */
 export const PUD = [];
 
-function acidAI(u, d, dt) {
+function acidAI(u, d, _dt) {
   const [b] = target(u, d.rng, 0);
   if (!b) return false;
   u.face = Math.atan2(b.x - u.x, b.y - u.y);

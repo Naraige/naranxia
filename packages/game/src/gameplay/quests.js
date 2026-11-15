@@ -289,7 +289,7 @@ const OLD1 = [
 export const questsPref = () => {
   try {
     return localStorage.getItem("dk_quests") !== "0";
-  } catch (e) {
+  } catch {
     return true;
   }
 };

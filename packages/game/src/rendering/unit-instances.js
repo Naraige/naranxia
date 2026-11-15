@@ -47,8 +47,6 @@ export let UNITSH = function UNITSH(sh) {
 
 export let matUI;
 
-let cubeG;
-
 const RINGS = {};
 function ringGeo(s) {
   if (RINGS[s]) return RINGS[s];
@@ -296,7 +294,7 @@ export function uiUMW(force) {
 
 export function uiFlush() {
   for (const b of UIB.values()) b.n = 0;
-  for (const [u, g] of unitG) if (g.userData.frame === frameState.frameN && g.visible) uiAdd(g);
+  for (const [, g] of unitG) if (g.userData.frame === frameState.frameN && g.visible) uiAdd(g);
   for (const c of CORPSES) uiAdd(c.g);
   for (const b of UIB.values()) {
     if (!b.mesh) continue;
@@ -320,7 +318,8 @@ export function initializeUnitInstances() {
     m.onBeforeCompile = UNITSH;
     return m;
   })();
-  cubeG = new THREE.BoxGeometry(1, 1, 1);
+  // Preserve Three.js allocation order and UUID random draws.
+  new THREE.BoxGeometry(1, 1, 1);
   ringMat = new THREE.MeshBasicMaterial({ vertexColors: true });
   const CARRY0 = (() => {
     const mk = (f) => {

@@ -5,7 +5,7 @@ import { inputState, keys } from "../input/state.js";
 import { mpFrame } from "../multiplayer/lockstep.js";
 import { MP } from "../multiplayer/session.js";
 import { hudState } from "../ui/hud.js";
-import { settingsState } from "../ui/settings.js";
+import { settingsState } from "../ui/panel-state.js";
 
 export const backgroundLoopState = {
   autoPaused: false,
@@ -14,7 +14,7 @@ export const backgroundLoopState = {
 /* QoL: auto-pause when the tab is hidden (solo), Delete = demolish the selected building */
 /* alt-tab / hidden tab: solo games pause themselves (and keys held down are released); co-op keeps simulating so the partner is never stalled */
 
-function focusLost(why) {
+function focusLost(_why) {
   for (const k in keys) keys[k] = false;
   inputState.ptr = null;
   inputState.box = null;
@@ -56,7 +56,9 @@ export function bgTick() {
         for (let k = 0; k < sessionState.spd; k++) update(d);
         e -= d;
       }
-    } catch (er) {}
+    } catch {
+      /* Stop hidden-tab catch-up on an update error; the visible loop resumes when shown. */
+    }
     return;
   }
   if (!(document.hidden && MP.on && sessionState.started && !sessionState.over)) {
@@ -75,7 +77,9 @@ export function bgTick() {
       e -= d;
       if (MP.stall) break;
     }
-  } catch (er) {}
+  } catch {
+    /* Skip this failed background step and retry from the next background tick. */
+  }
 }
 
 export function initializeBackgroundLoop() {
@@ -93,5 +97,7 @@ export function initializeBackgroundLoop() {
     wk.onmessage = () => {
       if (document.hidden) bgTick();
     };
-  } catch (e) {}
+  } catch {
+    /* The interval above remains the fallback when workers are unavailable. */
+  }
 }

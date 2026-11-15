@@ -30,13 +30,12 @@ import { cv, cvs } from "../ui/canvases.js";
 import { thIcons } from "../ui/icons.js";
 import { thp } from "../ui/kingdom-theme.js";
 import { D8 } from "../world/routes.js";
-import { CH, HT, occ } from "../world/terrain.js";
+import { CH, HT, occ } from "../world/terrain-state.js";
 
 export const structuresState = {
   BPLOFF: false,
 };
 
-let flagMat;
 const structO = new Set();
 const stairO = new Set();
 
@@ -63,7 +62,7 @@ export function retheme() {
   drawBanner();
   bannerTex.needsUpdate = true;
   for (const s of sessionState.structs) if (s.o3) buildStructMesh(s);
-  for (const [u, g] of unitG) {
+  for (const [, g] of unitG) {
     scene.remove(g);
   }
   unitG.clear();
@@ -313,7 +312,7 @@ export function pickStruct(p) {
     }
     const h = _rcS.intersectObjects(L, false);
     return h.length ? M.get(h[0].object) : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -420,7 +419,8 @@ export function setAddStairsHandler(handler) {
 }
 
 export function initializeStructures() {
-  flagMat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
+  // Preserve Three.js allocation order and UUID random draws.
+  new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
   BANNER = cvs(128, 192);
   bannerTex = new THREE.CanvasTexture(BANNER);
   bannerMat = new THREE.MeshBasicMaterial({

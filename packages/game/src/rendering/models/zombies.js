@@ -922,7 +922,6 @@ export function zBuild(S, E) {
   if (S.kind === "miner") {
     const LE = "#5a4630",
       LE2 = "#463624",
-      IRL = "#9a9ca2",
       OR = "#ffd23c",
       ST = "#8a8a92";
     b("H", -4.1, 28.6, -3.0, 4.1, 31.4, 5.0, LE);

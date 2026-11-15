@@ -6,22 +6,22 @@ import { doUpgrade, ok, pay } from "./economy.js";
 import { mk } from "./entities.js";
 import { ungar } from "./formations.js";
 import { HOMEC, LPL, playersState, stoneOn } from "./players.js";
-import { C, DIR4, GCAP, GTOP, ROTT, RS, SH, SZ, TS, TW } from "./rules.js";
+import { C, DIR4, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { sessionState } from "./session.js";
 import { demolish, rampGroup, tfOrder } from "./terraforming.js";
 import { placeSpike } from "./traps.js";
 import { MP } from "../multiplayer/session.js";
 import { puff } from "../rendering/effects.js";
-import { CONNT, isW } from "../rendering/models/structures.js";
+import { CONNT } from "../rendering/models/structures.js";
 import { snapM } from "../rendering/render-settings.js";
 import { addStruct, buildStructMesh, refreshNear, rmStruct } from "../rendering/structures.js";
-import { markT } from "../rendering/terrain.js";
-import { NAMES } from "../ui/build-menu.js";
+import { markT } from "../world/terrain-invalidation.js";
+import { NAMES } from "../ui/build-catalog.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { mmTile } from "../world/minimap.js";
 import { gOK } from "../world/routes.js";
-import { HT, occ, pth, stairs, ter, terrainState } from "../world/terrain.js";
+import { HT, occ, pth, stairs, ter, terrainState } from "../world/terrain-state.js";
 import { levelGround, solid } from "../world/traversal.js";
 
 export const constructionState = {
@@ -35,17 +35,11 @@ export const constructionState = {
 export let HEAL_R;
 export const HEAL_RATE = 5;
 
-let gateAx = 0;
 export const FORMS = ["None", "Line", "Block", "Wedge", "Ring"];
 
 export const tfo = new Map();
 
-export function gateAxAt(tx, ty) {
-  return constructionState.buildRot & 1;
-  const w = (x, y) => isW(x, y);
-  if (w(tx - 1, ty) || w(tx + 2, ty) || (w(tx - 1, ty) && w(tx + 2, ty)))
-    if (!(w(tx, ty - 1) || w(tx, ty + 1))) return 0;
-  if (w(tx, ty - 1) || w(tx, ty + 2)) if (!(w(tx - 1, ty) || w(tx + 1, ty))) return 1;
+export function gateAxAt(_tx, _ty) {
   return constructionState.buildRot & 1;
 }
 
@@ -201,6 +195,7 @@ export let build = function build(type, tx, ty) {
     type === "movec" ||
     wRep
   ) {
+    /* These tools and wall replacement apply their own placement checks below. */
   } else if (type === "path") {
     if (!pathOK(tx, ty)) return;
   } else if (!valid(tx, ty)) return;
@@ -299,23 +294,12 @@ export let build = function build(type, tx, ty) {
     }
     return;
   }
-  if (false) {
-    const sz = SZ[type],
-      t = tilesFor(type, tx, ty, sz),
-      h0 = Math.max(...t.map(([x, y]) => HT[y * TW + x]));
-    pay(C[type]);
-    levelGround(tx, ty, sz, h0);
-    const s = mk(0, type, tx, ty, sz, false);
-    addStruct(s);
-    refreshNear(s);
-    puff(s.x, s.y, "#c9c4b6", 10, 70, { soft: 1, T: 1, s: 0.4, z: 0.3, vz: 0.7, g: -0.3 });
-    return;
-  }
+
   if (type === "rally" || type === "rallyc") {
     const w = { x: (tx + 0.5) * TS, y: (ty + 0.5) * TS };
     const rs = type === "rallyc" && { 2: 1, 3: 1, 4: 1 }[ter[ty * TW + tx]];
     if (!gOK(tx, ty) || (solid(tx, ty) && !rs)) return;
-    let rb = null;
+    let rb;
     if (type === "rallyc")
       rb =
         selectionState.selB &&
@@ -586,7 +570,7 @@ export function moveOK(tx, ty) {
   if (hyp(x0 - c.tx, y0 - c.ty) > 40) return false;
   const ty0 = c.type;
   c.type = "castle_";
-  let r = false;
+  let r;
   try {
     r = nt.every(([x, y]) => gOK(x, y) && (own.has(y * TW + x) || valid(x, y)));
     if (r) {

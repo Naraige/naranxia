@@ -73,7 +73,7 @@ function pxCut(G, rows, map, o) {
 }
 
 /* ---------------- KING NARAIGE: A open face, beard and crown / B royal great helm under the crown ---------------- */
-export function pxKing(P, AL) {
+export function pxKing(P, _AL) {
   const vr = window.__KV || "B",
     helm = vr === "B",
     map = pxMap2(
@@ -230,7 +230,7 @@ export function pxKing(P, AL) {
 }
 
 /* ---------------- CAPTAIN: gilded breastplate, red officer sash, team skirt, open bascinet, gold pauldrons ---------------- */
-export function pxCaptain(P, AL) {
+export function pxCaptain(P, _AL) {
   const map = pxMap2({ h: "#4a2c16", r: "#2e1a0c", R: "#b8323c", Q: "#de5a62", X: "#7a1a24" }, thp());
   const K = {
     hatMat: 4,
@@ -326,7 +326,7 @@ export function pxCaptain(P, AL) {
 }
 
 /* ---------------- BANNERMAN: kettle hat, quilted gambeson, team tabard with a white cross, steel vambraces ---------------- */
-export function pxBannerman(P, AL) {
+export function pxBannerman(P, _AL) {
   const map = pxMap2(
     { h: "#5a3a1a", r: "#3a2410", a: "#ddd0ae", A: "#b4a682", c: "#f2ecdc", y: "#d9a83a", P: "#433824", p: "#2e2618" },
     thp(),
@@ -424,7 +424,7 @@ export function pxBannerman(P, AL) {
 }
 
 /* ---------------- GUNNERS: team doublet, brass buttons, leather apron, bandolier of flasks, cap with a white feather ---------------- */
-export function pxGunner(P, AL) {
+export function pxGunner(P, _AL) {
   const map = pxMap2(
     { h: "#3a2410", r: "#24160a", y: "#d9a83a", z: "#f2cc66", c: "#f2efe6", C: "#cfcabc", P: "#3e3a36", p: "#2a2622" },
     thp(),
@@ -525,7 +525,7 @@ const handItems = (P, fn) => {
 };
 
 /* ---------------- SCOUT: beige long coat, red scarf, flat brown cap with goggles pushed up, tall frame pack with a bedroll, spyglass ---------------- */
-export function pxScout(P, AL) {
+export function pxScout(P, _AL) {
   const map = pxMap2({
     h: "#5a3a1a",
     r: "#3a2410",
@@ -679,7 +679,7 @@ export function pxScout(P, AL) {
 }
 
 /* ---------------- ENGINEER: yellow hard hat with a lamp, leather apron with steel rivets, tool belt, huge hammer on the back, wrench ---------------- */
-export function pxEngineer(P, AL) {
+export function pxEngineer(P, _AL) {
   const map = pxMap2({
     h: "#4a2e16",
     r: "#2e1c0e",
@@ -806,14 +806,14 @@ export function pxEngineer(P, AL) {
       3.3,
       3.9,
       1.8,
-      (f, u, v, W, H) => (f === "F" && u === 1 && v < 2 ? null : f === "T" ? map[5] : map[4]),
+      (f, u, v, _W, _H) => (f === "F" && u === 1 && v < 2 ? null : f === "T" ? map[5] : map[4]),
       { mat: 4, grid: [3, 4, 2] },
     );
   });
 }
 
 /* ---------------- ENVOY: cream robe, red scarf wrapped high with two long tails down the back, red cap, big unrolled sheet in hand ---------------- */
-export function pxEnvoy(P, AL) {
+export function pxEnvoy(P, _AL) {
   const map = pxMap2({
     h: "#6a4a2a",
     r: "#442d16",
@@ -866,7 +866,7 @@ export function pxEnvoy(P, AL) {
   };
   K.arm.F[6] = "OOOO";
   K.arm.F[7] = "NNNN";
-  const tail = (c, d) => (f, u, v, W, H) =>
+  const tail = (c, d) => (f, u, v, _W, _H) =>
     f === "T" ? c : v < 2 ? d : (f === "F" || f === "B") && v % 7 === 3 && u === 1 ? d : c;
   pxScene(() => {
     pxSkin(P, K, map);
@@ -878,10 +878,10 @@ export function pxEnvoy(P, AL) {
       10.2,
       3.3,
       5.9,
-      (f, u, v, W, H) => (f === "T" || f === "D" ? map.W : v === 0 ? map.Z : (u + v) % 4 === 0 ? map.Z : map.W),
+      (f, u, v, _W, _H) => (f === "T" || f === "D" ? map.W : v === 0 ? map.Z : (u + v) % 4 === 0 ? map.Z : map.W),
       { mat: 0, grid: [10, 3, 6] },
     );
-    pxBox(P.HG, -3.7, 32.5, -3.7, 7.4, 1.3, 7.4, (f) => map.Z, { mat: 0, grid: [7, 1, 7] });
+    pxBox(P.HG, -3.7, 32.5, -3.7, 7.4, 1.3, 7.4, (_f) => map.Z, { mat: 0, grid: [7, 1, 7] });
     pxBox(P.G, 1.4, 3, -3.6, 2.8, 19.6, 1.2, tail(map.W, map.Z), { mat: 0, grid: [3, 20, 1] });
     pxBox(P.G, -3.6, 7, -3.6, 2.8, 15.2, 1.2, tail(map.W, map.Z), { mat: 0, grid: [3, 15, 1] });
     pxBox(P.G, 1.4, 3, -3.6, 2.8, 0.8, 1.2, fl(map.Z), { mat: 0, grid: [3, 1, 1] });

@@ -200,7 +200,7 @@ export function pxMutant(kind, type, ZV, P) {
         2.1,
         23.4,
         8.2,
-        over(dskin, (f, u, v, W, H, r) => (f === "T" && v <= 1 ? DK : undefined)),
+        over(dskin, (f, u, v, _W, _H, _r) => (f === "T" && v <= 1 ? DK : undefined)),
       );
       b(HG, -4.9, 23.4, 7, -3.7, 26.2, 8.2, bone);
       b(HG, 0.7, 23.4, 7, 1.9, 25.6, 8.2, bone);
@@ -286,7 +286,6 @@ export function pxMutant(kind, type, ZV, P) {
       dskin = tone(SKD, K + 5),
       VI = C("#b04aff"),
       VL = C("#e2b0ff"),
-      VD = C("#5a1e8a"),
       GO = PP(["#7a5a14", "#c49a2e", "#f0cc5c"]),
       FLG = C(["#8a1c1c", "#5a2a7a", "#1c5a4a", "#8a5a1c", "#2a3a7a", "#6a1c4a"][(ZV && ZV.v | 0) % 6]),
       FLD = shadeHex(FLG, 0.7),
@@ -309,7 +308,7 @@ export function pxMutant(kind, type, ZV, P) {
       b(G, -3.8, 15.2, 4.4, -2.2, 24.6, 5.3, tone(FL, K + 3), { g: [2, 9, 1] });
       b(G, 2.2, 15.2, 4.4, 3.8, 24.6, 5.3, tone(FL, K + 4), { g: [2, 9, 1] });
       b(G, -2.2, 15.6, 4.5, 2.2, 24.2, 4.9, flat(DK), { g: [1, 1, 1], ao: false });
-      b(G, -1, 16.6, 4.9, 1, 23.2, 5.1, (f, u, v, W, H) => (v % 3 === 1 ? VL : VI), { m: 5, g: [2, 7, 1] });
+      b(G, -1, 16.6, 4.9, 1, 23.2, 5.1, (f, u, v, _W, _H) => (v % 3 === 1 ? VL : VI), { m: 5, g: [2, 7, 1] });
       for (let i = 0; i < 4; i++) {
         b(G, -2.6, 16.4 + i * 2, 4.6, -0.6, 17.4 + i * 2, 6.2, bone, { g: [2, 1, 1] });
         b(G, 0.6, 17.4 + i * 2, 4.6, 2.6, 18.4 + i * 2, 6.2, bone, { g: [2, 1, 1] });
@@ -547,7 +546,7 @@ export function pxMutant(kind, type, ZV, P) {
             2,
             22.2,
             14.6,
-            over(tone(BL, K + 5), (f, u, v, W, H, r) =>
+            over(tone(BL, K + 5), (f, u, v, W, _H, _r) =>
               f === "T" ? (u === 0 || u === W - 1 || v === 0 ? BN[2] : BL[0]) : undefined,
             ),
           );
@@ -619,7 +618,7 @@ export function pxMutant(kind, type, ZV, P) {
       OR = C("#ff8a1e"),
       YL = C("#ffe27a"),
       RD = C("#d83a12"),
-      swell = over(skin, (f, u, v, W, H, r) => {
+      swell = over(skin, (f, u, v, _W, _H, _r) => {
         const n = N(K + 6, u >> 1, v >> 1);
         if (n > 0.9) return CH[1];
         if (f !== "T" && N(K + 7, u, v) > 0.93) return C("#e8b070");
@@ -658,7 +657,7 @@ export function pxMutant(kind, type, ZV, P) {
         7.34,
         19.4,
         3.4,
-        (f, u, v, W, H) => (f === "R" && Math.abs(u - 1.5 - Math.sin(v + K)) < 0.8 ? OR : null),
+        (f, u, v, _W, _H) => (f === "R" && Math.abs(u - 1.5 - Math.sin(v + K)) < 0.8 ? OR : null),
         { m: 5, g: [1, 6, 4] },
       );
       b(
@@ -669,7 +668,7 @@ export function pxMutant(kind, type, ZV, P) {
         -7.2,
         19.4,
         3.4,
-        (f, u, v, W, H) => (f === "L" && Math.abs(u - 1.5 - Math.sin(v * 1.4 + K)) < 0.8 ? OR : null),
+        (f, u, v, _W, _H) => (f === "L" && Math.abs(u - 1.5 - Math.sin(v * 1.4 + K)) < 0.8 ? OR : null),
         { m: 5, g: [1, 6, 4] },
       );
       b(
@@ -812,7 +811,7 @@ export function pxMutant(kind, type, ZV, P) {
         3.6,
         21.4,
         10,
-        over(skin, (f, u, v, W, H) =>
+        over(skin, (f, u, v, W, _H) =>
           f === "T" ? (u === 0 || u === W - 1 || v === 0 ? (u % 2 ? BN[2] : SK[0]) : AD) : undefined,
         ),
       );
@@ -943,7 +942,7 @@ export function pxMutant(kind, type, ZV, P) {
         4.6,
         30.2,
         7.6,
-        (f, u, v, W, H) => (f === "T" ? IR[1] : N(K + 5, u, v) < 0.2 ? RS : IR[2]),
+        (f, u, v, _W, _H) => (f === "T" ? IR[1] : N(K + 5, u, v) < 0.2 ? RS : IR[2]),
         { m: 4, g: [9, 1, 9] },
       );
       b(
@@ -954,11 +953,11 @@ export function pxMutant(kind, type, ZV, P) {
         3.6,
         32.6,
         6.6,
-        (f, u, v, W, H) =>
+        (f, u, v, _W, _H) =>
           N(K + 5, u >> 1, (v >> 1) + f.charCodeAt(0)) < 0.22 ? RS : f === "T" ? IR[1] : v === 0 ? IR[0] : IR[2],
         { m: 4, g: [7, 2, 7] },
       );
-      b(HG, -1.8, 25.2, 6.4, 1.8, 29.2, 11, (f, u, v, W, H) => (u === 1 && v === 1 ? AML : (u + v) % 2 ? AM : AMD), {
+      b(HG, -1.8, 25.2, 6.4, 1.8, 29.2, 11, (f, u, v, _W, _H) => (u === 1 && v === 1 ? AML : (u + v) % 2 ? AM : AMD), {
         m: 5,
         g: [3, 3, 3],
       });
@@ -972,7 +971,7 @@ export function pxMutant(kind, type, ZV, P) {
         2,
         0,
         2,
-        over(tone(LE, K + 6), (f, u, v, W, H, r) => undefined),
+        over(tone(LE, K + 6), (_f, _u, _v, _W, _H, _r) => undefined),
       );
       b(LG, -2.6, -12, -2.6, 2.6, -8.4, 3.2, stone);
       ground();
@@ -1034,7 +1033,7 @@ export function pxMutant(kind, type, ZV, P) {
       }),
       linen = tone(LN, K + 4, { bl: 0.25 }),
       astrip = (f, u, v) => LN[(u + v) % 2 ? 1 : 2],
-      strip = (f, u, v, W, H) => (v === 0 && N(K + 5, u, W) < 0.5 ? null : LN[v % 3 === 0 ? 0 : v % 3 === 1 ? 1 : 2]);
+      strip = (f, u, v, W, _H) => (v === 0 && N(K + 5, u, W) < 0.5 ? null : LN[v % 3 === 0 ? 0 : v % 3 === 1 ? 1 : 2]);
     pxScene(() => {
       pxRot(
         G,

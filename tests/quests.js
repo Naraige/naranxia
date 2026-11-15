@@ -3,7 +3,9 @@ async () => {
    co-op (shared line, switch command, snapshot round trip), save round trip, saves of the first version (16 quests by index) and saves without quests */
   try {
     renderer.render = () => {};
-  } catch (e) {}
+  } catch {
+    /* Rendering is optional for quest assertions; continue with the live renderer. */
+  }
   const O = {},
     C = [];
   const chk = (n, v) => {
@@ -282,7 +284,9 @@ async () => {
     try {
       pref = localStorage.getItem("dk_quests");
       localStorage.setItem("dk_quests", "0");
-    } catch (e) {}
+    } catch {
+      /* The game can still test quest state when storage is unavailable. */
+    }
     const co = () => {
       MP.on = true;
       MP.host = true;
@@ -316,7 +320,9 @@ async () => {
     let lp = "x";
     try {
       lp = localStorage.getItem("dk_quests");
-    } catch (e) {}
+    } catch {
+      /* The assertion below reports when persistence is unavailable. */
+    }
     const n0 = MP.out.length;
     questSwitch(false);
     const sent = MP.out[MP.out.length - 1];
@@ -330,7 +336,9 @@ async () => {
     let lp2 = "y";
     try {
       lp2 = localStorage.getItem("dk_quests");
-    } catch (e) {}
+    } catch {
+      /* Keep the distinct sentinel so the persistence assertion fails clearly. */
+    }
     chk("coopKeepsPref", lp === lp2);
     paused = true;
     const q0 = JSON.stringify(QST),
@@ -455,7 +463,9 @@ async () => {
     try {
       if (pref === null) localStorage.removeItem("dk_quests");
       else localStorage.setItem("dk_quests", pref);
-    } catch (e) {}
+    } catch {
+      /* This test page is discarded after the preference restore attempt. */
+    }
   }
   Math.random = RR;
   O.ok = C.every(Boolean);

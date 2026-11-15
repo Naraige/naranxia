@@ -12,14 +12,15 @@ import { pxCannon } from "./models/unit-accessories.js";
 import { gearSig } from "./models/gear-style.js";
 import { alv, PXON } from "./models/units.js";
 import { scene, SHADOWS } from "./scene.js";
-import { gh, unitG } from "./terrain.js";
+import { gh } from "../world/terrain-queries.js";
+import { unitG } from "./terrain.js";
 import { THREE } from "./three.js";
 import { buildUnitGroup, CARRYG, uiUMW, UL } from "./unit-instances.js";
 
 /* units are drawn at 76% so a man stands about a quarter of a house high (the title screen keeps its own framing) */
 export const UNITK = 0.76;
 
-const T_C = (u) => T.cannon.cdt;
+const T_C = (_u) => T.cannon.cdt;
 
 export function cannonG() {
   if (PXON) return pxCannon();
@@ -201,7 +202,7 @@ export const angd = (a, b) => {
 };
 
 const ATKT = 0.35;
-const lerp = (a, b, t) => a + (b - a) * t;
+
 export const sat = (t) => Math.max(0, Math.min(1, t));
 export const easeO = (t) => 1 - (1 - t) * (1 - t);
 const CHOPC = { t: "#9d7a50", w: "#8b5a2b", s: "#cfd6e2", g: "#ffd23c", f: "#8a6a3a", p: "#6a5a3a" };
@@ -245,14 +246,10 @@ export function animUnit(u, dt, anyDmg, frame) {
       !wl &&
       !u.carry &&
       (u.job === "r" ? anyDmg && !u.o : u.work > 0 && !u.o);
-  let ar = 0,
-    al = 0,
-    lean = 0,
-    twist = 0,
+  let ar, al, lean, headX, headZ;
+  let twist = 0,
     lunge = 0,
-    headX = 0,
     headY = 0,
-    headZ = 0,
     sway = 0,
     wr = 0;
   if (wl) {

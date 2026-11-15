@@ -20,7 +20,7 @@ import { hudDisplayState } from "./hud-state.js";
 import { dIc, IC } from "./icons.js";
 import { PAL, THEME } from "./kingdom-theme.js";
 import { FFP } from "./typography.js";
-import { mc, NCX, NCY, RUINS, terrainState } from "../world/terrain.js";
+import { mc, NCX, NCY, RUINS, terrainState } from "../world/terrain-state.js";
 
 export const minimapState = {
   mmT: -9,
@@ -188,8 +188,8 @@ export function mmLook(snap) {
 /* once per minimap draw: look once a second (not while the player drags on the minimap), glide toward the chosen frame */
 function mmStep() {
   const V = mmView,
-    t = sessionState.clockT;
-  let dt = t - V.last;
+    t = sessionState.clockT,
+    dt = t - V.last;
   V.last = t;
   if (!V.ok || dt < 0 || dt > 5) {
     mmLook(true);
@@ -663,7 +663,7 @@ export function drawMapModal(UW, UH) {
       sessionState.showMap = false;
     },
     ["Close [M]"],
-    (x, y, w, h) => dIc(IC.close, x + 3, y + 3, 12),
+    (x, y, _w, _h) => dIc(IC.close, x + 3, y + 3, 12),
   );
   frame(mx - 2, my - 2, mw + 4, mh + 4, ["#0b0f1a", "#1a2236", "#070a12"], UIT.rad.small);
   drawWorld(mx, my, mw, mh, true);

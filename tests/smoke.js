@@ -48,5 +48,6 @@ async () => {
     render3D(0.05);
     await new Promise((r) => setTimeout(r, 15));
   }
+  O.ok = /^v\d+$/.test(O.ver) && O.rest === 600 && O.st === 9 && O.rampPath === 1 && O.z > 0;
   return JSON.stringify(O);
 };

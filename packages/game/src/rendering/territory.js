@@ -1,12 +1,12 @@
-import { aiR, BASES, OWN, rebuildOwn } from "../ai/kingdoms.js";
+import { aiR, BASES, rebuildOwn } from "../ai/kingdoms.js";
 import { hyp } from "../core/math.js";
 import { sessionState } from "../gameplay/session.js";
 import { CAM, scene } from "./scene.js";
-import { gh } from "./terrain.js";
+import { gh } from "../world/terrain-queries.js";
 import { THREE } from "./three.js";
-import { PAL, THEME } from "../ui/kingdom-theme.js";
+import { PAL } from "../ui/kingdom-theme.js";
 import { gOK } from "../world/routes.js";
-import { LAND } from "../world/terrain.js";
+import { LAND } from "../world/terrain-state.js";
 
 /* territory borders drawn on the ground */
 let terrM = null,
@@ -50,23 +50,7 @@ export function updateTerr() {
         ph = h;
       }
     };
-  if (false) {
-    col.set(PAL[THEME.c][1]);
-    const i0 = Math.max(0, (cx - R) >> 1),
-      i1 = (cx + R) >> 1,
-      j0 = Math.max(0, (cz - R) >> 1),
-      j1 = (cz + R) >> 1;
-    for (let j = j0; j <= j1; j++)
-      for (let i = i0; i <= i1; i++) {
-        if (!OWN.has(j * 4096 + i)) continue;
-        const x = i * 2,
-          z = j * 2;
-        if (!OWN.has(j * 4096 + i - 1)) ez(x, z, 2);
-        if (!OWN.has(j * 4096 + i + 1)) ez(x + 2, z, 2);
-        if (!OWN.has((j - 1) * 4096 + i)) ex(x, z, 2);
-        if (!OWN.has((j + 1) * 4096 + i)) ex(x, z + 2, 2);
-      }
-  }
+
   for (const b of BASES) {
     if (!b.alive || hyp(b.tx - cx, b.ty - cz) > R + 60) continue;
     col.set(PAL[b.ci][1]);

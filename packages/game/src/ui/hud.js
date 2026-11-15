@@ -39,20 +39,21 @@ import {
   drawItem,
   drawTabs,
   menuItems,
-  NAMES,
   TABH,
   tabsWidth,
   tabState,
   uiBtn,
 } from "./build-menu.js";
+import { NAMES } from "./build-catalog.js";
 import { canvasesState, cv } from "./canvases.js";
 import { convoyPanelState, drawConvoy } from "./convoy-panel.js";
 import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, RDB, SLOT, TIPP, UIT } from "./drawing.js";
 import { hudDisplayState, topBox } from "./hud-state.js";
 import { dIc, IC } from "./icons.js";
 import { THEME } from "./kingdom-theme.js";
-import { bar, drawMapModal, drawWorld, mmss, pill } from "./minimap.js";
-import { KB, kdisp, settingsState } from "./settings.js";
+import { bar, drawMapModal, drawWorld, mmss } from "./minimap.js";
+import { KB, kdisp } from "./settings.js";
+import { settingsState } from "./panel-state.js";
 import { drawPicker, sitePickerState } from "./site-picker.js";
 import { drawTitle } from "./title-menu.js";
 import { guideWatch } from "./video-guide.js";
@@ -65,7 +66,8 @@ import { drawTroops, PLUN, troopPanelState } from "./troop-panel.js";
 import { hintBar } from "./tutorial.js";
 import { questLog, questPanel } from "./quest-panel.js";
 import { FF } from "./typography.js";
-import { LAND, rollWorld, terrainState } from "../world/terrain.js";
+import { rollWorld } from "../world/terrain.js";
+import { LAND, terrainState } from "../world/terrain-state.js";
 
 export const hudState = {
   uiHits: [],
@@ -88,8 +90,7 @@ function flow(L, x0, y0, w, noLab) {
   let x = x0,
     y = y0 + (CMP || noLab ? 0 : 9),
     rh = 0,
-    mx = 0,
-    rowStart = true;
+    mx = 0;
   for (const it of L) {
     if (it.under) {
       it.x = it.under.x;
@@ -109,12 +110,10 @@ function flow(L, x0, y0, w, noLab) {
       x = x0;
       y += rh + (CMP ? 3 : 12);
       rh = 0;
-      rowStart = true;
     }
     it.x = x;
     it.y = y;
     it.lab = it.first && !noLab;
-    rowStart = false;
     x += it.w + 3;
     rh = Math.max(rh, it.h);
     mx = Math.max(mx, x - 3);
@@ -390,7 +389,7 @@ export function drawUI() {
   let rx = UW - 5;
   const tb = (w, ic, fn, tip, on) => {
     rx -= w;
-    uiBtn(rx, 3, w, 17, BTN, BTNH, fn, tip, (x, y, W2, H2) => dIc(ic, x + (W2 - 12) / 2, y + 2.5, 12), on);
+    uiBtn(rx, 3, w, 17, BTN, BTNH, fn, tip, (x, y, W2, _H2) => dIc(ic, x + (W2 - 12) / 2, y + 2.5, 12), on);
     rx -= 3;
   };
   tb(18, IC.menu, openMenu, ["Main menu [Esc]"]);
@@ -639,10 +638,20 @@ export function drawUI() {
   hudState.uiRects.push(U(mx2 - 3, my2 - 3, mw + 6, mh + 6));
   const bw2 = (mw + 6 - 3) / 2,
     ya = my2 - 3 - 19;
-  uiBtn(mx2 - 3, ya, bw2, 17, GRN, GRNH, home, ["Back to base [H]", "Centers the camera on your castle"], (x, y, w) => {
-    dIc(IC.compass, x + 4, y + 2.5, 12);
-    T_("Base", x + 19, y + 4, "#fff", 0.95);
-  });
+  uiBtn(
+    mx2 - 3,
+    ya,
+    bw2,
+    17,
+    GRN,
+    GRNH,
+    home,
+    ["Back to base [H]", "Centers the camera on your castle"],
+    (x, y, _w) => {
+      dIc(IC.compass, x + 4, y + 2.5, 12);
+      T_("Base", x + 19, y + 4, "#fff", 0.95);
+    },
+  );
   uiBtn(
     mx2 - 3 + bw2 + 3,
     ya,
@@ -654,7 +663,7 @@ export function drawUI() {
       sessionState.showMap = true;
     },
     ["World map [M]", "See the whole world, spawns and routes"],
-    (x, y, w) => {
+    (x, y, _w) => {
       dIc(IC.map, x + 4, y + 2.5, 12);
       T_("Map", x + 19, y + 4, "#fff", 0.95);
     },
@@ -760,7 +769,7 @@ export function drawUI() {
   /* the band taken by those centre bars (the quest marker keeps its arrows off it) */
   hudDisplayState.cbar = bossY > 0 ? [UW / 2 - 125, settingsState.TOPH, 250, bossY] : null;
   if (!sessionState.over) {
-    let msg = sessionState.mode
+    const msg = sessionState.mode
       ? "Place " +
         NAMES[sessionState.mode] +
         (sessionState.mode === "gate"
@@ -842,8 +851,8 @@ export function drawUI() {
       cw0 = cpp ? cpp.reduce((q, p) => q + tw(p[0], 0.9) + 12, 0) : 0,
       w = Math.max(cw0, ...ln.map((s) => tw(s, 0.9))) + 14,
       h = ln.length * 11 + 8;
-    let tx = Math.min(UW - w - 2, Math.max(2, Math.round(hv.x / hudDisplayState.UIS))),
-      ty = Math.round(hv.y / hudDisplayState.UIS) - h - 4;
+    const tx = Math.min(UW - w - 2, Math.max(2, Math.round(hv.x / hudDisplayState.UIS)));
+    let ty = Math.round(hv.y / hudDisplayState.UIS) - h - 4;
     if (ty < 26) ty = Math.round((hv.y + hv.h) / hudDisplayState.UIS) + 4;
     frame(tx, ty, w, h, TIPP, UIT.rad.small);
     ln.forEach((s, i) => {

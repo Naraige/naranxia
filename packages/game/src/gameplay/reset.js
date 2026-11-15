@@ -30,7 +30,8 @@ import { icoPart } from "../rendering/pixel-icons.js";
 import { build3D } from "../rendering/structures.js";
 import { calcFD } from "../world/connectivity.js";
 import { GF } from "../world/pathfinding.js";
-import { ensureAround, initWorld, terrainState } from "../world/terrain.js";
+import { ensureAround, initWorld } from "../world/terrain.js";
+import { terrainState } from "../world/terrain-state.js";
 import { LVO } from "../world/traversal.js";
 
 /* the lanes of a wave are drawn at random, but a lane whose far end is too near a castle (see laneSpawnIdx) only comes after the others: same draws, then a stable reorder */

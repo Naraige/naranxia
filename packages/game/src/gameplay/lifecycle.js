@@ -5,9 +5,8 @@ import { mpSend } from "../multiplayer/lockstep.js";
 import { MP } from "../multiplayer/session.js";
 import { home } from "../rendering/camera.js";
 import { CAM } from "../rendering/scene.js";
-import { saveMenuState } from "../ui/save-menu.js";
+import { saveMenuState, settingsState } from "../ui/panel-state.js";
 import { registryHide } from "../multiplayer/registry.js";
-import { settingsState } from "../ui/settings.js";
 import { sitePickerState } from "../ui/site-picker.js";
 import { rollWorld } from "../world/terrain.js";
 
@@ -45,10 +44,14 @@ export function quitGame() {
     mpSend({ k: "bye" });
     try {
       MP.pcon && MP.pcon.close();
-    } catch (e) {}
+    } catch {
+      /* A data channel may already be closed; continue peer teardown. */
+    }
     try {
       MP.peer && MP.peer.destroy();
-    } catch (e) {}
+    } catch {
+      /* A peer may already be destroyed; continue resetting multiplayer state. */
+    }
     registryHide();
     MP.peer = null;
     MP.pcon = null;
@@ -63,7 +66,9 @@ export function quitGame() {
     MP.stall = false;
     try {
       mpModal(false);
-    } catch (e) {}
+    } catch {
+      /* The session state is already cleared; modal closure is best-effort. */
+    }
   }
   MP.side = 0;
   sessionState.inGame = false;

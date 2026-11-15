@@ -1,131 +1,7 @@
-import { PD, PDP, pxArms, pxBox, PXDK, PXLE, pxN, pxRot, pxScene, shadeHex, teamPal } from "./pixel-geometry.js";
+import { PD, pxArms, pxBox, pxN, pxRot, pxScene, shadeHex, teamPal } from "./pixel-geometry.js";
 import { zombiesState } from "./zombies.js";
 import { unitsState } from "./units.js";
 import { thp } from "../../ui/kingdom-theme.js";
-
-/* ---- faces: skin, eyes, brows, hair; hair styles: 0 short, 1 fringe, 2 long, 3 none ---- */
-const SKINS = [
-  ["#a8664c", "#c98262", "#e8a684"],
-  ["#8f5a40", "#b57452", "#d4946e"],
-  ["#6e4430", "#93603f", "#b07a54"],
-  ["#b27a5c", "#d69c78", "#f0bc96"],
-];
-
-function pxHead(P, o) {
-  const Sk = PDP(SKINS[o.skin || 0]),
-    Hr = o.hair ? PDP(o.hair) : null,
-    st = o.hs || 0,
-    EY = PD(o.eye || "#3fa65a"),
-    WH = PD("#f4f4f4"),
-    BR = Hr ? Hr[0] : PD("#4a3020"),
-    MO = PD("#8e4a3c"),
-    Bd = o.beard ? PDP(o.beard) : null;
-  pxBox(
-    P.HG,
-    -4,
-    24,
-    -4,
-    8,
-    8,
-    8,
-    (f, u, v, W, H) => {
-      if (f === "T") return Hr ? ((u + v) % 3 === 0 ? Hr[2] : Hr[1]) : Sk[1];
-      if (f === "D") return Sk[0];
-      if (f === "F") {
-        if (Hr) {
-          if (v === 7) return Hr[1];
-          if (v === 6 && (st === 1 ? u !== 5 : u <= 1 || u >= 6 || u === 3)) return u === 3 ? Hr[2] : Hr[1];
-          if (v === 5 && (u === 0 || u === 7) && st !== 3) return Hr[0];
-        }
-        if (v === 4 && (u === 1 || u === 2 || u === 5 || u === 6)) return BR;
-        if (v === 3) {
-          if (u === 1 || u === 6) return WH;
-          if (u === 2 || u === 5) return EY;
-        }
-        if (Bd && v <= 2 && !(v >= 1 && (u === 3 || u === 4)) && !(v === 2 && u >= 2 && u <= 5))
-          return v === 0 ? Bd[0] : Bd[1];
-        if (v === 2 && (u === 3 || u === 4)) return Sk[1];
-        if (v === 1 && (u === 3 || u === 4)) return MO;
-        return v === 0 ? Sk[1] : Sk[2];
-      }
-      const back = f === "B" || (f === "R" && u >= 4) || (f === "L" && u <= 3);
-      if (Hr) {
-        if (v >= 6) return Hr[1];
-        if (back && v >= (st === 2 ? 1 : 3)) return v === 3 && st !== 2 ? Hr[0] : Hr[1];
-        if (st === 2 && (f === "R" ? u >= 2 : f === "L" ? u <= 5 : false) && v >= 2) return Hr[1];
-      }
-      if (((f === "R" && u === 3) || (f === "L" && u === 4)) && v === 3) return Sk[0];
-      return Sk[1];
-    },
-    { mat: 0 },
-  );
-}
-
-/* ---- the body underneath: shirt (sleeves), bare forearms, trousers, boots ---- */
-function pxBody(P, o) {
-  const Sh = PDP(o.shirt || ["#283c5e", "#3a5788", "#4b6fa8", "#6a8cc4"]),
-    Pa = PDP(o.pants || ["#1d2a42", "#2a3b5c", "#344a72"]),
-    Bt = o.boots ? PDP(o.boots) : PXLE;
-  pxBox(
-    P.G,
-    -4,
-    12,
-    -2,
-    8,
-    12,
-    4,
-    (f, u, v, W, H) => {
-      if (f === "T") return Sh[2];
-      if (f === "D") return Sh[0];
-      if (v === H - 1) return Sh[3];
-      if (v <= 1) return Sh[1];
-      return Sh[2];
-    },
-    { mat: 0 },
-  );
-  pxBox(
-    P.LG,
-    -2,
-    -12,
-    -2,
-    4,
-    12,
-    4,
-    (f, u, v, W, H) => {
-      if (f === "T") return Pa[2];
-      if (f === "D") return Bt[0];
-      if (v <= 3) return v === 3 ? Bt[3] : v === 0 ? Bt[1] : Bt[2];
-      return v === 4 ? Pa[0] : Pa[1 + (v > 9 ? 1 : 0)];
-    },
-    { mat: 0 },
-  );
-  pxBox(P.LG, -30, -40, -30, 60, 28, 60, () => PXDK, { only: true });
-}
-
-function pxArm0(T, o) {
-  const Sk = PDP(SKINS[o.skin || 0]),
-    Sh = PDP(o.shirt || ["#283c5e", "#3a5788", "#4b6fa8", "#6a8cc4"]),
-    bare = o.bare !== false,
-    sl = o.sleeve || 6;
-  pxBox(
-    T,
-    -2,
-    -12,
-    -2,
-    4,
-    12,
-    4,
-    (f, u, v, W, H) => {
-      if (f === "T") return Sh[2];
-      if (f === "D") return Sk[0];
-      if (!bare || v >= 12 - sl) return v === 12 - sl ? Sh[1] : Sh[2];
-      return v <= 1 ? Sk[1] : Sk[2];
-    },
-    { mat: 0 },
-  );
-}
-
-const pE = (u, v, W, H) => Math.min(u, v, W - 1 - u, H - 1 - v);
 
 /* ================= BLOCKBENCH-STYLE SKINS =================
    Each unit is the plain Minecraft player model: six base cubes and six outer-layer cubes (hat +0.5px, jacket / sleeves /
@@ -184,8 +60,7 @@ export const pxTone = (paint, kind, sd) =>
       };
 const tk = (m, on) => (on ? (m === 4 ? 2 : 1) : 0);
 
-export function pxSkin(P, K, map, o) {
-  o = o || {};
+export function pxSkin(P, K, map, _options) {
   const V = skinV2.on,
     B = (Gx, x, y, z, w, h, d, spec, g, m, ao, kd) => {
       if (spec)
@@ -408,8 +283,7 @@ export function pxKnight(P, AL) {
       },
       thp(),
     ),
-    K = pxRankK(SK_KNIGHT, "sleeve", [4, 6, 8], ["F", "R", "B"], "G"),
-    S = (n) => map[n];
+    K = pxRankK(SK_KNIGHT, "sleeve", [4, 6, 8], ["F", "R", "B"], "G");
   pxScene(() => {
     pxSkin(P, K, map);
     pxBox(
@@ -497,7 +371,7 @@ export function pxKnight(P, AL) {
 /* ---------------- ROYAL GUARD ---------------- */
 let SK_GUARD;
 
-export function pxGuard(P, AL) {
+export function pxGuard(P, _AL) {
   const map = pxMap(
       {
         k: "#141519",
@@ -693,7 +567,7 @@ const SK_ARCHER = {
   },
 };
 
-export function pxArcher(P, AL) {
+export function pxArcher(P, _AL) {
   const map = pxMap({
       s: "#e8a684",
       S: "#c98262",
@@ -778,7 +652,7 @@ export function pxArcher(P, AL) {
 }
 
 /* ---------------- PEASANT (six variants: hat, skin, hair, beard, tunic colour) ---------------- */
-export function pxPeasant(P, AL) {
+export function pxPeasant(P, _AL) {
   const pv = zombiesState.ZVAR && zombiesState.ZVAR.hint === "p" ? zombiesState.ZVAR.v % 6 : 0;
   const SH = [
       ["#6e4424", "#8a5a32"],

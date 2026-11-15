@@ -7,7 +7,7 @@ import { mpSend } from "./lockstep.js";
 import { MP } from "./session.js";
 import { scr, wpos } from "../rendering/camera.js";
 import { canvasesState, cv } from "../ui/canvases.js";
-import { HT } from "../world/terrain.js";
+import { HT } from "../world/terrain-state.js";
 
 export const PINGS = [];
 
@@ -72,7 +72,6 @@ export function initializePings() {
     (e) => {
       if (e.altKey && MP.conn && sessionState.started) {
         const w = wpos(),
-          pt = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0) + (e.shiftKey && e.ctrlKey ? 0 : 0),
           pp = e.shiftKey && e.ctrlKey ? 3 : e.shiftKey ? 1 : e.ctrlKey ? 2 : 0;
         mpSend({ k: "ping", x: w.x, y: w.y, p: pp });
         addPing(w.x, w.y, true, pp);

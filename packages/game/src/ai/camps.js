@@ -1,9 +1,9 @@
 import { dist, rnd } from "../core/math.js";
 import { mkU } from "../gameplay/entities.js";
-import { fdist, focus } from "../gameplay/players.js";
+import { fdist } from "../gameplay/players.js";
 import { TS } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
-import { CAMPS, genF } from "../world/terrain.js";
+import { CAMPS, genF } from "../world/terrain-state.js";
 import { solidAt } from "../world/traversal.js";
 
 export const campsState = {
@@ -14,7 +14,6 @@ export function updateCamps(dt) {
   campsState.campT -= dt;
   if (campsState.campT > 0) return;
   campsState.campT = 0.6;
-  const cam = focus();
   let nz = 0;
   for (const u of sessionState.units) if (u.t === 1) nz++;
   for (const [k, c] of CAMPS) {

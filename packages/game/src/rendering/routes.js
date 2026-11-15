@@ -8,7 +8,7 @@ import { scene } from "./scene.js";
 import { CHK, keyOf } from "./terrain.js";
 import { THREE } from "./three.js";
 import { gOK } from "../world/routes.js";
-import { CH, HT, LAND, ter, terrainState, WLV } from "../world/terrain.js";
+import { CH, HT, LAND, ter, terrainState, WLV } from "../world/terrain-state.js";
 
 /* ---- zombie route lines: a glowing ribbon with chevrons flowing toward the castle, drawn only ahead of a living horde ---- */
 let routeMat;
@@ -222,7 +222,6 @@ function updateTf() {
       c,
       c,
     );
-    const d = [0.2, 0.14, 0.06];
     bxc(G, x + 0.5, h, y + 0.5, 0.2, 0.5, 0.2, o.t === "raise" ? [1, 1, 0.6] : [0.5, 0.3, 0.15]);
   }
   tfMesh = new THREE.Mesh(

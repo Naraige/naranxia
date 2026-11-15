@@ -37,8 +37,8 @@ async () => {
     }
     return null;
   };
-  const ac = put("academy"),
-    mk = put("market");
+  const ac = put("academy");
+  put("market");
   const clr = () => {
     RS2.on = null;
     RS2.t = 0;
@@ -94,7 +94,9 @@ async () => {
   const snap = JSON.parse(JSON.stringify(RS2));
   svAssign("RS2", snap);
   chk("chKept", RS2.ch && RS2.ch[2] === "harvest");
-  svAssign("RS2", (({ ch, ...r }) => r)(snap));
+  const snapWithoutChoice = { ...snap };
+  delete snapWithoutChoice.ch;
+  svAssign("RS2", snapWithoutChoice);
   chk("chAbsentOk", RS2.ch === undefined && rxLock("tools") === "harvest");
   RS2.ch = {};
   RS2.on = null;
@@ -124,7 +126,6 @@ async () => {
   buy("xfs");
   chk("barterFat", FAT.f === 1);
   /* recovery is slower under fatigue, then complete, deterministic */
-  const lo = PRICE.w;
   Object.assign(PRICE, PBASE);
   PRICE.w = 0.5;
   PRICE.s = 0.5;
@@ -137,7 +138,6 @@ async () => {
   chk("slowRecovery", PRICE.s > PRICE.w && PRICE.w > 0.5 && FAT.w < 8);
   for (let i = 0; i < 400; i++) priceTick(5);
   chk("fullRecovery", Math.abs(PRICE.w - 1) < 0.01 && FAT.w === 0);
-  const h1 = JSON.stringify([PRICE, FAT]);
   /* envoy tribute: degressive per camp and capped in all */
   const bs = BASES.filter((b) => b.alive);
   if (!bs.length) {
@@ -151,7 +151,6 @@ async () => {
   R.g = 0;
   R.f = 0;
   const gains = [];
-  let used = 0;
   for (let i = 0; i < 8; i++) {
     const g0 = R.g,
       f0 = R.f;
@@ -159,7 +158,6 @@ async () => {
     const u = mkU(0, "envoy", b.x + TS, b.y);
     units.push(u);
     for (let k = 0; k < 6; k++) update(0.05);
-    if (u.hp <= 0) used++;
     gains.push([R.g - g0, R.f - f0]);
   }
   chk("firstFull", gains[0][0] === 80 + 8 * Math.min(waveN, 20) && gains[0][0] > 0);

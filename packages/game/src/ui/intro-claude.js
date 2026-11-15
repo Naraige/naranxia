@@ -17,7 +17,7 @@ export function initializeClaudeIntro() {
       animationData,
       rendererSettings: { preserveAspectRatio: "xMidYMid meet" },
     });
-  } catch (e) {
+  } catch {
     boot.classList.add("nolottie");
   }
 }

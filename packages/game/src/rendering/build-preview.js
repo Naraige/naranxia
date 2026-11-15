@@ -15,7 +15,7 @@ import { DIRT, dirtyT, GRASS } from "./terrain.js";
 import { THREE } from "./three.js";
 import { cvs } from "../ui/canvases.js";
 import { D4, gOK } from "../world/routes.js";
-import { CH, genF, HT, LAND, NCX } from "../world/terrain.js";
+import { CH, genF, HT, LAND, NCX } from "../world/terrain-state.js";
 
 export const buildPreviewState = {
   GHO: null,
@@ -138,7 +138,7 @@ function tgRamp(G, d) {
 }
 
 function tgGeo(k) {
-  let q = TGEO[k];
+  const q = TGEO[k];
   if (q) return q;
   const G = newG();
   if (k === "block") tgBlock(G, 0, 1, GRASS, DIRT);

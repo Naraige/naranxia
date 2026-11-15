@@ -60,7 +60,8 @@ import { snapM } from "./render-settings.js";
 import { pulseRoutes } from "./routes.js";
 import { CAM, camera, scene } from "./scene.js";
 import { darkA, eyeFlush, fuseFx, mutGlow, pudRender, swarmRenderingState, swRender, zEyes } from "./swarm.js";
-import { gh, unitG, updateChunks } from "./terrain.js";
+import { gh } from "../world/terrain-queries.js";
+import { unitG, updateChunks } from "./terrain.js";
 import { updateTerr } from "./territory.js";
 import { THREE } from "./three.js";
 import { angd, animCorpses, animUnit, easeO, sat } from "./unit-animation.js";
@@ -68,7 +69,7 @@ import { _uFr, _uPV, _uSp, uiFlush } from "./unit-instances.js";
 import { weatherTick } from "./weather.js";
 import { hudState, inR } from "../ui/hud.js";
 import { gOK } from "../world/routes.js";
-import { HT, LAND, occ, pth, stairs, ter } from "../world/terrain.js";
+import { HT, LAND, occ, pth, stairs, ter } from "../world/terrain-state.js";
 import { stairInfo } from "../world/traversal.js";
 
 export const frameState = {
@@ -246,15 +247,6 @@ export let render3D = function render3D(dt) {
     }
   }
   selRing.visible = false;
-  if (false) {
-    selRing.position.set(
-      selectionState.selB.x / TS,
-      (selectionState.selB.bh || LAND) + 0.2,
-      selectionState.selB.y / TS,
-    );
-    const q = selectionState.selB.sz * 0.78 + Math.sin(sessionState.clockT * 4) * 0.05;
-    selRing.scale.set(q, q, q);
-  }
   for (const s of SCAF) {
     if (s.prog >= 1 || !sessionState.structs.includes(s)) {
       scene.remove(s.scaf);
@@ -438,64 +430,64 @@ export let render3D = function render3D(dt) {
         if (sessionState.mode === "barracks")
           good = tilesFor("barracks", tx, ty, 2).every(([x, y]) => gOK(x, y) && valid(x, y)) && ok(C.barracks);
         let hh =
-            sessionState.mode === "farm"
-              ? 0.9
-              : sessionState.mode === "storage"
-                ? 1.1
-                : sessionState.mode === "house"
-                  ? 1.4
-                  : sessionState.mode === "academy"
-                    ? 2.2
-                    : sessionState.mode === "market"
-                      ? 1.8
-                      : sessionState.mode === "forester"
-                        ? 1.5
-                        : sessionState.mode === "guild"
-                          ? 2.2
-                          : sessionState.mode === "observatory"
-                            ? 2.6
-                            : sessionState.mode === "granary"
-                              ? 2.3
-                              : sessionState.mode === "bell"
+          sessionState.mode === "farm"
+            ? 0.9
+            : sessionState.mode === "storage"
+              ? 1.1
+              : sessionState.mode === "house"
+                ? 1.4
+                : sessionState.mode === "academy"
+                  ? 2.2
+                  : sessionState.mode === "market"
+                    ? 1.8
+                    : sessionState.mode === "forester"
+                      ? 1.5
+                      : sessionState.mode === "guild"
+                        ? 2.2
+                        : sessionState.mode === "observatory"
+                          ? 2.6
+                          : sessionState.mode === "granary"
+                            ? 2.3
+                            : sessionState.mode === "bell"
+                              ? 2.2
+                              : sessionState.mode === "sanctuary"
                                 ? 2.2
-                                : sessionState.mode === "sanctuary"
-                                  ? 2.2
-                                  : sessionState.mode === "beacon"
-                                    ? 2.8
-                                    : sessionState.mode === "orchard"
-                                      ? 2.0
-                                      : sessionState.mode === "forge"
-                                        ? 2.4
-                                        : sessionState.mode === "embassy"
-                                          ? 2.3
-                                          : sessionState.mode === "warroom"
-                                            ? 2.4
-                                            : sessionState.mode === "sappers"
-                                              ? 2.2
-                                              : sessionState.mode === "torch"
-                                                ? 1.3
-                                                : sessionState.mode === "rally" || sessionState.mode === "rallyc"
-                                                  ? 0.1
-                                                  : sessionState.mode === "ramp"
-                                                    ? 0.12
-                                                    : sessionState.mode === "barracks"
-                                                      ? 1.9
-                                                      : sessionState.mode === "tower"
-                                                        ? 3
-                                                        : sessionState.mode === "path"
-                                                          ? 0.06
-                                                          : sessionState.mode === "stairs"
-                                                            ? 0.5
-                                                            : sessionState.mode === "gate"
-                                                              ? 2.2
-                                                              : sessionState.mode === "ballista" ||
-                                                                  sessionState.mode === "trebuchet"
-                                                                ? 3.6
-                                                                : sessionState.mode === "raise" ||
-                                                                    sessionState.mode === "dig"
-                                                                  ? 1
-                                                                  : 1.7,
-          h0 = HT[ty * TW + tx];
+                                : sessionState.mode === "beacon"
+                                  ? 2.8
+                                  : sessionState.mode === "orchard"
+                                    ? 2.0
+                                    : sessionState.mode === "forge"
+                                      ? 2.4
+                                      : sessionState.mode === "embassy"
+                                        ? 2.3
+                                        : sessionState.mode === "warroom"
+                                          ? 2.4
+                                          : sessionState.mode === "sappers"
+                                            ? 2.2
+                                            : sessionState.mode === "torch"
+                                              ? 1.3
+                                              : sessionState.mode === "rally" || sessionState.mode === "rallyc"
+                                                ? 0.1
+                                                : sessionState.mode === "ramp"
+                                                  ? 0.12
+                                                  : sessionState.mode === "barracks"
+                                                    ? 1.9
+                                                    : sessionState.mode === "tower"
+                                                      ? 3
+                                                      : sessionState.mode === "path"
+                                                        ? 0.06
+                                                        : sessionState.mode === "stairs"
+                                                          ? 0.5
+                                                          : sessionState.mode === "gate"
+                                                            ? 2.2
+                                                            : sessionState.mode === "ballista" ||
+                                                                sessionState.mode === "trebuchet"
+                                                              ? 3.6
+                                                              : sessionState.mode === "raise" ||
+                                                                  sessionState.mode === "dig"
+                                                                ? 1
+                                                                : 1.7;
+        const h0 = HT[ty * TW + tx];
         let gx = 1.02,
           gz = 1.02,
           cx2 = tx + 0.5,

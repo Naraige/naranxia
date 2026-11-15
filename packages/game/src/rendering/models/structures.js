@@ -39,21 +39,15 @@ import {
 } from "./fortifications.js";
 import { PAL, thp } from "../../ui/kingdom-theme.js";
 import { gOK } from "../../world/routes.js";
-import { occ } from "../../world/terrain.js";
+import { occ } from "../../world/terrain-state.js";
 
 export const structureModelsState = {
   BLU: undefined,
 };
 
 /* ---- structures: connected voxel models ---- */
-const ST = "#7f7f7f",
-  ST2 = "#8b8b8b",
-  ST3 = "#979797",
+const ST3 = "#979797",
   STD = "#5f5f5f",
-  STL = "#b3b3b3",
-  DK = "#1b1b22",
-  RED = "#9b3b2e",
-  WOOD = "#9c7a46",
   IRON = "#4a4a52";
 
 export const isW = (tx, ty) => {
@@ -109,18 +103,12 @@ export const pMask = (s) => {
 
 export const WH = 1.7;
 export const WT = 0.3;
-const CRS = [ST, ST2, ST3, ST2];
-
 export const DIRS = [
   [1, 0, -1],
   [2, 1, 0],
   [4, 0, 1],
   [8, -1, 0],
 ];
-
-/* box along an arm: t = distance along the arm, l = lateral */
-const ab = (G, dx, dz, t, l, y, a, b, h, c) =>
-  bxc(G, dx !== 0 ? dx * t : l, y, dz !== 0 ? dz * t : l, dx !== 0 ? a : b, h, dx !== 0 ? b : a, c);
 
 /* gate: 2 tiles long (local x -1..1), depth .8 */
 
@@ -195,7 +183,7 @@ export function trebBase() {
     [
       [0.3, -1],
       [1.7, 1],
-    ].forEach(([z, sg]) => {
+    ].forEach(([z, _sg]) => {
       bxc(G, x, 0.14, z * 0.5 + 1 * 0.5, 0.14, 0.1, 0.14, WD);
     });
     for (let k = 0; k < 5; k++) {
@@ -257,27 +245,12 @@ export function trebCW() {
 export const GEO = {};
 
 /* ---- wooden tier models ---- */
-const LG1 = "#6b4f2e";
-const LG2 = "#5b4326";
-const LG3 = "#b8945f";
-const LGD = "#3f2d1a";
-const THA = "#7a5a34";
-const THB = "#6a4c2a";
-const THC = "#573e22";
 export const ROPE = "#d9c28a";
 
 /* ================= Minecraft-style small buildings (cobble, planks, logs, glass, stair roofs) ================= */
-const COBL = ["#7d7d7d", "#8c8c8c", "#6e6e6e", "#838383"];
-const PLKL = ["#b8945f", "#a98450"];
-const SPRL = ["#6e5230", "#5f4527"];
-const LGM = "#5b4326";
-const GLS = "#bfe3f2";
 export const HAYC = "#d8b23a";
 
 /* houses merge with aligned neighbours (bits: 1 N, 2 E, 4 S, 8 W): shared walls, one continuous roof */
-
-const RF0 = "#9b3b2e",
-  RF1 = "#8a3228";
 
 export const CONNT = new Set(["storage", "barracks", "academy", "market"]);
 
@@ -326,8 +299,7 @@ export function scafGeo(w, d, h) {
   for (let y = 0; y + 1.3 < h; y += 1.3) {
     const n = Math.max(2, Math.round((x * 2) / 0.5));
     for (let k = 0; k < n; k++) {
-      const a = -x + ((k + 0.5) * 2 * x) / n,
-        f = k % 2 ? -1 : 1;
+      const a = -x + ((k + 0.5) * 2 * x) / n;
       bxc(G, a, y + 0.55, dz, 0.05, 0.7, 0.05, P);
     }
   }

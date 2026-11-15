@@ -14,14 +14,14 @@ import { sessionState } from "../gameplay/session.js";
 import { doTf, nearestTf } from "../gameplay/terraforming.js";
 import { convoyStep } from "../multiplayer/convoys.js";
 import { puff } from "../rendering/effects.js";
-import { markP } from "../rendering/terrain.js";
-import { NAMES } from "../ui/build-menu.js";
+import { markP } from "../world/terrain-invalidation.js";
+import { NAMES } from "../ui/build-catalog.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { atDepot, depBest, depFieldAt, DSIDE, reachTile, sameComp } from "../world/connectivity.js";
 import { mmTile } from "../world/minimap.js";
 import { gField, mkG } from "../world/pathfinding.js";
 import { D8, gOK } from "../world/routes.js";
-import { amt, ter } from "../world/terrain.js";
+import { amt, ter } from "../world/terrain-state.js";
 import { canStep, fv, solid } from "../world/traversal.js";
 
 export function peasant(u, dt) {
@@ -29,9 +29,7 @@ export function peasant(u, dt) {
     convoyStep(u, dt);
     return;
   }
-  const px = u.x,
-    py = u.y,
-    hadO = !!u.o;
+  const hadO = !!u.o;
   peasant0(u, dt);
   if (u.role && u.gwT === sessionState.time) {
     u.skt = 0;

@@ -3,7 +3,9 @@ async () => {
    closes with the screen it was opened from, the quest arrow stays off the HUD and goes to the screen edge when its building is out of view */
   try {
     renderer.render = () => {};
-  } catch (e) {}
+  } catch {
+    /* Preserve the real renderer if its render hook cannot be replaced. */
+  }
   const O = {},
     C = [];
   const chk = (n, v) => {
@@ -319,7 +321,7 @@ async () => {
       ].join();
       chk("migrateDefaults", O.mig1 === "f6,f7,f9,f3,KeyW,KeyA,KeyZ,KeyQ,é,3,f6,KeyW");
       /* a key the player chose stays; a new key already given to something else is not taken */
-      S = mig({ torch: "ù", wave: "f7", up: "z", rotL: "w", left: "q", army: "a" }, "2");
+      mig({ torch: "ù", wave: "f7", up: "z", rotL: "w", left: "q", army: "a" }, "2");
       O.mig2 = [KB.torch, KB.rally, KB.wave, KB.up, KB.rotL, KB.left, KB.army, KB.down, KB.forester].join();
       chk("migrateKeepsChoices", O.mig2 === "ù,-,f7,z,w,q,a,KeyS,f9");
       chk(
@@ -327,10 +329,10 @@ async () => {
         tap("z", "KeyW") === "up" && tap("w", "KeyZ") === "rotL" && tap("q", "KeyA") === "left" && armyOn("a", "KeyQ"),
       );
       /* from before v93 (no marker): the spearman moves too */
-      S = mig({ spearman: "\\" }, null);
+      mig({ spearman: "\\" }, null);
       chk("migrateFromOld", KB.spearman === "f4" && KB.torch === "f6" && LS.getItem("dk_keyv") === "3");
       /* already migrated: a player who puts the torch back on the apostrophe keeps it */
-      S = mig({}, "3");
+      mig({}, "3");
       chk("migrateOnce", KB.torch === "'" && KB.up === "w" && tap("w", "KeyW") === "up");
     }
     units.splice(units.indexOf(kn), 1);
@@ -506,8 +508,7 @@ async () => {
     );
     /* sweep the camera around the building: there is always an arrow and its tip is never on the HUD */
     let bad = [],
-      kinds = { w: 0, e: 0 },
-      low = 0;
+      kinds = { w: 0, e: 0 };
     for (let dz = -26; dz <= 26; dz += 2)
       for (const dx of [-30, -8, 0, 8, 30]) {
         CAM.x = bx + dx;

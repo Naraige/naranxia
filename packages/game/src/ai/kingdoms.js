@@ -5,36 +5,20 @@ import { CASTLE_RNG, hit } from "../gameplay/combat.js";
 import { mk, mkU } from "../gameplay/entities.js";
 import { garrison, garSlot, ungar } from "../gameplay/formations.js";
 import { chase, moveTo } from "../gameplay/movement.js";
-import { BAD, CASTLES, fdist, focus, playersState } from "../gameplay/players.js";
+import { BAD, CASTLES, fdist, playersState } from "../gameplay/players.js";
 import { GCAP, GET, GRNG, SH, T, TH, TS, TW, WORK } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { targetZ } from "../gameplay/swarm.js";
 import { puff } from "../rendering/effects.js";
 import { gtopOf } from "../rendering/models/fortifications.js";
-import { addStruct, buildStructMesh, refreshNear, rmStruct } from "../rendering/structures.js";
-import { markP, markT } from "../rendering/terrain.js";
+import { addStruct, buildStructMesh, refreshNear } from "../rendering/structures.js";
+import { markP } from "../world/terrain-invalidation.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { THEME } from "../ui/kingdom-theme.js";
 import { mmTile } from "../world/minimap.js";
 import { D4, D8, gOK } from "../world/routes.js";
-import {
-  _bwat,
-  amt,
-  baseHW,
-  CH,
-  ensureAround,
-  FLG,
-  genChunk,
-  HT,
-  LAND,
-  occ,
-  pth,
-  ROCKH,
-  stairs,
-  ter,
-  terrainState,
-  TFL,
-} from "../world/terrain.js";
+import { _bwat, baseHW, ensureAround, genChunk } from "../world/terrain.js";
+import { amt, CH, HT, LAND, occ, pth, ROCKH, stairs, ter, terrainState } from "../world/terrain-state.js";
 import { levelGround, solid, solidAt } from "../world/traversal.js";
 
 export const kingdomsState = {
@@ -46,7 +30,6 @@ export const kingdomsState = {
 /* ================= ROAMING HORDES + AI KINGDOMS ================= */
 export const HORDES = [],
   BASES = [];
-let flagMsgT = 0;
 
 const BNAMES = [
   "Ironhold",
@@ -141,7 +124,6 @@ export const selH = (s) =>
     trebuchet: 3,
   })[s.type] || 2;
 
-const capPop = (l) => 14 + l * 11;
 export const TOWR = 11;
 export const TR_CASTLE = 45;
 export const TR_TOWER = 15;
@@ -183,18 +165,7 @@ export function inTerr(tx, ty) {
   return OWN.has(ownKey(tx, ty));
 }
 
-function baseAt(tx, ty, m) {
-  for (const b of BASES)
-    if (b.alive && Math.max(Math.abs(tx - b.tx), Math.abs(ty - b.ty)) < aiR(b) + (m || 0)) return b;
-  return null;
-}
-
 /* the land around both co-op castles is protected the same way (AI kingdoms do not settle there) */
-const claimed = (tx, ty, m) =>
-  baseAt(tx, ty, m) ||
-  Math.max(Math.abs(tx - terrainState.CX), Math.abs(ty - terrainState.CY)) < TR_CASTLE + (m || 0) ||
-  (!!sessionState.SITE2 &&
-    Math.max(Math.abs(tx - sessionState.SITE2.tx), Math.abs(ty - sessionState.SITE2.ty)) < TR_CASTLE + (m || 0));
 
 function msgAI(s) {
   if (hudDisplayState.msgT <= 0 || hudDisplayState.msgS.startsWith("The ") || hudDisplayState.msgS.endsWith("horde")) {
@@ -353,7 +324,6 @@ export function updateHordes(dt) {
   if (kingdomsState.hdT > 0) return;
   const D = 0.6 - kingdomsState.hdT;
   kingdomsState.hdT = 0.6;
-  const cam = focus();
   let nz = zcount();
   for (let i = HORDES.length - 1; i >= 0; i--) {
     const h = HORDES[i];
@@ -430,260 +400,9 @@ export function updateHordes(dt) {
 }
 
 /* ---- AI kingdoms ---- */
-function expandBase(b) {
-  for (let a = 0; a < 14; a++) {
-    const an = Math.random() * 6.283,
-      r = aiR(b) + rnd(12, 30),
-      tx = Math.round(b.tx + Math.cos(an) * r),
-      ty = Math.round(b.ty + Math.sin(an) * r);
-    if (tx < 70 || ty < 70 || tx > TW - 70 || ty > TH - 70 || claimed(tx, ty, 30)) continue;
-    const h = baseHW(tx, ty);
-    if (_bwat || h >= ROCKH - 2) continue;
-    b.pop = Math.max(8, b.pop - 12);
-    addBase(tx, ty, 0, 8, b.ci);
-    msgAI(b.name + " founds a new settlement");
-    return true;
-  }
-  return false;
-}
-
-function fallBase(b, h) {
-  b.alive = false;
-  if (h) {
-    h.wait = 0;
-    h.wx = undefined;
-    h.n = Math.min(95, h.n + Math.round(b.pop * 0.6) + b.lvl * 3 + 4);
-  }
-  msgAI(b.name + " has fallen to the horde");
-}
 
 function updateBases(D) {
   aiTick(D);
-}
-
-function siteFlatten(b) {
-  const R = 7,
-    offs = [];
-  for (let dy = -26; dy <= 26; dy += 3) for (let dx = -26; dx <= 26; dx += 3) offs.push([dx, dy, dx * dx + dy * dy]);
-  offs.sort((p, q) => p[2] - q[2]);
-  for (const [dx, dy] of offs) {
-    const cx = b.tx + dx,
-      cy = b.ty + dy;
-    if (cx < R + 3 || cy < R + 3 || cx > TW - R - 3 || cy > TH - R - 3) continue;
-    let ok = true,
-      mn = 99,
-      mxh = 0;
-    const hs2 = [];
-    for (let j = -R - 1; j <= R + 1 && ok; j++)
-      for (let i = -R - 1; i <= R + 1; i++) {
-        const x = cx + i,
-          y = cy + j,
-          k = y * TW + x;
-        if (!gOK(x, y) || ter[k] === 1 || FLG[k] || occ.has(k) || pth[k]) {
-          ok = false;
-          break;
-        }
-        if (Math.abs(i) <= R && Math.abs(j) <= R) {
-          if (HT[k] < LAND) {
-            ok = false;
-            break;
-          }
-          hs2.push(HT[k]);
-          mn = Math.min(mn, HT[k]);
-          mxh = Math.max(mxh, HT[k]);
-        }
-      }
-    if (!ok || mxh - mn > 3) continue;
-    hs2.sort((p, q) => p - q);
-    const hc = hs2[hs2.length >> 1];
-    for (let j = -R - 2; j <= R + 2; j++)
-      for (let i = -R - 2; i <= R + 2; i++) {
-        const x = cx + i,
-          y = cy + j,
-          k = y * TW + x;
-        if (!gOK(x, y) || occ.has(k)) continue;
-        const ch = Math.max(Math.abs(i), Math.abs(j));
-        if (ch <= R) {
-          HT[k] = hc;
-          ter[k] = 0;
-          amt[k] = 0;
-          stairs.delete(k);
-        } else if (ter[k] !== 1) {
-          HT[k] = Math.max(hc - 1, Math.min(hc + 1, HT[k]));
-          if (ter[k] >= 2 && ter[k] <= 4 && ch <= R + 1) {
-            ter[k] = 0;
-            amt[k] = 0;
-          }
-        }
-        TFL[k] = 1;
-        markT(x, y);
-        markP(x, y);
-        mmTile(k);
-      }
-    b.tx = cx;
-    b.ty = cy;
-    b.x = (cx + 0.5) * TS;
-    b.y = (cy + 0.5) * TS;
-    sessionState.fdDirty = true;
-    return true;
-  }
-  return false;
-}
-
-function matBase(b) {
-  ensureAround(b.tx, b.ty, 1);
-  if (!b.flat) {
-    if (!siteFlatten(b)) {
-      b.fail++;
-      b.tx += rI(-16, 16);
-      b.ty += rI(-12, 12);
-      b.tx = Math.max(30, Math.min(TW - 30, b.tx));
-      b.ty = Math.max(30, Math.min(TH - 30, b.ty));
-      b.x = (b.tx + 0.5) * TS;
-      b.y = (b.ty + 0.5) * TS;
-      if (b.fail > 5) b.alive = false;
-      return;
-    }
-    b.flat = true;
-  }
-  const cx = b.tx,
-    cy = b.ty,
-    R = 6;
-  b.ss = [];
-  b.us = [];
-  const add = (type, x, y, w) => {
-    if (occ.has(y * TW + x)) return null;
-    const s = mk(2, type, x, y, 1, true);
-    s.tier = b.lvl >= 4 ? 1 : 0;
-    s.ci = b.ci;
-    s.base = b;
-    if (w) s.weapon = w;
-    addStruct(s);
-    b.ss.push(s);
-    return s;
-  };
-  const keep = mk(2, "castle", cx - 1, cy - 1, 3, true);
-  keep.ci = b.ci;
-  keep.base = b;
-  keep.keep = true;
-  keep.tier = b.lvl >= 3 ? 1 : 0;
-  addStruct(keep);
-  b.ss.push(keep);
-  const towers = [];
-  const tw2 = (x, y, w) => {
-    const s = add("tower", x, y, w);
-    if (s) towers.push(s);
-  };
-  if (b.lvl >= 1)
-    for (const [sx, sy] of [
-      [1, 1],
-      [-1, 1],
-    ])
-      tw2(cx + sx * R, cy + sy * R, null);
-  if (b.lvl >= 2)
-    for (const [sx, sy] of [
-      [-1, -1],
-      [1, -1],
-    ])
-      tw2(cx + sx * R, cy + sy * R, b.lvl >= 5 ? "ballista" : null);
-  if (b.lvl >= 3)
-    for (const [x, y] of [
-      [cx + R, cy],
-      [cx - R, cy],
-      [cx, cy - R],
-    ])
-      tw2(x, y, null);
-  if (b.lvl >= 4) {
-    tw2(cx - 2, cy + R, null);
-    tw2(cx + 1, cy + R, null);
-  }
-  if (b.lvl >= 5)
-    for (const [sx, sy] of [
-      [-1, -1],
-      [1, -1],
-      [-1, 1],
-      [1, 1],
-    ])
-      tw2(cx + sx * 3, cy + sy * 3, b.lvl >= 6 ? "ballista" : null);
-  if (b.lvl >= 3) {
-    for (let k = -R; k <= R; k++)
-      for (const [x, y] of [
-        [cx + k, cy - R],
-        [cx + k, cy + R],
-        [cx - R, cy + k],
-        [cx + R, cy + k],
-      ]) {
-        if (y === cy + R && (x === cx - 1 || x === cx)) continue;
-        add("wall", x, y);
-      }
-    {
-      const gt = mk(2, "gate", cx - 1, cy + R, 1, true, 0);
-      gt.tier = b.lvl >= 4 ? 1 : 0;
-      gt.ci = b.ci;
-      gt.base = b;
-      gt.gate = true;
-      addStruct(gt);
-      b.ss.push(gt);
-    }
-  }
-  for (const s of b.ss.slice()) refreshNear(s);
-  const mu = (type, x, y) => {
-    const u = mkU(2, type, x, y, null, -1);
-    u.ci = b.ci;
-    u.base = b;
-    u.hx = x;
-    u.hy = y;
-    u.face = Math.random() * 6;
-    sessionState.units.push(u);
-    b.us.push(u);
-    return u;
-  };
-  const pos = () => {
-    for (let t = 0; t < 16; t++) {
-      const x = (cx + 0.5 + rnd(-4.8, 4.8)) * TS,
-        y = (cy + 0.5 + rnd(-4.8, 4.8)) * TS;
-      if (!solidAt(x, y) && dist(x, y, keep.x, keep.y) > TS * 2.4) return [x, y];
-    }
-    return [(cx + 0.5) * TS, (cy + 4.5) * TS];
-  };
-  const nA = Math.min(14, 2 + Math.floor(b.lvl * 2)),
-    nK = Math.min(8, 1 + b.lvl),
-    nP = Math.min(10, Math.round(b.pop / 4));
-  let ti = 0;
-  for (let i = 0; i < nA; i++) {
-    const [x, y] = pos(),
-      u = mu("archer", x, y);
-    while (ti < towers.length && (towers[ti].garr || []).length >= GCAP.tower) ti++;
-    if (ti < towers.length) garrison(u, towers[ti]);
-  }
-  for (let i = 0; i < nK; i++) {
-    const [x, y] = pos();
-    mu("knight", x, y);
-  }
-  for (let i = 0; i < nP; i++) {
-    const [x, y] = pos();
-    mu("peasant", x, y);
-  }
-  b.n0 = b.us.length;
-  b.mat = true;
-}
-
-function unmatBase(b) {
-  const alive = b.us.filter((u) => u.hp > 0).length,
-    lost = b.n0 - alive;
-  if (lost > 0) b.pop = Math.max(3, b.pop - lost * 1.6);
-  const set = new Set(b.ss);
-  for (const s of b.ss) {
-    rmStruct(s);
-    for (const [x, y] of s.tiles) occ.delete(y * TW + x);
-  }
-  sessionState.structs = sessionState.structs.filter((s) => !set.has(s));
-  const us = new Set(b.us);
-  sessionState.units = sessionState.units.filter((u) => !us.has(u));
-  b.ss = [];
-  b.us = [];
-  b.mat = false;
-  sessionState.fdDirty = true;
 }
 
 /* ================= AI KINGDOMS =================
@@ -965,6 +684,7 @@ function aiSpot(b, type) {
 
 function aiPlace(b, type, x, y, h, ax) {
   if (type === "gate") {
+    /* Gates keep the existing ground height. */
   } else if (type === "tower" || type === "wall") levelGround(x, y, 1, HT[y * TW + x]);
   else levelGround(x, y, 2, h);
   const pv = playersState.CURPL;
@@ -1035,11 +755,9 @@ function aiStartBuild0(b) {
   if (!t) return;
   if (t === "tower") {
     const R = aiRing(b);
-    let left = 0;
     for (const [x, y] of R) {
       const o = occ.get(y * TW + x);
       if (o) continue;
-      left++;
       let tx = x,
         ty = y;
       if (!aiTileOK(tx, ty)) {
@@ -1456,7 +1174,7 @@ function aiPeasant(u, b, dt) {
   }
 }
 
-function aiRes(b, u) {
+function aiRes(b, _u) {
   const want = Math.random();
   for (let k = 0; k < 40; k++) {
     const a = Math.random() * 6.283,

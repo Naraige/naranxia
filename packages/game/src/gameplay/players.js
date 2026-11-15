@@ -86,6 +86,3 @@ export const fdist = (x, y) => {
   return m;
 };
 export const focus = () => (MP.on ? { x: sessionState.CS.x, y: sessionState.CS.y } : { x: CAM.x * TS, y: CAM.z * TS });
-
-const myTerr = (tx, ty) =>
-  !MP.on || !sessionState.CS2 || nearC((tx + 0.5) * TS, (ty + 0.5) * TS) === HOMEC() || !aliveC().includes(HOMEC());

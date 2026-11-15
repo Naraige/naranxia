@@ -219,7 +219,6 @@ export function pxZombie(type, ZV, P) {
   let jacket = null,
     sleeve = null,
     pants = null;
-  const sh = (c, f) => (f === "T" ? c : f === "D" ? null : c);
   if (o === "tunic" || o === "peasant" || o === "rags" || o === "gambeson" || o === "hooded") {
     const qu = o === "gambeson",
       rag = o === "rags" ? 0.3 : 0.07,
@@ -448,8 +447,7 @@ export function pxZombie(type, ZV, P) {
       });
     }
     /* the bomber's powder keg, fuse and spark; the acid spitter's glowing sacs */
-    const zB = -2.25 * tT[2] + tT[4],
-      xW = 4.25 * tT[0];
+    const zB = -2.25 * tT[2] + tT[4];
     if (type === "bomber") {
       const W2 = 6,
         yk = (13 - 12) * tT[1] + 12;
@@ -461,7 +459,7 @@ export function pxZombie(type, ZV, P) {
         W2,
         8,
         5,
-        (f, u, v, W, H) => {
+        (f, u, v, _W, _H) => {
           if (f === "T" || f === "D") return (u + v) % 3 ? RWD[2] : RWD[1];
           if (v === 1 || v === 6) return RDS[1];
           return u % 2 ? RWD[2] : RWD[3];
@@ -515,7 +513,7 @@ export function pxZombie(type, ZV, P) {
             1,
             1.7,
             11.4,
-            (f, u, v, W, H) => (f === "F" ? ST[3] : u % 4 === 3 ? RU : ST[2]),
+            (f, u, _v, _W, _H) => (f === "F" ? ST[3] : u % 4 === 3 ? RU : ST[2]),
             { mat: 4, grid: [1, 1, 8] },
           );
           zb("T", P.G, -3.4, 16.6, -5.4, 4.6, 2.9, 0.9, () => RU, { mat: 0, grid: [4, 1, 1] });
@@ -565,15 +563,15 @@ export function pxZombie(type, ZV, P) {
           8.8,
           1.4,
           8.8,
-          (f, u, v) => (f === "T" || f === "D" ? null : u % 4 === 1 ? HBD : HB),
+          (f, u, _v) => (f === "T" || f === "D" ? null : u % 4 === 1 ? HBD : HB),
           { mat: 0, grid: [8, 1, 8], ao: false },
         );
-        zb("H", P.HG, 0.6, 25.6, -7, 1.4, 3.6, 2.6, (f, u, v, W, H) => (v === 0 ? HBD : HB), {
+        zb("H", P.HG, 0.6, 25.6, -7, 1.4, 3.6, 2.6, (f, u, v, _W, _H) => (v === 0 ? HBD : HB), {
           mat: 0,
           grid: [1, 3, 2],
           ao: false,
         });
-        zb("H", P.HG, -2.2, 26.8, -6.4, 1.4, 2.4, 2, (f, u, v, W, H) => (v === 0 ? HBD : HB), {
+        zb("H", P.HG, -2.2, 26.8, -6.4, 1.4, 2.4, 2, (f, u, v, _W, _H) => (v === 0 ? HBD : HB), {
           mat: 0,
           grid: [1, 2, 2],
           ao: false,
@@ -728,7 +726,7 @@ export function pxZombie(type, ZV, P) {
       ])
         ab(x, 0, z, 1.2, h, 1.2, (f) => (f === "T" ? BN2 : BN), { mat: 0, grid: [1, 3, 1] });
     if (type === "brute" && R === "AL") {
-      ab(-2.6, -9.6, -2.6, 5.2, 1.8, 5.2, (f, u, v) => (f === "T" || f === "D" ? ST[1] : u % 2 ? ST[2] : ST[1]), {
+      ab(-2.6, -9.6, -2.6, 5.2, 1.8, 5.2, (f, u, _v) => (f === "T" || f === "D" ? ST[1] : u % 2 ? ST[2] : ST[1]), {
         mat: 4,
         grid: [5, 2, 5],
       });

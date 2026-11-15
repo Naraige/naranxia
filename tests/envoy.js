@@ -19,7 +19,6 @@ async () => {
   b.trait = "warlike";
   const R = RESP[0],
     g0 = R.g,
-    f0 = R.f,
     u = mkU(0, "envoy", b.x + TS, b.y);
   units.push(u);
   for (let i = 0; i < 10; i++) update(0.05);

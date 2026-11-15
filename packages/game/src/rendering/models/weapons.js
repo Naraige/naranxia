@@ -36,7 +36,7 @@ const pGem = (P) => (f, u, v, W, H) => {
   return u === 0 && v === H - 1 ? P[3] : u === W - 1 || v === 0 ? P[0] : P[1];
 };
 
-const pWrap = (P) => (f, u, v, W, H) => {
+const pWrap = (P) => (f, u, v, _W, _H) => {
   if (f === "T" || f === "D") return P[2];
   const q = f === "F" || f === "B" ? v : u;
   return (q + v) % 2 ? P[1] : P[3];
@@ -50,11 +50,10 @@ const gem = (G, x, y, z, w, h, d, P) =>
     grid: [Math.max(2, Math.round(w * 2)), Math.max(2, Math.round(h * 2)), Math.max(2, Math.round(d * 2))],
   });
 
-const GSC = 0.72,
-  gScale = (geo, k) => {
-    geo.scale(k, k, k);
-    return geo;
-  };
+const gScale = (geo, k) => {
+  geo.scale(k, k, k);
+  return geo;
+};
 
 const teamGem = () => {
   const T = teamPal(thp());
@@ -207,7 +206,7 @@ function pxMcShield(art, pal, AL, g2) {
     if (riv(u - 1, r) && isField(chAt(u - 1, r, front))) return shadeHex(b, 0.84);
     return b;
   };
-  const rim = (side) => (f, u, v, W, H) => {
+  const rim = (side) => (f, u, v, W, _H) => {
     if (f === "T") return IR[3];
     if (f === "D") return IR[0];
     if (f === "F" || f === "B") {
@@ -219,7 +218,7 @@ function pxMcShield(art, pal, AL, g2) {
   };
   pxScene(() => {
     /* planks: front painted, back bare */
-    gx(G, -5, -10, -0.5, 10, 20, 1, (f, u, v, W, H) => face(u + 1, 20 - v, f, f === "F"), {
+    gx(G, -5, -10, -0.5, 10, 20, 1, (f, u, v, _W, _H) => face(u + 1, 20 - v, f, f === "F"), {
       mat: 0,
       grid: [10, 20, 1],
       no: "RLTD",
@@ -422,15 +421,6 @@ export function pxGuardShield(AL, vr) {
    a Blockbench voxel weapon: every pixel is a cube one shaft-thickness wide. A spear point with two lugs, a crescent axe
    with a hollow and two horns, a back hook, a deep steel socket block, a brass collar with a small team tassel, a banded
    wooden shaft, a wrapped leather grip and a steel foot. Rows are drawn top first, the shaft is column 6. */
-const pInPoly = (P, x, y) => {
-  let c = false;
-  for (let i = 0, j = P.length - 1; i < P.length; j = i++) {
-    const [xi, yi] = P[i],
-      [xj, yj] = P[j];
-    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c;
-  }
-  return c;
-};
 
 const HALB = [
   ".......L.......",
@@ -507,13 +497,6 @@ export function pxHalberd() {
   });
   return gScale(toGeo(G), 1.0);
 }
-
-let RST;
-const pGrip = (f, u, v) => {
-  const Tm = teamPal(thp()),
-    q = f === "T" || f === "D" ? v : u;
-  return q % 2 ? Tm[1] : Tm[3];
-};
 
 /* ---------------- bow ----------------
    recurve limbs made of three straight wooden segments each (3D, rotated), brass rings at the joints, a leather grip with
@@ -739,5 +722,4 @@ export function initializeWeapons() {
     "TTTTTTTTTT",
     "TTTTTTTTTT",
   ]);
-  RST = RSV;
 }

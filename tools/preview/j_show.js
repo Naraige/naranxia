@@ -87,10 +87,7 @@ async () => {
     FOWU.fowP.value.w = f0;
     FOWU.fowP.value.z = f1;
     sc.remove(g);
-    if (GP) {
-      sc.remove(GP);
-      GP = null;
-    }
+    if (GP) sc.remove(GP);
     const c2 = document.createElement("canvas");
     c2.width = c2.height = M;
     const x2 = c2.getContext("2d"),

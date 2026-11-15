@@ -8,10 +8,11 @@ import { aliveC, LC, playersState } from "./players.js";
 import { H, RS2, T, TH, TS, TW, W } from "./rules.js";
 import { sessionState } from "./session.js";
 import { blood, puff } from "../rendering/effects.js";
-import { NAMES } from "../ui/build-menu.js";
+import { NAMES } from "../ui/build-catalog.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { D4, D8, FD, gOK } from "../world/routes.js";
-import { CH, ensureRect, genChunk, genF, HT, NCX, occ, ter, terrainState } from "../world/terrain.js";
+import { ensureRect, genChunk } from "../world/terrain.js";
+import { CH, genF, HT, NCX, occ, ter, terrainState } from "../world/terrain-state.js";
 import { blk, canStepZ, fv, solidAt } from "../world/traversal.js";
 
 export const swarmState = {
@@ -425,7 +426,6 @@ function swStep() {
   }
   const hitS = new Set(),
     R46 = (46 * TS) ** 2,
-    R62 = (62 * TS) ** 2,
     ZA = FD[0] && FD[0].list ? FD[0].list : FD[0] ? [FD[0]] : [],
     ZZ = swarmState.FZ && swarmState.FZ.list ? swarmState.FZ.list : swarmState.FZ ? [swarmState.FZ] : [];
   swLanes();
@@ -633,7 +633,6 @@ function swStep() {
         }
         gx = hc.x;
         gy = hc.y;
-        has = true;
         if (!bs) {
           sST[i] = 6;
           if (gho || ter[ti] > 0) ph = true;

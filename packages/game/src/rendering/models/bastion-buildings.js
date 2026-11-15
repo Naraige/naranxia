@@ -10,7 +10,6 @@ import {
   qAnvil,
   qBan,
   qBarrel,
-  qChim,
   qCone,
   qCornice,
   qCrate,
@@ -45,7 +44,6 @@ import {
   QS,
   QSD,
   QSL,
-  QTC,
   QTR,
   QW1,
   QW2,
@@ -459,7 +457,7 @@ export function forgeGeo() {
   flags(G, 1.1, 1.62, 1.7, 0.64, 6);
   qStone(G, xc, 0.13, zc, x1 - x0, z1 - z0, 0.84, { moss: 1 });
   qQuoin(G, x0, z0, x1, z1, 0.13, 0.84);
-  const rt = qRoof(G, xc, zc, z1 - z0, x1 - x0, 0.97, QSL, false, {
+  qRoof(G, xc, zc, z1 - z0, x1 - x0, 0.97, QSL, false, {
     rise: 0.2,
     run: 0.15,
     ov0: 0.08,
@@ -661,7 +659,7 @@ export function warRoomGeo() {
   for (const x of [0.24, 0.7]) bW(G, x, 0.13, 1.74, 0.05, 0.5, 0.05, QW2);
   bW(G, 0.47, 0.55, 1.74, 0.56, 0.04, 0.05, QW2);
   bW(G, 0.47, 0.3, 1.74, 0.56, 0.04, 0.05, QW2);
-  [0.32, 0.44, 0.56, 0.66].forEach((x, k) => {
+  [0.32, 0.44, 0.56, 0.66].forEach((x, _k) => {
     bW(G, x, 0.15, 1.78, 0.025, 0.68, 0.025, "#b08a58");
     bM(G, x, 0.83, 1.78, 0.05, 0.1, 0.02, "#dadde4");
   });

@@ -44,7 +44,7 @@ async () => {
     renderer.setClearColor(n ? 0x141c3c : 0xb9d2ee, 1);
   };
   const mk = (q) => {
-    const [key, type, tier, sz, ex] = q,
+    const [, type, tier, sz, ex] = q,
       g = new THREE.Group();
     if (type === "wallrun") {
       [

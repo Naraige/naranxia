@@ -273,7 +273,7 @@ function sprites() {
   const it = spGen(),
     step = () => {
       if (spSig !== sig) return;
-      let d = true;
+      let d;
       const m = Math.random;
       Math.random = REALR;
       try {
@@ -1017,7 +1017,7 @@ function cWalls(t) {
       300 -
         num(
           t,
-          WY.map((y, i) => [2 + ((y - 36) / 120) * 3.2, 10]),
+          WY.map((y, _i) => [2 + ((y - 36) / 120) * 3.2, 10]),
         ),
       200 - num(t, [[10.5, 80]]),
       250 - num(t, [[7.5, 40]]),
@@ -1192,7 +1192,7 @@ function cRes(t) {
   [
     [228, 98],
     [234, 114],
-  ].forEach(([x, y], i) => {
+  ].forEach(([x, y], _i) => {
     unit("knight", at([[0, x, y]], t), { ring: t > 15 && t < 15.8 ? "#ffe08a" : 0 });
     ringFx(t, 15, x, y - 8, 16, "#ffe08a");
   });
@@ -2042,7 +2042,9 @@ function hush() {
     try {
       g.gain.cancelScheduledValues(0);
       g.gain.setTargetAtTime(0, g.context.currentTime, 0.02);
-    } catch (e) {}
+    } catch {
+      /* Ignore voices whose audio context has already closed while the guide is closing. */
+    }
   }
   SV.length = 0;
 }

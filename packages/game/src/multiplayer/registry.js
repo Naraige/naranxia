@@ -67,7 +67,7 @@ function serve(c) {
         const g = me.games.get(String(m.code));
         if (g && g.c === c) me.games.delete(g.code);
       }
-    } catch (e) {
+    } catch {
       /* ignore a bad message */
     }
   });
@@ -83,7 +83,7 @@ function reset() {
   if (me) {
     try {
       me.peer.destroy();
-    } catch (e) {
+    } catch {
       /* already gone */
     }
     me = null;
@@ -110,7 +110,7 @@ function connect() {
     };
     loadPeer()
       .then(() => {
-        const hubPeer = new Peer(HUB, peerConfig());
+        const hubPeer = new window.Peer(HUB, peerConfig());
         hubPeer.on("open", () => {
           me = { peer: hubPeer, games: new Map() };
           hubPeer.on("connection", serve);
@@ -121,18 +121,18 @@ function connect() {
         hubPeer.on("error", (e) => {
           try {
             hubPeer.destroy();
-          } catch (x) {
+          } catch {
             /* already gone */
           }
           if (e.type !== "unavailable-id") return fail(e);
-          const p = new Peer(peerConfig());
+          const p = new window.Peer(peerConfig());
           p.on("open", () => {
             const conn = p.connect(HUB, { reliable: true, serialization: "json" });
             conn.on("data", (m) => {
               if (typeof m === "string") {
                 try {
                   m = JSON.parse(m);
-                } catch (e) {
+                } catch {
                   return;
                 }
               }
@@ -151,7 +151,7 @@ function connect() {
               if (!done) {
                 try {
                   p.destroy();
-                } catch (x) {
+                } catch {
                   /* gone */
                 }
                 fail(new Error("hub"));
@@ -180,7 +180,7 @@ export async function registryList() {
   let l;
   try {
     l = await ensure();
-  } catch (e) {
+  } catch {
     reset();
     l = await ensure();
   }
@@ -191,7 +191,7 @@ export async function registryList() {
       if (typeof m === "string") {
         try {
           m = JSON.parse(m);
-        } catch (e) {
+        } catch {
           return;
         }
       }
@@ -234,7 +234,7 @@ async function announce(again) {
         announce(true);
       }
     }, 6000);
-  } catch (e) {
+  } catch {
     /* retried at the next beat */
   }
 }

@@ -9,7 +9,7 @@ import { update0 } from "./simulation.js";
 import { eraTick, trapTick } from "./traps.js";
 import { objTick } from "../multiplayer/objectives.js";
 import { qBegin, qTick } from "./quests.js";
-import { terrainState } from "../world/terrain.js";
+import { terrainState } from "../world/terrain-state.js";
 
 export const statisticsState = {
   OBJ: { w: 1, k: 1 },
@@ -21,7 +21,9 @@ export function saveBest() {
   sbRec();
   try {
     localStorage.setItem("dk_last", JSON.stringify({ w: sessionState.waveN, k: sessionState.kills }));
-  } catch (e) {}
+  } catch {
+    /* Recent-run persistence is optional; in-memory score state remains available. */
+  }
   try {
     if (
       sessionState.waveN > sessionState.best.w ||
@@ -30,7 +32,9 @@ export function saveBest() {
       sessionState.best = { w: sessionState.waveN, k: sessionState.kills };
       localStorage.setItem("dk_best", JSON.stringify(sessionState.best));
     }
-  } catch (e) {}
+  } catch {
+    /* Keep the updated best score in memory when storage is unavailable. */
+  }
 }
 /* ================= END-OF-GAME STATS (#18) =================
    Counted for the local player only and never read by the simulation: the update wrapper measures what the sim added to the
@@ -81,7 +85,7 @@ const sbKey = () => (+terrainState.SEED).toFixed(4);
 const sbLoad = () => {
   try {
     return JSON.parse(localStorage.getItem("dk_sb") || "{}");
-  } catch (e) {
+  } catch {
     return {};
   }
 };
@@ -90,7 +94,7 @@ function sbDaily() {
   try {
     const d = Math.floor(Date.now() / 864e5);
     return Math.abs(rngf((d * 2654435761) % 4294967296)() * 500 - terrainState.SEED) < 1e-6;
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -120,7 +124,9 @@ export function sbRec() {
     }
     localStorage.setItem("dk_sb", JSON.stringify(all));
     statisticsState.SBR = { top, rank: top.indexOf(r), daily: sbDaily() };
-  } catch (e) {}
+  } catch {
+    /* If storage is denied, keep current-run statistics without a saved leaderboard. */
+  }
 }
 
 export function setUpdateHandler(handler) {

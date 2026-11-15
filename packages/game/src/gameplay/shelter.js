@@ -11,7 +11,7 @@ import { leaveSquad } from "./squads.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { DSIDE, longField, ringOf } from "../world/connectivity.js";
 import { gOK } from "../world/routes.js";
-import { terrainState } from "../world/terrain.js";
+import { terrainState } from "../world/terrain-state.js";
 import { fv, solid } from "../world/traversal.js";
 
 /* night shelter. A villager given an order during the night (or sent to repair) stays out until it is idle again.
@@ -129,7 +129,7 @@ function shelIn(u, c) {
   u.y = c.y;
 }
 
-export function shelTick(u, dt) {
+export function shelTick(u, _dt) {
   const c = u.shel;
   u.walk = 0;
   if (c.hp <= 0 || !sessionState.structs.includes(c)) {

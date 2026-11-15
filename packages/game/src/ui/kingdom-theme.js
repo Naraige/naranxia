@@ -65,5 +65,7 @@ export function initializeKingdomTheme() {
         c2: t.c2 == null ? 10 : Math.abs(t.c2 | 0) % PAL.length,
         p: Math.abs(t.p | 0) % 8,
       };
-  } catch (e) {}
+  } catch {
+    /* Malformed or unavailable storage leaves the default kingdom theme. */
+  }
 }

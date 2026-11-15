@@ -118,7 +118,9 @@ export function padOn() {
   try {
     const l = navigator.getGamepads ? navigator.getGamepads() : [];
     for (const p of l) if (p && p.connected) return true;
-  } catch (e) {}
+  } catch {
+    /* Unsupported or denied gamepad access means no pad is connected. */
+  }
   return false;
 }
 
@@ -132,7 +134,7 @@ export function navPoll() {
         g = p;
         break;
       }
-  } catch (e) {
+  } catch {
     return;
   }
   if (!g) return;

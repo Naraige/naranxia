@@ -1,8 +1,8 @@
 import { fb, hs } from "../core/math.js";
 import { TH, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
-import { amt, CH, FLG, genF, HT, NCX, NCY, occ, stairs, ter, terrainState } from "./terrain.js";
-import { canStep } from "./traversal.js";
+import { amt, CH, FLG, genF, HT, NCX, NCY, occ, stairs, ter, terrainState } from "./terrain-state.js";
+import { canStep } from "./traversal-rules.js";
 
 export const D4 = [
     [1, 0],
@@ -156,7 +156,7 @@ export function carveRamps(cx, cy) {
           }
           if (!acc) continue;
         }
-        for (const [ii, k, t] of T1) {
+        for (const [ii, k] of T1) {
           const lk = lo + k * step,
             hk = Math.min(hi, lk + step);
           HT[ii] = lk;

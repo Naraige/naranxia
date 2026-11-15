@@ -80,14 +80,18 @@ export function initializeBlocks() {
   let v = null;
   try {
     v = localStorage.getItem("dk_blocks");
-  } catch (e) {}
+  } catch {
+    /* A blocked store leaves the default block-rendering settings active. */
+  }
   if (v === "1") blocksState.on = true;
   else if (v && v[0] === "{") {
     try {
       const o = JSON.parse(v);
       blocksState.on = o.on !== false;
       for (const k of ["BLK", "DBLK", "terrain", "decor", "build", "seasons"]) if (k in o) blocksState[k] = o[k];
-    } catch (e) {}
+    } catch {
+      /* Ignore malformed saved graphics options and keep initialized defaults. */
+    }
   }
   apply();
 }

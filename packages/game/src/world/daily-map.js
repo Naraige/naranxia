@@ -1,6 +1,6 @@
 import { rngf } from "../core/random.js";
 import { mpWorldSync } from "../multiplayer/lobby.js";
-import { terrainState } from "./terrain.js";
+import { terrainState } from "./terrain-state.js";
 
 /* ---- daily map ---- */
 export function dailyMap() {

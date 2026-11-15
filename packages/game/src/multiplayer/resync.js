@@ -16,7 +16,8 @@ import { CAM } from "../rendering/scene.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { calcFD } from "../world/connectivity.js";
 import { GF } from "../world/pathfinding.js";
-import { initWorld, RAWD, smDone, terrainState } from "../world/terrain.js";
+import { initWorld } from "../world/terrain.js";
+import { RAWD, smDone, terrainState } from "../world/terrain-state.js";
 
 const RSCH = 48000;
 
@@ -30,7 +31,7 @@ export async function mpResync() {
   let txt;
   try {
     txt = JSON.stringify(await svEncode());
-  } catch (e) {
+  } catch {
     MP.rsy = null;
     return;
   }
@@ -151,7 +152,9 @@ async function mpResApply(txt, M) {
     try {
       icoPart("tier");
       icoPart("units");
-    } catch (e) {}
+    } catch {
+      /* The snapshot is applied; refreshing toolbar icons is best-effort. */
+    }
   } finally {
     Math.random = R0;
   }

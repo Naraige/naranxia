@@ -31,7 +31,7 @@ import { thp, ths } from "../ui/kingdom-theme.js";
    items  -> 16x16 pixel sprites with a dark outline (ingot, sword, armour, wheat, clock, map...)
    blocks -> isometric cubes (log, cobblestone, stone bricks, grass, TNT, piston, stairs, path)
    units  -> mob-head style heads; buildings -> isometric renders of the real medieval models */
-function pc16(fn, ol) {
+function pc16(fn, _ol) {
   const c = cvs(16, 16),
     g = c.getContext("2d"),
     P = (x, y, col) => {
@@ -96,7 +96,7 @@ function miShot(o, yaw, pitch) {
 
 /* building renders: brighter light, slightly finer pixels so timber frames and roofs stay readable */
 let MI_AMB = null;
-function miShotB(obj, yaw, pitch, n) {
+function miShotB(obj, yaw, pitch, _n) {
   const R = ICR,
     cam = R.cam;
   if (!MI_AMB) {
@@ -444,7 +444,7 @@ function* mcIconsSteps() {
   };
   IC2.rotL = pc16(({ C, R, P }) => arc(C, R, P, -1));
   IC2.rotR = pc16(({ C, R, P }) => arc(C, R, P, 1));
-  IC2.rotate = pc16(({ C, R, P }) => {
+  IC2.rotate = pc16(({ C, R, P: _P }) => {
     C(8, 8, (r, a) => {
       if (r < 3.6 || r > 5.2) return null;
       const deg = (a * 180) / Math.PI;
@@ -571,7 +571,7 @@ function* mcIconsSteps() {
     R(10, 9, 2, 1, "#3a6fd0");
     R(7, 9, 2, 1, "#55e070");
   });
-  IC2.agg = pc16(({ Gd, P }) => {
+  IC2.agg = pc16(({ Gd, P: _P }) => {
     Gd(SW.sword, { ...SPAL, w: "#ffe0e0", i: "#ff7a6a", d: "#c03a2a" }, 0, 0);
   }, false);
   IC2.def = IC2.shield;
@@ -959,7 +959,9 @@ export let icoPart = function icoPart(kind, i) {
       setTimeout(() => {
         try {
           icoPart(kind, i + 1);
-        } catch (e) {}
+        } catch {
+          /* One optional icon can fail without blocking the remaining refreshes. */
+        }
       }, 20);
   }
 };
@@ -977,7 +979,9 @@ export function* initializePixelIcons() {
     setIcons3DHandler(function () {
       try {
         _i3();
-      } catch (e) {}
+      } catch {
+        /* Continue with the Minecraft icon refresh if the previous refresh fails. */
+      }
       try {
         mcIcons();
       } catch (e) {

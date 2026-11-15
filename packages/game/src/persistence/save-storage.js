@@ -26,7 +26,7 @@ const SVDB = {
 
 export const SVST = {
   async list() {
-    if (window.NARX) return NARX.list();
+    if (window.NARX) return window.NARX.list();
     const keys = (await SVDB.tx("readonly", (s) => s.getAllKeys())) || [];
     const out = [];
     for (const k of keys) {
@@ -36,16 +36,16 @@ export const SVST = {
     return out.filter((o) => o.name).sort((a, b) => b.t - a.t);
   },
   async put(n, d, meta) {
-    if (window.NARX) return NARX.save(n, d);
+    if (window.NARX) return window.NARX.save(n, d);
     await SVDB.tx("readwrite", (s) => s.put(d, n));
     await SVDB.tx("readwrite", (s) => s.put(meta || {}, "meta:" + n));
   },
   async get(n) {
-    if (window.NARX) return NARX.load(n);
+    if (window.NARX) return window.NARX.load(n);
     return SVDB.tx("readonly", (s) => s.get(n));
   },
   async del(n) {
-    if (window.NARX) return NARX.del(n);
+    if (window.NARX) return window.NARX.del(n);
     await SVDB.tx("readwrite", (s) => s.delete(n));
     await SVDB.tx("readwrite", (s) => s.delete("meta:" + n));
   },
