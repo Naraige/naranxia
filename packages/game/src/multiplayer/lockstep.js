@@ -58,7 +58,7 @@ function mpWatch(){const now=performance.now();
 
 export function mpFrame(dt){if(sessionState.over)return;mpWatch();if(MP.rsy)return;MP.acc=Math.min(.3,MP.acc+dt);if(sessionState.paused){MP.acc=0;return}
  let n=0;while(MP.acc>=MPSTEP&&n<8){
-  while(MP.sent<MP.tick+MPD){MP.sent++;const c=MP.out;MP.out=[];MP.loc[MP.sent]=c;if(c.length){const sl=MP.sl||(MP.sl=[]);sl.push([MP.sent,c]);while(sl.length&&sl[0][0]<MP.tick-8)sl.shift()}mpSend({k:'c',t:MP.sent,c,e:MP.ep})}
+  while(MP.sent<MP.tick+MPD){MP.sent++;const c=MP.out;MP.out=[];MP.loc[MP.sent]=c;{const sl=MP.sl||(MP.sl=[]);if(c.length)sl.push([MP.sent,c]);while(sl.length&&sl[0][0]<MP.tick-8)sl.shift()}mpSend({k:'c',t:MP.sent,c,e:MP.ep})}
   const r=MP.rem[MP.tick];if(!r){if(!MP.stall)MP.stallAt=performance.now();MP.stall=true;break}MP.stall=false;
   const L=MP.loc[MP.tick]||[],cm=MP.host?[...L.map(c=>[c,1]),...r.map(c=>[c,0])]:[...r.map(c=>[c,0]),...L.map(c=>[c,1])];
   Math.random=MP.simR;try{mpGen();for(const[c,m]of cm)mpExec(c,m);update(MPSTEP)}finally{Math.random=REALR}
