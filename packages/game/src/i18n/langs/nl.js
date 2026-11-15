@@ -1519,4 +1519,6 @@ export const NL = {
   "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.": "Coöp: als je partner weggaat, blijf je speler 2 met je eigen kasteel. Opgeslagen spellen gaan nu precies verder zoals het oorspronkelijke spel.",
   "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.": "Nieuwe standaardtoetsen: fakkel F6, verzamelpunt van de kazerne F7, boswachter F9, gilde F3. Op AZERTY zit de camera nu op Z Q S D.",
   "The minimap now frames the area you explored, and banners no longer cover the event buttons.": "De minimap toont nu het verkende gebied, en banners bedekken de gebeurtenisknoppen niet meer.",
+  "Waves now appear far from your castle, so in co-op you no longer see your partner's wave spawn on top of you.": "Golven verschijnen nu ver van je kasteel, dus in coöp zie je de golf van je partner niet meer boven op je opduiken.",
+  "Hordes no longer pile up in narrow passages, and big waves run smoother.": "Hordes stapelen zich niet meer op in smalle doorgangen en grote golven lopen soepeler.",
 };

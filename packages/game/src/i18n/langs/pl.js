@@ -1519,4 +1519,6 @@ export const PL = {
   "Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.": "Kooperacja: jeśli partner wyjdzie, zostajesz graczem 2 z własnym zamkiem. Zapisane gry kontynuują się teraz dokładnie tak jak oryginalna gra.",
   "New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.": "Nowe domyślne klawisze: pochodnia F6, punkt zbiórki koszar F7, leśniczy F9, gildia F3. Na AZERTY kamera jest teraz na Z Q S D.",
   "The minimap now frames the area you explored, and banners no longer cover the event buttons.": "Minimapa pokazuje teraz zbadany obszar, a banery nie zasłaniają już przycisków zdarzeń.",
+  "Waves now appear far from your castle, so in co-op you no longer see your partner's wave spawn on top of you.": "Fale pojawiają się teraz daleko od twojego zamku, więc w co-opie nie zobaczysz już fali partnera tuż przy sobie.",
+  "Hordes no longer pile up in narrow passages, and big waves run smoother.": "Hordy nie kłębią się już w wąskich przejściach, a duże fale działają płynniej.",
 };

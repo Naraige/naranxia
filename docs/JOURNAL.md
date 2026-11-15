@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-15 · v94 release (the King said go)
+
+- Released the whole branch as v94: co-op fixes, waves always end, new default keys, minimap, far wave spawn (`WSPN` 150 / `WSEE` 130), horde pile-up fix (`SWJAM` 0.75, `SWBW` 3.5), swarm at 10 Hz, placement log `MP.plog`, command resend after resync, mp_build prune fix.
+- Notes: 2 lines added (far spawn, pile-up and smoother big waves), translated in 8 languages (`docs/studio-texts/notes-v94b.json`, nl/pl/tr).
+- CI green on 0481ccc (full quick suite). Smoke test run by `release.sh`; the release workflow runs the full suite.
+- Not verified: real two-machine co-op, real AZERTY keyboard, F-keys in the launcher, old saves mid-wave. #26 #3 #4 stay open until a guest F8 report.
+
 ## 2026-11-15 · v94 lot "horde pile-up" (hd-gameplay worktree, committed on branch, not merged, not released)
 
 - Finding to explain: wave 3 of world 2 took 875 s with perfect defence (about 700 zombies "piled" 20 to 40 tiles from the castle). Probe `tests/pile_probe.js` (per 50 s: zombies per swarm state, tiles with most zombies, way point index; dumps of the map and of single zombies).

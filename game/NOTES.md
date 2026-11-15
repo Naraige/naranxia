@@ -5,3 +5,5 @@ Co-op fixes, waves that always end, and new default keys.
 - Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.
 - New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.
 - The minimap now frames the area you explored, and banners no longer cover the event buttons.
+- Waves now appear far from your castle, so in co-op you no longer see your partner's wave spawn on top of you.
+- Hordes no longer pile up in narrow passages, and big waves run smoother.

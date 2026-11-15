@@ -853,7 +853,12 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v94 */
+  /* texts added in v95 */
+Object.assign(TRD,{
+"Waves now appear far from your castle, so in co-op you no longer see your partner's wave spawn on top of you.":["Les vagues apparaissent maintenant loin de votre château : en co-op, vous ne voyez plus la vague de votre partenaire surgir sur vous.","Las oleadas ahora aparecen lejos de tu castillo: en cooperativo ya no ves la oleada de tu compañero aparecer encima de ti.","Wellen erscheinen jetzt weit weg von deiner Burg: Im Koop siehst du die Welle deines Partners nicht mehr direkt bei dir auftauchen.","Le ondate ora compaiono lontano dal vostro castello: in co-op non vedete più l'ondata del compagno comparire addosso a voi.","As vagas aparecem agora longe do seu castelo: em cooperativo já não vê a vaga do parceiro surgir em cima de si."],
+"Hordes no longer pile up in narrow passages, and big waves run smoother.":["Les hordes ne s'entassent plus dans les passages étroits, et les grosses vagues tournent plus fluidement.","Las hordas ya no se amontonan en pasos estrechos, y las oleadas grandes van más fluidas.","Horden stauen sich nicht mehr in engen Passagen, und große Wellen laufen flüssiger.","Le orde non si ammassano più nei passaggi stretti e le grandi ondate scorrono più fluide.","As hordas já não se amontoam em passagens estreitas e as vagas grandes correm de forma mais fluida."]
+});
+/* texts added in v94 */
 Object.assign(TRD,{
 "Co-op fixes, waves that always end, and new default keys.":["Corrections co-op, vagues qui se terminent toujours et nouvelles touches par défaut.","Correcciones del cooperativo, oleadas que siempre terminan y nuevas teclas por defecto.","Koop-Korrekturen, Wellen, die immer enden, und neue Standardtasten.","Correzioni della co-op, ondate che finiscono sempre e nuovi tasti predefiniti.","Correções do cooperativo, vagas que acabam sempre e novas teclas predefinidas."],
 "Zombies no longer get stuck in water or on cliffs: every wave can now be finished.":["Les zombies ne restent plus bloqués dans l'eau ou sur les falaises : chaque vague peut maintenant être terminée.","Los zombis ya no se quedan atrapados en el agua ni en los acantilados: ahora se puede terminar cada oleada.","Zombies bleiben nicht mehr im Wasser oder an Klippen hängen: Jede Welle lässt sich jetzt beenden.","Gli zombie non restano più bloccati nell'acqua o sulle scogliere: ora ogni ondata può essere conclusa.","Os zombies já não ficam presos na água nem nas falésias: agora é possível terminar todas as vagas."],
