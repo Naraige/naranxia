@@ -440,6 +440,7 @@
     "packages/game/src/rendering/frame.js -> packages/game/src/gameplay/economy.js",
     "packages/game/src/rendering/frame.js -> packages/game/src/gameplay/terraforming.js",
     "packages/game/src/rendering/frame.js -> packages/game/src/gameplay/traps.js",
+    "packages/game/src/rendering/frame.js -> packages/game/src/multiplayer/objectives.js",
     "packages/game/src/rendering/frame.js -> packages/game/src/rendering/build-preview.js",
     "packages/game/src/rendering/frame.js -> packages/game/src/rendering/camera.js",
     "packages/game/src/rendering/frame.js -> packages/game/src/rendering/effects.js",

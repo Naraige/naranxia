@@ -207,10 +207,21 @@ let SPKG = null;
 export function spkGhost(tx, ty, good) {
   if (!SPKG) {
     SPKG = new THREE.Group();
-    SPKG.userData.m = new THREE.MeshLambertMaterial({ color: 0xaab0ba, transparent: true, opacity: 0.7, depthWrite: false });
+    SPKG.userData.m = new THREE.MeshLambertMaterial({
+      color: 0xaab0ba,
+      transparent: true,
+      opacity: 0.7,
+      depthWrite: false,
+    });
     const pit = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.46, 0.02, 10), SPKG.userData.m);
     SPKG.add(pit);
-    for (const [a, b] of [[0, 0], [0.22, 0.2], [-0.22, 0.2], [0.2, -0.22], [-0.2, -0.2]]) {
+    for (const [a, b] of [
+      [0, 0],
+      [0.22, 0.2],
+      [-0.22, 0.2],
+      [0.2, -0.22],
+      [-0.2, -0.2],
+    ]) {
       const c = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.34, 4), SPKG.userData.m);
       c.position.set(a, 0.17, b);
       SPKG.add(c);

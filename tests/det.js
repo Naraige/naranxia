@@ -158,16 +158,16 @@ async () => {
   const a = runOnce(),
     b = runOnce(),
     same = JSON.stringify(a) === JSON.stringify(b);
-  // Captured from v94 4a57714017d38c8d5294445e20962eb4b1e76c11 plus the lane-field target fix of issue #30 (the baseline of the cleanup differs from these lines in the swarm part).
+  // Captured from the v94 release branch: main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix (#30), spike removal (#31).
   const expected = [
-    "-1981940098:21949:1:0:1045:0.9614:sh9:nl0.99:f150:sp0:ro00:wk0:T-767045186:z139:pu2:fg1:fp2",
-    "2058766142:25993:7:0:1082:0.9768:sh9:nl1.00:f150:sp0:ro00:wk0:T-1867812774:z132:pu3:fg0:fp9",
-    "-64787436:25993:7:0:1082:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T-1867812774:z132:pu0:fg0:fp9",
-    "-2004093261:25993:7:0:1082:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T-1867812774:z132:pu0:fg0:fp9",
-    "2091106075:25964:36:0:1083:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T-1867812774:z132:pu0:fg0:fp9",
-    "239956097:25444:556:0:1474:0.9982:sh9:nl1.00:f300:sp0:ro00:wk0:T-1867812774:z132:pu0:fg0:fp9",
-    "-377070237:24827:1176:0:1877:0.9982:sh9:nl1.00:f450:sp0:ro00:wk0:T-1867812774:z135:pu0:fg0:fp6",
-    "161824364:24550:1466:0:2409:0.9982:sh0:nl1.00:f650:sp0:ro00:wk0:T-1867812774:z131:pu0:fg0:fp3",
+    "-633168385:21750:1:0:1045:0.9614:sh9:nl0.87:f150:sp0:ro00:wk0:T-767045186:z139:pu2:fg1:fp3",
+    "-114701762:26000:7:0:1082:0.9768:sh9:nl0.95:f150:sp0:ro00:wk0:T-996732883:z132:pu2:fg0:fp9",
+    "232668541:26000:7:0:1082:0.9875:sh9:nl0.99:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "-1815816439:26000:7:0:1082:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "-663486353:26000:7:0:1082:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "1122495987:26000:7:0:1082:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "-1170158045:25980:27:0:1083:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "-1778112590:25769:238:0:1215:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   return JSON.stringify({ ok: same && reference, same, reference, a, b });

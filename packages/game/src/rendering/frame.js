@@ -602,8 +602,7 @@ export let render3D = function render3D(dt) {
             good = true;
             showG = false;
             spkGhost(tx, ty, false);
-          } else
-          if (!o && stairs.has(ty * TW + tx)) {
+          } else if (!o && stairs.has(ty * TW + tx)) {
             good = true;
             showG = false;
             (stairs.get(ty * TW + tx).blk ? [ty * TW + tx] : rampGroup(ty * TW + tx)).forEach((ii, bi) =>
