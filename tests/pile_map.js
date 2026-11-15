@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 async () => {
   /* NOT in the suite: where does the horde stand still? Worlds SPW (default [2]), wave SPV (3), perfect defence like spawn_pace.js. Every 20 s: zombies per swarm state (0..9), within 40 tiles of a castle (n40) and of those not biting (free40), the most crowded tiles (tx,ty,count,lane,wp index,state,distance to castle). Ends with the wave end time. */
   renderer.render = function () {};

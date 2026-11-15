@@ -55,7 +55,7 @@ const mouseTile = () => {
     if (!m || m.x < 0) return null;
     const g = pickGround(m.x, m.y);
     return g ? [Math.floor(g.x), Math.floor(g.z)] : null;
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 };
