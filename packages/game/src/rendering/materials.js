@@ -1,11 +1,11 @@
-import { BLKU, BLKV, BPXU, BSEAS, GLBLK } from './blocks.js';
-import { GQU } from './scene.js';
-import { THREE } from './three.js';
+import { BLKU, BLKV, BPXU, BSEAS, GLBLK } from "./blocks.js";
+import { GQU } from "./scene.js";
+import { THREE } from "./three.js";
 
 /* ================= HD SURFACES =================
    smooth procedural detail in world space (no more 16x16 pixel noise), sharpened by distance-aware fading,
    per-pixel lighting with micro relief, material-aware: grass blades, stone cracks, earth strata, sand ripples */
-export const GLN=`
+export const GLN = `
 float hn3(vec3 p){p=fract(p*.3183099+vec3(.71,.113,.419));p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
 float vn3(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
  return mix(mix(mix(hn3(i),hn3(i+vec3(1.,0.,0.)),f.x),mix(hn3(i+vec3(0.,1.,0.)),hn3(i+vec3(1.,1.,0.)),f.x),f.y),
@@ -14,16 +14,16 @@ float fbm3(vec3 p){float s=.5*vn3(p);p=p*2.07+vec3(3.1,1.7,5.3);s+=.25*vn3(p);p=
 `;
 
 /* bump: perturb the view-space normal from a procedural height (derivative method) */
-const GLBUMP=`
+const GLBUMP = `
 vec3 bumpN(vec3 n,vec3 vp,float h,float k){vec3 dpx=dFdx(vp),dpy=dFdy(vp);float dhx=dFdx(h)*k,dhy=dFdy(h)*k;vec3 r1=cross(dpy,n),r2=cross(n,dpx);float det=dot(dpx,r1);vec3 g=sign(det)*(dhx*r1+dhy*r2);return normalize(abs(det)*n-g);}
 `;
 
-export const LMU={value:1.4};
+export const LMU = { value: 1.4 };
 /* 0 by day, 1 at night: lights the window glass (material 8) of every building */
-export const NGU={value:0};
+export const NGU = { value: 0 };
 
 /* ink: an anti-aliased line of constant screen width along an iso-contour of a value */
-const GLINK=`
+const GLINK = `
 float inkL(float v,float lv,float w){float dv=max(fwidth(v),1e-4);return 1.-smoothstep(w*dv*.5,w*dv*1.6,abs(v-lv));}
 float sdSeg(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h);}
 `;
@@ -33,16 +33,39 @@ float sdSeg(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/do
 export let matV;
 
 export let matWater;
-export const WUT = {value:0};
+export const WUT = { value: 0 };
 
 export let matT;
 
 export function initializeMaterials() {
-  matV = new THREE.MeshPhongMaterial({vertexColors:true,shininess:9,specular:0x0a0a0a});
+  matV = new THREE.MeshPhongMaterial({ vertexColors: true, shininess: 9, specular: 0x0a0a0a });
 
-  matV.userData.NGU=NGU;
-  matV.onBeforeCompile=sh=>{sh.uniforms.uHQ=GQU;sh.uniforms.uLMax=LMU;sh.uniforms.uNight=NGU;sh.uniforms.uBlk=BLKV;sh.uniforms.uBpx=BPXU;sh.uniforms.uSeas=BSEAS;sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;attribute float mat;varying float vMat;').replace('#include <begin_vertex>','#include <begin_vertex>\nvMat=mat;\n#ifdef USE_INSTANCING\nvWP=(modelMatrix*instanceMatrix*vec4(transformed,1.0)).xyz;\n#else\nvWP=(modelMatrix*vec4(transformed,1.0)).xyz;\n#endif');
-   sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;varying float vMat;uniform float uHQ;uniform float uLMax;uniform float uNight;'+GLN+GLBUMP+GLINK+GLBLK).replace('#include <color_fragment>',`#include <color_fragment>
+  matV.userData.NGU = NGU;
+  matV.onBeforeCompile = (sh) => {
+    sh.uniforms.uHQ = GQU;
+    sh.uniforms.uLMax = LMU;
+    sh.uniforms.uNight = NGU;
+    sh.uniforms.uBlk = BLKV;
+    sh.uniforms.uBpx = BPXU;
+    sh.uniforms.uSeas = BSEAS;
+    sh.vertexShader = sh.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying vec3 vWP;attribute float mat;varying float vMat;")
+      .replace(
+        "#include <begin_vertex>",
+        "#include <begin_vertex>\nvMat=mat;\n#ifdef USE_INSTANCING\nvWP=(modelMatrix*instanceMatrix*vec4(transformed,1.0)).xyz;\n#else\nvWP=(modelMatrix*vec4(transformed,1.0)).xyz;\n#endif",
+      );
+    sh.fragmentShader = sh.fragmentShader
+      .replace(
+        "#include <common>",
+        "#include <common>\nvarying vec3 vWP;varying float vMat;uniform float uHQ;uniform float uLMax;uniform float uNight;" +
+          GLN +
+          GLBUMP +
+          GLINK +
+          GLBLK,
+      )
+      .replace(
+        "#include <color_fragment>",
+        `#include <color_fragment>
  vec3 wN=normalize(cross(dFdx(vWP),dFdy(vWP)));vec3 aN=abs(wN);vec3 wq=vWP-wN*.002;
  vec2 uv=aN.y>.5?wq.xz:(aN.x>.5?wq.zy:wq.xy);
  float fw=max(length(dFdx(uv)),length(dFdy(uv)));
@@ -153,7 +176,12 @@ export function initializeMaterials() {
   if(mId>39.5&&vWP.y<11.9){float yq=(floor(vWP.y*bq)+.5)/bq,dw=clamp((11.92-yq)*.32+.25,0.,1.);diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.09,.24,.3),dw*.85);}
 #endif
  }
- float hB=BL?0.:stroke*.6*fS;`).replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>').replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+ float hB=BL?0.:stroke*.6*fS;`,
+      )
+      .replace("#include <normal_fragment_maps>", "#include <normal_fragment_maps>")
+      .replace(
+        "#include <lights_fragment_end>",
+        `#include <lights_fragment_end>
  {vec3 alb=max(diffuseColor.rgb,vec3(.004));vec3 irr=(reflectedLight.directDiffuse+reflectedLight.indirectDiffuse)/alb;float li=dot(irr,vec3(.299,.587,.114));
   float r=li/max(uLMax,.05);
   float bd=.4+.3*smoothstep(.24,.36,r)+.3*smoothstep(.52,.64,r)+.16*smoothstep(1.,1.25,r);
@@ -167,27 +195,69 @@ export function initializeMaterials() {
   if(vMat>4.5&&vMat<5.5){reflectedLight.directDiffuse=alb*.3*uLMax;totalEmissiveRadiance+=alb*1.35;}
   /* window glass: candle-lit after dusk (a few houses stay dark) */
   if(vMat>7.5&&vMat<8.5&&uNight>.01){float lt=smoothstep(.22,.4,vn3(vWP*.8+3.))*uNight;vec3 wm=vec3(1.,.72,.34)*(.8+.4*vn3(vWP*9.));
-   reflectedLight.directDiffuse=mix(reflectedLight.directDiffuse,wm*.25*uLMax,lt);totalEmissiveRadiance+=wm*lt*1.15;}}`).replace('#include <dithering_fragment>','#include <dithering_fragment>\n{gl_FragColor.rgb*=vec3(1.02,1.,.97);}');};
-  matWater = new THREE.MeshPhongMaterial({vertexColors:true,transparent:true,opacity:.84,depthWrite:true,shininess:140,specular:0xa0b0bc});
+   reflectedLight.directDiffuse=mix(reflectedLight.directDiffuse,wm*.25*uLMax,lt);totalEmissiveRadiance+=wm*lt*1.15;}}`,
+      )
+      .replace(
+        "#include <dithering_fragment>",
+        "#include <dithering_fragment>\n{gl_FragColor.rgb*=vec3(1.02,1.,.97);}",
+      );
+  };
+  matWater = new THREE.MeshPhongMaterial({
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.84,
+    depthWrite: true,
+    shininess: 140,
+    specular: 0xa0b0bc,
+  });
 
-  matWater.onBeforeCompile=sh=>{sh.uniforms.uT=WUT;sh.uniforms.uHQ=GQU;sh.uniforms.uBlk=BLKU;sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;uniform float uT;').replace('#include <begin_vertex>','#include <begin_vertex>\nvec3 wp0=(modelMatrix*vec4(position,1.0)).xyz;transformed.y+=(sin(wp0.x*1.3+uT*1.4)+sin(wp0.z*1.7+uT*1.1))*.025;vWP=(modelMatrix*vec4(transformed,1.0)).xyz;');
-   sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vWP;uniform float uT;uniform float uHQ;uniform float uBlk;'+GLN+GLBUMP).replace('#include <color_fragment>',`#include <color_fragment>
+  matWater.onBeforeCompile = (sh) => {
+    sh.uniforms.uT = WUT;
+    sh.uniforms.uHQ = GQU;
+    sh.uniforms.uBlk = BLKU;
+    sh.vertexShader = sh.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying vec3 vWP;uniform float uT;")
+      .replace(
+        "#include <begin_vertex>",
+        "#include <begin_vertex>\nvec3 wp0=(modelMatrix*vec4(position,1.0)).xyz;transformed.y+=(sin(wp0.x*1.3+uT*1.4)+sin(wp0.z*1.7+uT*1.1))*.025;vWP=(modelMatrix*vec4(transformed,1.0)).xyz;",
+      );
+    sh.fragmentShader = sh.fragmentShader
+      .replace(
+        "#include <common>",
+        "#include <common>\nvarying vec3 vWP;uniform float uT;uniform float uHQ;uniform float uBlk;" + GLN + GLBUMP,
+      )
+      .replace(
+        "#include <color_fragment>",
+        `#include <color_fragment>
  vec2 wXZ=uBlk>.5?(floor(vWP.xz*uBlk*16.)+.5)/(uBlk*16.):vWP.xz;float uTq=uBlk>.5?floor(uT*5.)/5.:uT;
  float w1=vn3(vec3(wXZ*1.25+vec2(uTq*.33,uTq*.21),uTq*.14)),w2=vn3(vec3(wXZ*3.2-vec2(uTq*.47,-uTq*.29),uTq*.25+7.)),w3=vn3(vec3(wXZ*8.5+vec2(uTq*.9,uTq*.6),uTq*.4+3.));
  float fwW=length(fwidth(vWP.xz));float hW=w1*.55+w2*.3*(1.-smoothstep(.07,.16,3.2*fwW))+w3*.15*(1.-smoothstep(.22,.5,8.5*fwW));
  float shf=smoothstep(.3,.8,vColor.r);vec3 wc=mix(vec3(.08,.34,.58),vec3(.16,.58,.64),smoothstep(.2,.3,vColor.r));
  float fp=smoothstep(.5,.78,vn3(vec3(wXZ*2.7+vec2(uTq*.22,-uTq*.17),uTq*.45)))*shf+smoothstep(.85,1.,shf)*.35;fp=min(fp,1.);
- diffuseColor.rgb=mix(wc*(.9+.2*w1),vec3(.9,.96,1.),fp*.85);diffuseColor.a=mix(mix(.88,.68,smoothstep(.2,.32,vColor.r)),.95,fp);hW+=fp*.6;float fwF=max(fwidth(fp),1e-4);diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*.25,(1.-smoothstep(fwF*.6,fwF*1.8,abs(fp-.42)))*.6*step(.05,shf));`).replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\nnormal=bumpN(normal,-vViewPosition,hW,uBlk>.5?0.:(uHQ>.5?.17:.08));').replace('#include <tonemapping_fragment>',`{vec3 Vw=normalize(vViewPosition);float fr=pow(1.-clamp(dot(normal,Vw),0.,1.),4.);
+ diffuseColor.rgb=mix(wc*(.9+.2*w1),vec3(.9,.96,1.),fp*.85);diffuseColor.a=mix(mix(.88,.68,smoothstep(.2,.32,vColor.r)),.95,fp);hW+=fp*.6;float fwF=max(fwidth(fp),1e-4);diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*.25,(1.-smoothstep(fwF*.6,fwF*1.8,abs(fp-.42)))*.6*step(.05,shf));`,
+      )
+      .replace(
+        "#include <normal_fragment_maps>",
+        "#include <normal_fragment_maps>\nnormal=bumpN(normal,-vViewPosition,hW,uBlk>.5?0.:(uHQ>.5?.17:.08));",
+      )
+      .replace(
+        "#include <tonemapping_fragment>",
+        `{vec3 Vw=normalize(vViewPosition);float fr=pow(1.-clamp(dot(normal,Vw),0.,1.),4.);
  #ifdef USE_FOG
  gl_FragColor.rgb=mix(gl_FragColor.rgb,fogColor*1.02,fr*.25);
  #endif
  gl_FragColor.a=mix(gl_FragColor.a,1.,fr*.35);}
-#include <tonemapping_fragment>`);};
+#include <tonemapping_fragment>`,
+      );
+  };
 }
 
 export function initializeTerrainMaterial() {
   matT = matV.clone();
   /* same shader, its own block-size uniform (the terrain and the decor can use different block sizes) */
-  matT.onBeforeCompile=function terrainShader(sh){matV.onBeforeCompile(sh);sh.uniforms.uBlk=BLKU};
-  matT.defines={TERR:''};
+  matT.onBeforeCompile = function terrainShader(sh) {
+    matV.onBeforeCompile(sh);
+    sh.uniforms.uBlk = BLKU;
+  };
+  matT.defines = { TERR: "" };
 }

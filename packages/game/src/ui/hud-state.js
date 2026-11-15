@@ -1,7 +1,7 @@
 export const hudDisplayState = {
   UIS: 2,
   msgT: 0,
-  msgS: '',
+  msgS: "",
   /* quest panel box of this frame [x, y, w, h] (null when not drawn) and height of the centre bars of the last frame */
   qbox: null,
   barsH: 0,
@@ -20,9 +20,15 @@ export const hudDisplayState = {
 export function barX(UW, w, y, h) {
   const b = hudDisplayState.qbox;
   let x = Math.round((UW - w) / 2);
-  if (b && y < b[1] + b[3] + 2 && y + h > b[1] - 2) { const lx = b[0] + b[2] + 3; if (x < lx && lx + w <= UW - 3) x = lx }
+  if (b && y < b[1] + b[3] + 2 && y + h > b[1] - 2) {
+    const lx = b[0] + b[2] + 3;
+    if (x < lx && lx + w <= UW - 3) x = lx;
+  }
   topBox(x, y, w, h);
   return x;
 }
 
-export function topBox(x, y, w, h) { const t = hudDisplayState.tbox; if (t.length < 12) t.push([x, y, w, h]) }
+export function topBox(x, y, w, h) {
+  const t = hudDisplayState.tbox;
+  if (t.length < 12) t.push([x, y, w, h]);
+}

@@ -1,9 +1,9 @@
-import { snd } from '../audio/sound.js';
-import { bastionHas, bastionHasNow } from './economy.js';
-import { playersState } from './players.js';
-import { sessionState } from './session.js';
-import { MP } from '../multiplayer/session.js';
-import { hudDisplayState } from '../ui/hud-state.js';
+import { snd } from "../audio/sound.js";
+import { bastionHas, bastionHasNow } from "./economy.js";
+import { playersState } from "./players.js";
+import { sessionState } from "./session.js";
+import { MP } from "../multiplayer/session.js";
+import { hudDisplayState } from "../ui/hud-state.js";
 
 /* ================= EVENTS WITH A CHOICE (events-camps) =================
    Two wave events used to be automatic gifts: the merchant caravan (wave %4 = 2) and the rebel envoys (wave %6 = 4).
@@ -36,9 +36,9 @@ export function evReset() {
   eventsState.pay = [];
 }
 
-export const renownOf = p => ((playersState.RESP[p] || {}).ren | 0);
+export const renownOf = (p) => (playersState.RESP[p] || {}).ren | 0;
 
-export const renownMul = p => 1 + RENOWN_STEP * Math.min(RENOWN_MAX, renownOf(p));
+export const renownMul = (p) => 1 + RENOWN_STEP * Math.min(RENOWN_MAX, renownOf(p));
 
 export const evCur = () => E().cur;
 
@@ -50,7 +50,7 @@ export const evLeft = () => {
 function activate(e) {
   e.exp = sessionState.time + EV_TTL;
   E().cur = e;
-  snd(e.k === 'car' ? 'caravan' : 'envoy');
+  snd(e.k === "car" ? "caravan" : "envoy");
 }
 
 /* called from wave(): the event opens now, or waits behind the one still open (stable order) */
@@ -73,59 +73,66 @@ function evMsg(text) {
 function payOut(p) {
   const R = playersState.RESP;
   for (let pi = 0; pi < R.length; pi++) {
-    const m = bastionHas(pi, 'embassy') ? 1.5 : 1;
+    const m = bastionHas(pi, "embassy") ? 1.5 : 1;
     R[pi].g += Math.round((p.g | 0) * m);
   }
-  hudDisplayState.msgS = 'The caravan reaches the market: +' + (p.g | 0) + ' gold';
+  hudDisplayState.msgS = "The caravan reaches the market: +" + (p.g | 0) + " gold";
   hudDisplayState.msgT = 6;
-  snd('caravan');
+  snd("caravan");
 }
 
 /* c = 0 or 1. A wrong or stale id (already decided, expired) is ignored, so a late click on one machine cannot split the two. */
 export function resolveEvent0(id, c) {
-  const S = E(), e = S.cur;
+  const S = E(),
+    e = S.cur;
   if (!e || e.i !== id) return;
   S.cur = null;
   c = c === 1 ? 1 : 0;
   const R = playersState.RESP;
-  if (e.k === 'car') {
+  if (e.k === "car") {
     const a = e.a;
     if (c === 0) {
       for (let pi = 0; pi < R.length; pi++) {
-        const m = bastionHasNow(pi, 'embassy') ? 1.5 : 1;
+        const m = bastionHasNow(pi, "embassy") ? 1.5 : 1;
         R[pi].g += Math.round(a.g * m);
         R[pi].w += Math.round(a.w * m);
         R[pi].s += Math.round(a.s * m);
       }
-      snd('caravan');
-      evMsg('A merchant caravan passes: +' + a.g + ' gold, +' + a.w + ' wood, +' + a.s + ' stone');
+      snd("caravan");
+      evMsg("A merchant caravan passes: +" + a.g + " gold, +" + a.w + " wood, +" + a.s + " stone");
     } else {
       const g = Math.round(a.g * EV_ESCK);
       S.pay.push({ t: sessionState.time + EV_ESC, g });
-      evMsg('The caravan is escorted: it pays ' + g + ' gold in ' + EV_ESC + ' s');
+      evMsg("The caravan is escorted: it pays " + g + " gold in " + EV_ESC + " s");
     }
   } else {
     if (c === 0) {
-      let gs = 0, fs = 0;
+      let gs = 0,
+        fs = 0;
       for (let pi = 0; pi < R.length; pi++) {
-        const m = (bastionHasNow(pi, 'embassy') ? 1.5 : 1) * (e.mu || 1) * renownMul(pi);
-        const g = Math.round(e.a.g * m), f = Math.round(e.a.f * m);
+        const m = (bastionHasNow(pi, "embassy") ? 1.5 : 1) * (e.mu || 1) * renownMul(pi);
+        const g = Math.round(e.a.g * m),
+          f = Math.round(e.a.f * m);
         R[pi].g += g;
         R[pi].f = (R[pi].f || 0) + f;
-        if (!pi) { gs = g; fs = f }
+        if (!pi) {
+          gs = g;
+          fs = f;
+        }
       }
-      snd('envoy');
-      evMsg('Tribute of ' + (e.cn || 'the rebel camps') + ': +' + gs + ' gold, +' + fs + ' food');
+      snd("envoy");
+      evMsg("Tribute of " + (e.cn || "the rebel camps") + ": +" + gs + " gold, +" + fs + " food");
     } else {
       for (let pi = 0; pi < R.length; pi++) R[pi].ren = renownOf(pi) + 1;
-      evMsg('Tribute refused: renown ' + renownOf(0));
+      evMsg("Tribute refused: renown " + renownOf(0));
     }
   }
 }
 
 /* every sim tick (update0): escorted caravans arrive, an unanswered event takes its first choice, the next one in line opens */
 export function eventsTick() {
-  const S = E(), t = sessionState.time;
+  const S = E(),
+    t = sessionState.time;
   for (let i = 0; i < S.pay.length; i++) {
     const p = S.pay[i];
     if (p.t <= t) {
