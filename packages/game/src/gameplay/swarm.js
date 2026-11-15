@@ -37,7 +37,7 @@ export const SW={n:0,acc:0,step:0,fxN:0,gacc:[0,0],q:[],
    counts one more look in sk. At SWGH looks (32 s) it gives up its path and walks straight at the nearest castle over any ground, as the horde already does
    where a lane has no way through (buildings still stop it, and it bites them): earth works, cliffs and water delay the horde but never keep it out.
    A zombie that still stands SWRM looks later (80 s more) is taken away without gold or a kill. sa and sk are saved with the swarm. */
-const SWCK=32,SWGH=10,SWRM=25;
+const SWCK=32,SWGH=10,SWRM=25,SWBW=3.5;
 
 export let SWD;
 export let SWH;
@@ -84,8 +84,10 @@ function fmask(S,tx,ty,terr){const lx=tx-S.x0,ly=ty-S.y0;if(lx<0||ly<0||lx>=S.w|
 const DX8=[1,-1,0,0,1,1,-1,-1],DY8=[0,0,1,-1,1,-1,1,-1];
 /* per-zombie constants read from tables (same expressions as before, so the same numbers): aim jitter inside the tile, walking speed */
 const SWJ=new Float64Array(256),SWV=new Float64Array(16),SWJAM=new Float64Array(64);
-for(let d=7;d<64;d++)SWJAM[d]=Math.max(.3,1-(d-6)*.05);
+for(let d=7;d<64;d++)SWJAM[d]=Math.max(.75,1-(d-6)*.04);
 for(let v=0;v<256;v++)SWJ[v]=(v/255-.5)*.62*TS;
+/* a zombie on the way points without a field (over rock or water) aims beside the way point, by its own seeded offset, so the horde crosses it as a wide band and not in single file */
+const SWLT=new Float64Array(256);for(let v=0;v<256;v++)SWLT[v]=(v/127.5-1)*SWBW*TS;
 for(let v=0;v<16;v++)SWV[v]=SWSP*(v&8?1.08:1)*(.9+(v&7)*.03);
 
 function swPick(S,tx,ty,terr,o){const m=fmask(S,tx,ty,terr);if(m<=0)return m===0?-1:-2;if(!(m&(m-1)))return 31-Math.clz32(m);let bq=-1,bs=1e9;const W=S.w,F=S.F,fb=(ty-S.y0)*W+tx-S.x0,sb=ty*TW+tx;
@@ -125,11 +127,12 @@ function swStep(){if(!SW.sk||!SW.sa){SW.sk=new Uint8Array(SWMAX);SW.sa=new Int32
   /* the lane is left for the castle's own path fields 46 tiles from the castle, but only from a tile these fields reach: across a river or below a closed ledge the lane goes on */
   if(sPH[i]!==65535){let go=gho;if(!go){const C=LCA[L]||LC(L),dcx=C.x-x,dcy=C.y-y;go=dcx*dcx+dcy*dcy<=R46&&hasC(tx,ty)}if(go)sPH[i]=65535}
   if(sPH[i]!==65535){const Wp=terrainState.ROUTES[L].wps,WX=LWX[L],WY=LWY[L],WL=WX.length;let p=sPH[i];while(p<WL&&Math.abs(WX[p]-x)<TS2&&Math.abs(WY[p]-y)<TS2)p++;
+   if(sST[i]===3)for(let c=0;c<6&&p<WL;c++){const a=p>3?p-3:0,b=p+3<WL?p+3:WL-1,ex=WX[b]-WX[a],ey=WY[b]-WY[a],el=hyp(ex,ey);if(el>0&&((x-WX[p])*ex+(y-WY[p])*ey)/el>-TS*.6)p++;else break}
    if(p<Wp.length){let S=laneFieldQ(L,(p/LSEG)|0),v=S?fv1(S,tx,ty):65535;if(S&&v<=3&&S.tg+1>p){p=Math.min(Wp.length,S.tg+1);if(p<Wp.length){S=laneFieldQ(L,(p/LSEG)|0);v=S?fv1(S,tx,ty):65535}}
     /* the way points left in this stretch lie in rock or water (its field ends behind this zombie): over land to the castle when its fields reach this tile, else on to the next stretch */
     else if(S&&v<=3){if(hasC(tx,ty))p=65535;else{p=Math.min(Wp.length,(((p/LSEG)|0)+1)*LSEG);if(p<Wp.length){S=laneFieldQ(L,(p/LSEG)|0);v=S?fv1(S,tx,ty):65535}}}
     sPH[i]=p;
-    if(p<Wp.length){sST[i]=2;if(S&&v<65535){dir=swPick(S,tx,ty,false,o);if(dir===-1){const g=Wp[S.tg];gx=g[0]*TS;gy=g[1]*TS;has=true}}else{ph=true;sST[i]=3;const g=Wp[p];gx=g[0]*TS;gy=g[1]*TS;has=true}}}
+    if(p<Wp.length){sST[i]=2;if(S&&v<65535){dir=swPick(S,tx,ty,false,o);if(dir===-1){const g=Wp[S.tg];gx=g[0]*TS;gy=g[1]*TS;has=true}}else{ph=true;sST[i]=3;const g=Wp[p],a=p>3?p-3:0,b=p+3<WL?p+3:WL-1,ex=WX[b]-WX[a],ey=WY[b]-WY[a],el=hyp(ex,ey)||1,lt=SWLT[(o>>4)&255];gx=g[0]*TS-ey/el*lt;gy=g[1]*TS+ex/el*lt;has=true}}}
    else sPH[i]=p}
   if(dir===-2&&!has){let bs=null,bv=65535;if(!gho)for(const S of ZA){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}
    if(bs){dir=swPick(bs,tx,ty,false,o);sST[i]=4}else if(!gho){for(const S of ZZ){const v=S?fv1(S,tx,ty):65535;if(v<bv){bv=v;bs=S}}if(bs){dir=swPick(bs,tx,ty,true,o);sST[i]=5}}
@@ -138,7 +141,7 @@ function swStep(){if(!SW.sk||!SW.sa){SW.sk=new Uint8Array(SWMAX);SW.sa=new Int32
   if(dir>=0){gx=(tx+DX8[dir]+.5)*TS+SWJ[o&255];gy=(ty+DY8[dir]+.5)*TS+SWJ[(o>>8)&255]}
   let vx=gx-x,vy=gy-y;const l=hyp(vx,vy);if(l>.5){vx/=l;vy/=l}else{vx=0;vy=0}
   const D0=SWD[ti];let jam=1;if(D0>1&&tx>0&&ty>0&&tx<TW-1&&ty<TH-1){const h0=HT[ti];let dl=D0,dr=D0,du=D0,dd=D0,q=ti-1;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dl=SWD[q];q=ti+1;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dr=SWD[q];q=ti-TW;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))du=SWD[q];q=ti+TW;if(ter[q]===0&&(HT[q]===h0||canStepZ(ti,q)))dd=SWD[q];
-   const pl=(dl-dr)*.07,pu=(du-dd)*.07;vx+=pl>.6?.6:pl<-.6?-.6:pl;vy+=pu>.6?.6:pu<-.6?-.6:pu;if(D0>6)jam=D0<64?SWJAM[D0]:.3}
+   const pl=(dl-dr)*.07,pu=(du-dd)*.07;vx+=pl>.6?.6:pl<-.6?-.6:pl;vy+=pu>.6?.6:pu<-.6?-.6:pu;if(D0>6)jam=D0<64?SWJAM[D0]:.75}
   const sp=SWV[(sK[i]?8:0)|(o>>13)]*jam*SWDT;let nx=x+vx*sp,ny=y+vy*sp;
   nx=nx<TS?TS:nx>W-TS?W-TS:nx;ny=ny<TS?TS:ny>H-TS?H-TS:ny;/* well inside its tile (0.01 px margin, wider than the float32 rounding of the stored position): no division needed, same tile */
   const bx=tx*TS,by=ty*TS,ix=nx>bx+.01&&nx<bx+TS-.01,iy=ny>by+.01&&ny<by+TS-.01,ntx=ix?tx:(nx/TS)|0,nty=iy?ty:(ny/TS)|0,ins=ix&&iy;
