@@ -1676,4 +1676,8 @@ export const NL = {
     "Golven verschijnen nu ver van je kasteel, dus in coöp zie je de golf van je partner niet meer boven op je opduiken.",
   "Hordes no longer pile up in narrow passages, and big waves run smoother.":
     "Hordes stapelen zich niet meer op in smalle doorgangen en grote golven lopen soepeler.",
+  "Spikes now show a placement preview and can be demolished for a full refund.":
+    "Pieken tonen nu een voorbeeld bij het plaatsen en kunnen worden gesloopt met volledige terugbetaling.",
+  "Zombie lanes find a way around rock and woods more often, so fewer hordes cross mountains or pile up on trees.":
+    "Zombieroutes gaan vaker om rotsen en bossen heen, zodat minder hordes over bergen lopen of zich bij bomen opstapelen.",
 };

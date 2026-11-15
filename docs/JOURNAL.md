@@ -4,9 +4,9 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
-## 2026-11-15 · v94 ready, merged with main (formatting PR #29), not yet published
+## 2026-11-15 · v94 release (merged with main, formatting PR #29)
 
-- Prepared the whole branch as v94 (not published): co-op fixes, waves always end, new default keys, minimap, far wave spawn (`WSPN` 150 / `WSEE` 130), horde pile-up fix (`SWJAM` 0.75, `SWBW` 3.5), swarm at 10 Hz, placement log `MP.plog`, command resend after resync, mp_build prune fix.
+- Released the whole branch as v94, plus spikes preview/demolish (#31) and lane fields (#30): co-op fixes, waves always end, new default keys, minimap, far wave spawn (`WSPN` 150 / `WSEE` 130), horde pile-up fix (`SWJAM` 0.75, `SWBW` 3.5), swarm at 10 Hz, placement log `MP.plog`, command resend after resync, mp_build prune fix.
 - Notes: 2 lines added (far spawn, pile-up and smoother big waves), translated in 8 languages (`docs/studio-texts/notes-v94b.json`, nl/pl/tr).
 - CI green on 0481ccc (full quick suite). Smoke test run by `release.sh`; the release workflow runs the full suite.
 - Not verified: real two-machine co-op, real AZERTY keyboard, F-keys in the launcher, old saves mid-wave. #26 #3 #4 stay open until a guest F8 report.

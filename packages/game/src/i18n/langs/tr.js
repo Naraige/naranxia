@@ -1660,4 +1660,8 @@ export const TR = {
     "Dalgalar artık kalenden uzakta beliriyor; eşli oyunda ortağının dalgasını üstünde doğarken görmezsin.",
   "Hordes no longer pile up in narrow passages, and big waves run smoother.":
     "Ordular artık dar geçitlerde yığılmıyor ve büyük dalgalar daha akıcı çalışıyor.",
+  "Spikes now show a placement preview and can be demolished for a full refund.":
+    "Dikenler artık yerleştirmeden önce önizleme gösteriyor ve tam iadeyle yıkılabiliyor.",
+  "Zombie lanes find a way around rock and woods more often, so fewer hordes cross mountains or pile up on trees.":
+    "Zombi yolları kayaları ve ormanları daha sık dolaşıyor; daha az ordu dağları aşıyor ya da ağaçlarda yığılıyor.",
 };

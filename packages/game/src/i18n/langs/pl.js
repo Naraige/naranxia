@@ -1663,4 +1663,8 @@ export const PL = {
     "Fale pojawiają się teraz daleko od twojego zamku, więc w co-opie nie zobaczysz już fali partnera tuż przy sobie.",
   "Hordes no longer pile up in narrow passages, and big waves run smoother.":
     "Hordy nie kłębią się już w wąskich przejściach, a duże fale działają płynniej.",
+  "Spikes now show a placement preview and can be demolished for a full refund.":
+    "Kolce pokazują teraz podgląd przed postawieniem i można je zburzyć z pełnym zwrotem.",
+  "Zombie lanes find a way around rock and woods more often, so fewer hordes cross mountains or pile up on trees.":
+    "Ścieżki zombie częściej omijają skały i lasy, więc mniej hord przechodzi przez góry lub tłoczy się na drzewach.",
 };
