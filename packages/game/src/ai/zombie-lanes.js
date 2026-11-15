@@ -40,6 +40,8 @@ export const zcount = () => {
 export const WSPN = 150,
   WSEE = 130,
   LSEG = 8,
+  DETK = 2.2,
+  DETA = 16,
   LFLD = new Map();
 
 /* where a horde of lane L appears: the far end of its route (the start of the map), as far as WSPN tiles of path from the castle the route leaves.
@@ -112,34 +114,59 @@ function laneField(L, sg) {
   const Wp = terrainState.ROUTES[L].wps,
     a = Math.min(Wp.length - 1, sg * LSEG),
     b = Math.min(Wp.length - 1, a + LSEG + 2);
-  let x0 = 1e9,
-    y0 = 1e9,
-    x1 = -1e9,
-    y1 = -1e9;
-  for (let i = a; i <= b; i++) {
-    const p = Wp[i];
-    x0 = Math.min(x0, p[0]);
-    y0 = Math.min(y0, p[1]);
-    x1 = Math.max(x1, p[0]);
-    y1 = Math.max(y1, p[1]);
-  }
-  x0 = Math.floor(x0) - 14;
-  y0 = Math.floor(y0) - 14;
-  x1 = Math.ceil(x1) + 14;
-  y1 = Math.ceil(y1) + 14;
-  const seeds = [];
-  let tg = b;
-  for (let k = b; k > a && !seeds.length; k--) {
+  /* the target of a stretch is its farthest way point that has free ground around it; the way points were laid without looking at the land, so that one can sit in a pocket of
+     rock or wood that is walled in or only reached by a long walk around. The field is then tried from the next way points back (4 tries, then a wider window once) and kept
+     when it reaches the stretch's start tile with a walk of at most DETK times the straight line + DETA tiles; else the first field stands (the horde then clambers, as before) */
+  const sp = Wp[a],
+    stx = sp[0] | 0,
+    sty = sp[1] | 0;
+  ensureAround(stx, sty, 1);
+  const tryK = (k, mg) => {
     const p = Wp[k],
       cx = p[0] | 0,
       cy = p[1] | 0;
     ensureAround(cx, cy, 1);
+    const seeds = [];
     for (let j = -2; j <= 2; j++)
       for (let i = -2; i <= 2; i++) if (!solid(cx + i, cy + j)) seeds.push([cx + i, cy + j]);
-    tg = k;
+    if (!seeds.length) return null;
+    let x0 = 1e9,
+      y0 = 1e9,
+      x1 = -1e9,
+      y1 = -1e9;
+    for (let i = a; i <= b; i++) {
+      x0 = Math.min(x0, Wp[i][0]);
+      y0 = Math.min(y0, Wp[i][1]);
+      x1 = Math.max(x1, Wp[i][0]);
+      y1 = Math.max(y1, Wp[i][1]);
+    }
+    x0 = Math.floor(x0) - mg;
+    y0 = Math.floor(y0) - mg;
+    x1 = Math.ceil(x1) + mg;
+    y1 = Math.ceil(y1) + mg;
+    const F = bfsW(seeds, false, x0, y0, x1 - x0, y1 - y0);
+    F.tg = k;
+    const v = fv(F, stx, sty);
+    return { F, v, ok: v < 65535 && v <= DETK * Math.hypot(p[0] - sp[0], p[1] - sp[1]) + DETA };
+  };
+  let S = null,
+    first = null,
+    bestR = null,
+    n = 0;
+  for (let k = b; k > a && n < 4 && !S; k--) {
+    const r = tryK(k, 14);
+    if (!r) continue;
+    n++;
+    if (!first) first = r;
+    if (r.ok) S = r.F;
+    else if (r.v < 65535 && (!bestR || r.v < bestR.v)) bestR = r;
+    k -= 2;
   }
-  const S = seeds.length ? bfsW(seeds, false, x0, y0, x1 - x0, y1 - y0) : null;
-  if (S) S.tg = tg;
+  if (!S && first) {
+    const r = tryK(first.F.tg, 40);
+    if (r && r.ok) S = r.F;
+  }
+  if (!S) S = bestR ? bestR.F : first ? first.F : null;
   LFLD.set(key, { S, v: sessionState.ver });
   if (LFLD.size > 260) LFLD.delete(LFLD.keys().next().value);
   return S;

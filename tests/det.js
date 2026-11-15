@@ -158,16 +158,16 @@ async () => {
   const a = runOnce(),
     b = runOnce(),
     same = JSON.stringify(a) === JSON.stringify(b);
-  // Captured from the unmodified v94 baseline at 4a57714017d38c8d5294445e20962eb4b1e76c11.
+  // Captured from v94 4a57714017d38c8d5294445e20962eb4b1e76c11 plus the lane-field target fix of issue #30 (the baseline of the cleanup differs from these lines in the swarm part).
   const expected = [
-    "1289907662:21950:1:0:1045:0.9614:sh9:nl0.99:f150:sp0:ro00:wk0:T-767045186:z139:pu2:fg1:fp3",
-    "1277869275:25993:7:0:1082:0.9768:sh9:nl1.00:f150:sp0:ro00:wk0:T-1684843046:z132:pu2:fg0:fp9",
-    "1806847686:25993:7:0:1082:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T-1684843046:z132:pu0:fg0:fp9",
-    "-1490071179:25993:7:0:1082:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T-1684843046:z132:pu0:fg0:fp9",
-    "-733253062:25986:18:0:1094:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T423784588:z128:pu0:fg0:fp9",
-    "-1208506384:25896:118:0:1129:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T423784588:z118:pu0:fg0:fp9",
-    "-1815204722:25660:364:0:1290:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T423784588:z110:pu0:fg0:fp8",
-    "-19860095:25528:509:2:1567:0.9982:sh0:nl1.00:f300:sp0:ro00:wk2:T423784588:z100:pu6:fg0:fp5",
+    "-1981940098:21949:1:0:1045:0.9614:sh9:nl0.99:f150:sp0:ro00:wk0:T-767045186:z139:pu2:fg1:fp2",
+    "2058766142:25993:7:0:1082:0.9768:sh9:nl1.00:f150:sp0:ro00:wk0:T-1867812774:z132:pu3:fg0:fp9",
+    "-64787436:25993:7:0:1082:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T-1867812774:z132:pu0:fg0:fp9",
+    "-2004093261:25993:7:0:1082:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T-1867812774:z132:pu0:fg0:fp9",
+    "2091106075:25964:36:0:1083:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T-1867812774:z132:pu0:fg0:fp9",
+    "239956097:25444:556:0:1474:0.9982:sh9:nl1.00:f300:sp0:ro00:wk0:T-1867812774:z132:pu0:fg0:fp9",
+    "-377070237:24827:1176:0:1877:0.9982:sh9:nl1.00:f450:sp0:ro00:wk0:T-1867812774:z135:pu0:fg0:fp6",
+    "161824364:24550:1466:0:2409:0.9982:sh0:nl1.00:f650:sp0:ro00:wk0:T-1867812774:z131:pu0:fg0:fp3",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   return JSON.stringify({ ok: same && reference, same, reference, a, b });

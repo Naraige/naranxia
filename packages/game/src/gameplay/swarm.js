@@ -656,24 +656,26 @@ function swStep() {
     const D0 = SWD[ti];
     let jam = 1;
     if (D0 > 1 && tx > 0 && ty > 0 && tx < TW - 1 && ty < TH - 1) {
-      const h0 = HT[ti];
+      const h0 = HT[ti],
+        /* clambering over rock or wood (no path, or standing on a solid tile): the crowd spreads over any neighbour and is not slowed by its own pile, else a horde that crosses a wood goes in single file on one tile */
+        cl = ph || ter[ti] > 0;
       let dl = D0,
         dr = D0,
         du = D0,
         dd = D0,
         q = ti - 1;
-      if (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q))) dl = SWD[q];
+      if (cl || (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q)))) dl = SWD[q];
       q = ti + 1;
-      if (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q))) dr = SWD[q];
+      if (cl || (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q)))) dr = SWD[q];
       q = ti - TW;
-      if (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q))) du = SWD[q];
+      if (cl || (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q)))) du = SWD[q];
       q = ti + TW;
-      if (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q))) dd = SWD[q];
+      if (cl || (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q)))) dd = SWD[q];
       const pl = (dl - dr) * 0.07,
         pu = (du - dd) * 0.07;
       vx += pl > 0.6 ? 0.6 : pl < -0.6 ? -0.6 : pl;
       vy += pu > 0.6 ? 0.6 : pu < -0.6 ? -0.6 : pu;
-      if (D0 > 6) jam = D0 < 64 ? SWJAM[D0] : 0.75;
+      if (D0 > 6 && !cl) jam = D0 < 64 ? SWJAM[D0] : 0.75;
     }
     const sp = SWV[(sK[i] ? 8 : 0) | (o >> 13)] * jam * SWDT;
     let nx = x + vx * sp,
