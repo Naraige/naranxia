@@ -914,6 +914,7 @@ export const TR = {
   "hit 10% harder and buildings slowly mend": "%10 daha sert vurur ve binalar yavaşça onarılır",
   "Spike trap": "Kazıklı tuzak",
   "Boiling oil": "Kaynar yağ",
+  "Trap removed: resources recovered": "Tuzak kaldırıldı: kaynaklar geri alındı",
   "Cannot place a trap here": "Buraya tuzak yerleştirilemez",
   "Not enough resources": "Yeterli kaynak yok",
   "Walls, gates and towers scald zombies next to them": "Surlar, kapılar ve kuleler yanlarındaki zombileri haşlar",

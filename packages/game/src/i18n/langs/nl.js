@@ -918,6 +918,7 @@ export const NL = {
   "hit 10% harder and buildings slowly mend": "slaan 10% harder en gebouwen herstellen langzaam",
   "Spike trap": "Spijkerval",
   "Boiling oil": "Kokende olie",
+  "Trap removed: resources recovered": "Val verwijderd: grondstoffen teruggekregen",
   "Cannot place a trap here": "Je kunt hier geen val plaatsen",
   "Not enough resources": "Niet genoeg grondstoffen",
   "Walls, gates and towers scald zombies next to them": "Muren, poorten en torens branden zombies ernaast",

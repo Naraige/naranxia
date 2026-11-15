@@ -45,6 +45,14 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Behaviour step: swarm at 10 Hz (`SWDT` .1, look every 32 steps = still 3.2 s, bite cap per step x2, `swRear` every 5 steps; render already interpolates). Swarm share excluding `(program)`: 43.9 / 45.6 %, swarm time about 16 to 24 s instead of 25 to 36 s. det hashes change (new ones identical on two runs).
 - Waves on worlds 0, 1, 2, 9 (probe, wave 3, perfect defence): end 461/808/508/493 s before, 463/793/505/490 after; kills equal within 20 (6931/10506/6126/11287 vs 6932/10523/6131/11289); no stuck zombie for 60 s, none in water.
 - Not verified: by eye in a real browser, bosses and miners at 10 Hz, real GPU.
+## 2026-11-15 · v94 lot "spikes preview and demolish" (hd-gameplay worktree, not merged, not released)
+
+- Issue #31 (King: "on ne peut pas prévisualiser les pics et on ne peut pas les détruire"). Nothing under `game/` or `announce/`, no push, no version change.
+- Cause 1: mode `spike` had no preview branch in `rendering/frame.js` (only the generic 1.7 high green box, validity ignored trap rules: water, existing trap, occupied tile). Cause 2: a trap is only a `SPK` tile -> hp entry, no structure in `occ`, so the demolish tool fell through to "Click one of your buildings".
+- Fix: `spikeFree()` (shared by `placeSpike` and the preview), `spkGhost()` translucent pit + 5 spikes (green / red; visual only, no sim state), demolish hover over a trap shows it red. `removeSpike()` called from the `demolish` branch of `build()` (so it runs inside the "b" command in co-op): instant removal, 100 % refund (10 g + 15 w) to the clicking player like a path tile, `SPKV++` rebuilds the mesh. New text "Trap removed: resources recovered" in 8 languages. SAVA unchanged (SPK stays tile -> hp).
+- Tests: `traps` extended (place + demolish through `mpExec` "b", refund, empty tile no refund, `spikeFree`).
+- Known limits: a trap has no owner, so in co-op either player can demolish (and be refunded for) the partner's trap; SPK is not in `mpHash` (resources are, so a refund divergence still shows). Not verified: preview seen on screen, a real 2-client co-op demolish.
+
 ## 2026-11-13 · codebase cleanup (unreleased, pinned v94)
 
 - Integrated the cleanup with fetched v94 `4a57714017d38c8d5294445e20962eb4b1e76c11`; this verification stays pinned by request. No release/version/notes change.

@@ -10,7 +10,7 @@ import { C, DIR4, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { sessionState } from "./session.js";
 import { demolish, rampGroup, tfOrder } from "./terraforming.js";
-import { placeSpike } from "./traps.js";
+import { placeSpike, removeSpike } from "./traps.js";
 import { MP } from "../multiplayer/session.js";
 import { puff } from "../rendering/effects.js";
 import { CONNT } from "../rendering/models/structures.js";
@@ -248,6 +248,7 @@ export let build = function build(type, tx, ty) {
     }
     return;
   }
+  if (type === "demolish" && !occ.get(i) && removeSpike(tx, ty)) return;
   if (type === "demolish" && !occ.get(i) && stairs.has(i)) {
     const G = rampGroup(i);
     const q = G.find((k) => tfo.has(k));

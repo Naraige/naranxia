@@ -913,6 +913,7 @@ export const PL = {
   "hit 10% harder and buildings slowly mend": "biją o 10% mocniej, a budynki powoli się naprawiają",
   "Spike trap": "Pułapka z kolcami",
   "Boiling oil": "Wrzący olej",
+  "Trap removed: resources recovered": "Pułapka usunięta: zasoby odzyskane",
   "Cannot place a trap here": "Nie można tu postawić pułapki",
   "Not enough resources": "Za mało surowców",
   "Walls, gates and towers scald zombies next to them": "Mury, bramy i wieże parzą zombie obok siebie",
