@@ -151,6 +151,7 @@ export function swQueue(L, an, cnt) {
       y: an.p[1],
       ph: an.ph,
       left: cnt,
+      r: Math.min(14, 5 + Math.floor(cnt / 2500)),
       rate: Math.max(45, cnt / 30),
       hp: 5 * (1 + 0.04 * sessionState.waveN),
     });
@@ -315,9 +316,11 @@ function swSpawn() {
       let x = 0,
         y = 0,
         ok = false;
+      /* a big wave comes out over a wider patch (r grows with its size, 5 for saves from before): 30000 on 11x11 tiles stood 250 to a tile and gave up its lane */
+      const r = q.r || 5;
       for (let t = 0; t < 4 && !ok; t++) {
-        x = (q.x + rnd(-5, 5)) * TS;
-        y = (q.y + rnd(-5, 5)) * TS;
+        x = (q.x + rnd(-r, r)) * TS;
+        y = (q.y + rnd(-r, r)) * TS;
         ok = !solidAt(x, y);
       }
       if (!ok) continue;
