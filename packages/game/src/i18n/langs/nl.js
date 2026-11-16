@@ -1689,4 +1689,22 @@ export const NL = {
   "A game is running: when the host presses Play, it will be replaced by a new co-op game.":
     "Er loopt een spel: zodra de host op Spelen drukt, wordt het vervangen door een nieuw coöpspel.",
   "This trap belongs to your partner": "Deze val is van je partner",
+  "Spread-out hordes, body blocking and formation previews.":
+    "Verspreide hordes, lichaamsblokkade en voorbeeld van formaties.",
+  "Hordes spawn spread out and flow around crowded tiles: fewer pile-ups in the lanes.":
+    "Hordes verschijnen verspreid en lopen om volle tegels heen: minder opstoppingen in de paden.",
+  "Units can no longer stand on top of each other: they push apart, and standing troops hold their ground.":
+    "Eenheden kunnen niet meer op elkaar staan: ze duwen elkaar weg en stilstaande troepen houden hun positie.",
+  "Defensive stance: troops strike what is in reach and never chase, then walk back to their post.":
+    "Defensieve houding: troepen slaan wat binnen bereik is en achtervolgen nooit, en keren dan terug naar hun post.",
+  "Formations show green and red slot markers on the ground while you place or drag them.":
+    "Formaties tonen groene en rode plekmarkeringen op de grond terwijl je ze plaatst of sleept.",
+  "Tab still jumps to the last attack for a minute after the alert marker fades.":
+    "Tab springt nog een minuut naar de laatste aanval nadat de waarschuwing is verdwenen.",
+  "Co-op: spikes have an owner, random starts stay on the main land, and a running game asks before it is replaced.":
+    "Coöp: vallen hebben een eigenaar, willekeurige starts blijven op het hoofdland en een lopend spel vraagt bevestiging voordat het wordt vervangen.",
+  "Co-op: saved games remember which castle belongs to which player.":
+    "Coöp: opgeslagen spellen onthouden welk kasteel bij welke speler hoort.",
+  "Zombie lanes find routes over hills and mountains more often.":
+    "Zombiepaden vinden vaker een route over heuvels en bergen.",
 };

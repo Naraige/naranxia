@@ -1676,4 +1676,21 @@ export const PL = {
   "A game is running: when the host presses Play, it will be replaced by a new co-op game.":
     "Trwa gra: gdy gospodarz naciśnie Graj, zostanie zastąpiona nową grą kooperacyjną.",
   "This trap belongs to your partner": "Ta pułapka należy do twojego partnera",
+  "Spread-out hordes, body blocking and formation previews.": "Rozproszone hordy, blokowanie ciał i podgląd formacji.",
+  "Hordes spawn spread out and flow around crowded tiles: fewer pile-ups in the lanes.":
+    "Hordy pojawiają się rozproszone i omijają zatłoczone pola: mniej zatorów w korytarzach.",
+  "Units can no longer stand on top of each other: they push apart, and standing troops hold their ground.":
+    "Jednostki nie mogą już stać jedna na drugiej: odpychają się, a stojące oddziały trzymają pozycję.",
+  "Defensive stance: troops strike what is in reach and never chase, then walk back to their post.":
+    "Postawa obronna: oddziały uderzają w to, co jest w zasięgu, i nigdy nie gonią, po czym wracają na posterunek.",
+  "Formations show green and red slot markers on the ground while you place or drag them.":
+    "Formacje pokazują zielone i czerwone znaczniki miejsc na ziemi podczas ustawiania lub przeciągania.",
+  "Tab still jumps to the last attack for a minute after the alert marker fades.":
+    "Tab nadal przenosi do ostatniego ataku przez minutę po zniknięciu alertu.",
+  "Co-op: spikes have an owner, random starts stay on the main land, and a running game asks before it is replaced.":
+    "Koop: pułapki mają właściciela, losowe starty zostają na głównym lądzie, a trwająca gra pyta o potwierdzenie przed zastąpieniem.",
+  "Co-op: saved games remember which castle belongs to which player.":
+    "Koop: zapisane gry pamiętają, który zamek należy do którego gracza.",
+  "Zombie lanes find routes over hills and mountains more often.":
+    "Korytarze zombie częściej znajdują drogę przez wzgórza i góry.",
 };

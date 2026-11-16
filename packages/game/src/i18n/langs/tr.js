@@ -1673,4 +1673,22 @@ export const TR = {
   "A game is running: when the host presses Play, it will be replaced by a new co-op game.":
     "Bir oyun sürüyor: ev sahibi Oyna'ya basınca yeni bir ortak oyunla değiştirilecek.",
   "This trap belongs to your partner": "Bu tuzak ortağına ait",
+  "Spread-out hordes, body blocking and formation previews.":
+    "Dağılmış ordular, beden engelleme ve diziliş önizlemesi.",
+  "Hordes spawn spread out and flow around crowded tiles: fewer pile-ups in the lanes.":
+    "Ordular dağılmış olarak doğar ve kalabalık karoları dolaşır: koridorlarda daha az yığılma.",
+  "Units can no longer stand on top of each other: they push apart, and standing troops hold their ground.":
+    "Birimler artık üst üste duramaz: birbirini iter, duran birlikler yerini korur.",
+  "Defensive stance: troops strike what is in reach and never chase, then walk back to their post.":
+    "Savunma duruşu: birlikler menzildekine vurur, asla kovalamaz, sonra görev yerine döner.",
+  "Formations show green and red slot markers on the ground while you place or drag them.":
+    "Dizilişler, yerleştirirken veya sürüklerken yerde yeşil ve kırmızı yuva işaretleri gösterir.",
+  "Tab still jumps to the last attack for a minute after the alert marker fades.":
+    "Uyarı işareti kaybolduktan sonra Tab bir dakika daha son saldırıya götürür.",
+  "Co-op: spikes have an owner, random starts stay on the main land, and a running game asks before it is replaced.":
+    "Ortak oyun: tuzakların sahibi vardır, rastgele başlangıçlar ana karada kalır ve süren bir oyun değiştirilmeden önce onay ister.",
+  "Co-op: saved games remember which castle belongs to which player.":
+    "Ortak oyun: kayıtlı oyunlar hangi kalenin hangi oyuncuya ait olduğunu hatırlar.",
+  "Zombie lanes find routes over hills and mountains more often.":
+    "Zombi koridorları tepelerde ve dağlarda daha sık yol bulur.",
 };

@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-16 · v95
+
+- Release of the polish batches below (hordes spread, body block, defensive stance, QoL, co-op lot, routes, formation ghost), merged from the three worktree lots plus the earlier cherry-picks on `release-v84`.
+- Merge fixes: `det` re-pinned after two identical runs on the merged code; `tests/waves.js` now calls `randomSite(false)` (the legacy rule keeps the worlds it was written for) and presses `mpStart()` twice (lot B's lobby confirm); `convoy_probe` too.
+- Verified here: waves (same numbers as lot A: w2 688 s, limit 700), det, save, mpk, ui, stance, traps. Left to CI: the full quick suite.
+- Watch: wave 3 of world 2 ends at 688 s (limit 700). If unwanted, `RMAX` back to 24 in `world/routes.js`. Pile 37-40 tiles out along a cliff still holds 100-139 per tile.
+- Not verified: two real machines, real AZERTY keys, red formation markers on screen, 10 Hz swarm feel.
+
 ## 2026-11-16 · polish lot B co-op
 
 - Lobby over a running game (`multiplayer/lobby.js`): `runningGame()` = `inGame && !over && !MP.on`. Host: the lobby says so, the first Play only asks ("Press Play again to replace your running game with a new co-op game", button "Play again to confirm"), the second starts. Guest: warning line only (the host's `s` command starts the game on both; the guest cannot veto, he can leave). 4 new texts, 8 languages (`langcheck`, `textaudit` OK).

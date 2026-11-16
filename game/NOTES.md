@@ -1,11 +1,10 @@
-Co-op fixes, waves that always end, and new default keys.
+Spread-out hordes, body blocking and formation previews.
 
-- Zombies no longer get stuck in water or on cliffs: every wave can now be finished.
-- Co-op: after a resync both games now restart from exactly the same state, and a clear one-line message says what is happening while you wait.
-- Co-op: if your partner leaves, you stay player 2 with your own castle. Saved games now continue exactly as the original game would.
-- New default keys: torch F6, barracks rally point F7, forester F9, guild F3. On AZERTY the camera is now on Z Q S D.
-- The minimap now frames the area you explored, and banners no longer cover the event buttons.
-- Waves now appear far from your castle, so in co-op you no longer see your partner's wave spawn on top of you.
-- Hordes no longer pile up in narrow passages, and big waves run smoother.
-- Spikes now show a placement preview and can be demolished for a full refund.
-- Zombie lanes find a way around rock and woods more often, so fewer hordes cross mountains or pile up on trees.
+- Hordes spawn spread out and flow around crowded tiles: fewer pile-ups in the lanes.
+- Units can no longer stand on top of each other: they push apart, and standing troops hold their ground.
+- Defensive stance: troops strike what is in reach and never chase, then walk back to their post.
+- Formations show green and red slot markers on the ground while you place or drag them.
+- Tab still jumps to the last attack for a minute after the alert marker fades.
+- Co-op: spikes have an owner, random starts stay on the main land, and a running game asks before it is replaced.
+- Co-op: saved games remember which castle belongs to which player.
+- Zombie lanes find routes over hills and mountains more often.
