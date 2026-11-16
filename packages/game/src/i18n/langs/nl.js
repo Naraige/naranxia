@@ -287,7 +287,8 @@ export const NL = {
   "Faster travel": "Sneller reizen",
   "Fess": "Balk",
   "Field gun pushed by a crew of 2 (2 population)": "Veldkanon geduwd door een bemanning van 2 (2 bevolking)",
-  "Fight around their post, then walk back to it": "Vecht rond hun post en loop dan terug",
+  "Strike what is in reach, never chase": "Slaat wat binnen bereik is, zonder achtervolging",
+  "Walk back to the post if pushed away": "Loopt terug naar de post als ze weggeduwd worden",
   "Finish a research": "Rond een onderzoek af",
   "Finish this wave first: the next one comes after the rest time":
     "Maak eerst deze golf af: de volgende komt na de rusttijd",

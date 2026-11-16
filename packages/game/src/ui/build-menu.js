@@ -72,7 +72,7 @@ const TIPS = {
   jr: ["Build and repair", "Sends the selected peasants to the nearest building site", "or damaged building"],
   repair: ["Repair", "Peasants fix the selected building", "Costs part of its wood / stone / gold"],
   agg: ["Aggressive [1]", "Chase and attack every enemy in sight"],
-  def: ["Defensive [2]", "Fight around their post, then walk back to it"],
+  def: ["Defensive [2]", "Strike what is in reach, never chase", "Walk back to the post if pushed away"],
   hold: ["Halt [3]", "Hold position: never move, only strike", "enemies within weapon range"],
   stop: ["Stop [4]", "Cancel current orders and stay here"],
   work: ["Gather", "Send these peasants back to work now"],

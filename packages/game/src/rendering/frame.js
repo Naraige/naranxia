@@ -71,11 +71,45 @@ import { weatherTick } from "./weather.js";
 import { hudState, inR } from "../ui/hud.js";
 import { gOK } from "../world/routes.js";
 import { HT, LAND, occ, pth, stairs, ter } from "../world/terrain-state.js";
-import { stairInfo } from "../world/traversal.js";
+import { solidAt, stairInfo } from "../world/traversal.js";
 
 export const frameState = {
   frameN: 0,
 };
+
+/* Formation slot preview: small translucent markers, green on free ground, red when blocked (visual only, no simulation state). */
+const FGH = { pool: [], geo: null, ok: null, bad: null };
+
+function formGhostShow(sl) {
+  if (!FGH.geo) {
+    FGH.geo = new THREE.CylinderGeometry(0.24, 0.24, 0.03, 12);
+    const mk = (c) =>
+      new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.75, depthWrite: false, toneMapped: false });
+    FGH.ok = mk(0x2dff55);
+    FGH.bad = mk(0xff2a2a);
+  }
+  let i = 0;
+  for (const q of sl) {
+    let m = FGH.pool[i];
+    if (!m) {
+      m = FGH.pool[i] = new THREE.Mesh(FGH.geo, FGH.ok);
+      m.renderOrder = 5;
+      scene.add(m);
+    }
+    const tx = q.x / TS,
+      ty = q.y / TS;
+    m.material = solidAt(q.x, q.y) || !gOK(Math.floor(tx), Math.floor(ty)) ? FGH.bad : FGH.ok;
+    m.position.set(tx, gh(tx, ty) + 0.03, ty);
+    m.visible = true;
+    i++;
+  }
+}
+
+function formGhostUpdate() {
+  for (const m of FGH.pool) m.visible = false;
+  const sl = inputState.fslots;
+  if (sl) formGhostShow(sl);
+}
 
 /* Construction animation (visual only): the building rises with s.prog (as before), the scaffold stays a little above it,
    dust puffs at each fifth of the progress and a short settle bounce when construction is seen to finish.
@@ -400,6 +434,7 @@ export let render3D = function render3D(dt) {
   if (TGH) TGH.visible = false;
   if (GBW) GBW.visible = false;
   spkGhostHide();
+  formGhostUpdate();
   if (
     sessionState.mode &&
     !sessionState.over &&

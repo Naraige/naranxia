@@ -287,7 +287,8 @@ export const PL = {
   "Faster travel": "Szybsza podróż",
   "Fess": "Pas",
   "Field gun pushed by a crew of 2 (2 population)": "Działo polowe pchane przez załogę 2 osób (2 populacji)",
-  "Fight around their post, then walk back to it": "Walcz wokół swojego posterunku, potem wróć na niego",
+  "Strike what is in reach, never chase": "Uderzają w zasięgu, bez pościgu",
+  "Walk back to the post if pushed away": "Wracają na posterunek, gdy zostaną odepchnięte",
   "Finish a research": "Dokończ badanie",
   "Finish this wave first: the next one comes after the rest time":
     "Najpierw dokończ tę falę: następna przyjdzie po czasie odpoczynku",

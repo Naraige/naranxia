@@ -14,6 +14,12 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Tests (run one at a time): traps (6 ownership checks added), det (re-pinned), mp8, mpk, mp_resync, mp_side, save, mp_events PASS; mp_build failed once ("guest King not at the guest castle", King not trained within the wait, machine under load) and PASSED when rerun alone. eslint, prettier on touched files, architecture check clean (SPK and SPO moved to the leaf `gameplay/trap-state.js` to avoid a new import cycle).
 - Not verified: two real machines, guest-side confirm UX by eye, the 2 pairs still not linked (not studied), mp_build flake cause.
 
+## 2026-11-16 · polish lot C formations
+
+- Formation slot ghost: small translucent discs on the ground, green on free ground, red where the slot is solid or off the map. Shown while a formation is on (key `form`) at the cursor (3+ selected fighters, no click held, nothing in build mode) and along the right-button drag (replaces the old yellow 2D ellipses; the arrow stays). `formPreview()` in `core/frame-loop.js` computes the slots with `formSlots` (same maths as `order`, King leads 2.2 tiles ahead) into `inputState.fslots`; `formGhostUpdate` in `rendering/frame.js` draws them like `spkGhost`. Visual only: no sim state, no RNG, hashes untouched (no gameplay file changed).
+- Stance panel already shows the active stance (`stanceOn` lights the button). Hint of Defensive said "Fight around their post, then walk back to it": now "Strike what is in reach, never chase" + "Walk back to the post if pushed away" (2 new keys FR ES DE IT PT NL PL TR, old key removed). NOTES.md untouched.
+- Verified: eslint, prettier, architecture (no new cycle: state lives in `inputState`), langcheck, textaudit. See report for what was not run.
+
 ## 2026-11-16 · polish: QoL
 
 - Tab (jump to last attack) only worked while the 5 s alert marker lived. `LASTALERT` (economy.js) keeps where the last marker faded for 60 s, reset in `reset()`; visual only, not saved, not in the hash. ui, smoke, det PASS. No new text.

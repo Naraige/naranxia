@@ -2,10 +2,10 @@ import { bootFrame } from "./boot.js";
 import { aInit } from "../audio/sound.js";
 import { diagnosticsState } from "../debug/diagnostics.js";
 import { bugCapture } from "../debug/tools.js";
-import { constructionState } from "../gameplay/construction.js";
-import { formSlots } from "../gameplay/formations.js";
 import { reset } from "../gameplay/reset.js";
 import { TS } from "../gameplay/rules.js";
+import { constructionState } from "../gameplay/construction.js";
+import { formSlots } from "../gameplay/formations.js";
 import { sel } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { update } from "../gameplay/statistics.js";
@@ -13,7 +13,7 @@ import { inputState, keys } from "../input/state.js";
 import { mpFrame } from "../multiplayer/lockstep.js";
 import { drawPings, PINGS } from "../multiplayer/pings.js";
 import { MP } from "../multiplayer/session.js";
-import { scr } from "../rendering/camera.js";
+import { pickGround, scr } from "../rendering/camera.js";
 import { FOWU } from "../rendering/fog.js";
 import { render3D } from "../rendering/frame.js";
 import { nightK } from "../rendering/lighting.js";
@@ -26,7 +26,7 @@ import { renderPick } from "../rendering/site-picker.js";
 import { gh } from "../world/terrain-queries.js";
 import { renderTitle } from "../rendering/title-scene.js";
 import { canvasesState, cv, cw, cwx } from "../ui/canvases.js";
-import { drawBars, drawUI } from "../ui/hud.js";
+import { drawBars, drawUI, hudState, inR } from "../ui/hud.js";
 import { minimapState, refreshMM } from "../ui/minimap.js";
 import { KB, placeInput } from "../ui/settings.js";
 import { sitePickerState } from "../ui/site-picker.js";
@@ -91,6 +91,7 @@ function frame(ts, warm) {
     SHF = 0;
     renderer.shadowMap.needsUpdate = true;
   }
+  formPreview();
   if (sessionState.started) render3D(dt);
   else if (sitePickerState.picking) PKL.on ? renderPickLive(dt) : renderPick(dt);
   else if (sessionState.inGame && !sessionState.over) render3D(0);
@@ -111,27 +112,7 @@ function frame(ts, warm) {
           frameLoopState.CWD = 1;
           const a = inputState.ptr.fo.w0,
             b = inputState.ptr.fo.w1,
-            fm = Math.atan2(b.x - a.x, b.y - a.y),
-            FM = sel().filter((u) => u.type !== "peasant" && !u.gar),
-            ft = constructionState.formType;
-          if (!constructionState.formType) constructionState.formType = 1;
-          let sl;
-          try {
-            sl = formSlots(FM, a, fm);
-          } finally {
-            constructionState.formType = ft;
-          }
-          canvasesState.ctx.lineWidth = Math.max(1, inputState.DPR * 1.2);
-          for (const q of sl.values()) {
-            const P = scr(q.x / TS, gh(q.x / TS, q.y / TS) + 0.05, q.y / TS);
-            if (!P.ok) continue;
-            canvasesState.ctx.beginPath();
-            canvasesState.ctx.ellipse(P.x, P.y, 6 * inputState.DPR, 3.4 * inputState.DPR, 0, 0, 6.283);
-            canvasesState.ctx.fillStyle = "rgba(255,225,74,.28)";
-            canvasesState.ctx.fill();
-            canvasesState.ctx.strokeStyle = "#ffe14a";
-            canvasesState.ctx.stroke();
-          }
+            fm = Math.atan2(b.x - a.x, b.y - a.y);
           const P0 = scr(a.x / TS, gh(a.x / TS, a.y / TS) + 0.05, a.y / TS),
             P1 = scr(
               (a.x + Math.sin(fm) * TS * 2) / TS,
@@ -235,6 +216,52 @@ export function* initializeFrameLoop() {
   yield* icons3DSteps();
   aInit();
 }
+/* Formation slot preview (visual only): slots under the cursor while a formation is on, or along the right-button drag.
+   render3D draws them (green on free ground, red when blocked); nothing here touches the simulation. */
+function formPreview() {
+  inputState.fslots = null;
+  if (!sessionState.started || sessionState.over || sessionState.mode) return;
+  const P = inputState.ptr,
+    drag = P && P.fo && P.fo.w1 && P.m > 8;
+  if (
+    !drag &&
+    (P ||
+      !constructionState.formType ||
+      inputState.mouse.x < 0 ||
+      hudState.uiRects.some((r) => inR(inputState.mouse, r)))
+  )
+    return;
+  const K = sel().find((u) => u.type === "king"),
+    FM = sel().filter((u) => u.type !== "peasant" && !u.gar && u !== K);
+  if (FM.length < (drag ? 2 : 3) && !(K && FM.length)) return;
+  let w, fm;
+  if (drag) {
+    w = P.fo.w0;
+    fm = Math.atan2(P.fo.w1.x - w.x, P.fo.w1.y - w.y);
+  } else {
+    const g = pickGround(inputState.mouse.x, inputState.mouse.y);
+    if (!g) return;
+    w = { x: g.x * TS, y: g.z * TS };
+    let cx = 0,
+      cy = 0;
+    for (const u of FM) {
+      cx += u.x;
+      cy += u.y;
+    }
+    cx /= FM.length;
+    cy /= FM.length;
+    fm = Math.hypot(w.x - cx, w.y - cy) > 40 ? Math.atan2(w.x - cx, w.y - cy) : constructionState.lastFm;
+  }
+  if (K) w = { x: w.x - Math.sin(fm) * TS * 2.2, y: w.y - Math.cos(fm) * TS * 2.2 };
+  const f0 = constructionState.formType;
+  if (!f0) constructionState.formType = 1;
+  try {
+    inputState.fslots = [...formSlots(FM, w, fm).values()];
+  } finally {
+    constructionState.formType = f0;
+  }
+}
+
 export function warmFrame() {
   frame(performance.now(), true);
   /* WebGL queues its work: read one pixel back so the shader compilation is really over before the cards move on */

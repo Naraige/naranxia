@@ -286,7 +286,8 @@ export const TR = {
   "Faster travel": "Daha hızlı yolculuk",
   "Fess": "Kuşak",
   "Field gun pushed by a crew of 2 (2 population)": "2 kişilik mürettebatın ittiği sahra topu (2 nüfus)",
-  "Fight around their post, then walk back to it": "Karakollarının çevresinde savaşır, sonra geri döner",
+  "Strike what is in reach, never chase": "Vuruşa erişimdeki düşmana saldırır, kovalamaz",
+  "Walk back to the post if pushed away": "Itilirse karakoluna geri döner",
   "Finish a research": "Bir araştırmayı bitir",
   "Finish this wave first: the next one comes after the rest time":
     "Önce bu dalgayı bitir: sonraki dalga dinlenme süresinden sonra gelir",
