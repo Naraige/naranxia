@@ -4,6 +4,10 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-16 · polish: defensive stance fights in place
+
+- Defensive (`def`) units ran out after zombies (chase within 5.5 tiles, and in a formation slot they left it). Now they strike what is in reach and stay: no chase, walk back to the post when pushed off, still obey move orders. `det` hashes unchanged. New test `stance` (agg chases, def and hold stay put): PASS, in the quick suite.
+
 ## 2026-11-16 · polish: spawn patch and body block
 
 - Waves came out in an 11x11 tile patch (up to 250 zombies per tile on wave 8), then gave up their lane. `swSpawn` now uses radius `q.r` = min(14, 5 + cnt/2500) (5 for old saves). Wave 8 world 5: peak pile 224 -> 119 per tile, climbers at 80 s 1325 -> 738. What is left are lane bottlenecks 40 to 60 tiles from the castle.

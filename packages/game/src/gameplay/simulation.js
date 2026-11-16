@@ -412,6 +412,10 @@ export function update0(dt) {
         if (b && dist(b.x, b.y, P.x, P.y) < TS * 1.1 + d.rng + d.r) {
           if (inR(bd)) {
             if (u.cd <= 0) hit(u, b);
+          } else if (stn === "def") {
+            /* defensive: strike what comes into reach, never step out of the formation slot */
+            if (dist(u.x, u.y, P.x, P.y) > 6) moveTo(u, P.x, P.y, dt);
+            else u.face = Math.atan2(b.x - u.x, b.y - u.y);
           } else if (u.type !== "cannon" && u.type !== "archer" && dist(u.x, u.y, P.x, P.y) < TS * 0.7) chase(u, b, dt);
           else if (dist(u.x, u.y, P.x, P.y) > 6) moveTo(u, P.x, P.y, dt);
         } else if (dist(u.x, u.y, P.x, P.y) > 6) moveTo(u, P.x, P.y, dt);
@@ -430,13 +434,13 @@ export function update0(dt) {
           } else walk(u, dt);
           continue;
         }
-        const [b, bd] = targetZ(u, TS * 5.5);
-        if (b && dist(b.x, b.y, u.gx, u.gy) < TS * 7) {
+        /* defensive: it fights where it stands (like Halt, but it walks back to its post when pushed off and obeys move orders); it no longer runs out after enemies */
+        const [b, bd] = targetZ(u, d.rng + d.r + 2);
+        if (b && inR(bd)) {
           u.o = null;
           u.ret = false;
-          if (inR(bd)) {
-            if (u.cd <= 0) hit(u, b);
-          } else chase(u, b, dt);
+          u.face = Math.atan2(b.x - u.x, b.y - u.y);
+          if (u.cd <= 0) hit(u, b);
           continue;
         }
         if (u.o) {
