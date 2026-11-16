@@ -28,3 +28,14 @@ export function markP(tx, ty) {
   }
   propInvalidator(tx, ty);
 }
+
+/* simulation-side listeners for a land tile that changed without a path-field version bump (a sapling grown into a tree): the lane fields of the zombies rebuild their window */
+const landListeners = [];
+
+export function onLandChange(fn) {
+  landListeners.push(fn);
+}
+
+export function landChanged(tx, ty) {
+  for (const fn of landListeners) fn(tx, ty);
+}

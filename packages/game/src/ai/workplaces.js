@@ -6,7 +6,7 @@ import { FARMT, FARMY, RS2, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { leaveSquad } from "../gameplay/squads.js";
 import { puff } from "../rendering/effects.js";
-import { markP } from "../world/terrain-invalidation.js";
+import { landChanged, markP } from "../world/terrain-invalidation.js";
 import { ringOf, sameComp } from "../world/connectivity.js";
 import { mmTile } from "../world/minimap.js";
 import { gField } from "../world/pathfinding.js";
@@ -328,6 +328,7 @@ export function saplTick(dt) {
     amt[i] = 3;
     mmTile(i);
     markP(x, y);
+    landChanged(x, y);
     sessionState.fdDirty = true;
   }
 }

@@ -99,7 +99,7 @@ import {
   sitePickerState,
 } from "../ui/site-picker.js";
 import { FD, gOK } from "../world/routes.js";
-import { rollWorld, ensureAround, setRollWorldHandler, starterTiles } from "../world/terrain.js";
+import { _bwat, baseHW, rollWorld, ensureAround, setRollWorldHandler, starterTiles } from "../world/terrain.js";
 import { HT, occ, pth, RUINS, stairs, ter, terrainState, TFL } from "../world/terrain-state.js";
 import { bfsW, canStep, canStepZ, freeTile, fv, solid } from "../world/traversal.js";
 
@@ -306,6 +306,12 @@ export function installBrowserConsole() {
       },
     },
     bfsW: { get: () => bfsW },
+    rawGround: {
+      get: () => (x, y) => {
+        const h = baseHW(x, y);
+        return _bwat ? -1 : h;
+      },
+    },
     swDbg: { get: () => ({ FD, swarmState, SWD, laneFieldQ, LFLD, fv, canStep, canStepZ, solid, wavesState }) },
     freeTile: { get: () => freeTile },
     gOK: { get: () => gOK },

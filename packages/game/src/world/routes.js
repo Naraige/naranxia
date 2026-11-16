@@ -24,7 +24,74 @@ export const D4 = [
 
 export const gOK = (x, y) => x >= 0 && y >= 0 && x < TW && y < TH && genF[((y / CH) | 0) * NCX + ((x / CH) | 0)] === 1;
 
-export function mkRoutes() {
+/* Route bending (v95): the way points used to be laid without looking at the land, so a lane could run straight into a mountain massif (the terrain then cut a canyon for it) or
+   through the middle of a wood. `ground(x, y)` (given by terrain.js: pure noise of the seed, no route, no chunk) returns the cost of standing on a tile: water, height above the
+   plains, woods. A dynamic programme over the lateral offset of every way point (RSTEP tiles apart, at most RMAX steps from the base curve, zero near the castle and at the map edge)
+   finds the cheapest bend, then the offsets are smoothed and interpolated along the polyline. No RNG, no terrain generation: same seed + same castles = same routes. */
+const RSTEP = 2,
+  RMAX = 24,
+  RTAPER = 60;
+
+function bendOffsets(ground, CX, CY, ex, ey, px, py, D, lat0, m) {
+  const ns = 2 * RMAX + 1,
+    INF = 1e12,
+    cap = new Int16Array(m),
+    cell = new Float64Array(m * ns),
+    best = new Float64Array(m * ns),
+    from = new Int8Array(m * ns),
+    G = (x, y) => ground(Math.max(1, Math.min(TW - 2, Math.round(x))), Math.max(1, Math.min(TH - 2, Math.round(y))));
+  for (let j = 0; j < m; j++) {
+    const d = D - j * 4.5;
+    cap[j] = Math.floor(RMAX * Math.max(0, Math.min(1, (D - d) / RTAPER, (d - 8) / RTAPER)));
+    for (let s = -cap[j]; s <= cap[j]; s++) {
+      const lat = lat0[j] + s * RSTEP,
+        x = CX + 0.5 + ex * d + px * lat,
+        y = CY + 0.5 + ey * d + py * lat;
+      cell[j * ns + s + RMAX] =
+        4.5 * (0.5 * G(x, y) + 0.25 * G(x + px * 4, y + py * 4) + 0.25 * G(x - px * 4, y - py * 4)) +
+        0.12 * Math.abs(s * RSTEP);
+    }
+  }
+  best.fill(INF);
+  best[RMAX] = cell[RMAX];
+  for (let j = 1; j < m; j++)
+    for (let s = -cap[j]; s <= cap[j]; s++) {
+      let bv = INF,
+        bf = 0;
+      for (let q = -2; q <= 2; q++) {
+        const s0 = s + q;
+        if (s0 < -cap[j - 1] || s0 > cap[j - 1]) continue;
+        const v = best[(j - 1) * ns + s0 + RMAX] + 0.5 * q * q;
+        if (v < bv) {
+          bv = v;
+          bf = q;
+        }
+      }
+      best[j * ns + s + RMAX] = bv + cell[j * ns + s + RMAX];
+      from[j * ns + s + RMAX] = bf;
+    }
+  const off = new Float64Array(m);
+  let s = 0,
+    bv = INF;
+  for (let t = -cap[m - 1]; t <= cap[m - 1]; t++) {
+    const v = best[(m - 1) * ns + t + RMAX];
+    if (v < bv) {
+      bv = v;
+      s = t;
+    }
+  }
+  for (let j = m - 1; j >= 0; j--) {
+    off[j] = s * RSTEP;
+    s += from[j * ns + s + RMAX];
+  }
+  for (let pass = 0; pass < 2; pass++) {
+    const o2 = off.slice();
+    for (let j = 1; j < m - 1; j++) off[j] = (o2[j - 1] + 2 * o2[j] + o2[j + 1]) / 4;
+  }
+  return off;
+}
+
+export function mkRoutes(ground) {
   terrainState.ROUTES = [];
   terrainState.RCH = new Map();
   const a0 = Math.random() * 6.283,
@@ -48,14 +115,40 @@ export function mkRoutes() {
       wps = [];
     const dX = ex > 1e-6 ? (TW - 12 - CX) / ex : ex < -1e-6 ? (12 - CX) / ex : 1e9,
       dY = ey > 1e-6 ? (TH - 12 - CY) / ey : ey < -1e-6 ? (12 - CY) / ey : 1e9,
-      D = Math.min(dX, dY);
-    for (let d = D, n = 0; d >= 8; d -= 1.5, n++) {
-      const lat =
+      D = Math.min(dX, dY),
+      lats = [];
+    for (let d = D; d >= 8; d -= 1.5)
+      lats.push(
         (fb(d * 0.02, ph, terrainState.SEED + k * 7) - 0.5) *
-        4 *
-        A *
-        Math.min(1, (D - d) / 40) *
-        Math.min(1, (d - 8) / 40);
+          4 *
+          A *
+          Math.min(1, (D - d) / 40) *
+          Math.min(1, (d - 8) / 40),
+      );
+    const m = Math.ceil(lats.length / 3),
+      off =
+        ground && m > 3
+          ? bendOffsets(
+              ground,
+              CX,
+              CY,
+              ex,
+              ey,
+              px,
+              py,
+              D,
+              lats.filter((_, n) => n % 3 === 0),
+              m,
+            )
+          : null;
+    for (let n = 0; n < lats.length; n++) {
+      const d = D - n * 1.5;
+      let lat = lats[n];
+      if (off) {
+        const j = Math.min(m - 1, Math.floor(n / 3)),
+          f = (n % 3) / 3;
+        lat += j + 1 < m ? off[j] * (1 - f) + off[j + 1] * f : off[j];
+      }
       const p = [
         Math.max(9, Math.min(TW - 10, CX + 0.5 + ex * d + px * lat)),
         Math.max(9, Math.min(TH - 10, CY + 0.5 + ey * d + py * lat)),

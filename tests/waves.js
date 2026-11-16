@@ -302,6 +302,24 @@ async () => {
     chk("givesUp", gave > 500 && gave < 720);
     chk("takenAway", gone > 2000 && gone < 2400 && kills === k0);
   }
+  /* v95: a sapling that grows into a tree beside a lane marks the lane fields whose window holds it as stale (the tree is solid, saplTick does not bump ver) */
+  {
+    const L = 0,
+      sg = 3,
+      Wp = ROUTES[L].wps,
+      p = Wp[Math.min(Wp.length - 1, sg * 8 + 3)];
+    for (let k = sg * 8; k <= sg * 8 + 10 && k < Wp.length; k++) ensureAround(Wp[k][0] | 0, Wp[k][1] | 0, 2);
+    swDbg.LFLD.clear();
+    const S = swDbg.laneFieldQ(L, sg),
+      E = swDbg.LFLD.get(L * 4096 + sg),
+      f = freeTile(p[0] | 0, p[1] | 0),
+      i = f[1] * TW + f[0];
+    SAPL.set(i, { t: -1e6, s: -1 });
+    const fresh = !!E && E.v === ver;
+    for (let k = 0; k < 25; k++) update(0.05);
+    update(1.05);
+    chk("saplLane", !!S && fresh && ter[i] === 2 && E.v === -1);
+  }
   /* a swarm saved before v94 has no sa / sk */
   {
     const c = CS,

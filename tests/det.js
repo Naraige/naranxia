@@ -158,16 +158,16 @@ async () => {
   const a = runOnce(),
     b = runOnce(),
     same = JSON.stringify(a) === JSON.stringify(b);
-  // Captured from the v94 release branch: main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix (#30), spike removal (#31).
+  // Captured from the v95 polish lot routes (terrain-aware lane routes, #30), identical on two runs: v94 release branch (main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix, spike removal) plus route bending.
   const expected = [
-    "-633168385:21750:1:0:1045:0.9614:sh9:nl0.87:f150:sp0:ro00:wk0:T-767045186:z139:pu2:fg1:fp3",
-    "-114701762:26000:7:0:1082:0.9768:sh9:nl0.95:f150:sp0:ro00:wk0:T-996732883:z132:pu2:fg0:fp9",
-    "232668541:26000:7:0:1082:0.9875:sh9:nl0.99:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
-    "-1815816439:26000:7:0:1082:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
-    "-663486353:26000:7:0:1082:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
-    "1122495987:26000:7:0:1082:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
-    "-1170158045:25980:27:0:1083:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
-    "-1778112590:25769:238:0:1215:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "757834138:21750:1:0:1087:0.9614:sh9:nl0.87:f150:sp0:ro00:wk0:T-1055785161:z138:pu2:fg1:fp3",
+    "-2088842229:26000:7:0:1124:0.9768:sh9:nl0.98:f150:sp0:ro00:wk0:T135695095:z131:pu0:fg0:fp6",
+    "-813915005:26000:7:0:1124:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T135695095:z131:pu0:fg0:fp6",
+    "1142454014:26000:7:0:1124:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T135695095:z131:pu0:fg0:fp6",
+    "-1409424338:26000:7:0:1124:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T135695095:z131:pu0:fg0:fp6",
+    "349278981:26000:10:0:1133:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T135695095:z128:pu0:fg0:fp6",
+    "-1585042782:25994:35:0:1190:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-2050644567:z109:pu0:fg0:fp6",
+    "635485672:25798:239:0:1342:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T-2050644567:z101:pu0:fg0:fp6",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   return JSON.stringify({ ok: same && reference, same, reference, a, b });

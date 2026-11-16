@@ -7,6 +7,7 @@ import { SW } from "../gameplay/swarm.js";
 import { longField } from "../world/connectivity.js";
 import { FD, gOK } from "../world/routes.js";
 import { ensureAround } from "../world/terrain.js";
+import { onLandChange } from "../world/terrain-invalidation.js";
 import { terrainState } from "../world/terrain-state.js";
 import { bfsW, fv, solid } from "../world/traversal.js";
 
@@ -167,9 +168,31 @@ function laneField(L, sg) {
     if (r && r.ok) S = r.F;
   }
   if (!S) S = bestR ? bestR.F : first ? first.F : null;
-  LFLD.set(key, { S, v: sessionState.ver });
+  let bx0 = 1e9,
+    by0 = 1e9,
+    bx1 = -1e9,
+    by1 = -1e9;
+  for (let i = a; i <= b; i++) {
+    bx0 = Math.min(bx0, Wp[i][0]);
+    by0 = Math.min(by0, Wp[i][1]);
+    bx1 = Math.max(bx1, Wp[i][0]);
+    by1 = Math.max(by1, Wp[i][1]);
+  }
+  LFLD.set(key, { S, v: sessionState.ver, bb: [bx0 - 16, by0 - 16, bx1 + 16, by1 + 16] });
   if (LFLD.size > 260) LFLD.delete(LFLD.keys().next().value);
   return S;
+}
+
+/* a tile of the land changed without a ver bump (a sapling grew into a tree): the fields whose window holds it are stale, so they are rebuilt (within the usual lfBud budget) at their next use.
+   Deterministic: it only follows terrain changes, which every client makes on the same tick */
+function laneTouch(x, y) {
+  for (const [key, E] of LFLD) {
+    if (E.v < 0 || x < E.bb[0] || y < E.bb[1] || x > E.bb[2] || y > E.bb[3]) continue;
+    E.v = -1;
+    const L = (key / 4096) | 0,
+      sg = key % 4096;
+    if (L < 6 && sg < 128) LFQT[L * 128 + sg] = -1;
+  }
 }
 
 export function laneWalk(u, dt) {
@@ -236,6 +259,7 @@ export function laneWalk(u, dt) {
 }
 
 export function initializeZombieLanes() {
+  onLandChange(laneTouch);
   LFQS = new Array(6 * 128).fill(null);
   LFQT = new Int32Array(6 * 128).fill(-1);
 }

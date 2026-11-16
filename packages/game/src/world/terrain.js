@@ -963,6 +963,17 @@ export let rollWorld = function rollWorld() {
   };
 };
 
+/* cost of a tile for the route planner (routes.js mkRoutes): water, height above the plains, woods; pure noise of the seed (no route, no chunk) */
+function routeGround(x, y) {
+  const h = baseHW(x, y),
+    al = h - LAND;
+  if (_bwat) return 8;
+  let c = al > 0 ? Math.min(al, 12) * 0.9 : 0;
+  const d = (fb(x * 0.06, y * 0.06, terrainState.SEED + 50) - terrainState.GPR.tr) / 0.2;
+  if (d > 0 && al < 14) c += Math.min(1, d) * 3;
+  return c;
+}
+
 export function initWorld() {
   mkGord();
   RAWD.fill(0);
@@ -983,7 +994,7 @@ export function initWorld() {
   TFL.fill(0);
   mg.fillStyle = "#10151f";
   mg.fillRect(0, 0, TW, TH);
-  mkRoutes();
+  mkRoutes(routeGround);
   ensureAround(terrainState.CX, terrainState.CY, 2);
 }
 
