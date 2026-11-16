@@ -7,7 +7,7 @@ import { PUD, SCRT } from "../ai/zombies.js";
 import { diagnosticsState } from "../debug/diagnostics.js";
 import { ACH, TOASTS } from "./achievements.js";
 import { castleRotAt, tfo } from "./construction.js";
-import { ALERTS, economyState, FAT, PBASE, PRICE, syncTradeC } from "./economy.js";
+import { ALERTS, LASTALERT, economyState, FAT, PBASE, PRICE, syncTradeC } from "./economy.js";
 import { mk, spawn } from "./entities.js";
 import { formationsState } from "./formations.js";
 import { lightingState } from "./lighting.js";
@@ -96,6 +96,7 @@ export function reset() {
   RS2.ch = {};
   for (const k in RS2.done) RS2.done[k] = false;
   ALERTS.length = 0;
+  LASTALERT.t = 0;
   economyState.alertT = 0;
   economyState.farmT = 0;
   sessionState.UID = 0;

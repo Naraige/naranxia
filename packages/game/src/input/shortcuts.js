@@ -1,6 +1,6 @@
 import { bugReport, devToggle } from "../debug/tools.js";
 import { build } from "../gameplay/construction.js";
-import { ALERTS } from "../gameplay/economy.js";
+import { ALERTS, LASTALERT } from "../gameplay/economy.js";
 import { TS } from "../gameplay/rules.js";
 import { selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
@@ -48,7 +48,7 @@ export function initializeShortcuts() {
   addEventListener("keydown", (e) => {
     if (e.key === "Tab" && sessionState.started) {
       e.preventDefault();
-      const a = ALERTS[ALERTS.length - 1];
+      const a = ALERTS[ALERTS.length - 1] || (LASTALERT.t > 0 ? LASTALERT : null);
       if (a) {
         CAM.x = a.x / TS;
         CAM.z = a.y / TS;

@@ -307,6 +307,8 @@ export function cancelTrain0(sid, i) {
 export const ok = (c) => Object.entries(c).every(([k, v]) => sessionState.res[k] >= v),
   pay = (c) => Object.entries(c).forEach(([k, v]) => (sessionState.res[k] -= v));
 export const ALERTS = [];
+/* where the last alert faded, kept 60 s so Tab still jumps there after the 5 s marker is gone (visual only, not saved) */
+export const LASTALERT = { x: 0, y: 0, t: 0 };
 
 export let startResearch2 = function startResearch2(k) {
   if (sessionState.over || RS2.done[k]) return;
@@ -371,8 +373,14 @@ export function extraSim(dt) {
   if (economyState.alertT > 0) economyState.alertT -= dt;
   for (let i = ALERTS.length - 1; i >= 0; i--) {
     ALERTS[i].t -= dt;
-    if (ALERTS[i].t <= 0) ALERTS.splice(i, 1);
+    if (ALERTS[i].t <= 0) {
+      LASTALERT.x = ALERTS[i].x;
+      LASTALERT.y = ALERTS[i].y;
+      LASTALERT.t = 60;
+      ALERTS.splice(i, 1);
+    }
   }
+  if (LASTALERT.t > 0) LASTALERT.t -= dt;
   if (RS2.on) {
     RS2.t += dt;
     if (RS2.t >= RT2[RS2.on]) {
