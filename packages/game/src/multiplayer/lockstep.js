@@ -190,6 +190,11 @@ export function mpFrame(dt) {
       const c = MP.out;
       MP.out = [];
       MP.loc[MP.sent] = c;
+      {
+        const sl = MP.sl || (MP.sl = []);
+        if (c.length) sl.push([MP.sent, c]);
+        while (sl.length && sl[0][0] < MP.tick - 8) sl.shift();
+      }
       mpSend({ k: "c", t: MP.sent, c, e: MP.ep });
     }
     const r = MP.rem[MP.tick];
@@ -262,6 +267,8 @@ export function mpBegin(st) {
   MP.sent = MPD - 1;
   MP.acc = 0;
   MP.out = [];
+  MP.sl = [];
+  MP.plog = [];
   MP.loc = {};
   MP.rem = {};
   MP.hs = {};

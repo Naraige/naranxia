@@ -1,5 +1,7 @@
 # Test infrastructure audit
 
+> Synchronization update (2026-11-16): main `61cfe09` was subsequently integrated. Its 10 Hz swarm, wave/lane fixes, actual spike model and full demolition refund are authoritative. Tests retain those upstream contracts and reference fingerprints. Measurements below describe the earlier audited snapshot, not the merged engine. New manual diagnostics are listed in `tests/manual_diagnostics.json`; they remain diagnostic tools rather than assertion-bearing suite results.
+
 Audit started 2026-11-15 at `86881a5`, on `feature/codebase-quality-v94`. The objective is observable regression evidence, followed by removing measured execution overhead. Passing a script or printing an empty error list is not evidence that its scenario happened.
 
 ## Branch reconciliation and baseline

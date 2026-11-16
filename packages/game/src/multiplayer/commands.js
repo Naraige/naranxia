@@ -28,6 +28,8 @@ import { MP } from "./session.js";
 import { puff, setPuffHandler } from "../rendering/effects.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { confirmPick } from "../ui/site-picker.js";
+import { pickGround } from "../rendering/camera.js";
+import { inputState } from "../input/state.js";
 
 /* visual helpers must never consume the shared simulation random stream */
 let _puff;
@@ -38,6 +40,25 @@ export let _N;
 const selIds = () => sel().map((u) => u.uid);
 export const mpPush = (c) => MP.out.push(c);
 const gated = () => MP.on && !MP.ex;
+
+/* Placement log for the bug report (F8): the last 20 building commands as this machine ran them. Read only, never read by the simulation.
+   A command carries the sender's player index (pl) and the tile under the sender's mouse (mt); the executor writes who it ran it for
+   (cur), what it expected (ex), and the structure that came out (sid, tx, ty, owner). A guest placement on the wrong site shows here. */
+export function plogAdd(e) {
+  const L = MP.plog || (MP.plog = []);
+  L.push(e);
+  if (L.length > 20) L.shift();
+}
+const mouseTile = () => {
+  try {
+    const m = inputState.mouse;
+    if (!m || m.x < 0) return null;
+    const g = pickGround(m.x, m.y);
+    return g ? [Math.floor(g.x), Math.floor(g.z)] : null;
+  } catch (_e) {
+    return null;
+  }
+};
 
 export const repairB = function (sid) {
   if (gated()) {
@@ -125,12 +146,31 @@ export let mpExec = function mpExec(c, mine) {
         constructionState.buildRot = c.r;
         constructionState.gateLen = c.gl || 2;
         selectionState.selB = c.sb != null ? sessionState.structs.find((s) => s.sid === c.sb) || null : null;
-        const bt0 = playersState.BTIER;
+        const bt0 = playersState.BTIER,
+          n0 = sessionState.structs.length;
         setTier(c.ti === undefined ? 1 : c.ti);
         try {
           _N.build(c.t, c.x, c.y);
         } finally {
           setTier(bt0);
+        }
+        {
+          const nw = sessionState.structs.length > n0 ? sessionState.structs[sessionState.structs.length - 1] : null,
+            xp = mine ? LPL() : 1 - LPL();
+          plogAdd({
+            tk: MP.tick,
+            ep: MP.ep | 0,
+            mine: mine ? 1 : 0,
+            t: c.t,
+            x: c.x,
+            y: c.y,
+            pl: c.pl,
+            ex: xp,
+            cur: playersState.CURPL,
+            mt: c.mt || null,
+            s: nw ? [nw.sid, nw.tx, nw.ty, nw.pl | 0] : null,
+            bad: c.pl !== undefined && c.pl !== xp ? 1 : 0,
+          });
         }
         break;
       }
@@ -272,6 +312,8 @@ export function initializeCommands() {
         t,
         x,
         y,
+        pl: LPL(),
+        mt: mouseTile(),
         r: constructionState.buildRot,
         ti: playersState.BTIER,
         gl: constructionState.gateLen,

@@ -4,13 +4,17 @@ async () => {
    World 9 (two castles): a lake lies between the spawn and the castles; hundreds of zombies wade through it.
    World 0 (solo): plain land with a one-tile ramp, as a reference.
    Then on the last world: zombies put on a water tile near the castle walk out; a zombie held on one spot is taken away without a kill; a swarm saved before v94 (no sa / sk) steps.
+   Spawn far (v94 lot): the hordes appear at the far end of their route, never within 100 tiles of a castle of either player (widest zoom shows about 90),
+   on 8 more worlds (solo, co-op near, picked lanes over 10 draws) and on the real queue of wave 1 in the three worlds above.
+   Horde pile-up lot (v94): world 2 (lane 0 crosses a rock massif, one rock mountain between lane and castle) took 875 s in wave 3: the horde crossed the way points without field in single file and every dense tile slowed it to 30 %.
+   Flow check on all four worlds (world 2 plays its wave 3, 6225 zombies, must end under 700 s; v94 far spawn 875 s): no more than 60 zombies within 40 tiles of a castle that bite nothing and stayed within one tile for 60 s (stand), and the wave ends in time.
    Same worlds and seeds as tests/waves_probe.js (trial = world). */
   renderer.render = function () {};
   const KR = 8,
     O = {},
     C = [],
     chk = (n, v) => {
-      window.__test.check(n, !!v);
+      __test.check(n, !!v);
       O[n] = v;
       C.push(!!v);
     };
@@ -79,10 +83,22 @@ async () => {
     waveT = 1e9;
     for (let i = 0; i < 40; i++) update(0.05);
   };
+  const dcs = (x, y) => Math.min(...[CS, CS2].filter(Boolean).map((c) => Math.hypot(x - c.x / TS, y - c.y / TS)));
+  let spMin = 1e9,
+    spTot = 0;
   const playWave = (w) => {
     waveN = w - 1;
     waveST = time;
     wave();
+    for (const q of SW.q) {
+      spMin = Math.min(spMin, dcs(q.x, q.y));
+      spTot++;
+    }
+    for (const u of units)
+      if (u.t === 1 && u.lane >= 0) {
+        spMin = Math.min(spMin, dcs(u.x / TS, u.y / TS));
+        spTot++;
+      }
     waveOn = hordeOn = true;
     hordeT = time;
     waveT = 0;
@@ -92,14 +108,16 @@ async () => {
     const last = new Map();
     let stk = new Set(),
       stk2 = new Set(),
-      wmax = 0;
+      wmax = 0,
+      nrMax = 0;
     for (let k = 0; k < 18400 && waveOn; k++) {
       tick();
       if (k % 600 === 599) {
         const pv = stk;
         stk = new Set();
         stk2 = new Set();
-        let wn = 0;
+        let wn = 0,
+          nr = 0;
         for (let i = 0; i < SW.n; i++) {
           if (SW.hp[i] <= 0) continue;
           const id = SW.id[i],
@@ -109,11 +127,15 @@ async () => {
           if (isW(x, y)) wn++;
           if (p && Math.abs(p[0] - x) < TS && Math.abs(p[1] - y) < TS && SW.st[i] !== 1 && SW.st[i] !== 7) {
             stk.add(id);
-            if (pv.has(id)) stk2.add(id);
+            if (pv.has(id)) {
+              stk2.add(id);
+              if (dcs(x / TS, y / TS) < 40) nr++;
+            }
           }
           last.set(id, [x, y]);
         }
         if (wn > wmax) wmax = wn;
+        if (nr > nrMax) nrMax = nr;
       }
     }
     let left = 0,
@@ -125,17 +147,56 @@ async () => {
       if (isW(SW.x[i], SW.y[i])) wat++;
       if (stk2.has(SW.id[i])) s2++;
     }
-    return { z, arrivals, end: Math.round(time - t0), left, wat, stk2: s2, wmax };
+    return { z, arrivals, end: Math.round(time - t0), left, wat, stk2: s2, wmax, stand: nrMax };
   };
-  for (const trial of [0, 1, 9]) {
+  /* spawn distances on more worlds: every lane, and the lanes pickLanes draws */
+  {
+    let minAll = 1e9,
+      minPick = 1e9,
+      nPick = 0,
+      shortRt = 1e9,
+      bad = 0;
+    for (const trial of [2, 3, 4, 5, 6, 7, 8, 11]) {
+      world(trial);
+      const nl = SITE2 ? 6 : 3;
+      for (let L = 0; L < nl; L++) {
+        const an = spawnAnchor(L),
+          d = dcs(an.p[0], an.p[1]),
+          P = ROUTES[L].pts;
+        let len = 0;
+        for (let j = Math.min(P.length - 1, an.ph * 3); j < P.length - 1; j++)
+          len += Math.hypot(P[j + 1][0] - P[j][0], P[j + 1][1] - P[j][1]);
+        if (d < minAll) minAll = d;
+        if (len < shortRt) shortRt = len;
+        if (d < 100) bad++;
+      }
+      for (let k = 0; k < 10; k++) {
+        waveN = k;
+        for (const L of pickLanes()) {
+          const an = spawnAnchor(L),
+            d = dcs(an.p[0], an.p[1]);
+          nPick++;
+          if (d < minPick) minPick = d;
+        }
+      }
+    }
+    O.spawn = { minAll: Math.round(minAll), minPick: Math.round(minPick), nPick, shortRt: Math.round(shortRt), bad };
+    chk("spawnLanesFar", bad <= 1 && minAll >= 100);
+    chk("spawnPickedFar", minPick >= 125 && nPick > 150);
+    chk("spawnWalk", shortRt >= 110);
+  }
+  for (const trial of [0, 1, 2, 9]) {
     world(trial);
-    const r = playWave(1);
+    const r = playWave(trial === 2 ? 3 : 1);
     O["w" + trial] = r;
-    chk("ends" + trial, r.end < 600 && r.z > 500);
-    // Other enemies legitimately die fighting camps before reaching a castle.
-    // The isolated cohort below must actually escape water alive.
+    chk("spawnQueueFar" + trial, spMin >= 100 && spTot > 0);
+    O["sp" + trial] = Math.round(spMin);
+    spMin = 1e9;
+    spTot = 0;
+    chk("ends" + trial, r.end < (trial === 2 ? 700 : 600) && r.z > (trial === 2 ? 5000 : 500));
     chk("reachesDefence" + trial, r.arrivals > 0);
     chk("noneStuck" + trial, r.stk2 === 0);
+    chk("flows" + trial, r.stand <= 60);
     chk("noneInWater" + trial, r.wat === 0);
     if (trial !== 9) MP.on = false;
   }
@@ -173,7 +234,7 @@ async () => {
       const f = freeTile(c.tx + 10, c.ty + 10),
         n0 = SW.n;
       SW.q.push({ ln: 0, x: f[0] + 0.5, y: f[1] + 0.5, ph: 65535, left: 30, rate: 600, hp: 5 });
-      update(0.05);
+      update(0.1);
       const D = swDbg.SWD,
         ids = new Set();
       for (let i = n0; i < SW.n; i++) {
@@ -186,9 +247,9 @@ async () => {
         ids.add(SW.id[i]);
       }
       O.put = ids.size;
+      const escaped = new Set();
       let inW = 0,
         t = 0;
-      const escaped = new Set();
       for (; t < 2400; t++) {
         tick();
         inW = 0;
@@ -203,8 +264,7 @@ async () => {
       }
       O.outSec = Math.round(t * 0.05);
       O.stillInWater = inW;
-      O.escapedAlive = escaped.size;
-      chk("waterTraversalNotDeletion", escaped.size >= ids.size * 0.9);
+      __test.check("waterTraversalNotDeletion", escaped.size >= ids.size * 0.9);
       chk("wadesOut", ids.size >= 20 && inW === 0 && t < 2400);
     }
   }
@@ -214,7 +274,7 @@ async () => {
       f = freeTile(c.tx - 30, c.ty - 30);
     SW.q.push({ ln: 0, x: f[0] + 0.5, y: f[1] + 0.5, ph: 65535, left: 1, rate: 600, hp: 5 });
     const n0 = SW.n;
-    update(0.05);
+    update(0.1);
     const id = SW.id[n0],
       x = SW.x[n0],
       y = SW.y[n0],

@@ -158,16 +158,16 @@ async () => {
   const a = runOnce(),
     b = runOnce(),
     same = JSON.stringify(a) === JSON.stringify(b);
-  // Captured from the unmodified v94 baseline at 4a57714017d38c8d5294445e20962eb4b1e76c11.
+  // Captured from the v94 release branch: main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix (#30), spike removal (#31).
   const expected = [
-    "1289907662:21950:1:0:1045:0.9614:sh9:nl0.99:f150:sp0:ro00:wk0:T-767045186:z139:pu2:fg1:fp3",
-    "1277869275:25993:7:0:1082:0.9768:sh9:nl1.00:f150:sp0:ro00:wk0:T-1684843046:z132:pu2:fg0:fp9",
-    "1806847686:25993:7:0:1082:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T-1684843046:z132:pu0:fg0:fp9",
-    "-1490071179:25993:7:0:1082:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T-1684843046:z132:pu0:fg0:fp9",
-    "-733253062:25986:18:0:1094:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T423784588:z128:pu0:fg0:fp9",
-    "-1208506384:25896:118:0:1129:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T423784588:z118:pu0:fg0:fp9",
-    "-1815204722:25660:364:0:1290:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T423784588:z110:pu0:fg0:fp8",
-    "-19860095:25528:509:2:1567:0.9982:sh0:nl1.00:f300:sp0:ro00:wk2:T423784588:z100:pu6:fg0:fp5",
+    "-633168385:21750:1:0:1045:0.9614:sh9:nl0.87:f150:sp0:ro00:wk0:T-767045186:z139:pu2:fg1:fp3",
+    "-114701762:26000:7:0:1082:0.9768:sh9:nl0.95:f150:sp0:ro00:wk0:T-996732883:z132:pu2:fg0:fp9",
+    "232668541:26000:7:0:1082:0.9875:sh9:nl0.99:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "-1815816439:26000:7:0:1082:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "-663486353:26000:7:0:1082:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "1122495987:26000:7:0:1082:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "-1170158045:25980:27:0:1083:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
+    "-1778112590:25769:238:0:1215:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T-996732883:z132:pu0:fg0:fp9",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   __test.check("repeated simulation fingerprints", a, b);

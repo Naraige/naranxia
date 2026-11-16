@@ -14,7 +14,7 @@ async () => {
   const O = {},
     C = [];
   const chk = (n, v) => {
-    window.__test.check(n, !!v);
+    __test.check(n, !!v);
     O[n] = v;
     C.push(!!v);
   };
@@ -74,6 +74,28 @@ async () => {
   const e = [era(0), era(9), era(23)];
   O.era = e;
   chk("eraPhaseIndependent", e[0] === e[1] && e[1] === e[2] && e[0] >= 5 && e[0] <= 10);
+  /* demolish a trap (issue #31): placed and removed through the same "b" command a co-op partner receives, full refund */
+  {
+    SPK.clear();
+    const R0 = RESP[CURPL | 0],
+      cmd = (t) => mpExec({ k: "b", t, x: tx, y: ty, r: 0, ti: 1, gl: 2, sb: null }, true),
+      g0 = R0.g,
+      w0 = R0.w;
+    cmd("spike");
+    const placed = SPK.has(ti),
+      paid = [g0 - R0.g, w0 - R0.w];
+    cmd("demolish");
+    O.demo = [placed, paid, SPK.has(ti), R0.g - g0, R0.w - w0];
+    chk("trapPlaced", placed && paid[0] === 10 && paid[1] === 15);
+    chk("trapDemolished", !SPK.has(ti) && R0.g === g0 && R0.w === w0);
+    cmd("demolish");
+    chk("demolishEmptyTileNoRefund", R0.g === g0 && R0.w === w0);
+    cmd("spike");
+    const g1 = R0.g;
+    cmd("spike");
+    chk("noDoublePlacement", SPK.has(ti) && R0.g === g1);
+    SPK.clear();
+  }
   // Isolate one trap contact from other combat. A positive delta alone would
   // accept incorrect damage, wear and even a second unit damaging the target.
   const isolated = freeTile(CS.tx + 16, CS.ty + 16),

@@ -913,6 +913,7 @@ export const PL = {
   "hit 10% harder and buildings slowly mend": "biją o 10% mocniej, a budynki powoli się naprawiają",
   "Spike trap": "Pułapka z kolcami",
   "Boiling oil": "Wrzący olej",
+  "Trap removed: resources recovered": "Pułapka usunięta: zasoby odzyskane",
   "Cannot place a trap here": "Nie można tu postawić pułapki",
   "Not enough resources": "Za mało surowców",
   "Walls, gates and towers scald zombies next to them": "Mury, bramy i wieże parzą zombie obok siebie",
@@ -1658,4 +1659,12 @@ export const PL = {
     "Nowe domyślne klawisze: pochodnia F6, punkt zbiórki koszar F7, leśniczy F9, gildia F3. Na AZERTY kamera jest teraz na Z Q S D.",
   "The minimap now frames the area you explored, and banners no longer cover the event buttons.":
     "Minimapa pokazuje teraz zbadany obszar, a banery nie zasłaniają już przycisków zdarzeń.",
+  "Waves now appear far from your castle, so in co-op you no longer see your partner's wave spawn on top of you.":
+    "Fale pojawiają się teraz daleko od twojego zamku, więc w co-opie nie zobaczysz już fali partnera tuż przy sobie.",
+  "Hordes no longer pile up in narrow passages, and big waves run smoother.":
+    "Hordy nie kłębią się już w wąskich przejściach, a duże fale działają płynniej.",
+  "Spikes now show a placement preview and can be demolished for a full refund.":
+    "Kolce pokazują teraz podgląd przed postawieniem i można je zburzyć z pełnym zwrotem.",
+  "Zombie lanes find a way around rock and woods more often, so fewer hordes cross mountains or pile up on trees.":
+    "Ścieżki zombie częściej omijają skały i lasy, więc mniej hord przechodzi przez góry lub tłoczy się na drzewach.",
 };

@@ -918,6 +918,7 @@ export const NL = {
   "hit 10% harder and buildings slowly mend": "slaan 10% harder en gebouwen herstellen langzaam",
   "Spike trap": "Spijkerval",
   "Boiling oil": "Kokende olie",
+  "Trap removed: resources recovered": "Val verwijderd: grondstoffen teruggekregen",
   "Cannot place a trap here": "Je kunt hier geen val plaatsen",
   "Not enough resources": "Niet genoeg grondstoffen",
   "Walls, gates and towers scald zombies next to them": "Muren, poorten en torens branden zombies ernaast",
@@ -1671,4 +1672,12 @@ export const NL = {
     "Nieuwe standaardtoetsen: fakkel F6, verzamelpunt van de kazerne F7, boswachter F9, gilde F3. Op AZERTY zit de camera nu op Z Q S D.",
   "The minimap now frames the area you explored, and banners no longer cover the event buttons.":
     "De minimap toont nu het verkende gebied, en banners bedekken de gebeurtenisknoppen niet meer.",
+  "Waves now appear far from your castle, so in co-op you no longer see your partner's wave spawn on top of you.":
+    "Golven verschijnen nu ver van je kasteel, dus in coöp zie je de golf van je partner niet meer boven op je opduiken.",
+  "Hordes no longer pile up in narrow passages, and big waves run smoother.":
+    "Hordes stapelen zich niet meer op in smalle doorgangen en grote golven lopen soepeler.",
+  "Spikes now show a placement preview and can be demolished for a full refund.":
+    "Pieken tonen nu een voorbeeld bij het plaatsen en kunnen worden gesloopt met volledige terugbetaling.",
+  "Zombie lanes find a way around rock and woods more often, so fewer hordes cross mountains or pile up on trees.":
+    "Zombieroutes gaan vaker om rotsen en bossen heen, zodat minder hordes over bergen lopen of zich bij bomen opstapelen.",
 };

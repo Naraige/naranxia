@@ -21,7 +21,8 @@ import { C, RS, RS2, TH, TS, TW, UPC, WORK } from "../gameplay/rules.js";
 import { selBs, selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { rampGroup, rampOK, tfOK } from "../gameplay/terraforming.js";
-import { SPK, spikeOK, spkSync } from "../gameplay/traps.js";
+import { SPK } from "../multiplayer/objectives.js";
+import { spkGhost, spkGhostHide, spkSync, spikeFree } from "../gameplay/traps.js";
 import { inputState } from "../input/state.js";
 import {
   buildPreviewState,
@@ -398,6 +399,7 @@ export let render3D = function render3D(dt) {
   ghost.material.depthTest = true;
   if (TGH) TGH.visible = false;
   if (GBW) GBW.visible = false;
+  spkGhostHide();
   if (
     sessionState.mode &&
     !sessionState.over &&
@@ -415,7 +417,6 @@ export let render3D = function render3D(dt) {
       }
       if (tx >= 0 && ty >= 0 && tx < TW && ty < TH && gOK(tx, ty)) {
         let good = (sessionState.mode === "path" ? pathOK(tx, ty) : valid(tx, ty)) && ok(C[sessionState.mode]);
-        if (sessionState.mode === "spike") good = spikeOK(tx, ty) && ok(C.spike);
         if (sessionState.mode === "tower")
           good =
             tilesFor("tower", tx, ty, 2).every(([x, y]) => gOK(x, y) && (valid(x, y) || wallAt(x, y))) && ok(C.tower);
@@ -589,13 +590,18 @@ export let render3D = function render3D(dt) {
             }
           } else good = false;
         }
+        if (sessionState.mode === "spike") {
+          showG = false;
+          good = spikeFree(tx, ty) && ok(C.spike);
+          spkGhost(tx, ty, good);
+        }
         if (sessionState.mode === "demolish") {
           const o = occ.get(ty * TW + tx);
           good = !!o && o.t === 0 && o.type !== "castle";
           if (!o && SPK.has(ty * TW + tx)) {
             good = true;
-            hh = 0.35;
-            yy = h0 + hh / 2;
+            showG = false;
+            spkGhost(tx, ty, false);
           } else if (!o && stairs.has(ty * TW + tx)) {
             good = true;
             showG = false;

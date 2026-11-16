@@ -1,4 +1,5 @@
 import { campsState } from "../ai/camps.js";
+import { laneSpawnIdx, WSEE } from "../ai/zombie-lanes.js";
 import { initAI } from "../ai/kingdoms.js";
 import { RHAS, ROLE, workerRolesState } from "../ai/worker-roles.js";
 import { PRES, SAPL, workplacesState } from "../ai/workplaces.js";
@@ -33,18 +34,23 @@ import { ensureAround, initWorld } from "../world/terrain.js";
 import { terrainState } from "../world/terrain-state.js";
 import { LVO } from "../world/traversal.js";
 
+/* the lanes of a wave are drawn at random, but a lane whose far end is too near a castle (see laneSpawnIdx) only comes after the others: same draws, then a stable reorder */
+const farFirst = (A) => {
+  const sc = A.map((L) => (laneSpawnIdx(L).d >= WSEE ? 1e9 : laneSpawnIdx(L).d));
+  return A.slice().sort((a, b) => sc[A.indexOf(b)] - sc[A.indexOf(a)]);
+};
 export function pickLanes() {
   const n = Math.min(
       3,
       1 + (sessionState.waveN > 2 ? 1 : 0) + (sessionState.waveN > 6 ? 1 : 0) + (Math.random() < 0.25 ? 1 : 0),
     ),
-    A = [0, 1, 2].sort(() => Math.random() - 0.5).slice(0, n);
+    A = farFirst([0, 1, 2].sort(() => Math.random() - 0.5)).slice(0, n);
   if (!sessionState.SITE2) return A;
   const n2 = Math.min(
     3,
     1 + (sessionState.waveN > 2 ? 1 : 0) + (sessionState.waveN > 6 ? 1 : 0) + (Math.random() < 0.25 ? 1 : 0),
   );
-  return A.concat([3, 4, 5].sort(() => Math.random() - 0.5).slice(0, n2));
+  return A.concat(farFirst([3, 4, 5].sort(() => Math.random() - 0.5)).slice(0, n2));
 }
 
 export function reset() {

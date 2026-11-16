@@ -22,9 +22,10 @@ export const swarmState = {
 };
 
 /* ================= THE SWARM: the wave husks as a light-weight crowd (tens of thousands of zombies) =================
-   typed arrays stepped at 20 Hz - path fields + tile density drive the flow - cell lists answer the combat queries */
+   typed arrays stepped at 10 Hz (SWDT, movement interpolated at render) - path fields + tile density drive the flow - cell lists answer the combat queries */
 const SWMAX = 30000;
-export const SWDT = 0.05;
+export const SWDT = 0.1;
+const SWSC = SWDT / 0.05;
 const SWCS = 4;
 let SWCW;
 let SWCH;
@@ -63,9 +64,10 @@ export const SW = {
    counts one more look in sk. At SWGH looks (32 s) it gives up its path and walks straight at the nearest castle over any ground, as the horde already does
    where a lane has no way through (buildings still stop it, and it bites them): earth works, cliffs and water delay the horde but never keep it out.
    A zombie that still stands SWRM looks later (80 s more) is taken away without gold or a kill. sa and sk are saved with the swarm. */
-const SWCK = 64,
+const SWCK = 32,
   SWGH = 10,
-  SWRM = 25;
+  SWRM = 25,
+  SWBW = 3.5;
 
 export let SWD;
 export let SWH;
@@ -264,13 +266,19 @@ const DX8 = [1, -1, 0, 0, 1, 1, -1, -1],
   DY8 = [0, 0, 1, -1, 1, -1, 1, -1];
 /* per-zombie constants read from tables (same expressions as before, so the same numbers): aim jitter inside the tile, walking speed */
 const SWJ = new Float64Array(256),
-  SWV = new Float64Array(16);
+  SWV = new Float64Array(16),
+  SWJAM = new Float64Array(64);
+for (let d = 7; d < 64; d++) SWJAM[d] = Math.max(0.75, 1 - (d - 6) * 0.04);
 for (let v = 0; v < 256; v++) SWJ[v] = (v / 255 - 0.5) * 0.62 * TS;
+/* a zombie on the way points without a field (over rock or water) aims beside the way point, by its own seeded offset, so the horde crosses it as a wide band and not in single file */
+const SWLT = new Float64Array(256);
+for (let v = 0; v < 256; v++) SWLT[v] = (v / 127.5 - 1) * SWBW * TS;
 for (let v = 0; v < 16; v++) SWV[v] = SWSP * (v & 8 ? 1.08 : 1) * (0.9 + (v & 7) * 0.03);
 
 function swPick(S, tx, ty, terr, o) {
   const m = fmask(S, tx, ty, terr);
   if (m <= 0) return m === 0 ? -1 : -2;
+  if (!(m & (m - 1))) return 31 - Math.clz32(m);
   let bq = -1,
     bs = 1e9;
   const W = S.w,
@@ -502,18 +510,23 @@ function swStep() {
         continue;
       }
     }
-    const L = sLN[i],
-      C = LCA[L] || LC(L),
-      dcx = C.x - x,
-      dcy = C.y - y,
-      dc2 = dcx * dcx + dcy * dcy;
+    const L = sLN[i];
     let gx = 0,
       gy = 0,
       has = false,
       dir = -2,
       ph = false;
     /* the lane is left for the castle's own path fields 46 tiles from the castle, but only from a tile these fields reach: across a river or below a closed ledge the lane goes on */
-    if (sPH[i] !== 65535 && (gho || (dc2 <= R46 && hasC(tx, ty)))) sPH[i] = 65535;
+    if (sPH[i] !== 65535) {
+      let go = gho;
+      if (!go) {
+        const C = LCA[L] || LC(L),
+          dcx = C.x - x,
+          dcy = C.y - y;
+        go = dcx * dcx + dcy * dcy <= R46 && hasC(tx, ty);
+      }
+      if (go) sPH[i] = 65535;
+    }
     if (sPH[i] !== 65535) {
       const Wp = terrainState.ROUTES[L].wps,
         WX = LWX[L],
@@ -521,6 +534,16 @@ function swStep() {
         WL = WX.length;
       let p = sPH[i];
       while (p < WL && Math.abs(WX[p] - x) < TS2 && Math.abs(WY[p] - y) < TS2) p++;
+      if (sST[i] === 3)
+        for (let c = 0; c < 6 && p < WL; c++) {
+          const a = p > 3 ? p - 3 : 0,
+            b = p + 3 < WL ? p + 3 : WL - 1,
+            ex = WX[b] - WX[a],
+            ey = WY[b] - WY[a],
+            el = hyp(ex, ey);
+          if (el > 0 && ((x - WX[p]) * ex + (y - WY[p]) * ey) / el > -TS * 0.6) p++;
+          else break;
+        }
       if (p < Wp.length) {
         let S = laneFieldQ(L, (p / LSEG) | 0),
           v = S ? fv1(S, tx, ty) : 65535;
@@ -556,9 +579,15 @@ function swStep() {
           } else {
             ph = true;
             sST[i] = 3;
-            const g = Wp[p];
-            gx = g[0] * TS;
-            gy = g[1] * TS;
+            const g = Wp[p],
+              a = p > 3 ? p - 3 : 0,
+              b = p + 3 < WL ? p + 3 : WL - 1,
+              ex = WX[b] - WX[a],
+              ey = WY[b] - WY[a],
+              el = hyp(ex, ey) || 1,
+              lt = SWLT[(o >> 4) & 255];
+            gx = g[0] * TS - (ey / el) * lt;
+            gy = g[1] * TS + (ex / el) * lt;
             has = true;
           }
         }
@@ -627,32 +656,44 @@ function swStep() {
     const D0 = SWD[ti];
     let jam = 1;
     if (D0 > 1 && tx > 0 && ty > 0 && tx < TW - 1 && ty < TH - 1) {
-      const h0 = HT[ti];
+      const h0 = HT[ti],
+        /* clambering over rock or wood (no path, or standing on a solid tile): the crowd spreads over any neighbour and is not slowed by its own pile, else a horde that crosses a wood goes in single file on one tile */
+        cl = ph || ter[ti] > 0;
       let dl = D0,
         dr = D0,
         du = D0,
         dd = D0,
         q = ti - 1;
-      if (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q))) dl = SWD[q];
+      if (cl || (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q)))) dl = SWD[q];
       q = ti + 1;
-      if (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q))) dr = SWD[q];
+      if (cl || (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q)))) dr = SWD[q];
       q = ti - TW;
-      if (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q))) du = SWD[q];
+      if (cl || (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q)))) du = SWD[q];
       q = ti + TW;
-      if (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q))) dd = SWD[q];
+      if (cl || (ter[q] === 0 && (HT[q] === h0 || canStepZ(ti, q)))) dd = SWD[q];
       const pl = (dl - dr) * 0.07,
         pu = (du - dd) * 0.07;
       vx += pl > 0.6 ? 0.6 : pl < -0.6 ? -0.6 : pl;
       vy += pu > 0.6 ? 0.6 : pu < -0.6 ? -0.6 : pu;
-      if (D0 > 6) jam = Math.max(0.3, 1 - (D0 - 6) * 0.05);
+      if (D0 > 6 && !cl) jam = D0 < 64 ? SWJAM[D0] : 0.75;
     }
     const sp = SWV[(sK[i] ? 8 : 0) | (o >> 13)] * jam * SWDT;
     let nx = x + vx * sp,
       ny = y + vy * sp;
     nx = nx < TS ? TS : nx > W - TS ? W - TS : nx;
-    ny = ny < TS ? TS : ny > H - TS ? H - TS : ny;
-    const ntx = (nx / TS) | 0,
-      nty = (ny / TS) | 0;
+    ny =
+      ny < TS
+        ? TS
+        : ny > H - TS
+          ? H - TS
+          : ny; /* well inside its tile (0.01 px margin, wider than the float32 rounding of the stored position): no division needed, same tile */
+    const bx = tx * TS,
+      by = ty * TS,
+      ix = nx > bx + 0.01 && nx < bx + TS - 0.01,
+      iy = ny > by + 0.01 && ny < by + TS - 0.01,
+      ntx = ix ? tx : (nx / TS) | 0,
+      nty = iy ? ty : (ny / TS) | 0,
+      ins = ix && iy;
     if (ntx !== tx || nty !== ty) {
       const pb = (a, b) => !!occ.get(b * TW + a),
         B = ph ? (a, b, c, d) => pb(c, d) : blk;
@@ -725,7 +766,7 @@ function swStep() {
       sTA[i] = NaN;
       sMX[i] = nx - x;
       sMY[i] = ny - y;
-      const nti = ((ny / TS) | 0) * TW + ((nx / TS) | 0);
+      const nti = ins ? ti : ((ny / TS) | 0) * TW + ((nx / TS) | 0);
       if (nti !== ti) {
         SWD[ti]--;
         SWD[nti]++;
@@ -750,7 +791,7 @@ function swStep() {
       (e.t === 0 && RS2.done.plate ? 0.78 : 1) *
       (e.t === 0 && RS2.done.mail ? 0.85 : 1) *
       (bs ? (e.t === 0 && RS2.done.bastion ? 0.72 : 1) * 1.6 : e.cb ? 0.8 : 1);
-    e.hp -= Math.min(hits * one, bs ? 1.6 : 1.2);
+    e.hp -= Math.min(hits * one, (bs ? 1.6 : 1.2) * SWSC);
     if (!bs) e.hurt = 0.2;
     if (e.t === 0 && economyState.alertT <= 0) {
       economyState.alertT = 8;
@@ -772,7 +813,7 @@ function swStep() {
   terrainState.gateSolid = gs;
   swCompact();
   swCells();
-  if (SW.step % 10 === 0 || !SW.n) swRear();
+  if (SW.step % 5 === 0 || !SW.n) swRear();
 }
 
 function swCompact() {

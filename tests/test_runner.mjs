@@ -80,7 +80,7 @@ assert.ok(tiers.full.includes("mp_resync_deep") && tiers.full.includes("mp_soak"
 for (const args of [["--tier"], ["--tier", "missing"], ["--full", "det"], ["--full", "--full"], ["--wat"], ["bogus"]])
   assert.throws(() => selectTests(args));
 const { readdirSync } = await import("node:fs");
-const { suite } = await import("../tools/test_suite.mjs");
+const { suite, manualDiagnostics } = await import("../tools/test_suite.mjs");
 const registered = new Set(
   Object.values(suite)
     .flatMap((s) => [s.file, ...(s.assets || [])])
@@ -96,7 +96,7 @@ const helpers = new Set([
 ]);
 for (const file of readdirSync(new URL(".", import.meta.url)).filter((n) => /\.(?:js|mjs|cjs|py)$/.test(n))) {
   assert.ok(
-    registered.has(file) || helpers.has(file),
+    registered.has(file) || helpers.has(file) || Object.hasOwn(manualDiagnostics, file),
     file + " must be registered or explicitly classified as a helper/artifact comparison",
   );
 }

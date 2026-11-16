@@ -1,4 +1,5 @@
 import sys
+import json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 from browser_suite import run
@@ -11,7 +12,8 @@ width=int(sys.argv[3]) if len(sys.argv)>3 else 1000
 height=int(sys.argv[4]) if len(sys.argv)>4 else 620
 wait=int(sys.argv[5]) if len(sys.argv)>5 else 3000
 html=sys.argv[6] if len(sys.argv)>6 else 'naranxia_readable.html'
-is_test=source.resolve().parent==ROOT/'tests'
+manual=json.loads((ROOT/'tests/manual_diagnostics.json').read_text(encoding='utf-8'))
+is_test=source.resolve().parent==ROOT/'tests' and source.name not in manual
 from browser_fixture import FLAGS
 with sync_playwright() as p:
     with p.chromium.launch(args=FLAGS) as browser:

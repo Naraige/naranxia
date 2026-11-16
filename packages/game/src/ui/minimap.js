@@ -9,6 +9,7 @@ import { inputState } from "../input/state.js";
 import { pickGround } from "../rendering/camera.js";
 import { fowBox, FOWC, fowSeenAt, fowVisAt } from "../rendering/fog.js";
 import { LANE_REAR, visLanes } from "../rendering/routes.js";
+import { laneSpawnIdx } from "../ai/zombie-lanes.js";
 import { CAM } from "../rendering/scene.js";
 import { uiBtn } from "./build-menu.js";
 import { canvasesState, cv, cvs } from "./canvases.js";
@@ -213,11 +214,12 @@ function mmStep() {
   V.h = (V.w * TH) / TW;
   V.mv = true;
 }
-/* where a zombie route comes into the frame: its start when that is in view, else the point where it crosses the edge (m tiles inside) */
-function mmEntry(P, V, m) {
+/* where a zombie route comes into the frame: its spawn point (laneSpawnIdx) when that is in view, else the point where it crosses the edge (m tiles inside) */
+function mmEntry(P, V, m, s0) {
+  s0 |= 0;
   const inV = (px, py) => px >= V.x + m && px <= V.x + V.w - m && py >= V.y + m && py <= V.y + V.h - m;
-  if (inV(P[0][0], P[0][1])) return P[0];
-  for (let i = 1; i < P.length; i++) {
+  if (inV(P[s0][0], P[s0][1])) return P[s0];
+  for (let i = s0 + 1; i < P.length; i++) {
     if (!inV(P[i][0], P[i][1])) continue;
     const a = P[i - 1],
       b = P[i];
@@ -326,7 +328,8 @@ export function drawWorld(x, y, w, h, big) {
   terrainState.ROUTES.forEach((R, k) => {
     if (!VL.has(k)) return;
     const r = big ? 6 : 4,
-      p = big ? R.pts[0] : mmEntry(R.pts, V, (r + 1.5) / sx);
+      si = laneSpawnIdx(k).i,
+      p = big ? R.pts[si] : mmEntry(R.pts, V, (r + 1.5) / sx, si);
     if (!p) return;
     const X = ox + p[0] * sx,
       Y = oy + p[1] * sy;

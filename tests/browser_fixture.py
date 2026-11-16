@@ -32,9 +32,9 @@ INIT = r"""(() => {
 })();"""
 
 
-def load_page(browser, html='naranxia_readable.html', width=1000, height=620, manual=True, init_script=''):
+def load_page(browser, html='naranxia_readable.html', width=1000, height=620, manual=True, init_script='', device_scale_factor=1):
     started = time.perf_counter()
-    context = browser.new_context(viewport={'width': width, 'height': height}, locale='en-US', timezone_id='UTC')
+    context = browser.new_context(viewport={'width': width, 'height': height}, locale='en-US', timezone_id='UTC', device_scale_factor=device_scale_factor)
     if manual or init_script:
         context.add_init_script((INIT if manual else '') + '\n' + init_script)
     page = context.new_page()

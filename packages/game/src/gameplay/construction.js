@@ -234,7 +234,6 @@ export let build = function build(type, tx, ty) {
     tfOrder(type, tx, ty);
     return;
   }
-  if (type === "demolish" && !occ.get(i) && removeSpike(tx, ty)) return;
   if (type === "demolish" && !occ.get(i) && pth[i]) {
     pth[i] = 0;
     const Rr = playersState.RESP[playersState.CURPL | 0];
@@ -249,6 +248,7 @@ export let build = function build(type, tx, ty) {
     }
     return;
   }
+  if (type === "demolish" && !occ.get(i) && removeSpike(tx, ty)) return;
   if (type === "demolish" && !occ.get(i) && stairs.has(i)) {
     const G = rampGroup(i);
     const q = G.find((k) => tfo.has(k));

@@ -3,7 +3,7 @@ import { GVER } from "../core/version.js";
 import { diagnosticsState, ERRLOG, MSGL } from "./diagnostics.js";
 import { finishResearch } from "../gameplay/economy.js";
 import { mkU } from "../gameplay/entities.js";
-import { HOMEC, playersState } from "../gameplay/players.js";
+import { HOMEC, LPL, playersState } from "../gameplay/players.js";
 import { RS, RS2, T, TS } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { SW, swReset } from "../gameplay/swarm.js";
@@ -119,6 +119,23 @@ export async function bugReport() {
             partner: MP.pname || "",
             partnerVer: MP.pver || "",
             hashes: (MP.hl || []).slice(-40),
+            /* placement diagnosis (issue #26): who this machine is, both castles, the window, and the last 20 building commands (see plogAdd) */
+            me: {
+              host: !!MP.host,
+              side: MP.side | 0,
+              lpl: LPL(),
+              cur: playersState.CURPL,
+              pending: (MP.out || []).length,
+              rsy: MP.rsy || null,
+              rsLast: MP.rsLast > 0 ? Math.round((performance.now() - MP.rsLast) / 1000) : null,
+            },
+            castles: [sessionState.CS, sessionState.CS2].map((c) =>
+              c ? { tx: c.tx, ty: c.ty, pl: c.pl | 0, rot: c.rot | 0, hp: Math.round(c.hp) } : null,
+            ),
+            site2: sessionState.SITE2 || null,
+            cx: [terrainState.CX, terrainState.CY],
+            win: { css: [innerWidth, innerHeight], cv: [cv.width, cv.height], dpr: devicePixelRatio },
+            plog: (MP.plog || []).slice(),
           }
         : null,
       errors: ERRLOG.slice(),

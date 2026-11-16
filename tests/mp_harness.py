@@ -15,6 +15,7 @@ compared = 0
 pending = {}
 states = {}
 bridge_calls = 0
+packet_observer = None
 
 
 def observe(a, b):
@@ -57,8 +58,8 @@ def check(name, actual, expected=True):
     return passed
 
 
-def load(browser, html, width=480, height=320):
-    pg, errors, timing = load_page(browser, html, width, height)
+def load(browser, html, width=480, height=320, device_scale_factor=1):
+    pg, errors, timing = load_page(browser, html, width, height, device_scale_factor=device_scale_factor)
     phases['load'] += timing['load']
     # Startup/audio retain REALR, captured during initialization. Give scenario
     # input selection its own stream after boot so ambient draws cannot move it.
@@ -79,7 +80,8 @@ def pump(a, b, n=1, frames=5):
     global bridge_calls
     for _ in range(n):
         counts = [frames, frames]
-        if a in states and b in states and states[a]['ep'] == states[b]['ep']:
+        # A paused simulation still needs presentation/input frames on both peers.
+        if a in states and b in states and states[a]['ep'] == states[b]['ep'] and not any(states[pg].get('paused') for pg in (a,b)):
             target = min(states[a]['tick'], states[b]['tick']) + frames
             counts = [max(0, target-states[pg]['tick']) for pg in (a,b)]
         outputs = []
@@ -90,8 +92,10 @@ def pump(a, b, n=1, frames=5):
                 for(const s of messages) mpMsg(JSON.parse(s));
                 for(let i=0;i<n;i++) __stepFrame();
                 const out=window.__out;window.__out=[];
-                return {out,tick:MP.tick,ep:MP.ep};
+                return {out,tick:MP.tick,ep:MP.ep,paused};
             }''', [pending.pop(pg, []), count]))
+            if packet_observer:
+                packet_observer(pg, outputs[-1]['out'])
             bridge_calls += 1
             states[pg] = outputs[-1]
         pending[a] = outputs[1]['out']

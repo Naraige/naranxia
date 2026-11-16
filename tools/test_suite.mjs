@@ -1,3 +1,7 @@
+import { readFileSync } from "node:fs";
+export const manualDiagnostics = JSON.parse(
+  readFileSync(new URL("../tests/manual_diagnostics.json", import.meta.url), "utf8"),
+);
 const browserNames = [
   "smoke",
   "det",
@@ -117,6 +121,7 @@ export const tiers = {
     "research",
     "quests",
     "save",
+    "mp_build",
     "mp8",
     "mp_kxp",
     "mp_resync",

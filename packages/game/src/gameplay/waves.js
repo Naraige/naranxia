@@ -2,7 +2,7 @@ import { bastionHas } from "./economy.js";
 import { baseTrait, BASES, campLabel } from "../ai/kingdoms.js";
 import { evPush } from "./events.js";
 import { bossSpawn } from "../ai/wave-boss.js";
-import { WSPN, zcount } from "../ai/zombie-lanes.js";
+import { laneSpawnIdx, zcount } from "../ai/zombie-lanes.js";
 import { snd } from "../audio/sound.js";
 import { hyp, rnd } from "../core/math.js";
 import { ach } from "./achievements.js";
@@ -149,17 +149,7 @@ export function wave() {
 
 export function spawnAnchor(L) {
   const R = terrainState.ROUTES[L],
-    P = R.pts;
-  let rem = 0,
-    i0 = 0;
-  for (let i = P.length - 1; i > 0; i--) {
-    rem += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]);
-    if (rem >= WSPN) {
-      i0 = i - 1;
-      break;
-    }
-  }
-  i0 -= i0 & 1;
+    i0 = laneSpawnIdx(L).i;
   for (let i = i0; i < R.pts.length; i += 2) {
     const p = R.pts[i];
     ensureAround(p[0] | 0, p[1] | 0, 1);

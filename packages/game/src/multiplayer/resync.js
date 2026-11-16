@@ -163,6 +163,14 @@ async function mpResApply(txt, M) {
   selectionState.selB = sb != null ? sessionState.structs.find((q) => q.sid === sb) || null : null;
   selectionState.castleSel = cs;
   selectionState.SELBS = [];
+  /* what this player sent for ticks the snapshot does not hold yet (t >= M.t) was dropped with the old epoch on both machines: a click made just before a resync
+    would vanish (nothing is paid, nothing built). Those commands go out again, in order, before anything new. */
+  {
+    const re = [];
+    for (const [t, c] of MP.sl || []) if (t >= M.t) re.push(...c);
+    MP.sl = [];
+    if (re.length) MP.out = re.concat(MP.out);
+  }
   MP.ep = M.ep;
   MP.simR = rngf(M.sd);
   MP.tick = M.t;

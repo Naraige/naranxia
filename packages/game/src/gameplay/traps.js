@@ -26,24 +26,35 @@ import { occ, ter } from "../world/terrain-state.js";
    Boiling oil (Academy research after Bastion walls): every finished wall, gate and tower scalds zombies within 1.3 tiles every 1.5 s.
    Both are simulation (timers in sim time, damage through the same lists the bombers use), traps are a Map tile -> hp saved with the game (SAVA). */
 const SPKC = { g: 10, w: 15 };
-export { SPK };
 
-export function spikeOK(tx, ty) {
+/* can a trap go on this tile (shared by the placement and its preview) */
+export function spikeFree(tx, ty) {
   const i = ty * TW + tx;
   return gOK(tx, ty) && valid(tx, ty) && ter[i] !== 1 && !SPK.has(i) && !occ.has(i);
 }
 
+/* demolish tool on a trap: removed at once, 100 % of the cost back to the player who clicked (like a path tile).
+   Runs inside the "b" command (build -> demolish), so both co-op machines do it at the same tick. */
 export function removeSpike(tx, ty) {
-  if (!SPK.delete(ty * TW + tx)) return false;
+  const i = ty * TW + tx;
+  if (!SPK.has(i)) return false;
+  SPK.delete(i);
   objectivesState.SPKV++;
-  snd("click");
+  const R = playersState.RESP[playersState.CURPL | 0];
+  for (const k in SPKC) R[k] += SPKC[k];
+  puff((tx + 0.5) * TS, (ty + 0.5) * TS, "#8a7058", 6, 40, { T: 0.5, z: 0.1, vz: 0.8, g: 2, s: 0.1 });
+  snd("click", (tx + 0.5) * TS, (ty + 0.5) * TS);
+  if (!MP.on || playersState.CURPL === LPL()) {
+    hudDisplayState.msgS = "Trap removed: resources recovered";
+    hudDisplayState.msgT = 2;
+  }
   return true;
 }
 
 export function placeSpike(tx, ty) {
   if (sessionState.over) return;
   const i = ty * TW + tx;
-  if (!spikeOK(tx, ty)) {
+  if (!spikeFree(tx, ty)) {
     if (!MP.on || playersState.CURPL === LPL()) {
       hudDisplayState.msgS = "Cannot place a trap here";
       hudDisplayState.msgT = 2;
@@ -188,6 +199,43 @@ export function spkSync() {
   SPKP.count = p;
   SPKM.instanceMatrix.needsUpdate = true;
   SPKP.instanceMatrix.needsUpdate = true;
+}
+
+/* ---- placement preview: translucent pit with five spikes (visual only, no simulation state) ---- */
+let SPKG = null;
+
+export function spkGhost(tx, ty, good) {
+  if (!SPKG) {
+    SPKG = new THREE.Group();
+    SPKG.userData.m = new THREE.MeshLambertMaterial({
+      color: 0xaab0ba,
+      transparent: true,
+      opacity: 0.7,
+      depthWrite: false,
+    });
+    const pit = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.46, 0.02, 10), SPKG.userData.m);
+    SPKG.add(pit);
+    for (const [a, b] of [
+      [0, 0],
+      [0.22, 0.2],
+      [-0.22, 0.2],
+      [0.2, -0.22],
+      [-0.2, -0.2],
+    ]) {
+      const c = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.34, 4), SPKG.userData.m);
+      c.position.set(a, 0.17, b);
+      SPKG.add(c);
+    }
+    SPKG.renderOrder = 5;
+    scene.add(SPKG);
+  }
+  SPKG.userData.m.color.set(good ? 0x9dff9d : 0xff6a6a);
+  SPKG.position.set(tx + 0.5, gh(tx + 0.5, ty + 0.5) + 0.012, ty + 0.5);
+  SPKG.visible = true;
+}
+
+export function spkGhostHide() {
+  if (SPKG) SPKG.visible = false;
 }
 
 export function eraTick(dt) {

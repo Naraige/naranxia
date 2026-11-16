@@ -24,15 +24,20 @@ async () => {
   const tx = Math.floor(p.x),
     ty = Math.floor(p.z),
     i = ty * TW + tx;
+  mode = "spike";
+  render3D(0);
   const ghosts = scene.children.filter(
-    (o) => o.isMesh && o.geometry.type === "BoxGeometry" && o.material.opacity === 0.45,
+    (o) =>
+      o.isGroup &&
+      o.userData.m?.opacity === 0.7 &&
+      o.children.filter((c) => c.geometry?.type === "ConeGeometry").length === 5,
   );
   __test.check("one placement cursor", ghosts.length, 1);
   const cursor = ghosts[0];
   const preview = () => {
     mode = "spike";
     render3D(0);
-    return cursor.visible && cursor.material.color.getHex() === 0x66ff66;
+    return cursor.visible && cursor.userData.m.color.getHex() === 0x9dff9d;
   };
   const r = RESP[0];
   r.g = 100;
@@ -63,7 +68,9 @@ async () => {
   mode = "demolish";
   render3D(0);
   __test.check("trap demolition preview visible", cursor.visible);
+  __test.check("demolition highlights the real trap model", cursor.userData.m.color.getHex(), 0xff6a6a);
   build("demolish", tx, ty);
+  __test.check("full trap cost refunded", [r.g, r.w], before);
   __test.check("demolition removes trap", SPK.has(i), false);
   render3D(0);
   __test.check(
