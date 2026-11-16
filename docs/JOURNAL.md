@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-16 · polish: spawn patch and body block
+
+- Waves came out in an 11x11 tile patch (up to 250 zombies per tile on wave 8), then gave up their lane. `swSpawn` now uses radius `q.r` = min(14, 5 + cnt/2500) (5 for old saves). Wave 8 world 5: peak pile 224 -> 119 per tile, climbers at 80 s 1325 -> 738. What is left are lane bottlenecks 40 to 60 tiles from the castle.
+- Units (not swarm zombies): units exactly stacked were never separated (`dd > 0`); now pushed along a fixed direction from `(a.gi + b.gi) & 7`. Push shared by weight (r squared), a unit that is not walking (`mv` false) weighs triple (body block). Peasant softness 0.08/0.3 -> 0.2/0.45.
+- det re-pinned (twice, each run a == b). Tests PASS: det features traps mp8 mpk mp_resync save waves. Not rerun after these: mp_events mp_build ui mp_quests (CI).
+
 ## 2026-11-16 · polish cleanup (merge of the 4 polish lots)
 
 - Merged perf, co-op, routes and QA lots into the branch (cherry-picks, journal conflicts only). Removed 4 dead text keys with old key hints (`Torch [']`, `Barracks rally [-]`, `Forester's hut [[]`, `Builders' guild []]`) in translations.js and nl/pl/tr: no source used them; langcheck and textaudit clean.
