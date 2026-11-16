@@ -55,6 +55,8 @@ export const simulationState = {
 
 export const SEPM = new Map();
 let SEPN = new Int32Array(1024);
+const SEPDX = [1, 0.7071, 0, -0.7071, -1, -0.7071, 0, 0.7071],
+  SEPDY = [0, 0.7071, 1, 0.7071, 0, -0.7071, -1, -0.7071];
 
 const ENVCAPG = 700,
   ENVCAPF = 350;
@@ -763,18 +765,32 @@ export function update0(dt) {
             if (b.gi <= a.gi) continue;
             const m = (T[a.type].r + T[b.type].r) * 1.12;
             if (Math.abs(a.x - b.x) > m || Math.abs(a.y - b.y) > m) continue;
-            const dd = dist(a.x, a.y, b.x, b.y);
-            if (dd < m && dd > 0) {
+            let dd = dist(a.x, a.y, b.x, b.y);
+            if (dd < m) {
               const pa = a.type === "peasant",
                 pb2 = b.type === "peasant",
-                sk = a.t === b.t && (pa || pb2) ? (pa && pb2 ? 0.08 : 0.3) : 1,
-                nx = (b.x - a.x) / dd,
-                ny = (b.y - a.y) / dd,
-                p = ((m - dd) / 2) * sk;
-              a.x -= nx * p;
-              a.y -= ny * p;
-              b.x += nx * p;
-              b.y += ny * p;
+                sk = a.t === b.t && (pa || pb2) ? (pa && pb2 ? 0.2 : 0.45) : 1;
+              let nx, ny;
+              if (dd > 0) {
+                nx = (b.x - a.x) / dd;
+                ny = (b.y - a.y) / dd;
+              } else {
+                /* exactly on top of each other: a fixed direction from the two ranks, so neither stays stacked (no random number, same on both machines) */
+                const d8 = (a.gi + b.gi) & 7;
+                nx = SEPDX[d8];
+                ny = SEPDY[d8];
+                dd = 0;
+              }
+              /* body block: the push is shared by weight (radius squared), and a unit that holds its ground (not walking) counts triple, so a moving one cannot shove a front line aside */
+              const wa = T[a.type].r * T[a.type].r * (a.mv ? 1 : 3),
+                wb = T[b.type].r * T[b.type].r * (b.mv ? 1 : 3),
+                tot = (m - dd) * sk,
+                pA = (tot * wb) / (wa + wb),
+                pB = (tot * wa) / (wa + wb);
+              a.x -= nx * pA;
+              a.y -= ny * pA;
+              b.x += nx * pB;
+              b.y += ny * pB;
             }
           }
         }
