@@ -20,6 +20,15 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Stance panel already shows the active stance (`stanceOn` lights the button). Hint of Defensive said "Fight around their post, then walk back to it": now "Strike what is in reach, never chase" + "Walk back to the post if pushed away" (2 new keys FR ES DE IT PT NL PL TR, old key removed). NOTES.md untouched.
 - Verified: eslint, prettier, architecture (no new cycle: state lives in `inputState`), langcheck, textaudit. See report for what was not run.
 
+## 2026-11-16 · polish lot A lanes
+
+- Routes (`world/routes.js` `bendOffsets`): reach `RMAX` 24 -> 56 steps (48 -> 112 tiles); side samples now at 4 and 8 tiles (weights 0.4 / 0.15x4) and read from one row of ground calls per way point (3 calls -> 1 per lattice point, so the DP is cheaper than before: confirmPick of 16 worlds 105 s -> 21 s on the loaded machine). `tests/route_probe.js`, 16 worlds, 8475 points: hill 924 (10.9 %) -> 726 (8.6 %), mountain 821 (9.7 %) -> 575 (6.8 %), water 456 -> 373. Old saves keep their saved routes.
+- Swarm (`gameplay/swarm.js` `swPick`): on a tile with 12+ zombies the crowd may also step to a neighbour of the same field value (along the contour) when it is emptier by more than 8 (`SWSD`, `SWSP2`). Pile probe wave 8, world 5 (30000 zombies), top tile on the lane stretches 40 to 60 tiles out: 136 / 101 / 130 -> 64 / 54 / 94 per tile; wave end 600 -> 623 s.
+- Tried and dropped: a gate of seeds across the route at the end of each lane field (no effect on the peaks); softer contour settings (24/16, 16/10: peaks unchanged or `noneStuck2` failed).
+- Found: wave 3 of world 2 went 560 -> 685 s with ANY wider reach (RMAX 32, 40, 56 alike), a lane then takes a different way with a narrow pass (wmax 3 -> 33 to 45); it is the route, not the swarm. Now 688 s (limit 700). w1 faster (503 -> 453), w9 slower (298 -> 346).
+- Not fixed: the pile 37 to 40 tiles from the castle (state 4, tile 879,258 world 5) stays at 100 to 139 per tile, a real corridor along a cliff edge.
+- Tests: det (re-pinned after two identical runs), waves PASS. mpk, save, mp_resync, features were running when the commit was asked; not verified here. No text added, no version change.
+
 ## 2026-11-16 · polish: QoL
 
 - Tab (jump to last attack) only worked while the 5 s alert marker lived. `LASTALERT` (economy.js) keeps where the last marker faded for 60 s, reset in `reset()`; visual only, not saved, not in the hash. ui, smoke, det PASS. No new text.
@@ -90,6 +99,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Tests: `waves` (world 2 added, plays wave 3: 6225 zombies must end under 700 s; `stand` = zombies within 40 tiles of a castle biting nothing and still for 60 s, at most 60; 140 s for the whole test) PASS; `det waves mpk features mp_resync` PASS. det hashes changed (8, identical on two runs): -633168385, 586599147, -6915776, -2117891958, 403569522, 2067057687, 1643546760, 1423044141.
 - Not verified: `mp8`, `mp_convoy`, `save`, `smoke`, `ui` (CI); by eye (a denser, faster horde in a corridor); waves 4+ with bosses and miners; the horde reaches defences about 15 to 25 % sooner on every world (not only the slow ones), which may make early waves harder; a save made mid-wave on this build.
 - Left to the King: jam floor 0.75 (0.55 gave 735 s in world 1, 661 in world 2; 0.75 gives 642 / 570) and band width 3.5 tiles (`SWBW`); whether the faster arrival is wanted (the far spawn had made first contact later).
+
 ## 2026-11-14 · v94 lot "waves spawn far" (hd-gameplay worktree, committed on branch, not merged, not released)
 
 - King: waves must appear at the start of the map, not near, so a co-op player no longer sees the other's wave appear on him. Nothing under `game/` or `announce/`, no push, no version change.
@@ -100,6 +110,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Tests: `waves` extended (8 more worlds: every lane at 100+ tiles, drawn lanes at 125+, route 110+, real queue of wave 1 in worlds 0, 1, 9); `det waves mpk features mp_resync` PASS. New det hashes (the 8, identical on two runs): -1058406660, 401256943, 711666343, 209404249, 836641923, 1624386777, -1515789622, -1631652357 (all changed, also the first). Probes: `tests/spawn_probe.js`, `tests/spawn_pace.js` (not in the suite). Console: `spawnAnchor`, `pickLanes` exposed. Screenshot dist/spawn_shot.png (co-op, widest zoom toward the spawn, 1280x720): no zombie in view.
 - No player text added. Not verified: `mp8`, `mp_convoy`, `save`, `smoke`, `ui` (CI), a save made mid-wave loaded on this build, rebel camps near a longer route (a horde can turn on a camp earlier), later waves with bosses at the new anchor, a real co-op game.
 - Left to the King: 150 tiles of walk and 130 of distance (`WSPN`, `WSEE`); first contact about 50 to 80 s later; tail of the wave longer in some worlds (world 2 at 875 s).
+
 ## 2026-11-13 · v94 lot "guest placement" #26 #3 #4 (hd-coop worktree, committed on branch, not merged, not released)
 
 - Widened `tests/mp_build.py` (2 headless clients, real mouse): windows of other sizes and ratios (host 1280x720 x1, guest 1024x640 x1.5, then resized while playing to 960x600 and 1500x800), camera turned with the right button and zoomed with the wheel, clicks all over the window, guest building beside the host castle and host beside the guest's, a path dragged across the partner's castle area, placement while paused, guest moving his castle then building and `home()`, a click right before a resync, building after it. Each click: tile under the mouse, tile in the command (`mpPush`), structure and owner on both machines, mesh.
@@ -109,6 +120,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Found by the test, not a fault: in a small window (960x600) the quest panel lies over the left of the map; a click there opens the quest log (full screen) instead of placing. The test avoids it.
 - Not verified: two real machines on a real link (latency, PeerJS, real GPU), a real public lobby, a real touch screen, the re-queue after a resync on a click inside the last 6 ticks.
 - For the King: #26 stays open; if it happens again an F8 report from the GUEST right after the bad placement tells enough (plog, castles, window). Ask him which of the two castles the building appeared near and whether the camera moved by itself.
+
 ## 2026-11-13 · v94 lot "swarm performance 2" (#21) (hd-perf worktree, committed on branch, not merged, not released)
 
 - Exact step (hashes of profile.py identical): no division for a zombie well inside its tile (0.01 px margin), jam table, `swPick` returns at once when one neighbour is downhill, castle distance only for zombies still on a lane. Gain inside the noise (share of swarm functions excluding `(program)`: 57.2 / 55.6 / 61.0 / 56.6 before, 56.1 / 54.5 / 54.9 / 58.3 after; machine load 4 to 15).
@@ -173,8 +185,9 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Skipped convoy quest on real maps: `tests/convoy_cut_probe.js` (120 seeded pairs): 114 linked, 6 cut (trials 49, 77, 80, 97, 112, 119; 77, 97, 112, 119 have water between the castles, 49 and 80 are two closed ledges). `tests/mp_cut.py` (2 headless clients, trial 77, river): convoy refused, quest skipped on both at tick 81 without reward, 1627 equal hashes, no desync, two more looks of the 30 s timer change nothing. Cost of `convoyLinked()` (machine at load 15 to 27): linked maps median 0.5 ms (max 52), cut maps median 22 ms (max 134); the FIRST call on a cut map also generates the land of the wide rectangle: 0.6 to 2 s once (a single hitch when the quest comes up, then the quest is skipped and never looked at again).
 - Keyboard (`tests/azerty_probe.js`, simulated AZERTY events): no plain key for torch (' is the 4 key), barracks rally (- is the 6 key), forester ([ = AltGr+5), guild (] = AltGr+)), royal charge (> = Shift+<), cannon (/ = Shift+:), idle workers (. = Shift+;). Camera W A S D are the Z Q S D keys on AZERTY (z = rotate left, q = select army; the arrows work). Free on both layouts, one press: F3 F6 F7 F9 Insert End (all 26 letters are taken). Beside `KB`, hard-wired: p = pan mode (also demolish), = and + zoom in (= is also the castle rally point), - zoom out (also barracks rally), , selects idle workers (also move castle).
 - Tests on this branch (v93 + the interface fixes): `events` PASS, `envoy` PASS, `features` PASS, `mp8` PASS, `mp_convoy` PASS (RESULT OK, 877 equal hashes), `save` PASS (same0 true, sameCont false as known), `det` PASS with the v93 hashes (1289907662, 78342706, -1731518221, 1421632697, -2023083426, -766400875, 432483754, 1830404059), `ui` PASS with 3 new cases (toasts drawn, toasts clear of every bar, banner under the event bar; the first run caught a mistake of mine in the toast code), `tools/profile.py` twice: same hashes (swStep 12 %). `fitcheck 1280 720`: 0 overflow in the 9 languages (canvas and HTML). `textaudit` table OK, `langcheck` 0 / 0 / 0.
-- Not verified: the top-bar fix in other languages (seen on the King picture: "Wave 4  Next 2:07  N SE  Summer" is back, the weather name dropped); the night picture and the narrow-screen toasts after the last fixes (seen once before them: night dark, torches lit, one toast left that `noToast` now holds back; toasts on the quest panel at 390 px, since moved under it and covered by `ui` only at 1280); the War cry button under its cooldown reads "War cry [<" with a smudge (not looked into); `mp_cut` judged on its log (its first run said FAIL on a time limit of mine, removed since times follow the load; not rerun); trials 49 and 80 (ledges) not run with 2 clients; `mpk`, `mp_resync`, `mp_quests`, `mp_events`, `smoke`, `tools` not rerun (CI); a real AZERTY keyboard, two real machines, a real GPU; NL / PL / TR read by a native speaker.
+- Not verified: the top-bar fix in other languages (seen on the King picture: "Wave 4 Next 2:07 N SE Summer" is back, the weather name dropped); the night picture and the narrow-screen toasts after the last fixes (seen once before them: night dark, torches lit, one toast left that `noToast` now holds back; toasts on the quest panel at 390 px, since moved under it and covered by `ui` only at 1280); the War cry button under its cooldown reads "War cry [<" with a smudge (not looked into); `mp_cut` judged on its log (its first run said FAIL on a time limit of mine, removed since times follow the load; not rerun); trials 49 and 80 (ledges) not run with 2 clients; `mpk`, `mp_resync`, `mp_quests`, `mp_events`, `smoke`, `tools` not rerun (CI); a real AZERTY keyboard, two real machines, a real GPU; NL / PL / TR read by a native speaker.
 - Left to the King: the minimap shows the whole 2250 x 1250 world, so a kingdom is a few pixels and the minimap is nearly black for most of a game (this is what the announcement pictures show; not a tool fault): a minimap framed on the explored land is a design change (M); default keys for the 7 actions above (proposal: torch F6, barracks rally F7, forester F9, guild F3; charge, cannon, idle stay on Shift or get Insert / End); the second line of the wave banner ("BLOOD MOON - ...") runs over the quest panel for a few seconds; on 390 px wide a long message line is cut at the right; the raid bar counts 7 000 (wave 3) to 15 000 (wave 6) zombies "left" in the tool scenes (swarm members): to compare with a real game.
+
 ## 2026-11-13 · v94 lot "wave cannot end" (#27) (hd-gameplay worktree, committed on branch, not merged, not released)
 
 - Reproduced (probe `tests/waves_probe.js`, wave 1, perfect defence, 12 seeded worlds, v93): 4 of 12 never end (900 s limit, 945 to 2025 zombies left, no progress for minutes). World 1 (co-op): the lane to the second castle ends in a rock massif and the whole horde piles on one way point 50 tiles out. World 9 (co-op): a lake between spawn and castles, 945 zombies on water tiles that nobody can reach, wave stuck. Worlds 2 and 3: 1170 zombies stuck / 5 stuck at 45 and 23 tiles from the castle. Solo 0, 4, 6, 8, 10 and co-op 5, 7, 11 end fine (about 1 world in 3 broken).
@@ -185,6 +198,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - det hashes: the first of the 8 equals lot "spearman 2" (1289907662), the other 7 differ (now 1277869275, 1806847686, -1490071179, -733253062, -1208506384, -1815204722, -19860095) because the horde now takes other routes in the det scenario once past the first 750 ticks; the new reference is these 8. Same twice.
 - Not verified: `mp8`, `mp_resync`, `mp_convoy`, `save` (CI); the screenshot (dist/water_after.png, 1280x720, wave 1 world 9) shows zombies wading through the lake with the stuck state gone, the lake zombies look right but I looked once; solo world with a castle on a small ledge; later waves (bosses, miners, bombers) not probed; real GPU; a real co-op game.
 - Left to the King: 32 s to give up and 80 s more before removal (tunable `SWGH`, `SWRM`); the zombies that wade through water now cross lakes (they did not die there in v93 either, they only stopped); whether miners and bosses (unit zombies) need the same net (only the lane walk was changed for them).
+
 ## 2026-11-13 · v94 lot "determinism" + co-op placement and sync line (hd-coop worktree, not merged, not released)
 
 - Placement (#26, #3, #4): new test `mp_build` (lobby as played, then the guest clicks with a real mouse: 12 kinds incl. wall, path, gate, rally, King; same for the host; resync; partner leaves). No placement fault on 2 connected machines: tile under the mouse = tile built, owner right, same on both, mesh present, castles on their chosen sites, cameras on their own castle. One real fault found: when the partner leaves, `LPL()` fell back to 0 and the guest alone became player 1 (host's resources and buildings, home key to the host castle); fixed with `MP.side` (guest keeps index 1 after `mpLost`, reset on quit, load, new game). Likely what the King saw after a disconnect; not proven for his session (needs an F8 report).
@@ -230,6 +244,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Verified: `textaudit` table OK and notes 0 problem, `langcheck` 0 / 0 for the three, `npm run build`, `npm test -- smoke tools` PASS (a first run under load timed out at page load). Seen by eye at 1280x720: Update page in French and German, top of the list (intro, both first headings, bullets), no asterisk, wraps inside the panel, no overflow reported.
 - Not verified: the bottom of the page (Comfort; the wheel did not scroll headless); the guard with a failing notes file (nothing under `game/` was touched); NL / PL / TR by a native speaker; fitcheck not rerun (no button label changed length upward except tips drawn with fitting).
 - Left to the King: FR / ES / PT "Tous vos {0}s" still glue an "s" to the unit name; NL "de {1}" in two repair messages ignores de / het; "Você" kept for "You".
+
 ## 2026-11-12 · v93 lot "convoys" (#20, hd-coop worktree, not merged, not released)
 
 - Causes found on 120 seeded pairs (v92: 17 not delivered, the 1 in 7 of the QA probe). (a) 6 pairs: the land route exists but is a long detour, the 120 s of the whole trip ran out. (b) 8 pairs "no path / porters stay home or stop on the way": there is no land route at all (river, or a castle standing on a ledge of 25 to 800 tiles without a ramp: `levelGround` only flags ring tiles 1 level off, `siteOK` does not check the way out); the porters walked to the closest tile they could reach and stood there. (c) 3 pairs "stop 5 to 7 tiles short": same thing at the partner's end, his castle is on a small ledge and the closest tile is at its foot, just outside the 4.6 tiles.
@@ -239,6 +254,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Tests (machine loaded 9 to 23, other agents): `mp_convoy` PASS (302 s), `mp_resync` PASS, `det` PASS (same game twice, same hashes; convoys are not in the det scenario, solo). `mp_quests` NOT green locally, twice: run 1 the convoy quest closed, 2857 equal hashes, no desync, no error, but the 6 s real-time waits of the test for the house and farm sites ran out under load (RESULT FAIL); run 2 the page did not load in 180 s (load 23). To rerun on a quiet machine or on CI.
 - Not verified: a real two-machine game; the 103 pairs of the 120 that already worked were not rerun past trial 35; a pair whose porters other than the first have no route (their share comes back after 120 s as before).
 - For the King (not done, rule choice): about 1 site in 12 puts a castle on a closed ledge or behind a river: the convoy quest cannot be done there until the player builds a ramp or a bridge. Either `siteOK` refuses such sites, or the levelling cuts a way down, or the co-op convoy quest is skipped when the two castles are not linked.
+
 ## 2026-11-12 · video guide lot for v93 (hd-menu-ux, issue #23, committed on the worktree branch, not pushed, not released)
 
 - King: "fait le tout" on the four open points of the guide. Detail in `docs/studio-notes/guide.md`.
@@ -263,6 +279,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Not verified: `mp8`, `mp_resync`, `save`, `events`, `envoy` with the change (CI will run them); a real AZERTY keyboard; F4 in the Electron launcher and on laptops where F keys need Fn; a long game (camp survival with fewer knights).
 - Found, not changed: on AZERTY the digit defaults (peasant 1, knight 2 ... and stances 1 to 4) need Shift, and Shift + digit is taken by the control groups: read in the code only. Proposed: match digit actions by `e.code`.
 - Left to the King: the shares per trait; spearmen replacing knights 1 for 1 (or 3 for 2 at equal price); F4 or another key; the AZERTY digits.
+
 ## 2026-11-12 · swarm performance, issue #21 (hd-perf worktree, not merged, not released)
 
 - Cause of "36 % instead of 20 %": nothing grew. The same profile on 16526d6 (the commit that wrote "~20 %") gives `swStep` 35.2 %, `swPick` 9.7 %, `swDn` 4.9 % of the simulation, as at v92 (35.0 / 9.2 / 4.7). The 20 % was the share of the whole profile, which is half `(program)` (time outside the page script, not simulation): `swStep` is 17 % of that at v92. In wall time the swarm (everything inside `swUpdate`) is about 70 % of the 6000-tick scenario (26 000 zombies).
@@ -314,6 +331,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - `docs/release-v92/NOTES.md`: "New events" listed blood moons and caravans, both already in v91; line now says wolf packs, eclipses and meteor showers, and that caravans and rebel envoys now ask you to choose. To confirm with the King.
 - Not verified: NL / PL / TR texts read by a native speaker; guide chapter list and quest log by eye; "eleven new buildings" and "levels up to 5" in the notes; no gameplay test run (text only).
 - To the King: Portuguese mixes European and Brazilian forms (pick one); German lore lines use "Ihr / Euer" while the interface uses "du"; Dutch plural "2 boers" (old keys with `{1}`) is wrong; add `textaudit.mjs` and `textwidth.py` to the tool list in CLAUDE.md.
+
 ## 2026-11-11 · full QA pass before v92 (hd-qa worktree, not merged, not released)
 
 - Base `release-v84` d49e027 (CI green on it: quick suite with `mp_resync`, `mp_convoy`). Nothing under `game/` or `announce/`, nothing pushed. Pictures: `dist/qa/shots/` (not committed), tool `tools/qa_shots.py`.
@@ -348,6 +366,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Still running: video guide (also removes the old tutorial bar).
 
 ## 2026-11-11 · lancier (spearman): nouvelle unité jouable, allumée, non fusionnée, non livrée
+
 - Demande du Roi: « oui tu peux creer le lancier » (les piquiers de l'écran titre n'existaient pas en jeu). Branche de worktree hd-gameplay, rien dans `game/`, rien poussé. Détail, tableau et mesures: `docs/studio-notes/spearman.md`.
 - Unité `spearman`, caserne, dès le début: 85 PV, 11 dégâts / 1 s, portée 36 (chevalier 14: frappe par-dessus le premier rang), x1,6 contre brute et boss (`SPEAR_BIG`), 90 or 30 bois 25 nourriture, 15 s, 1 population. Pas de bouclier, pas de règle spéciale contre l'acide (moins de PV suffit).
 - Courbe: par ressource contre les zombies ordinaires il vaut moins que le chevalier (13,2 contre 11,0 par DPS), par tête il vaut moins contre tout; meilleur seulement par ressource contre les brutes. Duels mesurés dans les notes.
@@ -359,7 +378,9 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Vérifié après fusion de `release-v84` (quêtes, 3 conflits: journal, traductions, `tools/test_all.mjs`, les deux côtés gardés): `npm run build`; `det features spearman quests mp8 mpk` (résultats: `dist/spear/tests4.txt`); hachages `det` identiques à ceux de `release-v84` avec quêtes (ils ne diffèrent de l'ancienne base que par l'état des quêtes, pas par le lancier); une capture du combat.
 - Non vérifié: `save` après fusion (SAVA non touché), `smoke` (build compressé), `mp_resync`, fitcheck, vrai GPU, mobile, lanciers en co-op à l'œil (aucun test co-op n'en forme), écran titre non regardé (piquiers changés de modèle), NL/PL/TR en anglais pour les 8 textes.
 - Au Roi: bonus x1,6 contre les brutes (ou 1,4), touche `\` par défaut, lanciers chez les rebelles / royaumes IA (changerait les hachages `det`), galons de grade, prix.
+
 ## 2026-11-11 · guide vidéo derrière le bouton Tutoriel, ancienne barre de tutoriel retirée (branche hd-menu-ux, non fusionné, non livré)
+
 - Demande du Roi: « make the tutorial more like a video guide ». Le bouton Tutoriel (T) du titre ouvre un écran lecteur (`ui/video-guide.js`, nouveau): 9 chapitres à gauche, « vidéo » à droite (légende, barre de progression, précédent / pause / suivant, enchaînement automatique). Détail, tableau des chapitres, reste à faire: `docs/studio-notes/guide.md`.
 - Les clips ne sont pas des fichiers vidéo: scènes 2D scriptées sur le canvas du menu (320 x 180, fonction pure du temps), icônes des vrais bâtiments (`IC`/`ICT`) et sprites tirés ici des vrais modèles d'unités posés par `animUnit` (89 petits rendus, par tranches de 10 ms à l'ouverture). Rien ne touche la simulation: unités jetables hors `sessionState`, horloge murale, `Math.random` remplacé par `REALR` pendant les rendus.
 - Décision du Roi: les quêtes remplacent l'ancienne barre de tutoriel en 5 étapes. Retirés: `TUTS`, `tutStart`, `tutEnd`, `tutBar` (`ui/tutorial.js` ne garde que `hintBar` et ses 3 astuces), l'appel dans `ui/hud.js` et `gameplay/reset.js`, `TUT` (`gameplay/traps.js`), la ligne « Tutoriel » des Options, la clé `dk_tut` (aussi dans `tools/announce_shots.py`). « Jouer la partie guidée » ouvre seulement Nouveau royaume.
@@ -381,7 +402,9 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - The King: prepare the mega update announcement with everything pushed since the GitHub cut, sent the way the system does at the next update.
 - `docs/release-v92/NOTES.md` rewritten (look, new to play, comfort); `README.md` there says how it ships (copied to `game/NOTES.md`, posted by `release.yml` through `tools/announce.sh` with `announce/img/v92/`). Old `announce-v92.md` draft removed (duplicate).
 - Before release: confirm bullets for spearman, video guide, quest marker (in progress), retake the 4 screenshots (they predate the new looks), King's go-ahead after the full pass.
+
 ## 2026-11-11 · quêtes lot 3: repère sur le bouton à presser (branche hd-gameplay, non fusionné, non livré)
+
 - Demande du Roi: un repère visuel sur le bouton de la quête active. `ui/quest-marker.js` (nouveau, affichage seul): contour or qui pulse + petite flèche qui rebondit, sur l'entrée du menu, sinon sur l'onglet ou la catégorie qui l'ouvre, sinon flèche au-dessus du bâtiment à cliquer. Table quête -> cible dans `docs/studio-notes/quests.md`.
 - Crochets: une ligne dans `drawItem` et `drawTabs` (`ui/build-menu.js`), une dans `kingBar` (`gameplay/king-skills.js`), appel depuis `questLog` (`ui/quest-panel.js`); `ui/hud.js`, `ui/tutorial.js`, `ui/title-menu.js` non touchés. Aucun texte nouveau.
 - Choix: repère visible même panneau replié; caché si quêtes éteintes, F10, fin de partie, pause, carte, journal ouvert. Pas de repère sur les ressources (récolte) ni sur le camp rebelle.
@@ -404,7 +427,9 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Checked: top level of `release-v84` equals `main` (`packages/ apps/ docs/ game/ announce/ tests/ tools/ .github/`) plus `.claude/agents/` (15 studio agents). Only HTML tracked outside review boards: `packages/game/index.html`, `apps/desktop/src/launcher.html`. `dist/` stays untracked.
 - Pushed `release-v84` (179 commits) to `origin/release-v84`. `main` untouched: no release, no Discord (those workflows run on `main` only); the test workflow runs on the branch.
 - Open: `save` test fails locally at the 1200 s limit with an empty log after the quests merge (direct run without limit in progress, `dist/save_direct.txt`).
+
 ## 2026-11-11 · quêtes lot 2: co-op, marché, guilde, siège, envoyé (branche hd-gameplay, non fusionné, non livré)
+
 - Décisions du Roi appliquées: quêtes aussi en co-op, les quêtes remplacent la barre Tutorial en 5 étapes, montants / ordre / noms revus, quêtes marché, guilde, siège, envoyé (+ convoi, co-op seulement). 21 quêtes en 7 chapitres (20 en solo). Tableau et règles: `docs/studio-notes/quests.md`.
 - Co-op: une seule ligne partagée, évaluée dans le tick, récompense payée aux DEUX joueurs (comme `objectives.js`), une partie co-op démarre toujours quêtes allumées. Interrupteur = commande lockstep `qs` (`questSwitch` dans `commands.js`, `case 'qs'` dans `mpExec`). État des quêtes ajouté au hachage lockstep (`mpHashX`).
 - État: `SAVA.QST` v2, par identifiant (`d:{id:1|2}`), plus par indice. Sauvegarde du lot 1 (indice sur 16 quêtes) migrée par identifiant dans `qFix`; sauvegarde sans quêtes = quêtes éteintes (inchangé).
@@ -424,21 +449,27 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Still running: video guide (`aaffcd280bd956aae`), spearman (`a32a61bc6cb6d6ef9`). After them the King asked for a full pass: improve and test everything.
 
 ## 2026-11-11 · bannière C (gonfanon sur mât) fusionnée et allumée (réponse du Roi « 1C 2C 3C »), non livré
+
 - `BANNER2='C'` dans `rendering/banner-icon.js`: petite icône (HUD, sauvegardes) et grande bannière (carte du royaume). `npm run build:release` fait, build de test republié.
 - Non relancé: tests (aucun fichier de simulation touché). Reste: bannières de pierre 3D sur l'ancien dessin, emblème illisible à 16 px, or sur or peu contrasté (`docs/studio-notes/banner.md`).
 
 ## 2026-11-11 · liste du Roi: Update, carte Leaderboard, 3 agents lancés (bannière, quêtes, guide vidéo), non livré
+
 - Liste du Roi (GitHub suspendu, donc pas d'issues): « What's new » -> « Update »; leaderboard en carte séparée sous la carte du haut avec aperçu du top 10; icône de bannière à refaire façon porte-étendard; tutoriel façon guide vidéo; quêtes pour guider les nouveaux joueurs; « où sont les lanciers du menu en jeu ? ».
 - Fait: `ui/title-menu.js` (libellé et titre « Update », texte ajouté via `docs/studio-texts/update.json`; carte Leaderboard sous la carte de saison, autant de lignes que la place le permet jusqu'à 10, clic = écran complet; `topRuns()` partagé avec l'écran). Vérifié: une capture 1280x720 avec 11 scores factices (10 lignes affichées). Non vérifié: écrans étroits/bas, fitcheck, tests non relancés (interface seule).
 - Lanciers: décor de l'écran titre seulement (`rendering/models/title-army.js`, chevaliers avec une pique), aucune unité lancier en jeu. Question posée au Roi: créer l'unité ou les retirer du titre.
 - Agents en worktree (rien fusionné): bannière (planche `docs/studio-boards/banner/`), quêtes (`gameplay/quests.js`, `docs/studio-notes/quests.md`), guide vidéo (`ui/video-guide.js`, `docs/studio-notes/guide.md`).
+
 ## 2026-11-11 · icône de bannière façon porte-étendard: planche A/B/C/D, interrupteur éteint (non fusionné, non livré)
+
 - Demande du Roi: « i'm still not happy about the icon for banner rework the banner maybe something more like the bannerman ». Branche de worktree hd-design, rien dans `game/`, rien poussé.
 - `rendering/banner-icon.js` (nouveau): `BANNER2=''` (défaut = image actuelle), 'B' étendard du porte-étendard, 'C' gonfanon sur mât, 'D' bannière murale; sprites 24x36 qui suivent couleur, 2e couleur, motif et emblème (16 emblèmes redessinés en 11x11). Deux lettres = petite puis grande image ('DB'). HUD, liste des sauvegardes et carte Nouveau royaume passent par `bannerIcon()`.
 - Planche `docs/studio-boards/banner/board.html` (3 lignes + référence du porte-étendard en jeu), `rows.json`; détail et constat: `docs/studio-notes/banner.md`. En attente du code du Roi.
 - Vérifié: `npm run build`; 24 captures du jeu sans erreur (4 variantes x 3 royaumes sur Nouveau royaume, sauvegardes, HUD, 16 et 32 px); feuille des 16 emblèmes x 3 variantes regardée une fois. Interrupteur éteint: `bannerIcon()` rend le canevas `BANNER` lui-même, mêmes rectangles.
 - Non vérifié: `npm test` (aucun fichier de simulation touché), vrai GPU, mobile, co-op. Non traité: texture 3D des bannières de pierre (reste A), pastilles d'emblème du menu (vectorielles), emblème or sur motif or peu contrasté.
+
 ## 2026-11-11 · quêtes pour guider un nouveau joueur (branche hd-gameplay, non fusionné, non livré)
+
 - Demande du Roi: « add quest in game to guide new player ». 16 quêtes en 6 chapitres, une active à la fois: bois, pierre et or, maison, ferme, caserne, 2 chevaliers, 2 archers, 6 murs + porte, tour, 3 pièges, vague 1, académie + recherche, Roi, compétence du Roi, vague 5, vague 10. Liste, récompenses et règles: `docs/studio-notes/quests.md`.
 - Code: `gameplay/quests.js` (état `questsState.Q`, `qBegin`/`qTick` dans l'enveloppe `update` de `statistics.js`), `ui/quest-panel.js` (panneau en haut à gauche, journal des quêtes, bouton replié), petits crochets dans `hud.js`, `reset.js`, `save-format.js` (`SAVA.QST`), `restore.js`, `settings.js` (ligne Quests On/Off), `input/desktop.js` (Échap ferme le journal). `ui/tutorial.js` et `ui/title-menu.js` non touchés.
 - Décisions: solo seulement (`qTick` ne fait rien si `MP.on`), rien en mode test F10, ancienne sauvegarde sans `QST` = quêtes éteintes. Récompenses au total 540 or, 120 bois, 40 pierre, 80 nourriture (avant la vague 1: 130 or, 120 bois, 40 pierre, 30 nourriture).
@@ -448,28 +479,34 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Reste au Roi: quêtes en co-op ou non, garder ou retirer la barre Tutorial en 5 étapes (double emploi), montants, ordre.
 
 ## 2026-11-11 · monde en blocs look B fusionné et allumé (réponse du Roi « 1B … 9B »), non livré
+
 - Le Roi a répondu 1B à 9B (planche blocs): branche fusionnée, `blocksState.on=true` par défaut (`rendering/blocks.js`), BLK=DBLK=0,5, terrain, décor, textures bâtiments et saisons allumés.
 - Rendu seulement, simulation intacte. Tests après fusion: smoke det tools mp8 mpk ALL PASS (`dist/merge_tests10.txt`); une capture du village avec mutants, armes et blocs allumés, sans erreur; build de test republié.
 - Reste (`docs/studio-notes/blocks.md`): géométrie des bâtiments non reconstruite en blocs (gros lot), arbres B plus grands (cachent plus les unités), écran titre et choix du site non regardés, vrai GPU, traits d'herbe sèche coupés depuis le lot bâtiments (correctif d'une ligne décrit, non fait).
 
 ## 2026-11-11 · armes et outils look B fusionné et allumé (réponse du Roi « 1B … 15B »), non livré
+
 - Le Roi a répondu 1B à 15B (planche armes, 12 lignes + 3 vues d'armée): branche fusionnée, `GEAR2_ON='all'` (`rendering/models/gear-style.js`).
 - Conflit de fusion dans `rendering/unit-instances.js` (clé de cache: mutants `m` + `gearSig()`), résolu à la main.
 - Tests après fusion: smoke det mp8 mpk mp_resync, résultat dans `dist/merge_tests9.txt`; build de test republié. Détail et reste à faire: `docs/studio-notes/gear.md` (projectiles, armes des morts-vivants, baliste, trébuchet, icônes non refaits).
 - Planche blocs toujours en attente du code du Roi (non fusionnée).
 
 ## 2026-11-10 · mutants look B fusionné et allumé (réponse du Roi « 1B … 8B »), non livré
+
 - Le Roi a répondu « 1B 2B 3B 4B 5B 6B 7B 8B »: branche fusionnée, `MUT2_ON='all'`, `npm run build:release` fait.
 - Tests après fusion: smoke det mp8 mpk ALL PASS (`dist/merge_tests8.txt`). Build de test republié (artifact de test).
 - Reste: nuée lointaine (ancien aspect pour momie et coureur), yeux/lueurs de nuit non regardés, cadavres, brute +54 % et boss +72 % de triangles, vrai GPU.
 - Planches armes/outils (`gear`) et blocs (`blocks`) prêtes dans leurs worktrees, non fusionnées, en attente des codes du Roi.
 
 ## 2026-11-10 · mutants en monstruosités: planche A/B, interrupteur éteint (historique)
+
 - Demande du Roi: « améliore les mutants pour ressembler à des monstruosités ». Branche de worktree hd-model, rien dans `game/`, rien poussé.
 - Look B des 6 mutants + boss dans `rendering/models/mutants.js`, interrupteur `MUT2_ON` (`mutant-style.js`, défaut '' = rien ne change). Détail, coûts, reste à faire: `docs/studio-notes/mutants.md`.
 - Planche: `docs/studio-boards/mutants/board.html` (8 lignes: brute, coureur, artificier, cracheur, mineur, momie, boss, horde), `rows.json`. En attente du code du Roi (« 1B 2A ... »).
 - Vérifié: poses repos/marche/attaque, triangles (6 mutants +17 %, scène horde +5,1 %, draw calls identiques), `npm test -- det smoke` (voir notes). Non traité: nuée instanciée lointaine (garde l'ancien aspect), nuit, co-op.
+
 ## 2026-11-10 · monde en blocs derrière un interrupteur éteint (non livré, planche en attente du Roi)
+
 - Demande du Roi: terrain, bâtiments et décors sur une seule taille de bloc, façon Minecraft. Étude et mesures: `docs/studio-notes/blocks.md`. Bloc retenu: 0,5 unité (2 blocs par case, unité = 1,7 bloc, 16 pixels par bloc); alternative 1/3.
 - `rendering/blocks.js` (nouveau): `blocksState` (éteint par défaut), parties `terrain`, `decor`, `build`, `seasons`, `setBlocks()`, localStorage `dk_blocks`. Terrain: mêmes colonnes et hauteurs, textures de blocs dans le shader, falaises fusionnées, liseré d'herbe, chemins en blocs, eau en pixels. Décor (`terrain-props-blocks.js`, nouveau): arbres, rochers, minerai, buissons en voxels fusionnés par chunk, plantes sur la grille de pixels, tout choisi par hachage de position. Bâtiments: seule la densité de texture change (18 -> 32 px par unité), modèles intacts. Saisons: neige et automne dessinés sur les blocs.
 - Vérifié: `npm run build`; `npm test -- det smoke` PASS (det 436 s, smoke 1110 s); listes de hachages `det` identiques octet pour octet entre release-v84, cette branche interrupteur éteint et cette branche interrupteur allumé. Coût: appels de dessin inchangés (154 village, 199 carte entière), triangles -34 % (village) et -41 % (carte entière), construction des chunks pas plus lente.
@@ -477,10 +514,13 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Reste: re-grille de la géométrie des bâtiments (non contenue, décrite dans les notes), contrôle sur un vrai GPU, co-op à l'œil. Régression probable notée (pas corrigée): depuis le lot bâtiments, l'id matière 9 (chaume) coupe les traits peints de l'herbe sèche du terrain.
 
 ## 2026-11-10 · logo Hammerdawn 1C appliqué, armes/outils en cours (non livré)
+
 - Planche `docs/studio-boards/hds/` (gen.py): le Roi a répondu « 1c » (soleil uni + 4 rayons + marteau droit). Appliqué aux calques de la carte d'intro (`packages/game/index.html`), animations inchangées. Ligne 2 (écriture du nom) sans réponse: nom laissé tel quel.
 - Vérifié: build:release, une capture de l'intro. Tests non relancés (HTML de l'intro seul). Icônes desktop et favicon non changés.
 - Agent hd-model en cours: revamp armes/outils, planche `docs/studio-boards/gear/`, interrupteur par défaut éteint, rien à fusionner avant la réponse du Roi.
+
 ## 2026-11-10 · armes et outils look B derrière un interrupteur (planche gear, non fusionné, non livré)
+
 - Demande du Roi: « revamp tout les armes / outils pour harmoniser le tout ». Interrupteur `GEAR2_ON` (`rendering/models/gear-style.js`), '' par défaut: rien ne change en jeu tant que le Roi n'a pas répondu.
 - Look B (`rendering/models/gear2.js`): une palette commune, épées (chevalier par niveau de recherche, capitaine, Roi), hallebarde, arc, 3 boucliers, 4 outils du paysan, charges portées, hampe d'étendard, canon. Détail et non-traités: `docs/studio-notes/gear.md`.
 - Planche: `docs/studio-boards/gear/board.html` (12 lignes + armée A/B), `rows.json` (ligne -> clés).
@@ -488,6 +528,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Non vérifié: temps de frame sur vraie carte graphique, `det` avec B activé (rendu seul), écran titre et icônes avec B, co-op. Non traités: projectiles (cubes instanciés), objets cuits dans les skins B des unités, armes des morts-vivants.
 
 ## 2026-11-10 · retours du Roi sur le build de test: son, intro, classement (non livré)
+
 - « Plus de son »: non reproduit en headless (musique mesurée ~-25 dBFS sur le titre, rendu neutralisé). Cause probable: ancien `dk_vol` bas ou `dk_snd=0` + nouvelle courbe au carré + -11 dB. Correctif: `TRIM` .285 -> .45 (+4 dB), remise à zéro unique de `dk_vol`/`dk_snd` (clé `dk_aud=2`). À confirmer par le Roi.
 - Carte Claude: jouée dans la sonde (`tools/bootprobe.py`); un clic pendant l'intro la sautait. Maintenant un clic ne saute plus, 2e clic ou Échap/Entrée/Espace saute.
 - Son sans clic: impossible dans un navigateur; launcher Electron: `autoplay-policy=no-user-gesture-required` (non testé).
@@ -495,12 +536,14 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Note: le build compressé charge three.js depuis un CDN; les sondes doivent le router en local (comme `bootprobe.py`).
 
 ## 2026-11-10 · bâtiments et unités look B fusionnés (Roi: tout B), non livré
+
 - Bâtiments: textures 3-4 tons, fenêtres éclairées la nuit, niveau bois distinct, fumée, 10 bâtiments refaits (`docs/studio-notes/buildings.md`). Unités: `UV2_ON='all'` dans `rendering/models/unit-style.js` (`docs/studio-notes/units.md`).
 - Vérifié sur l'arbre fusionné: smoke det tools features mp8 mpk mp_resync ALL PASS (`dist/merge_tests6.txt`). Build de test republié.
 - Non vérifié: coût sur vrai GPU (+5 % et +3,5 % de triangles), icônes de menu et écran titre avec les nouveaux looks, 7 cartes d'unités non relues, fitcheck.
 - Reste: pièges, échafaudage, canon, armes/boucliers, nuée au loin non traités; réponses du Roi sur l'audio.
 
 ## 2026-11-10 · audio refait, planches bâtiments et unités publiées (non livré)
+
 - Audio fusionné: lancement -11 dB (compresseurs sans rattrapage, limiteur, fondus, défauts 0,55), 7 thèmes variés, effets à hauteur/timbre variables, plafonds de voix, sons de menu; son d'onglet branché dans `kitTabs`. Détail: `docs/studio-notes/audio.md`. Aucune écoute humaine.
 - Vérifié sur l'arbre fusionné (intro + audio): smoke det mp8 mpk mp_resync, voir `dist/merge_tests5.txt`. `tools` non relancé depuis le correctif d'intro.
 - Build de test republié (artifact FibK3cKvLVe3mSuJDUb49d).
@@ -508,6 +551,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - À trancher par le Roi: niveau sonore, remise des curseurs au nouveau défaut, thème triomphe et silences; codes des deux planches.
 
 ## 2026-11-10 · intro de lancement dégelée, emblèmes annulés, build de test (non livré)
+
 - Intro: le démarrage était une seule tâche synchrone et l'intro comptait en horloge murale, donc finie avant d'être vue. `core/boot.js` découpe `main.js` en tranches de 30 ms; cartes en `transform`/`opacity`, lancées à la première image peinte; rideau ouvert quand le titre dessine. Détail: `docs/studio-notes/boot.md`.
 - Sous `navigator.webdriver` le démarrage reste synchrone (les tests ne couvrent pas le vrai chemin; `tools/bootprobe.py` le force).
 - Vérifié (branche agent): build, build:release, det PASS (hashes inchangés). NON vérifié: smoke et tools (dépassement, machine chargée) à relancer; vrai GPU, iframe claude.ai, launcher.
@@ -516,20 +560,24 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - En cours (agents): audio, unités (planche), bâtiments (planche). Les planches ne se fusionnent pas avant la réponse du Roi.
 
 ## 2026-11-10 · refonte fenêtres de lancement, menus, logos, animations (non livrée)
+
 - `ui/menu-kit.js` (gabarit plein écran), `menu-fx.js`; titre en lobby (Play + mode, pastilles L/T/O, carte version/saison), tous les écrans de lancement, Réglages, Esc, fin au gabarit; logo NARANXIA en blocs, carte Hammerdawn, favicon; animations sur horloge murale, coupées par Reduce motion.
 - Vérifié (branche agent): build, det tools smoke, fitcheck TOTAL 1 (connu). Arbre fusionné d'avant la refonte: det smoke events mp8 mpk mp_resync ALL PASS. Après refonte: tests relancés (dist/merge_tests4.txt), fitcheck à refaire avec les 17 nouvelles clés.
 - Planche avant/après publiée (docs/studio-boards/revamp). Non testé: tactile réel, manette, launcher, Esc en co-op. Icônes desktop .ico/.icns non refaites.
 
 ## 2026-11-09 · menus du Roi (1B 2B 3C 4B 5B 6B 7C 8C) appliqués, non livrés
+
 - Double filet doré, boutons plaques, pied de page Back/Select, titre en cadre avec braises, choix du mode en 3 cartes, fiche de détail unité/bâtiment, onglets à icônes + NEW (`dk_newslots`, jamais dans la sim ni la sauvegarde), onglets en PageUp/PageDown (Q/E déjà pris).
 - Bug corrigé: `hud.js` `const L=menuItems()` masquait `L()` (« L is not a function » à la sélection d'une unité).
 - Vérifié (branche agent): build, det tools smoke, captures. fitcheck TOTAL 1 (« Construire » FR dans un slot peasant, déjà présent). 63 clés ajoutées. À faire: textes d'ambiance relus par hd-lore, tests mp8 mpk mp_resync events sur l'arbre fusionné, fitcheck.
 - Rien poussé (GitHub suspendu).
 
 ## 2026-11-09 · look du Roi (1C 2C 3B 4B 5B) appliqué, non livré
+
 - Liseré doré + coins pixel, troupes en cartes par type, slots Build icône+coût, titres en Pixelify Sans (repli Inter), écran de fin en 3 niveaux. UI seulement. Vérifié: build, det, smoke, fitcheck 0. Reste: tests mp8 mpk mp_resync après fusion, police hors ligne réelle.
 
 ## 2026-11-09 · lots design / qualité / simplicité (non livrés, v92 en préparation)
+
 - Corrections qualité fusionnées; kit Discord (anglais) et `tools/announce.sh` (embed + images, dry-run seulement); images d'annonce v92 dans `announce/img/v92/` (minimap noire, barre du Roi absente sur 03).
 - Menus: Esc à 4 boutons, tutoriel 5 étapes, réglages 3 onglets, raccourcis ponctuation masqués, Build: niche masquée avant académie/vague 1, boutons maison/ferme/mur, `UIT` + `focusRing`.
 - Planche de look publiée (docs/studio-boards/look), en attente de la réponse du Roi. Aucun changement de look appliqué.
@@ -537,10 +585,12 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Rien poussé (GitHub suspendu).
 
 ## 2026-11-09 · model variants cleaned, scout/engineer/envoy in pixel layer (local, not released)
+
 - Deleted refused variants + `window.__MV` (model-variants.js, unit-variants.js); units.js / bastion-buildings.js back to the pre-variant behaviour for king, guard, buildings. `pxScout`, `pxEngineer`, `pxEnvoy` added in royal-skins.js (B silhouettes). Visual only.
 - Verified: build, `det` PASS, showshot front/back of the 3 units; bbox tops sit under the bar height (scout h 16, engineer 16.4, envoy 16). Not run: smoke.
 
 ## 2026-11-09 · Remaining workshops merged (v92, not released)
+
 - Research exclusive paths (Steel/Mail, Fire arrows/Boiling oil, Crop rotation/Better tools; `RS2.ch`, Iron age after either of Steel or Mail), market fatigue (`FAT` in SAVA, sell floor .80, barter .85), envoy tribute -25 % per visit with per-camp caps (700 gold, 350 food).
 - Events with a choice (caravan: take now or escort for x2.5 after 40 s; rebel envoys: accept or refuse for renown +10 %/point): `gameplay/events.js`, `ui/event-bar.js`, command `ev` in mpExec, state `EVT` in SAVA, first click decides in co-op, default after 30 s of sim time. Rebel camp traits (merchant x1.5 tribute, warlike +25 % horde hp, wary first envoy turned away) by pure hash of seed and camp id.
 - King XP and talents: state on the king unit (`kxp`, `kt`, `kdr`), levels 1-5, 8 talents in 2 branches, command `kt`.
@@ -550,12 +600,14 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Left: release v92 when GitHub is back (drafts in docs/release-v92, to update with the new features), recolour selection rings and zombie eyes for colour-blind mode, a fatigue indicator on market buttons.
 
 ## 2026-11-08 (night) · King's board answers applied (v92, not released)
+
 - Answers "1A 2A 3B 4A 5A 6A 7A 8B 9A 10A 11B 12X 13B 14X" (X = keep current): palette, team colours and seasons unchanged; unit bars = 10 pixel segments with bevel (`drawBars` in ui/hud.js); knight plume red, archer/tower/barracks icons already match A; team skin = full tabard; rank stripes 0-3 (min(3, xp/4), knight and archer, player team, model rebuilt on rank change, `u.mrk`); scout, engineer, envoy use model variant B (`MV_DEFAULT` in rendering/models/model-variants.js); king, guard, bastion buildings unchanged.
 - `tools/run.py` now serves the fonts offline (fontroute), it hung on Google Fonts before.
 - Verified: det, smoke PASS after the merge; one screenshot shows the segmented bars. Not seen: rank stripes and tabard in game (small, shield hides the knight's left arm), scout/engineer/envoy variant B in game.
 - Left: delete the refused model variants and the `window.__MV` selector (model.md step 1-3: pixel-texture the scout/engineer/envoy), release when GitHub is back.
 
 ## 2026-11-08 · Studio agents merged (v92, not released)
+
 - Hammerdawn Studio: 15 agents in `.claude/agents/hd-*.md`, guide `docs/STUDIO_AGENT_GUIDE.md`, org chart + game-structure map (units, buildings, research, enemies, events, links) in artifact PiQPNmRtfsp8cFWuKDs2BS (view button "Structure du jeu", data from rules.js).
 - Merged 11 agent branches (no conflicts): coop audit (ruins loot timer was not deterministic, fixed), menu-ux (colour-blind mode `dk_cb`, 3 one-time hints), animation (hit flash/recoil, construction scaffold, visual only), lore (boss legends, realm journal `JRN` in SAVA, 4 Chronicle fragments), audio (11 synthesized sounds), gameplay (market barter x*, wave preview `wave-preview.js`, tests/market.js), localization (L() fixes, 45 texts), model (variants via `window.__MV`, off by default), perf (no measurable cost of new features, hashes identical), community notes.
 - Texts merged with addtexts (lore 17, menu-ux 5, gameplay 17, localization 45); "Waves survived: {0}" fixed by hand. A merge replaced `node_modules` by a self-looping symlink committed by an agent: untracked, `.gitignore` now ignores the symlink, `npm ci` redone.
@@ -564,6 +616,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Not done: market fatigue, envoy gain cap, event choices, King XP/talents (need new SAVA counters). GitHub account suspended: nothing pushed, ~60 local commits on release-v84.
 
 ## 2026-11-07 · Design refresh: glass UI, Inter, cool light (v92, not released)
+
 - Waiting list DONE: rebel envoy (T/C/TRAIN envoy g80 f20 12 s, trained at the castle once an embassy is owned, hp45 spd120 vision 14; sim loop in simulation.js: within 8 tiles of an alive rebel base (BASES) and base.envT free -> +80+8*wave gold, +40+4*wave food, envoy consumed, base cooldown 300 s; model approved by eye only, white-robe diplomat with flag, board not used); ruins now have 3 looks by variant (pillar court, broken arch, tower stump), board published (1 row A/B/C, answer pending: keep one or mix). Tests: envoy (new, quick suite), det features mp8 mpk mp_resync pass; ruins/compat/save passed before the looks. NOT run: fitcheck, save after envoy. Visual note: envoy flag is thin edge-on from the front.
 - Ruins DONE (King chose 'ruines seules'; world camps are disabled in code so no envoy): `RUINS` map in world/terrain.js (mkRuin per chunk, >=48 tiles from castle, 20% of chunks, flat 3x3 spot, pure hs hashing so world gen is unchanged), saved in SAVA; gameplay/ruins.js loots once when a player unit comes within 2.5 tiles (3 loot kinds by variant, amount 40+0.8*distance, embassy not applied, English message); rendering/ruins.js placeholder model (slab, 4 broken pillars, chest that disappears when looted), synced in render3D. Debug globals RUINS/ensureAround/hudDisplayState. tests/ruins.js in the quick suite. Screenshot checked once. NOT done: rebel envoy unit (needs camps), minimap marker, ruin art board (placeholder look), translations of the message.
 - Events lot 2: wolf pack (wave 7 then every 9th: extra fast runners on every lane, hp +3%/wave, banner) and eclipse (wave 8 then every 11th: living zombies +15% hp, +40+8*wave gold per player, embassy x1.5), in waves.js, seeded rnd only. Messages English like the other events. Still queued: ruins to explore, rebel envoy unit. Tests: see next entry.
@@ -637,6 +690,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Built Windows and Linux Electron packages and checked the offline installation and save handlers with isolated profiles. The macOS build matrix remains in CI, since the Windows test host could not create the package symlinks.
 
 ## 2026-11-06 · v91
+
 - All 13 ideas of the King (issues #6-#18) in one batch, "tout ensemble". Removed by him: events, day/night cycle, co-op roles, difficulty modes. Added by him: seasons with weather.
 - Seasons and weather (`23_weather.js`, #6): season = 4 waves, weather fixed per wave from a hash of waveN, rain/snow/petals/leaves particles, thunder, sounds, top-bar label; visual and audio only (terrain colours are baked, so the season tints light, sky and fog).
 - Boss every 10th wave (`25_boss.js`, #7), King skills on `<` and `>` (`27_king_skills.js`, #8, co-op command `ks`), spike traps + Boiling oil + Iron age (`28_traps.js`, #9, #12: Iron age is stats only, no building look change, no palisade, no 3rd tier look), co-op goals (`26_coop_goals.js`, #11) and typed pings Alt/Shift/Ctrl (#10).
@@ -644,6 +698,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - New test `features` (tests/features.js). Verified locally: det, features, tools PASS, screenshots of the HUD (boss bar, king buttons, tutorial, typed pings), the end screen and snow; mp8, mpk and save PASS too (solo save round trip same0). GitHub runs smoke, mp_resync and mp_convoy before the release. Left: real devices for touch, visual check of the ping label, Iron age look, spike pits as a palisade variant, online leaderboard (needs a server).
 
 ## 2026-11-06 · v90
+
 - The whole restyle shipped (issues #1, #2): the King chose castle A (square fortress, now also the wooden tier via `pxCastleA(true)`),
   textures on buildings kept (he answered only "A"; taken for both boards). The wip patch was merged into `src/game/` with
   `wip/restyle/restyle.py` run on the joined parts (markers), result identical to the preview build (cmp). Toggles left in the code:
@@ -654,6 +709,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - wip/restyle is now history: do not run restyle.py again on src (its strings are already replaced).
 
 ## 2026-11-06 · restyle round 4: buildings (wip, not released)
+
 - Buildings are already block-built; round 4 adds Minecraft block textures in the matV surface shader (restyle.py `PXSH`, not on
   terrain: `#ifndef TERR`): 18 pixels per tile, stone = staggered bricks with mortar, wood = planks with butt joints, per-pixel noise,
   painted ink lines at 30%. No geometry change, no cost on the CPU.
@@ -662,6 +718,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
   Waiting for his choice (and A/B for the textures); the wood castle (tier 0) will follow the chosen design; then ship the whole revamp (rounds 2-4) in one release, credit bugbilly.
 
 ## 2026-11-06 · restyle round 3 (wip, not released)
+
 - Pixel capes (king cape + cape2 velvet and ermine with gold crown medallion, captain team cape with gold sun and hem, guard red cape
   with team collar and gold sun) via `pxCapes` before `fin()` in mcModel; the bannerman's banner as one 20x30 Minecraft banner over the
   three chained cloth pieces (`pxBanner`: gold border, fleur-de-lis, swallow tail); `pxCannon` (bronze barrel with rings, plank
@@ -669,6 +726,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Board updated (same URL, version 2, rows 1-3). He moved on to buildings without remarks: taken as approved. Then buildings (#2), then ship everything in one release.
 
 ## 2026-11-06 · restyle round 2 (wip, not released)
+
 - The King said "Go pour le revamp" (issue #1). New pixel-skin builders in `wip/restyle/sets_units2.js`: king (A face + beard + crown,
   B royal helm + crown), captain (gilded breastplate, red sash, open bascinet, gold pauldrons, chevron shield, gilded sword), bannerman
   (kettle hat, gambeson, cross tabard), gunners (gunner2 keeps the old ramrod), zombies (same zSpec variety and MUTX proportions as before,
@@ -677,6 +735,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Not done yet: capes, banner, cannon, swarm crowd, buildings (#2). Ship only when the whole set is approved; credit bugbilly for the shield.
 
 ## 2026-11-06 · v89
+
 - Batch 4 of the King's list of 2026-11-02 (the list is now complete): troops panel (F2 / army button, units by type and task,
   click to select), peasant tasks (Wood, Stone, Gold, Farm, Build in the peasant menu, `assignJob`), co-op convoys (castle menu >
   Co-op > Send: porters carry gold / wood / stone / food to the partner, dots on the map, refund after 120 s), Fire arrows research
@@ -696,12 +755,14 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
   buildings were never reproduced (identical in a real 2-client lobby test): waiting for an F8 report (#3, #4). Save/load continuation differs (#5).
 
 ## 2026-11-05 · v88
+
 - Co-op automatic resync: hash mismatch -> host freezes, sends its save in 48 KB chunks ('rs0'/'rs1'), guest loads, then host loads the same
   snapshot (`mpResApply`, seeded Math.random during the load), lockstep restarts at a new epoch (`MP.ep`); banner "Co-op: resynchronizing...".
 - Desync cause fixed: zombies / AI units took `pl` from CURPL (differs per machine), now `pl:t===0?CURPL:0`.
 - Verified: mp_resync RESULT OK (resync in 7-9 s), mp8 / mpk no divergence, det same.
 
 ## 2026-11-05 · v87
+
 - Castle turned with R while placing (door check `castleRotAt`), partner's castle visible in the live picker (ghost, beam, name tag, cursor),
   distance rule reduced to "castles must not overlap" (`sitesFar` >= 10 tiles), castles no longer sink (`smChunk` keeps the pad height),
   units use ramps (`canStep` / `canStepZ`, TFL 1 levelled 2 miner 3 player-made), double click selects all buildings of a type + group upgrade,
@@ -709,6 +770,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Decisions: public repo; "versions directes"; CLAUDE.md + headless tests + release workflow with Discord post.
 
 ## Before v87 (restyle track, unreleased, in wip/restyle)
+
 - Approved by the King: armour of knight / royal guard / archer / peasant in the Minecraft-skin style; knight shield B (Minecraft shield);
   royal guard shield "blason 1" (red pale, gold crown and sun); voxel halberd; shield pressed on the forearm (SHZ 1.35).
 - Credit "Minecraft Shield" by bugbilly (CC BY 4.0) in the release notes when the shields ship. Never copy third-party models (crimson heir: style only).

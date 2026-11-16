@@ -158,17 +158,16 @@ async () => {
   const a = runOnce(),
     b = runOnce(),
     same = JSON.stringify(a) === JSON.stringify(b);
-  // Lot B (v95): mpHash folds in the spike traps (count, tile, hp, owner), so only the first number of each line changed (same counts, same state); identical on two runs.
-  // Captured from the v95 polish lots (terrain-aware lane routes #30, spawn patch that widens with the wave size, weighted unit separation with body block), identical on two runs: v94 release branch (main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix, spike removal) plus route bending.
+  // Captured from the v95 polish lots (lot A: route reach 112 tiles, contour spread of crowded hordes, terrain-aware lane routes #30, spawn patch that widens with the wave size, weighted unit separation with body block), identical on two runs: v94 release branch (main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix, spike removal) plus route bending.
   const expected = [
-    "-1987203276:21750:2:0:1095:0.9614:sh9:nl0.91:f150:sp0:ro00:wk0:T-1674095301:z137:pu0:fg1:fp4",
-    "-901574525:26000:7:0:1124:0.9768:sh9:nl0.98:f150:sp0:ro00:wk0:T-2037096171:z131:pu0:fg0:fp5",
-    "145767452:26000:7:0:1124:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T-2037096171:z131:pu0:fg0:fp5",
-    "642257223:26000:7:0:1124:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T-2037096171:z131:pu0:fg0:fp5",
-    "1825980040:26000:7:0:1124:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T-2037096171:z131:pu0:fg0:fp5",
-    "2005643251:26000:10:0:1133:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-2037096171:z128:pu0:fg0:fp5",
-    "934305171:26000:22:0:1169:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T71531463:z117:pu0:fg0:fp5",
-    "-1252820980:25980:48:0:1187:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-288805216:z111:pu0:fg0:fp4",
+    "1599339652:21750:7:0:1084:0.9614:sh9:nl0.91:f150:sp0:ro00:wk0:T-749632464:z132:pu1:fg0:fp7",
+    "1493468916:26000:8:0:1090:0.9768:sh9:nl0.98:f150:sp0:ro00:wk0:T1934999151:z131:pu0:fg0:fp7",
+    "1717920530:26000:8:0:1090:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T1934999151:z131:pu0:fg0:fp7",
+    "1333432623:26000:8:0:1090:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T1934999151:z131:pu0:fg0:fp7",
+    "-1203503380:26000:9:0:1093:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T1934999151:z130:pu0:fg0:fp7",
+    "1823265646:26000:24:0:1138:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T1934999151:z115:pu0:fg0:fp7",
+    "-1573662705:25953:83:0:1173:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-1956941577:z103:pu0:fg0:fp7",
+    "1489954596:25833:218:0:1332:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T-1956941577:z89:pu2:fg0:fp6",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   return JSON.stringify({ ok: same && reference, same, reference, a, b });

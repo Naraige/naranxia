@@ -276,16 +276,35 @@ const SWLT = new Float64Array(256);
 for (let v = 0; v < 256; v++) SWLT[v] = (v / 127.5 - 1) * SWBW * TS;
 for (let v = 0; v < 16; v++) SWV[v] = SWSP * (v & 8 ? 1.08 : 1) * (0.9 + (v & 7) * 0.03);
 
+/* a step from (tx,ty) by (dx,dy) is open (same test as fmask, for tiles it did not list) */
+function swOpen(tx, ty, dx, dy, B) {
+  const X = tx + dx,
+    Y = ty + dy;
+  return !(dx && dy
+    ? HT[ty * TW + X] !== HT[ty * TW + tx] ||
+      HT[Y * TW + tx] !== HT[ty * TW + tx] ||
+      B(tx, ty, X, ty) ||
+      B(tx, ty, tx, Y) ||
+      B(tx, ty, X, Y)
+    : B(tx, ty, X, Y));
+}
+
+/* from SWSD zombies on a tile, the crowd also spreads along the contour of the field: a neighbour of the same field value (not downhill) counts too, at SWSP2 extra, so a zombie takes it
+   only where it is emptier by more than that. Else a horde that comes down a pass in a cone piles up on the middle tiles while the sides stand empty */
+const SWSD = 12,
+  SWSP2 = 8;
+
 function swPick(S, tx, ty, terr, o) {
   const m = fmask(S, tx, ty, terr);
   if (m <= 0) return m === 0 ? -1 : -2;
-  if (!(m & (m - 1))) return 31 - Math.clz32(m);
-  let bq = -1,
-    bs = 1e9;
   const W = S.w,
     F = S.F,
     fb = (ty - S.y0) * W + tx - S.x0,
-    sb = ty * TW + tx;
+    sb = ty * TW + tx,
+    crowd = SWD[sb] >= SWSD;
+  if (!crowd && !(m & (m - 1))) return 31 - Math.clz32(m);
+  let bq = -1,
+    bs = 1e9;
   for (let b = m; b; b &= b - 1) {
     const q = 31 - Math.clz32(b & -b),
       dx = DX8[q],
@@ -294,6 +313,23 @@ function swPick(S, tx, ty, terr, o) {
     if (sc < bs) {
       bs = sc;
       bq = q;
+    }
+  }
+  if (crowd) {
+    const B = terr ? blkT : blk,
+      v0 = F[fb];
+    for (let q = 0; q < 8; q++) {
+      if (m & (1 << q)) continue;
+      const dx = DX8[q],
+        dy = DY8[q],
+        a = tx - S.x0 + dx,
+        b = ty - S.y0 + dy;
+      if (a < 0 || b < 0 || a >= W || b >= S.h || F[fb + dy * W + dx] !== v0 || !swOpen(tx, ty, dx, dy, B)) continue;
+      const sc = v0 * 4 + SWD[sb + dy * TW + dx] + ((o >> q) & 1) * 1.5 + SWSP2;
+      if (sc < bs) {
+        bs = sc;
+        bq = q;
+      }
     }
   }
   return bq;

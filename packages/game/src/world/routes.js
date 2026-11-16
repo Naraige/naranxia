@@ -26,16 +26,17 @@ export const gOK = (x, y) => x >= 0 && y >= 0 && x < TW && y < TH && genF[((y / 
 
 /* Route bending (v95): the way points used to be laid without looking at the land, so a lane could run straight into a mountain massif (the terrain then cut a canyon for it) or
    through the middle of a wood. `ground(x, y)` (given by terrain.js: pure noise of the seed, no route, no chunk) returns the cost of standing on a tile: water, height above the
-   plains, woods. A dynamic programme over the lateral offset of every way point (RSTEP tiles apart, at most RMAX steps from the base curve, zero near the castle and at the map edge)
+   plains, woods. A dynamic programme over the lateral offset of every way point (RSTEP tiles apart, at most RMAX steps (40 x 2 = 80 tiles since lot A, was 48) from the base curve, zero near the castle and at the map edge)
    finds the cheapest bend, then the offsets are smoothed and interpolated along the polyline. No RNG, no terrain generation: same seed + same castles = same routes. */
 const RSTEP = 2,
-  RMAX = 24,
+  RMAX = 56,
   RTAPER = 60;
 
 function bendOffsets(ground, CX, CY, ex, ey, px, py, D, lat0, m) {
   const ns = 2 * RMAX + 1,
     INF = 1e12,
     cap = new Int16Array(m),
+    row = new Float64Array(ns + 8),
     cell = new Float64Array(m * ns),
     best = new Float64Array(m * ns),
     from = new Int8Array(m * ns),
@@ -43,14 +44,18 @@ function bendOffsets(ground, CX, CY, ex, ey, px, py, D, lat0, m) {
   for (let j = 0; j < m; j++) {
     const d = D - j * 4.5;
     cap[j] = Math.floor(RMAX * Math.max(0, Math.min(1, (D - d) / RTAPER, (d - 8) / RTAPER)));
-    for (let s = -cap[j]; s <= cap[j]; s++) {
-      const lat = lat0[j] + s * RSTEP,
-        x = CX + 0.5 + ex * d + px * lat,
-        y = CY + 0.5 + ey * d + py * lat;
-      cell[j * ns + s + RMAX] =
-        4.5 * (0.5 * G(x, y) + 0.25 * G(x + px * 4, y + py * 4) + 0.25 * G(x - px * 4, y - py * 4)) +
-        0.12 * Math.abs(s * RSTEP);
+    /* the side samples (4 and 8 tiles, 2 and 4 steps to each side: a valley narrower than 16 tiles is a corridor where the horde piles up) lie on the same lateral lattice as the centre samples: one ground call per lattice point, not three */
+    for (let s = -cap[j] - 4; s <= cap[j] + 4; s++) {
+      const lat = lat0[j] + s * RSTEP;
+      row[s + 4 + RMAX] = G(CX + 0.5 + ex * d + px * lat, CY + 0.5 + ey * d + py * lat);
     }
+    for (let s = -cap[j]; s <= cap[j]; s++)
+      cell[j * ns + s + RMAX] =
+        4.5 *
+          (0.4 * row[s + 4 + RMAX] +
+            0.15 * (row[s + 6 + RMAX] + row[s + 2 + RMAX]) +
+            0.15 * (row[s + 8 + RMAX] + row[s + RMAX])) +
+        0.12 * Math.abs(s * RSTEP);
   }
   best.fill(INF);
   best[RMAX] = cell[RMAX];
