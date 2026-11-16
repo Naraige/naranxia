@@ -4,6 +4,11 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-16 · polish cleanup (merge of the 4 polish lots)
+
+- Merged perf, co-op, routes and QA lots into the branch (cherry-picks, journal conflicts only). Removed 4 dead text keys with old key hints (`Torch [']`, `Barracks rally [-]`, `Forester's hut [[]`, `Builders' guild []]`) in translations.js and nl/pl/tr: no source used them; langcheck and textaudit clean.
+- Open for the King: v94 notes line "On AZERTY the camera is now on Z Q S D." wraps leaving "D." alone (write ZQSD at release); #26/#3/#4 stay open until a guest F8 report.
+
 ## 2026-11-16 · polish lot perf (hd-perf worktree, committed on branch, not merged, not released)
 
 - Task #21 (swarm ~57 % of sim time). Baseline `tools/profile.py` (v94 build): swStep 15.9 s self, swUpdate 3.9 s, swPick 3.2 s, GC 2.8 s, (program) 72 % (software GL). No unsafe or behaviour-changing change attempted: the swarm is already table-driven (v93), so only allocation cuts that give the same numbers.
