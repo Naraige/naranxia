@@ -1664,4 +1664,8 @@ export const TR = {
     "Dikenler artık yerleştirmeden önce önizleme gösteriyor ve tam iadeyle yıkılabiliyor.",
   "Zombie lanes find a way around rock and woods more often, so fewer hordes cross mountains or pile up on trees.":
     "Zombi yolları kayaları ve ormanları daha sık dolaşıyor; daha az ordu dağları aşıyor ya da ağaçlarda yığılıyor.",
+  "Could not connect to your partner. Check the code and try again.":
+    "Ortağına bağlanılamadı. Kodu kontrol et ve tekrar dene.",
+  "Co-op: connection lost with {0} ({1} s). Open the menu to leave, or wait for it to come back":
+    "Co-op: {0} ile bağlantı koptu ({1} sn). Çıkmak için menüyü aç ya da bağlantının dönmesini bekle",
 };

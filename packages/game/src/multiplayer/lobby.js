@@ -35,6 +35,14 @@ export function mpBanner(now) {
     ws = MP.stall && !sessionState.paused ? (now - (MP.stallAt || now)) / 1000 : 0,
     quiet = (now - (MP.rxAt || now)) / 1000;
   if (MP.rsy || MP.desync) return "Co-op: putting both games back in step, a few seconds (nothing to do)";
+  if (ws >= 1.5 && quiet >= 30)
+    return (
+      "Co-op: connection lost with " +
+      nm +
+      " (" +
+      Math.round(quiet) +
+      " s). Open the menu to leave, or wait for it to come back"
+    );
   if (ws >= 1.5 && quiet >= 6)
     return (
       "Co-op: no answer from " + nm + " for " + Math.round(quiet) + " s, the game goes on when the connection is back"
@@ -42,6 +50,13 @@ export function mpBanner(now) {
   if (ws >= 1.5) return "Co-op: waiting for " + nm + ", " + Math.round(ws) + " s (slow connection or computer)";
   if (MP.rtt >= 250) return "Co-op: slow connection (" + MP.rtt + " ms)";
   return "";
+}
+
+/* back to the first panel (host / join / public games), for a guest whose partner is gone: the lobby panel had no way out, so the page had to be reloaded */
+export function lobbyHome() {
+  if (!mpEl) return;
+  for (const id of ["mpHostP", "mpJoinP", "mpPubP", "mpLobby", "mpBack"]) $m(id).style.display = "none";
+  $m("mpHome").style.display = "block";
 }
 
 export function mpWorldSync() {

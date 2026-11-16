@@ -14,7 +14,7 @@ import { sessionState } from "../gameplay/session.js";
 import { update } from "../gameplay/statistics.js";
 import { SW, swarmState } from "../gameplay/swarm.js";
 import { mpExec } from "./commands.js";
-import { lobbyNote, lobbyRender, lobbyShow, mpModal, mpWorldSync } from "./lobby.js";
+import { lobbyHome, lobbyNote, lobbyRender, lobbyShow, mpModal, mpWorldSync } from "./lobby.js";
 import { mpResMsg, mpResync } from "./resync.js";
 import { MP } from "./session.js";
 import { home } from "../rendering/camera.js";
@@ -368,8 +368,21 @@ export function mpLost() {
     hudDisplayState.msgS = "Partner disconnected - continuing solo";
     hudDisplayState.msgT = 6;
   }
-  lobbyNote("Your partner left the lobby.");
+  if (!MP.host) {
+    /* the guest has nothing left to wait for: free the connection and offer the first panel again (host / join) */
+    try {
+      if (MP.peer) MP.peer.destroy();
+    } catch {
+      /* The peer is already gone. */
+    }
+    MP.peer = null;
+    MP.pcon = null;
+    MP.dc = null;
+    MP.code = "";
+    lobbyHome();
+  }
   lobbyRender();
+  lobbyNote("Your partner left the lobby.");
 }
 
 export function setMpMsgHandler(handler) {

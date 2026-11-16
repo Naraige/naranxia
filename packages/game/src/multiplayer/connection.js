@@ -28,7 +28,9 @@ export function loadPeer() {
 
 function attach(c) {
   MP.pcon = c;
+  let opened = false;
   c.on("open", () => {
+    opened = true;
     MP.dc = { readyState: "open", send: (s) => c.send(s) };
     mpConnected();
   });
@@ -39,8 +41,16 @@ function attach(c) {
       /* Ignore malformed or stale peer messages; later lockstep messages can still arrive. */
     }
   });
-  c.on("close", mpLost);
-  c.on("error", mpLost);
+  /* closed before it ever opened (a wrong code, a host that left, a blocked network): say so instead of staying on "Joining room..." */
+  const gone = () => {
+    if (opened) mpLost();
+    else if (MP.pcon === c && !MP.conn) {
+      MP.pcon = null;
+      mpStatus("Could not connect to your partner. Check the code and try again.");
+    }
+  };
+  c.on("close", gone);
+  c.on("error", gone);
 }
 
 const normCode = (c) =>
@@ -114,6 +124,13 @@ export async function lobbyJoin(code) {
   }
   MP.host = false;
   MP.code = code;
+  if (MP.peer && !MP.conn) {
+    try {
+      MP.peer.destroy();
+    } catch {
+      /* A peer that is already closed needs nothing more. */
+    }
+  }
   const peer = new window.Peer(PCFG);
   MP.peer = peer;
   const t = setTimeout(() => {

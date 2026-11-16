@@ -1667,4 +1667,8 @@ export const PL = {
     "Kolce pokazują teraz podgląd przed postawieniem i można je zburzyć z pełnym zwrotem.",
   "Zombie lanes find a way around rock and woods more often, so fewer hordes cross mountains or pile up on trees.":
     "Ścieżki zombie częściej omijają skały i lasy, więc mniej hord przechodzi przez góry lub tłoczy się na drzewach.",
+  "Could not connect to your partner. Check the code and try again.":
+    "Nie można połączyć się z partnerem. Sprawdź kod i spróbuj ponownie.",
+  "Co-op: connection lost with {0} ({1} s). Open the menu to leave, or wait for it to come back":
+    "Koop: utracono połączenie z {0} ({1} s). Otwórz menu, aby wyjść, albo poczekaj na powrót połączenia",
 };

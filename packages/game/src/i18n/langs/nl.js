@@ -1680,4 +1680,8 @@ export const NL = {
     "Pieken tonen nu een voorbeeld bij het plaatsen en kunnen worden gesloopt met volledige terugbetaling.",
   "Zombie lanes find a way around rock and woods more often, so fewer hordes cross mountains or pile up on trees.":
     "Zombieroutes gaan vaker om rotsen en bossen heen, zodat minder hordes over bergen lopen of zich bij bomen opstapelen.",
+  "Could not connect to your partner. Check the code and try again.":
+    "Kan geen verbinding maken met je partner. Controleer de code en probeer opnieuw.",
+  "Co-op: connection lost with {0} ({1} s). Open the menu to leave, or wait for it to come back":
+    "Coöp: verbinding met {0} verloren ({1} s). Open het menu om te stoppen, of wacht tot ze terug is",
 };

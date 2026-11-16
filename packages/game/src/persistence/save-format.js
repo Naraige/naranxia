@@ -20,6 +20,7 @@ import { statisticsState } from "../gameplay/statistics.js";
 import { SW, swarmState, SWD, SWH, SWN } from "../gameplay/swarm.js";
 import { wavesState } from "../gameplay/waves.js";
 import { SPK } from "../multiplayer/objectives.js";
+import { MP } from "../multiplayer/session.js";
 import { fowHi, fowLo, fowRA, fowSeen, fowTex, fowVis } from "../rendering/fog.js";
 import { THREE } from "../rendering/three.js";
 import { mkG } from "../world/pathfinding.js";
@@ -91,6 +92,13 @@ export const SAVA = {
     () => sessionState.SITE2,
     (v) => {
       sessionState.SITE2 = v;
+    },
+  ],
+  /* a guest whose partner left goes on alone as player 2 (MP.side = 1): a save made then must load as player 2, not as the host's kingdom */
+  MPSIDE: [
+    () => MP.side | 0,
+    (v) => {
+      MP.side = v | 0;
     },
   ],
   HT: [() => HT, null],

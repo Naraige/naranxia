@@ -615,6 +615,10 @@ function moveCastle(tx, ty) {
   if (c === sessionState.CS) {
     terrainState.CX = x0 + 2;
     terrainState.CY = y0 + 2;
+  } else if (c === sessionState.CS2 && sessionState.SITE2) {
+    /* the second castle moved: its site follows (AI camps, hordes and the chunks not yet generated keep away from the real castle) */
+    sessionState.SITE2.tx = x0 + 2;
+    sessionState.SITE2.ty = y0 + 2;
   }
   buildStructMesh(c);
   refreshNear(c);

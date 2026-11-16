@@ -1,6 +1,6 @@
 import { rebuildOwn } from "../ai/kingdoms.js";
 import { LFLD, LFQS, LFQT } from "../ai/zombie-lanes.js";
-import { setPl } from "../gameplay/players.js";
+import { LPL, setPl } from "../gameplay/players.js";
 import { TH, TW } from "../gameplay/rules.js";
 import { selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
@@ -50,7 +50,7 @@ export async function svApply(txt) {
   LFQT.fill(-1);
   LFQS.fill(null);
   SEPM.clear && SEPM.clear();
-  setPl(0);
+  setPl(LPL());
   {
     const fd = sessionState.fdDirty;
     calcFD();
