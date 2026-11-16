@@ -30,6 +30,14 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Also PASS (sequential, loaded machine): `mpk` 482 s, `features` 210 s, `mp_resync` 363 s, `save` 146 s; eslint, prettier, `check:architecture` clean (no new cycle edge).
 - Not verified: by eye (red trail on a bent route, screenshot); `mp8`, `mp_convoy`, `smoke`, `ui` (CI); real two-machine co-op; trees felled by lumberjacks do not mark lane fields (they free ground, the old behaviour holds); the red trail still climbs over the ground where a route must cross a hill.
 
+## 2026-11-16 · polish lot QA/UI (hd-qa worktree, committed on branch, not merged, not released)
+
+- Nothing under `game/` or `announce/`, no version change, no push. Build v94 base.
+- `tools/fitcheck.py` 1280x720 and 1024x600, 9 languages: 0 overflow (canvas and html). `textaudit`, `langcheck` clean (nl/pl/tr 0 missing). qa_shots (title, Update, settings 4 tabs, guide, HUD, Esc menu): no overlap or clipping; Controls list shows F4 spearman; K defaults KDEF match HK (F3 guild, F6 torch, F7 rally, F9 forester, F4 spearman, KeyW/A/S/D, KeyQ army).
+- Bug fixed (`ui/site-picker.js`): the site picker help line built "drag / WASD" + camKeys() before translating, so on AZERTY ("ZQSD") the key no longer matched and the whole line fell back to English; and FR showed ZQSD on QWERTY. Now translated first, then WASD/ZQSD replaced by the real camera keys.
+- Seen, not changed: v94 notes line "On AZERTY the camera is now on Z Q S D." wraps with "D." alone on the next line (writing "ZQSD" would fix it; NOTES is frozen). Dead translation keys with old key hints ("Torch [']", "Barracks rally [-]", "Forester's hut [[]", "Builders' guild []]") stay in the tables, unused by code. Tooltip badges show digits only by design (`hkShow`), so F3/F6/F7/F9 appear only in Settings > Controls and notes.
+- Tests: `ui`, `det` PASS; eslint, prettier, check:architecture OK.
+
 ## 2026-11-15 · v94 release (merged with main, formatting PR #29)
 
 - Released the whole branch as v94, plus spikes preview/demolish (#31) and lane fields (#30): co-op fixes, waves always end, new default keys, minimap, far wave spawn (`WSPN` 150 / `WSEE` 130), horde pile-up fix (`SWJAM` 0.75, `SWBW` 3.5), swarm at 10 Hz, placement log `MP.plog`, command resend after resync, mp_build prune fix.

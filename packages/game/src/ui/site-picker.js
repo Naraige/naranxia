@@ -3,7 +3,7 @@ import { startGame } from "../gameplay/lifecycle.js";
 import { reset } from "../gameplay/reset.js";
 import { TH, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
-import { T_, TTL, TTS, twH } from "../i18n/language.js";
+import { L, T_, TTL, TTS, twH } from "../i18n/language.js";
 import { lobbyShow } from "../multiplayer/lobby.js";
 import { MP } from "../multiplayer/session.js";
 import { PKL, pkLiveFocus } from "../rendering/live-site-preview.js";
@@ -306,7 +306,10 @@ function drawPickerIn(UW, UH) {
   );
   T_(
     PKL.on
-      ? "Click to place the castle  -  drag / " + camKeys() + ": move   Right drag: rotate   Wheel: zoom"
+      ? L("Click to place the castle  -  drag / WASD: move   Right drag: rotate   Wheel: zoom").replace(
+          /WASD|ZQSD/,
+          camKeys(),
+        )
       : "Left drag: move   Right drag: rotate   Wheel: zoom",
     px + 8,
     py + 40,
