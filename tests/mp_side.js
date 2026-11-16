@@ -6,6 +6,7 @@ async () => {
   const out = { ok: true, notes: [] };
   const HOME = () => (CURPL === 1 && CS2 ? CS2 : CS);
   const need = (c, m) => {
+    __test.check(m, !!c);
     if (!c) {
       out.ok = false;
       out.notes.push(m);

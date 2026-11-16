@@ -40,6 +40,12 @@ async () => {
       for (let i = 0; i < 3; i++) update(0.05);
     }
   Math.random = RR;
+  __test.check("defensive 70 does not chase", O.def70 < 4);
+  __test.check("defensive 130 does not chase", O.def130 < 4);
+  __test.check("hold 70 does not chase", O.hold70 < 4);
+  __test.check("hold 130 does not chase", O.hold130 < 4);
+  __test.check("aggressive 70 moves", O.agg70 > 8);
+  __test.check("aggressive 130 moves", O.agg130 > 8);
   O.ok = O.def70 < 4 && O.def130 < 4 && O.hold70 < 4 && O.hold130 < 4 && O.agg70 > 8 && O.agg130 > 8;
   return JSON.stringify(O);
 };

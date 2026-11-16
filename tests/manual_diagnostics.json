@@ -4,6 +4,8 @@
   "lane_static.js": "Manual generated lane-field inspection",
   "pile_map.js": "Manual crowd-map inspection",
   "pile_probe.js": "Manual horde crowding diagnostics",
+  "route_probe.js": "Manual route-field coverage diagnostics",
+  "site_reach_probe.js": "Manual random-site reachability diagnostics",
   "spawn_pace.js": "Manual wave spawn timing diagnostics",
   "spawn_probe.js": "Manual spawn-distance inspection",
   "stuck_probe.js": "Manual stuck-unit tracing"
