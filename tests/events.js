@@ -8,6 +8,7 @@ async () => {
   const out = {};
   const bad = [];
   const need = (c, m) => {
+    window.__test.check(m, !!c);
     if (!c) bad.push(m);
   };
   rollWorld();

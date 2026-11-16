@@ -34,8 +34,8 @@ npm run dev                    # load ES modules from the development server
 npm run build                  # build dist/naranxia_readable.html
 npm run build:release          # also build dist/naranxia.html for releases
 npm run quality                # ESLint, Prettier and architectural dependency checks
-npm test                       # quick suite, logs in dist/test-logs/
-npm test -- --full             # quick suite plus deep resync and 6000-tick co-op soak
+npm test                       # core integration, structured results in dist/test-logs/
+npm test -- --full             # full browser/co-op, deep resync, 6000 ticks and fault controls
 npm test -- det mp8            # select tests by name
 python3 tools/run.py X.js [out.png|-] [W H wait] [html]   # evaluates the JS function in X.js inside the loaded game
 python3 tools/fitcheck.py 1280 720 x 9                    # button text overflow in every language (after npm run build; slow, run in background)
@@ -59,7 +59,7 @@ Tests: `smoke` (packed build plays a wave), `det` (same game twice = same hashes
 `save` (save / load round trip and continuation must match; shared terrain references must survive restore), `waves` (routing and stuck-wave safety),
 `mp_build` (guest/host placement and ownership), `runner` (test-result contracts), `desktop` (preload/save bridge).
 `--full` also runs `mp_resync_deep` (five corruption/recovery cases) and `mp_soak` (6000 ticks without divergence or resync).
-GitHub runs quality checks and the quick suite on every push touching code (`.github/workflows/test.yml`) and before every release.
+GitHub runs quality/core on code pushes and full coverage on pull requests and releases; release/full workflow calls also run seeded world sweeps (`.github/workflows/test.yml`). See `docs/TEST_AUDIT.md` for levels, mutation evidence, measured costs and limits.
 The packed build is deterministic (terser + zopfli). See `CONTRIBUTING.md` and `docs/ARCHITECTURE.md` for coding and ownership rules.
 
 ## Releasing a version
@@ -85,9 +85,9 @@ The King chose "versions directes": code a batch, test it, release it as the nex
 - CI logs (`actions/jobs/ID/logs`) can be read with `gh api`, but the `test-logs` artifact download is blocked: find the failing test in the job log (`grep -aE "PASS|FAIL"`).
 - The swarm (`gameplay/swarm.js`, everything inside `swUpdate`) is about 65 to 70 % of the wall time of the 6000-tick profile scenario; `swStep` alone is ~35 to 40 % of script time
   (the old "20 %" counted `(program)`). Tuned in v93 (tables, flat way points, set bits): further gains need a change of behaviour. Measure with `tools/profile.py` before touching it.
-- Headless tests that `await` must stub `renderer.render`, or every await costs a software-rendered frame. Under load a headless page load takes 2 to 4 minutes.
+- The shared test fixture freezes incidental animation before boot and uses explicit readiness. Preserve real rendering in smoke/visual tests. Preview snippets retain automatic animation and their explicit screenshot waits. Do not reintroduce fixed startup sleeps into test fixtures.
 - Release notes: write `game/NOTES.md`, then add each line's translations (`tools/addtexts.py` for FR ES DE IT PT, `i18n/langs/*.js` for NL PL TR), or `release.sh` refuses.
-- `mp_convoy` is real-time bound (400 s budget in `tools/test_all.mjs`): a failure on CI alone is usually the slow runner.
+- Co-op tests explicitly drive the production frame callback and compare matching epoch/tick observations. Wall-clock deadlines detect infrastructure stalls; they do not decide success. Diagnose a CI-only failure from its structured assertions and first state difference, without retries or assuming the machine is merely slow.
 - Agent shell quirks: a bare `sleep` is refused (use `timeout N bash -c 'until COND; do sleep 5; done'` or a background run);
   the gh GraphQL API may be refused (use `gh api repos/...` REST, as `tools/ci_status.sh`).
 

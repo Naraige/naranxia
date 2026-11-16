@@ -48,6 +48,25 @@ async () => {
     render3D(0.05);
     await new Promise((r) => setTimeout(r, 15));
   }
+  render3D(0);
+  const gl = renderer.getContext(),
+    pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4),
+    colors = new Set();
+  gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+  for (let i = 0; i < pixels.length; i += 128) colors.add(pixels[i] + "," + pixels[i + 1] + "," + pixels[i + 2]);
+  let visibleTriangles = 0;
+  scene.traverseVisible((object) => {
+    const geometry = object.geometry;
+    if (geometry) visibleTriangles += (geometry.index?.count || geometry.attributes.position?.count || 0) / 3;
+  });
+  // renderer.info is reset by each post-processing pass; its last draw is a quad.
+  __test.check("game builds visible geometry", visibleTriangles > 500 && renderer.info.render.calls > 0);
+  __test.check("rendered game is not a uniform canvas", colors.size > 8);
+  __test.check("packed version", /^v\d+$/.test(O.ver));
+  __test.check("rest period", O.rest, 600);
+  __test.check("starter area", O.st, 9);
+  __test.check("ramp path", O.rampPath, 1);
+  __test.check("wave spawns enemies", O.z > 0);
   O.ok = /^v\d+$/.test(O.ver) && O.rest === 600 && O.st === 9 && O.rampPath === 1 && O.z > 0;
   return JSON.stringify(O);
 };

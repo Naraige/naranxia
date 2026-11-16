@@ -1,5 +1,5 @@
 async () => {
-  /* NOT in the suite: which seeded pairs of castle sites are cut (no land route for a convoy), and what the route check of the
+  /* Registered browser coverage: which seeded pairs of castle sites are cut (no land route for a convoy), and what the route check of the
    co-op quest costs there. Same worlds and sites as tests/convoy_probe.js (trial 0..N-1), but no convoy walks: per trial the two castles
    are founded, then convoyLinked() (multiplayer/convoys.js) is timed 3 times. A cut pair is the costly case (both wide floods run).
    python3 tools/run.py tests/convoy_cut_probe.js   -> one line per cut pair, then the totals (ms: median of the 3 calls).
@@ -42,13 +42,22 @@ async () => {
     mpStart();
     waveT = 1e9;
     for (let i = 0; i < 20; i++) update(0.05);
+    const before = mpHash();
+    const outcomes = [];
     const ms = [];
     let r;
     for (let i = 0; i < 3; i++) {
       const t0 = performance.now();
       r = convoyLinked();
+      outcomes.push(r);
       ms.push(performance.now() - t0);
     }
+    __test.check(
+      "route lookup stable " + trial,
+      outcomes.every((v) => v === outcomes[0]),
+    );
+    __test.check("route lookup preserves gameplay state " + trial, mpHash(), before);
+    if (trial === 77) __test.check("known river cut", r, false);
     ms.sort((x, y) => x - y);
     if (r) tl.push(ms[1]);
     else {
@@ -85,21 +94,16 @@ async () => {
       return s.length ? +s[s.length >> 1].toFixed(1) : 0;
     },
     mx = (A) => (A.length ? +Math.max(...A).toFixed(1) : 0);
-  return (
-    "TOTAL " +
-    (tl.length + tc.length) +
-    " pairs: linked " +
-    tl.length +
-    " (ms median " +
-    med(tl) +
-    ", max " +
-    mx(tl) +
-    "), cut " +
-    tc.length +
-    " (ms median " +
-    med(tc) +
-    ", max " +
-    mx(tc) +
-    ")"
-  );
+  __test.check("every seeded pair exercised", tl.length + tc.length, N);
+  __test.check("both linked and cut maps covered", tl.length > 0 && tc.length > 0);
+  return JSON.stringify({
+    ok: __test.assertions.every((a) => a.passed),
+    pairs: tl.length + tc.length,
+    linked: tl.length,
+    cut: tc.length,
+    medianLinked: med(tl),
+    medianCut: med(tc),
+    maxLinked: mx(tl),
+    maxCut: mx(tc),
+  });
 };

@@ -170,5 +170,7 @@ async () => {
     "-976910556:25833:218:0:1332:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T-1956941577:z89:pu2:fg0:fp6",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
+  __test.check("repeated simulation fingerprints", a, b);
+  __test.check("pinned v94 fingerprints", a, expected);
   return JSON.stringify({ ok: same && reference, same, reference, a, b });
 };

@@ -1,5 +1,5 @@
 async () => {
-  /* NOT in the suite: which default actions have a plain key (one press, no Shift, no AltGr) on a French AZERTY keyboard?
+  /* Registered browser coverage: which default actions have a plain key (one press, no Shift, no AltGr) on a French AZERTY keyboard?
    python3 tools/run.py tests/azerty_probe.js   -> one line per action whose key is a sign, then the summary.
    Each default key is looked up in the AZERTY layout below (character -> physical key and modifiers), then the event a browser would send
    is dispatched in a running game: for a key that is not a letter or a digit the handler calls preventDefault() exactly when it found an
@@ -76,24 +76,52 @@ async () => {
   };
   const out = [],
     bad = [];
+  const point = spawnPos(CS),
+    troop = mkU(0, "knight", point.x, point.y);
+  units.push(troop);
   for (const a of Object.keys(KB)) {
     const k = KB[a];
+    if (/^Key[A-Z]$/.test(k)) {
+      const az = { KeyW: "z", KeyA: "q", KeyZ: "w", KeyQ: "a" }[k] || k.slice(3).toLowerCase();
+      for (const [layout, character] of [
+        ["US", k.slice(3).toLowerCase()],
+        ["AZERTY", az],
+      ]) {
+        for (const unit of units) unit.sel = false;
+        document.body.dispatchEvent(
+          new KeyboardEvent("keydown", { key: character, code: k, bubbles: true, cancelable: true }),
+        );
+        __test.check("physical " + layout + " " + a, a === "army" ? troop.sel === true : keys[k] === true);
+        document.body.dispatchEvent(new KeyboardEvent("keyup", { key: character, code: k, bubbles: true }));
+        __test.check("physical key released " + layout + " " + a, !keys[k]);
+      }
+      continue;
+    }
     if (/^[a-z0-9]$/.test(k) || /^f\d+$/.test(k))
       continue; /* letters: same character on both; digits: by physical key (tests/ui.js) */
     const z = find(AZ, k),
       u = find(US, k);
     let why = "";
-    if (!z) why = "not on the keyboard";
-    else if (z.mod === "plain" && /^Digit\d$/.test(z.code)) {
+    let reachable = true;
+    if (!z) {
+      why = "not on the keyboard";
+      reachable = false;
+    } else if (z.mod === "plain" && /^Digit\d$/.test(z.code)) {
       send(k, z.code);
       why = "is the " + z.code[5] + " key: the digit wins (" + act(z.code[5]) + ")";
+      reachable = false;
     } else if (z.mod === "plain") {
-      if (!send(k, z.code) && k !== " ") why = "event not taken";
+      if (!send(k, z.code) && k !== " ") {
+        why = "event not taken";
+        reachable = false;
+      }
     } else if (z.mod === "shift") {
       const p = send(k, z.code, { shiftKey: true });
+      reachable = p;
       why = "needs Shift (" + z.code + ")" + (p ? ", taken with Shift" : ", NOT taken");
     } else {
       const p = send(k, z.code, { ctrlKey: true, altKey: true });
+      reachable = p;
       why = "needs AltGr (" + z.code + ")" + (p ? ", taken with AltGr" : ", NOT taken");
     }
     const row = {
@@ -103,7 +131,7 @@ async () => {
       qwerty: u ? u.mod + " (" + u.code + ")" : "?",
     };
     out.push(row);
-    if (why) bad.push(row);
+    if (!reachable) bad.push(row);
   }
   /* letters exist on both, but the camera cluster moves: W A S D of QWERTY are Z Q S D on AZERTY, and z / q are other actions */
   const cam =
@@ -118,12 +146,6 @@ async () => {
   if (k0 !== null) LS.setItem("dk_keys", k0);
   loadKB();
   for (const r of out) console.log(JSON.stringify(r));
-  return (
-    "NOT PLAIN ON AZERTY: " +
-    bad.map((r) => r.action + " [" + r.key + "] " + r.azerty + " | qwerty " + r.qwerty).join("; ") +
-    "\nCAMERA: " +
-    cam +
-    "\nFREE ON BOTH: " +
-    both.join(" ")
-  );
+  __test.check("symbol bindings handle their required modifiers", bad, []);
+  return JSON.stringify({ ok: __test.assertions.every((a) => a.passed), rows: out, camera: cam, free: both });
 };

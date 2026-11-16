@@ -1,5 +1,5 @@
 async () => {
-  /* NOT in the suite: probe of co-op convoys between pairs of valid castle sites 24 to 60 tiles apart (one page, the guest's convoy command run directly).
+  /* Registered browser coverage: probe of co-op convoys between pairs of valid castle sites 24 to 60 tiles apart (one page, the guest's convoy command run directly).
    python3 tools/run.py tests/convoy_probe.js   -> one line per pair as it ends (LOG), then TOTAL.
    res: delivered / partly / returned (goods back after 120 s without progress or 900 s in all) / refused (no land route, said at once, nothing leaves).
    For a refused pair: link = is the partner's castle reachable from the porter in a window 300 tiles wider than the pair (the game looks 160 tiles around);
@@ -42,6 +42,7 @@ async () => {
       }
     }
     Math.random = RR;
+    __test.check("sites " + trial, !!b);
     if (!b) {
       out.push(JSON.stringify({ trial, nob: 1 }));
       continue;
@@ -56,7 +57,8 @@ async () => {
       R.s = 5000;
     }
     for (let i = 0; i < 40; i++) update(0.05);
-    const w0 = RESP[1].w,
+    const stocks = RESP.map((r) => [r.g, r.w, r.s, r.f || 0]),
+      w0 = RESP[1].w,
       d = Math.round(Math.hypot(a.tx - b.tx, a.ty - b.ty));
     n++;
     mpExec({ k: "cv", g: 0, w: 120, s: 60, f: 0 }, false);
@@ -85,6 +87,11 @@ async () => {
         },
         B1 = bfsW([ft], true, x0, y0, w, h),
         B2 = bfsW([st], true, x0, y0, w, h);
+      __test.check(
+        "refused convoy preserves both players' stocks " + trial,
+        RESP.map((r) => [r.g, r.w, r.s, r.f || 0]),
+        stocks,
+      );
       nr++;
       out.push(
         JSON.stringify({
@@ -114,6 +121,7 @@ async () => {
       }
     }
     const sec = Math.round(t * 0.05);
+    __test.check("convoy delivered " + trial, res, "delivered");
     if (res === "delivered") nd++;
     out.push(
       JSON.stringify(
@@ -135,5 +143,8 @@ async () => {
     );
     MP.on = false;
   }
-  return "TOTAL delivered " + nd + ", refused " + nr + ", of " + n;
+  __test.check("all worlds exercised", n, N);
+  __test.check("delivered or refused every convoy", nd + nr, N);
+  __test.check("connected worlds actually deliver", nd > 0);
+  return JSON.stringify({ ok: __test.assertions.every((a) => a.passed), delivered: nd, refused: nr, worlds: n });
 };

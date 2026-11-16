@@ -29,6 +29,10 @@ async () => {
   units.push(u2);
   for (let i = 0; i < 10; i++) update(0.05);
   const second = u2.hp > 0;
+  __test.check("envoy tribute", gain, 80);
+  __test.check("envoy consumed", dead);
+  __test.check("cooldown set", cd);
+  __test.check("second envoy kept", second);
   Math.random = RR;
   return JSON.stringify({ ok: !!(gain > 0 && dead && cd && second && T.envoy && C.envoy), gain, dead, cd, second });
 };

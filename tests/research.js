@@ -14,6 +14,7 @@ async () => {
   const O = {},
     C0 = [];
   const chk = (n, v) => {
+    window.__test.check(n, !!v);
     O[n] = v;
     C0.push(!!v);
   };
@@ -181,13 +182,7 @@ async () => {
   units.push(ux);
   for (let k = 0; k < 6; k++) update(0.05);
   chk("exhaustedKeepsEnvoy", ux.hp > 0 && R.g === 0 && R.f === 0);
-  chk(
-    "oldBaseOk",
-    (() => {
-      const o = { x: b.x, y: b.y, alive: true };
-      return (o.envN | 0) === 0 && (o.envG | 0) === 0;
-    })(),
-  );
+  // Missing envoy fields are exercised above by deleting them before eight real visits.
   Math.random = RR;
   return JSON.stringify({ ok: C0.every(Boolean), gains: JSON.stringify(gains), ...O });
 };

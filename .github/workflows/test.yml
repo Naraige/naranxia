@@ -8,13 +8,13 @@ on:
   workflow_dispatch:
     inputs:
       full:
-        description: include deep resync and 6000-tick multiplayer soak
+        description: full regression, packed asset and seeded world sweeps
         type: boolean
         default: false
   workflow_call:
     inputs:
       full:
-        description: include deep resync and 6000-tick multiplayer soak
+        description: full regression, packed asset and seeded world sweeps
         type: boolean
         default: false
 concurrency:
@@ -37,7 +37,7 @@ jobs:
       - name: Install
         run: |
           npm ci
-          pip install playwright==1.56.0
+          pip install -r tests/requirements.txt
       - name: Quality
         run: npm run quality
       - name: Cache Chromium
@@ -52,8 +52,13 @@ jobs:
           else python -m playwright install --with-deps chromium; fi
       - name: Tests
         env:
-          J: 2
-        run: npm test -- ${{ inputs.full && '--full' || '' }}
+          J: 1
+        run: npm test -- ${{ (inputs.full || github.event_name == 'pull_request') && '--full' || '' }}
+      - name: Release world sweeps
+        if: inputs.full
+        env:
+          J: 1
+        run: node tools/test_all.mjs convoy_probe convoy_cut_probe waves_probe
       - name: Save tested release asset
         if: inputs.full
         uses: actions/upload-artifact@v4

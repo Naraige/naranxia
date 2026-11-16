@@ -14,6 +14,7 @@ async () => {
   const O = {},
     C = [];
   const chk = (n, v) => {
+    window.__test.check(n, !!v);
     O[n] = v;
     C.push(!!v);
   };
@@ -77,10 +78,14 @@ async () => {
   /* sappers repair nearby buildings; an engineer repairs fast */
   if (B.sappers && B.observatory) {
     const o = B.observatory;
+    // Put the damaged structure inside the repair radius; distance must never
+    // serve as an alternative success condition for a repair test.
+    o.x = B.sappers.x + TS * 2;
+    o.y = B.sappers.y;
     o.hp = o.hp * 0.5;
     const h0 = o.hp;
     for (let i = 0; i < 40; i++) update(0.05);
-    chk("sappersRepair", o.hp > h0 || dist(o.x, o.y, B.sappers.x, B.sappers.y) > TS * 8);
+    chk("sappersRepair", o.hp > h0 && o.hp <= o.max);
   }
   {
     const g = CS;

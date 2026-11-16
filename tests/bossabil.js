@@ -48,13 +48,19 @@ async () => {
   }
   {
     const b = mk(2);
-    const k = mkU(0, "knight", x + TS * 2, y);
+    for (let i = units.length - 1; i >= 0; i--) if (units[i].t === 1 && units[i] !== b) units.splice(i, 1);
+    const k = mkU(0, "knight", x + TS * 4, y);
     units.push(k);
     const h0 = k.hp;
-    for (let i = 0; i < 400; i++) update(0.05);
-    O.frost = k.hp < h0;
+    b.bs = 0.01;
+    b.bt = 100;
+    b.cd = 100;
+    k.stn = "hold";
+    update(0.05);
+    O.frost = h0 - k.hp === 8 + waveN * 0.8;
     b.hp = 0;
   }
+  for (const [name, value] of Object.entries(O)) __test.check(name, value);
   Math.random = RR;
   return JSON.stringify({ ok: O.heal && O.bell && O.hive && O.frost, O });
 };

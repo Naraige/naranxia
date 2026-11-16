@@ -317,7 +317,7 @@ def model_capture_source():
 def measure_artifact(browser, artifact, models_only=False):
     progress(f"Loading {artifact}")
     context = browser.new_context(viewport={"width": 1280, "height": 720}, reduced_motion="reduce")
-    context.add_init_script(script=INIT_SCRIPT)
+    context.add_init_script(script=INIT_SCRIPT + "\nwindow.requestAnimationFrame = () => 0;")
     page = context.new_page()
     page_errors = []
     page.on("pageerror", lambda error: page_errors.append(str(error)[:500]))
@@ -334,9 +334,10 @@ def measure_artifact(browser, artifact, models_only=False):
 
     fontroute.setup(page)
     try:
-        page.goto(artifact.as_uri(), timeout=180000)
-        page.wait_for_timeout(3500)
+        page.goto(artifact.as_uri(), timeout=180000, wait_until="domcontentloaded")
+        page.wait_for_function("() => typeof window.svPack === 'function' && !!window.renderer", timeout=120000)
         page.evaluate("() => window.__stopParityFrames()")
+        page.evaluate((ROOT / 'tests/assertions.js').read_text(encoding='utf-8'))
         progress(f"  booted {artifact.name}; rendering offline audio")
         if page_errors:
             raise RuntimeError(f"{artifact.name} raised page errors during startup: {page_errors[:4]}")
