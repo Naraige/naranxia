@@ -87,8 +87,7 @@ async () => {
   /* a moved second castle moves SITE2 */
   MP.side = 1;
   setPl(1);
-  const c = CS2,
-    before = { ...SITE2 };
+  const before = { ...SITE2 };
   let moved = false;
   for (let d = 4; d < 12 && !moved; d++)
     for (const [dx, dy] of [
