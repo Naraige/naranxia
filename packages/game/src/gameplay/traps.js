@@ -9,7 +9,7 @@ import { sessionState } from "./session.js";
 import { ugNear, UGU } from "./spatial-index.js";
 import { SW, swSplash } from "./swarm.js";
 import { wavesState } from "./waves.js";
-import { objectivesState, SPK } from "../multiplayer/objectives.js";
+import { objectivesState, SPK, SPO } from "../multiplayer/objectives.js";
 import { MP } from "../multiplayer/session.js";
 import { puff } from "../rendering/effects.js";
 import { scene } from "../rendering/scene.js";
@@ -38,9 +38,22 @@ export function spikeFree(tx, ty) {
 export function removeSpike(tx, ty) {
   const i = ty * TW + tx;
   if (!SPK.has(i)) return false;
+  const me = playersState.CURPL | 0,
+    own = SPO.get(i);
+  /* co-op: a trap belongs to the player who placed it; only he or the host (player 0) removes it. No owner (old save) = anyone. */
+  if (MP.on && own !== undefined && own !== me && me !== 0) {
+    if (me === LPL()) {
+      hudDisplayState.msgS = "This trap belongs to your partner";
+      hudDisplayState.msgT = 2;
+      snd("err");
+    }
+    return true;
+  }
   SPK.delete(i);
+  SPO.delete(i);
   objectivesState.SPKV++;
-  const R = playersState.RESP[playersState.CURPL | 0];
+  /* the refund goes to the owner, so the host removing a guest's trap does not collect it */
+  const R = playersState.RESP[own === undefined ? me : own | 0];
   for (const k in SPKC) R[k] += SPKC[k];
   puff((tx + 0.5) * TS, (ty + 0.5) * TS, "#8a7058", 6, 40, { T: 0.5, z: 0.1, vz: 0.8, g: 2, s: 0.1 });
   snd("click", (tx + 0.5) * TS, (ty + 0.5) * TS);
@@ -72,6 +85,7 @@ export function placeSpike(tx, ty) {
   }
   pay(SPKC);
   SPK.set(i, 120);
+  SPO.set(i, playersState.CURPL | 0);
   objectivesState.SPKV++;
   snd("build", (tx + 0.5) * TS, (ty + 0.5) * TS);
   puff((tx + 0.5) * TS, (ty + 0.5) * TS, "#8a7058", 6, 40, { T: 0.5, z: 0.1, vz: 0.8, g: 2, s: 0.1 });
@@ -110,7 +124,10 @@ export function trapTick(dt) {
         }
       }
       if (dead.length) {
-        for (const i of dead) SPK.delete(i);
+        for (const i of dead) {
+          SPK.delete(i);
+          SPO.delete(i);
+        }
         objectivesState.SPKV++;
       }
     }

@@ -1664,4 +1664,12 @@ export const TR = {
     "Ortağına bağlanılamadı. Kodu kontrol et ve tekrar dene.",
   "Co-op: connection lost with {0} ({1} s). Open the menu to leave, or wait for it to come back":
     "Co-op: {0} ile bağlantı koptu ({1} sn). Çıkmak için menüyü aç ya da bağlantının dönmesini bekle",
+  "Press Play again to replace your running game with a new co-op game.":
+    "Devam eden oyununu yeni bir ortak oyunla değiştirmek için Oyna'ya bir kez daha bas.",
+  "Play again to confirm": "Onaylamak için tekrar bas",
+  "A game is running: Play will replace it with a new co-op game. Close this window to keep playing.":
+    "Bir oyun sürüyor: Oyna onu yeni bir ortak oyunla değiştirir. Oynamaya devam etmek için bu pencereyi kapat.",
+  "A game is running: when the host presses Play, it will be replaced by a new co-op game.":
+    "Bir oyun sürüyor: ev sahibi Oyna'ya basınca yeni bir ortak oyunla değiştirilecek.",
+  "This trap belongs to your partner": "Bu tuzak ortağına ait",
 };

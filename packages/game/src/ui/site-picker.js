@@ -120,16 +120,66 @@ export function siteOK(tx, ty) {
   return true;
 }
 
-export function randomSite() {
-  if (sitePickerState.pvKey !== terrainState.SEED) buildPreview();
-  for (let a = 0; a < 2000; a++) {
-    const tx = 140 + ((Math.random() * (TW - 280)) | 0),
-      ty = 110 + ((Math.random() * (TH - 220)) | 0);
-    if (siteOK(tx, ty)) {
-      sitePickerState.pickPos = { tx, ty, ok: true };
-      return;
+/* Land the random pick may use (v95 polish): the preview cells (water and mountain cells are walls, 4 neighbours) are labelled once per world and the
+   biggest piece of land is kept. A start on a closed ledge or behind a river (about 1 world in 12) made the co-op convoy quest impossible and left the
+   horde nothing to walk on; the random pick now re-rolls until the castle stands on that piece. Manual picks are not restricted. */
+let SITEL = null,
+  SITELK = -1,
+  SITEBIG = 0;
+
+function siteLand() {
+  if (SITELK === terrainState.SEED && SITEL) return SITEL;
+  if (sitePickerState.pvKey !== terrainState.SEED || !pvW) buildPreview();
+  const n = PVW * PVH,
+    L = new Int32Array(n),
+    st = new Int32Array(n);
+  const wall = (k) => pvW[k] || pvH[k] >= ROCKH;
+  let id = 0,
+    best = 0,
+    bestN = 0;
+  for (let k0 = 0; k0 < n; k0++) {
+    if (L[k0] || wall(k0)) continue;
+    id++;
+    let sp = 0,
+      cnt = 0;
+    st[sp++] = k0;
+    L[k0] = id;
+    while (sp) {
+      const k = st[--sp],
+        x = k % PVW;
+      cnt++;
+      if (x > 0 && !L[k - 1] && !wall(k - 1)) ((L[k - 1] = id), (st[sp++] = k - 1));
+      if (x < PVW - 1 && !L[k + 1] && !wall(k + 1)) ((L[k + 1] = id), (st[sp++] = k + 1));
+      if (k >= PVW && !L[k - PVW] && !wall(k - PVW)) ((L[k - PVW] = id), (st[sp++] = k - PVW));
+      if (k < n - PVW && !L[k + PVW] && !wall(k + PVW)) ((L[k + PVW] = id), (st[sp++] = k + PVW));
+    }
+    if (cnt > bestN) {
+      bestN = cnt;
+      best = id;
     }
   }
+  SITELK = terrainState.SEED;
+  SITEBIG = best;
+  return (SITEL = L);
+}
+
+/* the castle's centre cell lies on the biggest piece of land */
+export function siteOnMainland(tx, ty) {
+  const L = siteLand();
+  return L[((ty / PVS) | 0) * PVW + ((tx / PVS) | 0)] === SITEBIG;
+}
+
+export function randomSite() {
+  if (sitePickerState.pvKey !== terrainState.SEED) buildPreview();
+  for (const main of [true, false])
+    for (let a = 0; a < 2000; a++) {
+      const tx = 140 + ((Math.random() * (TW - 280)) | 0),
+        ty = 110 + ((Math.random() * (TH - 220)) | 0);
+      if (siteOK(tx, ty) && (!main || siteOnMainland(tx, ty))) {
+        sitePickerState.pickPos = { tx, ty, ok: true };
+        return;
+      }
+    }
 }
 
 export function openPicker() {

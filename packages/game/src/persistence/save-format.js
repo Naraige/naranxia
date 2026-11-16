@@ -19,7 +19,7 @@ import { simulationState } from "../gameplay/simulation.js";
 import { statisticsState } from "../gameplay/statistics.js";
 import { SW, swarmState, SWD, SWH, SWN } from "../gameplay/swarm.js";
 import { wavesState } from "../gameplay/waves.js";
-import { SPK } from "../multiplayer/objectives.js";
+import { SPK, SPO } from "../multiplayer/objectives.js";
 import { MP } from "../multiplayer/session.js";
 import { fowHi, fowLo, fowRA, fowSeen, fowTex, fowVis } from "../rendering/fog.js";
 import { THREE } from "../rendering/three.js";
@@ -46,6 +46,7 @@ import { LVO } from "../world/traversal.js";
    Desktop app: one file per save in the app-data folder (window.NARX); browser: IndexedDB. */
 export const SAVA = {
   SPK: [() => SPK, null],
+  SPO: [() => SPO, null],
   QST: [
     () => questsState.Q,
     (v) => {

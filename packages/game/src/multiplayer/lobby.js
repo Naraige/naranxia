@@ -16,8 +16,14 @@ import { terrainState } from "../world/terrain-state.js";
 /* the two castles may stand side by side: only their 5x5 walls and the 3 tiles in front of each door must not overlap */
 export const sitesFar = (a, b) => !a || !b || Math.max(Math.abs(a.tx - b.tx), Math.abs(a.ty - b.ty)) >= 10;
 
+/* a solo (or left-over co-op) game is running while a co-op lobby is open: Play would replace it with a new world.
+   The host must press Play twice (_runOk); the guest only gets a warning, since the host's "s" command starts the game on both machines. */
+const runningGame = () => !!(sessionState.inGame && !sessionState.over && !MP.on);
+let _runOk = false;
+
 /* ---- lobby state ---- */
 export function mpConnected() {
+  _runOk = false;
   registryHide();
   MP.conn = true;
   MP.mine = null;
@@ -86,6 +92,13 @@ export function mpStart() {
     lobbyNote("The two castles are too close: one of you must move.");
     return;
   }
+  if (runningGame() && !_runOk) {
+    _runOk = true;
+    lobbyNote("Press Play again to replace your running game with a new co-op game.");
+    lobbyRender();
+    return;
+  }
+  _runOk = false;
   const st = {
     k: "s",
     seed: terrainState.SEED,
@@ -194,8 +207,15 @@ export function lobbyRender() {
   pb.style.display = MP.host ? "inline-block" : "none";
   const rd = MP.conn && MP.mine && MP.theirs;
   pb.disabled = !rd;
-  pb.textContent = rd ? "Play" : "Play (both players must place a castle)";
+  if (!rd) _runOk = false;
+  pb.textContent = rd ? (_runOk ? "Play again to confirm" : "Play") : "Play (both players must place a castle)";
   if (!MP.host && MP.conn && MP.mine && MP.theirs) mpStatus("Waiting for the host to press Play...");
+  if (MP.conn && runningGame() && !_runOk)
+    mpStatus(
+      MP.host
+        ? "A game is running: Play will replace it with a new co-op game. Close this window to keep playing."
+        : "A game is running: when the host presses Play, it will be replaced by a new co-op game.",
+    );
 }
 
 export function initializeLobbyState() {

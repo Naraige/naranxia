@@ -4,6 +4,16 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-16 · polish lot B co-op
+
+- Lobby over a running game (`multiplayer/lobby.js`): `runningGame()` = `inGame && !over && !MP.on`. Host: the lobby says so, the first Play only asks ("Press Play again to replace your running game with a new co-op game", button "Play again to confirm"), the second starts. Guest: warning line only (the host's `s` command starts the game on both; the guest cannot veto, he can leave). 4 new texts, 8 languages (`langcheck`, `textaudit` OK).
+- Spikes in co-op: new `SPO` map tile -> player (`multiplayer/objectives.js`, in `SAVA`, cleared by `reset`, deleted when a trap breaks or is removed). Rule: only the owner or the host (player 0) demolishes a trap (else "This trap belongs to your partner"); refund 100 % goes to the owner (a host removing a guest trap does not collect it). Missing owner (old save, tests) = anyone. Only active when `MP.on`; solo unchanged.
+- `mpHash` now folds in the traps (count, and a sum over tile / hp / owner, order independent): cheap (a few traps). det hashes re-pinned (only the first number of each line changed, same counts; `a` = `b` in the run); mp8 mpk mp_resync mp_side save see the line below.
+- Random start (`ui/site-picker.js` `randomSite`): preview cells (water, mountain = wall, 4 neighbours) labelled once per world, the biggest piece of land kept; the random pick re-rolls until the castle is on it (falls back to the old rule if none). Manual picks are free. Probe `tests/site_reach_probe.js` (not in the suite), 40 seeded worlds: old pick put 19.1 % of random sites (34 worlds of 40) off the biggest land, new 0; co-op pairs 60 to 220 tiles apart (convoy range), real start + `convoyLinked()`: old 6 of 80 not linked, new 2 of 80.
+- Decisions to know: the "biggest land" rule is stricter than reality (19 % of sites excluded, many were fine: fords, 1-cell passes); a river that splits the map in two halves leaves one half to the random pick. The two guests of a co-op can still choose different pieces by hand.
+- Tests (run one at a time): traps (6 ownership checks added), det (re-pinned), mp8, mpk, mp_resync, mp_side, save, mp_events PASS; mp_build failed once ("guest King not at the guest castle", King not trained within the wait, machine under load) and PASSED when rerun alone. eslint, prettier on touched files, architecture check clean (SPK and SPO moved to the leaf `gameplay/trap-state.js` to avoid a new import cycle).
+- Not verified: two real machines, guest-side confirm UX by eye, the 2 pairs still not linked (not studied), mp_build flake cause.
+
 ## 2026-11-16 · polish: QoL
 
 - Tab (jump to last attack) only worked while the 5 s alert marker lived. `LASTALERT` (economy.js) keeps where the last marker faded for 60 s, reset in `reset()`; visual only, not saved, not in the hash. ui, smoke, det PASS. No new text.

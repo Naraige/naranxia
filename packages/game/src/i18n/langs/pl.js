@@ -1667,4 +1667,12 @@ export const PL = {
     "Nie można połączyć się z partnerem. Sprawdź kod i spróbuj ponownie.",
   "Co-op: connection lost with {0} ({1} s). Open the menu to leave, or wait for it to come back":
     "Koop: utracono połączenie z {0} ({1} s). Otwórz menu, aby wyjść, albo poczekaj na powrót połączenia",
+  "Press Play again to replace your running game with a new co-op game.":
+    "Naciśnij Graj jeszcze raz, aby zastąpić trwającą grę nową grą kooperacyjną.",
+  "Play again to confirm": "Naciśnij ponownie, aby potwierdzić",
+  "A game is running: Play will replace it with a new co-op game. Close this window to keep playing.":
+    "Trwa gra: Graj zastąpi ją nową grą kooperacyjną. Zamknij to okno, aby grać dalej.",
+  "A game is running: when the host presses Play, it will be replaced by a new co-op game.":
+    "Trwa gra: gdy gospodarz naciśnie Graj, zostanie zastąpiona nową grą kooperacyjną.",
+  "This trap belongs to your partner": "Ta pułapka należy do twojego partnera",
 };

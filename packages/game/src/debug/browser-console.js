@@ -95,6 +95,8 @@ import {
   confirmPick,
   openPicker,
   randomSite,
+  siteOK,
+  siteOnMainland,
   setConfirmPickHandler,
   sitePickerState,
 } from "../ui/site-picker.js";
@@ -445,6 +447,8 @@ export function installBrowserConsole() {
       },
     },
     randomSite: { get: () => randomSite },
+    siteOK: { get: () => siteOK },
+    siteOnMainland: { get: () => siteOnMainland },
     render3D: { get: () => render3D, set: setRender3DHandler },
     renderer: { get: () => renderer },
     res: {

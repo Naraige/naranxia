@@ -22,7 +22,7 @@ import { qReset } from "./quests.js";
 import { evReset } from "./events.js";
 import { swReset } from "./swarm.js";
 import { wavesState } from "./waves.js";
-import { objectivesState, objReset, SPK } from "../multiplayer/objectives.js";
+import { objectivesState, objReset, SPK, SPO } from "../multiplayer/objectives.js";
 import { home } from "../rendering/camera.js";
 import { fowReset } from "../rendering/fog.js";
 import { ICR } from "../rendering/model-icons.js";
@@ -137,6 +137,7 @@ export function reset() {
   sessionState.waveN = 0;
   sessionState.mode = null;
   SPK.clear();
+  SPO.clear();
   objectivesState.SPKV++;
   GF.clear();
   for (const k in RL) delete RL[k];

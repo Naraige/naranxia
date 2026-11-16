@@ -95,6 +95,37 @@ async () => {
     chk("noDoublePlacement", SPK.has(ti) && R0.g === g1);
     SPK.clear();
   }
+  /* ownership in co-op (polish lot B): a trap belongs to the player who placed it; only he or the host (player 0) removes it; refund to the owner;
+     a trap with no owner (old save) goes to anyone. mine=true runs as this machine's player (the host, 0), mine=false as the partner (1) */
+  {
+    const was = MP.on,
+      wasH = MP.host;
+    MP.on = true;
+    MP.host = true;
+    const cmd = (mine, t) => mpExec({ k: "b", t, x: tx, y: ty, r: 0, ti: 1, gl: 2, sb: null }, mine),
+      g1 = () => RESP[1].g;
+    SPK.clear();
+    cmd(false, "spike");
+    chk("guestTrapPlaced", SPK.has(ti));
+    const gh0 = RESP[0].g,
+      gg0 = g1();
+    cmd(true, "demolish");
+    chk("hostRemovesGuestTrap", !SPK.has(ti) && RESP[0].g === gh0 && g1() === gg0 + 10);
+    cmd(true, "spike");
+    cmd(false, "demolish");
+    chk("guestCannotRemoveHostTrap", SPK.has(ti));
+    cmd(true, "demolish");
+    chk("hostRemovesOwn", !SPK.has(ti));
+    cmd(false, "spike");
+    cmd(false, "demolish");
+    chk("guestRemovesOwn", !SPK.has(ti));
+    SPK.set(ti, 120);
+    cmd(false, "demolish");
+    chk("noOwnerAnyone", !SPK.has(ti));
+    SPK.clear();
+    MP.on = was;
+    MP.host = wasH;
+  }
   Math.random = RR;
   O.ok = C.every(Boolean);
   return JSON.stringify(O);

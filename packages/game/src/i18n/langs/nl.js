@@ -1680,4 +1680,12 @@ export const NL = {
     "Kan geen verbinding maken met je partner. Controleer de code en probeer opnieuw.",
   "Co-op: connection lost with {0} ({1} s). Open the menu to leave, or wait for it to come back":
     "Coöp: verbinding met {0} verloren ({1} s). Open het menu om te stoppen, of wacht tot ze terug is",
+  "Press Play again to replace your running game with a new co-op game.":
+    "Druk nogmaals op Spelen om je lopende spel te vervangen door een nieuw coöpspel.",
+  "Play again to confirm": "Nogmaals drukken om te bevestigen",
+  "A game is running: Play will replace it with a new co-op game. Close this window to keep playing.":
+    "Er loopt een spel: Spelen vervangt het door een nieuw coöpspel. Sluit dit venster om verder te spelen.",
+  "A game is running: when the host presses Play, it will be replaced by a new co-op game.":
+    "Er loopt een spel: zodra de host op Spelen drukt, wordt het vervangen door een nieuw coöpspel.",
+  "This trap belongs to your partner": "Deze val is van je partner",
 };

@@ -6,6 +6,7 @@ import { startGame } from "../gameplay/lifecycle.js";
 import { LPL, playersState, setPl } from "../gameplay/players.js";
 import { reset } from "../gameplay/reset.js";
 import { FAT, PBASE, PRICE } from "../gameplay/economy.js";
+import { SPK, SPO } from "../gameplay/trap-state.js";
 import { eventsState } from "../gameplay/events.js";
 import { BASES } from "../ai/kingdoms.js";
 import { RUINS } from "../world/terrain-state.js";
@@ -94,6 +95,13 @@ function mpHashX(h) {
     m(Math.round((FAT[k] || 0) * 1000));
   }
   for (const R of playersState.RESP) m(R.ren);
+  /* spike traps: count, and tile / hp / owner summed so the order of the map does not matter */
+  {
+    let sp = 0;
+    for (const [i, hp] of SPK) sp = (sp + Math.imul(i + 1, 31) + Math.round(hp) * 7 + ((SPO.get(i) | 0) + 1) * 131) | 0;
+    m(SPK.size);
+    m(sp);
+  }
   let d = 0;
   for (const r of RUINS.values()) if (r.done) d++;
   m(d);

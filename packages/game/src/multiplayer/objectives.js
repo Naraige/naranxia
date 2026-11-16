@@ -10,7 +10,7 @@ export const objectivesState = {
   SPKV: 0,
 };
 
-export const SPK = new Map();
+export { SPK, SPO } from "../gameplay/trap-state.js";
 /* ================= CO-OP SHARED GOALS (#11) =================
    Two goals run at the same time in a co-op game: reach wave 5, 10, 15... and slay 150, 375... zombies together. Reaching one pays BOTH players.
    Pure simulation (checked once per update from waveN and kills, which are equal on both machines), the progress is OBJ, saved with the game. */
