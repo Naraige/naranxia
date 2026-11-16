@@ -1,9 +1,11 @@
-import assert from "node:assert/strict";
+import report from "./node_report.cjs";
+const { assert, finish } = report;
 import { spawnSync } from "node:child_process";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import test from "node:test";
+import test, { after } from "node:test";
+after(() => finish("architecture", "Dependency boundaries, graph failures and synchronous terrain providers"));
 import { fileURLToPath } from "node:url";
 import {
   buildGraph,

@@ -10,6 +10,7 @@ async () => {
     O = {},
     C = [],
     chk = (n, v) => {
+      window.__test.check(n, !!v);
       O[n] = v;
       C.push(!!v);
     };
@@ -17,6 +18,7 @@ async () => {
   const RR = Math.random;
   const castles = () => structs.filter((s) => s.type === "castle"),
     isW = (x, y) => ter[((y / TS) | 0) * TW + ((x / TS) | 0)] === 1;
+  let arrivals = 0;
   const tick = () => {
     update(0.05);
     const Cs = castles();
@@ -27,6 +29,7 @@ async () => {
       for (const c of Cs)
         if (Math.abs(SW.x[i] - c.x) < KR * TS && Math.abs(SW.y[i] - c.y) < KR * TS) {
           SW.hp[i] = 0;
+          arrivals++;
           break;
         }
     }
@@ -83,6 +86,7 @@ async () => {
     waveOn = hordeOn = true;
     hordeT = time;
     waveT = 0;
+    arrivals = 0;
     const t0 = time,
       z = SW.n + SW.q.reduce((n, q) => n + q.left, 0);
     const last = new Map();
@@ -121,13 +125,16 @@ async () => {
       if (isW(SW.x[i], SW.y[i])) wat++;
       if (stk2.has(SW.id[i])) s2++;
     }
-    return { z, end: Math.round(time - t0), left, wat, stk2: s2, wmax };
+    return { z, arrivals, end: Math.round(time - t0), left, wat, stk2: s2, wmax };
   };
   for (const trial of [0, 1, 9]) {
     world(trial);
     const r = playWave(1);
     O["w" + trial] = r;
     chk("ends" + trial, r.end < 600 && r.z > 500);
+    // Other enemies legitimately die fighting camps before reaching a castle.
+    // The isolated cohort below must actually escape water alive.
+    chk("reachesDefence" + trial, r.arrivals > 0);
     chk("noneStuck" + trial, r.stk2 === 0);
     chk("noneInWater" + trial, r.wat === 0);
     if (trial !== 9) MP.on = false;
@@ -181,6 +188,7 @@ async () => {
       O.put = ids.size;
       let inW = 0,
         t = 0;
+      const escaped = new Set();
       for (; t < 2400; t++) {
         tick();
         inW = 0;
@@ -189,11 +197,14 @@ async () => {
           if (ids.has(SW.id[i]) && SW.hp[i] > 0) {
             al++;
             if (isW(SW.x[i], SW.y[i])) inW++;
+            else escaped.add(SW.id[i]);
           }
         if (!al) break;
       }
       O.outSec = Math.round(t * 0.05);
       O.stillInWater = inW;
+      O.escapedAlive = escaped.size;
+      chk("waterTraversalNotDeletion", escaped.size >= ids.size * 0.9);
       chk("wadesOut", ids.size >= 20 && inW === 0 && t < 2400);
     }
   }

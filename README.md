@@ -19,12 +19,14 @@ The dev server loads the ES modules under `packages/game/src/`. The build produc
 Install Python with Playwright and its Chromium browser to run the test suite.
 
 ```sh
-python -m pip install playwright
+python -m pip install -r tests/requirements.txt
 python -m playwright install chromium
 npm test -- --full
 ```
 
-Pass test names to run a subset, for example `npm test -- det save`. Test logs are in `dist/test-logs/`.
+`npm run test:fast` runs rules, architecture, runner and desktop contracts without Chromium. `npm test` runs core integration; `npm test -- --full` adds complete browser/co-op coverage, packed rendering and targeted fault checks. Use `npm run test:stress` for world sweeps and `npm run test:performance` for isolated benchmarks.
+
+Pass test names to run a subset, for example `npm test -- det save`. Structured results and failure logs are in `dist/test-logs/`. See [the audit and coverage limits](docs/TEST_AUDIT.md).
 
 `npm run quality` checks JavaScript formatting, ESLint rules, and architectural dependencies. Use `npm run format` to apply formatting. The line-oriented translation table retains its tooling-compatible layout.
 

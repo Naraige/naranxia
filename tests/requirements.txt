@@ -1,0 +1,2 @@
+# Keep Chromium cache and CI browser version in .github/workflows/test.yml in sync.
+playwright==1.56.0

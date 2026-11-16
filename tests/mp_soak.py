@@ -4,6 +4,7 @@ from playwright.sync_api import sync_playwright
 import os
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)));sys.path.insert(0,os.path.join(ROOT,'tools'))
 import fontroute
+import mp_harness as harness
 # co-op soak: a long game of two headless clients with everything going on (building by both players, training, fights at both castles,
 # waves, convoys both ways, choice events, quests, knights sent against a rebel camp, King skills) and NO corruption: the two machines
 # must never differ. Every tick is compared (epoch:tick) with the wide digest of mp_resync_deep.py; the first difference is printed as
@@ -20,7 +21,7 @@ INIT="""()=>{'use strict';window.__out=[];MP.dc={readyState:'open',send:s=>windo
   if(c.k==='zk'){const cs=c.p?CS2:CS;setPl(c.p);for(let i=0;i<c.n;i++){const f=freeTile(cs.tx+7+i%4,cs.ty+7+((i/4)|0));if(f)units.push(mkU(0,i%3?'knight':'archer',(f[0]+.5)*TS,(f[1]+.5)*TS))}setPl(MP.host?0:1);return}
   return _e(c,m)};
  const _sg=startGame;startGame=function(){_sg();for(const R of RESP){R.g=5000;R.w=5000;R.s=5000}waveT=1e9};
- return 'ok'}"""
+  return 'ok'}"""
 REC="""()=>{window.__H={};window.__D={};let rc=0,rc0=0,inner=MP.simR;const w=function(){rc++;return inner()};
  Object.defineProperty(MP,'simR',{configurable:true,get(){return w},set(f){inner=f}});
  const h=s=>{let x=0;for(let i=0;i<s.length;i++)x=(Math.imul(x,31)+s.charCodeAt(i))|0;return x};
@@ -36,12 +37,7 @@ REC="""()=>{window.__H={};window.__D={};let rc=0,rc0=0,inner=MP.simR;const w=fun
   const key=MP.ep+':'+t;window.__H[key]=Object.keys(P).map(k=>k+'~'+h(P[k])).join(' ');window.__D[key]=P;delete window.__D[MP.ep+':'+(t-150)]}}"""
 def P(*a):print(*a,flush=True)
 def pump(A,B,n=1):
-    for _ in range(n):
-        a=A.evaluate("()=>{const o=window.__out;window.__out=[];return o}")
-        b=B.evaluate("()=>{const o=window.__out;window.__out=[];return o}")
-        if a:B.evaluate("(L)=>{for(const s of L)mpMsg(JSON.parse(s))}",a)
-        if b:A.evaluate("(L)=>{for(const s of L)mpMsg(JSON.parse(s))}",b)
-        time.sleep(.01)
+    harness.pump(A,B,n)
 GETH="()=>{const o=window.__H;window.__H={};return o}"
 HA={};HB={};bad=[None];nchk={};cut={}   # cut[epoch] = first tick not compared (a machine was corrupted there)
 kk=lambda k:[int(x) for x in k.split(':')]
@@ -52,8 +48,9 @@ def check():
         if e in cut and n>=cut[e]:
             del HA[t];del HB[t];continue
         nchk[e]=nchk.get(e,0)+1
+        harness.compared+=1
         if HA[t]!=HB[t] and bad[0] is None:
-            bad[0]=t;P('FIRST DIVERGENCE epoch:tick',t,'\n A',HA[t],'\n B',HB[t])
+            bad[0]=t;harness.divergence(A,B,t);P('FIRST DIVERGENCE epoch:tick',t,'\n A',HA[t],'\n B',HB[t])
             da=json.loads(A.evaluate("(k)=>JSON.stringify(window.__D[k]||null)",t) or 'null');db=json.loads(B.evaluate("(k)=>JSON.stringify(window.__D[k]||null)",t) or 'null')
             if da and db:
                 for part in da:
@@ -66,14 +63,11 @@ def check():
                             P('   ',[z for z in fa if z.startswith(('uid=','sid=','type='))],'A',[z for z in fa if z not in sb][:10],'B',[z for z in fb if z not in sa][:10])
         del HA[t];del HB[t]
 def waitT(sec):
-    t0=time.time();k=0
-    while time.time()-t0<sec:
-        pump(A,B);k+=1
-        if k%10==0:check()
-    check()
+    harness.wait_seconds(A,B,sec,check)
 RSQ="()=>JSON.stringify({ep:MP.ep,rsy:MP.rsy,tick:MP.tick,ds:MP.desync,dsN:MP.dsN|0})"
 ok=[True]
 def need(c,msg):
+    harness.check(msg,bool(c))
     if not c:ok[0]=False;P('FAIL',msg)
 SPOT="""(n)=>{const me=CURPL?CS2:CS,out=[];for(let r=6;r<26&&out.length<n;r++)for(let j=-r;j<=r&&out.length<n;j++)for(let i=-r;i<=r&&out.length<n;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=me.tx+2+i,ty=me.ty+2+j;
   let free=true;for(let b=-1;b<=2&&free;b++)for(let a=-1;a<=2&&free;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])free=false}
@@ -89,18 +83,16 @@ INFO="()=>JSON.stringify({tick:MP.tick,ep:MP.ep,u:units.length,z:units.filter(u=
 with sync_playwright() as p:
     pages=[];brs=[]
     for i in range(2):
-        br=p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required','--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--enable-unsafe-swiftshader']);brs.append(br)
-        pg=br.new_page(viewport={'width':480,'height':320});errs=[]
-        pg.on('pageerror',lambda e,errs=errs:errs.append(str(e)[:300]))
-        fontroute.setup(pg);pg.route('**/three.min.js',lambda r:r.fulfill(path=os.path.join(ROOT,'node_modules/three/build/three.min.js'),content_type='application/javascript'))
-        pg.goto((Path(ROOT)/'dist'/html).resolve().as_uri(),timeout=600000);pg.wait_for_timeout(2500)
+        br=brs[0] if brs else p.chromium.launch(args=harness.FLAGS)
+        if not brs:brs.append(br)
+        pg,errs=harness.load(br,html,480,320)
         P('loaded',i,pg.evaluate(INIT));pages.append((pg,errs))
     A,ea=pages[0];B,eb=pages[1]
     A.evaluate("()=>{MP.host=true;MP.conn=true}");B.evaluate("()=>{MP.host=false;MP.conn=true}")
     A.evaluate("""()=>{const R0=Math.random;let s=103;Math.random=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};rollWorld();if(pvKey!==SEED)buildPreview();let a=null,b=null;for(let t=0;t<20000&&!(a&&b);t++){randomSite();if(!pickPos||!pickPos.ok)continue;const s={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=s;else{const d=Math.hypot(a.tx-s.tx,a.ty-s.ty);if(d>=24&&d<=60)b=s}}
      Math.random=R0;window.__ab=[a,b];mpWorldSync()}""");pump(A,B,3)
     r=A.evaluate("""()=>{const a=window.__ab[0],b=window.__ab[1];MP.mine=a;MP.theirs=b;mpStart();return JSON.stringify({a,b,on:MP.on})}""")
-    A.evaluate(REC);pump(A,B,1);B.evaluate(REC);P('start',r)
+    harness.flush(A,B);A.evaluate(REC);B.evaluate(REC);harness.observe(A,B);pump(A,B,1);P('start',r)
     step=0;evi=9100;t0=time.time()
     def tick():return min(json.loads(A.evaluate(RSQ))['tick'],json.loads(B.evaluate(RSQ))['tick'])
     # the script: (tick, what)
@@ -132,7 +124,9 @@ with sync_playwright() as p:
     check()
     a=json.loads(A.evaluate(RSQ));b=json.loads(B.evaluate(RSQ));P('end A',a,A.evaluate(INFO));P('end B',b)
     n=sum(nchk.values());P('ticks compared',n,'per epoch',json.dumps(nchk),'in',round(time.time()-t0),'s')
-    need(bad[0] is None,'divergence at '+str(bad[0]));need(a['ep']==0 and b['ep']==0 and not a['dsN'] and not b['dsN'],'a resync happened');need(n>=TICKS-20,'only %d ticks compared'%n)
+    need(bad[0] is None,'divergence at '+str(bad[0]));need(a['ep']==0 and b['ep']==0 and not a['dsN'] and not b['dsN'],'a resync happened');need(n>=TICKS,'only %d ticks compared'%n)
     P('RESULT','OK' if ok[0] else 'FAIL','divergence' if bad[0] else '')
     P('ERRS',ea[:3],eb[:3])
+    outcome=ok[0] and bad[0] is None
+    harness.finish('mp_soak',outcome,A,B,ea+eb,sum(nchk.values()))
     for br in brs:br.close()

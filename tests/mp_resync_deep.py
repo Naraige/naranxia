@@ -4,6 +4,7 @@ from playwright.sync_api import sync_playwright
 import os
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)));sys.path.insert(0,os.path.join(ROOT,'tools'))
 import fontroute
+import mp_harness as harness
 # co-op: do both machines really resume from the same tick with the same state after an auto resync?
 # Five resyncs in one game: during an open event, a convoy on the road, a raid (wolf pack wave and zombies at the walls), King skills
 # running, then everything at once with the HOST corrupted. After each one, every tick is compared between the two machines, indexed by
@@ -21,7 +22,7 @@ INIT="""()=>{'use strict';window.__out=[];MP.dc={readyState:'open',send:s=>windo
   if(c.k==='zw'){waveN=c.n;waveT=0;return}
   return _e(c,m)};
  const _sg=startGame;startGame=function(){_sg();for(const R of RESP){R.g=5000;R.w=5000;R.s=5000}waveT=1e9};
- return 'ok'}"""
+  return 'ok'}"""
 REC="""()=>{window.__H={};window.__D={};let rc=0,rc0=0,inner=MP.simR;const w=function(){rc++;return inner()};
  Object.defineProperty(MP,'simR',{configurable:true,get(){return w},set(f){inner=f}});
  const h=s=>{let x=0;for(let i=0;i<s.length;i++)x=(Math.imul(x,31)+s.charCodeAt(i))|0;return x};
@@ -37,12 +38,7 @@ REC="""()=>{window.__H={};window.__D={};let rc=0,rc0=0,inner=MP.simR;const w=fun
   const key=MP.ep+':'+t;window.__H[key]=Object.keys(P).map(k=>k+'~'+h(P[k])).join(' ');window.__D[key]=P;delete window.__D[MP.ep+':'+(t-150)]}}"""
 def P(*a):print(*a,flush=True)
 def pump(A,B,n=1):
-    for _ in range(n):
-        a=A.evaluate("()=>{const o=window.__out;window.__out=[];return o}")
-        b=B.evaluate("()=>{const o=window.__out;window.__out=[];return o}")
-        if a:B.evaluate("(L)=>{for(const s of L)mpMsg(JSON.parse(s))}",a)
-        if b:A.evaluate("(L)=>{for(const s of L)mpMsg(JSON.parse(s))}",b)
-        time.sleep(.01)
+    harness.pump(A,B,n)
 GETH="()=>{const o=window.__H;window.__H={};return o}"
 HA={};HB={};bad=[None];nchk={};cut={}   # cut[epoch] = first tick not compared (a machine was corrupted there)
 kk=lambda k:[int(x) for x in k.split(':')]
@@ -53,8 +49,9 @@ def check():
         if e in cut and n>=cut[e]:
             del HA[t];del HB[t];continue
         nchk[e]=nchk.get(e,0)+1
+        harness.compared+=1
         if HA[t]!=HB[t] and bad[0] is None:
-            bad[0]=t;P('FIRST DIVERGENCE epoch:tick',t,'\n A',HA[t],'\n B',HB[t])
+            bad[0]=t;harness.divergence(A,B,t);P('FIRST DIVERGENCE epoch:tick',t,'\n A',HA[t],'\n B',HB[t])
             da=json.loads(A.evaluate("(k)=>JSON.stringify(window.__D[k]||null)",t) or 'null');db=json.loads(B.evaluate("(k)=>JSON.stringify(window.__D[k]||null)",t) or 'null')
             if da and db:
                 for part in da:
@@ -67,14 +64,11 @@ def check():
                             P('   ',[z for z in fa if z.startswith(('uid=','sid=','type='))],'A',[z for z in fa if z not in sb][:10],'B',[z for z in fb if z not in sa][:10])
         del HA[t];del HB[t]
 def waitT(sec):
-    t0=time.time();k=0
-    while time.time()-t0<sec:
-        pump(A,B);k+=1
-        if k%10==0:check()
-    check()
+    harness.wait_seconds(A,B,sec,check)
 RSQ="()=>JSON.stringify({ep:MP.ep,rsy:MP.rsy,tick:MP.tick,ds:MP.desync})"
 ok=[True]
 def need(c,msg):
+    harness.check(msg,bool(c))
     if not c:ok[0]=False;P('FAIL',msg)
 def resync(lbl,page,js,state):
     """corrupt one machine, wait for the epoch to move on both, then run TICKS ticks and compare them all"""
@@ -83,7 +77,7 @@ def resync(lbl,page,js,state):
     st=A.evaluate(state);P(lbl,'state before',st)
     cut[ep]=json.loads(page.evaluate(RSQ))['tick'];page.evaluate(js)
     t0=time.time();done=False
-    while time.time()-t0<240:
+    for _ in range(240*30//5):
         pump(A,B)
         a=json.loads(A.evaluate(RSQ));b=json.loads(B.evaluate(RSQ))
         if a['ep']==ep+1 and b['ep']==ep+1 and not a['rsy'] and not b['rsy']:done=True;break
@@ -91,7 +85,7 @@ def resync(lbl,page,js,state):
     if not done:return
     t1=a['tick'];P(lbl,'resynced in',round(time.time()-t0,1),'s, epoch',ep+1,'ticks A',a['tick'],'B',b['tick'],'| state after A',A.evaluate(state),'B',B.evaluate(state))
     t0=time.time();k=0
-    while time.time()-t0<400:
+    for _ in range((TICKS+600)//5):
         pump(A,B);k+=1
         if k%10==0:
             check();a=json.loads(A.evaluate(RSQ));b=json.loads(B.evaluate(RSQ))
@@ -101,11 +95,9 @@ def resync(lbl,page,js,state):
 with sync_playwright() as p:
     pages=[];brs=[]
     for i in range(2):
-        br=p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required','--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--enable-unsafe-swiftshader']);brs.append(br)
-        pg=br.new_page(viewport={'width':480,'height':320});errs=[]
-        pg.on('pageerror',lambda e,errs=errs:errs.append(str(e)[:300]))
-        fontroute.setup(pg);pg.route('**/three.min.js',lambda r:r.fulfill(path=os.path.join(ROOT,'node_modules/three/build/three.min.js'),content_type='application/javascript'))
-        pg.goto((Path(ROOT)/'dist'/html).resolve().as_uri(),timeout=600000);pg.wait_for_timeout(2500)
+        br=brs[0] if brs else p.chromium.launch(args=harness.FLAGS)
+        if not brs:brs.append(br)
+        pg,errs=harness.load(br,html,480,320)
         P('loaded',i,pg.evaluate(INIT));pages.append((pg,errs))
     A,ea=pages[0];B,eb=pages[1]
     A.evaluate("()=>{MP.host=true;MP.conn=true}");B.evaluate("()=>{MP.host=false;MP.conn=true}")
@@ -113,7 +105,7 @@ with sync_playwright() as p:
     A.evaluate("""()=>{const R0=Math.random;let s=103;Math.random=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};rollWorld();if(pvKey!==SEED)buildPreview();let a=null,b=null;for(let t=0;t<20000&&!(a&&b);t++){randomSite();if(!pickPos||!pickPos.ok)continue;const s={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=s;else{const d=Math.hypot(a.tx-s.tx,a.ty-s.ty);if(d>=24&&d<=60)b=s}}
      Math.random=R0;window.__ab=[a,b];mpWorldSync()}""");pump(A,B,3)
     r=A.evaluate("""()=>{const a=window.__ab[0],b=window.__ab[1];MP.mine=a;MP.theirs=b;mpStart();return JSON.stringify({a,b,on:MP.on})}""")
-    A.evaluate(REC);pump(A,B,1);B.evaluate(REC);P('start',r)
+    harness.flush(A,B);A.evaluate(REC);B.evaluate(REC);harness.observe(A,B);pump(A,B,1);P('start',r)
     waitT(3)
     A.evaluate("()=>{selB=structs.find(s=>s.type==='castle'&&(s.pl|0)===0);train('king')}");B.evaluate("()=>{selB=structs.find(s=>s.type==='castle'&&(s.pl|0)===1);train('king')}")
     # 1. an event open
@@ -149,4 +141,6 @@ with sync_playwright() as p:
     P('ticks compared per epoch',json.dumps(nchk))
     P('RESULT','OK' if ok[0] else 'FAIL','divergence' if bad[0] else '')
     P('ERRS',ea[:3],eb[:3])
+    outcome=ok[0] and bad[0] is None
+    harness.finish('mp_resync_deep',outcome,A,B,ea+eb,sum(nchk.values()))
     for br in brs:br.close()

@@ -26,11 +26,24 @@ import { occ, ter } from "../world/terrain-state.js";
    Boiling oil (Academy research after Bastion walls): every finished wall, gate and tower scalds zombies within 1.3 tiles every 1.5 s.
    Both are simulation (timers in sim time, damage through the same lists the bombers use), traps are a Map tile -> hp saved with the game (SAVA). */
 const SPKC = { g: 10, w: 15 };
+export { SPK };
+
+export function spikeOK(tx, ty) {
+  const i = ty * TW + tx;
+  return gOK(tx, ty) && valid(tx, ty) && ter[i] !== 1 && !SPK.has(i) && !occ.has(i);
+}
+
+export function removeSpike(tx, ty) {
+  if (!SPK.delete(ty * TW + tx)) return false;
+  objectivesState.SPKV++;
+  snd("click");
+  return true;
+}
 
 export function placeSpike(tx, ty) {
   if (sessionState.over) return;
   const i = ty * TW + tx;
-  if (!gOK(tx, ty) || !valid(tx, ty) || ter[i] === 1 || SPK.has(i) || occ.has(i)) {
+  if (!spikeOK(tx, ty)) {
     if (!MP.on || playersState.CURPL === LPL()) {
       hudDisplayState.msgS = "Cannot place a trap here";
       hudDisplayState.msgT = 2;

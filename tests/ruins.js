@@ -26,6 +26,9 @@ async () => {
   const g1 = RESP[0].g + RESP[0].w + RESP[0].s + RESP[0].f;
   const sv = await svPack(),
     back = JSON.parse(sv).R.RUINS !== undefined;
+  __test.check("ruin claimed", r.done);
+  __test.check("ruin reward", g1 > g0);
+  __test.check("ruin in save", back);
   render3D(0.05);
   Math.random = RR;
   return JSON.stringify({

@@ -14,6 +14,7 @@ async () => {
   const O = {},
     C = [];
   const chk = (n, v) => {
+    window.__test.check(n, !!v);
     O[n] = v;
     C.push(!!v);
   };
@@ -73,6 +74,27 @@ async () => {
   const e = [era(0), era(9), era(23)];
   O.era = e;
   chk("eraPhaseIndependent", e[0] === e[1] && e[1] === e[2] && e[0] >= 5 && e[0] <= 10);
+  // Isolate one trap contact from other combat. A positive delta alone would
+  // accept incorrect damage, wear and even a second unit damaging the target.
+  const isolated = freeTile(CS.tx + 16, CS.ty + 16),
+    ii = isolated[1] * TW + isolated[0],
+    target = mkU(1, "zombie", (isolated[0] + 0.5) * TS, (isolated[1] + 0.5) * TS, null, -1);
+  units.splice(0, units.length, target);
+  target.hp = target.max = 1e6;
+  target.cd = 1e9;
+  SPK.clear();
+  SPK.set(ii, 120);
+  waveN = 0;
+  time = 1000.49;
+  update(0.05);
+  __test.check("exact trap damage", 1e6 - target.hp, 7);
+  __test.check("exact trap wear", SPK.get(ii), 113);
+  SPK.set(ii, 7);
+  time = 1001.49;
+  target.x = (isolated[0] + 0.5) * TS;
+  target.y = (isolated[1] + 0.5) * TS;
+  update(0.05);
+  __test.check("worn trap removed", SPK.has(ii), false);
   Math.random = RR;
   O.ok = C.every(Boolean);
   return JSON.stringify(O);

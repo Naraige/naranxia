@@ -1,149 +1,195 @@
 #!/usr/bin/env node
-// Cross-platform test runner used by the root `npm test` script.
-import { createWriteStream, mkdirSync } from "node:fs";
+import { createWriteStream, mkdirSync, writeFileSync, unlinkSync } from "node:fs";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { testPassed } from "./test_result.mjs";
+import { validateResults } from "./test_result.mjs";
+import { selectTests, suite } from "./test_suite.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const logDir = path.join(root, "dist", "test-logs");
-mkdirSync(logDir, { recursive: true });
-const python = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
-const suite = {
-  smoke: { args: ["tools/run.py", "tests/smoke.js", "-", "1280", "720", "300", "naranxia.html"], pass: /"ok":true/ },
-  det: { args: ["tools/run.py", "tests/det.js"], pass: /"ok":true/ },
-  tools: { args: ["tests/tools.py"], pass: /^RESULT OK/m },
-  features: { args: ["tools/run.py", "tests/features.js"], pass: /"ok":true/ },
-  spearman: { args: ["tools/run.py", "tests/spearman.js"], pass: /"ok":true/ },
-  kingxp: { args: ["tools/run.py", "tests/kingxp.js"], pass: /"ok":true/ },
-  mp_kxp: { args: ["tests/mp_kxp.py", "naranxia_readable.html", "30"], pass: /^RESULT OK/m },
-  compat: { args: ["tools/run.py", "tests/compat.js"], pass: /"ok":true/ },
-  bossabil: { args: ["tools/run.py", "tests/bossabil.js"], pass: /"ok":true/ },
-  envoy: { args: ["tools/run.py", "tests/envoy.js"], pass: /"ok":true/ },
-  ruins: { args: ["tools/run.py", "tests/ruins.js"], pass: /"ok":true/ },
-  events: { args: ["tools/run.py", "tests/events.js"], pass: /"ok":true/ },
-  traps: { args: ["tools/run.py", "tests/traps.js"], pass: /"ok":true/ },
-  mp_events: { args: ["tests/mp_events.py", "naranxia_readable.html", "90"], pass: /^RESULT OK/m },
-  bastion: { args: ["tools/run.py", "tests/bastion.js"], pass: /"ok":true/ },
-  research: { args: ["tools/run.py", "tests/research.js"], pass: /"ok":true/ },
-  market: { args: ["tools/run.py", "tests/market.js"], pass: /"ok":true/ },
-  quests: { args: ["tools/run.py", "tests/quests.js"], pass: /"ok":true/ },
-  ui: { args: ["tools/run.py", "tests/ui.js", "-", "1280", "720"], pass: /"ok":true/ },
-  waves: { args: ["tools/run.py", "tests/waves.js"], pass: /"ok":true/ },
-  mp8: { args: ["tests/mp8.py", "naranxia_readable.html", "40"], pass: /^ERRS \[\] \[\]/m },
-  mpk: { args: ["tests/mpk.py", "naranxia_readable.html", "40"], pass: /^ERRS \[\] \[\]/m },
-  mp_resync: { args: ["tests/mp_resync.py", "naranxia_readable.html", "220"], pass: /^RESULT OK/m },
-  mp_quests: { args: ["tests/mp_quests.py", "naranxia_readable.html", "400"], pass: /^RESULT OK/m },
-  mp_convoy: { args: ["tests/mp_convoy.py", "naranxia_readable.html", "400"], pass: /^RESULT OK/m },
-  save: { args: ["tools/run.py", "tests/save.js"], pass: /"ok":true/ },
-  mp_build: { args: ["tests/mp_build.py", "naranxia_readable.html"], pass: /^RESULT OK$/m },
-  mp_resync_deep: { args: ["tests/mp_resync_deep.py", "naranxia_readable.html", "200"], pass: /^RESULT OK/m },
-  mp_soak: { args: ["tests/mp_soak.py", "naranxia_readable.html", "6000"], pass: /^RESULT OK/m },
-  runner: { command: process.execPath, args: ["tests/test_runner.mjs"], pass: /^runner contracts PASS$/m },
-  desktop: { command: process.execPath, args: ["tests/desktop_bridge.cjs"], pass: /^desktop bridge PASS$/m },
-};
-const quick = [
-  "smoke",
-  "det",
-  "tools",
-  "features",
-  "spearman",
-  "traps",
-  "kingxp",
-  "compat",
-  "ruins",
-  "envoy",
-  "bossabil",
-  "bastion",
-  "market",
-  "research",
-  "quests",
-  "ui",
-  "waves",
-  "events",
-  "mp8",
-  "mpk",
-  "mp_resync",
-  "mp_kxp",
-  "mp_convoy",
-  "mp_quests",
-  "mp_events",
-  "mp_build",
-  "save",
-  "runner",
-  "desktop",
-];
-const args = process.argv.slice(2);
-const names = args.includes("--full")
-  ? [...new Set([...quick, "mp_resync_deep", "mp_soak"])]
-  : args.filter((name) => name !== "--full");
-const selected = names.length ? names : quick;
-const unknown = selected.filter((name) => !suite[name]);
-if (unknown.length) {
-  console.error(`Unknown test(s): ${unknown.join(", ")}. Available: ${Object.keys(suite).join(", ")}`);
+let selection;
+try {
+  selection = selectTests(process.argv.slice(2));
+} catch (error) {
+  console.error(error.message);
   process.exit(2);
 }
-
-const concurrency = Math.max(1, Number.parseInt(process.env.J || "1", 10) || 1);
-const timeoutMs = 20 * 60 * 1000;
-let next = 0;
-let failures = 0;
-
-function run(name) {
+if (selection.list) {
+  console.log(JSON.stringify(selection, null, 2));
+  process.exit(0);
+}
+const python = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
+const concurrency = Number(process.env.J || 1);
+if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 2) {
+  console.error("J must be 1 or 2 (browser CPU contention is expensive)");
+  process.exit(2);
+}
+const started = performance.now();
+const runId = new Date().toISOString().replace(/[:.]/g, "-") + `-${process.pid}`;
+const logDir = path.join(root, "dist", "test-logs", runId);
+mkdirSync(logDir, { recursive: true });
+const phasesMs = {},
+  outcomes = [],
+  children = new Set();
+function stop(child) {
+  if (process.platform === "win32")
+    spawn("taskkill", ["/pid", String(child.pid), "/T", "/F"], { windowsHide: true, stdio: "ignore" });
+  else {
+    try {
+      process.kill(-child.pid, "SIGKILL");
+    } catch {
+      /* already exited */
+    }
+  }
+}
+for (const signal of ["SIGINT", "SIGTERM"])
+  process.once(signal, () => {
+    for (const child of children) stop(child);
+    process.exit(130);
+  });
+function execute(command, args, name, timeout = 20 * 60 * 1000) {
   return new Promise((resolve) => {
-    const spec = suite[name];
-    const started = Date.now();
+    const begin = performance.now();
+    const child = spawn(command, args, {
+      cwd: root,
+      windowsHide: true,
+      detached: process.platform !== "win32",
+      env: {
+        ...process.env,
+        PYTHONUNBUFFERED: "1",
+        PYTHONIOENCODING: "utf-8",
+        TEST_ARTIFACT_DIR: logDir,
+        TEST_PURPOSES: JSON.stringify(
+          Object.fromEntries(
+            Object.entries(suite)
+              .filter(([, s]) => s.purpose)
+              .map(([name, s]) => [name, s.purpose]),
+          ),
+        ),
+      },
+    });
+    children.add(child);
+    const chunks = [];
+    let bytes = 0,
+      timedOut = false;
     const logPath = path.join(logDir, `${name}.log`);
     const log = createWriteStream(logPath);
-    const child = spawn(spec.command || python, spec.args, { cwd: root, windowsHide: true });
-    let output = "";
-    let timedOut = false;
+    for (const stream of [child.stdout, child.stderr])
+      stream?.on("data", (chunk) => {
+        chunks.push(chunk);
+        log.write(chunk);
+        bytes += chunk.length;
+        if (bytes > 32 * 1024 * 1024) {
+          timedOut = true;
+          stop(child);
+        }
+      });
+    child.on("error", (error) => {
+      chunks.push(Buffer.from(String(error)));
+      log.write(String(error));
+    });
     const timer = setTimeout(() => {
       timedOut = true;
-      child.kill("SIGTERM");
-    }, timeoutMs);
-    for (const stream of [child.stdout, child.stderr]) {
-      stream?.on("data", (chunk) => {
-        log.write(chunk);
-        output += chunk.toString();
-      });
-    }
-    child.on("error", (error) => {
-      output += `\n${error}\n`;
-    });
+      stop(child);
+    }, timeout);
     child.on("close", (code) => {
       clearTimeout(timer);
-      log.end();
-      const passed = testPassed(code, timedOut, output, spec.pass);
-      if (!passed) failures++;
-      const seconds = Math.floor((Date.now() - started) / 1000);
-      console.log(`${passed ? "PASS" : "FAIL"} ${name.padEnd(10)} ${String(seconds).padStart(4)}s`);
-      if (!passed) console.log(`     log: ${path.relative(root, logPath)}${timedOut ? " (timed out)" : ""}`);
-      /* the CI job log is all that can be read after a failure (the test-logs artifact cannot be downloaded): show the end of the log */
-      if (!passed)
-        console.log(
-          output
-            .trimEnd()
-            .split("\n")
-            .slice(-15)
-            .map((line) => `     | ${line.slice(0, 400)}`)
-            .join("\n"),
-        );
-      resolve();
+      children.delete(child);
+      const output = Buffer.concat(chunks).toString("utf8");
+      log.end(() => resolve({ code, timedOut, output, logPath, durationMs: performance.now() - begin }));
     });
   });
 }
-
-async function worker() {
-  while (next < selected.length) {
-    const name = selected[next++];
-    await run(name);
+if (selection.build && selection.selected.some((name) => ["browser", "python"].includes(suite[name].kind))) {
+  const built = await execute(process.execPath, ["tools/build.mjs"], "build");
+  phasesMs.build = built.durationMs;
+  if (built.code !== 0 || built.timedOut) {
+    console.error(built.output);
+    process.exit(1);
+  }
+  if (selection.selected.includes("smoke")) {
+    const packed = await execute(process.execPath, ["tools/build_dist.mjs"], "pack");
+    phasesMs.pack = packed.durationMs;
+    if (packed.code !== 0 || packed.timedOut) {
+      console.error(packed.output);
+      process.exit(1);
+    }
   }
 }
-await Promise.all(Array.from({ length: Math.min(concurrency, selected.length) }, worker));
-if (failures) {
-  console.error(`SOME FAILED: see ${path.relative(root, logDir)}/`);
-  process.exit(1);
+const jobs = [];
+for (const html of ["naranxia_readable.html", "naranxia.html"]) {
+  const names = selection.selected.filter((name) => suite[name].kind === "browser" && suite[name].html === html);
+  const regular = names.filter((name) => !suite[name].heavy);
+  for (const name of names.filter((name) => suite[name].heavy))
+    jobs.push({ names: [name], command: python, args: ["tools/browser_suite.py", suite[name].file, "--html", html] });
+  if (regular.length)
+    jobs.push({
+      names: regular,
+      command: python,
+      args: ["tools/browser_suite.py", ...regular.map((name) => suite[name].file), "--html", html],
+    });
 }
-console.log("ALL PASS");
+for (const name of selection.selected.filter((name) => suite[name].kind !== "browser")) {
+  const spec = suite[name];
+  jobs.push({
+    names: [name],
+    command: spec.kind === "node" ? process.execPath : python,
+    args: [spec.file, ...(spec.args || [])],
+  });
+}
+let next = 0;
+async function worker() {
+  while (next < jobs.length) {
+    const job = jobs[next++];
+    const label = job.names.length > 1 ? "browser-" + suite[job.names[0]].html : job.names[0];
+    const child = await execute(job.command, job.args, label);
+    const validation = validateResults(child.code, child.timedOut, child.output, job.names);
+    outcomes.push({
+      names: job.names,
+      durationMs: child.durationMs,
+      setupTeardownMs: Math.max(0, child.durationMs - validation.results.reduce((sum, r) => sum + r.durationMs, 0)),
+      ...validation,
+    });
+    saveReport(false);
+    for (const name of job.names) {
+      const r = validation.results.find((r) => r.id === name);
+      const own = r ? validateResults(0, false, "TEST_RESULT " + JSON.stringify(r), [name]) : validation;
+      const passed = own.passed && !child.timedOut;
+      console.log(
+        `${passed ? "PASS" : "FAIL"} ${name} ${((r?.durationMs ?? child.durationMs) / 1000).toFixed(2)}s ${r?.assertions.length || 0} assertions${!passed && own.category ? " [" + own.category + "]" : ""}`,
+      );
+    }
+    if (validation.passed) unlinkSync(child.logPath);
+    else {
+      console.error(`${validation.error}\nLog: ${child.logPath}`);
+      console.error(
+        child.output
+          .trimEnd()
+          .split("\n")
+          .slice(-8)
+          .map((line) => line.slice(0, 2000))
+          .join("\n"),
+      );
+    }
+  }
+}
+await Promise.all(Array.from({ length: Math.min(concurrency, jobs.length) }, worker));
+function saveReport(complete) {
+  const summary = {
+    schema: 1,
+    complete,
+    runId,
+    tier: selection.tier,
+    selected: selection.selected,
+    concurrency,
+    environment: { node: process.version, platform: process.platform, python },
+    durationMs: performance.now() - started,
+    phasesMs,
+    outcomes,
+  };
+  writeFileSync(path.join(logDir, "results.json"), JSON.stringify(summary, null, 2));
+}
+saveReport(true);
+const report = path.join(logDir, "results.json");
+console.log(`Results: ${report}`);
+process.exitCode = outcomes.every((r) => r.passed) ? 0 : 1;

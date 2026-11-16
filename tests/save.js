@@ -79,16 +79,35 @@ async () => {
       sw,
       mpHash(),
       JSON.stringify(PRICE),
+      JSON.stringify([...SPK]),
       rc,
     ].join("|");
   };
   /* solo generates the far chunks in the background, by the clock (bgGen / idle callback), also while the awaits below let frames run: that is
     wall time, not saved state, so it is stopped here (everything left counts as generated) and both continuations see the same world */
   SAVA.GI[1](SAVA.GORD[0]().length);
+  SPK.set((CY + 6) * TW + CX + 6, 77);
   rc = 0;
   const D1 = dg();
   paused = true;
   /* the live frame loop would keep ticking during the awaits */ window.__svw = [];
+  const typedState = async () => {
+    const values = {};
+    for (const [name, [get]] of Object.entries(SAVA)) {
+      const value = get();
+      if (!ArrayBuffer.isView(value)) continue;
+      const digest = new Uint8Array(
+        await crypto.subtle.digest("SHA-256", new Uint8Array(value.buffer, value.byteOffset, value.byteLength)),
+      );
+      values[name] = {
+        type: value.constructor.name,
+        length: value.length,
+        sha256: Array.from(digest, (b) => b.toString(16).padStart(2, "0")).join(""),
+      };
+    }
+    return values;
+  };
+  const beforeTyped = await typedState();
   const t1 = performance.now();
   const txt = await svPack();
   const tPack = performance.now() - t1;
@@ -106,15 +125,20 @@ async () => {
   const terrainKeys = ["HT", "ter", "amt", "pth", "FLG", "TFL", "genF", "stairs", "occ", "CAMPS", "RUINS"];
   const terrainRefs = terrainKeys.map((k) => SAVA[k][0]());
   const t2 = performance.now();
+  SPK.clear();
   await svApply(txt);
   const tLoad = performance.now() - t2;
+  __test.check("every persisted typed-array byte restored", await typedState(), beforeTyped);
   rc = 0;
   const D2 = dg();
+  __test.check("save round trip state", D2, D1);
   const sameTerrainRefs = terrainRefs.every((v, i) => v === SAVA[terrainKeys[i]][0]());
+  __test.check("shared terrain identity", sameTerrainRefs);
   if (!sameTerrainRefs) throw new Error("terrain arrays or collections were replaced during save restore");
   seedR(77);
   for (let k = 0; k < 400; k++) update(0.05);
   const B = dg();
+  __test.check("deterministic continuation", B, A);
   renderer.render = REND;
   render3D(0.05);
   /* one real frame of the loaded game: must not throw */ Math.random = RR;

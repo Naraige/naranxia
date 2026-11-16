@@ -6,9 +6,10 @@ ROOT=Path(__file__).resolve().parents[1]
 # compare the printed hashes before and after an optimisation: they must be identical (determinism)
 src=(ROOT/'tests/det.js').read_text(encoding='utf-8')
 with sync_playwright() as p:
-    b=p.chromium.launch(args=['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--enable-unsafe-swiftshader'])
-    pg=b.new_page();pg.route('**/three.min.js',lambda r:r.fulfill(path=str(ROOT/'node_modules/three/build/three.min.js'),content_type='application/javascript'))
-    pg.goto((ROOT/'dist/naranxia_readable.html').as_uri(),timeout=900000);pg.wait_for_timeout(3000)
+    sys.path.insert(0,str(ROOT/'tests'))
+    from browser_fixture import FLAGS,load_page
+    b=p.chromium.launch(args=FLAGS)
+    pg,errors,phases=load_page(b)
     c=pg.context.new_cdp_session(pg);c.send('Profiler.enable');c.send('Profiler.setSamplingInterval',{'interval':500});c.send('Profiler.start')
     pg.evaluate('()=>{window.__NX_PROFILE_DET__=true}')
     r=pg.evaluate(src);prof=c.send('Profiler.stop')['profile']
@@ -20,4 +21,6 @@ with sync_playwright() as p:
         self[k]=self.get(k,0)+d
     tot=sum(self.values())
     for k,v in sorted(self.items(),key=lambda x:-x[1])[:18]:print(f"{v/1000:8.0f}ms {100*v/tot:5.1f}% {k}")
+    if errors:raise RuntimeError('Profile scenario page errors: '+repr(errors))
+    print('startup phases ms',json.dumps(phases))
     b.close()

@@ -6,12 +6,17 @@ Use Node.js `^20.19.0 || ^22.13.0 || >=24` and npm from the repository root. Kee
 
 ```sh
 npm ci
+npm run test:fast
 npm run quality
 npm test -- --full
 npm run package:desktop -- win32:x64
 ```
 
-Install the Python Playwright package and its Chromium browser before running browser tests; CI pins the supported version in `.github/workflows/test.yml`. Select scenarios with `npm test -- det save`; logs go to `dist/test-logs/`. Desktop packaging targets depend on the host platform.
+Install browser tools with `python -m pip install -r tests/requirements.txt` and `python -m playwright install chromium`. Set `PYTHON` to a virtual environment's interpreter when needed. `npm test` builds readable HTML and runs core integration coverage; `npm test -- --full` adds packed rendering, all co-op scenarios, soak, deep recovery and source fault controls. Select scenarios with `npm test -- det save`, or reuse built artifacts with `node tools/test_all.mjs det save`. Structured reports and failure logs go to `dist/test-logs/`. Desktop packaging targets depend on the host platform.
+
+Use `npm run test:stress` for seeded world sweeps and `npm run test:performance` for isolated startup/CPU/GPU/heap measurements. Run benchmarks alone with `J=1`; `PERFORMANCE_MAX_SIM_MS` optionally supplies a calibrated simulation median budget. Tests never retry automatically. See [the test audit](docs/TEST_AUDIT.md) for coverage, mutation evidence, timings and remaining limits.
+
+Browser snippets must register named requirements through `__test.check(name, actual, expected)` and return an `ok` boolean in their result. `ok` alone is insufficient. New scenarios belong in `tools/test_suite.mjs`; pure checks should import production modules and avoid browser initialization. Keep fresh contexts per scenario, seeded inputs and tick/epoch comparisons. Do not shorten production rule durations or replace gameplay functions in fixtures. Synthetic setup commands may establish a scenario, but normal commands must delegate to production logic.
 
 Run `npm run format` for mechanical formatting. Git attributes and the editor configuration keep text files on LF line endings across Windows and CI. Review formatting separately from refactors and behavior fixes. Generated distributions and installed dependencies are excluded from formatting and linting.
 
