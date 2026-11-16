@@ -7,11 +7,9 @@ import fontroute
 html=sys.argv[1] if len(sys.argv)>1 else 'naranxia_readable.html';shot=sys.argv[2] if len(sys.argv)>2 else None
 def P(*a):print(*a,flush=True)
 with sync_playwright() as p:
-    b=p.chromium.launch(args=['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--enable-unsafe-swiftshader'])
-    pg=b.new_page(viewport={'width':1280,'height':720},accept_downloads=True);errs=[]
-    pg.on('pageerror',lambda e:errs.append(str(e)[:300]))
-    fontroute.setup(pg);pg.route('**/three.min.js',lambda r:r.fulfill(path=os.path.join(ROOT,'node_modules/three/build/three.min.js'),content_type='application/javascript'))
-    pg.goto('file://'+os.path.join(ROOT,'dist',html),timeout=180000);pg.wait_for_timeout(3000)
+    import mp_harness as harness
+    b=p.chromium.launch(args=harness.FLAGS)
+    pg,errs=harness.load(b,html,1280,720)
     r=json.loads(pg.evaluate("""async()=>{let s=21;const RR=Math.random;Math.random=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};
      rollWorld();randomSite();pickPos={tx:pickPos.tx,ty:pickPos.ty,ok:true};confirmPick();Math.random=RR;waveT=1e9;
      const O={},R=RESP[0],g0=R.g;devToggle();O.open=devOpen;
@@ -25,12 +23,20 @@ with sync_playwright() as p:
      devAct('spd');O.spd=spd;devAct('spd');devAct('spd');devAct('spd');O.spd2=spd;
      O.devu=DEVU;const a0=ACH.size;ach('res');O.achBlocked=ACH.size===a0;
      console.error('test error from tests/tools.py');
-     inGame=true;started=true;await new Promise(r=>setTimeout(r,400));
-     await bugReport();const B=window.__bug;O.report={ver:B.ver,mode:B.mode,test:B.test,seed:B.seed===SEED,save:!!(B.save&&B.save.v),shot:!!(B.shot&&B.shot.length>5000),errors:B.errors.length,msgs:B.messages.length};
+     inGame=true;started=true;
+     const capture=bugReport();__stepFrame();await capture;const B=window.__bug;O.report={ver:B.ver,mode:B.mode,test:B.test,seed:B.seed===SEED,save:!!(B.save&&B.save.v),shot:!!(B.shot&&B.shot.length>5000),errors:B.errors.length,msgs:B.messages.length};
      window.__bugtxt=JSON.stringify(B);return JSON.stringify(O)}"""))
     P('result',json.dumps(r))
     txt=pg.evaluate('()=>window.__bugtxt');open(os.path.join(ROOT,'dist','test_bug.json'),'w').write(txt);P('report bytes',len(txt))
-    if shot:pg.wait_for_timeout(600);pg.screenshot(path=shot)
+    if shot:pg.screenshot(path=shot)
     ok=r['open'] and r['res']==10000 and r['rsch'] and r['spawned']>=15 and r['waveOn'] and r['built'][0]>=1 and r['built'][1]==0 and r['healed'] and r['left']==0 and r['spd']==2 and r['spd2']==1 and r['devu'] and r['achBlocked'] \
        and r['report']['save'] and r['report']['shot'] and r['report']['errors']>=1 and r['report']['test']
-    P('RESULT','OK' if ok and not errs else 'FAIL');P('ERRS',errs[:3]);b.close()
+    for key in ('open','rsch','waveOn','healed','devu','achBlocked'):
+        harness.check(key,r[key],True)
+    harness.check('resources granted',r['res'],10000)
+    harness.check('all requirements',bool(ok))
+    harness.check('page errors',errs,[])
+    from browser_fixture import result,emit
+    emit(result('tools','Solo-only developer actions, achievement guard and complete bug report',harness.assertions,harness.started,harness.phases,{'html':html}))
+    b.close()
+    if not ok or errs:sys.exit(1)

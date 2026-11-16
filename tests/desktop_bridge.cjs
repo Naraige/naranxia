@@ -1,4 +1,4 @@
-const assert = require("node:assert/strict");
+const { assert, finish } = require("./node_report.cjs");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
@@ -151,6 +151,7 @@ async function main() {
     assert.equal(await exposed.api.del("summer slot"), true);
     assert.equal(await exposed.api.load("summer slot"), null);
     console.log("desktop bridge PASS");
+    finish("desktop", "Actual Electron preload and save IPC boundary");
   } finally {
     fs.rmSync(testRoot, { recursive: true, force: true });
   }

@@ -14,6 +14,7 @@ async () => {
     O = {},
     C = [],
     chk = (n, v) => {
+      __test.check(n, !!v);
       O[n] = v;
       C.push(!!v);
     };
@@ -21,6 +22,7 @@ async () => {
   const RR = Math.random;
   const castles = () => structs.filter((s) => s.type === "castle"),
     isW = (x, y) => ter[((y / TS) | 0) * TW + ((x / TS) | 0)] === 1;
+  let arrivals = 0;
   const tick = () => {
     update(0.05);
     const Cs = castles();
@@ -31,6 +33,7 @@ async () => {
       for (const c of Cs)
         if (Math.abs(SW.x[i] - c.x) < KR * TS && Math.abs(SW.y[i] - c.y) < KR * TS) {
           SW.hp[i] = 0;
+          arrivals++;
           break;
         }
     }
@@ -99,6 +102,7 @@ async () => {
     waveOn = hordeOn = true;
     hordeT = time;
     waveT = 0;
+    arrivals = 0;
     const t0 = time,
       z = SW.n + SW.q.reduce((n, q) => n + q.left, 0);
     const last = new Map();
@@ -143,7 +147,7 @@ async () => {
       if (isW(SW.x[i], SW.y[i])) wat++;
       if (stk2.has(SW.id[i])) s2++;
     }
-    return { z, end: Math.round(time - t0), left, wat, stk2: s2, wmax, stand: nrMax };
+    return { z, arrivals, end: Math.round(time - t0), left, wat, stk2: s2, wmax, stand: nrMax };
   };
   /* spawn distances on more worlds: every lane, and the lanes pickLanes draws */
   {
@@ -190,6 +194,7 @@ async () => {
     spMin = 1e9;
     spTot = 0;
     chk("ends" + trial, r.end < (trial === 2 ? 700 : 600) && r.z > (trial === 2 ? 5000 : 500));
+    chk("reachesDefence" + trial, r.arrivals > 0);
     chk("noneStuck" + trial, r.stk2 === 0);
     chk("flows" + trial, r.stand <= 60);
     chk("noneInWater" + trial, r.wat === 0);
@@ -242,6 +247,7 @@ async () => {
         ids.add(SW.id[i]);
       }
       O.put = ids.size;
+      const escaped = new Set();
       let inW = 0,
         t = 0;
       for (; t < 2400; t++) {
@@ -252,11 +258,13 @@ async () => {
           if (ids.has(SW.id[i]) && SW.hp[i] > 0) {
             al++;
             if (isW(SW.x[i], SW.y[i])) inW++;
+            else escaped.add(SW.id[i]);
           }
         if (!al) break;
       }
       O.outSec = Math.round(t * 0.05);
       O.stillInWater = inW;
+      __test.check("waterTraversalNotDeletion", escaped.size >= ids.size * 0.9);
       chk("wadesOut", ids.size >= 20 && inW === 0 && t < 2400);
     }
   }

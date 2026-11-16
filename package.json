@@ -14,13 +14,19 @@
     "build:release": "npm run build && node tools/build_dist.mjs",
     "package:desktop": "npm run build:release && npm run build --workspace @naranxia/desktop --",
     "dev": "vite --host 127.0.0.1 --config tools/vite.config.mjs",
-    "test": "npm run build:release && node tools/test_all.mjs",
+    "test": "node tools/test_all.mjs --build",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,mjs,cjs}\"",
     "format:check": "prettier --check \"**/*.{js,mjs,cjs}\"",
     "test:architecture": "node --test tests/architecture-check.test.mjs",
     "check:architecture": "node tools/check-architecture.mjs",
-    "quality": "npm run test:architecture && npm run check:architecture && npm run lint && npm run format:check"
+    "quality": "npm run test:architecture && npm run check:architecture && npm run lint && npm run format:check",
+    "test:fast": "node tools/test_all.mjs --tier fast",
+    "test:core": "node tools/test_all.mjs --build --tier core",
+    "test:full": "node tools/test_all.mjs --build --full",
+    "test:stress": "node tools/test_all.mjs --build --tier stress",
+    "test:performance": "node tools/test_all.mjs --build --tier performance",
+    "test:faults": "node tools/test_all.mjs --build browser_faults"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

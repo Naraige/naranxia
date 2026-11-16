@@ -60,5 +60,11 @@ async () => {
   }
   const ok =
     ["mixed", "newer"].every((k) => out[k] && out[k].ran && out[k].u === nU && out[k].s === nS && !out[k].nan) && bad;
+  for (const k of ["mixed", "newer"]) {
+    __test.check(k + " units", out[k].u, nU);
+    __test.check(k + " structures", out[k].s, nS);
+    __test.check(k + " finite health", out[k].nan, false);
+  }
+  __test.check("malformed save rejected", bad);
   return JSON.stringify({ ok, bad, out });
 };

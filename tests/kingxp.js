@@ -21,6 +21,7 @@ async () => {
   const O = {},
     C = [];
   const chk = (n, v) => {
+    window.__test.check(n, !!v);
     O[n] = v;
     C.push(!!v);
   };

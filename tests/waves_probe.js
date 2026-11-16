@@ -1,5 +1,5 @@
 async () => {
-  /* NOT in the suite: probe of "the wave cannot end" (#27). Many seeded worlds and sites, solo and two castles, rendering stubbed.
+  /* Registered browser coverage: probe of "the wave cannot end" (#27). Many seeded worlds and sites, solo and two castles, rendering stubbed.
    python3 tools/run.py tests/waves_probe.js   -> one line per trial (LOG), then TOTAL.
    Each trial plays one wave with a perfect defence: the castles cannot fall and every zombie that comes within KR tiles of a castle dies.
    What is left is what a player could never kill at his walls. Per trial: end = seconds of simulation until the wave is beaten (900 = the game's own time limit),
@@ -66,6 +66,7 @@ async () => {
     const t0 = time,
       z = SW.n + SW.q.reduce((n, q) => n + q.left, 0) + units.filter((u) => u.t === 1 && u.lane >= 0).length,
       cs = () => structs.filter((s) => s.type === "castle");
+    __test.check("wave spawns enemies world " + trial, z > 0);
     const last = new Map();
     let stk = new Set(),
       stk2 = new Set(),
@@ -170,11 +171,14 @@ async () => {
         nlu: lu.length,
       };
     n++;
+    __test.check("wave completes world " + trial, end < 880 && n2 === 0 && wat === 0);
     if (end >= 880 || n2 > 0 || wat > 0) bad++;
     console.log(JSON.stringify(r));
     out.push(r);
     Math.random = RR;
     MP.on = false;
   }
-  return "TOTAL " + n + " trials, " + bad + " that hit the time limit or left zombies stuck for 60 s or in water";
+  const expectedWorlds = N - (typeof WP0 === "number" ? WP0 : 0);
+  __test.check("all worlds exercised", n, expectedWorlds);
+  return JSON.stringify({ ok: bad === 0 && n === expectedWorlds, worlds: n, failures: bad });
 };

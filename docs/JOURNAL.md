@@ -4,6 +4,24 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-16 · upstream synchronization
+
+- Integrated main `61cfe09` with the test overhaul; resolved overlapping trap, wave, multiplayer placement, runner and journal changes.
+- Kept upstream's real spike preview and full demolition refund, far spawning, 10 Hz swarm, lane-field corrections and command resend/pruning fixes.
+- Preserved the expanded placement scenarios (different DPR/windows, camera rotation, dragging, pause, castle movement, resync and placement logs) on the shared deterministic driver. Paused placement targets the canvas, and paused peers keep rendering/input frames without advancing simulation ticks.
+- Kept upstream's v94 reference fingerprints and new wave/spike regressions alongside stricter damage, wear, living-water-escape and visibility assertions. Classified the eight new manual diagnostics explicitly; core retains placement coverage.
+
+## 2026-11-16 · test reliability overhaul (unreleased, v94)
+
+- Audited every test, runner/build/CI path and active branch differences; evidence, per-file dispositions, timings and limits are in `docs/TEST_AUDIT.md`.
+- Added strict assertion-bearing results, deterministic frame driving, fresh contexts/browser reuse, five execution tiers, focused fault controls and incremental interruption reports. Removed co-op rule-duration substitutions; isolated scenario RNG from ambient audio/startup draws.
+- Fixed spike duplicate previews and demolition through shared placement rules, trap invalidation and a visible cursor; no refund or save-schema change. The new regression failed before the fix, then passed with trusted input and mesh checks.
+- Verified full 40/40, all 11 co-op scenarios after RNG isolation, 36 convoy journeys, 120 route pairs, 24 dense wave worlds and 3/3 identical-seed recovery runs. Fifteen relevant source mutants were rejected; a genuine stuck-startup-overlay fault protects actual canvas visibility.
+- Isolated repeated features/UI workloads improved 65.3%/72.0%; fast checks take about 1.3 s. Full validation took 13m49s at J=2, with broader assertions/coverage; that is not an equivalent-workload speed claim. Performance reports include software rendering, heap and visible boot phases.
+- Baseline/candidate parity passed 146 models, six audio summaries and repeated 6000-tick fingerprints. All nine languages fit at 1280×720 and 960×640; actual gameplay/HUD captures inspected. Windows/Linux packages embed the exact tested packed HTML.
+- Gates: quality, fast checks, Python compilation and diff checks. No commit/version/release or remote CI run. Remaining limits include internet/WebRTC, historical save fixtures, exhaustive graph identity, per-pixel trap occlusion, native installers/macOS, physical input/GPUs and calibrated GPU/memory budgets.
+
+
 ## 2026-11-15 · v94 release (merged with main, formatting PR #29)
 
 - Released the whole branch as v94, plus spikes preview/demolish (#31) and lane fields (#30): co-op fixes, waves always end, new default keys, minimap, far wave spawn (`WSPN` 150 / `WSEE` 130), horde pile-up fix (`SWJAM` 0.75, `SWBW` 3.5), swarm at 10 Hz, placement log `MP.plog`, command resend after resync, mp_build prune fix.

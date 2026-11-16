@@ -2,7 +2,7 @@
 """Does any button text spill out of its button? One headless page per language and screen size.
    python3 tools/fitcheck.py [W H [x|1,6 [N]]]     (needs npm run build first; x = the first N languages, 1,6 = only those). Prints, per language, the labels that still overflow
    at the smallest font scale, plus HTML buttons (co-op window) whose text is wider than the button."""
-import sys, time, json
+import sys, json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -11,24 +11,21 @@ W, H = (int(sys.argv[1]), int(sys.argv[2])) if len(sys.argv) > 2 else (1280, 720
 LANGS = json.loads(json.dumps(sys.argv[3].split(',') if len(sys.argv) > 3 else None))
 
 def frames(pg, n=4):
-    pg.evaluate("()=>new Promise(r=>{let n=%d;const f=()=>--n?requestAnimationFrame(f):r();requestAnimationFrame(f)})" % n)
+    pg.evaluate("(n)=>{for(let i=0;i<n;i++)__stepFrame()}",n)
 
 with sync_playwright() as p:
-    b = p.chromium.launch(args=['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--enable-unsafe-swiftshader'])
+    sys.path.insert(0,str(ROOT/'tests'))
+    from browser_fixture import FLAGS,load_page
+    b=p.chromium.launch(args=FLAGS)
     n_lang = int(sys.argv[4]) if len(sys.argv) > 4 else 8
     bad = 0
     # third argument: x = every language, or indices like 1,6 (0 English, 1 French ... 6 Dutch, 7 Polish, 8 Turkish)
     for li in ([int(x) for x in LANGS] if LANGS and all(x.isdigit() for x in LANGS) else range(n_lang)):
-        ctx = b.new_context(viewport={'width': W, 'height': H})
-        ctx.add_init_script("localStorage.setItem('dk_lang','%d');localStorage.setItem('dk_last','{\"w\":9,\"k\":120}')" % li)
-        pg = ctx.new_page()
-        pg.route('**/three.min.js', lambda r: r.fulfill(path=str(ROOT / 'node_modules/three/build/three.min.js'), content_type='application/javascript'))
-        pg.route('**/fonts.g*', lambda r: r.abort())
-        pg.goto((ROOT / 'dist/naranxia_readable.html').as_uri(), timeout=900000, wait_until='domcontentloaded')
-        time.sleep(10)
+        pg,errors,_=load_page(b,width=W,height=H,init_script="localStorage.setItem('dk_lang','%d');localStorage.setItem('dk_last','{\"w\":9,\"k\":120}')" % li)
+        ctx=pg.context
+        pg.evaluate("()=>document.fonts.ready.then(()=>true)")
         pg.evaluate("()=>{renderer.render=function(){}}")
-        name = pg.evaluate("()=>document.title")
-        time.sleep(6)  # title fade-in
+        frames(pg,180)
         def shot(label, js):
             pg.evaluate(js); frames(pg)
         shot('title', "()=>{}")
@@ -41,22 +38,23 @@ with sync_playwright() as p:
             shot('settings%d' % t, "()=>{settingsState.settingsOpen=true;settingsDebug.tab(%d)}" % t)
         shot('', "()=>{settingsState.settingsOpen=false;settingsDebug.tab(0)}")
         # in game: hud, build menu, pause menu, troop panel (F2), test mode (F10)
-        pg.evaluate("()=>{rollWorld();reset();startGame()}"); time.sleep(3); frames(pg, 6)
+        pg.evaluate("()=>{rollWorld();reset();startGame()}"); frames(pg, 6)
         # lot D: castle tabs + detail card, a selected unit card
         pg.evaluate("()=>{selB=structs.find(s=>s.type==='castle'&&s.t===0)||null}"); frames(pg, 4)
         for k in ['PageDown', 'PageDown', 'PageDown']:
-            pg.keyboard.press(k); time.sleep(.3); frames(pg, 3)
+            pg.keyboard.press(k); frames(pg, 3)
         pg.evaluate("()=>{selB=null;const u=units.find(u=>u.t===0);if(u)u.sel=true}"); frames(pg, 4)
         pg.evaluate("()=>{for(const u of units)u.sel=false}"); frames(pg, 2)
         for k in ['Escape', 'Escape', 'F2', 'F2', 'F10', 'F10', 'm', 'm']:
-            pg.keyboard.press(k); time.sleep(.3); frames(pg, 3)
+            pg.keyboard.press(k); frames(pg, 3)
         ovf = pg.evaluate("()=>[...new Set(window.__ovf||[])]")
         # HTML (co-op window): any button whose text is wider than itself
         html = pg.evaluate("""()=>{const o=[];const m=document.getElementById('mp');m.style.display='flex';
           for(const id of ['mpHome','mpHostP','mpJoinP','mpPubP']){for(const x of ['mpHome','mpHostP','mpJoinP','mpPubP','mpLobby'])document.getElementById(x).style.display=x===id?'block':'none';
            for(const bt of m.querySelectorAll('button'))if(bt.offsetParent&&(bt.scrollWidth>bt.clientWidth+1||bt.scrollHeight>bt.clientHeight+1))o.push(bt.textContent.trim().slice(0,40))}return [...new Set(o)]}""")
         print('%-12s canvas overflow: %s | html overflow: %s' % (pg.evaluate("()=>LANGS?LANGS:0") if False else li, ovf, html), flush=True)
-        bad += len(ovf) + len(html)
+        bad += len(ovf) + len(html) + len(errors)
+        if errors:print('PAGE ERRORS',errors,flush=True)
         ctx.close()
     b.close()
     print('TOTAL', bad)
