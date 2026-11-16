@@ -58,15 +58,15 @@ const cases = [
   {
     id: "ui-demolition",
     file: "gameplay/traps.js",
-    from: "if (!SPK.has(i)) return false;\n  SPK.delete(i);",
-    to: "if (!SPK.has(i)) return false;\n  SPK.has(i);",
+    from: "    return true;\n  }\n  SPK.delete(i);",
+    to: "    return true;\n  }\n  SPK.has(i);",
     test: "trap_controls",
   },
   {
     id: "trap-mesh-invalidation",
     file: "gameplay/traps.js",
-    from: "SPK.delete(i);\n  objectivesState.SPKV++;",
-    to: "SPK.delete(i);",
+    from: "SPO.delete(i);\n  objectivesState.SPKV++;",
+    to: "SPO.delete(i);",
     test: "trap_controls",
   },
   {

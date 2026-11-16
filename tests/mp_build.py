@@ -285,7 +285,7 @@ with sync_playwright() as p:
     sp=json.loads(B.evaluate(SPOTS,1))[0];ids=B.evaluate("()=>structs.map(s=>s.sid)")
     B.evaluate("(q)=>{CAM.x=q[0]+.5;CAM.z=q[1]+.5}",[sp['tx'],sp['ty']]);solo(B,.6);B.evaluate("()=>{mode='farm'}");cx_,cy_=B.viewport_size['width']//2,B.viewport_size['height']//2+20;B.mouse.move(cx_-3,cy_-3);B.mouse.move(cx_,cy_);solo(B,.2)
     u=B.evaluate(UNDER,[cx_,cy_]);B.mouse.down();B.mouse.up();solo(B,1.2)
-    nf=json.loads(B.evaluate("(a)=>JSON.stringify(structs.filter(s=>s.type==='farm'&&!a.includes(s.sid)).map(s=>[s.tx,s.ty,s.pl|0]))",ids));P('farm of the guest alone',nf,'mouse',u)
+    nf=json.loads(B.evaluate("(a)=>JSON.stringify(structs.filter(s=>s.t===0&&s.type==='farm'&&!a.includes(s.sid)).map(s=>[s.tx,s.ty,s.pl|0]))",ids));P('farm of the guest alone',nf,'mouse',u)
     need(len(nf)==1 and nf[0][2]==1 and u and max(abs(nf[0][0]-u[0]),abs(nf[0][1]-u[1]))<=2,'the guest alone builds elsewhere or for player 1: %s'%nf)
     P('commands sent',len(cmds),json.dumps(cmds[:6]))
     P('RESULT','OK' if ok[0] else 'FAIL')
