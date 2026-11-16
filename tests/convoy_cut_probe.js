@@ -26,7 +26,7 @@ async () => {
     let a = null,
       b = null;
     for (let t = 0; t < 20000 && !(a && b); t++) {
-      randomSite();
+      randomSite(false);
       if (!pickPos || !pickPos.ok) continue;
       const s = { tx: pickPos.tx, ty: pickPos.ty };
       if (!a) a = s;
@@ -40,6 +40,7 @@ async () => {
     MP.mine = a;
     MP.theirs = b;
     mpStart();
+    if (!MP.on) mpStart(); /* v95: the first call only asks to confirm over a running game */
     waveT = 1e9;
     for (let i = 0; i < 20; i++) update(0.05);
     const before = mpHash();
