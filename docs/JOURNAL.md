@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-16 · polish lot perf (hd-perf worktree, committed on branch, not merged, not released)
+
+- Task #21 (swarm ~57 % of sim time). Baseline `tools/profile.py` (v94 build): swStep 15.9 s self, swUpdate 3.9 s, swPick 3.2 s, GC 2.8 s, (program) 72 % (software GL). No unsafe or behaviour-changing change attempted: the swarm is already table-driven (v93), so only allocation cuts that give the same numbers.
+- Changes (hashes identical, `det` PASS on the pinned contract): `swStep` no longer creates two closures per tile crossing (`pb` and `B` now the module function `blkOcc`), no array-destructuring iterators in the hot per-zombie loop (`D9N`) and in the per-structure tile flagging; `swRender` reuses 4 Float64Array for the frustum planes instead of 4 arrays per frame.
+- Measure: NOT conclusive. The machine had load 24 (other agents), so the two profiles (before 54.7 s sim, after 67.9 s; swStep 15.9 -> 20.8 s) differ by noise, not by the change. Re-run `tools/profile.py` on a quiet machine before quoting a gain.
+- Tests: `det waves mpk features mp_resync save` all PASS (det 651 s, waves 831, mpk 721, features 581, mp_resync 616, save 615), eslint, prettier, `check:architecture` OK.
+- Ideas not done (need hash-safe proof): `swRear` object per call (every 5 steps), `cl` closure in the blocked branch, per-step `UM` Map and `flg`/`sfl` arrays (reuse across steps), `swCompact` copies 20 arrays per move (swap-remove would change order, so hashes).
 ## 2026-11-15 · v94 release (merged with main, formatting PR #29)
 
 - Released the whole branch as v94, plus spikes preview/demolish (#31) and lane fields (#30): co-op fixes, waves always end, new default keys, minimap, far wave spawn (`WSPN` 150 / `WSEE` 130), horde pile-up fix (`SWJAM` 0.75, `SWBW` 3.5), swarm at 10 Hz, placement log `MP.plog`, command resend after resync, mp_build prune fix.

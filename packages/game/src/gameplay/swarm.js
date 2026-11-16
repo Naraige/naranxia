@@ -359,6 +359,9 @@ export function swUpdate(dt) {
   if (SW.acc > SWDT) SW.acc = SWDT;
 }
 
+/* clambering over rock: only a structure on the target tile blocks (module level, no closure per step) */
+const blkOcc = (a, b, c, d) => !!occ.get(d * TW + c);
+
 function swStep() {
   if (!SW.sk || !SW.sa) {
     SW.sk = new Uint8Array(SWMAX);
@@ -414,7 +417,9 @@ function swStep() {
   const sfl = [];
   for (const s of sessionState.structs) {
     if (s.t !== 0 || s.hp <= 0 || !s.tiles) continue;
-    for (const [a, b] of s.tiles)
+    for (let e = 0; e < s.tiles.length; e++) {
+      const a = s.tiles[e][0],
+        b = s.tiles[e][1];
       for (let j = -1; j <= 1; j++)
         for (let q = -1; q <= 1; q++) {
           const k = (b + j) * TW + a + q;
@@ -423,6 +428,7 @@ function swStep() {
             sfl.push(k);
           }
         }
+    }
   }
   const hitS = new Set(),
     R46 = (46 * TS) ** 2,
@@ -492,8 +498,8 @@ function swStep() {
     }
     if (fl & 2) {
       let bs = null;
-      for (const [dx, dy] of D9N) {
-        const s = occ.get(ti + dy * TW + dx);
+      for (let e = 0; e < 9; e++) {
+        const s = occ.get(ti + D9N[e][1] * TW + D9N[e][0]);
         if (s && s.t === 0 && s.hp > 0) {
           bs = s;
           break;
@@ -695,8 +701,7 @@ function swStep() {
       nty = iy ? ty : (ny / TS) | 0,
       ins = ix && iy;
     if (ntx !== tx || nty !== ty) {
-      const pb = (a, b) => !!occ.get(b * TW + a),
-        B = ph ? (a, b, c, d) => pb(c, d) : blk;
+      const B = ph ? blkOcc : blk;
       const bl =
         ntx !== tx && nty !== ty
           ? B(tx, ty, ntx, ty) || B(tx, ty, tx, nty) || B(tx, ty, ntx, nty)

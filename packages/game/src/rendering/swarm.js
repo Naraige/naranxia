@@ -247,6 +247,9 @@ export function zEyes(u, a, vis) {
   );
 }
 
+/* frustum plane coefficients, reused every frame (no 4 arrays per frame) */
+const FPA = [new Float64Array(6), new Float64Array(6), new Float64Array(6), new Float64Array(6)];
+
 export function swRender(dt) {
   if (!SWR.meshes) swInitR();
   const M = SWR.meshes,
@@ -262,16 +265,16 @@ export function swRender(dt) {
       k = Math.min(1, dt * 9);
     let ng = 0;
     const FP_ = _uFr.planes,
-      Fa = [],
-      Fb = [],
-      Fc = [],
-      Fd = [];
+      Fa = FPA[0],
+      Fb = FPA[1],
+      Fc = FPA[2],
+      Fd = FPA[3];
     for (let q = 0; q < 6; q++) {
       const p = FP_[q];
-      Fa.push(p.normal.x);
-      Fb.push(p.normal.y);
-      Fc.push(p.normal.z);
-      Fd.push(p.constant + 1.6);
+      Fa[q] = p.normal.x;
+      Fb[q] = p.normal.y;
+      Fc[q] = p.normal.z;
+      Fd[q] = p.constant + 1.6;
     }
     for (let i = 0; i < SW.n; i++) {
       const x1 = SW.x[i],
