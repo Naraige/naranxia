@@ -169,9 +169,9 @@ export function siteOnMainland(tx, ty) {
   return L[((ty / PVS) | 0) * PVW + ((tx / PVS) | 0)] === SITEBIG;
 }
 
-export function randomSite() {
+export function randomSite(mainOnly = true) {
   if (sitePickerState.pvKey !== terrainState.SEED) buildPreview();
-  for (const main of [true, false])
+  for (const main of mainOnly ? [true, false] : [false])
     for (let a = 0; a < 2000; a++) {
       const tx = 140 + ((Math.random() * (TW - 280)) | 0),
         ty = 110 + ((Math.random() * (TH - 220)) | 0);

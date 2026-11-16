@@ -56,7 +56,7 @@ async () => {
     let a = null,
       b = null;
     for (let t = 0; t < 20000 && !(a && (b || !coop)); t++) {
-      randomSite();
+      randomSite(false); /* legacy rule: keeps the worlds this test was written for */
       if (!pickPos || !pickPos.ok) continue;
       const s = { tx: pickPos.tx, ty: pickPos.ty };
       if (!a) a = s;
@@ -71,6 +71,7 @@ async () => {
       MP.mine = a;
       MP.theirs = b;
       mpStart();
+      if (!MP.on) mpStart(); /* v95: the first call only asks to confirm over a running game */
     } else {
       MP.on = false;
       MP.conn = false;
@@ -202,7 +203,7 @@ async () => {
     /* past the dawn that burns the stragglers */ let c = CS,
       wt = null,
       bd = 1e9;
-    for (const cc of [CS, CS2])
+    for (const cc of [CS, CS2].filter(Boolean))
       for (let j = -45; j <= 45; j++)
         for (let i = -45; i <= 45; i++) {
           const x = cc.tx + i,

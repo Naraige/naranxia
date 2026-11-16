@@ -49,6 +49,7 @@ async () => {
     MP.mine = a;
     MP.theirs = b;
     mpStart();
+    if (!MP.on) mpStart(); /* v95: the first call only asks to confirm over a running game */
     waveT = 1e9;
     for (const R of RESP) {
       R.w = 5000;
