@@ -21,7 +21,7 @@ if ! printf '%s\n' "$NOTES" | grep -q '^## '; then
 fi
 DESC=$(printf '%s%s**Play now:** the game updates itself at next launch.\n[Release notes](https://github.com/%s/releases/tag/%s)' "${TAG:0:600}" "${TAG:+$'\n\n'}" "$REPO" "$V")
 FIELDS=$(jq -n --arg a "${ADD:0:1000}" --arg c "${CHG:0:1000}" --arg f "${FIX:0:1000}" \
-  '[{name:"\u2795 Add",value:$a},{name:"\ud83d\udd27 Change",value:$c},{name:"\ud83e\ude79 Fix",value:$f}] | map(select(.value != "")) | map(. + {inline:false})')
+  '[{name:"Add",value:$a},{name:"Change",value:$c},{name:"Fix",value:$f}] | map(select(.value != "")) | map(. + {inline:false})')
 URL="https://github.com/$REPO/releases/tag/$V"
 IMGS=(); if [ -d "announce/img/$V" ]; then while IFS= read -r f; do IMGS+=("$f"); done < <(ls announce/img/"$V"/*.png 2>/dev/null | sort | head -4); fi
 EMB=$(jq -n --arg t "Naranxia $V is out!" --arg d "$DESC" --arg u "$URL" --arg f "Hammerdawn Studio · $V" --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
