@@ -55,4 +55,5 @@ jobs:
         run: |
           V=$(tr -d '[:space:]' < game/VERSION)
           # embed with the release notes and the screenshots of announce/img/$V/ (tools/announce.sh)
-          bash tools/announce.sh "$V" game/NOTES.md
+          F=game/NOTES.md; [ -f "announce/$V.md" ] && F="announce/$V.md"
+          bash tools/announce.sh "$V" "$F"
