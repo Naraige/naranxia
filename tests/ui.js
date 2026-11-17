@@ -642,6 +642,16 @@ async () => {
     Object.assign(MP, keep);
     paused = was;
   }
+  /* Esc backs out one level at a time: a selected building is dropped first, the main menu opens only on the next Esc */
+  none();
+  if (!started) startGame();
+  BCAT = null;
+  selB = structs.find((q) => q.t === 0) || null;
+  key("Escape", "Escape");
+  chk("escDropsBuilding", !selB && started === true);
+  key("Escape", "Escape");
+  chk("escThenMenu", started === false);
+  startGame();
   O.ok = C.every(Boolean);
   return JSON.stringify(O);
 };

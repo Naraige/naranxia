@@ -601,6 +601,11 @@ export function initializeDesktopInput() {
       else if (sessionState.mode || sel().length) {
         sessionState.mode = null;
         sessionState.units.forEach((u) => (u.sel = false));
+      } else if (selectionState.selB || selectionState.castleSel || selectionState.SELBS.length) {
+        /* a selected building or the castle is dropped before Esc leaves for the main menu, as for a unit selection */
+        selectionState.selB = null;
+        selectionState.castleSel = false;
+        selectionState.SELBS = [];
       } else if (buildMenuState.BCAT) buildMenuState.BCAT = null;
       else openMenu();
       return;

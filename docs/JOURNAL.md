@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-17 · menu logic (Esc), tickets closed
+
+- #26, #3, #4 closed on the King's request (not reproduced, covered by mp_build / mp_side / mp_lag; full suite 43/43). #21 kept open: swarm already tuned in v93, more gain needs a behaviour change (profile today: swStep 20 %, solid 18 %, swPick 16 %).
+- Menus (King: "meilleure logique pour les menus"; asked: navigation, HUD, settings, help; fix directly): in game, Esc now drops a selected building or the castle before it opens the main menu (order: quest log, map, mode / units, building, build category, menu). `input/desktop.js`.
+- `tests/ui.js`: `escDropsBuilding`, `escThenMenu` (ui 70/70). Not released, no version change.
+- Left: audit of settings rows and help texts not done yet (no other logic fault found in the Esc / back chain of title, settings, save menu and picker).
+
 ## 2026-11-17 · co-op tested by hand (#26, #3, #4)
 
 - New `tests/mp_lag.py` (in the full tier): two headless clients on a bad network, with a random delay per direction (up to 9 rounds of 5 frames), a slow machine, and both players building, training and moving all the time (about 170 builds over 4 profiles, about 2300 ticks). Result: no desync, no resync, the same structures on both machines, every structure on its owner's side with the right owner and a mesh. 125 s.
