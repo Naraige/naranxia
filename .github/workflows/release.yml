@@ -35,6 +35,19 @@ jobs:
             gh release create "$V" dist/naranxia.html --title "Naranxia $V" --notes "$NOTES"
             echo "new=1" >> "$GITHUB_OUTPUT"
           fi
+      - name: Update banner for the announcement
+        env:
+          HOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        if: env.HOOK != '' && steps.rel.outputs.new == '1'
+        continue-on-error: true
+        run: |
+          V=$(tr -d '[:space:]' < game/VERSION)
+          npm ci --ignore-scripts
+          python3 -m pip install -r tests/requirements.txt Pillow
+          python3 -m playwright install --with-deps chromium
+          mkdir -p "announce/img/$V"
+          SHOT_OUT="announce/img/$V" python3 tools/announce_banner.py "$V"
+          mv "announce/img/$V/banner-$V.png" "announce/img/$V/00-banner.png"
       - name: Announce on Discord
         env:
           HOOK: ${{ secrets.DISCORD_WEBHOOK }}

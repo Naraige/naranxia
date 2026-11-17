@@ -2,8 +2,8 @@
 """Update banner for the Discord announcements (1280x320 PNG, < 1 MB), offline fonts via tools/fontroute.py.
 usage: python3 tools/announce_banner.py [vNN] ["tagline"] [background.png]
 vNN defaults to the version in game/VERSION; background defaults to the newest picture in announce/img (a game screenshot, darkened).
-Written to dist/announce-shots/banner-vNN.png (SHOT_OUT=dir for another place). Nothing is written under announce/: look at it,
-then copy it to announce/img/vNN/ with the batch that ships it. Discord text stays English."""
+Written to dist/announce-shots/banner-vNN.png (SHOT_OUT=dir for another place). The release workflow runs it by itself for every new
+release (SHOT_OUT=announce/img/vNN, renamed 00-banner.png so it leads the Discord gallery). Discord text stays English."""
 import os, sys, base64
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,7 +11,8 @@ sys.path.insert(0, str(ROOT / 'tools'))
 OUT = Path(os.environ.get('SHOT_OUT') or ROOT / 'dist' / 'announce-shots'); OUT.mkdir(parents=True, exist_ok=True)
 
 def newest_bg():
-    pics = sorted((ROOT / 'announce' / 'img').glob('v*/*.png'), key=lambda p: (int(p.parent.name[1:]), p.name))
+    pics = sorted((p for p in (ROOT / 'announce' / 'img').glob('v*/*.png') if 'banner' not in p.name),
+                  key=lambda p: (int(p.parent.name[1:]), p.name))
     return pics[-1] if pics else None
 
 def main():
