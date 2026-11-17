@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-17 · co-op tested by hand (#26, #3, #4)
+
+- New `tests/mp_lag.py` (in the full tier): two headless clients on a bad network, with a random delay per direction (up to 9 rounds of 5 frames), a slow machine, and both players building, training and moving all the time (about 170 builds over 4 profiles, about 2300 ticks). Result: no desync, no resync, the same structures on both machines, every structure on its owner's side with the right owner and a mesh. 125 s.
+- With `mp_build` (real clicks, other window sizes, resync, guest alone) and `mp_side` (save/load side) this covers #26, #3 and #4 from every angle reachable headless. No reproduction: the three stay open, but no F8 report is needed any more; the likely cause of #26 (side lost after loading a co-op save) was fixed in v95.
+- Not covered: a real PeerJS connection (the shell has no network to it) and two real screens.
+
 ## 2026-11-17 · v95 follow-up (#33)
 
 - #33 was a probe artifact: the "idle" zombies were the tail of a queue in a one-tile corridor (6 to 18 per tile, 15 tiles from the castle). World 0 with 120 s more: left 0, stuck 0. `tests/waves_probe.js` now gives 120 s of grace after the wave is beaten and tolerates 0 stuck again (all 24 worlds PASS, 1033 s).
