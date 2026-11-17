@@ -27,9 +27,8 @@ def main():
     html = """<html><body style="margin:0"><div style="width:1280px;height:320px;position:relative;overflow:hidden;background:#0b0e1a;font-family:'Cinzel',serif;color:#f1e6c6">
 %s<div style="position:absolute;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#8a6a22,#f0cf6a,#8a6a22)"></div>
 <div style="position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,#8a6a22,#f0cf6a,#8a6a22)"></div>
-<div style="position:absolute;left:72px;top:58px;font-size:25px;letter-spacing:.5em;color:#d9b95a;font-weight:600">HAMMERDAWN STUDIO</div>
-<div style="position:absolute;left:68px;top:96px;font-size:118px;font-weight:700;letter-spacing:.06em;color:#f6dc86;text-shadow:0 4px 0 #6b4d12,0 10px 28px rgba(0,0,0,.7)">NARANXIA</div>
-<div style="position:absolute;left:72px;top:238px;font-family:'Marcellus',serif;font-size:30px;letter-spacing:.12em;color:#e9e0c8">%s</div>
+<div style="position:absolute;left:68px;top:62px;font-size:118px;font-weight:700;letter-spacing:.06em;color:#f6dc86;text-shadow:0 4px 0 #6b4d12,0 10px 28px rgba(0,0,0,.7)">NARANXIA</div>
+<div style="position:absolute;left:72px;top:210px;font-family:'Marcellus',serif;font-size:30px;letter-spacing:.12em;color:#e9e0c8">%s</div>
 <div style="position:absolute;right:64px;top:84px;padding:14px 34px 10px;border:4px solid #f0cf6a;border-radius:14px;background:rgba(10,12,24,.78);font-size:30px;letter-spacing:.3em;color:#d9b95a;text-align:center">UPDATE<div style="font-size:92px;letter-spacing:.04em;color:#f6dc86;line-height:1.05;margin-top:2px">%s</div></div>
 </div></body></html>""" % (bgdiv, tag, ver)
     from playwright.sync_api import sync_playwright

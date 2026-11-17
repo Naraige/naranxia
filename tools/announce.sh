@@ -24,7 +24,7 @@ FIELDS=$(jq -n --arg a "${ADD:0:1000}" --arg c "${CHG:0:1000}" --arg f "${FIX:0:
   '[{name:"Add",value:$a},{name:"Change",value:$c},{name:"Fix",value:$f}] | map(select(.value != "")) | map(. + {inline:false})')
 URL="https://github.com/$REPO/releases/tag/$V"
 IMGS=(); if [ -d "announce/img/$V" ]; then while IFS= read -r f; do IMGS+=("$f"); done < <(ls announce/img/"$V"/*.png 2>/dev/null | sort | head -4); fi
-EMB=$(jq -n --arg t "Naranxia $V is out!" --arg d "$DESC" --arg u "$URL" --arg f "Hammerdawn Studio · $V" --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+EMB=$(jq -n --arg t "Naranxia $V is out!" --arg d "$DESC" --arg u "$URL" --arg f "$V" --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   --argjson fl "$FIELDS" '{title:$t,description:$d,url:$u,color:12865562,fields:$fl,footer:{text:$f},timestamp:$ts}')
 if [ ${#IMGS[@]} -gt 0 ]; then
   # same url on every embed makes Discord show the screenshots as one gallery under the first embed
