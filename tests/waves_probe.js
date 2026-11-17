@@ -73,7 +73,11 @@ async () => {
       stk2 = new Set(),
       wmax = 0,
       k = 0;
-    for (; k < 18400 && waveOn; k++) {
+    /* 120 s of grace after the wave is beaten: the tail of a queue in a one-tile corridor is not stuck, it drains (#33) */
+    let grace = 0,
+      endT = null;
+    for (; k < 18400 && (waveOn || grace++ < 2400); k++) {
+      if (!waveOn && endT === null) endT = time - t0;
       update(0.05);
       const C = cs();
       for (const c of C) c.hp = c.max;
@@ -151,7 +155,7 @@ async () => {
           dc(u.x, u.y) +
           (ter[((u.y / TS) | 0) * TW + ((u.x / TS) | 0)] === 1 ? "w" : ""),
       );
-    const end = Math.round(time - t0),
+    const end = Math.round(endT === null ? time - t0 : endT),
       r = {
         trial,
         coop: coop ? 1 : 0,
@@ -172,10 +176,8 @@ async () => {
         nlu: lu.length,
       };
     n++;
-    /* up to 3 zombies idle for 60 s are tolerated (the v94 baseline already had 3 in world 21; v95 has 1 to 2 in worlds 0, 9, 20, 21; tracked in an issue) */
-    const STUCK_OK = 3;
-    __test.check("wave completes world " + trial, end < 880 && n2 <= STUCK_OK && wat === 0);
-    if (end >= 880 || n2 > STUCK_OK || wat > 0) bad++;
+    __test.check("wave completes world " + trial, end < 880 && n2 === 0 && wat === 0);
+    if (end >= 880 || n2 > 0 || wat > 0) bad++;
     console.log(JSON.stringify(r));
     out.push(r);
     Math.random = RR;

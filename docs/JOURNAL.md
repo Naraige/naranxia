@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-17 · v95 follow-up (#33)
+
+- #33 was a probe artifact: the "idle" zombies were the tail of a queue in a one-tile corridor (6 to 18 per tile, 15 tiles from the castle). World 0 with 120 s more: left 0, stuck 0. `tests/waves_probe.js` now gives 120 s of grace after the wave is beaten and tolerates 0 stuck again (all 24 worlds PASS, 1033 s).
+- Also checked: a v94 save taken in wave 1 (1170 zombies) loads in v95 and runs 1500 ticks without error; the formation ghost shows green discs, snapped to free ground (red only in edge cases, never seen on screen).
+- Discord: announce/vNN.md blocks (Add / Change / Fix) and the update banner come from the release workflow; the banner step is untested until the v96 release.
+
 ## 2026-11-16 · v95
 
 - Release of the polish batches below (hordes spread, body block, defensive stance, QoL, co-op lot, routes, formation ghost), merged from the three worktree lots plus the earlier cherry-picks on `release-v84`.
