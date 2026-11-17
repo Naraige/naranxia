@@ -9,7 +9,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - #26, #3, #4 closed on the King's request (not reproduced, covered by mp_build / mp_side / mp_lag; full suite 43/43). #21 kept open: swarm already tuned in v93, more gain needs a behaviour change (profile today: swStep 20 %, solid 18 %, swPick 16 %).
 - Menus (King: "meilleure logique pour les menus"; asked: navigation, HUD, settings, help; fix directly): in game, Esc now drops a selected building or the castle before it opens the main menu (order: quest log, map, mode / units, building, build category, menu). `input/desktop.js`.
 - `tests/ui.js`: `escDropsBuilding`, `escThenMenu` (ui 70/70). Not released, no version change.
-- Left: audit of settings rows and help texts not done yet (no other logic fault found in the Esc / back chain of title, settings, save menu and picker).
+- Settings audit (rows, tabs, rebinding, Reset keys) read and the F1 / Esc / menu chain played live: no other logic fault found. Left: any screen the King finds illogical, to be named.
 
 ## 2026-11-17 · co-op tested by hand (#26, #3, #4)
 
