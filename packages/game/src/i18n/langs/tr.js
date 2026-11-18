@@ -1696,4 +1696,6 @@ export const TR = {
     "Büyük hordalar çok daha az işlem gücü harcar: oyun binlerce zombiyle daha akıcı kalır.",
   "Esc now drops a selected building or the castle first, and opens the main menu on the next press.":
     "Esc önce seçili binayı veya kaleyi bırakır, bir sonraki basışta ana menüyü açar.",
+  "Something went wrong, but the game goes on. Save your game to be safe.":
+    "Bir sorun oluştu ama oyun devam ediyor. Güvenlik için oyununuzu kaydedin.",
 };

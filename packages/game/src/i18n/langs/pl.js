@@ -1698,4 +1698,6 @@ export const PL = {
     "Wielkie hordy wymagają znacznie mniej obliczeń: gra działa płynniej przy tysiącach zombie.",
   "Esc now drops a selected building or the castle first, and opens the main menu on the next press.":
     "Esc najpierw odznacza wybrany budynek lub zamek, a menu główne otwiera przy następnym naciśnięciu.",
+  "Something went wrong, but the game goes on. Save your game to be safe.":
+    "Coś poszło nie tak, ale gra trwa dalej. Zapisz grę dla bezpieczeństwa.",
 };

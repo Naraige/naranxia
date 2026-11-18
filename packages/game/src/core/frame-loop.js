@@ -1,6 +1,7 @@
 import { bootFrame } from "./boot.js";
 import { aInit } from "../audio/sound.js";
 import { diagnosticsState } from "../debug/diagnostics.js";
+import { hudDisplayState } from "../ui/hud-state.js";
 import { bugCapture } from "../debug/tools.js";
 import { reset } from "../gameplay/reset.js";
 import { TS } from "../gameplay/rules.js";
@@ -39,8 +40,26 @@ export const frameLoopState = {
   UIT: -1,
 };
 
+/* A frame that throws must not stop the loop (the game would freeze with no word to the player): the error is logged (the first ones, then now and then), a message tells the player once
+   in a while that the game goes on, and the next frame is always scheduled. */
+let frameErrors = 0,
+  frameErrT = -1e9;
+function frameFailed(e) {
+  frameErrors++;
+  if (frameErrors <= 3 || frameErrors % 600 === 0) console.error("frame error #" + frameErrors, e);
+  const now = performance.now();
+  if (now - frameErrT > 20000) {
+    frameErrT = now;
+    hudDisplayState.msgS = "Something went wrong, but the game goes on. Save your game to be safe.";
+    hudDisplayState.msgT = 6;
+  }
+}
 function loop(ts) {
-  frame(ts);
+  try {
+    frame(ts);
+  } catch (e) {
+    frameFailed(e);
+  }
   requestAnimationFrame(loop);
 }
 /* one frame; warm = the hidden start-up frame that compiles the title shaders behind the launch splash */

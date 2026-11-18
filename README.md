@@ -1,6 +1,18 @@
-# Naranxia — le royaume du roi Naraige
+# Naranxia
 
-Naranxia is a browser strategy and tower defense game with solo play and two-player co-op. The Electron launcher runs the same game on Windows, macOS, and Linux.
+A browser strategy and tower defence game. Build a kingdom on a procedurally generated world, train an army, research upgrades and hold your castle against night hordes, rebel camps and bosses. Play solo or in two-player co-op.
+
+- **Solo and co-op:** one kingdom alone, or two players sharing the same world over a peer-to-peer connection.
+- **Seasons, day and night, events and bosses:** the world changes as the game goes on.
+- **Nine languages:** English, French, Spanish, German, Italian, Portuguese, Dutch, Polish and Turkish.
+- **Plays anywhere:** a single HTML file in any modern browser, or the Electron launcher for Windows, macOS and Linux, which updates itself from the latest release.
+- **Keyboard layouts:** QWERTY, AZERTY and QWERTZ, with rebindable keys, plus a colour-blind mode and reduced motion.
+
+## Play
+
+Download `naranxia.html` from the [latest release](https://github.com/Naraige/naranxia/releases/latest) and open it in a browser, or install the desktop launcher. Saves stay on your machine. See the [changelog](CHANGELOG.md) for what changed in each version.
+
+Made by Naraige (King Naraige).
 
 ## Development
 

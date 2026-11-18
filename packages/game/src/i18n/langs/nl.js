@@ -1712,4 +1712,6 @@ export const NL = {
     "Grote hordes vragen veel minder rekenkracht: het spel blijft vloeiender met duizenden zombies.",
   "Esc now drops a selected building or the castle first, and opens the main menu on the next press.":
     "Esc heft eerst de selectie van een gebouw of het kasteel op en opent bij de volgende druk het hoofdmenu.",
+  "Something went wrong, but the game goes on. Save your game to be safe.":
+    "Er is iets misgegaan, maar het spel gaat door. Sla je spel op voor de zekerheid.",
 };

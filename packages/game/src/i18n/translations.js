@@ -848,7 +848,11 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v96 */
+  /* texts added in v97 */
+Object.assign(TRD,{
+"Something went wrong, but the game goes on. Save your game to be safe.":["Un problème est survenu, mais le jeu continue. Sauvegardez votre partie par précaution.","Ha ocurrido un problema, pero el juego continúa. Guarda la partida por precaución.","Es ist ein Fehler aufgetreten, aber das Spiel läuft weiter. Speichere sicherheitshalber dein Spiel.","Si è verificato un problema, ma il gioco continua. Salva la partita per sicurezza.","Ocorreu um problema, mas o jogo continua. Guarde o jogo por precaução."]
+});
+/* texts added in v96 */
 Object.assign(TRD,{
 "Faster big hordes and a clearer Esc key.":["Grandes hordes plus rapides et touche Échap plus claire.","Hordas grandes más rápidas y una tecla Esc más clara.","Schnellere große Horden und eine klarere Esc-Taste.","Grandi orde più veloci e tasto Esc più chiaro.","Hordas grandes mais rápidas e tecla Esc mais clara."],
 "Big hordes cost much less processing: the game stays smoother with thousands of zombies.":["Les grandes hordes coûtent bien moins de calcul : le jeu reste plus fluide avec des milliers de zombies.","Las hordas grandes consumen mucho menos proceso: el juego va más fluido con miles de zombis.","Große Horden brauchen deutlich weniger Rechenleistung: das Spiel läuft mit tausenden Zombies flüssiger.","Le grandi orde richiedono molta meno elaborazione: il gioco resta più fluido con migliaia di zombi.","As grandes hordas exigem muito menos processamento: o jogo fica mais fluido com milhares de zombies."],

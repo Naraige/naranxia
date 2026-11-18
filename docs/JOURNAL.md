@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · professional finish audit (not released)
+
+- King: "fait un audit de mon jeu et travail sur tout pour rendre le jeu plus pro". Audit in `docs/PRO_AUDIT.md`.
+- Fixed: the frame loop died on the first exception (`core/frame-loop.js`, now survives, logs, tells the player once; test `frame_guard`, in the core tier). README intro for players, `CHANGELOG.md` + `tools/changelog.py`.
+- Verified: eslint, prettier on changed files, architecture check, `det ui tools runner frame_guard`.
+- Left for the King: LICENSE choice, 99 MB of design boards in `docs/`, an in-game About screen. No version change.
+
 ## 2026-11-18 · v96
 
 - Released on the King's "oui go": swarm perf (#21, occupancy byte table, hashes unchanged) and Esc dropping a selected building before the main menu. Notes, announce/v96.md, translations (FR ES DE IT PT NL PL TR) added; textaudit and langcheck clean.

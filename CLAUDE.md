@@ -72,7 +72,7 @@ The King chose "versions directes": code a batch, test it, release it as the nex
 3. `COMMIT_TRAILER="<attribution lines>" bash tools/release.sh vNN "title"` then `bash tools/ci_status.sh --wait`:
    GitHub runs all the tests, then creates release vNN (the launchers update themselves) and posts the notes on Discord.
 4. When green: publish `dist/naranxia.html` to the claude.ai artifact https://claude.ai/artifact/QrDKDMuFAotHdCus8kQiz5 (same URL every time).
-5. Close the issues of the batch (`gh api -X PATCH repos/Naraige/naranxia/issues/N -f state=closed`), tell the King in French, one line per point.
+5. Run `python3 tools/changelog.py` (rewrites `CHANGELOG.md` from the GitHub releases) and commit it. Close the issues of the batch (`gh api -X PATCH repos/Naraige/naranxia/issues/N -f state=closed`), tell the King in French, one line per point.
 
 ## Working efficiently (the King asked to keep usage low)
 
