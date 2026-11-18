@@ -10,5 +10,6 @@ Zombies: the horde that ended the old world. Raids by rebels and convoys between
 - New buildings: sanctuary, observatory, royal forge, watchtower beacon, granary, apothecary, market, embassy, war room, bell tower, sappers' workshop, orchard.
 
 ## Queue (status)
-- Done: observatory, granary, bell, sanctuary, beacon, orchard; named bosses; wave events (rebel envoys, meteors); Chronicle page + fragments.
-- Next: lot 3 buildings (royal forge, embassy, war room, apothecary, sappers' workshop); units without duplicates (siege engineer, mounted scout, rebel envoy; the priest duplicates the bannerman); eclipse and wolves; ruins.
+- Done: observatory, granary, bell, sanctuary, beacon, orchard, royal forge, embassy, war room, sappers' workshop; units scout, engineer (siege), rebel envoy; named bosses; wave events (rebel envoys, meteors, eclipse, wolves); ruins; Chronicle page + fragments.
+- Not built: apothecary (the sanctuary already heals nearby troops, so it would duplicate it; revisit only with a distinct role, for example curing a status effect).
+- Open ideas: co-op spectator (#36).

@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · #37 closed as already done, #36 scoped
+
+- Checked #37 against the code: royal forge, embassy, war room, sappers' workshop, scout, engineer and envoy exist (`gameplay/rules.js`, build menu, models); eclipse, wolves and ruins exist. `docs/IDEAS.md` was stale and is corrected. Only the apothecary is missing and it would duplicate the sanctuary, so #37 is closed.
+- #36 (spectator) not started: needs a third peer with command relay by the host, a mid-game snapshot join (resync format) and a spectator role in lockstep, none of which can be tested here (one real connection only). Left open with the design notes in the issue.
+- fitcheck 0 overflow with the World size row.
+
 ## 2026-11-18 · world size (#34, not released)
 
 - Setting "World size (next game)" in Options, Game tab: Large (default, the whole world, exactly as before), Medium (lanes start at most 380 tiles from the castle), Small (170). Only `world/routes.js` reads it (`MAPD`, `sessionState.mapSize`); it does not change the world, the tile arrays or the save layout. Kept in localStorage `dk_msize`, saved with the game (`mapSize` in SAVA, old saves mean Large), sent by the co-op host in the `w` and `s` messages (`ms`).
