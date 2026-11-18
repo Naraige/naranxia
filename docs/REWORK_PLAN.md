@@ -46,3 +46,7 @@ M1 + B1 + H2, in that order: none of them breaks old saves, each has a clear tes
 - Phase 1 (portals): done, see journal. Not released.
 - Phase 2 (buildings from Minecraft plans): waiting for the King's files. Plan: `tools/schem2voxels` reads Sponge .schem, .litematic and vanilla .nbt (gzip NBT), maps block names to a colour table, writes compact voxel data per building; the renderer merges faces (culling hidden ones); the footprint is the schematic's X x Z in tiles (1 block = 1 tile).
 - Phase 3 (block-by-block terrain): large; needs its own design (save and co-op hash compatibility) before any code.
+
+## Decision 2026-11-18 (King): no compatibility with old saves
+
+Old saves are hidden and everything restarts on the new system (voxel terrain, schematic buildings, portals). No save migration, no legacy code paths: a save format version gate hides saves from before the switch. Co-op hashes and `det` are simply re-pinned.
