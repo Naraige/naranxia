@@ -153,6 +153,7 @@ export function reset() {
     setPl(0);
   }
   sessionState.nextL = pickLanes();
+  sessionState.portals = [];
   calcFD();
   initAI();
   ["g", "w", "s"].forEach((j) => spawn(0, "peasant", 1, j));

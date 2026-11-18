@@ -58,6 +58,7 @@ import { matV, WUT } from "./materials.js";
 import { CONNT, scafGeo } from "./models/structures.js";
 import { postRender } from "./post-processing.js";
 import { snapM } from "./render-settings.js";
+import { pulsePortals } from "./portals.js";
 import { pulseRoutes } from "./routes.js";
 import { CAM, camera, scene } from "./scene.js";
 import { darkA, eyeFlush, fuseFx, mutGlow, pudRender, swarmRenderingState, swRender, zEyes } from "./swarm.js";
@@ -404,6 +405,7 @@ export let render3D = function render3D(dt) {
   spkSync();
   updateTerr();
   pulseRoutes();
+  pulsePortals();
   rflagUpd();
   if (sessionState.mode === "movec" && !sessionState.over) {
     const hc = HOMEC();

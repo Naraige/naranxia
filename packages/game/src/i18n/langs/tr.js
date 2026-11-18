@@ -621,6 +621,7 @@ export const TR = {
   "The darkness hurts! Stay near the castle, towers, torches or a bannerman":
     "Karanlık yaralar! Kaleye, kulelere, meşalelere veya bir sancaktara yakın dur",
   "The horde turns on ": "Ordu şuna yöneliyor: ",
+  "A new portal tears open in the ": "Yeni bir portal şurada açılıyor: ",
   "The host chose a map": "Ev sahibi bir harita seçti",
   "The host chose a new map": "Ev sahibi yeni bir harita seçti",
   "The king is summoned at your castle": "Kral kaleye çağrılıyor",

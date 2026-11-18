@@ -622,6 +622,7 @@ export const NL = {
   "The darkness hurts! Stay near the castle, towers, torches or a bannerman":
     "De duisternis doet pijn! Blijf bij het kasteel, de torens, fakkels of een bannerdrager",
   "The horde turns on ": "De horde keert zich tegen ",
+  "A new portal tears open in the ": "Een nieuw portaal opent zich in het ",
   "The host chose a map": "De host koos een kaart",
   "The host chose a new map": "De host koos een nieuwe kaart",
   "The king is summoned at your castle": "De koning wordt bij je kasteel opgeroepen",

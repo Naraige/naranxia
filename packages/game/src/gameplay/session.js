@@ -31,6 +31,7 @@ export const sessionState = {
   waveI: 160,
   waveN: undefined,
   nextL: undefined,
+  portals: [],
   queue: undefined,
   mode: undefined,
   last: undefined,

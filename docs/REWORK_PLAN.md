@@ -40,3 +40,9 @@ Horde spawning
 ## Suggested first slice
 
 M1 + B1 + H2, in that order: none of them breaks old saves, each has a clear test (site score distribution, preview reason texts in 9 languages, wave lanes in the `waves` test). Start only after the King confirms the options or names his own.
+
+## Status 2026-11-18
+
+- Phase 1 (portals): done, see journal. Not released.
+- Phase 2 (buildings from Minecraft plans): waiting for the King's files. Plan: `tools/schem2voxels` reads Sponge .schem, .litematic and vanilla .nbt (gzip NBT), maps block names to a colour table, writes compact voxel data per building; the renderer merges faces (culling hidden ones); the footprint is the schematic's X x Z in tiles (1 block = 1 tile).
+- Phase 3 (block-by-block terrain): large; needs its own design (save and co-op hash compatibility) before any code.

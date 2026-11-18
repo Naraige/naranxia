@@ -850,6 +850,7 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v97 */
 Object.assign(TRD,{
+"A new portal tears open in the ":["Un nouveau portail s'ouvre au ","Se abre un nuevo portal al ","Ein neues Portal öffnet sich im ","Si apre un nuovo portale a ","Abre-se um novo portal a "],
 "World size (next game)":["Taille du monde (prochaine partie)","Tamaño del mundo (próxima partida)","Weltgröße (nächstes Spiel)","Dimensione del mondo (prossima partita)","Tamanho do mundo (próximo jogo)"],
 "Medium":["Moyenne","Mediano","Mittel","Media","Médio"],
 "Rematch":["Revanche","Revancha","Revanche","Rivincita","Desforra"],

@@ -621,6 +621,7 @@ export const PL = {
   "The darkness hurts! Stay near the castle, towers, torches or a bannerman":
     "Ciemność rani! Zostań blisko zamku, wież, pochodni lub chorążego",
   "The horde turns on ": "Horda zwraca się przeciw ",
+  "A new portal tears open in the ": "Nowy portal otwiera się na ",
   "The host chose a map": "Host wybrał mapę",
   "The host chose a new map": "Host wybrał nową mapę",
   "The king is summoned at your castle": "Król zostaje wezwany do twojego zamku",

@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · horde portals (phase 1 of the rework), not released
+
+- Each lane gets a huge obsidian portal (9x12 blocks, animated violet plane) at its spawn point, opened by the first horde of that lane (message "A new portal tears open in the <dir>", violet burst). Portals are saved (`sessionState.portals`, SAVA), cleared on reset, at most one per lane, so up to 3 per castle appear over time as lanes unlock (wave 1, 3, 7). New: `rendering/portals.js`, `tests/portals.js`.
+- Spawn point unchanged (far end of the route, `laneSpawnIdx`), so `det` hashes did not move. Verified: portals, det, save, waves, features, mp8, mpk, mp_resync, lint, architecture; screenshot checked once.
+- Decided not to speed zombies up per lane: the spawn stays ~150 path tiles out (World size caps it). Left: schematic importer (.schem/.litematic/.nbt) once the King sends build files, then voxel terrain (see docs/REWORK_PLAN.md).
+
 ## 2026-11-18 · rework request: baseline and plan (no code change)
 
 - King asked to rework map generation, building logic and horde spawning, with no stated defect. Measured the baseline (spawn_probe: 384 lanes none within 90 tiles; spawn_pace wave 3: solo beaten in 434 to 444 s, co-op 310 to 406 s) and wrote `docs/REWORK_PLAN.md` with the constraints (determinism, saves, co-op) and options M1..M3, B1..B3, H1..H3. Suggested first slice: M1 start quality, B1 placement feedback, H2 pincer waves.

@@ -177,6 +177,12 @@ function wave0() {
   for (const L of sessionState.nextL) {
     const an = spawnAnchor(L),
       p = an.p;
+    /* the first horde of a lane tears open its portal there; it stays for the rest of the game and every later wave of that lane comes out of it */
+    if (!sessionState.portals.some((q) => q.L === L)) {
+      sessionState.portals.push({ L, x: p[0], y: p[1], w: sessionState.waveN });
+      wmsg = "A new portal tears open in the " + terrainState.ROUTES[L].dir;
+      puff(p[0] * TS, p[1] * TS, "#b46bff", 40, 90, { T: 1.2, z: 1, vz: 3, g: -0.5, s: 0.2 });
+    }
     const zf = (sessionState.SITE2 ? 0.8 : 1) * laneK(L, sessionState.nextL),
       nh = Math.min(260, Math.round((16 + sessionState.waveN * 10) * df.zm * zf)),
       nz = Math.round(sessionState.waveN * 2.2 * df.zm * zf),

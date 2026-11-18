@@ -229,6 +229,12 @@ export const SAVA = {
       sessionState.nextL = v;
     },
   ],
+  portals: [
+    () => sessionState.portals,
+    (v) => {
+      sessionState.portals = Array.isArray(v) ? v : [];
+    },
+  ],
   CS: [
     () => sessionState.CS,
     (v) => {

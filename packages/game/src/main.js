@@ -47,6 +47,7 @@ import { initializeUnits } from "./rendering/models/units.js";
 import { initializeWeapons } from "./rendering/models/weapons.js";
 import { initializePixelIcons } from "./rendering/pixel-icons.js";
 import { initializePostProcessing } from "./rendering/post-processing.js";
+import { initializePortals } from "./rendering/portals.js";
 import { initializeRoutes } from "./rendering/routes.js";
 import { initializeScene } from "./rendering/scene.js";
 import { initializeSitePicker } from "./rendering/site-picker.js";
@@ -114,6 +115,7 @@ runBoot(
     initializeWorldEffects,
     initializeSwarmRendering,
     initializeRoutes,
+    initializePortals,
     initializeSceneLighting,
     initializePostProcessing,
     initializeSound,

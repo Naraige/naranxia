@@ -399,6 +399,7 @@ export function installBrowserConsole() {
         hudDisplayState.msgS = value;
       },
     },
+    portals: { get: () => sessionState.portals },
     nextL: {
       get: () => sessionState.nextL,
       set: (value) => {
