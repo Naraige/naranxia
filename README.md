@@ -8,6 +8,10 @@ A browser strategy and tower defence game. Build a kingdom on a procedurally gen
 - **Plays anywhere:** a single HTML file in any modern browser, or the Electron launcher for Windows, macOS and Linux, which updates itself from the latest release.
 - **Keyboard layouts:** QWERTY, AZERTY and QWERTZ, with rebindable keys, plus a colour-blind mode and reduced motion.
 
+![The title screen](docs/img/title.jpg)
+
+![A kingdom at the start of a game](docs/img/kingdom.jpg)
+
 ## Play
 
 Download `naranxia.html` from the [latest release](https://github.com/Naraige/naranxia/releases/latest) and open it in a browser, or install the desktop launcher. Saves stay on your machine. See the [changelog](CHANGELOG.md) for what changed in each version.

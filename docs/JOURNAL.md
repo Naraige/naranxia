@@ -4,6 +4,10 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · README screenshots (#40 part)
+
+- `docs/img/title.jpg` (title screen) and `docs/img/kingdom.jpg` (a kingdom, cropped below the top bar because the test world shows a meaningless wave timer) taken with `tools/qa_shots.py` (English; its always-on `87_back_fr` step forces French, so a temporary copy set it to English). README shows them. #40 stays open for the store page and a trailer (needs the King's accounts).
+
 ## 2026-11-18 · #37 closed as already done, #36 scoped
 
 - Checked #37 against the code: royal forge, embassy, war room, sappers' workshop, scout, engineer and envoy exist (`gameplay/rules.js`, build menu, models); eclipse, wolves and ruins exist. `docs/IDEAS.md` was stale and is corrected. Only the apothecary is missing and it would duplicate the sanctuary, so #37 is closed.
