@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · world size (#34, not released)
+
+- Setting "World size (next game)" in Options, Game tab: Large (default, the whole world, exactly as before), Medium (lanes start at most 380 tiles from the castle), Small (170). Only `world/routes.js` reads it (`MAPD`, `sessionState.mapSize`); it does not change the world, the tile arrays or the save layout. Kept in localStorage `dk_msize`, saved with the game (`mapSize` in SAVA, old saves mean Large), sent by the co-op host in the `w` and `s` messages (`ms`).
+- Tests: new `map_size` (lane reach for the three sizes), `mp_rematch` extended (the guest follows the host's small world, same routes on both). `det save mp_rematch mp_lag ui runner architecture` pass, so the default game is unchanged. fitcheck not rerun for the new row.
+- Not done: a size choice on the new-kingdom screen and in the co-op lobby (the host sets it in Options first), and no change of the real map extent (it stays 2250x1250 tiles). #34 stays open until the King has played it.
+
 ## 2026-11-18 · co-op rematch (#35, not released)
 
 - King: "ok je suis pret" (go on with the tickets). Co-op game over: the button says "Rematch" and brings both players back to the lobby with the connection kept (`mpRematch` in `multiplayer/lobby.js`, reached through `playAgain` in `gameplay/lifecycle.js`, registered in `main.js` so no new import cycle). The host's `rollWorld` syncs the new map, both choose a castle, host presses Play. Before, "Play again" opened the solo setup while the co-op link stayed on.

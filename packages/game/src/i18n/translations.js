@@ -850,6 +850,8 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v97 */
 Object.assign(TRD,{
+"World size (next game)":["Taille du monde (prochaine partie)","Tamaño del mundo (próxima partida)","Weltgröße (nächstes Spiel)","Dimensione del mondo (prossima partita)","Tamanho do mundo (próximo jogo)"],
+"Medium":["Moyenne","Mediano","Mittel","Media","Médio"],
 "Rematch":["Revanche","Revancha","Revanche","Rivincita","Desforra"],
 "New map rolled: both of you choose a castle, then press Play":["Nouvelle carte tirée : choisissez chacun un château, puis lancez la partie.","Nuevo mapa generado: elegid cada uno un castillo y pulsad Jugar.","Neue Karte gewürfelt: Wählt beide eine Burg und drückt dann auf Spielen.","Nuova mappa generata: scegliete ciascuno un castello, poi premete Gioca.","Novo mapa gerado: escolham cada um um castelo e carreguem em Jogar."],
 "Waiting for the host to start the rematch":["En attente de l'hôte pour lancer la revanche.","Esperando a que el anfitrión inicie la revancha.","Warten, bis der Gastgeber die Revanche startet.","In attesa che l'host avvii la rivincita.","À espera de que o anfitrião inicie a desforra."],

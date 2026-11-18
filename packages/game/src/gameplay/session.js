@@ -11,6 +11,7 @@ export const sessionState = {
   spd: 1,
   paused: false,
   diffI: 1,
+  mapSize: 0,
   bannerT: 0,
   bannerS: "",
   bannerS2: "",
@@ -41,11 +42,30 @@ export const sessionState = {
 
 const DIFFS = [{ n: "Normal", zm: 1, tm: 1, g: 200, first: 600 }];
 export const D_ = () => DIFFS[0];
+/* world size = how far from the castle the zombie lanes start (tiles): 0 Large is the whole world (the original rule, and what old saves and co-op messages without a size mean), 1 Medium, 2 Small.
+   Only read when the lanes are laid out (world/routes.js); chosen in the settings, kept in localStorage dk_msize, sent by the co-op host, saved with the game. */
+export const MAPD = [1e9, 380, 170];
+export const mapSizeValid = (v) => (v === 1 || v === 2 ? v : 0);
+export const worldSizePref = () => {
+  try {
+    return mapSizeValid(+localStorage.getItem("dk_msize"));
+  } catch {
+    return 0;
+  }
+};
+export const setWorldSizePref = (v) => {
+  try {
+    localStorage.setItem("dk_msize", String(mapSizeValid(v)));
+  } catch {
+    /* Keep the default size when storage is unavailable. */
+  }
+};
 /* ================= GAME LOGIC ================= */
 
 export function initializeSessionPreferences() {
   try {
     sessionState.diffI = 0;
+    sessionState.mapSize = worldSizePref();
     sessionState.best = JSON.parse(localStorage.getItem("dk_best") || '{"w":0,"k":0}');
   } catch {
     /* Unavailable or invalid storage keeps the initialized session defaults. */

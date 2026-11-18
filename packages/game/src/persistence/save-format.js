@@ -452,6 +452,12 @@ export const SAVA = {
   fowRA: [() => fowRA, null],
   fowLo: [() => fowLo, null],
   fowHi: [() => fowHi, null],
+  mapSize: [
+    () => sessionState.mapSize,
+    (v) => {
+      sessionState.mapSize = v === 1 || v === 2 ? v : 0;
+    },
+  ],
   diffI: [
     () => sessionState.diffI,
     (v) => {

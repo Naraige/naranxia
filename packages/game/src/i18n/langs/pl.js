@@ -1712,4 +1712,6 @@ export const PL = {
   "New map rolled: both of you choose a castle, then press Play":
     "Wylosowano nową mapę: obaj wybierzcie zamek, a potem naciśnijcie Graj.",
   "Waiting for the host to start the rematch": "Czekanie, aż gospodarz rozpocznie rewanż.",
+  "World size (next game)": "Rozmiar świata (następna gra)",
+  "Medium": "Średni",
 };

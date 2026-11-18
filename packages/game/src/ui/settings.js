@@ -1,7 +1,7 @@
 import { cbOn, cbSet, pref, setPref } from "../core/prefs.js";
 import { applyVol, saveVol, snd, soundState } from "../audio/sound.js";
 import { startGame } from "../gameplay/lifecycle.js";
-import { sessionState } from "../gameplay/session.js";
+import { sessionState, setWorldSizePref, worldSizePref } from "../gameplay/session.js";
 import { questsPref, questsState } from "../gameplay/quests.js";
 import { questSwitch } from "../multiplayer/commands.js";
 import { LANG, LANGS, languageState, T_, tw } from "../i18n/language.js";
@@ -578,6 +578,19 @@ export function drawSettings(UW, UH, fh, back) {
         }
       }
     });
+    {
+      const cur = worldSizePref(),
+        pick = (v) => setWorldSizePref(v);
+      l.row({
+        label: "World size (next game)",
+        opts: [
+          ["Large", cur === 0, () => pick(0)],
+          ["Medium", cur === 1, () => pick(1)],
+          ["Small", cur === 2, () => pick(2)],
+        ],
+        fn: () => pick((cur + 1) % 3),
+      });
+    }
     prow(l, "Pause when away", "ap", true);
     prow(l, "Autosave", "as", true);
     {

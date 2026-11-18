@@ -1,6 +1,6 @@
 import { fb, hs } from "../core/math.js";
 import { TH, TW } from "../gameplay/rules.js";
-import { sessionState } from "../gameplay/session.js";
+import { MAPD, sessionState } from "../gameplay/session.js";
 import { amt, CH, FLG, genF, HT, NCX, NCY, occ, stairs, ter, terrainState } from "./terrain-state.js";
 import { canStep } from "./traversal-rules.js";
 
@@ -120,7 +120,7 @@ export function mkRoutes(ground) {
       wps = [];
     const dX = ex > 1e-6 ? (TW - 12 - CX) / ex : ex < -1e-6 ? (12 - CX) / ex : 1e9,
       dY = ey > 1e-6 ? (TH - 12 - CY) / ey : ey < -1e-6 ? (12 - CY) / ey : 1e9,
-      D = Math.min(dX, dY),
+      D = Math.min(dX, dY, MAPD[sessionState.mapSize | 0] || 1e9),
       lats = [];
     for (let d = D; d >= 8; d -= 1.5)
       lats.push(

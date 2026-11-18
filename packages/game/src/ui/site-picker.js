@@ -2,7 +2,7 @@ import { snd } from "../audio/sound.js";
 import { startGame } from "../gameplay/lifecycle.js";
 import { reset } from "../gameplay/reset.js";
 import { TH, TW } from "../gameplay/rules.js";
-import { sessionState } from "../gameplay/session.js";
+import { sessionState, worldSizePref } from "../gameplay/session.js";
 import { L, T_, TTL, TTS, twH } from "../i18n/language.js";
 import { lobbyShow } from "../multiplayer/lobby.js";
 import { MP } from "../multiplayer/session.js";
@@ -203,6 +203,7 @@ export let confirmPick = function confirmPick() {
   sitePickerState.picking = false;
   settingsState.setupOpen = false;
   MP.side = 0;
+  sessionState.mapSize = worldSizePref();
   reset();
   sessionState.inGame = false;
   startGame();

@@ -1726,4 +1726,6 @@ export const NL = {
   "New map rolled: both of you choose a castle, then press Play":
     "Nieuwe kaart gegooid: kies allebei een kasteel en druk dan op Spelen.",
   "Waiting for the host to start the rematch": "Wachten tot de host de herkansing start.",
+  "World size (next game)": "Wereldgrootte (volgend spel)",
+  "Medium": "Gemiddeld",
 };

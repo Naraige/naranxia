@@ -1,5 +1,5 @@
 import { GVER } from "../core/version.js";
-import { sessionState } from "../gameplay/session.js";
+import { sessionState, worldSizePref } from "../gameplay/session.js";
 import { swarmState } from "../gameplay/swarm.js";
 import { L } from "../i18n/language.js";
 import { _N } from "./commands.js";
@@ -68,7 +68,7 @@ export function lobbyHome() {
 export function mpWorldSync() {
   if (MP.conn && MP.host) {
     MP.theirs = null;
-    mpSend({ k: "w", seed: terrainState.SEED, gpr: terrainState.GPR, d: sessionState.diffI });
+    mpSend({ k: "w", seed: terrainState.SEED, gpr: terrainState.GPR, d: sessionState.diffI, ms: worldSizePref() });
     MP.mine = null;
     lobbyRender();
   }
@@ -110,6 +110,7 @@ export function mpStart() {
     cy2: MP.theirs.ty,
     cr2: MP.theirs.rot | 0,
     d: sessionState.diffI,
+    ms: worldSizePref(),
     sw: swarmState.SWF,
   };
   mpSend(st);

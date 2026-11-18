@@ -248,6 +248,7 @@ export function mpBegin(st) {
   terrainState.CY = st.cy;
   sessionState.CROT = st.cr & 3;
   sessionState.diffI = 0;
+  sessionState.mapSize = st.ms === 1 || st.ms === 2 ? st.ms : 0;
   swarmState.SWF = 100;
   sessionState.SITE2 = { tx: st.cx2, ty: st.cy2, rot: st.cr2 & 3 };
   sitePickerState.picking = false;
@@ -344,6 +345,7 @@ export let mpMsg = function mpMsg(m) {
     terrainState.SEED = m.seed;
     terrainState.GPR = m.gpr;
     sessionState.diffI = m.d;
+    sessionState.mapSize = m.ms === 1 || m.ms === 2 ? m.ms : 0;
     MP.mine = null;
     MP.theirs = null;
     if (sitePickerState.picking) {

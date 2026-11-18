@@ -1710,4 +1710,6 @@ export const TR = {
   "New map rolled: both of you choose a castle, then press Play":
     "Yeni harita seçildi: ikiniz de bir kale seçin, sonra Oyna'ya basın.",
   "Waiting for the host to start the rematch": "Ev sahibinin rövanşı başlatması bekleniyor.",
+  "World size (next game)": "Dünya boyutu (sonraki oyun)",
+  "Medium": "Orta",
 };
