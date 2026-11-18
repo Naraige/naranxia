@@ -1,3 +1,5 @@
+import { TH, TW } from "../gameplay/rules.js";
+
 export const terrainState = {
   CX: undefined,
   CY: undefined,
@@ -29,7 +31,23 @@ export let pth;
 export let FLG;
 export let genF;
 
-export const occ = new Map();
+/* tile -> structure. OCCB mirrors the keys (1 = a structure stands there) so the hot solid() tests of the swarm skip the Map lookup on free tiles */
+export const OCCB = new Uint8Array(TW * TH);
+class OccMap extends Map {
+  set(k, v) {
+    OCCB[k] = 1;
+    return super.set(k, v);
+  }
+  delete(k) {
+    OCCB[k] = 0;
+    return super.delete(k);
+  }
+  clear() {
+    OCCB.fill(0);
+    super.clear();
+  }
+}
+export const occ = new OccMap();
 export const stairs = new Map();
 export const CAMPS = new Map();
 export const RUINS = new Map();

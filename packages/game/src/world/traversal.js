@@ -3,7 +3,7 @@ import { markT } from "./terrain-invalidation.js";
 import { prepareTerrainRect } from "./chunk-provider.js";
 import { D4, gOK } from "./routes.js";
 import { canStep, canStepZ } from "./traversal-rules.js";
-import { HT, occ, pth, stairs, ter, terrainState, TFL } from "./terrain-state.js";
+import { HT, occ, OCCB, pth, stairs, ter, terrainState, TFL } from "./terrain-state.js";
 
 export { canStep, canStepZ };
 
@@ -12,6 +12,7 @@ export const solid = (x, y) => {
   if (!gOK(x, y)) return true;
   const i = y * TW + x;
   if (ter[i] > 0) return true;
+  if (!OCCB[i]) return false;
   const o = occ.get(i);
   return !!o && (!o.gate || terrainState.gateSolid || (o.gl === 3 && (o.ax ? y !== o.ty + 1 : x !== o.tx + 1)));
 };

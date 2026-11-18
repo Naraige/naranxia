@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · perf of the swarm (#21), no behaviour change
+
+- King: "continue toutes les améliorations" (asked: swarm perf, balance, HUD, robustness). `solid()` was the hot spot of `swFmask` / `swOpen` / `blk` (a Map lookup per tile). `world/terrain-state.js`: `occ` is now an `OccMap` that mirrors its keys into the `OCCB` byte table, `solid()` skips the lookup on free tiles. Same answers, so same hashes.
+- Verified: `tools/profile.py` 6000 ticks 45.6 s to 27.6 s (instrumented), solid 8.1 s to 1.2 s; `det`, `save`, `waves`, `mp8`, `mpk`, `mp_resync` pass with the pinned hashes. #21 closed.
+- Not released, no version change.
+
 ## 2026-11-17 · menu logic (Esc), tickets closed
 
 - #26, #3, #4 closed on the King's request (not reproduced, covered by mp_build / mp_side / mp_lag; full suite 43/43). #21 kept open: swarm already tuned in v93, more gain needs a behaviour change (profile today: swStep 20 %, solid 18 %, swPick 16 %).
