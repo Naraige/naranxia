@@ -1693,4 +1693,9 @@ export const PL = {
     "Koop: zapisane gry pamiętają, który zamek należy do którego gracza.",
   "Zombie lanes find routes over hills and mountains more often.":
     "Korytarze zombie częściej znajdują drogę przez wzgórza i góry.",
+  "Faster big hordes and a clearer Esc key.": "Szybsze wielkie hordy i bardziej czytelny klawisz Esc.",
+  "Big hordes cost much less processing: the game stays smoother with thousands of zombies.":
+    "Wielkie hordy wymagają znacznie mniej obliczeń: gra działa płynniej przy tysiącach zombie.",
+  "Esc now drops a selected building or the castle first, and opens the main menu on the next press.":
+    "Esc najpierw odznacza wybrany budynek lub zamek, a menu główne otwiera przy następnym naciśnięciu.",
 };

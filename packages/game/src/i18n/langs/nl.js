@@ -1707,4 +1707,9 @@ export const NL = {
     "Coöp: opgeslagen spellen onthouden welk kasteel bij welke speler hoort.",
   "Zombie lanes find routes over hills and mountains more often.":
     "Zombiepaden vinden vaker een route over heuvels en bergen.",
+  "Faster big hordes and a clearer Esc key.": "Snellere grote hordes en een duidelijkere Esc-toets.",
+  "Big hordes cost much less processing: the game stays smoother with thousands of zombies.":
+    "Grote hordes vragen veel minder rekenkracht: het spel blijft vloeiender met duizenden zombies.",
+  "Esc now drops a selected building or the castle first, and opens the main menu on the next press.":
+    "Esc heft eerst de selectie van een gebouw of het kasteel op en opent bij de volgende druk het hoofdmenu.",
 };

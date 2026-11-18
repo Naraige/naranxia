@@ -848,7 +848,13 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v95 */
+  /* texts added in v96 */
+Object.assign(TRD,{
+"Faster big hordes and a clearer Esc key.":["Grandes hordes plus rapides et touche Échap plus claire.","Hordas grandes más rápidas y una tecla Esc más clara.","Schnellere große Horden und eine klarere Esc-Taste.","Grandi orde più veloci e tasto Esc più chiaro.","Hordas grandes mais rápidas e tecla Esc mais clara."],
+"Big hordes cost much less processing: the game stays smoother with thousands of zombies.":["Les grandes hordes coûtent bien moins de calcul : le jeu reste plus fluide avec des milliers de zombies.","Las hordas grandes consumen mucho menos proceso: el juego va más fluido con miles de zombis.","Große Horden brauchen deutlich weniger Rechenleistung: das Spiel läuft mit tausenden Zombies flüssiger.","Le grandi orde richiedono molta meno elaborazione: il gioco resta più fluido con migliaia di zombi.","As grandes hordas exigem muito menos processamento: o jogo fica mais fluido com milhares de zombies."],
+"Esc now drops a selected building or the castle first, and opens the main menu on the next press.":["Échap désélectionne d'abord un bâtiment ou le château, et ouvre le menu principal à la pression suivante.","Esc ahora suelta primero un edificio o el castillo seleccionado y abre el menú principal en la siguiente pulsación.","Esc hebt zuerst die Auswahl eines Gebäudes oder der Burg auf und öffnet beim nächsten Druck das Hauptmenü.","Esc deseleziona prima un edificio o il castello e apre il menu principale alla pressione successiva.","Esc deseleciona primeiro um edifício ou o castelo e abre o menu principal na pressão seguinte."]
+});
+/* texts added in v95 */
 Object.assign(TRD,{
 "Spread-out hordes, body blocking and formation previews.":["Hordes mieux réparties, blocage des corps et aperçu des formations.","Hordas más repartidas, bloqueo de cuerpos y vista previa de formaciones.","Verteilte Horden, Körperblockade und Formationsvorschau.","Orde più distribuite, blocco dei corpi e anteprima delle formazioni.","Hordas mais espalhadas, bloqueio de corpos e pré-visualização das formações."],
 "Hordes spawn spread out and flow around crowded tiles: fewer pile-ups in the lanes.":["Les hordes apparaissent étalées et contournent les cases bondées : moins d'amas dans les couloirs.","Las hordas aparecen repartidas y rodean las casillas llenas: menos aglomeraciones en los pasillos.","Horden erscheinen verteilt und weichen vollen Feldern aus: weniger Staus in den Gassen.","Le orde appaiono distribuite e aggirano le caselle affollate: meno ammassi nei corridoi.","As hordas surgem espalhadas e contornam as casas cheias: menos aglomerações nos corredores."],

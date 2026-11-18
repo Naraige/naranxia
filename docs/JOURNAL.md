@@ -4,6 +4,11 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · v96
+
+- Released on the King's "oui go": swarm perf (#21, occupancy byte table, hashes unchanged) and Esc dropping a selected building before the main menu. Notes, announce/v96.md, translations (FR ES DE IT PT NL PL TR) added; textaudit and langcheck clean.
+- Left: the release workflow's automatic banner step has its first real run now (check the Discord post); no open issue.
+
 ## 2026-11-18 · perf of the swarm (#21), no behaviour change
 
 - King: "continue toutes les améliorations" (asked: swarm perf, balance, HUD, robustness). `solid()` was the hot spot of `swFmask` / `swOpen` / `blk` (a Map lookup per tile). `world/terrain-state.js`: `occ` is now an `OccMap` that mirrors its keys into the `OCCB` byte table, `solid()` skips the lookup on free tiles. Same answers, so same hashes.

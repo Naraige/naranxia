@@ -1691,4 +1691,9 @@ export const TR = {
     "Ortak oyun: kayıtlı oyunlar hangi kalenin hangi oyuncuya ait olduğunu hatırlar.",
   "Zombie lanes find routes over hills and mountains more often.":
     "Zombi koridorları tepelerde ve dağlarda daha sık yol bulur.",
+  "Faster big hordes and a clearer Esc key.": "Daha hızlı büyük hordalar ve daha net bir Esc tuşu.",
+  "Big hordes cost much less processing: the game stays smoother with thousands of zombies.":
+    "Büyük hordalar çok daha az işlem gücü harcar: oyun binlerce zombiyle daha akıcı kalır.",
+  "Esc now drops a selected building or the castle first, and opens the main menu on the next press.":
+    "Esc önce seçili binayı veya kaleyi bırakır, bir sonraki basışta ana menüyü açar.",
 };
