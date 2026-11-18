@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · finish lot 2 (not released)
+
+- King: "tout sauf la difficulté" (one fixed difficulty stays). Done: About screen on the title card (`ui/title-menu.js`, name, version, credits, saves stay local, rights), Fullscreen row in Display settings (`ui/settings.js`), LICENSE (all rights reserved, third-party notices), PRIVACY.md (peer to peer, public lobby hub, third-party loads), README links. Texts in 9 languages; fitcheck 0 overflow; `ui tools frame_guard det runner architecture` pass.
+- Not done, tracked as issues: #34 map size/type, #35 co-op rematch, #36 spectator, #37 content lot 3, #38 installer signing (needs certificates), #39 cloud saves, #40 store page + screenshots.
+- Kept: `docs/studio-boards` (98 MB) stays tracked: tests read its font (`tools/fontroute.py`) and eslint lints it. Moving it needs those paths changed first.
+- LICENSE is the conservative default (all rights reserved); the King may replace it with an open licence.
+
 ## 2026-11-18 · professional finish audit (not released)
 
 - King: "fait un audit de mon jeu et travail sur tout pour rendre le jeu plus pro". Audit in `docs/PRO_AUDIT.md`.

@@ -1700,4 +1700,12 @@ export const PL = {
     "Esc najpierw odznacza wybrany budynek lub zamek, a menu główne otwiera przy następnym naciśnięciu.",
   "Something went wrong, but the game goes on. Save your game to be safe.":
     "Coś poszło nie tak, ale gra trwa dalej. Zapisz grę dla bezpieczeństwa.",
+  "About": "O grze",
+  "Made by Naraige (King Naraige).": "Stworzone przez Naraige (króla Naraige).",
+  "Built with Three.js and PeerJS. Fonts: Inter, Pixelify Sans, Cinzel and Marcellus (SIL Open Font License).":
+    "Zbudowane z Three.js i PeerJS. Czcionki: Inter, Pixelify Sans, Cinzel i Marcellus (SIL Open Font License).",
+  "Your saves stay on this device. In co-op, only game commands are sent to your partner.":
+    "Twoje zapisy zostają na tym urządzeniu. W trybie współpracy do partnera wysyłane są tylko polecenia gry.",
+  "All rights reserved.": "Wszelkie prawa zastrzeżone.",
+  "Fullscreen": "Pełny ekran",
 };

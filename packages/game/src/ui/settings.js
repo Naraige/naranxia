@@ -544,6 +544,15 @@ export function drawSettings(UW, UH, fh, back) {
       });
     }
 
+    /* the click is the user gesture the browser asks for; the Electron launcher keeps F11 for the same thing */
+    tog(l, "Fullscreen", !!document.fullscreenElement, (v) => {
+      try {
+        const r = v ? document.documentElement.requestFullscreen() : document.exitFullscreen();
+        if (r && r.catch) r.catch(() => {});
+      } catch {
+        /* Fullscreen is not available in this window. */
+      }
+    });
     tog(l, "Colour-blind mode", cbOn(), (v) => {
       cbSet(v);
       applyCB();

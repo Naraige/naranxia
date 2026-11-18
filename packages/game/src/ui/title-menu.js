@@ -47,6 +47,7 @@ import { hexBadge, tipBanner, titleBlur, titleEmbers, titleLogo, titleLogoW, tit
 let TT0 = -1;
 let scrKey = "main";
 let notesOpen = false;
+let aboutOpen = false;
 let chrOpen = false;
 let recOpen = false;
 export const titleDebug = {
@@ -58,6 +59,9 @@ export const titleDebug = {
   },
   chr(v) {
     chrOpen = v;
+  },
+  about(v) {
+    aboutOpen = v;
   },
   modes(v) {
     modeState.open = v;
@@ -137,6 +141,7 @@ function drawTitleScreen(UW, UH) {
     settingsState.setupOpen ||
     modeState.open ||
     notesOpen ||
+    aboutOpen ||
     chrOpen ||
     recOpen;
   titleBlur(!ig && !sub);
@@ -160,11 +165,13 @@ function drawTitleScreen(UW, UH) {
                 ? "mod"
                 : notesOpen
                   ? "not"
-                  : chrOpen
-                    ? "chr"
-                    : recOpen
-                      ? "rec"
-                      : "main";
+                  : aboutOpen
+                    ? "abt"
+                    : chrOpen
+                      ? "chr"
+                      : recOpen
+                        ? "rec"
+                        : "main";
     if (sk !== scrKey) {
       scrKey = sk;
       NAV.sel = -1;
@@ -245,6 +252,16 @@ function drawTitleScreen(UW, UH) {
         notesOpen = false;
       },
       drawNotes,
+      0,
+    );
+    return;
+  }
+  if (aboutOpen) {
+    LS(
+      () => {
+        aboutOpen = false;
+      },
+      drawAbout,
       0,
     );
     return;
@@ -360,6 +377,12 @@ function drawLobby(UW, UH) {
       "Chronicle",
       () => {
         chrOpen = true;
+      },
+    ],
+    [
+      "About",
+      () => {
+        aboutOpen = true;
       },
     ],
   ];
@@ -753,6 +776,22 @@ function drawNotes(UW, UH, fh, back) {
     Each line is one translation key, looked up whole (tools/textaudit.mjs --notes refuses a release with a line left in English) */
   l.section(GVER);
   for (const it of notesLines(GNOTES)) it.h ? l.section(it.t) : l.para(it.t, "#ead8ba", 0.88, it.b);
+  listEnd();
+}
+
+/* ================= About: name, version, credits, where the saves live ================= */
+function drawAbout(UW, UH, fh, back) {
+  const b = kitScreen(UW, UH, { key: "abt", title: "About", close: back, fh, maxW: 500 }),
+    l = listBegin("abt", b.x, b.y, b.w, b.h);
+  l.section("Naranxia " + GVER);
+  l.para("Made by Naraige (King Naraige).", "#ead8ba", 0.88);
+  l.para(
+    "Built with Three.js and PeerJS. Fonts: Inter, Pixelify Sans, Cinzel and Marcellus (SIL Open Font License).",
+    "#ead8ba",
+    0.88,
+  );
+  l.para("Your saves stay on this device. In co-op, only game commands are sent to your partner.", "#ead8ba", 0.88);
+  l.para("All rights reserved.", "#ead8ba", 0.88);
   listEnd();
 }
 

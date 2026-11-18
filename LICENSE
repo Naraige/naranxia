@@ -1,0 +1,8 @@
+Copyright (c) 2026 Naraige. All rights reserved.
+
+Naranxia (the game, its source code, art, sounds and texts) is the property of Naraige.
+No licence is granted to copy, modify, redistribute or sell it, except to download and play
+the official releases published at https://github.com/Naraige/naranxia/releases.
+
+Third-party components keep their own licences: Three.js (MIT), PeerJS (MIT), Electron (MIT),
+and the Inter, Pixelify Sans, Cinzel and Marcellus fonts (SIL Open Font License 1.1).

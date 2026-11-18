@@ -850,6 +850,12 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v97 */
 Object.assign(TRD,{
+"About":["À propos","Acerca de","Info","Informazioni","Acerca"],
+"Made by Naraige (King Naraige).":["Créé par Naraige (le roi Naraige).","Creado por Naraige (el rey Naraige).","Entwickelt von Naraige (König Naraige).","Creato da Naraige (il re Naraige).","Criado por Naraige (o rei Naraige)."],
+"Built with Three.js and PeerJS. Fonts: Inter, Pixelify Sans, Cinzel and Marcellus (SIL Open Font License).":["Réalisé avec Three.js et PeerJS. Polices : Inter, Pixelify Sans, Cinzel et Marcellus (licence SIL Open Font).","Hecho con Three.js y PeerJS. Fuentes: Inter, Pixelify Sans, Cinzel y Marcellus (licencia SIL Open Font).","Gebaut mit Three.js und PeerJS. Schriften: Inter, Pixelify Sans, Cinzel und Marcellus (SIL Open Font License).","Realizzato con Three.js e PeerJS. Caratteri: Inter, Pixelify Sans, Cinzel e Marcellus (licenza SIL Open Font).","Feito com Three.js e PeerJS. Tipos de letra: Inter, Pixelify Sans, Cinzel e Marcellus (licença SIL Open Font)."],
+"Your saves stay on this device. In co-op, only game commands are sent to your partner.":["Vos sauvegardes restent sur cet appareil. En coop, seules les commandes de jeu sont envoyées à votre partenaire.","Tus partidas guardadas se quedan en este dispositivo. En cooperativo, solo se envían a tu compañero los comandos del juego.","Deine Spielstände bleiben auf diesem Gerät. Im Koop werden nur Spielbefehle an deinen Partner gesendet.","I tuoi salvataggi restano su questo dispositivo. In cooperativa vengono inviati al partner solo i comandi di gioco.","Os seus jogos guardados ficam neste dispositivo. No modo cooperativo, só os comandos de jogo são enviados ao seu parceiro."],
+"All rights reserved.":["Tous droits réservés.","Todos los derechos reservados.","Alle Rechte vorbehalten.","Tutti i diritti riservati.","Todos os direitos reservados."],
+"Fullscreen":["Plein écran","Pantalla completa","Vollbild","Schermo intero","Ecrã inteiro"],
 "Something went wrong, but the game goes on. Save your game to be safe.":["Un problème est survenu, mais le jeu continue. Sauvegardez votre partie par précaution.","Ha ocurrido un problema, pero el juego continúa. Guarda la partida por precaución.","Es ist ein Fehler aufgetreten, aber das Spiel läuft weiter. Speichere sicherheitshalber dein Spiel.","Si è verificato un problema, ma il gioco continua. Salva la partita per sicurezza.","Ocorreu um problema, mas o jogo continua. Guarde o jogo por precaução."]
 });
 /* texts added in v96 */

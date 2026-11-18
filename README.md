@@ -12,7 +12,7 @@ A browser strategy and tower defence game. Build a kingdom on a procedurally gen
 
 Download `naranxia.html` from the [latest release](https://github.com/Naraige/naranxia/releases/latest) and open it in a browser, or install the desktop launcher. Saves stay on your machine. See the [changelog](CHANGELOG.md) for what changed in each version.
 
-Made by Naraige (King Naraige).
+Made by Naraige (King Naraige). All rights reserved, see [LICENSE](LICENSE); [privacy](PRIVACY.md).
 
 ## Development
 

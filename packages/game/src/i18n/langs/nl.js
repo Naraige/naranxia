@@ -1714,4 +1714,12 @@ export const NL = {
     "Esc heft eerst de selectie van een gebouw of het kasteel op en opent bij de volgende druk het hoofdmenu.",
   "Something went wrong, but the game goes on. Save your game to be safe.":
     "Er is iets misgegaan, maar het spel gaat door. Sla je spel op voor de zekerheid.",
+  "About": "Over",
+  "Made by Naraige (King Naraige).": "Gemaakt door Naraige (koning Naraige).",
+  "Built with Three.js and PeerJS. Fonts: Inter, Pixelify Sans, Cinzel and Marcellus (SIL Open Font License).":
+    "Gebouwd met Three.js en PeerJS. Lettertypen: Inter, Pixelify Sans, Cinzel en Marcellus (SIL Open Font License).",
+  "Your saves stay on this device. In co-op, only game commands are sent to your partner.":
+    "Je opgeslagen spellen blijven op dit apparaat. In coöp worden alleen spelopdrachten naar je partner gestuurd.",
+  "All rights reserved.": "Alle rechten voorbehouden.",
+  "Fullscreen": "Volledig scherm",
 };

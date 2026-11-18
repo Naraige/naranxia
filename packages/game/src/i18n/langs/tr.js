@@ -1698,4 +1698,12 @@ export const TR = {
     "Esc önce seçili binayı veya kaleyi bırakır, bir sonraki basışta ana menüyü açar.",
   "Something went wrong, but the game goes on. Save your game to be safe.":
     "Bir sorun oluştu ama oyun devam ediyor. Güvenlik için oyununuzu kaydedin.",
+  "About": "Hakkında",
+  "Made by Naraige (King Naraige).": "Naraige (Kral Naraige) tarafından yapıldı.",
+  "Built with Three.js and PeerJS. Fonts: Inter, Pixelify Sans, Cinzel and Marcellus (SIL Open Font License).":
+    "Three.js ve PeerJS ile yapıldı. Yazı tipleri: Inter, Pixelify Sans, Cinzel ve Marcellus (SIL Open Font License).",
+  "Your saves stay on this device. In co-op, only game commands are sent to your partner.":
+    "Kayıtlarınız bu cihazda kalır. Ortak oyunda yalnızca oyun komutları ortağınıza gönderilir.",
+  "All rights reserved.": "Tüm hakları saklıdır.",
+  "Fullscreen": "Tam ekran",
 };
