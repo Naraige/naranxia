@@ -4,6 +4,11 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · rework request: baseline and plan (no code change)
+
+- King asked to rework map generation, building logic and horde spawning, with no stated defect. Measured the baseline (spawn_probe: 384 lanes none within 90 tiles; spawn_pace wave 3: solo beaten in 434 to 444 s, co-op 310 to 406 s) and wrote `docs/REWORK_PLAN.md` with the constraints (determinism, saves, co-op) and options M1..M3, B1..B3, H1..H3. Suggested first slice: M1 start quality, B1 placement feedback, H2 pincer waves.
+- Left: the King's choice of options. Full suite 46/46 earlier today; v97 content ready, not released.
+
 ## 2026-11-18 · README screenshots (#40 part)
 
 - `docs/img/title.jpg` (title screen) and `docs/img/kingdom.jpg` (a kingdom, cropped below the top bar because the test world shows a meaningless wave timer) taken with `tools/qa_shots.py` (English; its always-on `87_back_fr` step forces French, so a temporary copy set it to English). README shows them. #40 stays open for the store page and a trailer (needs the King's accounts).
