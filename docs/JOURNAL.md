@@ -8,6 +8,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 
 - Released on the King's "oui go": swarm perf (#21, occupancy byte table, hashes unchanged) and Esc dropping a selected building before the main menu. Notes, announce/v96.md, translations (FR ES DE IT PT NL PL TR) added; textaudit and langcheck clean.
 - Left: the release workflow's automatic banner step has its first real run now (check the Discord post); no open issue.
+- v96 banner was missing: the release job ran on ubuntu-latest (now Ubuntu 26.04, no Playwright chromium) and the step is continue-on-error. Fixed: release job pinned to ubuntu-24.04 like tests; banner generated locally and v96 reposted through announce/QUEUE. First automatic banner expected at v97 (check the "Update banner" step log).
 
 ## 2026-11-18 · perf of the swarm (#21), no behaviour change
 
