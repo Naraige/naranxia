@@ -14,6 +14,8 @@ import {
   stronglyConnectedComponents,
 } from "../tools/check-architecture.mjs";
 import { prepareTerrainRect, setTerrainRectPreparer } from "../packages/game/src/world/chunk-provider.js";
+import { TH, TW } from "../packages/game/src/gameplay/rules.js";
+import { OCCB, occ } from "../packages/game/src/world/terrain-state.js";
 import { markP, markT, setTerrainInvalidationHandlers } from "../packages/game/src/world/terrain-invalidation.js";
 
 const sourceRoot = "packages/game/src/";
@@ -168,4 +170,17 @@ test("build-menu keeps the legacy catalog exports bound to the shared objects", 
 
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.deepEqual(JSON.parse(result.stdout.trim()), { names: true, hotkeys: true });
+});
+
+test("the occupancy byte table follows the occ map and covers every tile", () => {
+  assert.equal(OCCB.length, TW * TH);
+  const k = 5 * TW + 7;
+  assert.equal(OCCB[k], 0);
+  occ.set(k, {});
+  assert.equal(OCCB[k], 1);
+  occ.delete(k);
+  assert.equal(OCCB[k], 0);
+  occ.set(k, {});
+  occ.clear();
+  assert.equal(OCCB[k], 0);
 });
