@@ -1708,4 +1708,8 @@ export const PL = {
     "Twoje zapisy zostają na tym urządzeniu. W trybie współpracy do partnera wysyłane są tylko polecenia gry.",
   "All rights reserved.": "Wszelkie prawa zastrzeżone.",
   "Fullscreen": "Pełny ekran",
+  "Rematch": "Rewanż",
+  "New map rolled: both of you choose a castle, then press Play":
+    "Wylosowano nową mapę: obaj wybierzcie zamek, a potem naciśnijcie Graj.",
+  "Waiting for the host to start the rematch": "Czekanie, aż gospodarz rozpocznie rewanż.",
 };

@@ -156,6 +156,33 @@ export function mpOpenJoin() {
   $m("mpBJ").click();
 }
 
+/* after a co-op game: back to the lobby with the same partner still connected. Lockstep stops, the host rolls a new map (rollWorld syncs it to the guest),
+   both choose their castle again and the host presses Play. Each player's own button does it on their side, both see the end of the game at the same tick. */
+export function mpRematch() {
+  if (!MP.conn) return false;
+  MP.on = false;
+  MP.stall = false;
+  MP.rsy = null;
+  MP.desync = false;
+  _runOk = false;
+  MP.mine = null;
+  MP.theirs = null;
+  sessionState.over = false;
+  sessionState.inGame = false;
+  sessionState.started = false;
+  settingsState.setupOpen = false;
+  settingsState.settingsOpen = false;
+  rollWorld();
+  lobbyRender();
+  mpOpen();
+  lobbyNote(
+    MP.host
+      ? "New map rolled: both of you choose a castle, then press Play"
+      : "Waiting for the host to start the rematch",
+  );
+  return true;
+}
+
 export function mpOpen() {
   lobbyTexts();
   mpModal(true);

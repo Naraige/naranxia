@@ -850,6 +850,9 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v97 */
 Object.assign(TRD,{
+"Rematch":["Revanche","Revancha","Revanche","Rivincita","Desforra"],
+"New map rolled: both of you choose a castle, then press Play":["Nouvelle carte tirée : choisissez chacun un château, puis lancez la partie.","Nuevo mapa generado: elegid cada uno un castillo y pulsad Jugar.","Neue Karte gewürfelt: Wählt beide eine Burg und drückt dann auf Spielen.","Nuova mappa generata: scegliete ciascuno un castello, poi premete Gioca.","Novo mapa gerado: escolham cada um um castelo e carreguem em Jogar."],
+"Waiting for the host to start the rematch":["En attente de l'hôte pour lancer la revanche.","Esperando a que el anfitrión inicie la revancha.","Warten, bis der Gastgeber die Revanche startet.","In attesa che l'host avvii la rivincita.","À espera de que o anfitrião inicie a desforra."],
 "About":["À propos","Acerca de","Info","Informazioni","Acerca"],
 "Made by Naraige (King Naraige).":["Créé par Naraige (le roi Naraige).","Creado por Naraige (el rey Naraige).","Entwickelt von Naraige (König Naraige).","Creato da Naraige (il re Naraige).","Criado por Naraige (o rei Naraige)."],
 "Built with Three.js and PeerJS. Fonts: Inter, Pixelify Sans, Cinzel and Marcellus (SIL Open Font License).":["Réalisé avec Three.js et PeerJS. Polices : Inter, Pixelify Sans, Cinzel et Marcellus (licence SIL Open Font).","Hecho con Three.js y PeerJS. Fuentes: Inter, Pixelify Sans, Cinzel y Marcellus (licencia SIL Open Font).","Gebaut mit Three.js und PeerJS. Schriften: Inter, Pixelify Sans, Cinzel und Marcellus (SIL Open Font License).","Realizzato con Three.js e PeerJS. Caratteri: Inter, Pixelify Sans, Cinzel e Marcellus (licenza SIL Open Font).","Feito com Three.js e PeerJS. Tipos de letra: Inter, Pixelify Sans, Cinzel e Marcellus (licença SIL Open Font)."],

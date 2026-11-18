@@ -32,7 +32,7 @@ import {
   kHas,
   KXL,
 } from "../gameplay/king-skills.js";
-import { openMenu, quitGame, setStartGameHandler, startGame } from "../gameplay/lifecycle.js";
+import { openMenu, playAgain, quitGame, setStartGameHandler, startGame } from "../gameplay/lifecycle.js";
 import { LPL, playersState, setPl, setTier } from "../gameplay/players.js";
 import { pickLanes, reset } from "../gameplay/reset.js";
 import { C, LH, RS, RS2, RT2, rulesState, rxLock, T, TH, TRAIN, TS, TW, UPC } from "../gameplay/rules.js";
@@ -523,6 +523,7 @@ export function installBrowserConsole() {
     openGuide: { get: () => openGuide },
     guideWatch: { get: () => guideWatch },
     openMenu: { get: () => openMenu },
+    playAgain: { get: () => playAgain },
     quitGame: { get: () => quitGame },
     drawUI: { get: () => drawUI },
     convoyLinked: { get: () => convoyLinked },

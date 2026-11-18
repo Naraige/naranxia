@@ -9,6 +9,7 @@ import { installBrowserConsole } from "./debug/browser-console.js";
 import { initializeDiagnostics } from "./debug/diagnostics.js";
 import { initializeConstruction } from "./gameplay/construction.js";
 import { initializeEconomy } from "./gameplay/economy.js";
+import { setRematchHandler } from "./gameplay/lifecycle.js";
 import { initializeRules } from "./gameplay/rules.js";
 import { initializeSessionPreferences } from "./gameplay/session.js";
 import { initializeSpatialIndex } from "./gameplay/spatial-index.js";
@@ -23,7 +24,7 @@ import { initializeTouch } from "./input/touch.js";
 import { initializeChat, initializeChatMessages } from "./multiplayer/chat.js";
 import { initializeCommands } from "./multiplayer/commands.js";
 import { initializeConnection } from "./multiplayer/connection.js";
-import { initializeLobby, initializeLobbyState } from "./multiplayer/lobby.js";
+import { initializeLobby, initializeLobbyState, mpRematch } from "./multiplayer/lobby.js";
 import { initializeLockstep, initializeMultiplayerFrame } from "./multiplayer/lockstep.js";
 import { initializePings } from "./multiplayer/pings.js";
 import { initializeResync } from "./multiplayer/resync.js";
@@ -138,6 +139,7 @@ runBoot(
     initializeLobbyState,
     initializeConnection,
     initializeLobby,
+    () => setRematchHandler(mpRematch),
     initializeAdditionalIcons,
     initializeControlGroups,
     initializeShortcuts,

@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · co-op rematch (#35, not released)
+
+- King: "ok je suis pret" (go on with the tickets). Co-op game over: the button says "Rematch" and brings both players back to the lobby with the connection kept (`mpRematch` in `multiplayer/lobby.js`, reached through `playAgain` in `gameplay/lifecycle.js`, registered in `main.js` so no new import cycle). The host's `rollWorld` syncs the new map, both choose a castle, host presses Play. Before, "Play again" opened the solo setup while the co-op link stayed on.
+- New test `mp_rematch` (full tier, mutation checked: fails without the feature): game over on both, rematch, same seed, castles chosen again, second game in step with no resync. Passing: `det ui runner architecture mp_rematch mp_lag tools`, eslint, architecture ratchet unchanged (815).
+- #35 stays open until the King has seen it in play (not covered: real two-screen flow, a guest who leaves during the game over screen).
+
 ## 2026-11-18 · finish lot 2 (not released)
 
 - King: "tout sauf la difficulté" (one fixed difficulty stays). Done: About screen on the title card (`ui/title-menu.js`, name, version, credits, saves stay local, rights), Fullscreen row in Display settings (`ui/settings.js`), LICENSE (all rights reserved, third-party notices), PRIVACY.md (peer to peer, public lobby hub, third-party loads), README links. Texts in 9 languages; fitcheck 0 overflow; `ui tools frame_guard det runner architecture` pass.

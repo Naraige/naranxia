@@ -1722,4 +1722,8 @@ export const NL = {
     "Je opgeslagen spellen blijven op dit apparaat. In coöp worden alleen spelopdrachten naar je partner gestuurd.",
   "All rights reserved.": "Alle rechten voorbehouden.",
   "Fullscreen": "Volledig scherm",
+  "Rematch": "Opnieuw spelen",
+  "New map rolled: both of you choose a castle, then press Play":
+    "Nieuwe kaart gegooid: kies allebei een kasteel en druk dan op Spelen.",
+  "Waiting for the host to start the rematch": "Wachten tot de host de herkansing start.",
 };

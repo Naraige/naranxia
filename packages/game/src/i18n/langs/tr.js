@@ -1706,4 +1706,8 @@ export const TR = {
     "Kayıtlarınız bu cihazda kalır. Ortak oyunda yalnızca oyun komutları ortağınıza gönderilir.",
   "All rights reserved.": "Tüm hakları saklıdır.",
   "Fullscreen": "Tam ekran",
+  "Rematch": "Rövanş",
+  "New map rolled: both of you choose a castle, then press Play":
+    "Yeni harita seçildi: ikiniz de bir kale seçin, sonra Oyna'ya basın.",
+  "Waiting for the host to start the rematch": "Ev sahibinin rövanşı başlatması bekleniyor.",
 };

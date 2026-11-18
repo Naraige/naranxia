@@ -29,6 +29,18 @@ export function setStartGameHandler(handler) {
   startGame = handler;
 }
 
+/* the co-op lobby registers its rematch here (the lifecycle must not import the multiplayer modules) */
+let rematchHandler = null;
+export function setRematchHandler(handler) {
+  rematchHandler = handler;
+}
+
+/* "Play again" at the end of a game: with a co-op partner still connected it is a rematch in the lobby, else a new solo game */
+export function playAgain() {
+  if (MP.conn && rematchHandler && rematchHandler()) return;
+  newGame();
+}
+
 export function newGame() {
   rollWorld();
   sessionState.over = false;

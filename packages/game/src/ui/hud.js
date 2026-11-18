@@ -11,7 +11,7 @@ import { ACHD, TOASTS } from "../gameplay/achievements.js";
 import { popCap, popUsed } from "../gameplay/economy.js";
 import { kingBar } from "../gameplay/king-skills.js";
 import { eventBar } from "./event-bar.js";
-import { newGame, openMenu } from "../gameplay/lifecycle.js";
+import { openMenu, playAgain } from "../gameplay/lifecycle.js";
 import { aliveC, LPL, playersState } from "../gameplay/players.js";
 import { GCAP, rulesState, T, TH, TS, TW } from "../gameplay/rules.js";
 import { curB, sel, selectionState } from "../gameplay/selection.js";
@@ -291,7 +291,11 @@ function drawEnd(UW, UH) {
   canvasesState.ctx.fillStyle = UIT.gold;
   canvasesState.ctx.fillRect(Math.round(cx - 60), Math.round(y), 120, 1);
   y += 9;
-  bevelBtn(cx - pw / 2, y, pw, 24, "Play again", "go", newGame, { nav: false, sc: 0.95 });
+  /* co-op: the partner is still connected, so the rematch goes back to the lobby with them; alone it opens the new game screen */
+  bevelBtn(cx - pw / 2, y, pw, 24, MP.conn ? "Rematch" : "Play again", "go", playAgain, {
+    nav: false,
+    sc: 0.95,
+  });
   bevelBtn(
     cx - pw / 2,
     y + 30,
