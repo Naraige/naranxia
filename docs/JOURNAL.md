@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-18 · Minecraft plans import (phase 2 start), not released
+
+- King sent 3 .schem plans (pixl-5, -yellow, -gray: a medieval smithy, 23x24x21 blocks once the yard ring is cropped). New tools: `tools/schem.mjs` (Sponge .schem reader), `tools/blocks.mjs` (block name to colour and shape table; unknown blocks are listed), `tools/schem2voxels.mjs` (crop, strip ground and plants, JSON in `assets/builds/`), `tools/voxel_preview_entry.js` (preview scene). New `rendering/voxel-model.js`: merged geometry, hidden faces culled, stairs (all shapes), slabs, fences, walls, panes, trapdoors, doors, signs, chains, lanterns, log ends, light per-block variation.
+- Verified by two screenshots (all three variants, close-up of the gray one): shapes and colours read correctly. Not wired into the game yet: footprint 23x21 tiles is far bigger than the current forge, so it needs the King's call on scale (which building it becomes, tile footprint, collision, build time).
+- Left: wire a voxel building as a real structure (footprint, placement, construction), more plans from the King.
+
 ## 2026-11-18 · horde portals (phase 1 of the rework), not released
 
 - Each lane gets a huge obsidian portal (9x12 blocks, animated violet plane) at its spawn point, opened by the first horde of that lane (message "A new portal tears open in the <dir>", violet burst). Portals are saved (`sessionState.portals`, SAVA), cleared on reset, at most one per lane, so up to 3 per castle appear over time as lanes unlock (wave 1, 3, 7). New: `rendering/portals.js`, `tests/portals.js`.
