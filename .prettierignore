@@ -4,3 +4,4 @@ apps/desktop/out/
 package-lock.json
 # Translation keys stay one per line for tools/addtexts.py and tools/textaudit.mjs.
 packages/game/src/i18n/translations.js
+packages/game/src/assets/builds/

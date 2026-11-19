@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-19 · every building drawn in blocks (phase 2), not released
+
+- The King handed over the rework of all buildings ("rework all building in that kind of style"). 18 buildings (house, farm, storage, barracks, academy, market, forester, guild, observatory, granary, bell, sanctuary, beacon, orchard, embassy, warroom, sappers, forge) are now Minecraft-style block builds: stairs roofs, timber frames, windows, lanterns, banners, stalls, fields, trees. One tile = 4 blocks (`BPT`), a model fills its footprint (`BSZ` in `gameplay/rules.js`, 3 to 6 tiles a side instead of 2). The forge is the King's smithy plan (pixl-5 timber, pixl-5-gray stone). Houses come in 3 looks by tile.
+- New: `rendering/voxel-build.js` (builder: boxes, walls, gable and hip roofs from stairs), `rendering/models/voxel-parts.js` (halls, towers, stalls, wells, trees, fences), `rendering/models/voxel-buildings.js` (the 18 designs), `rendering/voxel-blocks.js` (block table, shared with the importer), console helpers `freeSite`, `BSZ`, `VOXB`. Houses and farms no longer snap or merge.
+- Rules that had the 2x2 size built in: builders and demolishers work from the site edge (`rad`), forester planting ring and spacing (per player now), guild waiting spot, AI base: ring radius 11 to 20, spots scaled to the footprint. Found on the way: `unm` (an "unreachable" message throttle) was set on a structure on one machine only and desynced co-op; now kept off the structure.
+- Tests: new `voxel_buildings`; spot searches in mp8, mp_build, mp_cut, mp_quests, market, spearman, ui, mp_side, tools, det now use the building's footprint; `det` re-pinned (same on repeated runs); architecture baseline ratcheted (811 edges).
+- Left: castle, keep, towers, walls, gates, ballista, trebuchet, torch still old style; build menu icons and construction scaffold look; damage and demolition crumble for block builds; centring the cursor on large footprints (the cursor tile is the corner for now).
+
 ## 2026-11-18 · Minecraft plans import (phase 2 start), not released
 
 - King sent 3 .schem plans (pixl-5, -yellow, -gray: a medieval smithy, 23x24x21 blocks once the yard ring is cropped). New tools: `tools/schem.mjs` (Sponge .schem reader), `tools/blocks.mjs` (block name to colour and shape table; unknown blocks are listed), `tools/schem2voxels.mjs` (crop, strip ground and plants, JSON in `assets/builds/`), `tools/voxel_preview_entry.js` (preview scene). New `rendering/voxel-model.js`: merged geometry, hidden faces culled, stairs (all shapes), slabs, fences, walls, panes, trapdoors, doors, signs, chains, lanterns, log ends, light per-block variation.
