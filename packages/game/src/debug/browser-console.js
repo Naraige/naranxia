@@ -75,7 +75,7 @@ import { toolGeos } from "../rendering/models/unit-parts.js";
 import { ZNV } from "../rendering/models/zombies.js";
 import { rs } from "../rendering/resolution.js";
 import { CAM, hemi, renderer, scene, sun } from "../rendering/scene.js";
-import { BPT, VOXB } from "../rendering/models/voxel-buildings.js";
+import { BPT, fortOf, VOXB } from "../rendering/models/voxel-buildings.js";
 import { voxelGeo } from "../rendering/voxel-model.js";
 import { home as dbgHome, pickGround as dbgPickGround, scr as dbgScr } from "../rendering/camera.js";
 import { mpLost as dbgMpLost } from "../multiplayer/lockstep.js";
@@ -423,6 +423,7 @@ export function installBrowserConsole() {
         },
     },
     VOXB: { get: () => VOXB },
+    fortOf: { get: () => fortOf },
     BPT: { get: () => BPT },
     voxelGeo: { get: () => voxelGeo },
     nextL: {

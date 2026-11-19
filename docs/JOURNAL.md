@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-19 · all buildings redesigned in blocks, fortifications too (unreleased)
+- The King found the first block buildings rushed. All 18 types + castle redrawn (forge = his plan, untouched). New kit `rendering/models/voxel-kit.js` (palettes by tier, framed storeys, profiled roofs with dark trim, windows with shutters and flower boxes, doorways, round towers, cones, spires, trees, stalls); designs in `models/builds/{homes,civic,military}.js`. `voxel-parts.js` removed.
+- Look: tier 0 = oak planks in dark oak frames on cobble, wooden or thatch roofs; tier 1 = stone ground floor, plaster upper floors, coloured tile roofs with black trim. Roof colour identifies the type in both tiers (market red, academy blue, sanctuary green, observatory copper, castle blue, barracks red). Houses: 3 looks (cottage, jettied town house, L-shaped).
+- Fortifications in blocks (`builds/walls.js`, `fortOf` in voxel-buildings.js): walls by neighbour mask (corbelled deck, merlons on outward sides, diagonal fillers), tower 1 tile, great tower 2x2 (round in stone), gates 2 and 3 tiles (door leaves stay the animated meshes), keep, torch. Heights follow `gtopOf` (6 / 13 / 14 / 15 blocks), so no gameplay number changed. Ballista and trebuchet (machines) keep their old models.
+- Mesher (`voxel-model.js`): ambient occlusion per vertex, faces looking into sealed rooms skipped, part-block faces covered by the neighbour skipped (about -35 % triangles: house 2.7k, castle 11k). New blocks: plaster, thatch, tile roofs, window, path / paving, flowers, fire...
+- Ground level is y = 0 of every model (yard props used to float one block up).
+- Verified: voxel_buildings (now also all 144 fortification pieces and every house look), det, save, ui, tools, features, spearman, mp_build, mp8, smoke PASS; eslint, prettier, architecture. Seen in game: a town of all types, walls + towers + torch (`/tmp/shot.py`-style harness: stub the renderer during boot, one real frame for the picture; real frames take ~6 s here).
+- Not done: scaffold / damage looks were not reviewed against the new shapes; cursor still at the corner of big footprints; a real GPU / two machines not tried. Preview tool: `tools/voxel_preview_entry.js` (names `type:look@turn!tier`, or `fort`).
+
 ## 2026-11-19 · castle in blocks (unreleased)
 - Castle (5x5 tiles, wood/stone) is now a block build: curtain wall, 4 corner towers, gatehouse with gate, keep with donjon, animated flag on the pole. `VOXB.castle`, `BSZ.castle=5`; old banners/corner flags skipped.
 - Verified: voxel_buildings, save, det, mp8, mp_build, spearman, quests PASS. Still old style: keep, tower, wall, gate, ballista, trebuchet, torch.

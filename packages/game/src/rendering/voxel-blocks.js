@@ -11,6 +11,41 @@ export const RULES = [
   [/_glass_pane$|^glass_pane$/, { k: "pane", c: "#cfe9f2", glass: 1, stained: 1 }],
   [/glass$/, { k: "cube", c: "#cfe9f2", glass: 1, stained: 1 }],
   [/^iron_bars$/, { k: "pane", c: "#6b6e70" }],
+  [/^flower_(\w+)$/, { k: "tuft", flowerc: 1 }],
+  [/^fire$/, { k: "small", c: "#ff8a2a", glow: 1 }],
+  [/^path$/, { k: "slab", c: "#9c8c64", h: 0.12 }],
+  [/^paving$/, { k: "slab", c: "#8b8b87", h: 0.14 }],
+  [/^paving_dark$/, { k: "slab", c: "#74746f", h: 0.14 }],
+  [/^soil_low$/, { k: "slab", c: "#55391f", h: 0.2 }],
+  [/^water_low$/, { k: "slab", c: "#3b6fb6", h: 0.14, glass: 1 }],
+  [/^sack$/, { k: "small", c: "#cdbd98" }],
+  [/^crate$/, { k: "cube", c: "#9a7442", c2: "#84612f" }],
+  [/^thatch$/, { k: "cube", c: "#a8904e" }],
+  [/^thatch_dark$/, { k: "cube", c: "#806a34" }],
+  [/^window$/, { k: "pane", c: "#86b6cf", glass: 1 }],
+  [/^apple_leaves$/, { k: "cube", c: "#b8362a" }],
+  [/^plaster$/, { k: "cube", c: "#d9cdb0" }],
+  [/^plaster_dark$/, { k: "cube", c: "#c2b392" }],
+  [/^target$/, { k: "cube", c: "#e3d9c6", c2: "#c0392b" }],
+  [/^pumpkin$/, { k: "small", c: "#d07a18" }],
+  [/^melon$/, { k: "small", c: "#6f9a26" }],
+  [/^beehive$/, { k: "cube", c: "#c9a14e", c2: "#a67c32" }],
+  [/^composter$/, { k: "cube", c: "#7a5a34" }],
+  [/^lectern$/, { k: "small", c: "#a58451" }],
+  [/^ladder$/, { k: "sign", c: "#8a6a3a", full: 1 }],
+  [/^scaffolding$/, { k: "fence", c: "#d9b56a" }],
+  [/^cobweb$/, { k: "skip" }],
+  [/^moss_block$/, { k: "cube", c: "#5b7030" }],
+  [/^packed_mud$/, { k: "cube", c: "#8e6a4f" }],
+  [/^calcite$/, { k: "cube", c: "#dcdcd6" }],
+  [/^tuff$/, { k: "cube", c: "#6c6d66" }],
+  [/^cracked_stone_bricks$/, { k: "cube", c: "#727272" }],
+  [/^mossy_stone_bricks$/, { k: "cube", c: "#6f7a64" }],
+  [/^mossy_cobblestone$/, { k: "cube", c: "#6a785c" }],
+  [/^gravel$/, { k: "cube", c: "#857f7c" }],
+  [/^coal_block$/, { k: "cube", c: "#191919" }],
+  [/^copper_block$/, { k: "cube", c: "#c06a4a" }],
+  [/^amethyst_block$/, { k: "cube", c: "#8a62c4" }],
   [/^chain$/, { k: "post", c: "#3a3f45", t: 0.1875 }],
   [/^lantern$|^soul_lantern$/, { k: "lamp", c: "#f2b94a", glow: 1 }],
   [/^campfire$|^soul_campfire$/, { k: "slab", c: "#c75b1b", glow: 1, h: 0.45 }],
@@ -54,7 +89,8 @@ export const RULES = [
   [/^crop_(\w+)$/, { k: "slab", h: 0.62, cropc: 1 }],
   [/^water$/, { k: "slab", c: "#3b6fb6", h: 0.85, glass: 1 }],
   [/_leaves$/, { k: "cube", leaf: 1 }],
-  [/_wool$|_carpet$/, { k: "cube", wool: 1 }],
+  [/_carpet$/, { k: "slab", wool: 1, h: 0.08 }],
+  [/_wool$/, { k: "cube", wool: 1 }],
   [/^banner_(\w+)$/, { k: "flag", banner: 1 }],
   [/^bookshelf$/, { k: "cube", c: "#6b4f2d", c2: "#a58451" }],
   [/^crafting_table$/, { k: "cube", c: "#8a5a2b" }],
@@ -66,6 +102,8 @@ export const RULES = [
   [/^terracotta$|^orange_terracotta$/, { k: "cube", c: "#a1583a" }],
   [/^red_terracotta$|^red_nether_bricks$|^nether_bricks$/, { k: "cube", c: "#7d3a2e" }],
   [/^hay_block$/, { k: "cube", c: "#b89a2a" }],
+  [/^(\w+)_terracotta$/, { k: "cube", terra: 1 }],
+  [/^(\w+)_concrete$/, { k: "cube", wool: 1, conc: 1 }],
   [/^air$|^cave_air$|^void_air$/, { k: "air" }],
 ];
 
@@ -87,6 +125,28 @@ export const WOOL = {
   lime: "#70b81a",
   magenta: "#b040b0",
   light_gray: "#9a9a94",
+};
+export const TERRA = {
+  white: "#d2b2a1",
+  red: "#8f3d2e",
+  orange: "#a1583a",
+  yellow: "#ba8523",
+  brown: "#4d3323",
+  light_gray: "#876b62",
+  gray: "#3a2a24",
+  cyan: "#565b5b",
+  blue: "#4a3c5b",
+  green: "#4c532a",
+  black: "#251610",
+  pink: "#a14e4e",
+};
+export const FLOWER = {
+  red: "#d8372b",
+  yellow: "#f0cf3a",
+  white: "#f1f1ea",
+  blue: "#4a74e0",
+  pink: "#ee8fc0",
+  orange: "#f08a1c",
 };
 export const LEAF = {
   oak: "#4d7a2c",
@@ -110,6 +170,19 @@ const FAM = [
   [/^mud_brick/, "#8a6a4a"],
   [/^purpur/, "#a77ba7"],
   [/^red_sandstone/, "#b5622a"],
+  [/^polished_blackstone|^blackstone/, "#2b262b"],
+  [/^(stripped_)?mangrove/, "#763630", "#7d3d36", "#54382a"],
+  [/^(stripped_)?cherry/, "#e2b3ac", "#e6bcb5", "#3a2530"],
+  [/^(stripped_)?crimson/, "#653147", "#6f3850", "#5a2a3e"],
+  [/^granite|^polished_granite/, "#95674f"],
+  [/^diorite|^polished_diorite/, "#bcbcbc"],
+  [/^tuff/, "#6c6d66"],
+  [/^thatch_dark/, "#806a34"],
+  [/^thatch/, "#a8904e"],
+  [/^red_tile/, "#8a3a2c"],
+  [/^blue_tile/, "#35507a"],
+  [/^green_tile/, "#3f6a4a"],
+  [/^exposed_cut_copper/, "#a07a66"],
   [/^(stripped_)?spruce/, "#735530", "#85683d", "#6b4f2d"],
   [/^(stripped_)?dark_oak/, "#43301a", "#4b3822", "#43301a"],
   [/^(stripped_)?oak/, "#a58451", "#b09258", "#9c7a44"],
@@ -170,7 +243,9 @@ export function defOf(full, unknown) {
       break;
     }
   if (r.stained) o.c = n.startsWith("white") ? "#cfe9f2" : WOOL[n.replace(/_stained_glass(_pane)?$/, "")] || "#cfe9f2";
-  else if (r.wool) o.c = WOOL[n.replace(/_(wool|carpet)$/, "")] || "#e8e8e8";
+  else if (r.wool) o.c = WOOL[n.replace(/_(wool|carpet|concrete)$/, "")] || "#e8e8e8";
+  else if (r.terra) o.c = TERRA[n.replace(/_terracotta$/, "")] || "#a1583a";
+  else if (r.flowerc) o.c = FLOWER[n.slice(7)] || "#d8372b";
   else if (r.leaf) o.c = LEAF[n.replace(/_leaves$/, "")] || "#4d7a2c";
   else if (r.cropc) o.c = CROP[n.slice(5)] || "#cfb44e";
   else if (r.banner) o.c = WOOL[n.slice(7)] || "#a8322a";
@@ -186,7 +261,8 @@ export function defOf(full, unknown) {
   if (r.glass) o.glass = 1;
   if (r.t) o.t = r.t;
   if (r.h) o.h = r.h;
-  for (const k of ["facing", "half", "type", "shape", "open", "hinge", "east", "west", "north", "south"])
+  if (r.full) o.full = 1;
+  for (const k of ["hanging", "facing", "half", "type", "shape", "open", "hinge", "east", "west", "north", "south"])
     if (s[k] !== undefined) o[k] = s[k];
   void base;
   return o;

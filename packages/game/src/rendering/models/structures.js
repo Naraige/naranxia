@@ -38,7 +38,7 @@ import {
   woodWallGeo,
 } from "./fortifications.js";
 import { PAL, thp } from "../../ui/kingdom-theme.js";
-import { VOXB, BPT } from "./voxel-buildings.js";
+import { BPT, fortOf, VOXB } from "./voxel-buildings.js";
 import { voxelGeo } from "../voxel-model.js";
 import { gOK } from "../../world/routes.js";
 import { occ } from "../../world/terrain-state.js";
@@ -311,7 +311,7 @@ export function scafGeo(w, d, h) {
 /* the block-built buildings: one cached geometry per type and tier, drawn at 1/BPT tile per block, filling the footprint from its corner */
 function voxGeo(s) {
   const B = VOXB[s.type],
-    v = B.variants ? (((s.tx * 7 + s.ty * 13) % B.variants) + B.variants) % B.variants : 0,
+    v = B.variants ? ((((s.tx | 0) * 7 + (s.ty | 0) * 13) % B.variants) + B.variants) % B.variants : 0,
     k = "vx" + s.type + (s.tier === 0 ? "w" : "s") + v;
   if (GEO[k]) return GEO[k];
   return (GEO[k] = voxelGeo(B.make(s.tier === 0 ? 0 : 1, v), { ox: B.ox || 0, oz: B.oz || 0, k: 1 / BPT }));
@@ -319,6 +319,14 @@ function voxGeo(s) {
 
 export function sGeo(s, m) {
   if (VOXB[s.type]) return voxGeo(s);
+  {
+    const F = fortOf(s, m, s.type === "tower" && !!s.weapon);
+    if (F) {
+      if (GEO["vf" + F.k]) return GEO["vf" + F.k];
+      const B = F.make();
+      return (GEO["vf" + F.k] = voxelGeo(B.M, { ox: B.o, oz: B.oz === undefined ? B.o : B.oz, k: 1 / BPT }));
+    }
+  }
   const MG =
       s.type === "house" ||
       s.type === "farm" ||

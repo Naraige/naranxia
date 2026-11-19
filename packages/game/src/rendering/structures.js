@@ -7,6 +7,7 @@ import { matV } from "./materials.js";
 import { icons3D } from "./model-icons.js";
 import { C5 } from "./models/castles.js";
 import { VOXB } from "./models/voxel-buildings.js";
+import { CASTLE_FLAG } from "./models/builds/military.js";
 import { doorGeo, doorGeoW, gtopOf } from "./models/fortifications.js";
 import {
   ballBolt,
@@ -109,8 +110,8 @@ export function buildStructMesh0(s) {
     const g3 = s.gl === 3,
       gk = g3 ? 1 : (s.gl || 2) / 2;
     (g3 ? [-1, 1] : [-0.74 * gk, 0.74 * gk]).forEach((x) => {
-      g.add(bpl(0.3, 0.62, x, g3 ? 1.55 : 1.15, g3 ? 0.457 : 0.435, 0));
-      g.add(bpl(0.3, 0.62, x, g3 ? 1.55 : 1.15, g3 ? -0.457 : -0.435, Math.PI));
+      g.add(bpl(0.3, 0.62, x, g3 ? 1.55 : 1.15, 0.51, 0));
+      g.add(bpl(0.3, 0.62, x, g3 ? 1.55 : 1.15, -0.51, Math.PI));
     });
     let d;
     if (s.tier === 0) {
@@ -243,7 +244,7 @@ export function buildStructMesh0(s) {
   }
   if (s.type === "castle" && VOXB.castle) {
     const fg = new THREE.Group();
-    fg.position.set(2.375, 5.75, 2.125);
+    fg.position.set(CASTLE_FLAG.x, CASTLE_FLAG.y, CASTLE_FLAG.z);
     fg.add(bpl(0.7, 0.9, 0.38, -0.45, 0, 0));
     g.add(fg);
     s.flag = fg;
