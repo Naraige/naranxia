@@ -6,6 +6,7 @@ import { drawBanner } from "./kingdom-banner.js";
 import { matV } from "./materials.js";
 import { icons3D } from "./model-icons.js";
 import { C5 } from "./models/castles.js";
+import { VOXB } from "./models/voxel-buildings.js";
 import { doorGeo, doorGeoW, gtopOf } from "./models/fortifications.js";
 import {
   ballBolt,
@@ -240,7 +241,13 @@ export function buildStructMesh0(s) {
         [-0.405, 0, -Math.PI / 2],
       ].forEach(([x, z, r]) => g.add(bpl(0.3, 0.5, x, 2.0, z, r)));
   }
-  if (s.type === "castle" && s.sz === 5) {
+  if (s.type === "castle" && VOXB.castle) {
+    const fg = new THREE.Group();
+    fg.position.set(2.375, 5.75, 2.125);
+    fg.add(bpl(0.7, 0.9, 0.38, -0.45, 0, 0));
+    g.add(fg);
+    s.flag = fg;
+  } else if (s.type === "castle" && s.sz === 5) {
     const st = s.tier !== 0,
       fg = new THREE.Group();
     fg.position.set(C5.kx, st ? C5.flag : C5.wflag, st ? C5.kz : 1.25);

@@ -298,11 +298,74 @@ function sappers(t) {
   return vb.model();
 }
 
+/* the castle: a walled yard with a gatehouse on the south (+z, the door side), four corner towers and a keep with a tall donjon and the flagpole.
+   20 x 20 blocks = the 5 x 5 tiles of the castle; the gate opening is 4 blocks wide at the middle of the south wall */
+function castle(t) {
+  const P = palette(t),
+    vb = model(20, 26, 20),
+    W = t ? "stone_bricks" : "spruce_planks";
+  vb.box(0, 0, 0, 19, 0, 19, "stone_bricks");
+  for (let x = 1; x < 19; x += 2) for (let z = 1; z < 19; z += 2) vb.set(x, 0, z, "cobblestone");
+  /* curtain wall with crenels */
+  vb.walls(0, 1, 0, 19, 5, 19, W);
+  for (let i = 0; i < 20; i++) {
+    vb.set(i, 6, 0, i % 2 ? 0 : W)
+      .set(i, 6, 19, i % 2 ? 0 : W)
+      .set(0, 6, i, i % 2 ? 0 : W)
+      .set(19, 6, i, i % 2 ? 0 : W);
+    vb.set(i, 5, 0, P.log).set(i, 5, 19, P.log).set(0, 5, i, P.log).set(19, 5, i, P.log);
+  }
+  /* corner towers and the two gatehouse towers */
+  for (const [x, z, h] of [
+    [0, 0, 10],
+    [16, 0, 10],
+    [0, 16, 10],
+    [16, 16, 10],
+    [5, 16, 8],
+    [11, 16, 8],
+  ])
+    tower(vb, P, x, z, x === 5 || x === 11 ? 4 : 4, 0, h, { wall: W, slit: false });
+  for (const [x, z] of [
+    [1, 1],
+    [17, 1],
+    [1, 17],
+    [17, 17],
+  ])
+    vb.set(x, 11, z, "lantern");
+  /* the gate: an opening 4 wide through the front wall and the gatehouse, an arch of beams above */
+  vb.box(8, 1, 16, 11, 5, 19, 0);
+  vb.box(8, 6, 16, 11, 6, 19, P.log).box(8, 5, 19, 11, 5, 19, P.log);
+  vb.set(7, 5, 20 - 1, "lantern").set(12, 5, 19, "lantern");
+  for (const x of [8, 11]) vb.set(x, 4, 19, `iron_bars`);
+  /* the keep: a hall between two turrets, a tall donjon behind its middle */
+  hall(vb, P, 5, 4, 14, 12, { fh: 5, floors: 2, door: false, win: true, roof: false, wall: W });
+  vb.box(5, 11, 4, 14, 11, 12, P.log);
+  for (let i = 5; i <= 14; i++) for (const z of [4, 12]) if (i % 2) vb.set(i, 12, z, W);
+  for (let z = 4; z <= 12; z++) for (const x of [5, 14]) if (z % 2 === 0) vb.set(x, 12, z, W);
+  tower(vb, P, 7, 5, 6, 11, 7, { wall: W, slit: false });
+  vb.hip(6, 4, 13, 12, 19, t ? "deepslate_tile_stairs" : "spruce_stairs", t ? "deepslate_tiles" : "spruce_planks");
+  vb.box(9, 20, 8, 9, 24, 8, "spruce_fence");
+  for (const x of [7, 12]) vb.set(x, 6, 13, "banner_blue[facing=south]").set(x, 7, 13, "banner_blue[facing=south]");
+  vb.set(9, 4, 13, "dark_oak_door[facing=south,half=lower]").set(9, 5, 13, "dark_oak_door[facing=south,half=upper]");
+  for (const [x, z] of [
+    [2, 6],
+    [3, 8],
+    [16, 7],
+    [17, 9],
+    [6, 15],
+    [13, 15],
+  ])
+    vb.set(x, 1, z, "barrel[facing=up]");
+  vb.box(1, 1, 12, 2, 1, 13, "hay_block").box(17, 1, 12, 17, 2, 13, "oak_planks");
+  return vb.model();
+}
+
 const FORGE_OFS = { ox: 0, oz: 1 };
 const forge = (t) => (t ? forgeStone : forgeWood);
 
 /* type -> { sz: tiles per side, make(tier) -> model, ox, oz: block offset inside the footprint } */
 export const VOXB = {
+  castle: { sz: 5, make: castle, flag: { x: 2.5, y: 6.5, z: 2.1 } },
   house: { sz: 3, make: house, variants: 3 },
   farm: { sz: 4, make: farm },
   storage: { sz: 4, make: storage },

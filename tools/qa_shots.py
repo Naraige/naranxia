@@ -27,7 +27,7 @@ GAME = """async()=>{let s=7;window.__RR=Math.random;Math.random=()=>{s=(s*16807)
  for(const R of RESP){R.g=900;R.w=700;R.s=500;R.f=300}
  const cast={x:CX*TS,y:CY*TS},ft=(x,y)=>freeTile(Math.round(x),Math.round(y));
  const SLOTS=[[-8,-1],[-8,5],[-13,2],[-13,8],[8,-1],[8,5],[13,2],[13,8]];
- ['barracks','market','guild','academy','tower','house','farm','tower'].forEach((t,i)=>{const sl=SLOTS[i],f=ft(CS.tx+2+sl[0],CS.ty+2+sl[1]);build(t,f[0],f[1]);const st=structs.filter(x=>x.type===t).pop();if(st){st.prog=1;st.hp=st.max}});
+ ['barracks','market','guild','academy','tower','house','farm','tower'].forEach((t,i)=>{const sl=SLOTS[i],f=freeSite(t,CS.tx+2+sl[0]*2,CS.ty+2+sl[1]*2,20);if(!f)return;build(t,f[0],f[1]);const st=structs.filter(x=>x.type===t).pop();if(st){st.prog=1;st.hp=st.max}});
  ['knight','spearman','archer','spearman','knight','spearman','archer','spearman','spearman','archer','king'].forEach((t,i)=>{units.push(mkU(0,t,cast.x+(-4+(i%6)*1.6)*TS,cast.y+(4+((i/6)|0)*1.6)*TS))});
  for(let dx=-48;dx<=48;dx+=16)for(let dy=-48;dy<=48;dy+=16)ensureAround(Math.max(1,Math.min(TW-2,CX+dx)),Math.max(1,Math.min(TW-2,CY+dy)),1);
  for(let i=0;i<40;i++)update(.1);

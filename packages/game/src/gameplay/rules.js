@@ -62,6 +62,7 @@ export const TRAIN = {
   SZ = { trebuchet: 2 },
   /* footprint, in tiles per side, of the block-built buildings (one tile = 4 blocks; see rendering/models/voxel-buildings.js); the others keep 2 */
   BSZ = {
+    castle: 5,
     house: 3,
     farm: 4,
     storage: 4,

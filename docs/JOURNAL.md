@@ -4,6 +4,10 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-19 · castle in blocks (unreleased)
+- Castle (5x5 tiles, wood/stone) is now a block build: curtain wall, 4 corner towers, gatehouse with gate, keep with donjon, animated flag on the pole. `VOXB.castle`, `BSZ.castle=5`; old banners/corner flags skipped.
+- Verified: voxel_buildings, save, det, mp8, mp_build, spearman, quests PASS. Still old style: keep, tower, wall, gate, ballista, trebuchet, torch.
+
 ## 2026-11-19 · every building drawn in blocks (phase 2), not released
 
 - The King handed over the rework of all buildings ("rework all building in that kind of style"). 18 buildings (house, farm, storage, barracks, academy, market, forester, guild, observatory, granary, bell, sanctuary, beacon, orchard, embassy, warroom, sappers, forge) are now Minecraft-style block builds: stairs roofs, timber frames, windows, lanterns, banners, stalls, fields, trees. One tile = 4 blocks (`BPT`), a model fills its footprint (`BSZ` in `gameplay/rules.js`, 3 to 6 tiles a side instead of 2). The forge is the King's smithy plan (pixl-5 timber, pixl-5-gray stone). Houses come in 3 looks by tile.
