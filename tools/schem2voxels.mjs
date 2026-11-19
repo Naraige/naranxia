@@ -8,7 +8,7 @@ import { defOf } from "./blocks.mjs";
 const crop = (process.argv.find((a) => a.startsWith("--crop=")) || "").slice(7).split(",").map(Number),
   [, , src, out, name] = process.argv.filter((a) => !a.startsWith("--crop="));
 if (!src || !out) {
-  console.error("usage: schem2voxels in.schem out.json [name]");
+  console.error("usage: schem2voxels in.schem out.json|out.js [name]");
   process.exit(1);
 }
 const s = readSchem(src),
@@ -54,22 +54,20 @@ for (let y = y0; y <= y1; y++)
     }
 if (defs.length > 255) throw new Error("too many block states");
 const solid = vox.reduce((a, v) => a + (v ? 1 : 0), 0);
-writeFileSync(
-  out,
-  JSON.stringify({
-    name:
-      name ||
-      src
-        .split("/")
-        .pop()
-        .replace(/\.schem$/, ""),
-    w,
-    h,
-    l,
-    defs,
-    vox: Buffer.from(vox).toString("base64"),
-  }),
-);
+const data = JSON.stringify({
+  name:
+    name ||
+    src
+      .split("/")
+      .pop()
+      .replace(/\.schem$/, ""),
+  w,
+  h,
+  l,
+  defs,
+  vox: Buffer.from(vox).toString("base64"),
+});
+writeFileSync(out, out.endsWith(".js") ? "export default " + data + ";\n" : data);
 console.log(
   out,
   w + "x" + h + "x" + l,

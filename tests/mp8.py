@@ -66,7 +66,7 @@ with sync_playwright() as p:
         A.evaluate("()=>{[MP.mine,MP.theirs]=window.__ab;mpStart()}");harness.flush(A,B)
         A.evaluate(REC);B.evaluate(REC);harness.observe(A,B)
         FIND="""(t)=>{const c=CURPL?CS2:CS;for(let r=5;r<26;r++)for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){
-          if(Math.max(Math.abs(dx),Math.abs(dy))!==r)continue;const x=c.tx+dx,y=c.ty+dy,tt=tilesFor(t,x,y,2);
+          if(Math.max(Math.abs(dx),Math.abs(dy))!==r)continue;const x=c.tx+dx,y=c.ty+dy,tt=tilesFor(t,x,y,BSZ[t]||2);
           if(tt.every(([i,j])=>gOK(i,j)&&valid(i,j)&&HT[j*TW+i]===HT[y*TW+x])){build(t,x,y);return[x,y]}}return null}"""
         for pg in (A,B):
             pg.evaluate("()=>roleAdj('b',3)")

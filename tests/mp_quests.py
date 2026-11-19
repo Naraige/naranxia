@@ -57,7 +57,7 @@ def wait(cond,sec,lbl):
             if cond(a) and cond(b):P(lbl,'ok after',round(time.time()-t0,1),'s tick',a['tick']);check();harness.check(lbl,True);return True
     check();P(lbl,'TIMEOUT','A',json.dumps(st(A)),'B',json.dumps(st(B)));harness.check(lbl,False);return False
 # the k-th free spot around the player's castle (the real build rules may still refuse a spot: place() then tries the next one)
-FIND="""([pl,t,k])=>{const c=pl?CS2:CS;let f=null,n=0;for(let r=5;r<16&&!f;r++)for(let a=0;a<24&&!f;a++){const x=Math.round(c.tx+Math.cos(a/24*6.283+1)*r),y=Math.round(c.ty+Math.sin(a/24*6.283+1)*r);const tt=tilesFor(t,x,y,2);if(tt.every(([i,j])=>gOK(i,j)&&valid(i,j))&&n++===k)f=[x,y]}if(!f)return 'nospot';build(t,f[0],f[1]);return JSON.stringify(f)}"""
+FIND="""([pl,t,k])=>{const c=pl?CS2:CS;let f=null,n=0;for(let r=5;r<16&&!f;r++)for(let a=0;a<24&&!f;a++){const x=Math.round(c.tx+Math.cos(a/24*6.283+1)*r),y=Math.round(c.ty+Math.sin(a/24*6.283+1)*r);const tt=tilesFor(t,x,y,BSZ[t]||2);if(tt.every(([i,j])=>gOK(i,j)&&valid(i,j))&&n++===k)f=[x,y]}if(!f)return 'nospot';build(t,f[0],f[1]);return JSON.stringify(f)}"""
 def place(pg,pl,t):
     for k in range(0,40,5):
         r=pg.evaluate(FIND,[pl,t,k]);has=lambda s:(t+':1.0') in s['p%d'%pl].split(' ')

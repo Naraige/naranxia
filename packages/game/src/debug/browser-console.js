@@ -35,7 +35,7 @@ import {
 import { openMenu, playAgain, quitGame, setStartGameHandler, startGame } from "../gameplay/lifecycle.js";
 import { LPL, playersState, setPl, setTier } from "../gameplay/players.js";
 import { pickLanes, reset } from "../gameplay/reset.js";
-import { C, LH, RS, RS2, RT2, rulesState, rxLock, T, TH, TRAIN, TS, TW, UPC } from "../gameplay/rules.js";
+import { BSZ, C, LH, RS, RS2, RT2, rulesState, rxLock, T, TH, TRAIN, TS, TW, UPC } from "../gameplay/rules.js";
 import { selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { simulationState } from "../gameplay/simulation.js";
@@ -75,6 +75,8 @@ import { toolGeos } from "../rendering/models/unit-parts.js";
 import { ZNV } from "../rendering/models/zombies.js";
 import { rs } from "../rendering/resolution.js";
 import { CAM, hemi, renderer, scene, sun } from "../rendering/scene.js";
+import { BPT, VOXB } from "../rendering/models/voxel-buildings.js";
+import { voxelGeo } from "../rendering/voxel-model.js";
 import { home as dbgHome, pickGround as dbgPickGround, scr as dbgScr } from "../rendering/camera.js";
 import { mpLost as dbgMpLost } from "../multiplayer/lockstep.js";
 import { buildStructMesh, setBuildStructMeshHandler } from "../rendering/structures.js";
@@ -400,6 +402,28 @@ export function installBrowserConsole() {
       },
     },
     portals: { get: () => sessionState.portals },
+    BSZ: { get: () => BSZ },
+    /* a tile (corner) where a building of this type fits: every tile free and flat, nearest to (x, y) */
+    freeSite: {
+      get:
+        () =>
+        (type, x, y, R = 30) => {
+          const z = BSZ[type] || 2;
+          for (let r = 0; r <= R; r++)
+            for (let dy = -r; dy <= r; dy++)
+              for (let dx = -r; dx <= r; dx++) {
+                if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+                const t = tilesFor(type, x + dx, y + dy, z);
+                if (!t.every(([i, j]) => gOK(i, j) && valid(i, j) && !occ.has(j * TW + i))) continue;
+                const hs = t.map(([i, j]) => HT[j * TW + i]);
+                if (Math.max(...hs) - Math.min(...hs) <= 1) return [x + dx, y + dy];
+              }
+          return null;
+        },
+    },
+    VOXB: { get: () => VOXB },
+    BPT: { get: () => BPT },
+    voxelGeo: { get: () => voxelGeo },
     nextL: {
       get: () => sessionState.nextL,
       set: (value) => {

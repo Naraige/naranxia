@@ -23,7 +23,7 @@ async () => {
   R.w = 500;
   R.s = 500;
   R.f = 500;
-  const f = freeTile(CS.tx + 7, CS.ty + 7);
+  const f = freeSite("market", CS.tx + 7, CS.ty + 7);
   build("market", f[0], f[1]);
   const m = structs[structs.length - 1];
   m.prog = 1;

@@ -17,7 +17,7 @@ import {
 } from "../gameplay/construction.js";
 import { ok } from "../gameplay/economy.js";
 import { HOMEC, stoneOn } from "../gameplay/players.js";
-import { C, RS, RS2, TH, TS, TW, UPC, WORK } from "../gameplay/rules.js";
+import { bsz, C, RS, RS2, TH, TS, TW, UPC, WORK } from "../gameplay/rules.js";
 import { selBs, selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { rampGroup, rampOK, tfOK } from "../gameplay/terraforming.js";
@@ -467,7 +467,8 @@ export let render3D = function render3D(dt) {
         if (sessionState.mode === "stairs") good = good && !!stairInfo(tx, ty);
         if (sessionState.mode === "path") good = good && pth[ty * TW + tx] < (RS.done ? 2 : 1);
         if (sessionState.mode === "barracks")
-          good = tilesFor("barracks", tx, ty, 2).every(([x, y]) => gOK(x, y) && valid(x, y)) && ok(C.barracks);
+          good =
+            tilesFor("barracks", tx, ty, bsz("barracks")).every(([x, y]) => gOK(x, y) && valid(x, y)) && ok(C.barracks);
         let hh =
           sessionState.mode === "farm"
             ? 0.9
@@ -586,7 +587,7 @@ export let render3D = function render3D(dt) {
           sessionState.mode === "warroom" ||
           sessionState.mode === "sappers"
         ) {
-          const t2 = tilesFor(sessionState.mode, tx, ty, 2),
+          const t2 = tilesFor(sessionState.mode, tx, ty, bsz(sessionState.mode)),
             hs2 = t2.map(([x, y]) => HT[y * TW + x]);
           good =
             t2.every(([x, y]) => gOK(x, y) && valid(x, y)) &&

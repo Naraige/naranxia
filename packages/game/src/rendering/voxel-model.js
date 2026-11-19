@@ -66,6 +66,8 @@ function boxesOf(d) {
     }
     case "door":
       return [facePlate(f, 3 * T16)];
+    case "flag":
+      return [facePlate(f, 2 * T16)];
     case "sign":
       return [facePlate(f, 2 * T16, 0.25, 0.75)];
     case "post": {
@@ -112,7 +114,8 @@ export function voxelGeo(M, opts = {}) {
       return i > 0 && defs[i - 1].k === "cube" && !defs[i - 1].glass;
     },
     ox = opts.ox === undefined ? -w / 2 : opts.ox,
-    oz = opts.oz === undefined ? -l / 2 : opts.oz;
+    oz = opts.oz === undefined ? -l / 2 : opts.oz,
+    k = opts.k || 1;
   for (let y = 0; y < h; y++)
     for (let z = 0; z < l; z++)
       for (let x = 0; x < w; x++) {
@@ -122,12 +125,12 @@ export function voxelGeo(M, opts = {}) {
           v = 0.94 + hash(x, y, z) * 0.12;
         for (const b of p.B) {
           const [a0, b0, c0, a1, b1, c1] = b,
-            X0 = ox + x + a0,
-            X1 = ox + x + a1,
-            Y0 = y + b0,
-            Y1 = y + b1,
-            Z0 = oz + z + c0,
-            Z1 = oz + z + c1;
+            X0 = (ox + x + a0) * k,
+            X1 = (ox + x + a1) * k,
+            Y0 = (y + b0) * k,
+            Y1 = (y + b1) * k,
+            Z0 = (oz + z + c0) * k,
+            Z1 = (oz + z + c1) * k;
           /* a face on the edge of its block is hidden when the block next to it is a full opaque cube */
           const show = [
             !(b1 >= 1 && opaque(x, y + 1, z)),

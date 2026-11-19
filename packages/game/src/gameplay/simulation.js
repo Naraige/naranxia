@@ -139,11 +139,11 @@ export function update0(dt) {
       selectionState.pendB = true;
       let w = 0;
       {
-        const Q = ugNear(0, s.x, s.y, TS * 2.6);
+        const dr = Math.max(TS * 2.6, s.rad + TS * 1.6),
+          Q = ugNear(0, s.x, s.y, dr);
         for (let q = 0; q < Q.length; q++) {
           const u = UGU[Q[q]];
-          if (u.t === 0 && u.type === "peasant" && u.job === "r" && !u.carry && dist(u.x, u.y, s.x, s.y) < TS * 2.6)
-            w++;
+          if (u.t === 0 && u.type === "peasant" && u.job === "r" && !u.carry && dist(u.x, u.y, s.x, s.y) < dr) w++;
         }
       }
       s.dp = (s.dp || 0) + dt * w * 1.4;
@@ -185,11 +185,12 @@ export function update0(dt) {
       if (!(s.unr > sessionState.time) && s.t === 0) selectionState.pendB = true;
       let w = 0;
       {
-        const Q = ugNear(0, s.x, s.y, TS * 2.4);
+        /* peasants work from the edge of the site: its half width plus a tile and a half (a 2x2 site: the old 2.4 tiles) */
+        const wr = Math.max(TS * 2.4, s.rad + TS * 1.6),
+          Q = ugNear(0, s.x, s.y, wr);
         for (let q = 0; q < Q.length; q++) {
           const u = UGU[Q[q]];
-          if (u.t === 0 && u.type === "peasant" && u.job === "r" && !u.carry && dist(u.x, u.y, s.x, s.y) < TS * 2.4)
-            w++;
+          if (u.t === 0 && u.type === "peasant" && u.job === "r" && !u.carry && dist(u.x, u.y, s.x, s.y) < wr) w++;
         }
       }
       if (!w && s.t === 0 && !simulationState.shelOn && !(s.unr > sessionState.time)) {

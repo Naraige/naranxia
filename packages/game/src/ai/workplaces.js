@@ -205,15 +205,17 @@ const pLive = (j) => {
 };
 
 function plantPick(u, s) {
-  const cx = s.tx + 1,
-    cy = s.ty + 1,
+  const cx = s.tx + (s.sz >> 1),
+    cy = s.ty + (s.sz >> 1),
     ux = Math.floor(u.x / TS),
     uy = Math.floor(u.y / TS),
     C = [];
   for (let dy = -FOR_R; dy <= FOR_R; dy++)
     for (let dx = -FOR_R; dx <= FOR_R; dx++) {
       const r2 = dx * dx + dy * dy;
-      if (r2 < 5 || r2 > FOR_R * FOR_R + 2) continue;
+      if (r2 > FOR_R * FOR_R + 2) continue;
+      /* not on the building or its walls */
+      if (cx + dx >= s.tx - 1 && cx + dx <= s.tx + s.sz && cy + dy >= s.ty - 1 && cy + dy <= s.ty + s.sz) continue;
       const i = (cy + dy) * TW + cx + dx;
       const rv = PRES.get(i);
       if (rv && rv !== u && rv.hp > 0 && rv.pt === i) continue;
@@ -239,7 +241,8 @@ export function relPt(u) {
 
 function forHome(u, s, dt) {
   u.work = 0;
-  if (dist(u.x, u.y, s.x, s.y) > TS * 2.2) stepF(u, gField("s" + s.ty * TW + s.tx, s.tx, s.ty, s.sz), s.x, s.y, dt);
+  if (dist(u.x, u.y, s.x, s.y) > s.rad + TS * 1.2)
+    stepF(u, gField("s" + s.ty * TW + s.tx, s.tx, s.ty, s.sz), s.x, s.y, dt);
 }
 
 export function forester(u, dt) {

@@ -38,7 +38,7 @@ async () => {
   let bk = null;
   for (let a = 0; a < 40 && !bk; a++) {
     const n0 = structs.length,
-      f = freeTile(CS.tx + 7 + (a % 5) * 4, CS.ty + 7 + ((a / 5) | 0) * 4);
+      f = freeSite("barracks", CS.tx + 7 + (a % 5) * 8, CS.ty + 7 + ((a / 5) | 0) * 8, 25);
     build("barracks", f[0], f[1]);
     if (structs.length > n0) bk = structs[structs.length - 1];
   }

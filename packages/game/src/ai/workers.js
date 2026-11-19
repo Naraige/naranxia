@@ -24,6 +24,9 @@ import { D8, gOK } from "../world/routes.js";
 import { amt, ter } from "../world/terrain-state.js";
 import { canStep, fv, solid } from "../world/traversal.js";
 
+/* when a building last told the local player it cannot be reached (display only: kept off the structure, which is hashed and sent to the other machine) */
+const UNMSG = new WeakMap();
+
 export function peasant(u, dt) {
   if (u.cv) {
     convoyStep(u, dt);
@@ -363,8 +366,8 @@ function peasant0(u, dt) {
             b.unr = sessionState.time + 45;
             u.rb = null;
             u.work = 0;
-            if ((b.pl | 0) === LPL() && !(b.unm > sessionState.time)) {
-              b.unm = sessionState.time + 40;
+            if ((b.pl | 0) === LPL() && !(UNMSG.get(b) > sessionState.time)) {
+              UNMSG.set(b, sessionState.time + 40);
               hudDisplayState.msgS =
                 (b.prog < 1 ? "A construction site" : "The " + (NAMES[b.type] || "building")) +
                 " cannot be reached by your peasants";

@@ -18,6 +18,7 @@ const browserNames = [
   "frame_guard",
   "map_size",
   "portals",
+  "voxel_buildings",
   "mp_side",
   "bastion",
   "research",
@@ -74,7 +75,7 @@ export const suite = Object.fromEntries([
 ]);
 const purposes = {
   smoke: "Packed loader, starting rules, ramp paths, wave spawning and real rendered pixels",
-  det: "Repeated 6000-tick simulation with pinned v94 reference fingerprints",
+  det: "Repeated 6000-tick simulation with pinned reference fingerprints",
   features: "Seasons, trap/oil damage, boss, King skills, statistics, records and co-op goals",
   spearman: "Training costs, reach, exact damage, camp composition and keyboard migration",
   kingxp: "King XP sources, talent requirements, skill effects and historical save fields",
@@ -84,6 +85,7 @@ const purposes = {
   ruins: "Ruin discovery, claim reward and save registration",
   events: "Event choices, deadlines, payouts, camp traits, renown and state assignment",
   mp_rematch: "Co-op rematch: Play again returns both players to the lobby and a second game runs in step",
+  voxel_buildings: "Block-built buildings: footprints match the models, every block is known, geometry builds",
   portals: "Horde portals: one per lane, opened by its first horde, saved and restored",
   map_size: "World size: zombie lanes start within the chosen distance, Large keeps the whole world",
   frame_guard: "A frame that throws does not stop the loop and tells the player once",
@@ -134,6 +136,7 @@ export const tiers = {
     "frame_guard",
     "map_size",
     "portals",
+    "voxel_buildings",
     "mp_side",
     "trap_controls",
     "kingxp",

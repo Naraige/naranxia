@@ -60,9 +60,31 @@ export const TRAIN = {
   },
   BT = { barracks: 40, wall: 8, gate: 14, tower: 34, ballista: 24, trebuchet: 46 },
   SZ = { trebuchet: 2 },
+  /* footprint, in tiles per side, of the block-built buildings (one tile = 4 blocks; see rendering/models/voxel-buildings.js); the others keep 2 */
+  BSZ = {
+    house: 3,
+    farm: 4,
+    storage: 4,
+    barracks: 6,
+    academy: 5,
+    market: 5,
+    forester: 4,
+    guild: 5,
+    observatory: 4,
+    granary: 4,
+    bell: 3,
+    sanctuary: 5,
+    beacon: 3,
+    orchard: 5,
+    embassy: 5,
+    warroom: 5,
+    sappers: 4,
+    forge: 6,
+  },
   GCAP = { wall: 1, gate: 2, tower: 3 },
   GRNG = { wall: 1.6, gate: 1.6, tower: 2.3 },
   GTOP = { wall: 1.8, gate: 2.1, tower: 3.28 };
+export const bsz = (type) => BSZ[type] || 2;
 
 export const CWOOD = { wall: { w: 12 }, gate: { w: 25 }, tower: { w: 50 }, barracks: { w: 100 }, path: { w: 3 } },
   CSTONE = {

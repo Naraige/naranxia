@@ -6,7 +6,7 @@ import { doUpgrade, ok, pay } from "./economy.js";
 import { mk } from "./entities.js";
 import { ungar } from "./formations.js";
 import { HOMEC, LPL, playersState, stoneOn } from "./players.js";
-import { C, DIR4, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
+import { bsz, C, DIR4, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { sessionState } from "./session.js";
 import { demolish, rampGroup, tfOrder } from "./terraforming.js";
@@ -108,10 +108,17 @@ export function placeErr(type, tx, ty) {
         return "Only one " + UNIQB[type] + " per kingdom";
   }
   if (type === "forester") {
-    const cx = tx + 1,
-      cy = ty + 1;
+    const h = bsz("forester") / 2,
+      cx = tx + h,
+      cy = ty + h;
     for (const s of sessionState.structs)
-      if (s.t === 0 && s.type === "forester" && s.hp > 0 && Math.hypot(s.tx + 1 - cx, s.ty + 1 - cy) < 2 * FOR_R + 1)
+      if (
+        s.t === 0 &&
+        s.type === "forester" &&
+        s.hp > 0 &&
+        (s.pl | 0) === (playersState.CURPL | 0) &&
+        Math.hypot(s.tx + h - cx, s.ty + h - cy) < 2 * FOR_R + 1
+      )
         return "Too close to another forester: their planting areas would touch";
   }
   return "";
@@ -387,13 +394,14 @@ export let build = function build(type, tx, ty) {
         return;
       }
     }
-    const t = tilesFor(type, tx, ty, 2);
+    const bz = bsz(type),
+      t = tilesFor(type, tx, ty, bz);
     if (!t.every(([x, y]) => gOK(x, y) && valid(x, y))) return;
     const hs = t.map(([x, y]) => HT[y * TW + x]);
     if (Math.max(...hs) - Math.min(...hs) > 2) return;
     pay(C[type]);
-    levelGround(tx, ty, 2, Math.max(...hs));
-    const s = mk(0, type, tx, ty, 2, false);
+    levelGround(tx, ty, bz, Math.max(...hs));
+    const s = mk(0, type, tx, ty, bz, false);
     addStruct(s);
     refreshNear(s);
     puff(s.x, s.y, "#c9c4b6", 10, 70, { soft: 1, T: 1, s: 0.4, z: 0.3, vz: 0.7, g: -0.3 });

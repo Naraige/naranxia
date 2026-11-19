@@ -36,7 +36,7 @@ async () => {
       ["forester", -12, 2],
       ["guild", -4, 10],
     ]) {
-      const f = freeTile(Math.round(CX + fx * a - fy * b), Math.round(CY + fy * a + fx * b));
+      const f = freeSite(t, Math.round(CX + fx * a - fy * b), Math.round(CY + fy * a + fx * b), 14);
       if (!f) continue;
       const m = structs.length;
       _N.build(t, f[0], f[1]);
@@ -160,17 +160,17 @@ async () => {
     same = JSON.stringify(a) === JSON.stringify(b);
   // Captured from the v95 polish lots (lot A: route reach 112 tiles, contour spread of crowded hordes, terrain-aware lane routes #30, spawn patch that widens with the wave size, weighted unit separation with body block), identical on two runs: v94 release branch (main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix, spike removal) plus route bending.
   const expected = [
-    "1891460740:21750:7:0:1084:0.9614:sh9:nl0.91:f150:sp0:ro00:wk0:T-749632464:z132:pu1:fg0:fp7",
-    "-2090582412:26000:8:0:1090:0.9768:sh9:nl0.98:f150:sp0:ro00:wk0:T1934999151:z131:pu0:fg0:fp7",
-    "-1140946158:26000:8:0:1090:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T1934999151:z131:pu0:fg0:fp7",
-    "-1266637329:26000:8:0:1090:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T1934999151:z131:pu0:fg0:fp7",
-    "1914514732:26000:9:0:1093:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T1934999151:z130:pu0:fg0:fp7",
-    "1705287790:26000:24:0:1138:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T1934999151:z115:pu0:fg0:fp7",
-    "466752911:25953:83:0:1173:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-1956941577:z103:pu0:fg0:fp7",
-    "-976910556:25833:218:0:1332:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T-1956941577:z89:pu2:fg0:fp6",
+    "-701341155:21750:8:0:1090:0.9614:sh9:nl0.91:f150:sp0:ro00:wk0:T-362253428:z131:pu0:fg1:fp0",
+    "-325683475:26000:8:0:1090:0.9768:sh9:nl0.98:f150:sp0:ro00:wk0:T-362253428:z131:pu0:fg0:fp0",
+    "1506748410:26000:8:0:1090:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T-362253428:z131:pu0:fg0:fp0",
+    "1674001854:26000:8:0:1090:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T-362253428:z131:pu0:fg0:fp0",
+    "-237257509:26000:11:0:1099:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T-362253428:z129:pu0:fg0:fp0",
+    "-627670301:25988:43:0:1158:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-362253428:z109:pu0:fg0:fp0",
+    "226020560:25908:144:0:1209:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T40773140:z88:pu0:fg0:fp0",
+    "1135062242:25813:263:0:1389:0.9982:sh9:nl1.00:f200:sp0:ro00:wk0:T-266710129:z66:pu1:fg0:fp0",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   __test.check("repeated simulation fingerprints", a, b);
-  __test.check("pinned v94 fingerprints", a, expected);
+  __test.check("pinned fingerprints (re-pinned with the block-built buildings)", a, expected);
   return JSON.stringify({ ok: same && reference, same, reference, a, b });
 };

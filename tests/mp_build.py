@@ -34,9 +34,9 @@ ST="()=>JSON.stringify({tick:MP.tick,ep:MP.ep,ds:MP.desync,pl:CURPL,cs:[CS.tx,CS
 SL="()=>JSON.stringify(structs.map(s=>[s.sid,s.type,s.tx,s.ty,s.pl|0,s.t,!!s.o3,(s.tiles||[]).length]))"
 # free ground for a 2x2 building near the player's own castle (flat, nothing on it), a few tiles apart
 SPOTS="""(n)=>{const me=CURPL?CS2:CS,ot=CURPL?CS:CS2,out=[];
- for(let r=5;r<22&&out.length<n;r++)for(let j=-r;j<=r&&out.length<n;j++)for(let i=-r;i<=r&&out.length<n;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=me.tx+2+i,ty=me.ty+2+j;
-  let free=true;for(let b=-1;b<=2&&free;b++)for(let a=-1;a<=2&&free;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])free=false}
-  if(!free||out.some(u=>Math.abs(u.tx-tx)<5&&Math.abs(u.ty-ty)<5))continue;out.push({tx,ty,dMe:Math.round(Math.hypot(tx-me.tx,ty-me.ty)),dOt:Math.round(Math.hypot(tx-ot.tx,ty-ot.ty))})}
+ for(let r=5;r<34&&out.length<n;r++)for(let j=-r;j<=r&&out.length<n;j++)for(let i=-r;i<=r&&out.length<n;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=me.tx+2+i,ty=me.ty+2+j;
+  if(Math.hypot(tx-me.tx,ty-me.ty)>=Math.hypot(tx-ot.tx,ty-ot.ty))continue;let free=true;for(let b=-1;b<=6&&free;b++)for(let a=-1;a<=6&&free;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])free=false}
+  if(!free||out.some(u=>Math.abs(u.tx-tx)<7&&Math.abs(u.ty-ty)<7))continue;out.push({tx,ty,dMe:Math.round(Math.hypot(tx-me.tx,ty-me.ty)),dOt:Math.round(Math.hypot(tx-ot.tx,ty-ot.ty))})}
  return JSON.stringify(out)}"""
 UNDER="(p)=>{const g=pickGround(p[0]*cv.width/innerWidth,p[1]*cv.height/innerHeight);return g?[Math.floor(g.x),Math.floor(g.z)]:null}"
 KINDS=['house','farm','storage','barracks','academy','market','forester','guild','tower','wall','path','gate']
@@ -148,9 +148,9 @@ with sync_playwright() as p:
     # ---- the way the King plays: other window sizes, a turned and zoomed camera, drags, a pause, a moved castle, a click during a resync ----
     # every click is checked three ways: the tile under the mouse on the player's screen, the tile in the command that left (mpPush), the structure on both machines
     SPOTSAT="""(a)=>{const c=a[0]?CS2:CS,out=[];
-     for(let r=a[1];r<a[1]+18&&out.length<a[2];r++)for(let j=-r;j<=r&&out.length<a[2];j++)for(let i=-r;i<=r&&out.length<a[2];i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=c.tx+2+i,ty=c.ty+2+j;
-      let free=true;for(let b=-1;b<=2&&free;b++)for(let a=-1;a<=2&&free;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])free=false}
-      if(!free||out.some(u=>Math.abs(u.tx-tx)<4&&Math.abs(u.ty-ty)<4))continue;out.push({tx,ty})}
+     for(let r=a[1];r<a[1]+30&&out.length<a[2];r++)for(let j=-r;j<=r&&out.length<a[2];j++)for(let i=-r;i<=r&&out.length<a[2];i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=c.tx+2+i,ty=c.ty+2+j;
+      let free=true;for(let b=-1;b<=6&&free;b++)for(let a=-1;a<=6&&free;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])free=false}
+      if(!free||out.some(u=>Math.abs(u.tx-tx)<7&&Math.abs(u.ty-ty)<7))continue;out.push({tx,ty})}
      return JSON.stringify(out)}"""
     PXOF="(q)=>{const v=scr(q[0]+1,HT[q[1]*TW+q[0]],q[1]+1);return[v.x/inputState.DPR,v.y/inputState.DPR,v.ok]}"
     NEWS="(a)=>JSON.stringify(structs.filter(s=>s.t===0&&s.type===a[0]&&!a[1].includes(s.sid)).map(s=>[s.sid,s.tx,s.ty,s.pl|0,!!s.o3]))"

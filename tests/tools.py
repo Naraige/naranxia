@@ -17,7 +17,7 @@ with sync_playwright() as p:
      devAct('rsch');O.rsch=Object.values(RS2.done).every(x=>x)&&RS.done;
      const z0=units.filter(u=>u.t===1).length;devAct('zomb');devAct('brute');O.spawned=units.filter(u=>u.t===1).length-z0;
      devAct('wave');O.waveT=waveT;for(let i=0;i<4;i++)update(.05);O.waveOn=waveOn;
-     (()=>{for(let r=0;r<14;r++)for(let q=0;q<14;q++){const x=CS.tx+4+r,y=CS.ty-6+q;if(tilesFor('house',x,y,2,0,0).every(([i,j])=>gOK(i,j)&&valid(i,j)&&!occ.has(j*TW+i))){build('house',x,y);return}}})();const nb=structs.filter(q=>q.t===0&&q.prog<1).length;devAct('build');O.built=[nb,structs.filter(q=>q.t===0&&q.prog<1).length];
+     (()=>{for(let r=0;r<14;r++)for(let q=0;q<14;q++){const x=CS.tx+4+r,y=CS.ty-6+q;if(tilesFor('house',x,y,BSZ.house,0,0).every(([i,j])=>gOK(i,j)&&valid(i,j)&&!occ.has(j*TW+i))){build('house',x,y);return}}})();const nb=structs.filter(q=>q.t===0&&q.prog<1).length;devAct('build');O.built=[nb,structs.filter(q=>q.t===0&&q.prog<1).length];
      const k=units.find(u=>u.t===0);k.hp=1;devAct('heal');O.healed=k.hp===T[k.type].hp;
      devAct('kill');for(let i=0;i<3;i++)update(.05);O.left=units.filter(u=>u.t===1&&u.hp>0).length+SW.n;
      devAct('spd');O.spd=spd;devAct('spd');devAct('spd');devAct('spd');O.spd2=spd;

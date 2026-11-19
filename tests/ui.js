@@ -444,7 +444,7 @@ async () => {
     };
     let b = null;
     for (let k = 0; k < 60 && !b; k++) {
-      const f = freeTile(CS.tx + 12 + (k % 6) * 3, CS.ty - 9 + ((k / 6) | 0) * 3),
+      const f = freeSite("barracks", CS.tx + 12 + (k % 6) * 3, CS.ty - 9 + ((k / 6) | 0) * 3, 4),
         m = structs.length;
       if (f) build("barracks", f[0], f[1]);
       if (structs.length > m) {

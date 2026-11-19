@@ -71,7 +71,7 @@ async () => {
     for (let i = -r; i <= r && !placed; i += 3) {
       const tx = CS2.tx + 2 + i,
         ty = CS2.ty + 2 + r;
-      if (!valid(tx, ty) || !valid(tx + 1, ty + 1)) continue;
+      if (!freeSite("house", tx, ty, 0)) continue;
       build("house", tx, ty);
       if (structs.length > n0) placed = structs[structs.length - 1];
     }

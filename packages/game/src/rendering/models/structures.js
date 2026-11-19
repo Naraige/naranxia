@@ -38,6 +38,8 @@ import {
   woodWallGeo,
 } from "./fortifications.js";
 import { PAL, thp } from "../../ui/kingdom-theme.js";
+import { VOXB, BPT } from "./voxel-buildings.js";
+import { voxelGeo } from "../voxel-model.js";
 import { gOK } from "../../world/routes.js";
 import { occ } from "../../world/terrain-state.js";
 
@@ -306,7 +308,17 @@ export function scafGeo(w, d, h) {
   return toGeo(G);
 }
 
+/* the block-built buildings: one cached geometry per type and tier, drawn at 1/BPT tile per block, filling the footprint from its corner */
+function voxGeo(s) {
+  const B = VOXB[s.type],
+    v = B.variants ? (((s.tx * 7 + s.ty * 13) % B.variants) + B.variants) % B.variants : 0,
+    k = "vx" + s.type + (s.tier === 0 ? "w" : "s") + v;
+  if (GEO[k]) return GEO[k];
+  return (GEO[k] = voxelGeo(B.make(s.tier === 0 ? 0 : 1, v), { ox: B.ox || 0, oz: B.oz || 0, k: 1 / BPT }));
+}
+
 export function sGeo(s, m) {
+  if (VOXB[s.type]) return voxGeo(s);
   const MG =
       s.type === "house" ||
       s.type === "farm" ||

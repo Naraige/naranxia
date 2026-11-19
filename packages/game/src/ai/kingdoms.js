@@ -6,7 +6,7 @@ import { mk, mkU } from "../gameplay/entities.js";
 import { garrison, garSlot, ungar } from "../gameplay/formations.js";
 import { chase, moveTo } from "../gameplay/movement.js";
 import { BAD, CASTLES, fdist, playersState } from "../gameplay/players.js";
-import { GCAP, GET, GRNG, SH, T, TH, TS, TW, WORK } from "../gameplay/rules.js";
+import { bsz, GCAP, GET, GRNG, SH, T, TH, TS, TW, WORK } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { targetZ } from "../gameplay/swarm.js";
 import { puff } from "../rendering/effects.js";
@@ -410,7 +410,7 @@ function updateBases(D) {
    farms, builds houses, a barracks, towers, then walls and stone, trains an army and holds off the hordes.
    They are on your side against the dead; when a castle falls its people turn. Everything runs in the simulation (co-op safe). */
 const AIK_N = 4,
-  AIR = 11,
+  AIR = 20,
   AIC = {
     house: { w: 40 },
     farm: { w: 30 },
@@ -628,13 +628,15 @@ function aiTileOK(x, y) {
   return ter[q] === 0 && !occ.has(q) && !stairs.has(q) && !pth[q] && !(AIB && AIB.includes(q));
 }
 
-/* a 2x2 spot inside the ring (on a 3-tile grid, so lanes stay open), else just outside it */
+/* a spot for a building of this type (bsz tiles square) inside the ring (on a grid one tile wider than the building, so lanes stay open), else just outside it */
 function aiSpot(b, type) {
   const cx = b.tx,
     cy = b.ty,
+    z = bsz(type),
+    st = z + 1,
     C = [];
-  for (let dy = -AIR + 2; dy <= AIR - 3; dy += 3)
-    for (let dx = -AIR + 2; dx <= AIR - 3; dx += 3) {
+  for (let dy = -AIR + 2; dy <= AIR - z - 1; dy += st)
+    for (let dx = -AIR + 2; dx <= AIR - z - 1; dx += st) {
       if (Math.abs(dx) <= 3 && Math.abs(dy) <= 3) continue;
       C.push([cx + dx, cy + dy, 0]);
     }
@@ -649,8 +651,8 @@ function aiSpot(b, type) {
     let ok = true,
       mn = 99,
       mx = 0;
-    for (let j = 0; j < 2 && ok; j++)
-      for (let i = 0; i < 2; i++) {
+    for (let j = 0; j < z && ok; j++)
+      for (let i = 0; i < z; i++) {
         if (!aiTileOK(x + i, y + j)) {
           ok = false;
           break;
@@ -660,22 +662,19 @@ function aiSpot(b, type) {
         mx = Math.max(mx, h);
       }
     if (!ok || mx - mn > 1) continue;
-    for (const [dx, dy] of [
-      [-1, 0],
-      [2, 0],
-      [0, -1],
-      [0, 2],
-      [-1, 1],
-      [2, 1],
-      [1, -1],
-      [1, 2],
-    ]) {
-      const o = occ.get((y + dy) * TW + x + dx);
-      if (o && o.type !== "house" && o.type !== "wall") {
-        ok = false;
-        break;
+    for (let k = 0; k < z && ok; k++)
+      for (const [dx, dy] of [
+        [-1, k],
+        [z, k],
+        [k, -1],
+        [k, z],
+      ]) {
+        const o = occ.get((y + dy) * TW + x + dx);
+        if (o && o.type !== "house" && o.type !== "wall") {
+          ok = false;
+          break;
+        }
       }
-    }
     if (!ok) continue;
     return [x, y, mx];
   }
@@ -686,7 +685,7 @@ function aiPlace(b, type, x, y, h, ax) {
   if (type === "gate") {
     /* Gates keep the existing ground height. */
   } else if (type === "tower" || type === "wall") levelGround(x, y, 1, HT[y * TW + x]);
-  else levelGround(x, y, 2, h);
+  else levelGround(x, y, bsz(type), h);
   const pv = playersState.CURPL;
   playersState.CURPL = 0;
   let s;
@@ -694,7 +693,7 @@ function aiPlace(b, type, x, y, h, ax) {
     s =
       type === "gate"
         ? mk(2, "gate", x, y, 1, false, ax, 2)
-        : mk(2, type, x, y, type === "tower" || type === "wall" ? 1 : 2, false);
+        : mk(2, type, x, y, type === "tower" || type === "wall" ? 1 : bsz(type), false);
   } finally {
     playersState.CURPL = pv;
   }

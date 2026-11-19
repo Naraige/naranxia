@@ -3,7 +3,7 @@ import { GROWT, SAPL } from "../ai/workplaces.js";
 import { rngf } from "../core/random.js";
 import { constructionState, tilesFor } from "../gameplay/construction.js";
 import { HOMEC, stoneOn } from "../gameplay/players.js";
-import { ROTT, TH, TS, TW } from "../gameplay/rules.js";
+import { bsz, ROTT, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { fowSeenAt } from "./fog.js";
 import { bxc, newG, quad, shade, toGeo } from "./geometry.js";
@@ -246,7 +246,7 @@ export function ghostMake(G, type, tx, ty, ax, good, alpha) {
             type === "warroom" ||
             type === "sappers" ||
             type === "keep"
-          ? 2
+          ? bsz(type)
           : 1,
     wd = !(stoneOn() && (type === "barracks" || type === "wall" || type === "gate" || type === "tower")),
     tier = buildPreviewState.GHO ? buildPreviewState.GHO.tier : wd ? 0 : 1,
