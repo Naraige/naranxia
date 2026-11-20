@@ -186,8 +186,8 @@ export const TR = {
   "Cancel current orders and stay here": "Mevcut emirleri iptal et ve burada kal",
   "Cannon": "Top",
   "Cannon [/]": "Top [/]",
-  "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)":
-    "Kale oraya taşınamaz (5x5 boş, 40 kare içinde, düz zemin)",
+  "Cannot move the castle there (20x20 free, within 40 tiles, flat ground)":
+    "Kale oraya taşınamaz (20x20 boş, 40 kare içinde, düz zemin)",
   "Cannot reshape this tile": "Bu kare şekillendirilemez",
   "Captain": "Yüzbaşı",
   "Castle health": "Kale sağlığı",

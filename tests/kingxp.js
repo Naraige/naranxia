@@ -146,12 +146,14 @@ async () => {
   units.push(fk);
   const hb = kn.hp;
   fk.bs = 0.01;
+  fk.cd = 9; /* the stomp alone: no bite of the brute in the same tick */
   update(0.05);
   const d1 = hb - kn.hp;
   const kn2 = mkU(0, "knight", kn.x, kn.y, null, -1);
   units.push(kn2);
   kn2.hp = 100;
   fk.bs = 0.01;
+  fk.cd = 9;
   update(0.05);
   const d2 = 100 - kn2.hp;
   chk("frostWard", d1 > 0 && d2 > 0 && d1 < d2 * 0.75);

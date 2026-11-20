@@ -225,7 +225,7 @@ export function gbwShow(type, o, aim, good) {
 export function ghostMake(G, type, tx, ty, ax, good, alpha) {
   const sz =
       type === "castle"
-        ? 5
+        ? bsz("castle")
         : type === "tower" ||
             type === "barracks" ||
             type === "farm" ||

@@ -45,6 +45,7 @@ M1 + B1 + H2, in that order: none of them breaks old saves, each has a clear tes
 
 - Phase 1 (portals): done, see journal. Not released.
 - Phase 2 (buildings from Minecraft plans): waiting for the King's files. Plan: `tools/schem2voxels` reads Sponge .schem, .litematic and vanilla .nbt (gzip NBT), maps block names to a colour table, writes compact voxel data per building; the renderer merges faces (culling hidden ones); the footprint is the schematic's X x Z in tiles (1 block = 1 tile).
+  Status 2026-11-20: scale decided by the King: one block of a building = one tile (buildings 4x larger, units unchanged), see the journal.
   Status 2026-11-19: importer done (forge = the King's plan); every other building and the fortifications are block builds designed in code with the kit (`models/voxel-kit.js`, `models/builds/`). More plans from the King replace a design by adding its file to `assets/builds/` and its entry in `VOXB`.
 - Phase 3 (block-by-block terrain): large; needs its own design (save and co-op hash compatibility) before any code.
 

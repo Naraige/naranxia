@@ -6,7 +6,7 @@ import { mk, mkU } from "../gameplay/entities.js";
 import { garrison, garSlot, ungar } from "../gameplay/formations.js";
 import { chase, moveTo } from "../gameplay/movement.js";
 import { BAD, CASTLES, fdist, playersState } from "../gameplay/players.js";
-import { bsz, GCAP, GET, GRNG, SH, T, TH, TS, TW, WORK } from "../gameplay/rules.js";
+import { bsz, CHALF, CSZ, GCAP, GET, GRNG, SH, T, TH, TS, TW, WORK } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { targetZ } from "../gameplay/swarm.js";
 import { puff } from "../rendering/effects.js";
@@ -410,7 +410,7 @@ function updateBases(D) {
    farms, builds houses, a barracks, towers, then walls and stone, trains an army and holds off the hordes.
    They are on your side against the dead; when a castle falls its people turn. Everything runs in the simulation (co-op safe). */
 const AIK_N = 4,
-  AIR = 20,
+  AIR = 60,
   AIC = {
     house: { w: 40 },
     farm: { w: 30 },
@@ -463,10 +463,10 @@ function aiInit() {
   }
 }
 
-/* a flat 7x7 spot near the chosen place, levelled for the castle */
+/* a spot near the chosen place where the castle fits with a tile to spare all round: cleared of trees and stone, levelled to its middle height */
 function aiFound(b) {
-  ensureAround(b.tx, b.ty, 1);
-  for (let r = 0; r <= 18; r += 2)
+  ensureAround(b.tx, b.ty, 3);
+  for (let r = 0; r <= 30; r += 3)
     for (let k = 0; k < Math.max(1, r * 4); k++) {
       const an = (k / Math.max(1, r * 4)) * 6.283,
         cx = Math.round(b.tx + Math.cos(an) * r),
@@ -475,8 +475,9 @@ function aiFound(b) {
         mn = 99,
         mx = 0;
       const hh = [];
-      for (let j = -3; j <= 3 && ok; j++)
-        for (let i = -3; i <= 3; i++) {
+      const F = CHALF + 1;
+      for (let j = -F; j <= F && ok; j++)
+        for (let i = -F; i <= F; i++) {
           const x = cx + i,
             y = cy + j,
             q = y * TW + x;
@@ -488,11 +489,11 @@ function aiFound(b) {
           mn = Math.min(mn, HT[q]);
           mx = Math.max(mx, HT[q]);
         }
-      if (!ok || mx - mn > 2) continue;
+      if (!ok || mx - mn > 3) continue;
       hh.sort((p, q) => p - q);
       const h0 = hh[hh.length >> 1];
-      for (let j = -3; j <= 3; j++)
-        for (let i = -3; i <= 3; i++) {
+      for (let j = -F; j <= F; j++)
+        for (let i = -F; i <= F; i++) {
           const q = (cy + j) * TW + cx + i;
           if (ter[q] >= 2 && ter[q] <= 4) {
             ter[q] = 0;
@@ -500,7 +501,7 @@ function aiFound(b) {
             mmTile(q);
           }
         }
-      levelGround(cx - 2, cy - 2, 5, h0);
+      levelGround(cx - CHALF, cy - CHALF, CSZ, h0);
       b.tx = cx;
       b.ty = cy;
       b.x = (cx + 0.5) * TS;
@@ -509,7 +510,7 @@ function aiFound(b) {
       playersState.CURPL = 0;
       let c;
       try {
-        c = mk(2, "castle", cx - 2, cy - 2, 5, true);
+        c = mk(2, "castle", cx - CHALF, cy - CHALF, CSZ, true);
       } finally {
         playersState.CURPL = pv;
       }
@@ -622,10 +623,16 @@ function aiRing(b) {
 }
 
 let AIB = null;
-function aiTileOK(x, y) {
+function aiTileOK(x, y, clear) {
   if (!gOK(x, y)) return false;
   const q = y * TW + x;
-  return ter[q] === 0 && !occ.has(q) && !stairs.has(q) && !pth[q] && !(AIB && AIB.includes(q));
+  return (
+    (ter[q] === 0 || (clear && ter[q] >= 2 && ter[q] <= 4)) &&
+    !occ.has(q) &&
+    !stairs.has(q) &&
+    (clear || !pth[q]) &&
+    !(AIB && AIB.includes(q))
+  );
 }
 
 /* a spot for a building of this type (bsz tiles square) inside the ring (on a grid one tile wider than the building, so lanes stay open), else just outside it */
@@ -633,11 +640,12 @@ function aiSpot(b, type) {
   const cx = b.tx,
     cy = b.ty,
     z = bsz(type),
-    st = z + 1,
+    /* block-built buildings differ in size, so they are tried every 4 tiles instead of on a grid of their own size (the ring of free tiles checked below keeps the lanes) */
+    st = z >= 12 ? 4 : z + 1,
     C = [];
   for (let dy = -AIR + 2; dy <= AIR - z - 1; dy += st)
     for (let dx = -AIR + 2; dx <= AIR - z - 1; dx += st) {
-      if (Math.abs(dx) <= 3 && Math.abs(dy) <= 3) continue;
+      if (dx > -(z + CHALF + 2) && dx < CHALF + 2 && dy > -(z + CHALF + 2) && dy < CHALF + 2) continue;
       C.push([cx + dx, cy + dy, 0]);
     }
   for (let k = 0; k < 40; k++) {
@@ -651,17 +659,21 @@ function aiSpot(b, type) {
     let ok = true,
       mn = 99,
       mx = 0;
+    const hh = [];
     for (let j = 0; j < z && ok; j++)
       for (let i = 0; i < z; i++) {
-        if (!aiTileOK(x + i, y + j)) {
+        if (!aiTileOK(x + i, y + j, z >= 12)) {
           ok = false;
           break;
         }
         const h = HT[(y + j) * TW + x + i];
+        hh.push(h);
         mn = Math.min(mn, h);
         mx = Math.max(mx, h);
       }
-    if (!ok || mx - mn > 1) continue;
+    if (!ok || mx - mn > 3) continue;
+    hh.sort((p, q) => p - q);
+    mx = hh[hh.length >> 1];
     for (let k = 0; k < z && ok; k++)
       for (const [dx, dy] of [
         [-1, k],
@@ -685,7 +697,20 @@ function aiPlace(b, type, x, y, h, ax) {
   if (type === "gate") {
     /* Gates keep the existing ground height. */
   } else if (type === "tower" || type === "wall") levelGround(x, y, 1, HT[y * TW + x]);
-  else levelGround(x, y, bsz(type), h);
+  else {
+    const z = bsz(type);
+    for (let j = 0; j < z; j++)
+      for (let i = 0; i < z; i++) {
+        const q = (y + j) * TW + x + i;
+        if (ter[q] >= 2 && ter[q] <= 4) {
+          ter[q] = 0;
+          amt[q] = 0;
+          mmTile(q);
+          markP(x + i, y + j);
+        }
+      }
+    levelGround(x, y, z, h);
+  }
   const pv = playersState.CURPL;
   playersState.CURPL = 0;
   let s;

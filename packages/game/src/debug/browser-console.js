@@ -13,7 +13,7 @@ import { GVER } from "../core/version.js";
 import { diagnosticsState, ERRLOG } from "./diagnostics.js";
 import { bugReport, devAct, devToggle } from "./tools.js";
 import { ach, ACH, TOASTS } from "../gameplay/achievements.js";
-import { build, constructionState, setBuildHandler, tilesFor, valid } from "../gameplay/construction.js";
+import { build, constructionState, setBuildHandler, siteFit, tilesFor, valid } from "../gameplay/construction.js";
 import { buy, economyState, FAT, PBASE, PRICE, priceTick, setTrainHandler, train } from "../gameplay/economy.js";
 import { mkU, spawnPos } from "../gameplay/entities.js";
 import { wavePreview } from "../gameplay/wave-preview.js";
@@ -408,20 +408,29 @@ export function installBrowserConsole() {
     freeSite: {
       get:
         () =>
-        (type, x, y, R = 30) => {
-          const z = BSZ[type] || 2;
+        (type, x, y, R = 70) => {
+          if (!BSZ[type]) {
+            for (let r = 0; r <= R; r++)
+              for (let dy = -r; dy <= r; dy++)
+                for (let dx = -r; dx <= r; dx++)
+                  if (
+                    Math.max(Math.abs(dx), Math.abs(dy)) === r &&
+                    gOK(x + dx, y + dy) &&
+                    valid(x + dx, y + dy) &&
+                    !occ.has((y + dy) * TW + x + dx)
+                  )
+                    return [x + dx, y + dy];
+            return null;
+          }
           for (let r = 0; r <= R; r++)
             for (let dy = -r; dy <= r; dy++)
-              for (let dx = -r; dx <= r; dx++) {
-                if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
-                const t = tilesFor(type, x + dx, y + dy, z);
-                if (!t.every(([i, j]) => gOK(i, j) && valid(i, j) && !occ.has(j * TW + i))) continue;
-                const hs = t.map(([i, j]) => HT[j * TW + i]);
-                if (Math.max(...hs) - Math.min(...hs) <= 1) return [x + dx, y + dy];
-              }
+              for (let dx = -r; dx <= r; dx++)
+                if (Math.max(Math.abs(dx), Math.abs(dy)) === r && siteFit(type, x + dx, y + dy) >= 0)
+                  return [x + dx, y + dy];
           return null;
         },
     },
+    siteFit: { get: () => siteFit },
     VOXB: { get: () => VOXB },
     fortOf: { get: () => fortOf },
     BPT: { get: () => BPT },

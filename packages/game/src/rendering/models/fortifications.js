@@ -1,4 +1,5 @@
 import { GTOP } from "../../gameplay/rules.js";
+import { FORT_TOP } from "./builds/walls.js";
 import { newG, toGeo } from "../geometry.js";
 import {
   bC,
@@ -436,6 +437,11 @@ export function woodTowerGeo2(m, op) {
 
 /* garrison height of a building: where its men really stand */
 export function gtopOf(s) {
+  /* block-built pieces: the top of their deck, in blocks (= tiles) */
+  if (s.type === "wall") return FORT_TOP.wall;
+  if (s.type === "gate") return FORT_TOP.gate;
+  if (s.type === "tower") return s.sz === 2 ? FORT_TOP.tower2 : FORT_TOP.tower;
+  if (s.type === "keep") return FORT_TOP.keep;
   const st = s.tier !== 0;
   if (s.type === "wall") return st ? WALLH + 0.07 : WDH + 0.06;
   if (s.type === "gate") return (s.gl || 2) === 3 ? (st ? 2.72 : 2.05) : 2.1;

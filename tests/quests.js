@@ -36,7 +36,7 @@ async () => {
     const done = (t, a, b0) => {
       const m = structs.length;
       for (let k = 0; k < 40 && structs.length === m; k++) {
-        const f = freeTile(CX + a + (k % 5) * 3 * (a < 0 ? -1 : 1), CY + b0 + ((k / 5) | 0) * 3 * (b0 < 0 ? -1 : 1));
+        const f = freeSite(t, CX + a + (k % 5) * 3 * (a < 0 ? -1 : 1), CY + b0 + ((k / 5) | 0) * 3 * (b0 < 0 ? -1 : 1));
         if (f) build(t, f[0], f[1]);
       }
       if (structs.length === m) {
@@ -367,7 +367,7 @@ async () => {
           randomSite();
           if (!pickPos || !pickPos.ok) continue;
           const d = Math.hypot(pickPos.tx - CX, pickPos.ty - CY);
-          if (d > 24 && d < 45) b = { tx: pickPos.tx, ty: pickPos.ty, rot: 0 };
+          if (d > 48 && d < 70) b = { tx: pickPos.tx, ty: pickPos.ty, rot: 0 };
         }
         SITE2 = b;
         reset();
@@ -388,9 +388,9 @@ async () => {
         r.l0 = convoyLinked();
         r.cur0 = qCur().id;
         r.ct = QST.ct > time + 29;
-        const cx = CS2.tx + 2,
-          cy = CS2.ty + 2,
-          rr = 11;
+        const cx = CS2.tx + (CS2.sz >> 1),
+          cy = CS2.ty + (CS2.sz >> 1),
+          rr = (CS2.sz >> 1) + 6; /* beyond the reach a convoy needs of a castle (CVE in multiplayer/convoys.js) */
         let n = 0;
         setPl(1);
         for (let i = -rr; i <= rr; i++)

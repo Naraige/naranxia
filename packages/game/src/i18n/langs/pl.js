@@ -187,8 +187,8 @@ export const PL = {
   "Cancel current orders and stay here": "Anuluj bieżące rozkazy i zostań tutaj",
   "Cannon": "Armata",
   "Cannon [/]": "Armata [/]",
-  "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)":
-    "Nie można tam przenieść zamku (5x5 wolne, w promieniu 40 pól, płaski teren)",
+  "Cannot move the castle there (20x20 free, within 40 tiles, flat ground)":
+    "Nie można tam przenieść zamku (20x20 wolne, w promieniu 40 pól, płaski teren)",
   "Cannot reshape this tile": "Nie można przekształcić tego pola",
   "Captain": "Kapitan",
   "Castle health": "Zdrowie zamku",

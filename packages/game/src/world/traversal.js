@@ -82,8 +82,9 @@ export const fv = (S, x, y) =>
       ? 65535
       : S.F[(y - S.y0) * S.w + x - S.x0];
 
+/* the nearest free tile, looking as far as just outside a castle (whose centre tile is what callers often pass) */
 export function freeTile(tx, ty) {
-  for (let r = 0; r <= 4; r++)
+  for (let r = 0; r <= 16; r++)
     for (let j = -r; j <= r; j++)
       for (let i = -r; i <= r; i++) {
         if (Math.max(Math.abs(i), Math.abs(j)) !== r) continue;
@@ -115,6 +116,24 @@ export function stairInfo(tx, ty) {
 export const LVO = new Map();
 
 export function levelGround(tx, ty, sz, h0) {
+  /* a block-built building is levelled to the middle height of a wide footprint, which may leave it up to 3 levels above or below the land beside it:
+     the three rings of free ground around it are graded one level per ring, so the site can be walked to from every side */
+  if (sz >= 12)
+    for (let d = 3; d >= 1; d--)
+      for (let j = ty - d; j < ty + sz + d; j++)
+        for (let i = tx - d; i < tx + sz + d; i++) {
+          if (i >= tx - d + 1 && i < tx + sz + d - 1 && j >= ty - d + 1 && j < ty + sz + d - 1) continue;
+          const k = j * TW + i;
+          if (!gOK(i, j) || ter[k] !== 0 || occ.has(k) || stairs.has(k)) continue;
+          const h = Math.max(h0 - d, Math.min(h0 + d, HT[k]));
+          if (h !== HT[k]) {
+            const lv = LVO.get(k);
+            LVO.set(k, { o: lv ? lv.o : HT[k], h });
+            HT[k] = h;
+            markT(i, j);
+          }
+          if (HT[k] !== h0 || d === 1) TFL[k] = 1;
+        }
   for (let j = ty - 1; j <= ty + sz; j++)
     for (let i = tx - 1; i <= tx + sz; i++) {
       const k = j * TW + i;

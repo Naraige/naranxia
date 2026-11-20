@@ -4,7 +4,7 @@ import { REALR } from "../core/random.js";
 import { valid } from "./construction.js";
 import { ok, pay } from "./economy.js";
 import { LPL, playersState } from "./players.js";
-import { RS2, TS, TW } from "./rules.js";
+import { edgeDist, RS2, TS, TW } from "./rules.js";
 import { sessionState } from "./session.js";
 import { ugNear, UGU } from "./spatial-index.js";
 import { SW, swSplash } from "./swarm.js";
@@ -144,7 +144,7 @@ export function trapTick(dt) {
         let n = 0;
         for (let q = 0; q < Q.length; q++) {
           const z = UGU[Q[q]];
-          if (z.t === 1 && z.hp > 0 && dist(z.x, z.y, s.x, s.y) < TS * 1.3 + (s.rad || 0)) {
+          if (z.t === 1 && z.hp > 0 && edgeDist(s, z.x, z.y) < TS * 1.3) {
             z.hp -= dm;
             z.hurt = 0.25;
             n++;

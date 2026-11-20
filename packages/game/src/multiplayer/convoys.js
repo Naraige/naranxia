@@ -2,7 +2,7 @@ import { snd } from "../audio/sound.js";
 import { dist } from "../core/math.js";
 import { walk } from "../gameplay/movement.js";
 import { LPL, playersState } from "../gameplay/players.js";
-import { TS } from "../gameplay/rules.js";
+import { CHALF, TS } from "../gameplay/rules.js";
 import { qNote } from "../gameplay/quests.js";
 import { sessionState } from "../gameplay/session.js";
 import { leaveSquad } from "../gameplay/squads.js";
@@ -28,7 +28,7 @@ function cvText(a) {
 }
 
 function cvGo(u, c) {
-  u.o = { x: c.x, y: c.y, g: mkG(c.tx + 2, c.ty + 2, u.x / TS, u.y / TS) };
+  u.o = { x: c.x, y: c.y, g: mkG(c.tx + (c.sz >> 1), c.ty + (c.sz >> 1), u.x / TS, u.y / TS) };
 }
 
 export function sendConvoy0(c) {
@@ -97,14 +97,15 @@ export function sendConvoy0(c) {
 }
 
 /* a porter is there within 4.6 tiles of the castle, or within 8 when its path ends there (castle on a ledge: the foot of it counts) */
-const CVN = 4.6,
-  CVE = 8,
+/* reach of a castle for its porters, from its centre: just outside its walls (CVN) and a little further (CVE) */
+const CVN = CHALF + 2.6,
+  CVE = CHALF + 6,
   CVW = 120,
   CVMAX = 900;
 
 /* a land route from the tile position (sx, sy) to within CVE - 1 tiles of the castle `to`: what the command asks of its first porter */
 function cvRoute(sx, sy, to) {
-  const g = mkG(to.tx + 2, to.ty + 2, sx, sy);
+  const g = mkG(to.tx + (to.sz >> 1), to.ty + (to.sz >> 1), sx, sy);
   g.mk();
   return !!g.S && !(g.alt && dist(g.alt.x, g.alt.y, to.x, to.y) > TS * (CVE - 1));
 }
@@ -119,8 +120,8 @@ export function convoyLinked() {
   const A = sessionState.CS,
     B = sessionState.CS2;
   if (!A || !B || A.hp <= 0 || B.hp <= 0) return false;
-  const fa = freeTile(A.tx + 2, A.ty + 2),
-    fb = freeTile(B.tx + 2, B.ty + 2);
+  const fa = freeTile(A.tx + (A.sz >> 1), A.ty + (A.sz >> 1)),
+    fb = freeTile(B.tx + (B.sz >> 1), B.ty + (B.sz >> 1));
   if (!fa || !fb) return false;
   const side = (S, f, p) => {
     if (fv(S, f[0], f[1]) < 65535) return true;

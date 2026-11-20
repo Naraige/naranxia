@@ -1,4 +1,5 @@
 import { GVER } from "../core/version.js";
+import { CSZ } from "../gameplay/rules.js";
 import { sessionState, worldSizePref } from "../gameplay/session.js";
 import { swarmState } from "../gameplay/swarm.js";
 import { L } from "../i18n/language.js";
@@ -14,7 +15,7 @@ import { rollWorld, setRollWorldHandler } from "../world/terrain.js";
 import { terrainState } from "../world/terrain-state.js";
 
 /* the two castles may stand side by side: only their 5x5 walls and the 3 tiles in front of each door must not overlap */
-export const sitesFar = (a, b) => !a || !b || Math.max(Math.abs(a.tx - b.tx), Math.abs(a.ty - b.ty)) >= 10;
+export const sitesFar = (a, b) => !a || !b || Math.max(Math.abs(a.tx - b.tx), Math.abs(a.ty - b.ty)) >= 2 * CSZ + 4;
 
 /* a solo (or left-over co-op) game is running while a co-op lobby is open: Play would replace it with a new world.
    The host must press Play twice (_runOk); the guest only gets a warning, since the host's "s" command starts the game on both machines. */

@@ -103,15 +103,14 @@ export function buildStructMesh0(s) {
     g.position.set(s.tx + 0.5, b, s.ty + 0.5);
     g.rotation.y = ROTT.has(s.type) && !s.weapon ? ((s.rot | 0) * Math.PI) / 2 : 0;
   } else g.position.set(s.tx, b, s.ty);
-  if (s.type === "gate" && s.gl !== 3) mesh.scale.x = (s.gl || 2) / 2;
   s.door = null;
   s.flag = null;
   if (s.type === "gate") {
     const g3 = s.gl === 3,
       gk = g3 ? 1 : (s.gl || 2) / 2;
-    (g3 ? [-1, 1] : [-0.74 * gk, 0.74 * gk]).forEach((x) => {
-      g.add(bpl(0.3, 0.62, x, g3 ? 1.55 : 1.15, 0.51, 0));
-      g.add(bpl(0.3, 0.62, x, g3 ? 1.55 : 1.15, -0.51, Math.PI));
+    (g3 ? [-1, 1] : [-0.5, 0.5]).forEach((x) => {
+      g.add(bpl(0.5, 0.8, x, 3.1, 0.51, 0));
+      g.add(bpl(0.5, 0.8, x, 3.1, -0.51, Math.PI));
     });
     let d;
     if (s.tier === 0) {
@@ -136,7 +135,11 @@ export function buildStructMesh0(s) {
       d.position.set(0, 1.32, 0);
       d.castShadow = SHADOWS;
     }
-    g.add(d);
+    /* the leaves were made for a passage 0.92 wide and 1.32 high: stretched to the block gate (3 high; 2 tiles wide, or 1 between pylons) */
+    const dw = new THREE.Group();
+    dw.scale.set((g3 ? 1 : 2) / 0.92 / (g3 ? 1 : gk), 3 / 1.32, 1);
+    dw.add(d);
+    g.add(dw);
     s.door = d;
     s.dop = s.dop || 0;
   }
@@ -181,7 +184,7 @@ export function buildStructMesh0(s) {
     const h = new THREE.Mesh(GEO.bh || (GEO.bh = ballHead()), matV);
     h.scale.setScalar(s.sz === 2 ? 1 : 0.82);
     if (s.sz === 2) h.position.set(1, gtopOf(s) + 0.32, 1);
-    else h.position.set(0, 3.28 + 0.3, 0);
+    else h.position.set(0, gtopOf(s) + 0.3, 0);
     h.castShadow = SHADOWS;
     g.add(h);
     s.head = h;
@@ -197,7 +200,7 @@ export function buildStructMesh0(s) {
       wg.position.set(0.3, gtopOf(s), 0.3);
     } else {
       wg.scale.setScalar(0.4);
-      wg.position.set(-0.4, 3.28, -0.4);
+      wg.position.set(-0.4, gtopOf(s), -0.4);
     }
     const b2 = new THREE.Mesh(GEO.tb || (GEO.tb = trebBase()), matV);
     b2.castShadow = SHADOWS;
@@ -245,7 +248,7 @@ export function buildStructMesh0(s) {
   if (s.type === "castle" && VOXB.castle) {
     const fg = new THREE.Group();
     fg.position.set(CASTLE_FLAG.x, CASTLE_FLAG.y, CASTLE_FLAG.z);
-    fg.add(bpl(0.7, 0.9, 0.38, -0.45, 0, 0));
+    fg.add(bpl(2.8, 3.6, 1.5, -1.8, 0, 0));
     g.add(fg);
     s.flag = fg;
   } else if (s.type === "castle" && s.sz === 5) {

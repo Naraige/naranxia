@@ -50,16 +50,22 @@ function lampList() {
         [1, 1],
       ]) {
         const fr = dx * fx + dy * fy > 0,
-          K = s.sz === 5 ? 1.9 : 1.04;
+          big = s.sz >= 12,
+          K = big ? s.sz / 2 - 3.5 : s.sz === 5 ? 1.9 : 1.04;
         if (st)
           LAMPS.push([
             s.x + dx * TS * K,
             s.y + dy * TS * K,
-            b + (s.sz === 5 ? (fr ? 6.2 : 6.9) : fr ? 5.85 : 6.6),
+            b + (big ? 12.5 : s.sz === 5 ? (fr ? 6.2 : 6.9) : fr ? 5.85 : 6.6),
             1.1,
           ]);
         else if (fr)
-          LAMPS.push([s.x + dx * TS * K * 1.04, s.y + dy * TS * K * 1.04, b + (s.sz === 5 ? 3.1 : 2.69), 0.9]);
+          LAMPS.push([
+            s.x + dx * TS * K * 1.04,
+            s.y + dy * TS * K * 1.04,
+            b + (big ? 12.5 : s.sz === 5 ? 3.1 : 2.69),
+            0.9,
+          ]);
       }
       const ox = (1.5 - 1.18) * TS;
       LAMPS.push(
@@ -67,8 +73,8 @@ function lampList() {
           ? [s.x - fx * ox, s.y - fy * ox, b + 8.85, 1.6]
           : [s.x - fx * 0.55 * TS, s.y - fy * 0.55 * TS, b + 3.44, 1.1],
       );
-    } else if (s.type === "wall" && (s.tiles[0][0] + s.tiles[0][1] * 3) % 5 === 0) LAMPS.push([s.x, s.y, b + 2.2, 0.6]);
-    else if (s.type === "torch") LAMPS.push([s.x, s.y, b + 1.45, 0.85]);
+    } else if (s.type === "wall" && (s.tiles[0][0] + s.tiles[0][1] * 3) % 5 === 0) LAMPS.push([s.x, s.y, b + 3.4, 0.6]);
+    else if (s.type === "torch") LAMPS.push([s.x, s.y, b + 2.6, 0.85]);
     else if (s.type === "market") LAMPS.push([s.x, s.y, b + 1.5, 0.55]);
   }
 }

@@ -3,7 +3,7 @@ import { snd } from "../audio/sound.js";
 import { dist } from "../core/math.js";
 import { stepF } from "../gameplay/movement.js";
 import { LPL, playersState } from "../gameplay/players.js";
-import { TS, TW } from "../gameplay/rules.js";
+import { edgeDist, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { shelOut } from "../gameplay/shelter.js";
 import { simulationState } from "../gameplay/simulation.js";
@@ -111,8 +111,7 @@ export function guildWait(u, dt) {
   u.work = 0;
   const G = guildOf(u.pl | 0, u.x, u.y);
   if (!G) return;
-  if (dist(u.x, u.y, G.x, G.y) > G.rad + TS * 1.4)
-    stepF(u, gField("s" + G.ty * TW + G.tx, G.tx, G.ty, G.sz), G.x, G.y, dt);
+  if (edgeDist(G, u.x, u.y) > TS * 1.4) stepF(u, gField("s" + G.ty * TW + G.tx, G.tx, G.ty, G.sz), G.x, G.y, dt);
 }
 
 export function roleAdj0(r, d) {

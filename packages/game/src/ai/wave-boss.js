@@ -4,7 +4,7 @@ import { zcount } from "./zombie-lanes.js";
 import { solidAt } from "../world/traversal.js";
 import { target } from "../gameplay/combat.js";
 import { mkU } from "../gameplay/entities.js";
-import { T, TS } from "../gameplay/rules.js";
+import { edgeDist, T, TS } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { spawnAnchor } from "../gameplay/waves.js";
 import { TC } from "../i18n/language.js";
@@ -61,7 +61,7 @@ export function bossStomp(u) {
   shake(0.4);
   for (const s of sessionState.structs)
     if (s.hp > 0 && s.t !== 1 && s.prog >= 1) {
-      const dd = Math.max(0, dist(s.x, s.y, x, y) - (s.rad || 20));
+      const dd = Math.max(0, edgeDist(s, x, y));
       if (dd < R)
         s.hp -=
           (70 + sessionState.waveN * 5) * (1 - (dd / R) * 0.6) * (s.type === "castle" || s.type === "keep" ? 0.5 : 1);

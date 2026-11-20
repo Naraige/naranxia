@@ -53,7 +53,7 @@ export function mmGo(p) {
 
 let hovHit = "";
 export function camZoom(d) {
-  CAM.dist = Math.max(7, Math.min(80, CAM.dist * (d > 0 ? 1.18 : 1 / 1.18)));
+  CAM.dist = Math.max(7, Math.min(160, CAM.dist * (d > 0 ? 1.18 : 1 / 1.18)));
 }
 
 export function panCam(dx, dy) {

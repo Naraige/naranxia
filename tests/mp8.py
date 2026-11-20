@@ -61,13 +61,11 @@ with sync_playwright() as p:
         A.evaluate("()=>{MP.host=true;MP.conn=true}");B.evaluate("()=>{MP.host=false;MP.conn=true}")
         # Stable nearby sites; generated terrain and every rule are production code.
         A.evaluate("""()=>{let s=103;const old=Math.random;Math.random=()=>{s=s*16807%2147483647;return(s-1)/2147483646};
-          rollWorld();buildPreview();let a=null,b=null;for(let t=0;t<20000&&!b;t++){randomSite();if(!pickPos?.ok)continue;const q={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=q;else{const d=Math.hypot(a.tx-q.tx,a.ty-q.ty);if(d>=24&&d<=60)b=q}}Math.random=old;window.__ab=[a,b];mpWorldSync()}""")
+          rollWorld();buildPreview();let a=null,b=null;for(let t=0;t<20000&&!b;t++){randomSite();if(!pickPos?.ok)continue;const q={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=q;else{const d=Math.hypot(a.tx-q.tx,a.ty-q.ty);if(d >= 48 && d <= 84)b=q}}Math.random=old;window.__ab=[a,b];mpWorldSync()}""")
         harness.flush(A,B)
         A.evaluate("()=>{[MP.mine,MP.theirs]=window.__ab;mpStart()}");harness.flush(A,B)
         A.evaluate(REC);B.evaluate(REC);harness.observe(A,B)
-        FIND="""(t)=>{const c=CURPL?CS2:CS;for(let r=5;r<26;r++)for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){
-          if(Math.max(Math.abs(dx),Math.abs(dy))!==r)continue;const x=c.tx+dx,y=c.ty+dy,tt=tilesFor(t,x,y,BSZ[t]||2);
-          if(tt.every(([i,j])=>gOK(i,j)&&valid(i,j)&&HT[j*TW+i]===HT[y*TW+x])){build(t,x,y);return[x,y]}}return null}"""
+        FIND="""(t)=>{const c=CURPL?CS2:CS,f=freeSite(t,c.tx-4,c.ty-4,60);if(f)build(t,f[0],f[1]);return f}"""
         for pg in (A,B):
             pg.evaluate("()=>roleAdj('b',3)")
             for kind in ('academy','farm','forester','guild'):

@@ -283,7 +283,7 @@ export function beacon(t) {
 
 /* the castle: a curtain wall between four round towers under pointed roofs, a gatehouse on the south (the gate is 4 blocks wide in the middle),
    and a tall keep with a stair turret; the flag flies from the pole on the keep roof (CASTLE_FLAG, in tiles) */
-export const CASTLE_FLAG = { x: 2.375, y: 6.2, z: 2.125 };
+export const CASTLE_FLAG = { x: 9.5, y: 24.8, z: 8.5 };
 export function castle(t) {
   const P = palette(t, "blue", true),
     vb = model(20, 26, 20),

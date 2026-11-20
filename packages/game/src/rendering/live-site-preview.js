@@ -1,4 +1,4 @@
-import { TW } from "../gameplay/rules.js";
+import { CHALF, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { L } from "../i18n/language.js";
 import { inputState, keys } from "../input/state.js";
@@ -123,12 +123,12 @@ export function renderPickLive(dt) {
           const ok = siteOK(tx, ty) && sitesFar({ tx, ty }, MP.conn ? MP.theirs : null);
           PKL.hit = { tx, ty, ok };
           if (!(sitePickerState.pickPos && sitePickerState.pickPos.tx === tx && sitePickerState.pickPos.ty === ty))
-            ghostMake(GB1, "castle", tx - 2, ty - 2, 0, ok, 0.6);
+            ghostMake(GB1, "castle", tx - CHALF, ty - CHALF, 0, ok, 0.6);
         }
       }
     }
     if (sitePickerState.pickPos && gOK(sitePickerState.pickPos.tx, sitePickerState.pickPos.ty)) {
-      ghostMake(GB2, "castle", sitePickerState.pickPos.tx - 2, sitePickerState.pickPos.ty - 2, 0, true, 1);
+      ghostMake(GB2, "castle", sitePickerState.pickPos.tx - CHALF, sitePickerState.pickPos.ty - CHALF, 0, true, 1);
       PKL.beam.visible = true;
       PKL.beam.position.set(
         sitePickerState.pickPos.tx + 0.5,
@@ -159,7 +159,7 @@ export function renderPickLive(dt) {
     if (MP.theirs) {
       buildPreviewState.GHO = { tier: 0, gl: 2, rot: MP.theirs.rot & 3 };
       try {
-        ghostMake(GB3, "castle", PO.tx - 2, PO.ty - 2, 0, true, 1);
+        ghostMake(GB3, "castle", PO.tx - CHALF, PO.ty - CHALF, 0, true, 1);
       } finally {
         buildPreviewState.GHO = gho;
       }

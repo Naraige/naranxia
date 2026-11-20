@@ -148,7 +148,9 @@ const VSN = {
   warroom: 8,
   sappers: 7,
 };
-export const vsnOf = (s) => (s.weapon ? Math.max(VSN[s.type] || 6, VSN[s.weapon] || 0) : VSN[s.type] || 6);
+/* how far a structure sees, from its centre: its own reach beyond its walls for the block-built buildings (12 to 24 tiles wide) */
+export const vsnOf = (s) =>
+  (s.weapon ? Math.max(VSN[s.type] || 6, VSN[s.weapon] || 0) : VSN[s.type] || 6) + (s.sz >= 12 ? s.sz / 2 : 0);
 
 export function fowUpdate(dt) {
   fogState.fowTm -= dt;

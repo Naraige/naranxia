@@ -8,7 +8,7 @@ import { lightingState, litAt } from "../gameplay/lighting.js";
 import { stepF, walk } from "../gameplay/movement.js";
 import { BAD, dpt, homeOf, LPL, playersState } from "../gameplay/players.js";
 import { CLM, nearest, nearestLocal, rclaimed } from "../gameplay/resources.js";
-import { CODE, GET, RS2, TS, TW, WORK } from "../gameplay/rules.js";
+import { edgeDist, CODE, GET, RS2, TS, TW, WORK } from "../gameplay/rules.js";
 import { selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { doTf, nearestTf } from "../gameplay/terraforming.js";
@@ -322,7 +322,6 @@ function peasant0(u, dt) {
       !(rb.prog >= 1 && !rb.dem && rb.noRep > sessionState.time)
     ) {
       b = rb;
-      bd = dist(u.x, u.y, rb.x, rb.y);
     } else {
       u.rb = null;
       for (const s of sessionState.structs)
@@ -343,7 +342,7 @@ function peasant0(u, dt) {
         }
     }
     if (b) {
-      if (bd - b.rad < 40) {
+      if (edgeDist(b, u.x, u.y) < 40) {
         u.unr = 0;
         if (b.prog >= 1 && !b.dem && !repTick(b, dt)) {
           u.rb = null;

@@ -9,7 +9,7 @@ import { hit, target } from "../gameplay/combat.js";
 import { ALERTS, economyState } from "../gameplay/economy.js";
 import { chase, losClear, moveTo, stepF } from "../gameplay/movement.js";
 import { LC, nearC } from "../gameplay/players.js";
-import { RS2, T, TH, TS, TW } from "../gameplay/rules.js";
+import { edgeDist, RS2, T, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { swSplash } from "../gameplay/swarm.js";
 import { puff, ring, shake, vflash } from "../rendering/effects.js";
@@ -62,7 +62,7 @@ function boom(x, y, pw) {
   shake(0.35);
   for (const s of sessionState.structs)
     if (s.hp > 0 && s.t !== 1) {
-      const dd = Math.max(0, dist(s.x, s.y, x, y) - (s.rad || 20));
+      const dd = Math.max(0, edgeDist(s, x, y));
       if (dd < R) {
         s.hp -=
           320 *
@@ -202,7 +202,7 @@ export function acidSplash(x, y, big) {
     }
   for (const s of sessionState.structs)
     if (s.t !== 1 && s.hp > 0) {
-      const dd = dist(s.x, s.y, x, y) - (s.rad || 20);
+      const dd = edgeDist(s, x, y);
       if (dd < R) {
         s.acid = Math.max(s.acid || 0, tm);
         s.acidD = big ? 14 : 10;

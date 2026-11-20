@@ -1,5 +1,5 @@
 import { fb, hs, hyp } from "../core/math.js";
-import { N, TH, TS, TW } from "../gameplay/rules.js";
+import { CHALF, N, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { markP, markT } from "./terrain-invalidation.js";
 import { cvs } from "../ui/canvases.js";
@@ -203,7 +203,7 @@ function rawAt(x, y) {
   }
   let lim = 999,
     flag = 0;
-  if (cheb <= 3) flag = 1;
+  if (cheb <= CHALF + 3) flag = 1;
   const pl = terrainState.RCH.get(((y / CH) | 0) * NCX + ((x / CH) | 0));
   if (pl && cheb > 44) {
     let md = 1e9;
@@ -769,7 +769,7 @@ function cliffFoot(x, y, h) {
   return false;
 }
 
-/* the only deposits laid out for you: 3 gold, 3 stone and 3 trees, about 12 tiles from each castle, each set in a little group;
+/* the only deposits laid out for you: 3 gold, 3 stone and 3 trees, a little way out from each castle wall, each set in a little group;
    picked from the raw terrain (water, castle square and roads avoided), so it does not depend on which chunk is made first */
 let STK0 = "",
   STL0 = null;
@@ -792,7 +792,7 @@ export function starterTiles() {
     const okT = (x, y) => {
       if (x < 3 || y < 3 || x >= TW - 3 || y >= TH - 3) return false;
       const c = Math.max(Math.abs(x - X), Math.abs(y - Y));
-      if (c < 10 || c > 16) return false;
+      if (c < CHALF + 8 || c > CHALF + 15) return false;
       const i = y * TW + x;
       if (used.has(i) || STL0.has(i)) return false;
       const r = rawAt(x, y);
@@ -805,7 +805,7 @@ export function starterTiles() {
     ].forEach(([code, am], k) => {
       for (let s = 0; s < 44; s++) {
         const a = ga + k * 2.094 + (s % 2 ? 1 : -1) * Math.ceil(s / 2) * 0.11,
-          r = 12.5 + (s >= 24 ? 1.5 : 0),
+          r = CHALF + 10.5 + (s >= 24 ? 1.5 : 0),
           ax = Math.round(X + Math.cos(a) * r),
           ay = Math.round(Y + Math.sin(a) * r);
         if (!okT(ax, ay)) continue;

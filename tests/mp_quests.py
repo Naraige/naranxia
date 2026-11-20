@@ -77,7 +77,7 @@ with sync_playwright() as p:
     # walked by a convoy within its 120 s (long detour, no path, or porters stopped a few tiles short of the castle: see the journal),
     # which made this test fail by chance. Seed 103 gives sites (1126,624) and (1101,599): delivered in about 10 s.
     # (roll and search in one call: frames between two calls draw random numbers too)
-    A.evaluate("""()=>{const R0=Math.random;let s=103;Math.random=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};rollWorld();if(pvKey!==SEED)buildPreview();let a=null,b=null;for(let t=0;t<20000&&!(a&&b);t++){randomSite();if(!pickPos||!pickPos.ok)continue;const s={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=s;else{const d=Math.hypot(a.tx-s.tx,a.ty-s.ty);if(d>=24&&d<=60)b=s}}
+    A.evaluate("""()=>{const R0=Math.random;let s=103;Math.random=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};rollWorld();if(pvKey!==SEED)buildPreview();let a=null,b=null;for(let t=0;t<20000&&!(a&&b);t++){randomSite();if(!pickPos||!pickPos.ok)continue;const s={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=s;else{const d=Math.hypot(a.tx-s.tx,a.ty-s.ty);if(d >= 48 && d <= 84)b=s}}
      Math.random=R0;window.__ab=[a,b];mpWorldSync()}""");pump(A,B,3)
     r=A.evaluate("""()=>{const a=window.__ab[0],b=window.__ab[1];MP.mine=a;MP.theirs=b;mpStart();return JSON.stringify({a,b,on:MP.on})}""")
     harness.flush(A,B);A.evaluate(REC);B.evaluate(REC);harness.observe(A,B);pump(A,B,1);P('start',r)

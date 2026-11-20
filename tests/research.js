@@ -27,7 +27,7 @@ async () => {
   const put = (t) => {
     for (let a = 0; a < 40; a++) {
       const n0 = structs.length,
-        f = freeTile(CS.tx + 7 + (a % 5) * 4, CS.ty + 7 + ((a / 5) | 0) * 4);
+        f = freeSite(t, CS.tx + 7 + (a % 5) * 4, CS.ty + 7 + ((a / 5) | 0) * 4);
       build(t, f[0], f[1]);
       if (structs.length > n0) {
         const m = structs[structs.length - 1];

@@ -38,7 +38,7 @@ async () => {
   let bk = null;
   for (let a = 0; a < 40 && !bk; a++) {
     const n0 = structs.length,
-      f = freeSite("barracks", CS.tx + 7 + (a % 5) * 8, CS.ty + 7 + ((a / 5) | 0) * 8, 25);
+      f = freeSite("barracks", CS.tx + 7 + (a % 5) * 8, CS.ty + 7 + ((a / 5) | 0) * 8);
     build("barracks", f[0], f[1]);
     if (structs.length > n0) bk = structs[structs.length - 1];
   }
@@ -178,6 +178,9 @@ async () => {
       z.x = x0;
       z.y = y0 + 46;
       z.cd = 9;
+      /* only this spearman strikes: the rest of the camp (it now stands close around) holds its blow */
+      for (const q of units) if (q !== u && q.t === 2) q.cd = 9;
+      for (const q of structs) if (q.t === 2) q.cd = 9;
       update(0.05);
       dm = h0 - z.hp;
     }

@@ -3,7 +3,7 @@ import { snd } from "../audio/sound.js";
 import { dist, hyp, rnd } from "../core/math.js";
 import { ALERTS, economyState } from "./economy.js";
 import { aliveC, LPL } from "./players.js";
-import { LH, RANKN, RS2, SPEAR_BIG, T, TS } from "./rules.js";
+import { SRMAX, edgeDist, LH, RANKN, RS2, SPEAR_BIG, T, TS } from "./rules.js";
 import { sessionState } from "./session.js";
 import { simulationState } from "./simulation.js";
 import { SGC, sgFresh, SGH, SGHt, SGN, SGU, SGW, UGC, ugFresh, UGH, UGHt, UGN, UGU, UGW } from "./spatial-index.js";
@@ -28,7 +28,7 @@ export function target(u, range, tt) {
     const e = C.b;
     if (e === null) return [null, range];
     if (e.hp > 0 && !e.gar && (e.t === tt || (tt === 0 && e.t === 2))) {
-      const dd = dist(u.x, u.y, e.x, e.y) - (e.type in T ? T[e.type].r : e.rad);
+      const dd = e.type in T ? dist(u.x, u.y, e.x, e.y) - T[e.type].r : edgeDist(e, u.x, u.y);
       if (dd < range) return [e, dd];
     }
   }
@@ -69,7 +69,7 @@ function target0(u, range, tt) {
         }
   }
   sgFresh();
-  const R = range + 200,
+  const R = range + SRMAX,
     x0 = Math.max(0, ((u.x - R) / SGC) | 0),
     x1 = Math.min(SGW - 1, ((u.x + R) / SGC) | 0),
     y0 = Math.max(0, ((u.y - R) / SGC) | 0),
@@ -83,7 +83,7 @@ function target0(u, range, tt) {
       for (let k = SGH[cy * SGW + cx]; k >= 0; k = SGN[k]) {
         const s = SGU[k];
         if (s.t === tt || (tt === 0 && s.t === 2)) {
-          const td = dist(u.x, u.y, s.x, s.y) - s.rad;
+          const td = edgeDist(s, u.x, u.y);
           if (td >= range) continue;
           const dd = td + (u.t === 1 && s.zq ? Math.min(6, s.zq) * TS * 0.85 * (u._tc && u._tc.b === s ? 0 : 1) : 0);
           if (dd < sbd || (dd === sbd && sb !== null && k < sk)) {

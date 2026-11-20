@@ -2,7 +2,7 @@ import { dist } from "../core/math.js";
 import { inDoor, tfo } from "../gameplay/construction.js";
 import { moveTo, stepF } from "../gameplay/movement.js";
 import { aliveC, BAD, playersState } from "../gameplay/players.js";
-import { FARMT, FARMY, RS2, TH, TS, TW } from "../gameplay/rules.js";
+import { edgeDist, FARMT, FARMY, RS2, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { leaveSquad } from "../gameplay/squads.js";
 import { puff } from "../rendering/effects.js";
@@ -241,8 +241,7 @@ export function relPt(u) {
 
 function forHome(u, s, dt) {
   u.work = 0;
-  if (dist(u.x, u.y, s.x, s.y) > s.rad + TS * 1.2)
-    stepF(u, gField("s" + s.ty * TW + s.tx, s.tx, s.ty, s.sz), s.x, s.y, dt);
+  if (edgeDist(s, u.x, u.y) > TS * 1.2) stepF(u, gField("s" + s.ty * TW + s.tx, s.tx, s.ty, s.sz), s.x, s.y, dt);
 }
 
 export function forester(u, dt) {

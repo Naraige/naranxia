@@ -224,7 +224,7 @@ function devSpawn(type, n, r) {
   let k = 0;
   for (let i = 0; i < n; i++) {
     const a = (i / n) * 6.283,
-      f = freeTile(Math.round(c.tx + 2 + Math.cos(a) * r), Math.round(c.ty + 2 + Math.sin(a) * r));
+      f = freeTile(Math.round(c.tx + (c.sz >> 1) + Math.cos(a) * r), Math.round(c.ty + (c.sz >> 1) + Math.sin(a) * r));
     if (f) {
       sessionState.units.push(mkU(1, type, (f[0] + 0.5) * TS, (f[1] + 0.5) * TS, null, -1));
       k++;

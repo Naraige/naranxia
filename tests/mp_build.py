@@ -33,17 +33,23 @@ def need(c,msg):
 ST="()=>JSON.stringify({tick:MP.tick,ep:MP.ep,ds:MP.desync,pl:CURPL,cs:[CS.tx,CS.ty,CS.rot|0,CS.pl|0],cs2:CS2&&[CS2.tx,CS2.ty,CS2.rot|0,CS2.pl|0],cam:[Math.round(CAM.x),Math.round(CAM.z)],h:mpHash()})"
 SL="()=>JSON.stringify(structs.map(s=>[s.sid,s.type,s.tx,s.ty,s.pl|0,s.t,!!s.o3,(s.tiles||[]).length]))"
 # free ground for a 2x2 building near the player's own castle (flat, nothing on it), a few tiles apart
-SPOTS="""(n)=>{const me=CURPL?CS2:CS,ot=CURPL?CS:CS2,out=[];
- for(let r=5;r<34&&out.length<n;r++)for(let j=-r;j<=r&&out.length<n;j++)for(let i=-r;i<=r&&out.length<n;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=me.tx+2+i,ty=me.ty+2+j;
-  if(Math.hypot(tx-me.tx,ty-me.ty)>=Math.hypot(tx-ot.tx,ty-ot.ty))continue;let free=true;for(let b=-1;b<=6&&free;b++)for(let a=-1;a<=6&&free;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])free=false}
-  if(!free||out.some(u=>Math.abs(u.tx-tx)<7&&Math.abs(u.ty-ty)<7))continue;out.push({tx,ty,dMe:Math.round(Math.hypot(tx-me.tx,ty-me.ty)),dOt:Math.round(Math.hypot(tx-ot.tx,ty-ot.ty))})}
+SPOTS="""(n)=>{const K=Array.isArray(n)?n:Array(n).fill('farm'),me=CURPL?CS2:CS,ot=CURPL?CS:CS2,out=[];
+ /* one spot per kind, big enough for it (small pieces get the room of a house), on this player's side, two tiles clear of the spots already taken */
+ const find=(kind)=>{const z=BSZ[kind]||12,kf=BSZ[kind]?kind:'house';
+  for(let r=13;r<150;r++)for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=me.tx+10+i,ty=me.ty+10+j,cx=tx+z/2,cy=ty+z/2;
+   if(Math.hypot(cx-me.x/TS,cy-me.y/TS)>=Math.hypot(cx-ot.x/TS,cy-ot.y/TS))continue;
+   if(out.some(u=>tx<u.tx+u.z+8&&u.tx<tx+z+8&&ty<u.ty+u.z+8&&u.ty<ty+z+8))continue;
+   /* the click may land up to 3 tiles from the spot: the building must fit all round it */
+   if([-3,0,3].some(a=>[-3,0,3].some(b=>siteFit(kf,tx+a,ty+b)<0)))continue;{/* no hill or pit close by: it would hide the spot from the mouse ray */let lo=99,hi=0;for(let b=-6;b<z+6;b+=2)for(let a=-6;a<z+6;a+=2){const h=HT[(ty+b)*TW+tx+a];if(h<lo)lo=h;if(h>hi)hi=h}if(hi-lo>3)continue}if(!BSZ[kind]){let f=true;for(let b=-3;b<=5&&f;b++)for(let a=-3;a<=5&&f;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])f=false}if(!f)continue}
+   return{tx,ty,z,dMe:Math.round(Math.hypot(cx-me.x/TS,cy-me.y/TS)),dOt:Math.round(Math.hypot(cx-ot.x/TS,cy-ot.y/TS))}}return null};
+ for(const kind of K){const q=find(kind);if(q)out.push(q)}
  return JSON.stringify(out)}"""
 UNDER="(p)=>{const g=pickGround(p[0]*cv.width/innerWidth,p[1]*cv.height/innerHeight);return g?[Math.floor(g.x),Math.floor(g.z)]:null}"
 KINDS=['house','farm','storage','barracks','academy','market','forester','guild','tower','wall','path','gate']
 def place_all(pg,who,pl):
     """pg clicks one structure of each kind near its own castle; returns the number of structures checked"""
     other=B if pg is A else A
-    spots=json.loads(pg.evaluate(SPOTS,len(KINDS)+4));P(who,'free spots',len(spots),spots[:3])
+    spots=json.loads(pg.evaluate(SPOTS,KINDS));P(who,'free spots',len(spots),spots[:3])
     need(len(spots)>=len(KINDS),who+': not enough free ground (%d)'%len(spots))
     need(all(s['dMe']<s['dOt'] for s in spots),who+': spots not on its own side')
     done=0
@@ -93,7 +99,7 @@ with sync_playwright() as p:
     A,ea=pages[0];B,eb=pages[1]
     A.evaluate("()=>{MP.host=true;MP.conn=true}");B.evaluate("()=>{MP.host=false;MP.conn=true}")
     # the lobby: the host rolls a world and finds two sites (seeded), each player confirms his own in the picker, the host starts
-    A.evaluate("""()=>{const R0=Math.random;let s=103;Math.random=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};rollWorld();if(pvKey!==SEED)buildPreview();let a=null,b=null;for(let t=0;t<20000&&!(a&&b);t++){randomSite(false);if(!pickPos||!pickPos.ok)continue;const s={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=s;else{const d=Math.hypot(a.tx-s.tx,a.ty-s.ty);if(d>=24&&d<=60)b=s}}
+    A.evaluate("""()=>{const R0=Math.random;let s=103;Math.random=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};rollWorld();if(pvKey!==SEED)buildPreview();let a=null,b=null;for(let t=0;t<20000&&!(a&&b);t++){randomSite(false);if(!pickPos||!pickPos.ok)continue;const s={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=s;else{const d=Math.hypot(a.tx-s.tx,a.ty-s.ty);if(d >= 48 && d <= 84)b=s}}
      Math.random=R0;window.__ab=[a,b];mpWorldSync()}""");pump(A,B,3)
     ab=json.loads(A.evaluate("()=>JSON.stringify(window.__ab)"));P('sites',ab)
     B.evaluate("(s)=>{pickPos={tx:s.tx,ty:s.ty,ok:true};confirmPick()}",ab[1]);pump(A,B,3)
@@ -103,8 +109,8 @@ with sync_playwright() as p:
     sa=json.loads(A.evaluate(ST));sb=json.loads(B.evaluate(ST));P('A',sa);P('B',sb)
     # #3: each castle on the site its player chose, the same on both machines, each player looking at his own
     need(sa['cs']==sb['cs'] and sa['cs2']==sb['cs2'],'castles differ between machines')
-    need(sa['cs'][:2]==[ab[0]['tx']-2,ab[0]['ty']-2] and sa['cs'][3]==0,'host castle not on the host site')
-    need(sa['cs2'] and sa['cs2'][:2]==[ab[1]['tx']-2,ab[1]['ty']-2] and sa['cs2'][3]==1,'guest castle not on the guest site')
+    need(sa['cs'][:2]==[ab[0]['tx']-10,ab[0]['ty']-10] and sa['cs'][3]==0,'host castle not on the host site')
+    need(sa['cs2'] and sa['cs2'][:2]==[ab[1]['tx']-10,ab[1]['ty']-10] and sa['cs2'][3]==1,'guest castle not on the guest site')
     need(abs(sb['cam'][0]-ab[1]['tx'])<=3 and abs(sb['cam'][1]-ab[1]['ty'])<=3,'guest camera not on its castle: %s'%sb['cam'])
     need(abs(sa['cam'][0]-ab[0]['tx'])<=3 and abs(sa['cam'][1]-ab[0]['ty'])<=3,'host camera not on its castle: %s'%sa['cam'])
     need(sa['pl']==0 and sb['pl']==1,'player index wrong')
@@ -147,10 +153,12 @@ with sync_playwright() as p:
         need(A.evaluate(OWN)==B.evaluate(OWN),'the players\' structures differ at the end')
     # ---- the way the King plays: other window sizes, a turned and zoomed camera, drags, a pause, a moved castle, a click during a resync ----
     # every click is checked three ways: the tile under the mouse on the player's screen, the tile in the command that left (mpPush), the structure on both machines
-    SPOTSAT="""(a)=>{const c=a[0]?CS2:CS,out=[];
-     for(let r=a[1];r<a[1]+30&&out.length<a[2];r++)for(let j=-r;j<=r&&out.length<a[2];j++)for(let i=-r;i<=r&&out.length<a[2];i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=c.tx+2+i,ty=c.ty+2+j;
-      let free=true;for(let b=-1;b<=6&&free;b++)for(let a=-1;a<=6&&free;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])free=false}
-      if(!free||out.some(u=>Math.abs(u.tx-tx)<7&&Math.abs(u.ty-ty)<7))continue;out.push({tx,ty})}
+    SPOTSAT="""(a)=>{const c=a[0]?CS2:CS,K=a[3]||Array(a[2]).fill('farm'),out=[];
+     const find=(kind)=>{const z=BSZ[kind]||12,kf=BSZ[kind]?kind:'house';
+      for(let r=a[1]+10;r<a[1]+140;r++)for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=c.tx+10+i,ty=c.ty+10+j;
+       if(out.some(u=>tx<u.tx+u.z+8&&u.tx<tx+z+8&&ty<u.ty+u.z+8&&u.ty<ty+z+8))continue;
+       if([-3,0,3].some(a=>[-3,0,3].some(b=>siteFit(kf,tx+a,ty+b)<0)))continue;{/* no hill or pit close by: it would hide the spot from the mouse ray */let lo=99,hi=0;for(let b=-6;b<z+6;b+=2)for(let a=-6;a<z+6;a+=2){const h=HT[(ty+b)*TW+tx+a];if(h<lo)lo=h;if(h>hi)hi=h}if(hi-lo>3)continue}if(!BSZ[kind]){let f=true;for(let b=-3;b<=5&&f;b++)for(let a=-3;a<=5&&f;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])f=false}if(!f)continue}return{tx,ty,z}}return null};
+     for(const kind of K){const q=find(kind);if(q)out.push(q)}
      return JSON.stringify(out)}"""
     PXOF="(q)=>{const v=scr(q[0]+1,HT[q[1]*TW+q[0]],q[1]+1);return[v.x/inputState.DPR,v.y/inputState.DPR,v.ok]}"
     NEWS="(a)=>JSON.stringify(structs.filter(s=>s.t===0&&s.type===a[0]&&!a[1].includes(s.sid)).map(s=>[s.sid,s.tx,s.ty,s.pl|0,!!s.o3]))"
@@ -186,7 +194,7 @@ with sync_playwright() as p:
                 if not os.path.exists(os.path.join(ROOT,'dist','test-logs','mp_build_hud.png')):pg.screenshot(path=os.path.join(ROOT,'dist','test-logs','mp_build_hud.png'))
                 need(not na and not nb,tag+': HUD click creates no phantom building')
                 return
-            need(False,tag+': nothing built on both (%s %s) under %s command %s msg %s'%(na,nb,under,cm,pg.evaluate("()=>msgS")));return
+            need(False,tag+': nothing built on both (%s %s) under %s command %s msg %s fit %s'%(na,nb,under,cm,pg.evaluate("()=>msgS"),pg.evaluate("(q)=>{const z=BSZ[q[0]]||2,R={ter:{},occ:{},st:0,hmin:99,hmax:0,ng:0};for(let j=0;j<z;j++)for(let i=0;i<z;i++){const x=q[1][0]+i,y=q[1][1]+j,k=y*TW+x;if(!gOK(x,y)){R.ng++;continue}R.ter[ter[k]]=(R.ter[ter[k]]||0)+1;const o=occ.get(k);if(o)R.occ[o.type]=(R.occ[o.type]||0)+1;if(stairs.has(k))R.st++;R.hmin=Math.min(R.hmin,HT[k]);R.hmax=Math.max(R.hmax,HT[k])}return JSON.stringify([q[2],R])}",[kind,under,spot])));return
         need(len(na)==1 and len(nb)==1,tag+': %d / %d new'%(len(na),len(nb)))
         a,b=na[0],nb[0]
         need(a==b,tag+': differs between machines %s %s'%(a,b))
@@ -200,17 +208,17 @@ with sync_playwright() as p:
     for pg,who,pl in((B,'guest',1),(A,'host',0)):
         vw=pg.viewport_size;pg.mouse.move(vw['width']*.5,vw['height']*.5);pg.mouse.down(button='right');pg.mouse.move(vw['width']*.5+70,vw['height']*.5+25,steps=6);pg.mouse.up(button='right')
         pg.mouse.wheel(0,-250);waitT(.3);P(who,'camera',pg.evaluate("()=>JSON.stringify([CAM.yaw.toFixed(2),CAM.pitch.toFixed(2),CAM.dist.toFixed(1)])"))
-        sp=json.loads(pg.evaluate(SPOTSAT,[pl,6,5]))
+        sp=json.loads(pg.evaluate(SPOTSAT,[pl,6,5,['house','farm','storage','barracks','tower']]))
         need(len(sp)>=5,who+': no free spots for the wide test')
         for (kind,fx,fy),spot in zip((('house',.55,.3),('farm',.7,.35),('storage',.5,.5),('barracks',.45,.58),('tower',.72,.55)),sp):
             click_build(pg,who+' (turned camera)',kind,spot,fx,fy,pl)
     # W2: the guest scrolls to the host's castle and builds beside it: it is built there, as the guest's (nothing in the rules forbids it); and the host beside the guest's castle
-    spo=json.loads(B.evaluate(SPOTSAT,[0,4,3]));P('guest next to the host castle',spo)
+    spo=json.loads(B.evaluate(SPOTSAT,[0,4,3,['house','farm','barracks']]));P('guest next to the host castle',spo)
     for kind,spot in zip(('house','farm','barracks'),spo):click_build(B,'guest beside the host castle',kind,spot,.5,.45,1)
-    spg=json.loads(A.evaluate(SPOTSAT,[1,4,2]))
+    spg=json.loads(A.evaluate(SPOTSAT,[1,4,2,['house','storage']]))
     for kind,spot in zip(('house','storage'),spg):click_build(A,'host beside the guest castle',kind,spot,.5,.45,0)
     # W3: a drag laying a path across the partner's castle area: every tile under the mouse gets a path on both machines
-    PA=json.loads(B.evaluate("""()=>{const c=CS,out=[];for(let r=4;r<24&&out.length<1;r++)for(let j=-r;j<=r&&!out.length;j++)for(let i=-r;i<=r&&!out.length;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=c.tx+2+i,ty=c.ty+2+j;let f=true;for(let k=0;k<9&&f;k++){const q=ty*TW+tx+k;if(!valid(tx+k,ty)||ter[q]!==0||occ.get(q)||pth[q]||HT[q]!==HT[ty*TW+tx])f=false}if(f)out.push([tx,ty])}return JSON.stringify(out)}"""))
+    PA=json.loads(B.evaluate("""()=>{const c=CS,out=[];for(let r=14;r<40&&out.length<1;r++)for(let j=-r;j<=r&&!out.length;j++)for(let i=-r;i<=r&&!out.length;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=c.tx+10+i,ty=c.ty+10+j;let f=true;for(let k=0;k<9&&f;k++){const q=ty*TW+tx+k;if(!valid(tx+k,ty)||ter[q]!==0||occ.get(q)||pth[q]||HT[q]!==HT[ty*TW+tx])f=false}if(f)out.push([tx,ty])}return JSON.stringify(out)}"""))
     if PA:
         t0_=PA[0];B.evaluate("(q)=>{CAM.x=q[0]+4.5;CAM.z=q[1]+.5}",t0_);waitT(.4)
         x0,y0,_=B.evaluate(PXOF,[t0_[0],t0_[1]]);x1,y1,_=B.evaluate(PXOF,[t0_[0]+8,t0_[1]])
@@ -240,14 +248,14 @@ with sync_playwright() as p:
     need(len(na)==1 and na==nb and na[0][3]==1 and cm and u and abs(cm['x']-u[0])<=2 and abs(na[0][1]-u[0])<=3,'paused placement: %s %s command %s mouse %s'%(na,nb,cm,u))
     # W5: the guest moves his castle (the host sees it move, his own castle stays), then builds beside the new place
     cs0=json.loads(A.evaluate("()=>JSON.stringify([CS.tx,CS.ty,CS2.tx,CS2.ty])"))
-    mv=B.evaluate("""()=>{const c=CS2,out=[];for(let r=8;r<16&&!out.length;r++)for(let j=-r;j<=r&&!out.length;j++)for(let i=-r;i<=r&&!out.length;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=c.tx+2+i,ty=c.ty+2+j;let f=true;
-      for(let b=-4;b<=4&&f;b++)for(let a=-4;a<=4&&f;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])f=false}if(f)out.push([tx,ty])}return out[0]||null}""")
+    mv=B.evaluate("""()=>{const c=CS2,out=[];for(let r=24;r<48&&!out.length;r++)for(let j=-r;j<=r&&!out.length;j++)for(let i=-r;i<=r&&!out.length;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=c.tx+10+i,ty=c.ty+10+j;let f=true;
+      for(let b=-12;b<=12&&f;b++)for(let a=-12;a<=12&&f;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])f=false}if(f)out.push([tx,ty])}return out[0]||null}""")
     if mv:
         x,y,_=aim(B,{'tx':mv[0]-1,'ty':mv[1]-1},.5,.45)
         B.evaluate("()=>{mode='movec'}");B.mouse.move(x-3,y-3);B.mouse.move(x,y);pump(A,B,2);u=B.evaluate(UNDER,[x,y]);B.mouse.down();B.mouse.up();waitT(4)
         ca=json.loads(A.evaluate("()=>JSON.stringify([CS.tx,CS.ty,CS2.tx,CS2.ty])"));cb=json.loads(B.evaluate("()=>JSON.stringify([CS.tx,CS.ty,CS2.tx,CS2.ty])"));P('castle move',cs0,'->',ca,cb,'mouse',u)
-        need(ca==cb and ca[:2]==cs0[:2] and ca[2:]!=cs0[2:] and u and abs(ca[2]+2-u[0])<=1 and abs(ca[3]+2-u[1])<=1,'the guest castle did not move to the mouse, or the host castle moved: %s %s'%(ca,cb))
-        B.evaluate("()=>{CAM.x=5;CAM.z=5;home()}");hm=json.loads(B.evaluate("()=>JSON.stringify([Math.round(CAM.x),Math.round(CAM.z),CS2.tx+2,CS2.ty+2])"))
+        need(ca==cb and ca[:2]==cs0[:2] and ca[2:]!=cs0[2:] and u and abs(ca[2]+10-u[0])<=1 and abs(ca[3]+10-u[1])<=1,'the guest castle did not move to the mouse, or the host castle moved: %s %s'%(ca,cb))
+        B.evaluate("()=>{CAM.x=5;CAM.z=5;home()}");hm=json.loads(B.evaluate("()=>JSON.stringify([Math.round(CAM.x),Math.round(CAM.z),CS2.tx+10,CS2.ty+10])"))
         need(abs(hm[0]-hm[2])<=1 and abs(hm[1]-hm[3])<=1,'home() of the guest is not its moved castle: %s'%hm)
         spn=json.loads(B.evaluate(SPOTSAT,[1,4,2]));click_build(B,'guest beside its moved castle','house',spn[0],.5,.45,1)
     else:P('no spot to move the castle to')
@@ -280,7 +288,7 @@ with sync_playwright() as p:
     B.evaluate("()=>{mpLost()}");solo(B,1.5)
     lost=json.loads(B.evaluate("()=>JSON.stringify({on:MP.on,pl:CURPL,lpl:LPL(),res:res===RESP[1]})"));P('guest alone',lost)
     need(lost['on'] is False and lost['pl']==1 and lost['lpl']==1 and lost['res'],'the guest alone is no longer player 2: %s'%lost)
-    cs2c=B.evaluate("()=>[CS2.tx+2,CS2.ty+2]");B.evaluate("()=>{CAM.x=5;CAM.z=5;home()}");cam=json.loads(B.evaluate("()=>JSON.stringify([Math.round(CAM.x),Math.round(CAM.z)])"))
+    cs2c=B.evaluate("()=>[CS2.tx+10,CS2.ty+10]");B.evaluate("()=>{CAM.x=5;CAM.z=5;home()}");cam=json.loads(B.evaluate("()=>JSON.stringify([Math.round(CAM.x),Math.round(CAM.z)])"))
     need(abs(cam[0]-cs2c[0])<=3 and abs(cam[1]-cs2c[1])<=3,'home of the guest alone is not its (moved) castle: %s, castle %s'%(cam,cs2c))
     sp=json.loads(B.evaluate(SPOTS,1))[0];ids=B.evaluate("()=>structs.map(s=>s.sid)")
     B.evaluate("(q)=>{CAM.x=q[0]+.5;CAM.z=q[1]+.5}",[sp['tx'],sp['ty']]);solo(B,.6);B.evaluate("()=>{mode='farm'}");cx_,cy_=B.viewport_size['width']//2,B.viewport_size['height']//2+20;B.mouse.move(cx_-3,cy_-3);B.mouse.move(cx_,cy_);solo(B,.2)

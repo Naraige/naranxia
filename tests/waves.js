@@ -1,7 +1,7 @@
 async () => {
   /* waves end (#27): fixed worlds where v93 left the horde standing, played with a perfect defence (castles cannot fall, zombies die within KR tiles of a castle).
    World 1 (two castles): the lane to the second castle runs into a rock massif 50 tiles out; v93 piled the whole horde on one way point and hit the 900 s limit.
-   World 9 (two castles): a lake lies between the spawn and the castles; hundreds of zombies wade through it.
+   World 19 (two castles; it was world 9 before castles grew to 20 tiles and had to stand further apart): a lake lies between the spawn and the castles; hundreds of zombies wade through it.
    World 0 (solo): plain land with a one-tile ramp, as a reference.
    Then on the last world: zombies put on a water tile near the castle walk out; a zombie held on one spot is taken away without a kill; a swarm saved before v94 (no sa / sk) steps.
    Spawn far (v94 lot): the hordes appear at the far end of their route, never within 100 tiles of a castle of either player (widest zoom shows about 90),
@@ -10,7 +10,7 @@ async () => {
    Flow check on all four worlds (world 2 plays its wave 3, 6225 zombies, must end under 700 s; v94 far spawn 875 s): no more than 60 zombies within 40 tiles of a castle that bite nothing and stayed within one tile for 60 s (stand), and the wave ends in time.
    Same worlds and seeds as tests/waves_probe.js (trial = world). */
   renderer.render = function () {};
-  const KR = 8,
+  const KR = 16,
     O = {},
     C = [],
     chk = (n, v) => {
@@ -65,7 +65,7 @@ async () => {
       if (!a) a = s;
       else {
         const d = Math.hypot(a.tx - s.tx, a.ty - s.ty);
-        if (d >= 24 && d <= 60) b = s;
+        if (d >= 48 && d <= 84) b = s;
       }
     }
     if (coop) {
@@ -186,7 +186,7 @@ async () => {
     chk("spawnPickedFar", minPick >= 125 && nPick > 150);
     chk("spawnWalk", shortRt >= 110);
   }
-  for (const trial of [0, 1, 2, 9]) {
+  for (const trial of [0, 1, 2, 19]) {
     world(trial);
     const r = playWave(trial === 2 ? 3 : 1);
     O["w" + trial] = r;
@@ -199,9 +199,9 @@ async () => {
     chk("noneStuck" + trial, r.stk2 === 0);
     chk("flows" + trial, r.stand <= 60);
     chk("noneInWater" + trial, r.wat === 0);
-    if (trial !== 9) MP.on = false;
+    if (trial !== 19) MP.on = false;
   }
-  chk("lakeCrossed", O.w9.wmax > 50);
+  chk("lakeCrossed", O.w19.wmax > 50);
   /* zombies standing on a water tile near a castle (as v93 left them) walk out */
   {
     for (let k = 0; k < 700; k++) tick();

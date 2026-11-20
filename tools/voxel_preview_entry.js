@@ -6,24 +6,17 @@ const THREE = globalThis.THREE;
 /* a little fortress to look at the fortifications together: [piece, tile x, tile z] (1-tile pieces and gates by their middle, 2-tile pieces by their corner) */
 const FORT = (t) => [
   [tower1(t, false), 0.5, 0.5],
-  [wall(t, 10), 1.5, 0.5],
-  [wall(t, 10), 2.5, 0.5],
-  [gate(t, 2), 4, 0.5],
-  [wall(t, 10), 5.5, 0.5],
-  [wall(t, 10 | 4), 6.5, 0.5],
-  [wall(t, 5), 6.5, 1.5],
-  [wall(t, 1 | 8), 6.5, 2.5],
-  [wall(t, 2), 5.5, 2.5],
-  [tower1(t, true), 7.5, 0.5],
-  [wall(t, 8 | 16), 8.5, 0.5],
-  [wall(t, 0), 9.5, 1.5],
-  [tower2(t, false), 11, 0],
-  [tower2(t, true), 11, 3],
-  [keep(t), 1, 2.5],
-  [torch(), 4.5, 2.5],
-  [gate(t, 3), 5, 5.5],
-  [wall(t, 2), 3, 5.5],
-  [wall(t, 8), 7, 5.5],
+  ...[1, 2, 3, 4].map((x) => [wall(t, x & 1), x + 0.5, 0.5]),
+  [gate(t, 2), 6, 0.5],
+  ...[7, 8, 9].map((x) => [wall(t, x & 1), x + 0.5, 0.5]),
+  [tower1(t, true), 10.5, 0.5],
+  ...[11, 12].map((x) => [wall(t, x & 1), x + 0.5, 0.5]),
+  [gate(t, 3), 14.5, 0.5],
+  [wall(t, 0), 16.5, 0.5],
+  [tower2(t, false), 17, 0],
+  [tower2(t, true), 17, 4],
+  [keep(t), 2, 4],
+  [torch(), 8.5, 4.5],
 ];
 /* window.__go(names, tier, yaw, pitch, dist, cols): lay the named buildings out in a grid (tile scale) and photograph them */
 window.__go = (names, tier, yaw, pitch, dist, cols) => {
@@ -54,7 +47,7 @@ window.__go = (names, tier, yaw, pitch, dist, cols) => {
       sc.add(m);
     }
     names = [];
-    mx = 13;
+    mx = 19;
     mz = 6;
   }
   for (const full of names) {

@@ -110,7 +110,7 @@ async () => {
   need(moved, "no spot to move the castle to (test limit)");
   if (moved) {
     need(
-      SITE2.tx === CS2.tx + 2 && SITE2.ty === CS2.ty + 2,
+      SITE2.tx === CS2.tx + (CS2.sz >> 1) && SITE2.ty === CS2.ty + (CS2.sz >> 1),
       "SITE2 did not follow the moved castle: " + JSON.stringify(SITE2) + " castle " + CS2.tx + "," + CS2.ty,
     );
     need(SITE2.tx !== before.tx || SITE2.ty !== before.ty, "SITE2 unchanged");

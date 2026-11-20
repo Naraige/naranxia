@@ -101,7 +101,7 @@ export function initializeTouch() {
           cx = (a.x + b.x) / 2,
           cy = (a.y + b.y) / 2;
         if (sessionState.started && !sessionState.showMap) {
-          if (d > 8 && TG.d > 8) CAM.dist = Math.max(7, Math.min(80, (CAM.dist * TG.d) / d));
+          if (d > 8 && TG.d > 8) CAM.dist = Math.max(7, Math.min(160, (CAM.dist * TG.d) / d));
           panCam((cx - TG.cx) * tchK(), (cy - TG.cy) * tchK());
         }
         TG = { d, cx, cy };

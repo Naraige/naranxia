@@ -2,6 +2,7 @@ export const rulesState = {
   GST: { k: {}, g: 0, w: 0, s: 0, f: 0, lost: 0 },
 };
 
+const BSZ_CASTLE = 20;
 export const TW = 2250,
   TH = 1250,
   TS = 40,
@@ -62,30 +63,44 @@ export const TRAIN = {
   SZ = { trebuchet: 2 },
   /* footprint, in tiles per side, of the block-built buildings (one tile = 4 blocks; see rendering/models/voxel-buildings.js); the others keep 2 */
   BSZ = {
-    castle: 5,
-    house: 3,
-    farm: 4,
-    storage: 4,
-    barracks: 6,
-    academy: 5,
-    market: 5,
-    forester: 4,
-    guild: 5,
-    observatory: 4,
-    granary: 4,
-    bell: 3,
-    sanctuary: 5,
-    beacon: 3,
-    orchard: 5,
-    embassy: 5,
-    warroom: 5,
-    sappers: 4,
-    forge: 6,
+    castle: 20,
+    house: 12,
+    farm: 16,
+    storage: 16,
+    barracks: 24,
+    academy: 20,
+    market: 20,
+    forester: 16,
+    guild: 20,
+    observatory: 16,
+    granary: 16,
+    bell: 12,
+    sanctuary: 20,
+    beacon: 12,
+    orchard: 20,
+    embassy: 20,
+    warroom: 20,
+    sappers: 16,
+    forge: 24,
   },
+  /* the castle: its side in tiles and the offset of its corner from its centre tile */
+  CSZ = BSZ_CASTLE,
+  CHALF = BSZ_CASTLE >> 1,
   GCAP = { wall: 1, gate: 2, tower: 3 },
   GRNG = { wall: 1.6, gate: 1.6, tower: 2.3 },
   GTOP = { wall: 1.8, gate: 2.1, tower: 3.28 };
 export const bsz = (type) => BSZ[type] || 2;
+/* how far the point (x, y) is from the edge of a structure (negative inside a small one): the square footprint of a block-built building,
+   the old circle (rad) for the one- and two-tile pieces. With 20-tile sides a circle would leave the corners of a building out of reach */
+export const edgeDist = (s, x, y) => {
+  if (s.sz >= 3 && !s.gate) {
+    const h = (s.sz * TS) / 2;
+    return Math.hypot(Math.max(0, Math.abs(x - s.x) - h), Math.max(0, Math.abs(y - s.y) - h));
+  }
+  return Math.hypot(x - s.x, y - s.y) - (s.rad || 20);
+};
+/* the largest half-diagonal a structure can have, for searches that start from structure centres */
+export const SRMAX = 12 * 1.42 * TS;
 
 export const CWOOD = { wall: { w: 12 }, gate: { w: 25 }, tower: { w: 50 }, barracks: { w: 100 }, path: { w: 3 } },
   CSTONE = {
@@ -324,6 +339,6 @@ export function initializeRules() {
   Object.assign(BT, { keep: 30 });
   Object.assign(GCAP, { keep: 12, tower: 4 });
   Object.assign(GRNG, { keep: 2.8 });
-  Object.assign(GTOP, { keep: 3.7 });
+  Object.assign(GTOP, { keep: 10 });
   UPC.keep = { s: 360, w: 80 };
 }

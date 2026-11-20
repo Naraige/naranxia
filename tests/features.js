@@ -75,7 +75,13 @@ async () => {
   units.push(oz);
   waveOn = true;
   const oh = oz.hp;
+  /* the oil boils only while a horde is on (more than 6 of the dead still on a lane); the check used to pass on a castle arrow */
+  const pack = [];
+  for (let i = 0; i < 8; i++) pack.push(mkU(1, "zombie", wl.x + TS * 0.4, wl.y, null, 0));
+  units.push(...pack);
+  waveST = time;
   for (let i = 0; i < 40; i++) {
+    for (const z of pack) z.hp = 55;
     oz.x = wl.x + TS * 0.4;
     oz.y = wl.y;
     update(0.05);

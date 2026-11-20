@@ -39,7 +39,7 @@ async () => {
       if (!a) a = s;
       else {
         const d = Math.hypot(a.tx - s.tx, a.ty - s.ty);
-        if (d >= 24 && d <= 60) b = s;
+        if (d >= 48 && d <= 84) b = s;
       }
     }
     if (coop && !b) {

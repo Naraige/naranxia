@@ -6,7 +6,7 @@ import { doUpgrade, ok, pay } from "./economy.js";
 import { mk } from "./entities.js";
 import { ungar } from "./formations.js";
 import { HOMEC, LPL, playersState, stoneOn } from "./players.js";
-import { bsz, C, DIR4, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
+import { bsz, BSZ, C, CSZ, DIR4, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { sessionState } from "./session.js";
 import { demolish, rampGroup, tfOrder } from "./terraforming.js";
@@ -16,12 +16,12 @@ import { puff } from "../rendering/effects.js";
 import { CONNT } from "../rendering/models/structures.js";
 import { snapM } from "../rendering/render-settings.js";
 import { addStruct, buildStructMesh, refreshNear, rmStruct } from "../rendering/structures.js";
-import { markT } from "../world/terrain-invalidation.js";
+import { markP, markT } from "../world/terrain-invalidation.js";
 import { NAMES } from "../ui/build-catalog.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { mmTile } from "../world/minimap.js";
 import { gOK } from "../world/routes.js";
-import { HT, occ, pth, stairs, ter, terrainState } from "../world/terrain-state.js";
+import { amt, HT, occ, pth, stairs, ter, terrainState } from "../world/terrain-state.js";
 import { levelGround, solid } from "../world/traversal.js";
 
 export const constructionState = {
@@ -55,6 +55,40 @@ export function tilesFor(type, tx, ty, sz, ax, gl) {
   return t;
 }
 
+/* ---- the site of a block-built building. Its footprint is large (12 to 24 tiles a side), so the ground is prepared for it: trees, stone and gold
+   standing on it are cleared away, and the footprint is levelled to its middle height when the ground varies by 3 levels at most. Water, other buildings,
+   stairs and the castle door stay in the way. ---- */
+export const siteTile = (x, y) => {
+  if (!gOK(x, y)) return false;
+  const i = y * TW + x,
+    t = ter[i];
+  return (t === 0 || (t >= 2 && t <= 4)) && !occ.has(i) && !stairs.has(i) && !inDoor(x, y);
+};
+/* the height the footprint would be levelled to, or -1 when the building does not fit there */
+export function siteFit(type, tx, ty) {
+  const z = bsz(type),
+    hs = [];
+  for (let j = 0; j < z; j++)
+    for (let i = 0; i < z; i++) {
+      if (!siteTile(tx + i, ty + j)) return -1;
+      hs.push(HT[(ty + j) * TW + tx + i]);
+    }
+  hs.sort((a, b) => a - b);
+  return hs[hs.length - 1] - hs[0] > 3 ? -1 : hs[hs.length >> 1];
+}
+function clearSite(tx, ty, z) {
+  for (let j = 0; j < z; j++)
+    for (let i = 0; i < z; i++) {
+      const q = (ty + j) * TW + tx + i;
+      if (ter[q] >= 2 && ter[q] <= 4) {
+        ter[q] = 0;
+        amt[q] = 0;
+        mmTile(q);
+        markP(tx + i, ty + j);
+      }
+    }
+}
+
 export function gateOK(tx, ty, ax, gl) {
   const t = tilesFor("gate", tx, ty, 1, ax, gl),
     hs = t.map(([x, y]) => HT[y * TW + x]);
@@ -66,7 +100,7 @@ export function castleRotAt(c, want) {
   for (let k = 0; k < 4; k++) {
     const r = (want + k) & 3;
     if (
-      doorTiles({ tx: c.tx, ty: c.ty, sz: 5, rot: r }, 1).every(
+      doorTiles({ tx: c.tx, ty: c.ty, sz: CSZ, rot: r }, 1).every(
         ([x, y]) => gOK(x, y) && !solid(x, y) && !stairs.has(y * TW + x),
       )
     )
@@ -79,8 +113,9 @@ export function doorTiles(c, depth) {
   const [dx, dy] = DIR4[(c.rot | 0) & 3],
     t = [],
     z = c.sz || 3,
-    a0 = (z - 3) >> 1;
-  for (let a = a0; a < a0 + 3; a++)
+    w = z >= 12 ? 4 : 3,
+    a0 = (z - w) >> 1;
+  for (let a = a0; a < a0 + w; a++)
     for (let d = 0; d < depth; d++) {
       if (dy) t.push([c.tx + a, dy > 0 ? c.ty + z + d : c.ty - 1 - d]);
       else t.push([dx > 0 ? c.tx + z + d : c.tx - 1 - d, c.ty + a]);
@@ -205,6 +240,8 @@ export let build = function build(type, tx, ty) {
     /* These tools and wall replacement apply their own placement checks below. */
   } else if (type === "path") {
     if (!pathOK(tx, ty)) return;
+  } else if (BSZ[type]) {
+    /* A block-built building checks (and clears) its whole footprint below. */
   } else if (!valid(tx, ty)) return;
   if (type === "rotate") {
     rotateB(occ.get(i));
@@ -395,12 +432,11 @@ export let build = function build(type, tx, ty) {
       }
     }
     const bz = bsz(type),
-      t = tilesFor(type, tx, ty, bz);
-    if (!t.every(([x, y]) => gOK(x, y) && valid(x, y))) return;
-    const hs = t.map(([x, y]) => HT[y * TW + x]);
-    if (Math.max(...hs) - Math.min(...hs) > 2) return;
+      h0 = siteFit(type, tx, ty);
+    if (h0 < 0) return;
     pay(C[type]);
-    levelGround(tx, ty, bz, Math.max(...hs));
+    clearSite(tx, ty, bz);
+    levelGround(tx, ty, bz, h0);
     const s = mk(0, type, tx, ty, bz, false);
     addStruct(s);
     refreshNear(s);
@@ -572,22 +608,22 @@ function rotateB(s) {
 export function moveOK(tx, ty) {
   const c = HOMEC();
   if (!c || c.hp <= 0 || !sessionState.structs.includes(c)) return false;
-  const x0 = tx - 2,
-    y0 = ty - 2,
-    nt = tilesFor("castle", x0, y0, 5),
+  const x0 = tx - (CSZ >> 1),
+    y0 = ty - (CSZ >> 1),
+    nt = tilesFor("castle", x0, y0, CSZ),
     own = new Set(c.tiles.map(([x, y]) => y * TW + x));
   if (hyp(x0 - c.tx, y0 - c.ty) > 40) return false;
   const ty0 = c.type;
   c.type = "castle_";
   let r;
   try {
-    r = nt.every(([x, y]) => gOK(x, y) && (own.has(y * TW + x) || valid(x, y)));
+    r = nt.every(([x, y]) => gOK(x, y) && (own.has(y * TW + x) || siteTile(x, y)));
     if (r) {
       const hs = nt.map(([x, y]) => HT[y * TW + x]);
-      if (Math.max(...hs) - Math.min(...hs) > 2) r = false;
+      if (Math.max(...hs) - Math.min(...hs) > 3) r = false;
     }
     if (r) {
-      const f = { tx: x0, ty: y0, rot: c.rot | 0 };
+      const f = { tx: x0, ty: y0, sz: CSZ, rot: c.rot | 0 };
       r = doorTiles(f, 1).every(
         ([x, y]) => gOK(x, y) && (own.has(y * TW + x) || (!solid(x, y) && !stairs.has(y * TW + x))),
       );
@@ -601,32 +637,34 @@ export function moveOK(tx, ty) {
 function moveCastle(tx, ty) {
   const c = HOMEC();
   if (!c || !moveOK(tx, ty)) {
-    hudDisplayState.msgS = "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)";
+    hudDisplayState.msgS = "Cannot move the castle there (20x20 free, within 40 tiles, flat ground)";
     hudDisplayState.msgT = 3;
     snd("err");
     return;
   }
   pay(C.movec);
-  const x0 = tx - 2,
-    y0 = ty - 2,
-    nt = tilesFor("castle", x0, y0, 5),
+  const x0 = tx - (CSZ >> 1),
+    y0 = ty - (CSZ >> 1),
+    nt = tilesFor("castle", x0, y0, CSZ),
     ox = c.x,
-    oy = c.y;
+    oy = c.y,
+    hs = nt.map(([x, y]) => HT[y * TW + x]).sort((a, b) => a - b);
   for (const [x, y] of c.tiles) if (occ.get(y * TW + x) === c) occ.delete(y * TW + x);
-  levelGround(x0, y0, 5, Math.max(...nt.map(([x, y]) => HT[y * TW + x])));
+  clearSite(x0, y0, CSZ);
+  levelGround(x0, y0, CSZ, hs[hs.length >> 1]);
   c.tx = x0;
   c.ty = y0;
   c.tiles = nt;
-  c.x = (x0 + 2.5) * TS;
-  c.y = (y0 + 2.5) * TS;
+  c.x = (x0 + CSZ / 2) * TS;
+  c.y = (y0 + CSZ / 2) * TS;
   for (const [x, y] of nt) occ.set(y * TW + x, c);
   if (c === sessionState.CS) {
-    terrainState.CX = x0 + 2;
-    terrainState.CY = y0 + 2;
+    terrainState.CX = x0 + (CSZ >> 1);
+    terrainState.CY = y0 + (CSZ >> 1);
   } else if (c === sessionState.CS2 && sessionState.SITE2) {
     /* the second castle moved: its site follows (AI camps, hordes and the chunks not yet generated keep away from the real castle) */
-    sessionState.SITE2.tx = x0 + 2;
-    sessionState.SITE2.ty = y0 + 2;
+    sessionState.SITE2.tx = x0 + (CSZ >> 1);
+    sessionState.SITE2.ty = y0 + (CSZ >> 1);
   }
   buildStructMesh(c);
   refreshNear(c);

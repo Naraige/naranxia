@@ -187,8 +187,8 @@ export const NL = {
   "Cancel current orders and stay here": "Annuleer de huidige orders en blijf hier",
   "Cannon": "Kanon",
   "Cannon [/]": "Kanon [/]",
-  "Cannot move the castle there (5x5 free, within 40 tiles, flat ground)":
-    "Het kasteel kan daar niet heen (5x5 vrij, binnen 40 vakjes, vlakke grond)",
+  "Cannot move the castle there (20x20 free, within 40 tiles, flat ground)":
+    "Het kasteel kan daar niet heen (20x20 vrij, binnen 40 vakjes, vlakke grond)",
   "Cannot reshape this tile": "Dit vakje kan niet hervormd worden",
   "Captain": "Kapitein",
   "Castle health": "Gezondheid van het kasteel",

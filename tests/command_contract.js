@@ -18,7 +18,7 @@ async () => {
     if (!a) a = p;
     else {
       const d = Math.hypot(a.tx - p.tx, a.ty - p.ty);
-      if (d >= 24 && d <= 60) b = p;
+      if (d >= 48 && d <= 84) b = p;
     }
   }
   MP.host = true;

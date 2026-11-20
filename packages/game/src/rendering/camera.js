@@ -136,7 +136,7 @@ export function home() {
   CAM.y = LAND;
   CAM.yaw = 0;
   CAM.pitch = 0.92;
-  CAM.dist = window.innerWidth >= 900 ? 24 : 30;
+  CAM.dist = window.innerWidth >= 900 ? 46 : 56;
 }
 
 export function initializeCamera() {

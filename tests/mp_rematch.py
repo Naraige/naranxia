@@ -13,7 +13,7 @@ INIT="""()=>{'use strict';window.__out=[];MP.dc={readyState:'open',send:s=>windo
 ST="()=>JSON.stringify({tick:MP.tick,on:MP.on,conn:MP.conn,ep:MP.ep,ds:MP.desync,seed:SEED,over:over,started:started,mine:!!MP.mine,theirs:!!MP.theirs,h:MP.on?mpHash():null})"
 def P(*a):print(*a,flush=True)
 SITES="""(s)=>{const R0=Math.random;let q=s,a=null,b=null;Math.random=()=>{q=(q*16807)%2147483647;return (q-1)/2147483646};
- for(let t=0;t<20000&&!(a&&b);t++){randomSite(false);if(!pickPos||!pickPos.ok)continue;const p={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=p;else{const d=Math.hypot(a.tx-p.tx,a.ty-p.ty);if(d>=24&&d<=60)b=p}}
+ for(let t=0;t<20000&&!(a&&b);t++){randomSite(false);if(!pickPos||!pickPos.ok)continue;const p={tx:pickPos.tx,ty:pickPos.ty};if(!a)a=p;else{const d=Math.hypot(a.tx-p.tx,a.ty-p.ty);if(d >= 48 && d <= 84)b=p}}
  Math.random=R0;return JSON.stringify([a,b])}"""
 def st(pg):return json.loads(pg.evaluate(ST))
 def start_game(A,B,seed):
@@ -62,7 +62,7 @@ with sync_playwright() as p:
     harness.check('no resync or desync',a['ep']==0 and b['ep']==0 and not a['ds'] and not b['ds'])
     RT="()=>JSON.stringify({far:Math.round(Math.max(...ROUTES.map(r=>Math.max(...r.pts.map(p=>Math.min(Math.hypot(p[0]-CS.tx,p[1]-CS.ty),CS2?Math.hypot(p[0]-CS2.tx,p[1]-CS2.ty):1e9)))))),n:ROUTES.length,p0:ROUTES[0].pts[0]})"
     ra=json.loads(A.evaluate(RT));rb=json.loads(B.evaluate(RT));P('routes',ra,rb)
-    harness.check('host lanes are short (small world)',ra['far']<=175)
+    harness.check('host lanes are short (small world)',ra['far']<=190)
     harness.check('the guest follows the host world size',rb==ra)
     A.evaluate("()=>localStorage.removeItem('dk_msize')")
     harness.finish('mp_rematch',True,A,B,ea+eb,None)

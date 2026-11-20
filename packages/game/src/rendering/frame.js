@@ -14,10 +14,11 @@ import {
   tilesFor,
   valid,
   wallAt,
+  siteFit,
 } from "../gameplay/construction.js";
 import { ok } from "../gameplay/economy.js";
 import { HOMEC, stoneOn } from "../gameplay/players.js";
-import { bsz, C, RS, RS2, TH, TS, TW, UPC, WORK } from "../gameplay/rules.js";
+import { C, RS, RS2, TH, TS, TW, UPC, WORK } from "../gameplay/rules.js";
 import { selBs, selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { rampGroup, rampOK, tfOK } from "../gameplay/terraforming.js";
@@ -423,8 +424,8 @@ export let render3D = function render3D(dt) {
           (hc.rot | 0) +
           ":" +
           OWN.size,
-        hc.tx + 2,
-        hc.ty + 2,
+        hc.tx + (hc.sz >> 1),
+        hc.ty + (hc.sz >> 1),
         41,
         (x, y) => moveOK(x, y),
       );
@@ -466,9 +467,7 @@ export let render3D = function render3D(dt) {
         if (sessionState.mode === "ramp") good = rampOK(tx, ty) && !tfo.has(ty * TW + tx);
         if (sessionState.mode === "stairs") good = good && !!stairInfo(tx, ty);
         if (sessionState.mode === "path") good = good && pth[ty * TW + tx] < (RS.done ? 2 : 1);
-        if (sessionState.mode === "barracks")
-          good =
-            tilesFor("barracks", tx, ty, bsz("barracks")).every(([x, y]) => gOK(x, y) && valid(x, y)) && ok(C.barracks);
+        if (sessionState.mode === "barracks") good = siteFit("barracks", tx, ty) >= 0 && ok(C.barracks);
         let hh =
           sessionState.mode === "farm"
             ? 0.9
@@ -587,14 +586,9 @@ export let render3D = function render3D(dt) {
           sessionState.mode === "warroom" ||
           sessionState.mode === "sappers"
         ) {
-          const t2 = tilesFor(sessionState.mode, tx, ty, bsz(sessionState.mode)),
-            hs2 = t2.map(([x, y]) => HT[y * TW + x]);
-          good =
-            t2.every(([x, y]) => gOK(x, y) && valid(x, y)) &&
-            Math.max(...hs2) - Math.min(...hs2) <= 2 &&
-            ok(C[sessionState.mode]) &&
-            !placeErr(sessionState.mode, tx, ty);
-          yy = Math.max(...hs2) + hh / 2;
+          const h2 = siteFit(sessionState.mode, tx, ty);
+          good = h2 >= 0 && ok(C[sessionState.mode]) && !placeErr(sessionState.mode, tx, ty);
+          yy = (h2 >= 0 ? h2 : HT[ty * TW + tx]) + hh / 2;
         }
         if (sessionState.mode === "raise") {
           showG = false;

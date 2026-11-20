@@ -13,7 +13,7 @@ import { formationsState } from "./formations.js";
 import { lightingState } from "./lighting.js";
 import { BAD, playersState, setPl } from "./players.js";
 import { CLM, RL } from "./resources.js";
-import { C, CWOOD, FOOD0, RALLY, RALLYC, RS, RS2 } from "./rules.js";
+import { C, CHALF, CSZ, CWOOD, FOOD0, RALLY, RALLYC, RS, RS2 } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { D_, sessionState } from "./session.js";
 import { simulationState } from "./simulation.js";
@@ -143,12 +143,12 @@ export function reset() {
   for (const k in RL) delete RL[k];
   initWorld();
   sessionState.CS2 = null;
-  sessionState.CS = mk(0, "castle", terrainState.CX - 2, terrainState.CY - 2, 5, true);
+  sessionState.CS = mk(0, "castle", terrainState.CX - CHALF, terrainState.CY - CHALF, CSZ, true);
   sessionState.CS.rot = castleRotAt(sessionState.CS, sessionState.CROT);
   if (sessionState.SITE2) {
     ensureAround(sessionState.SITE2.tx, sessionState.SITE2.ty, 3);
     setPl(1);
-    sessionState.CS2 = mk(0, "castle", sessionState.SITE2.tx - 2, sessionState.SITE2.ty - 2, 5, true);
+    sessionState.CS2 = mk(0, "castle", sessionState.SITE2.tx - CHALF, sessionState.SITE2.ty - CHALF, CSZ, true);
     sessionState.CS2.rot = castleRotAt(sessionState.CS2, sessionState.SITE2.rot | 0);
     setPl(0);
   }
