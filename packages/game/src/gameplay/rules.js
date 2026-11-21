@@ -339,6 +339,6 @@ export function initializeRules() {
   Object.assign(BT, { keep: 30 });
   Object.assign(GCAP, { keep: 12, tower: 4 });
   Object.assign(GRNG, { keep: 2.8 });
-  Object.assign(GTOP, { keep: 10 });
+  Object.assign(GTOP, { keep: 12 });
   UPC.keep = { s: 360, w: 80 };
 }

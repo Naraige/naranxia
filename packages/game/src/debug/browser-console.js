@@ -1,4 +1,5 @@
 import { baseTrait, BASES, campDebug, campLabel, inTerr, spearN, TRAITS } from "../ai/kingdoms.js";
+import { markP, markT } from "../world/terrain-invalidation.js";
 import { evChoose, eventsState, eventsTick, evPush, renownMul, resolveEvent0 } from "../gameplay/events.js";
 import { bossStomp } from "../ai/wave-boss.js";
 import { RHAS, roleAdj0 } from "../ai/worker-roles.js";
@@ -591,6 +592,9 @@ export function installBrowserConsole() {
     svPeek: { get: () => svPeek },
     continueLast: { get: () => continueLast },
     ter: { get: () => ter },
+    constructionState: { get: () => constructionState },
+    markTile: { get: () => markT },
+    markProps: { get: () => markP },
     setBlocks: { get: () => setBlocks },
     blkChunks: {
       get: () => ({ CHK: BCHK, buildChunk: bBuildChunk, buildProps: bBuildProps, updateChunks: bUpdateChunks }),

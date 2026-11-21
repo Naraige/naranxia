@@ -355,7 +355,7 @@ export function castleFire(dt) {
       t: 0.3,
       T: 0.3,
       a: 1,
-      h0: (c.bh || LAND) + (c.tier ? 3.5 : 2.5),
+      h0: (c.bh || LAND) + 11,
     });
     if (b) b.hp -= dm;
     else {
@@ -369,7 +369,7 @@ export function castleFire(dt) {
           t: 0.3,
           T: 0.3,
           a: 1,
-          h0: (c.bh || LAND) + (c.tier ? 3.5 : 2.5),
+          h0: (c.bh || LAND) + 11,
         });
     }
     snd("arrow", sx, sy);

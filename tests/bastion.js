@@ -39,10 +39,10 @@ async () => {
     B = {};
   let k = 0;
   for (const t of types) {
-    const a = k % 4,
-      b = (k / 4) | 0,
-      f = freeTile(CS.tx + (a - 1.5) * 5, CS.ty + 9 + b * 5);
-    build(t, f[0], f[1]);
+    /* a real site for the footprint of each (12 to 24 tiles a side), on a ring round the castle */
+    const an = (k / types.length) * 6.283,
+      f = freeSite(t, Math.round(CS.tx + 10 + Math.cos(an) * 46), Math.round(CS.ty + 10 + Math.sin(an) * 46), 60);
+    if (f) build(t, f[0], f[1]);
     k++;
     const st = structs.find((x) => x.type === t);
     if (st) {

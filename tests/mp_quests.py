@@ -17,7 +17,9 @@ INIT="""()=>{'use strict';window.__out=[];window.__q=[];MP.dc={readyState:'open'
  const _e=mpExec;mpExec=function(c,m){
   if(c.k==='qa'){QST.a=[c.g,c.w,c.s];return}
   if(c.k==='qd'){for(const id of c.ids)if(!QST.d[id])QST.d[id]=2;return}
-  if(c.k==='zz'){const cs=c.p?CS2:CS;for(let i=0;i<c.n;i++){const a=i/c.n*6.283,f=freeTile(Math.round(cs.tx+Math.cos(a)*c.r),Math.round(cs.ty+Math.sin(a)*c.r));if(f)units.push(mkU(1,'zombie',(f[0]+.5)*TS,(f[1]+.5)*TS))}return}
+  if(c.k==='zz'){const cs=c.p?CS2:CS,us=units.filter(u=>u.t===0&&(u.pl|0)===c.p&&(u.type==='spearman'||u.type==='knight')&&u.hp>0);
+   let cx=cs.tx+cs.sz/2,cy=cs.ty+cs.sz/2;if(us.length){cx=us.reduce((a,u)=>a+u.x,0)/us.length/TS;cy=us.reduce((a,u)=>a+u.y,0)/us.length/TS}
+   for(let i=0;i<c.n;i++){const a=i/c.n*6.283,f=freeTile(Math.round(cx+Math.cos(a)*c.r),Math.round(cy+Math.sin(a)*c.r));if(f)units.push(mkU(1,'zombie',(f[0]+.5)*TS,(f[1]+.5)*TS))}return}
   return _e(c,m)};
  const _sg=startGame;startGame=function(){_sg();for(const R of RESP){R.g=5000;R.w=5000;R.s=5000;R.f=5000}waveT=1e9};
  return 'ok'}"""
@@ -56,8 +58,9 @@ def wait(cond,sec,lbl):
             a=st(A);b=st(B)
             if cond(a) and cond(b):P(lbl,'ok after',round(time.time()-t0,1),'s tick',a['tick']);check();harness.check(lbl,True);return True
     check();P(lbl,'TIMEOUT','A',json.dumps(st(A)),'B',json.dumps(st(B)));harness.check(lbl,False);return False
-# the k-th free spot around the player's castle (the real build rules may still refuse a spot: place() then tries the next one)
-FIND="""([pl,t,k])=>{const c=pl?CS2:CS;let f=null,n=0;for(let r=5;r<16&&!f;r++)for(let a=0;a<24&&!f;a++){const x=Math.round(c.tx+Math.cos(a/24*6.283+1)*r),y=Math.round(c.ty+Math.sin(a/24*6.283+1)*r);const tt=tilesFor(t,x,y,BSZ[t]||2);if(tt.every(([i,j])=>gOK(i,j)&&valid(i,j))&&n++===k)f=[x,y]}if(!f)return 'nospot';build(t,f[0],f[1]);return JSON.stringify(f)}"""
+# a site near the player's castle where the building fits by the real rules (freeSite: the footprint, trees cleared, ground levelled);
+# k picks another side of the castle (place() tries the next one when the build is still refused or cannot be reached)
+FIND="""([pl,t,k])=>{const c=pl?CS2:CS,z=c.sz,A=[[-4,-4],[z+4,-4],[-4,z+4],[z+4,z+4],[-20,8],[z+8,8],[8,-20],[8,z+8]][((k/5)|0)%8],f=freeSite(t,c.tx+A[0],c.ty+A[1],60);if(!f)return 'nospot';build(t,f[0],f[1]);return JSON.stringify(f)}"""
 def place(pg,pl,t):
     for k in range(0,40,5):
         r=pg.evaluate(FIND,[pl,t,k]);has=lambda s:(t+':1.0') in s['p%d'%pl].split(' ')
@@ -96,8 +99,9 @@ with sync_playwright() as p:
     P('A trains',A.evaluate(TRAINJ,[0,'knight',2]),A.evaluate(TRAINJ,[0,'spearman',3]));P('B trains',B.evaluate(TRAINJ,[1,'spearman',4]))
     ok.append(wait(done('knights'),90,'knights'))
     ok.append(wait(lambda s:s['sp']==[3,4],120,'spearmen 3+4'))
-    # a fight at each castle: spearmen must strike the same way on both machines
-    A.evaluate("()=>{mpPush({k:'zz',n:10,r:8,p:0});mpPush({k:'zz',n:10,r:8,p:1})}")
+    # a fight for each player: zombies ringed round his soldiers (the buildings are large now: a ring round the castle would be far from them),
+    # the spearmen must strike the same way on both machines
+    A.evaluate("()=>{mpPush({k:'zz',n:5,r:6,p:0});mpPush({k:'zz',n:5,r:6,p:1})}")
     ok.append(wait(lambda s:s['z']>0,20,'zombies in'));ok.append(wait(lambda s:s['z']<=2,150,'zombies beaten'))
     # skip to the co-op quest, then wait for the delivery
     A.evaluate("()=>{mpPush({k:'qd',ids:['archers','walls','tower','traps','wave1','market','guild','research','king','skill','wave5','siege','envoy']})}")

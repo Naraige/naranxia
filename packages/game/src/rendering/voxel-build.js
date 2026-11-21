@@ -68,71 +68,19 @@ export class VB {
   shell(x0, y0, z0, x1, y1, z1, b) {
     return this.walls(x0, y0, z0, x1, y1, z1, b).box(x0, y0, z0, x1, y0, z1, b).box(x0, y1, z0, x1, y1, z1, b);
   }
-  /* gabled roof over [x0..x1] x [z0..z1] starting at height y; the ridge runs along x when alongX (else along z).
-     st is a stair id ("spruce_stairs"), sl its slab id; the span is walked inward row by row, the last row is a slab (odd span) or a stair pair (even span) */
-  gable(x0, z0, x1, z1, y, alongX, st, sl, gableB) {
-    const lo = alongX ? z0 : x0,
-      hi = alongX ? z1 : x1,
-      n = alongX ? [x0, x1] : [z0, z1];
-    for (let k = 0; lo + k <= hi - k; k++) {
-      const a = lo + k,
-        b = hi - k;
-      for (let t = n[0]; t <= n[1]; t++) {
-        const put = (c, face) => {
-          const bl = `${st}[facing=${face},half=bottom,shape=straight]`;
-          if (alongX) this.set(t, y + k, c, bl);
-          else this.set(c, y + k, t, bl);
-        };
-        if (a === b) {
-          if (alongX) this.set(t, y + k, a, sl + "[type=bottom]");
-          else this.set(a, y + k, t, sl + "[type=bottom]");
-        } else {
-          put(a, alongX ? "south" : "east");
-          put(b, alongX ? "north" : "west");
-          for (let c = a + 1; c < b; c++) {
-            if (!gableB || (t !== n[0] + 1 && t !== n[1] - 1)) break;
-            if (alongX) this.set(t, y + k, c, gableB);
-            else this.set(c, y + k, t, gableB);
-          }
-        }
-      }
-    }
-    return this;
-  }
-  /* four-sided pyramid roof from stairs, finished by a slab or block at the top */
-  hip(x0, z0, x1, z1, y, st, top) {
-    let a = x0,
-      b = z0,
-      c = x1,
-      d = z1,
-      k = 0;
-    for (; a <= c && b <= d; k++, a++, b++, c--, d--) {
-      for (let x = a; x <= c; x++) {
-        this.set(x, y + k, b, `${st}[facing=south,half=bottom,shape=straight]`);
-        this.set(x, y + k, d, `${st}[facing=north,half=bottom,shape=straight]`);
-      }
-      for (let z = b; z <= d; z++) {
-        this.set(a, y + k, z, `${st}[facing=east,half=bottom,shape=straight]`);
-        this.set(c, y + k, z, `${st}[facing=west,half=bottom,shape=straight]`);
-      }
-      this.set(a, y + k, b, `${st}[facing=south,half=bottom,shape=outer_left]`);
-      this.set(c, y + k, b, `${st}[facing=south,half=bottom,shape=outer_right]`);
-      this.set(a, y + k, d, `${st}[facing=north,half=bottom,shape=outer_right]`);
-      this.set(c, y + k, d, `${st}[facing=north,half=bottom,shape=outer_left]`);
-      if (c - a < 2 || d - b < 2) {
-        for (let z = b; z <= d; z++) for (let x = a; x <= c; x++) this.set(x, y + k + 1, z, top);
-        break;
-      }
-    }
-    return this;
-  }
   /* a gabled roof with a profile, the way steep medieval roofs are built: o.prof lists how many blocks each row climbs from the eave inward
      (1 = a stair, 2 = a block with a stair on it...), so [1, 1, 2, 2] flares at the eave and steepens to the ridge.
-     (x0,z0)-(x1,z1) is the whole roof with its overhangs, y the eave. m and t are materials {st, sl, bl} for the body and for the trim
-     (the rows at both gable ends and the ridge). fill(u, v) gives the block of the gable walls (u: offset from the middle, v: height above the eave), set `end` blocks in from each end */
+     (x0,z0)-(x1,z1) is the whole roof with its overhangs, y the eave. m and t are materials {st, sl, bl} for the body and for the trim: the trim
+     draws the outline of the roof (the row at each gable end, the eave course unless o.eave says otherwise, the ridge).
+     o.under thickens the barge boards (stairs under the trim rows); o.crest shapes the ridge: "teeth" (blocks and slabs alternate), "block",
+     a block name (a ridge pole), else slabs; o.fin is a block set on both ends of the ridge (o.finAt "lo" / "hi": on one end only).
+     o.fill(u, v, far) gives the blocks of the gable walls (u: offset from the middle, v: height above the eave), set `end` blocks in from each end;
+     o.fill2 the same one block further in (the panels of a framed gable). Returns the height of the ridge; this.rf describes the courses
+     ({ ys: top of each course, lo, hi, n0, n1, ax, top }) for whatever is set on the roof afterwards (dormers, chimneys) */
   roof(o) {
     const { x0, z0, x1, z1, y, m } = o,
       t = o.t || m,
+      e = o.eave === false ? m : o.eave || t,
       ax = o.alongX !== undefined ? o.alongX : x1 - x0 >= z1 - z0,
       prof = o.prof || [1],
       end = o.end === undefined ? 1 : o.end,
@@ -141,34 +89,55 @@ export class VB {
       n0 = ax ? x0 : z0,
       n1 = ax ? x1 : z1,
       put = (tt, c, yy, b) => (ax ? this.set(tt, yy, c, b) : this.set(c, yy, tt, b)),
+      addb = (tt, c, yy, b) => (ax ? this.add(tt, yy, c, b) : this.add(c, yy, tt, b)),
       fa = ax ? "south" : "east",
-      fb = ax ? "north" : "west";
+      fb = ax ? "north" : "west",
+      S = (M, f, h = "bottom") => `${M.st}[facing=${f},half=${h},shape=straight]`,
+      slab = t.sl + "[type=bottom]",
+      ridge = (tt) =>
+        o.crest === "teeth"
+          ? (tt - n0) % 2 === 0
+            ? t.bl
+            : slab
+          : o.crest === "block"
+            ? t.bl
+            : typeof o.crest === "string"
+              ? o.crest
+              : slab,
+      ys = [];
     let yk = y,
       top = y;
     for (let k = 0; lo + k <= hi - k; k++) {
       const a = lo + k,
         b = hi - k,
-        r = prof[Math.min(k, prof.length - 1)];
+        r = a === b ? 1 : prof[Math.min(k, prof.length - 1)];
       for (let tt = n0; tt <= n1; tt++) {
-        const M = tt === n0 || tt === n1 ? t : m;
-        if (a === b) {
-          for (let i = 0; i < r - 1; i++) put(tt, a, yk + i, t.bl);
-          put(tt, a, yk + r - 1, t.sl + "[type=bottom]");
-        } else {
+        const edge = tt === n0 || tt === n1,
+          M = edge ? t : k === 0 ? e : m;
+        if (a === b) put(tt, a, yk, ridge(tt));
+        else {
           for (let i = 0; i < r - 1; i++) {
             put(tt, a, yk + i, M.bl);
             put(tt, b, yk + i, M.bl);
           }
-          put(tt, a, yk + r - 1, `${M.st}[facing=${fa},half=bottom,shape=straight]`);
-          put(tt, b, yk + r - 1, `${M.st}[facing=${fb},half=bottom,shape=straight]`);
-          if (b - a === 1 && o.cap !== false) {
-            put(tt, a, yk + r, t.sl + "[type=bottom]");
-            put(tt, b, yk + r, t.sl + "[type=bottom]");
+          put(tt, a, yk + r - 1, S(M, fa));
+          put(tt, b, yk + r - 1, S(M, fb));
+          if (edge && o.under && k > 0) {
+            addb(tt, a, yk - 1, S(t, fa, "top"));
+            addb(tt, b, yk - 1, S(t, fb, "top"));
           }
-          if (o.fill && (tt === n0 + end || tt === n1 - end))
+          if (b - a === 1 && o.cap !== false) {
+            put(tt, a, yk + r, ridge(tt));
+            put(tt, b, yk + r, ridge(tt));
+          }
+          for (const [fn, d] of [
+            [o.fill, end],
+            [o.fill2, end + 1],
+          ]) {
+            if (!fn || (tt !== n0 + d && tt !== n1 - d) || n0 + d > n1 - d) continue;
             for (let c = a + 1; c < b; c++)
               for (let i = 0; i < r; i++) {
-                const bl = o.fill(c - (lo + hi) / 2, yk + i - y, tt === n0 + end ? 0 : 1);
+                const bl = fn(c - (lo + hi) / 2, yk + i - y, tt === n0 + d ? 0 : 1);
                 if (bl)
                   put(
                     tt,
@@ -177,14 +146,21 @@ export class VB {
                     bl === "window" ? bl + (ax ? "[north=true,south=true]" : "[east=true,west=true]") : bl,
                   );
               }
+          }
         }
       }
-      top = yk + r - 1;
+      ys.push(yk + r - 1);
+      top = a === b ? yk : b - a === 1 && o.cap !== false ? yk + r : yk + r - 1;
       yk += r;
     }
+    if (o.fin) {
+      const c = (lo + hi) >> 1;
+      for (const tt of o.finAt === "lo" ? [n0] : o.finAt === "hi" ? [n1] : [n0, n1]) put(tt, c, top + 1, o.fin);
+    }
+    this.rf = { ys, lo, hi, n0, n1, ax, top, y };
     return top;
   }
-  /* a lean-to roof: one slope climbing from the low side. dir is the side the roof falls toward ("south": low at z1) */
+  /* a lean-to roof: one slope climbing from the low side. dir is the side the roof falls toward ("south": low at z1); o.t trims its two ends and its eave */
   shed(o) {
     const { x0, z0, x1, z1, y, m, dir } = o,
       prof = o.prof || [1],
@@ -196,7 +172,7 @@ export class VB {
       const r = prof[Math.min(k, prof.length - 1)],
         c = dir === "south" ? z1 - k : dir === "north" ? z0 + k : dir === "east" ? x1 - k : x0 + k;
       for (let tt = ax ? x0 : z0; tt <= (ax ? x1 : z1); tt++) {
-        const M = o.t && (tt === (ax ? x0 : z0) || tt === (ax ? x1 : z1)) ? o.t : m;
+        const M = o.t && (tt === (ax ? x0 : z0) || tt === (ax ? x1 : z1) || k === 0) ? o.t : m;
         for (let i = 0; i < r - 1; i++) ax ? this.set(tt, yk + i, c, M.bl) : this.set(c, yk + i, tt, M.bl);
         const s = `${M.st}[facing=${back},half=bottom,shape=straight]`;
         ax ? this.set(tt, yk + r - 1, c, s) : this.set(c, yk + r - 1, tt, s);
@@ -205,10 +181,14 @@ export class VB {
     }
     return yk - 1;
   }
-  /* a pointed roof on a square: rings of stairs climbing by the profile, closed by a column of blocks */
-  spire(o) {
+  /* a hipped roof over a rectangle, or a spire over a square: rings of stairs climbing by the profile. The trim (o.t) draws the eave ring
+     (unless o.eave is false) and the four hips; the last ring closes on a ridge of slabs, a square on a point with its finial (o.fin).
+     Returns the height of the top */
+  hipRoof(o) {
     const { y, m } = o,
-      prof = o.prof || [1];
+      t = o.t || m,
+      prof = o.prof || [1],
+      S = (M, f, sh) => `${M.st}[facing=${f},half=bottom,shape=${sh}]`;
     let a = o.x0,
       b = o.z0,
       c = o.x1,
@@ -217,19 +197,43 @@ export class VB {
     for (let k = 0; a <= c && b <= d; k++, a++, b++, c--, d--) {
       const r = prof[Math.min(k, prof.length - 1)];
       if (c - a < 2 || d - b < 2) {
-        this.box(a, yk, b, c, yk + r - 1, d, m.bl);
+        const point = c - a < 2 && d - b < 2;
+        if (!point) {
+          /* a ridge: one course of slabs */
+          this.box(a, yk, b, c, yk, d, t.sl + "[type=bottom]");
+          return yk;
+        }
+        for (let i = 0; i < r; i++) this.box(a, yk + i, b, c, yk + i, d, t.bl);
+        if (o.fin && point) {
+          const fs = Array.isArray(o.fin) ? o.fin : [o.fin];
+          fs.forEach((f, i) => this.set(a, yk + r + i, b, f));
+          return yk + r - 1 + fs.length;
+        }
         return yk + r - 1;
       }
-      for (let i = 0; i < r - 1; i++) this.walls(a, yk + i, b, c, yk + i, d, m.bl);
-      const yy = yk + r - 1,
-        S = (f, sh) => `${m.st}[facing=${f},half=bottom,shape=${sh}]`;
-      for (let x = a; x <= c; x++) this.set(x, yy, b, S("south", "straight")).set(x, yy, d, S("north", "straight"));
-      for (let z = b; z <= d; z++) this.set(a, yy, z, S("east", "straight")).set(c, yy, z, S("west", "straight"));
-      this.set(a, yy, b, S("south", "outer_left")).set(c, yy, b, S("south", "outer_right"));
-      this.set(a, yy, d, S("north", "outer_right")).set(c, yy, d, S("north", "outer_left"));
+      const M = k === 0 && o.eave !== false ? o.eave || t : m;
+      for (let i = 0; i < r - 1; i++) {
+        this.walls(a, yk + i, b, c, yk + i, d, M.bl);
+        for (const [x, z] of [
+          [a, b],
+          [c, b],
+          [a, d],
+          [c, d],
+        ])
+          this.set(x, yk + i, z, t.bl);
+      }
+      const yy = yk + r - 1;
+      for (let x = a; x <= c; x++)
+        this.set(x, yy, b, S(M, "south", "straight")).set(x, yy, d, S(M, "north", "straight"));
+      for (let z = b; z <= d; z++) this.set(a, yy, z, S(M, "east", "straight")).set(c, yy, z, S(M, "west", "straight"));
+      this.set(a, yy, b, S(t, "south", "outer_left")).set(c, yy, b, S(t, "south", "outer_right"));
+      this.set(a, yy, d, S(t, "north", "outer_right")).set(c, yy, d, S(t, "north", "outer_left"));
       yk += r;
     }
     return yk - 1;
+  }
+  spire(o) {
+    return this.hipRoof(o);
   }
   /* every cell of the layer y whose centre is within r of (cx, cz); with r0 only the ring between r0 and r. cx, cz may be halves (a tower of even width) */
   disc(cx, cz, r, y, b, r0 = -1) {
@@ -245,16 +249,37 @@ export class VB {
     for (let y = y0; y <= y1; y++) this.disc(cx, cz, r, y, b, r - 1.05);
     return this;
   }
-  /* a cone of blocks: the radius shrinks by `step` every `rise` layers, with a brim of slabs at the foot */
-  cone(cx, cz, r, y, m, rise = 2, step = 1, brim = true) {
-    if (brim) this.disc(cx, cz, r + 1, y, m.sl + "[type=bottom]");
-    let yy = y;
-    for (let rr = r; rr > 0.45; rr -= step) {
-      for (let i = 0; i < rise; i++) this.disc(cx, cz, rr, yy + i, m.bl);
-      yy += rise;
+  /* a cone of blocks: the radius shrinks by `step` every `rise` layers (rise: a number, or a list of heights from the foot up, so a spire can
+     flare then shoot up), with a brim of slabs at the foot and a slab between the steps.
+     t: another material for the brim and the tip; fin: a finial. Returns the height of the top */
+  cone(cx, cz, r, y, m, rise = 2, step = 1, brim = true, t, fin) {
+    const T = t || m,
+      rs = Array.isArray(rise) ? rise : null;
+    if (brim) this.disc(cx, cz, r + 1, y, T.sl + "[type=bottom]");
+    let yy = y,
+      k = 0;
+    for (let rr = r; rr > 0.45; rr -= step, k++) {
+      const last = rr - step > 0.45 ? m : T,
+        h = rs ? rs[Math.min(k, rs.length - 1)] : rise;
+      for (let i = 0; i < h; i++) this.disc(cx, cz, rr, yy + i, last.bl);
+      yy += h;
       if (rr - step > 0.45) this.disc(cx, cz, rr, yy, m.sl + "[type=bottom]", rr - step);
     }
+    if (fin) {
+      const fs = Array.isArray(fin) ? fin : [fin];
+      fs.forEach((f, i) => this.set(Math.floor(cx), yy + i, Math.floor(cz), f));
+      return yy - 1 + fs.length;
+    }
     return yy - 1;
+  }
+  /* half a ball of blocks standing on the layer y */
+  dome(cx, cz, r, y, b, hollow) {
+    for (let k = 0; k <= r; k++) {
+      const rr = Math.sqrt(Math.max(0, (r + 0.35) * (r + 0.35) - k * k));
+      if (rr < 0.5) break;
+      this.disc(cx, cz, rr, y + k, b, hollow ? rr - 1.3 : -1);
+    }
+    return this;
   }
   /* a door in a wall: lower and upper half, facing outward */
   door(x, y, z, face, wood = "spruce") {

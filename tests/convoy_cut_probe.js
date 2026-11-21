@@ -58,7 +58,7 @@ async () => {
       outcomes.every((v) => v === outcomes[0]),
     );
     __test.check("route lookup preserves gameplay state " + trial, mpHash(), before);
-    if (trial === 77) __test.check("known river cut", r, false);
+    if (trial === 62) __test.check("known river cut", r, false);
     ms.sort((x, y) => x - y);
     if (r) tl.push(ms[1]);
     else {

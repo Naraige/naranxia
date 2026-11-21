@@ -5,15 +5,16 @@ import os
 # NOT in the quick suite (two page loads; run by hand): co-op on a map where the two castles have NO land route between them.
 # The convoy quest must be skipped (state 2, no reward) on both machines at the same tick, with equal hashes all along, the guest's
 # convoy must be refused, and the land-route check (convoyLinked, every 30 s of simulation) must stay cheap: it is timed on both pages.
-# World and sites: trial T of tests/convoy_cut_probe.js (default 77: a river between the castles; 49 and 80: both castles on closed ledges).
+# World and sites: trial T of tests/convoy_cut_probe.js (default 62: a river between the castles; 16 and 49: castles on closed ledges).
+# The cut pairs move when the site rules do (castle size, spacing): rerun the probe and pick one from its list.
 # Test-only commands go through the lockstep like player commands: `qa` sets the gathered counters, `qd` marks quests done
 # without reward (to reach the convoy quest), `zz` spawns zombies around a castle.
-# usage: python3 tests/mp_cut.py [naranxia_readable.html] [trial, default 77]
+# usage: python3 tests/mp_cut.py [naranxia_readable.html] [trial, default 62]
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)));sys.path.insert(0,os.path.join(ROOT,'tools'))
 import fontroute
 import mp_harness as harness
 html=sys.argv[1] if len(sys.argv)>1 else 'naranxia_readable.html'
-TRIAL=int(sys.argv[2]) if len(sys.argv)>2 else 77
+TRIAL=int(sys.argv[2]) if len(sys.argv)>2 else 62
 INIT="""()=>{'use strict';window.__out=[];window.__q=[];MP.dc={readyState:'open',send:s=>window.__out.push(s)};
  renderer.render=function(){};
  const _e=mpExec;mpExec=function(c,m){

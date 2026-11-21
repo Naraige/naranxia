@@ -4,6 +4,7 @@ import { DIR4, TS } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { rmotion } from "../core/prefs.js";
 import { _o, glow, smk } from "./effects.js";
+import { FORT_TOP } from "./models/builds/walls.js";
 import { LMU, NGU } from "./materials.js";
 import { CAM, hemi, scene, sun } from "./scene.js";
 import { THREE } from "./three.js";
@@ -36,10 +37,19 @@ function lampList() {
   for (const s of sessionState.structs) {
     if (s.t !== 0 || s.prog < 1) continue;
     const b = s.bh || 0;
-    if (s.type === "tower")
-      LAMPS.push([s.x, s.y, b + (s.sz === 2 ? (s.tier === 0 ? 4.2 : 4.6) : s.tier === 0 ? 5.45 : 4.95), 1]);
+    if (s.type === "tower") LAMPS.push([s.x, s.y, b + (s.sz === 2 ? FORT_TOP.tower2 : FORT_TOP.tower) + 0.5, 1]);
     else if (s.type === "gate") {
-      LAMPS.push([s.x, s.y, b + 2.6, 1]);
+      LAMPS.push([s.x, s.y, b + FORT_TOP.gate - 1.5, 1]);
+    } else if (s.type === "castle" && s.sz >= 12) {
+      /* the block castle: the sconces either side of the gate and of the keep door (tiles from its middle, along its front and across) */
+      const [fx, fy] = DIR4[(s.rot | 0) & 3];
+      for (const [f, d, h, w] of [
+        [9.4, -1.5, 3.7, 1],
+        [9.4, 1.5, 3.7, 1],
+        [2.4, -1.5, 3.7, 0.8],
+        [2.4, 1.5, 3.7, 0.8],
+      ])
+        LAMPS.push([s.x + (fx * f - fy * d) * TS, s.y + (fy * f + fx * d) * TS, b + h, w]);
     } else if (s.type === "castle") {
       const [fx, fy] = DIR4[(s.rot | 0) & 3],
         st = s.tier !== 0;
@@ -73,7 +83,8 @@ function lampList() {
           ? [s.x - fx * ox, s.y - fy * ox, b + 8.85, 1.6]
           : [s.x - fx * 0.55 * TS, s.y - fy * 0.55 * TS, b + 3.44, 1.1],
       );
-    } else if (s.type === "wall" && (s.tiles[0][0] + s.tiles[0][1] * 3) % 5 === 0) LAMPS.push([s.x, s.y, b + 3.4, 0.6]);
+    } else if (s.type === "wall" && (s.tiles[0][0] + s.tiles[0][1] * 3) % 5 === 0)
+      LAMPS.push([s.x, s.y, b + FORT_TOP.wall + 0.4, 0.6]);
     else if (s.type === "torch") LAMPS.push([s.x, s.y, b + 2.6, 0.85]);
     else if (s.type === "market") LAMPS.push([s.x, s.y, b + 1.5, 0.55]);
   }

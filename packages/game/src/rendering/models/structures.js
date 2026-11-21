@@ -10,7 +10,9 @@ import {
   observatoryGeo,
   sanctuaryGeo,
 } from "./bastion-buildings.js";
-import { TW } from "../../gameplay/rules.js";
+import { ROTT, TW } from "../../gameplay/rules.js";
+import { BKB, matOfKind } from "../blocks.js";
+import { THREE } from "../three.js";
 import { bxc, geometryState, newG, toGeo } from "../geometry.js";
 import {
   academyGeo,
@@ -309,12 +311,35 @@ export function scafGeo(w, d, h) {
 }
 
 /* the block-built buildings: one cached geometry per type and tier, drawn at 1/BPT tile per block, filling the footprint from its corner */
+/* the same geometry for a building turned a quarter: the textures are drawn in world space, so only the lying logs must change kind
+   (a beam along x in the model lies along z in the world). Positions, normals, colours and faces are shared, not copied */
+export function turnedLogs(g) {
+  const m = g.getAttribute("mat");
+  if (!m) return g;
+  const a = new Float32Array(m.array),
+    X = matOfKind(BKB.logX),
+    Z = matOfKind(BKB.logZ);
+  for (let i = 0; i < a.length; i++)
+    if (a[i] === X) a[i] = Z;
+    else if (a[i] === Z) a[i] = X;
+  const t = new THREE.BufferGeometry();
+  for (const k of ["position", "normal", "color"]) t.setAttribute(k, g.getAttribute(k));
+  t.setAttribute("mat", new THREE.Float32BufferAttribute(a, 1));
+  t.setIndex(g.getIndex());
+  t.boundingSphere = g.boundingSphere;
+  return t;
+}
+const turned = (s) => ((ROTT.has(s.type) && !s.hm ? s.rot | 0 : 0) & 1) === 1;
+
 function voxGeo(s) {
   const B = VOXB[s.type],
     v = B.variants ? ((((s.tx | 0) * 7 + (s.ty | 0) * 13) % B.variants) + B.variants) % B.variants : 0,
-    k = "vx" + s.type + (s.tier === 0 ? "w" : "s") + v;
-  if (GEO[k]) return GEO[k];
-  return (GEO[k] = voxelGeo(B.make(s.tier === 0 ? 0 : 1, v), { ox: B.ox || 0, oz: B.oz || 0, k: 1 / BPT }));
+    k = "vx" + s.type + (s.tier === 0 ? "w" : "s") + v,
+    kt = turned(s) ? k + "t" : k;
+  if (GEO[kt]) return GEO[kt];
+  const g =
+    GEO[k] || (GEO[k] = voxelGeo(B.make(s.tier === 0 ? 0 : 1, v), { ox: B.ox || 0, oz: B.oz || 0, k: 1 / BPT }));
+  return kt === k ? g : (GEO[kt] = turnedLogs(g));
 }
 
 export function sGeo(s, m) {

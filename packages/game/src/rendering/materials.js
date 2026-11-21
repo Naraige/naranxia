@@ -169,7 +169,7 @@ export function initializeMaterials() {
 #ifdef TERR
  if(vWP.y<11.9&&vMat<8.5){float dw=clamp((11.92-vWP.y)*.32+.25,0.,1.);diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.09,.24,.3),dw*.85);}
 #endif
- if(BL){float bm=mod(mId,20.),bq=uBlk*16.,px1=fw*bq,fzb=aN.y>.5?7.3:(aN.x>.5?3.1:5.7);vec2 pb=floor(uv*bq+.001);vec3 cb=vColor.rgb;
+ if(BL){float bm=mId>59.5?mId-40.:mod(mId,20.),bq=uBlk*16.,px1=fw*bq,fzb=aN.y>.5?7.3:(aN.x>.5?3.1:5.7);vec2 pb=floor(uv*bq+.001);vec3 cb=vColor.rgb;
   if(bm==8.){float ry=floor((ceil(vWP.y-.004)-vWP.y)*bq);if(ry>=2.+floor(hn3(vec3(pb.x,3.,fzb))*3.)){bm=2.;cb=vec3(.53,.38,.26)*(wN.x>.5?.9:(wN.x<-.5?.8:(wN.z>.5?.95:.75)));}}
   diffuseColor.rgb=blkTex(bm,cb,pb,fzb,aN.y>.5,1.-smoothstep(.45,1.4,px1),1.-smoothstep(.7,2.4,px1),wq);
 #ifdef TERR
@@ -185,16 +185,16 @@ export function initializeMaterials() {
  {vec3 alb=max(diffuseColor.rgb,vec3(.004));vec3 irr=(reflectedLight.directDiffuse+reflectedLight.indirectDiffuse)/alb;float li=dot(irr,vec3(.299,.587,.114));
   float r=li/max(uLMax,.05);
   float bd=.4+.3*smoothstep(.24,.36,r)+.3*smoothstep(.52,.64,r)+.16*smoothstep(1.,1.25,r);
-  vec3 tnt=mix(vec3(.64,.74,1.08),vec3(1.06,1.,.88),smoothstep(.36,.7,r));
+  vec3 tnt=mix(BL?vec3(.8,.85,1.03):vec3(.64,.74,1.08),vec3(1.06,1.,.88),smoothstep(.36,.7,r));
   vec3 nI=irr/max(li,1e-4)*bd*uLMax*tnt;
   float h1=0.;if(r<.5){float hl=fract((uv.x+uv.y)*4.+vn3(vec3(uv*2.,1.))*.7);h1=(1.-smoothstep(.06,.17,hl))*(1.-smoothstep(.28,.5,r));
    if(r<.34){float hl2=fract((uv.x-uv.y)*4.+vn3(vec3(uv*2.,2.))*.7);h1=max(h1,(1.-smoothstep(.06,.17,hl2))*(1.-smoothstep(.18,.34,r)));}h1*=FA(4.);}
   nI*=1.-(BL?0.:h1)*.42*(1.-.55*kT)*(vMat>4.5&&vMat<5.5?0.:1.)*((vMat>.5&&vMat<3.5)||(vMat>5.5&&vMat<6.5)||vMat>7.5?.3:1.);
   if(vMat>3.5&&vMat<4.5){vec3 Vv=normalize(vViewPosition);float fr=pow(1.-clamp(dot(normal,Vv),0.,1.),2.2);nI=nI*1.08+vec3(1.,.86,.56)*fr*.75*uLMax+vec3(1.,.95,.8)*smoothstep(.62,.9,r)*.35*uLMax;}
   reflectedLight.directDiffuse=alb*nI;reflectedLight.indirectDiffuse=vec3(0.);
-  if(vMat>4.5&&vMat<5.5){reflectedLight.directDiffuse=alb*.3*uLMax;totalEmissiveRadiance+=alb*1.35;}
+  if((vMat>4.5&&vMat<5.5)||vMat>98.5){reflectedLight.directDiffuse=alb*.3*uLMax;totalEmissiveRadiance+=alb*1.35;}
   /* window glass: candle-lit after dusk (a few houses stay dark) */
-  if(vMat>7.5&&vMat<8.5&&uNight>.01){float lt=smoothstep(.22,.4,vn3(vWP*.8+3.))*uNight;vec3 wm=vec3(1.,.72,.34)*(.8+.4*vn3(vWP*9.));
+  if(((vMat>7.5&&vMat<8.5)||(vMat>69.5&&vMat<70.5))&&uNight>.01){float lt=smoothstep(.22,.4,vn3(vWP*.8+3.))*uNight;vec3 wm=vec3(1.,.72,.34)*(.8+.4*vn3(vWP*9.));
    reflectedLight.directDiffuse=mix(reflectedLight.directDiffuse,wm*.25*uLMax,lt);totalEmissiveRadiance+=wm*lt*1.15;}}`,
       )
       .replace(

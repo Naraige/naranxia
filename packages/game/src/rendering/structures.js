@@ -109,8 +109,8 @@ export function buildStructMesh0(s) {
     const g3 = s.gl === 3,
       gk = g3 ? 1 : (s.gl || 2) / 2;
     (g3 ? [-1, 1] : [-0.5, 0.5]).forEach((x) => {
-      g.add(bpl(0.5, 0.8, x, 3.1, 0.51, 0));
-      g.add(bpl(0.5, 0.8, x, 3.1, -0.51, Math.PI));
+      g.add(bpl(0.5, 0.8, x, 4.1, 0.51, 0));
+      g.add(bpl(0.5, 0.8, x, 4.1, -0.51, Math.PI));
     });
     let d;
     if (s.tier === 0) {
@@ -135,9 +135,9 @@ export function buildStructMesh0(s) {
       d.position.set(0, 1.32, 0);
       d.castShadow = SHADOWS;
     }
-    /* the leaves were made for a passage 0.92 wide and 1.32 high: stretched to the block gate (3 high; 2 tiles wide, or 1 between pylons) */
+    /* the leaves were made for a passage 0.92 wide and 1.32 high: stretched to the block gate (4 high; 2 tiles wide, or 1 between pylons) */
     const dw = new THREE.Group();
-    dw.scale.set((g3 ? 1 : 2) / 0.92 / (g3 ? 1 : gk), 3 / 1.32, 1);
+    dw.scale.set((g3 ? 1 : 2) / 0.92 / (g3 ? 1 : gk), 4 / 1.32, 1);
     dw.add(d);
     g.add(dw);
     s.door = d;
@@ -236,14 +236,14 @@ export function buildStructMesh0(s) {
         [1, 0.14, Math.PI],
         [1.86, 1, Math.PI / 2],
         [0.14, 1, -Math.PI / 2],
-      ].forEach(([x, z, r]) => g.add(bpl(0.4, 0.72, x, 2.75, z, r)));
+      ].forEach(([x, z, r]) => g.add(bpl(0.4, 0.72, x, 4.75, z, r)));
     } else
       [
         [0, 0.405, 0],
         [0, -0.405, Math.PI],
         [0.405, 0, Math.PI / 2],
         [-0.405, 0, -Math.PI / 2],
-      ].forEach(([x, z, r]) => g.add(bpl(0.3, 0.5, x, 2.0, z, r)));
+      ].forEach(([x, z, r]) => g.add(bpl(0.3, 0.5, x, 4.3, z, r)));
   }
   if (s.type === "castle" && VOXB.castle) {
     const fg = new THREE.Group();
