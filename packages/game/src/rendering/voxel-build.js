@@ -18,6 +18,8 @@ export class VB {
     this.key = new Map();
     this.cache = new Map();
     this.unk = new Set();
+    /* shifts the pattern of mixed blocks, so two models of the same shape need not mix their stones alike */
+    this.sx = 0;
   }
   id(b) {
     if (b === 0 || b === "air") return 0;
@@ -42,7 +44,7 @@ export class VB {
   /* b is a block name, a block index, or a list of names: then one is picked per cell (a fixed pattern), which is how masons mix stone */
   set(x, y, z, b) {
     if (!this.inside(x, y, z)) return this;
-    if (Array.isArray(b)) b = b[Math.floor(cellHash(x, y, z) * b.length)];
+    if (Array.isArray(b)) b = b[Math.floor(cellHash(x + this.sx, y, z) * b.length)];
     this.vox[(y * this.l + z) * this.w + x] = typeof b === "number" ? b : this.id(b);
     return this;
   }
@@ -182,8 +184,8 @@ export class VB {
     return yk - 1;
   }
   /* a hipped roof over a rectangle, or a spire over a square: rings of stairs climbing by the profile. The trim (o.t) draws the eave ring
-     (unless o.eave is false) and the four hips; the last ring closes on a ridge of slabs, a square on a point with its finial (o.fin).
-     Returns the height of the top */
+     (unless o.eave is false) and the four hips; the last ring closes on a ridge of slabs, a square on a point (of the trim, or of o.tip)
+     with its finial (o.fin). Returns the height of the top */
   hipRoof(o) {
     const { y, m } = o,
       t = o.t || m,
@@ -203,7 +205,7 @@ export class VB {
           this.box(a, yk, b, c, yk, d, t.sl + "[type=bottom]");
           return yk;
         }
-        for (let i = 0; i < r; i++) this.box(a, yk + i, b, c, yk + i, d, t.bl);
+        for (let i = 0; i < r; i++) this.box(a, yk + i, b, c, yk + i, d, (o.tip || t).bl);
         if (o.fin && point) {
           const fs = Array.isArray(o.fin) ? o.fin : [o.fin];
           fs.forEach((f, i) => this.set(a, yk + r + i, b, f));

@@ -6,7 +6,23 @@ import { mk, mkU } from "../gameplay/entities.js";
 import { garrison, garSlot, ungar } from "../gameplay/formations.js";
 import { chase, moveTo } from "../gameplay/movement.js";
 import { BAD, CASTLES, fdist, playersState } from "../gameplay/players.js";
-import { bsz, CHALF, CSZ, GCAP, GET, GRNG, SH, T, TH, TS, TW, WORK } from "../gameplay/rules.js";
+import {
+  bsz,
+  CHALF,
+  CSZ,
+  edgeDist,
+  fcell,
+  FCELL,
+  GCAP,
+  GET,
+  GRNG,
+  SH,
+  T,
+  TH,
+  TS,
+  TW,
+  WORK,
+} from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { targetZ } from "../gameplay/swarm.js";
 import { puff } from "../rendering/effects.js";
@@ -89,9 +105,10 @@ export function rangeOf(s) {
   if (!s || s.t !== 0 || s.prog < 1) return null;
   if (s.type === "castle") return { r: CASTLE_RNG };
   if (s.type !== "tower") return null;
-  if (s.weapon === "ballista") return { r: 720 / TS };
-  if (s.weapon === "trebuchet") return { r: 1300 / TS, min: 240 / TS };
-  return { r: TOWR + (s.tier !== 0 ? 60 / TS : 0) };
+  const wo = s.sz * 0.375;
+  if (s.weapon === "ballista") return { r: 720 / TS + wo };
+  if (s.weapon === "trebuchet") return { r: 1300 / TS + wo, min: 240 / TS + wo };
+  return { r: towerReach(s) / TS };
 }
 
 export const selH = (s) =>
@@ -125,6 +142,9 @@ export const selH = (s) =>
   })[s.type] || 2;
 
 export const TOWR = 11;
+/* how far a tower shoots from its middle (sim units): TOWR tiles (a tile and a half more in stone), plus what its footprint grew since the towers
+   of two tiles (3/8 of its side), so the reach beyond its walls is what it always was; the engines on it get the same allowance */
+export const towerReach = (s) => TOWR * TS + (s.tier !== 0 ? 60 : 0) + s.sz * 0.375 * TS;
 export const TR_CASTLE = 45;
 export const TR_TOWER = 15;
 export const aiR = (b) => 26 + b.lvl * 5;
@@ -605,21 +625,34 @@ const aiPay = (b, c) => {
 };
 
 /* the ring of towers (and later walls) around the castle */
+/* the eight points the defences of a camp hang on (corners, then the middles of the sides): on the grid of the fortifications, the ring one cell
+   clear of the ground the buildings take (a camp of a save made before the grid lays its ring anew) */
 function aiRing(b) {
-  if (b.ring.length) return b.ring;
-  const R = AIR,
-    c = [b.tx, b.ty];
+  if (b.ring.length && b.ring[0][0] % FCELL === 0 && b.ring[0][1] % FCELL === 0) return b.ring;
+  const X = [fcell(b.tx - AIR - 2), fcell(b.tx), fcell(b.tx + AIR + 2)],
+    Y = [fcell(b.ty - AIR - 2), fcell(b.ty), fcell(b.ty + AIR + 2)];
   b.ring = [
-    [-R, -R],
-    [R, -R],
-    [R, R],
-    [-R, R],
-    [0, -R],
-    [R, 0],
-    [0, R],
-    [-R, 0],
-  ].map(([x, y]) => [c[0] + x, c[1] + y]);
+    [0, 0],
+    [2, 0],
+    [2, 2],
+    [0, 2],
+    [1, 0],
+    [2, 1],
+    [1, 2],
+    [0, 1],
+  ].map(([i, j]) => [X[i], Y[j]]);
   return b.ring;
+}
+/* can a camp raise a fortification on the w x l tiles at (x, y)? The level it would stand on, or -1 */
+function aiFortOK(x, y, w, l) {
+  const hh = [];
+  for (let j = 0; j < l; j++)
+    for (let i = 0; i < w; i++) {
+      if (!aiTileOK(x + i, y + j, true)) return -1;
+      hh.push(HT[(y + j) * TW + x + i]);
+    }
+  hh.sort((p, q) => p - q);
+  return hh[hh.length - 1] - hh[0] > 3 ? -1 : hh[hh.length >> 1];
 }
 
 let AIB = null;
@@ -694,31 +727,29 @@ function aiSpot(b, type) {
 }
 
 function aiPlace(b, type, x, y, h, ax) {
-  if (type === "gate") {
-    /* Gates keep the existing ground height. */
-  } else if (type === "tower" || type === "wall") levelGround(x, y, 1, HT[y * TW + x]);
-  else {
-    const z = bsz(type);
-    for (let j = 0; j < z; j++)
-      for (let i = 0; i < z; i++) {
-        const q = (y + j) * TW + x + i;
-        if (ter[q] >= 2 && ter[q] <= 4) {
-          ter[q] = 0;
-          amt[q] = 0;
-          mmTile(q);
-          markP(x + i, y + j);
-        }
+  /* a camp builds on whole cells: a wall one cell, a tower one cell, a gate two cells long. Walls follow the ground, towers and gates are levelled */
+  const fort = type === "gate" || type === "tower" || type === "wall",
+    w = type === "gate" ? (ax ? 1 : 2) * FCELL : fort ? FCELL : bsz(type),
+    l = type === "gate" ? (ax ? 2 : 1) * FCELL : w;
+  for (let j = 0; j < l; j++)
+    for (let i = 0; i < w; i++) {
+      const q = (y + j) * TW + x + i;
+      if (ter[q] >= 2 && ter[q] <= 4) {
+        ter[q] = 0;
+        amt[q] = 0;
+        mmTile(q);
+        markP(x + i, y + j);
       }
-    levelGround(x, y, z, h);
-  }
+    }
+  if (type === "gate")
+    for (let k = 0; k < 2; k++) levelGround(x + (ax ? 0 : k * FCELL), y + (ax ? k * FCELL : 0), FCELL, h, true);
+  else if (type === "tower") levelGround(x, y, FCELL, h, true);
+  else if (!fort) levelGround(x, y, w, h);
   const pv = playersState.CURPL;
   playersState.CURPL = 0;
   let s;
   try {
-    s =
-      type === "gate"
-        ? mk(2, "gate", x, y, 1, false, ax, 2)
-        : mk(2, type, x, y, type === "tower" || type === "wall" ? 1 : bsz(type), false);
+    s = type === "gate" ? mk(2, "gate", x, y, FCELL, false, ax, 2) : mk(2, type, x, y, fort ? FCELL : bsz(type), false);
   } finally {
     playersState.CURPL = pv;
   }
@@ -780,22 +811,24 @@ function aiStartBuild0(b) {
   if (t === "tower") {
     const R = aiRing(b);
     for (const [x, y] of R) {
-      const o = occ.get(y * TW + x);
-      if (o) continue;
       let tx = x,
-        ty = y;
-      if (!aiTileOK(tx, ty)) {
-        let f = null;
-        for (const [dx, dy] of D8)
-          if (aiTileOK(x + dx, y + dy)) {
-            f = [x + dx, y + dy];
+        ty = y,
+        h = occ.has(y * TW + x) ? -1 : aiFortOK(x, y, FCELL, FCELL);
+      if (h < 0) {
+        if (occ.has(y * TW + x)) continue;
+        /* the point is taken by a tree line, a slope or a path: the first free cell around it */
+        for (const [dx, dy] of D8) {
+          h = aiFortOK(x + dx * FCELL, y + dy * FCELL, FCELL, FCELL);
+          if (h >= 0) {
+            tx = x + dx * FCELL;
+            ty = y + dy * FCELL;
             break;
           }
-        if (!f) continue;
-        [tx, ty] = f;
+        }
+        if (h < 0) continue;
       }
       if (!aiPay(b, AIC.tower)) return;
-      aiPlace(b, "tower", tx, ty);
+      aiPlace(b, "tower", tx, ty, h);
       return;
     }
     b.twFull = 1;
@@ -806,23 +839,26 @@ function aiStartBuild0(b) {
     const i = b.wallI % R.length,
       p = R[[0, 4, 1, 5, 2, 6, 3, 7][i]],
       q = R[[4, 1, 5, 2, 6, 3, 7, 0][i]];
+    /* the cells between two points of the ring, a gate two cells long in the middle of the north and south sides */
     const L = [];
-    const st = Math.max(Math.abs(q[0] - p[0]), Math.abs(q[1] - p[1]));
-    for (let k = 1; k < st; k++) L.push([p[0] + Math.sign(q[0] - p[0]) * k, p[1] + Math.sign(q[1] - p[1]) * k]);
+    const st = Math.max(Math.abs(q[0] - p[0]), Math.abs(q[1] - p[1])) / FCELL;
+    for (let k = 1; k < st; k++)
+      L.push([p[0] + Math.sign(q[0] - p[0]) * k * FCELL, p[1] + Math.sign(q[1] - p[1]) * k * FCELL]);
     const gi = (i === 4 || i === 0) && L.length > 3 ? L.length >> 1 : -1;
     for (let k = 0; k < L.length; k++) {
       const [x, y] = L[k];
       if (occ.has(y * TW + x)) continue;
       if (gi >= 0 && (k === gi || k === gi + 1)) {
-        const gx = Math.min(L[gi][0], L[gi + 1][0]);
-        if (aiTileOK(gx, y) && aiTileOK(gx + 1, y)) {
+        const gx = Math.min(L[gi][0], L[gi + 1][0]),
+          h = aiFortOK(gx, y, 2 * FCELL, FCELL);
+        if (h >= 0) {
           if (!aiPay(b, AIC.gate)) return;
-          aiPlace(b, "gate", gx, y, 0, 0);
+          aiPlace(b, "gate", gx, y, h, 0);
           return;
         }
         continue;
       }
-      if (!aiTileOK(x, y)) continue;
+      if (aiFortOK(x, y, FCELL, FCELL) < 0) continue;
       if (!aiPay(b, AIC.wall)) return;
       aiPlace(b, "wall", x, y);
       return;
@@ -1115,7 +1151,8 @@ function aiPeasant(u, b, dt) {
       u.bj = null;
     } else {
       u.job = "r";
-      if (dist(u.x, u.y, s.x, s.y) < TS * (s.sz > 1 || s.type === "gate" ? 2.2 : 1.6)) {
+      /* from the edge of the site: its middle is out of reach inside a footprint of 4 to 24 tiles */
+      if (edgeDist(s, u.x, u.y) < TS * 1.6) {
         u.face = Math.atan2(s.x - u.x, s.y - u.y);
         u.work = (u.work || 0) + dt;
         u.walk = 0;

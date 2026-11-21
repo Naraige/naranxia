@@ -1,7 +1,8 @@
 import { academy, bell, embassy, guild, market, observatory, sanctuary } from "./builds/civic.js";
 import { farm, forester, granary, house, orchard, storage } from "./builds/homes.js";
 import { barracks, beacon, castle, sappers, warroom } from "./builds/military.js";
-import { gate, keep, torch, tower1, tower2, wall } from "./builds/walls.js";
+import { FCELL } from "../../gameplay/rules.js";
+import { gate, keep, torch, tower, tower1, wall, WALL_RUN } from "./builds/walls.js";
 import forgeWood from "../../assets/builds/pixl-5.js";
 import forgeStone from "../../assets/builds/pixl-5-gray.js";
 
@@ -36,21 +37,25 @@ export const VOXB = {
   forge: { sz: 24, make: forge, ox: 0, oz: 1 },
 };
 
-/* the fortifications depend on more than the tier: a tower on its size and on whether an engine stands on it (op), a gate on its length; walls
-   alternate two looks along their length. Returns the cache key of the piece and how to build it ({ M: model, o / oz: offset of its first block }) */
-export function fortOf(s, m, op) {
+/* the fortifications depend on more than the tier: a wall piece on what stands around it (look: wallLook of builds/walls.js; without it, a piece
+   in the middle of a wall, for the icons) and on its place (the mix of its stones), a tower on its size and on whether an engine stands on it
+   (op), a gate on its length. Returns the cache key of the piece and how to build it ({ M: model, o / oz: offset of its first block }) */
+export function fortOf(s, look, op) {
   const t = s.tier === 0 ? 0 : 1;
   switch (s.type) {
     case "wall": {
-      const alt = ((s.tx | 0) + (s.ty | 0)) & 1;
-      return { k: "wall" + t + alt, make: () => wall(t, alt) };
+      const lk = typeof look === "string" ? look : WALL_RUN,
+        v = t ? ((((s.tx >> 2) * 7 + (s.ty >> 2) * 13) % 3) + 3) % 3 : 0;
+      return { k: "wall" + t + v + lk, make: () => wall(t, lk, v) };
     }
     case "tower":
-      return s.sz === 2
-        ? { k: "tower2" + t + (op ? "o" : ""), make: () => tower2(t, op) }
-        : { k: "tower" + t + (op ? "o" : ""), make: () => tower1(t, op) };
-    case "gate":
-      return (s.gl || 2) === 2 || s.gl === 3 ? { k: "gate" + t + (s.gl || 2), make: () => gate(t, s.gl || 2) } : null;
+      return s.sz === FCELL
+        ? { k: "tower1" + t + (op ? "o" : ""), make: () => tower1(t, op) }
+        : { k: "tower" + t + (op ? "o" : ""), make: () => tower(t, op) };
+    case "gate": {
+      const n = s.gl === 3 ? 3 : 2;
+      return { k: "gate" + t + n, make: () => gate(t, n) };
+    }
     case "keep":
       return { k: "keep" + t, make: () => keep(t) };
     case "torch":

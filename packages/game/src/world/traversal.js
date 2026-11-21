@@ -1,4 +1,4 @@
-import { TH, TS, TW } from "../gameplay/rules.js";
+import { gatePost, TH, TS, TW } from "../gameplay/rules.js";
 import { markT } from "./terrain-invalidation.js";
 import { prepareTerrainRect } from "./chunk-provider.js";
 import { D4, gOK } from "./routes.js";
@@ -14,7 +14,7 @@ export const solid = (x, y) => {
   if (ter[i] > 0) return true;
   if (!OCCB[i]) return false;
   const o = occ.get(i);
-  return !!o && (!o.gate || terrainState.gateSolid || (o.gl === 3 && (o.ax ? y !== o.ty + 1 : x !== o.tx + 1)));
+  return !!o && (!o.gate || terrainState.gateSolid || gatePost(o, x, y));
 };
 
 export const solidAt = (x, y) => solid(Math.floor(x / TS), Math.floor(y / TS));
@@ -115,10 +115,11 @@ export function stairInfo(tx, ty) {
 
 export const LVO = new Map();
 
-export function levelGround(tx, ty, sz, h0) {
+export function levelGround(tx, ty, sz, h0, grade) {
   /* a block-built building is levelled to the middle height of a wide footprint, which may leave it up to 3 levels above or below the land beside it:
-     the three rings of free ground around it are graded one level per ring, so the site can be walked to from every side */
-  if (sz >= 12)
+     the three rings of free ground around it are graded one level per ring, so the site can be walked to from every side
+     (grade: the same for a smaller footprint, the towers and the gates of the walls) */
+  if (sz >= 12 || grade)
     for (let d = 3; d >= 1; d--)
       for (let j = ty - d; j < ty + sz + d; j++)
         for (let i = tx - d; i < tx + sz + d; i++) {

@@ -1,4 +1,4 @@
-import { ROTT, TS, TW } from "../gameplay/rules.js";
+import { FCELL, lampWall, ROTT, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { home } from "./camera.js";
 import { addBox, newG, rgb, toGeo } from "./geometry.js";
@@ -8,19 +8,21 @@ import { icons3D } from "./model-icons.js";
 import { C5 } from "./models/castles.js";
 import { VOXB } from "./models/voxel-buildings.js";
 import { CASTLE_FLAG } from "./models/builds/military.js";
-import { doorGeo, doorGeoW, gtopOf } from "./models/fortifications.js";
+import { footing, FORT_H, wallLamp } from "./models/builds/walls.js";
+import { gtopOf } from "./models/fortifications.js";
 import {
   ballBolt,
   ballHead,
-  connMask,
   CONNT,
   GEO,
-  pMask,
+  leafGeo,
+  portcGeo,
   sGeo,
   structureModelsState,
   trebArm,
   trebBase,
   trebCW,
+  wallLookOf,
 } from "./models/structures.js";
 import { UM } from "./models/unit-parts.js";
 import { buildRoutes } from "./routes.js";
@@ -28,11 +30,12 @@ import { CAM, camera, scene, SHADOWS } from "./scene.js";
 import { CHK, dirtyP, dirtyT, dropChunk, loadChunk, RM, unitG } from "./terrain.js";
 import { THREE } from "./three.js";
 import { titleSceneState } from "./title-scene.js";
+import { voxelGeo } from "./voxel-model.js";
 import { cv, cvs } from "../ui/canvases.js";
 import { thIcons } from "../ui/icons.js";
 import { thp } from "../ui/kingdom-theme.js";
 import { D8 } from "../world/routes.js";
-import { CH, HT, occ } from "../world/terrain-state.js";
+import { CH, HT, LAND, occ, ter } from "../world/terrain-state.js";
 
 export const structuresState = {
   BPLOFF: false,
@@ -89,9 +92,15 @@ export function buildStructMesh0(s) {
   s.arm = null;
   s.bolt = null;
   s.tpv = null;
-  for (const [i, j] of s.tiles) b = Math.max(b, HT[j * TW + i]);
+  /* a fortification stands on its highest land (a wall piece may reach over the water of a shore) */
+  const fort = s.type === "wall" || s.type === "tower" || s.type === "keep" || s.type === "gate";
+  for (const [i, j] of s.tiles) if (!(fort && ter[j * TW + i] === 1)) b = Math.max(b, HT[j * TW + i]);
+  /* (the preview of a piece that would stand in open water floats on it) */
+  if (fort && !b) b = LAND;
   s.bh = b;
-  const m = s.sz === 1 ? connMask(s) : s.type === "tower" ? pMask(s) : 0,
+  g.userData.mh = 0;
+  g.userData.lamp = null;
+  const m = s.type === "wall" ? wallLookOf(s) + (lampWall(s) ? "L" : "") : 0,
     mesh = new THREE.Mesh(sGeo(s, m), matV);
   mesh.castShadow = SHADOWS;
   mesh.receiveShadow = SHADOWS;
@@ -105,41 +114,75 @@ export function buildStructMesh0(s) {
   } else g.position.set(s.tx, b, s.ty);
   s.door = null;
   s.flag = null;
+  if (fort)
+    g.userData.mh =
+      s.type === "gate"
+        ? s.gl === 3
+          ? FORT_H.gate3
+          : FORT_H.gate
+        : s.type === "tower"
+          ? s.sz > FCELL
+            ? FORT_H.tower
+            : FORT_H.tower1
+          : FORT_H[s.type];
+  if (s.type === "wall") {
+    /* a wall follows the ground as it is: where it falls away under the piece its footing shows (one course below the water on a shore) */
+    const dr = new Array(FCELL * FCELL).fill(0),
+      t = s.tier === 0 ? 0 : 1;
+    let any = false;
+    for (const [i, j] of s.tiles) {
+      const q = j * TW + i,
+        d = Math.min(12, ter[q] === 1 ? b - LAND + 2 : b - HT[q]);
+      if (d > 0) {
+        dr[(j - s.ty) * FCELL + i - s.tx] = d;
+        any = true;
+      }
+    }
+    if (any) {
+      const k = "ft" + t + dr.join(".");
+      let fg = GEO[k];
+      if (!fg) {
+        const F = footing(t, FCELL, FCELL, dr);
+        fg = GEO[k] = voxelGeo(F.M, { ox: 0, oz: 0, k: 1 });
+        fg.userData.D = F.D;
+      }
+      const fm = new THREE.Mesh(fg, matV);
+      fm.position.y = -fg.userData.D;
+      fm.castShadow = SHADOWS;
+      fm.receiveShadow = SHADOWS;
+      g.add(fm);
+    }
+    const lk = m.length > FCELL * FCELL ? wallLamp(m) : null;
+    if (lk) g.userData.lamp = [s.tx + lk[0] + 0.5, s.ty + lk[1] + 0.5, b + (t ? 7.75 : 6.75)];
+  }
   if (s.type === "gate") {
-    const g3 = s.gl === 3,
-      gk = g3 ? 1 : (s.gl || 2) / 2;
-    (g3 ? [-1, 1] : [-0.5, 0.5]).forEach((x) => {
-      g.add(bpl(0.5, 0.8, x, 4.1, 0.51, 0));
-      g.add(bpl(0.5, 0.8, x, 4.1, -0.51, Math.PI));
-    });
-    let d;
-    if (s.tier === 0) {
-      const k = g3 ? 1 : gk,
-        geo = GEO.doorw || (GEO.doorw = doorGeoW());
-      d = new THREE.Group();
-      d.position.set(0, 1.32, 0);
+    /* the banner of the kingdom on both faces of each end, and the doors: two leaves that swing in timber, a portcullis that lifts in stone */
+    const bx = s.gl === 3 ? 4 : 3,
+      by = s.gl === 3 ? 8.4 : 7.2;
+    for (const x of [-bx, bx]) {
+      g.add(bpl(1.3, 2.2, x, by, 2.02, 0));
+      g.add(bpl(1.3, 2.2, x, by, -2.02, Math.PI));
+    }
+    const d = new THREE.Group();
+    if (s.tier === 0)
       d.userData.lv = [-1, 1].map((sd) => {
-        const pv = new THREE.Group();
-        pv.position.x = sd * 0.46 * k;
-        const m = new THREE.Mesh(geo, matV);
-        m.scale.x = k * 0.5;
-        m.position.x = -sd * 0.23 * k;
-        m.castShadow = SHADOWS;
-        pv.add(m);
+        const pv = new THREE.Group(),
+          lm = new THREE.Mesh(leafGeo(sd), matV);
+        pv.position.x = sd * 2;
+        lm.castShadow = SHADOWS;
+        pv.add(lm);
         d.add(pv);
         return pv;
       });
-    } else {
-      d = new THREE.Mesh(GEO.door || (GEO.door = doorGeo()), matV);
-      d.scale.x = g3 ? 1 : gk;
-      d.position.set(0, 1.32, 0);
-      d.castShadow = SHADOWS;
+    else {
+      /* hung from the head of the passage: it is drawn up by flattening it there (frame.js) */
+      const pm = new THREE.Mesh(portcGeo(), matV);
+      pm.position.y = -4;
+      pm.castShadow = SHADOWS;
+      d.position.y = 4;
+      d.add(pm);
     }
-    /* the leaves were made for a passage 0.92 wide and 1.32 high: stretched to the block gate (4 high; 2 tiles wide, or 1 between pylons) */
-    const dw = new THREE.Group();
-    dw.scale.set((g3 ? 1 : 2) / 0.92 / (g3 ? 1 : gk), 4 / 1.32, 1);
-    dw.add(d);
-    g.add(dw);
+    g.add(d);
     s.door = d;
     s.dop = s.dop || 0;
   }
@@ -180,13 +223,19 @@ export function buildStructMesh0(s) {
       a.rotation.y = 0;
     }
   }
+  /* the engine of a tower stands in the middle of its fighting top, sized to it (the models are two tiles wide) */
+  const big = s.sz > FCELL,
+    tc = s.sz / 2;
   if (s.type === "tower" && s.weapon === "ballista") {
-    const h = new THREE.Mesh(GEO.bh || (GEO.bh = ballHead()), matV);
-    h.scale.setScalar(s.sz === 2 ? 1 : 0.82);
-    if (s.sz === 2) h.position.set(1, gtopOf(s) + 0.32, 1);
-    else h.position.set(0, gtopOf(s) + 0.3, 0);
+    /* the head turns and recoils about its own origin (frame.js): it hangs in a group that puts that origin on the middle of the top */
+    const h = new THREE.Mesh(GEO.bh || (GEO.bh = ballHead()), matV),
+      k = big ? 3 : 1.7,
+      hp = new THREE.Group();
+    hp.scale.setScalar(k);
+    hp.position.set(tc, gtopOf(s) + 0.32 * k, tc);
     h.castShadow = SHADOWS;
-    g.add(h);
+    hp.add(h);
+    g.add(hp);
     s.head = h;
     h.rotation.y = s.aim || 0;
     const bo = new THREE.Mesh(GEO.bbo || (GEO.bbo = ballBolt()), matV);
@@ -194,14 +243,10 @@ export function buildStructMesh0(s) {
     s.bolt = bo;
   }
   if (s.type === "tower" && s.weapon === "trebuchet") {
-    const wg = new THREE.Group();
-    if (s.sz === 2) {
-      wg.scale.setScalar(0.7);
-      wg.position.set(0.3, gtopOf(s), 0.3);
-    } else {
-      wg.scale.setScalar(0.4);
-      wg.position.set(-0.4, gtopOf(s), -0.4);
-    }
+    const wg = new THREE.Group(),
+      k = big ? 2.4 : 1.3;
+    wg.scale.setScalar(k);
+    wg.position.set(tc - k, gtopOf(s), tc - k);
     const b2 = new THREE.Mesh(GEO.tb || (GEO.tb = trebBase()), matV);
     b2.castShadow = SHADOWS;
     wg.add(b2);
@@ -229,21 +274,18 @@ export function buildStructMesh0(s) {
       a.rotation.y = 0;
     }
   }
-  if (s.type === "tower") {
-    if (s.sz === 2) {
-      [
-        [1, 1.86, 0],
-        [1, 0.14, Math.PI],
-        [1.86, 1, Math.PI / 2],
-        [0.14, 1, -Math.PI / 2],
-      ].forEach(([x, z, r]) => g.add(bpl(0.4, 0.72, x, 4.75, z, r)));
-    } else
-      [
-        [0, 0.405, 0],
-        [0, -0.405, Math.PI],
-        [0.405, 0, Math.PI / 2],
-        [-0.405, 0, -Math.PI / 2],
-      ].forEach(([x, z, r]) => g.add(bpl(0.3, 0.5, x, 4.3, z, r)));
+  if (s.type === "tower" || s.type === "keep") {
+    /* the banner of the kingdom down each face of the shaft (one block in from the foot of a great tower) */
+    const f = big ? 1 : 0,
+      y = big ? (s.type === "keep" ? 9.4 : 7.4) : 6.3,
+      w = big ? 1.7 : 1.3,
+      h = big ? 3 : 1.8;
+    [
+      [tc, s.sz - f + 0.02, 0],
+      [tc, f - 0.02, Math.PI],
+      [s.sz - f + 0.02, tc, Math.PI / 2],
+      [f - 0.02, tc, -Math.PI / 2],
+    ].forEach(([x, z, r]) => g.add(bpl(w, h, x, y, z, r)));
   }
   if (s.type === "castle" && VOXB.castle) {
     const fg = new THREE.Group();
@@ -292,7 +334,7 @@ export function buildStructMesh0(s) {
       g.add(f2);
     });
   }
-  if (s.sz >= 2) {
+  if (s.sz >= 2 && s.type !== "gate") {
     const sz = s.sz,
       inner = new THREE.Group();
     while (g.children.length) inner.add(g.children[0]);
@@ -346,7 +388,7 @@ export function rmStruct(s) {
 
 export function refreshNear(s) {
   const seen = new Set(),
-    rw = s.type === "wall" || s.type === "gate" || s.type === "tower" || s.type === "castle" || s.type === "keep";
+    rw = s.type === "wall" || s.type === "gate" || s.type === "tower" || s.type === "keep";
   for (const [tx, ty] of s.tiles)
     for (const [dx, dy] of D8) {
       const o = occ.get((ty + dy) * TW + tx + dx);
@@ -354,8 +396,8 @@ export function refreshNear(s) {
         o &&
         o !== s &&
         o.o3 &&
-        ((o.sz === 1 && (dx === 0 || dy === 0 || o.type === "wall")) ||
-          (o.type === "tower" && rw) ||
+        /* a wall piece is drawn by what stands around it: its parapet opens where another fortification joins it */
+        ((o.type === "wall" && rw) ||
           (o.type === s.type &&
             (dx === 0 || dy === 0) &&
             (o.type === "house" || o.type === "farm" || CONNT.has(o.type)))) &&

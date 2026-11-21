@@ -39,8 +39,10 @@ SPOTS="""(n)=>{const K=Array.isArray(n)?n:Array(n).fill('farm'),me=CURPL?CS2:CS,
   for(let r=13;r<150;r++)for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=me.tx+10+i,ty=me.ty+10+j,cx=tx+z/2,cy=ty+z/2;
    if(Math.hypot(cx-me.x/TS,cy-me.y/TS)>=Math.hypot(cx-ot.x/TS,cy-ot.y/TS))continue;
    if(out.some(u=>tx<u.tx+u.z+8&&u.tx<tx+z+8&&ty<u.ty+u.z+8&&u.ty<ty+z+8))continue;
-   /* the click may land up to 3 tiles from the spot: the building must fit all round it */
-   if([-3,0,3].some(a=>[-3,0,3].some(b=>siteFit(kf,tx+a,ty+b)<0)))continue;{/* no hill or pit close by: it would hide the spot from the mouse ray */let lo=99,hi=0;for(let b=-6;b<z+6;b+=2)for(let a=-6;a<z+6;a+=2){const h=HT[(ty+b)*TW+tx+a];if(h<lo)lo=h;if(h>hi)hi=h}if(hi-lo>3)continue}if(!BSZ[kind]){let f=true;for(let b=-3;b<=5&&f;b++)for(let a=-3;a<=5&&f;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])f=false}if(!f)continue}
+   /* the click may land up to 3 tiles from the spot: the building must fit all round it. A wall, a tower or a gate is aimed at the middle of the
+      spot and lands on the grid of the fortifications, up to 8 tiles from the click: it gets 6 tiles more room on every side */
+   const O=kind==='tower'||kind==='wall'||kind==='gate'?[-6,-3,0,3,6]:[-3,0,3];
+   if(O.some(a=>O.some(b=>siteFit(kf,tx+a,ty+b)<0)))continue;{/* no hill or pit close by: it would hide the spot from the mouse ray */let lo=99,hi=0;for(let b=-6;b<z+6;b+=2)for(let a=-6;a<z+6;a+=2){const h=HT[(ty+b)*TW+tx+a];if(h<lo)lo=h;if(h>hi)hi=h}if(hi-lo>3)continue}if(!BSZ[kind]){let f=true;for(let b=-3;b<=5&&f;b++)for(let a=-3;a<=5&&f;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])f=false}if(!f)continue}
    return{tx,ty,z,dMe:Math.round(Math.hypot(cx-me.x/TS,cy-me.y/TS)),dOt:Math.round(Math.hypot(cx-ot.x/TS,cy-ot.y/TS))}}return null};
  for(const kind of K){const q=find(kind);if(q)out.push(q)}
  return JSON.stringify(out)}"""
@@ -57,14 +59,15 @@ def place_all(pg,who,pl):
         before={s[0] for s in json.loads(A.evaluate(SL))}|{s[0] for s in json.loads(B.evaluate(SL))}
         # the player scrolls to the spot and clicks in the middle of his screen
         vw=pg.viewport_size;sp['px']=vw['width']//2;sp['py']=vw['height']//2+20
-        pg.evaluate("(q)=>{CAM.x=q[0]+.5;CAM.z=q[1]+.5}",[sp['tx'],sp['ty']]);waitT(.4)
+        fort=kind in('tower','wall','gate');off=6 if fort else 0
+        pg.evaluate("(q)=>{CAM.x=q[0]+.5;CAM.z=q[1]+.5}",[sp['tx']+off,sp['ty']+off]);waitT(.4)
         pg.evaluate("(t)=>{mode=t}",kind);pg.mouse.move(sp['px']-3,sp['py']-3);pg.mouse.move(sp['px'],sp['py']);pump(A,B,2)
         under=pg.evaluate(UNDER,[sp['px'],sp['py']])
         if not under:need(False,who+' '+kind+': no ground under the mouse');continue
-        need(max(abs(under[0]-sp['tx']),abs(under[1]-sp['ty']))<=3,who+' '+kind+': the middle of the screen is not the spot scrolled to: %s vs %s'%(under,sp))
+        need(max(abs(under[0]-sp['tx']-off),abs(under[1]-sp['ty']-off))<=3,who+' '+kind+': the middle of the screen is not the spot scrolled to: %s vs %s'%(under,sp))
         pg.mouse.down();pg.mouse.up()
         # the two machines are read at different ticks: wait until both have run the command, and look only at the player's structures of that kind
-        NEW="(a)=>JSON.stringify(structs.filter(s=>s.t===0&&s.type===a[0]&&!a[1].includes(s.sid)).map(s=>[s.sid,s.type,s.tx,s.ty,s.pl|0,s.t,!!s.o3,(s.tiles||[]).length]))"
+        NEW="(a)=>JSON.stringify(structs.filter(s=>s.t===0&&s.type===a[0]&&!a[1].includes(s.sid)).map(s=>[s.sid,s.type,s.tx,s.ty,s.pl|0,s.t,!!s.o3,(s.tiles||[]).length,Math.max(...s.tiles.map(t=>t[0]))-s.tx+1,Math.max(...s.tiles.map(t=>t[1]))-s.ty+1]))"
         PT="(q)=>q?pth[q[1]*TW+q[0]]:0"
         t0=time.time()
         for _ in range(50):
@@ -83,7 +86,11 @@ def place_all(pg,who,pl):
         need(a==b,who+' '+kind+': differs between machines: host %s guest %s'%(a,b))
         need(a[1]==kind and a[4]==pl,who+' '+kind+': type / owner wrong: %s'%a)
         d=max(abs(a[2]-under[0]),abs(a[3]-under[1]))
-        need(d<=2,who+' '+kind+': built at %s,%s but the mouse was on %s (%d tiles away)'%(a[2],a[3],under,d))
+        if fort:
+            # on the grid of the fortifications: the piece is laid under the mouse, with its whole footprint (16 tiles, 8 x 8, 12 x 4)
+            need(a[2]<=under[0]<a[2]+a[8] and a[3]<=under[1]<a[3]+a[9],who+' '+kind+': built at %s,%s (%s x %s) but the mouse was on %s'%(a[2],a[3],a[8],a[9],under))
+            need(a[2]%4==0 and a[3]%4==0 and a[7]=={'wall':16,'tower':64,'gate':48}[kind],who+' '+kind+': off the grid or not whole: %s'%a)
+        else:need(d<=2,who+' '+kind+': built at %s,%s but the mouse was on %s (%d tiles away)'%(a[2],a[3],under,d))
         need(a[6] and b and b[6],who+' '+kind+': no mesh (invisible) host %s guest %s'%(a[6],b and b[6]))
         done+=1
     return done
@@ -157,7 +164,9 @@ with sync_playwright() as p:
      const find=(kind)=>{const z=BSZ[kind]||12,kf=BSZ[kind]?kind:'house';
       for(let r=a[1]+10;r<a[1]+140;r++)for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=c.tx+10+i,ty=c.ty+10+j;
        if(out.some(u=>tx<u.tx+u.z+8&&u.tx<tx+z+8&&ty<u.ty+u.z+8&&u.ty<ty+z+8))continue;
-       if([-3,0,3].some(a=>[-3,0,3].some(b=>siteFit(kf,tx+a,ty+b)<0)))continue;{/* no hill or pit close by: it would hide the spot from the mouse ray */let lo=99,hi=0;for(let b=-6;b<z+6;b+=2)for(let a=-6;a<z+6;a+=2){const h=HT[(ty+b)*TW+tx+a];if(h<lo)lo=h;if(h>hi)hi=h}if(hi-lo>3)continue}if(!BSZ[kind]){let f=true;for(let b=-3;b<=5&&f;b++)for(let a=-3;a<=5&&f;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])f=false}if(!f)continue}return{tx,ty,z}}return null};
+       /* a tower lands on the grid of the fortifications, up to 6 tiles from the click: it gets that much more room */
+       const O=kind==='tower'?[-6,-3,0,3,6]:[-3,0,3];
+       if(O.some(a=>O.some(b=>siteFit(kf,tx+a,ty+b)<0)))continue;{/* no hill or pit close by: it would hide the spot from the mouse ray */let lo=99,hi=0;for(let b=-6;b<z+6;b+=2)for(let a=-6;a<z+6;a+=2){const h=HT[(ty+b)*TW+tx+a];if(h<lo)lo=h;if(h>hi)hi=h}if(hi-lo>3)continue}if(!BSZ[kind]){let f=true;for(let b=-3;b<=5&&f;b++)for(let a=-3;a<=5&&f;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])f=false}if(!f)continue}return{tx,ty,z}}return null};
      for(const kind of K){const q=find(kind);if(q)out.push(q)}
      return JSON.stringify(out)}"""
     PXOF="(q)=>{const v=scr(q[0]+1,HT[q[1]*TW+q[0]],q[1]+1);return[v.x/inputState.DPR,v.y/inputState.DPR,v.ok]}"
@@ -200,7 +209,8 @@ with sync_playwright() as p:
         need(a==b,tag+': differs between machines %s %s'%(a,b))
         need(a[3]==want_pl,tag+': owner %d, wanted %d'%(a[3],want_pl))
         need(cm is not None and under and abs(cm['x']-under[0])<=tol and abs(cm['y']-under[1])<=tol,tag+': command %s but the mouse was on %s'%(cm and (cm['x'],cm['y']),under))
-        need(under and max(abs(a[1]-under[0]),abs(a[2]-under[1]))<=tol+1,tag+': built at %s,%s, mouse on %s'%(a[1],a[2],under))
+        if kind=='tower':need(under and a[1]<=under[0]<a[1]+8 and a[2]<=under[1]<a[2]+8 and a[1]%4==0 and a[2]%4==0,tag+': built at %s,%s (8 x 8 on the grid), mouse on %s'%(a[1],a[2],under))
+        else:need(under and max(abs(a[1]-under[0]),abs(a[2]-under[1]))<=tol+1,tag+': built at %s,%s, mouse on %s'%(a[1],a[2],under))
         need(a[4] and b[4],tag+': no mesh')
     # W1: windows of other sizes (resized while playing), camera turned with the right button and zoomed with the wheel, then clicks all over the screen
     B.set_viewport_size({'width':1500,'height':800});A.set_viewport_size({'width':960,'height':600});waitT(1)
@@ -260,7 +270,7 @@ with sync_playwright() as p:
         spn=json.loads(B.evaluate(SPOTSAT,[1,4,2]));click_build(B,'guest beside its moved castle','house',spn[0],.5,.45,1)
     else:P('no spot to move the castle to')
     # W6: a click right before a resync must not be swallowed by it
-    spr=json.loads(B.evaluate(SPOTSAT,[1,5,3]));ids=sids(A);rs0=json.loads(A.evaluate(ST))['ep']
+    spr=json.loads(B.evaluate(SPOTSAT,[1,5,1,['tower']]));ids=sids(A);rs0=json.loads(A.evaluate(ST))['ep']
     x,y,_=aim(B,spr[0],.45,.45);B.evaluate("()=>{mode='tower'}");B.mouse.move(x-3,y-3);B.mouse.move(x,y);pump(A,B,1);u=B.evaluate(UNDER,[x,y]);B.mouse.down();B.mouse.up();B.evaluate("()=>{mode=null;RESP[0].g+=23}")
     t0=time.time()
     for _ in range(240*30//5):

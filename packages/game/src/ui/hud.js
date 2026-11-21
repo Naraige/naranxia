@@ -777,7 +777,7 @@ export function drawUI() {
       ? "Place " +
         NAMES[sessionState.mode] +
         (sessionState.mode === "gate"
-          ? " - 3 tiles: two towers and a passage, [R] rotates"
+          ? " - 12 tiles: two towers and a passage, [R] rotates"
           : sessionState.mode === "movec"
             ? " - click the new centre of your castle"
             : sessionState.mode === "ballista" || sessionState.mode === "trebuchet"
@@ -957,7 +957,7 @@ export function drawBars() {
     }
   for (const s of sessionState.structs) {
     if (s.garr && s.garr.length) {
-      const q = scr(s.x / TS, (s.bh || LAND) + (s.type === "tower" ? 4.9 : 2.7), s.y / TS);
+      const q = scr(s.x / TS, (s.bh || LAND) + ((s.o3 && s.o3.userData.mh) || 2.1) + 0.6, s.y / TS);
       if (q.ok) {
         drew = 1;
         canvasesState.ctx.font = Math.round(9 * k * 1.75) + "px " + FF;
@@ -972,34 +972,37 @@ export function drawBars() {
     const q = scr(
       s.x / TS,
       (s.bh || LAND) +
-        ({
-          tower: 4.9,
-          wall: 2.2,
-          gate: 2.6,
-          ballista: 1.6,
-          trebuchet: 3.6,
-          house: 3.3,
-          barracks: 3.2,
-          storage: 2.5,
-          academy: 3.6,
-          market: 2.7,
-          forester: 2.4,
-          guild: 3.2,
-          observatory: 3.5,
-          granary: 2.8,
-          bell: 2.8,
-          sanctuary: 2.8,
-          beacon: 3.6,
-          orchard: 2.6,
-          forge: 3.2,
-          embassy: 3.0,
-          warroom: 3.1,
-          sappers: 2.8,
-          torch: 1.9,
-          farm: 1.0,
-          keep: 5.2,
-          castle: s.tier !== 0 ? 6.2 : 5.2,
-        }[s.type] || 6.7),
+        /* the fortifications say how tall they stand (rendering/structures.js) */
+        ((s.o3 && s.o3.userData.mh && s.o3.userData.mh + 0.9) ||
+          {
+            tower: 4.9,
+            wall: 2.2,
+            gate: 2.6,
+            ballista: 1.6,
+            trebuchet: 3.6,
+            house: 3.3,
+            barracks: 3.2,
+            storage: 2.5,
+            academy: 3.6,
+            market: 2.7,
+            forester: 2.4,
+            guild: 3.2,
+            observatory: 3.5,
+            granary: 2.8,
+            bell: 2.8,
+            sanctuary: 2.8,
+            beacon: 3.6,
+            orchard: 2.6,
+            forge: 3.2,
+            embassy: 3.0,
+            warroom: 3.1,
+            sappers: 2.8,
+            torch: 1.9,
+            farm: 1.0,
+            keep: 5.2,
+            castle: s.tier !== 0 ? 6.2 : 5.2,
+          }[s.type] ||
+          6.7),
       s.y / TS,
     );
     if (!q.ok) continue;

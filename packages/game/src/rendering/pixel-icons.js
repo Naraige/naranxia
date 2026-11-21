@@ -5,8 +5,7 @@ import { FOWU } from "./fog.js";
 import { bxc, newG, toGeo } from "./geometry.js";
 import { matV } from "./materials.js";
 import { icoInit, icons3D, icoShot, ICR, ICT, setIcons3DHandler } from "./model-icons.js";
-import { doorGeo, doorGeoW } from "./models/fortifications.js";
-import { ballHead, GEO, sGeo, trebArm } from "./models/structures.js";
+import { ballHead, GEO, leafGeo, portcGeo, sGeo, trebArm } from "./models/structures.js";
 import { mkModel, SPAL, sprites } from "./models/unit-parts.js";
 import { renderer } from "./scene.js";
 import {
@@ -26,6 +25,17 @@ import { cvs } from "../ui/canvases.js";
 import { arcIcon, epx, ICO_N, ICO_RT } from "../ui/drawing.js";
 import { IC } from "../ui/icons.js";
 import { thp, ths } from "../ui/kingdom-theme.js";
+
+/* the doors of a gate, closed, for its picture (stone: the portcullis, timber: the two leaves) */
+const gateDoors = (w, stone) => {
+  if (stone) w.add(new THREE.Mesh(portcGeo(), matV));
+  else
+    for (const sd of [-1, 1]) {
+      const m = new THREE.Mesh(leafGeo(sd), matV);
+      m.position.x = sd * 2;
+      w.add(m);
+    }
+};
 
 /* ================= Minecraft-style icons =================
    items  -> 16x16 pixel sprites with a dark outline (ingot, sword, armour, wheat, clock, map...)
@@ -794,9 +804,7 @@ function* mcIconsSteps() {
   yield;
   IC2.gate = B(
     st("gate", 0, tr, (w) => {
-      const d = new THREE.Mesh(tr ? GEO.door || (GEO.door = doorGeo()) : GEO.doorw || (GEO.doorw = doorGeoW()), matV);
-      d.position.set(0, 1.32, 0);
-      w.add(d);
+      gateDoors(w, tr);
     }),
     0.3,
     24,
@@ -867,9 +875,7 @@ function* mcIconsSteps() {
   );
   yield;
   const door = (t) => (w) => {
-    const d = new THREE.Mesh(t ? GEO.door || (GEO.door = doorGeo()) : GEO.doorw || (GEO.doorw = doorGeoW()), matV);
-    d.position.set(0, 1.32, 0);
-    w.add(d);
+    gateDoors(w, t);
   };
   for (const t of [0, 1]) {
     ICT[t].wall = B(st("wall", 10, t), 0.3, 22);
@@ -930,12 +936,7 @@ export let icoPart = function icoPart(kind, i) {
           "gate",
           B(
             st("gate", 0, tr, (w) => {
-              const d = new THREE.Mesh(
-                tr ? GEO.door || (GEO.door = doorGeo()) : GEO.doorw || (GEO.doorw = doorGeoW()),
-                matV,
-              );
-              d.position.set(0, 1.32, 0);
-              w.add(d);
+              gateDoors(w, tr);
             }),
             0.3,
             24,

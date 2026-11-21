@@ -88,12 +88,36 @@ export const TRAIN = {
   CHALF = BSZ_CASTLE >> 1,
   GCAP = { wall: 1, gate: 2, tower: 3 },
   GRNG = { wall: 1.6, gate: 1.6, tower: 2.3 },
-  GTOP = { wall: 1.8, gate: 2.1, tower: 3.28 };
-export const bsz = (type) => BSZ[type] || 2;
-/* how far the point (x, y) is from the edge of a structure (negative inside a small one): the square footprint of a block-built building,
-   the old circle (rad) for the one- and two-tile pieces. With 20-tile sides a circle would leave the corners of a building out of reach */
+  GTOP = { wall: 5, gate: 8, tower: 11 },
+  /* the fortifications are laid on a grid of FCELL tiles, the scale of the block-built buildings: a wall piece is one cell (the free tiles of it),
+     the tower of the build menu 2 x 2 cells (the camps raise towers of one cell), a gate 2 or 3 cells long and one cell thick with a passage
+     FCELL tiles wide in its middle, a keep 2 x 2 cells. FSZ: their side in tiles */
+  FCELL = 4,
+  FSZ = { wall: FCELL, tower: 2 * FCELL, keep: 2 * FCELL };
+export const bsz = (type) => BSZ[type] || FSZ[type] || 2;
+/* the corner of the grid cell a tile lies in */
+export const fcell = (v) => v - (((v % FCELL) + FCELL) % FCELL);
+/* is the tile (x, y) of a gate one of its posts (the ends beside the passage, solid for everybody)? */
+export const gatePost = (o, x, y) => {
+  const a = o.ax ? y - o.ty : x - o.tx,
+    p = (((o.gl || 2) - 1) * FCELL) >> 1;
+  return a < p || a >= p + FCELL;
+};
+/* the sides of a footprint in tiles, along x and along y (a gate is longer than it is thick) */
+export const footW = (s) => (s.type === "gate" ? (s.ax ? 1 : s.gl || 2) * FCELL : s.sz);
+export const footD = (s) => (s.type === "gate" ? (s.ax ? s.gl || 2 : 1) * FCELL : s.sz);
+/* one wall piece in five carries a fire basket: it lights the night (gameplay/lighting.js) and shows it (rendering/structures.js) */
+export const lampWall = (s) => s.type === "wall" && ((s.tx >> 2) + (s.ty >> 2) * 3) % 5 === 0;
+/* how far the point (x, y) is from the edge of a structure (negative inside a small one): the footprint of a block-built building or of a
+   fortification (a square, the rectangle of a gate), the old circle (rad) for the one-tile pieces. With 20-tile sides a circle would leave
+   the corners of a building out of reach */
 export const edgeDist = (s, x, y) => {
-  if (s.sz >= 3 && !s.gate) {
+  if (s.gate) {
+    const l = ((s.gl || 2) * FCELL * TS) / 2,
+      t = (FCELL * TS) / 2;
+    return Math.hypot(Math.max(0, Math.abs(x - s.x) - (s.ax ? t : l)), Math.max(0, Math.abs(y - s.y) - (s.ax ? l : t)));
+  }
+  if (s.sz >= 3) {
     const h = (s.sz * TS) / 2;
     return Math.hypot(Math.max(0, Math.abs(x - s.x) - h), Math.max(0, Math.abs(y - s.y) - h));
   }
@@ -334,11 +358,11 @@ export function initializeRules() {
   Object.assign(TRAIN, { scout: 10, engineer: 14, envoy: 12 });
 
   Object.assign(C, { movec: { g: 100, w: 150 }, rotate: {} });
-  Object.assign(SZ, { keep: 2 });
+  Object.assign(SZ, { keep: FSZ.keep });
   Object.assign(SH, { keep: 2400 });
   Object.assign(BT, { keep: 30 });
   Object.assign(GCAP, { keep: 12, tower: 4 });
   Object.assign(GRNG, { keep: 2.8 });
-  Object.assign(GTOP, { keep: 12 });
+  Object.assign(GTOP, { keep: 15 });
   UPC.keep = { s: 360, w: 80 };
 }

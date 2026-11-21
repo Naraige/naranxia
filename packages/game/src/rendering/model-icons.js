@@ -3,8 +3,7 @@ import { RS } from "../gameplay/rules.js";
 import { FOWU } from "./fog.js";
 import { bxc, newG, toGeo } from "./geometry.js";
 import { matV } from "./materials.js";
-import { doorGeo } from "./models/fortifications.js";
-import { ballHead, GEO, sGeo, trebArm } from "./models/structures.js";
+import { ballHead, GEO, leafGeo, portcGeo, sGeo, trebArm } from "./models/structures.js";
 import { sprites, vsp } from "./models/unit-parts.js";
 import { renderer, scene } from "./scene.js";
 import { unitG } from "./terrain.js";
@@ -61,7 +60,7 @@ export function icoUnit(type, t) {
 }
 
 function icoStruct(type, m, tier, extra) {
-  const s = { type, t: 0, tier: tier == null ? 1 : tier, sz: 1 };
+  const s = { type, t: 0, tier: tier == null ? 1 : tier, sz: 1, gl: type === "gate" ? 3 : 0 };
   const w = new THREE.Group();
   const me = new THREE.Mesh(sGeo(s, m || 0), matV);
   w.add(me);
@@ -111,12 +110,18 @@ function icoObj(k) {
       return icoStruct("barracks", 0, ICOT < 0 ? (RS.done ? 1 : 0) : ICOT);
     case "farm":
       return icoStruct("farm", 0, 1);
-    case "gate":
-      return icoStruct("gate", 0, ICOT < 0 ? (RS.done ? 1 : 0) : ICOT, (w) => {
-        const d = new THREE.Mesh(GEO.door || (GEO.door = doorGeo()), matV);
-        d.position.set(0, 1.32, 0);
-        w.add(d);
+    case "gate": {
+      const tier = ICOT < 0 ? (RS.done ? 1 : 0) : ICOT;
+      return icoStruct("gate", 0, tier, (w) => {
+        if (tier) w.add(new THREE.Mesh(portcGeo(), matV));
+        else
+          for (const sd of [-1, 1]) {
+            const d = new THREE.Mesh(leafGeo(sd), matV);
+            d.position.x = sd * 2;
+            w.add(d);
+          }
       });
+    }
     case "home":
     case "castle": {
       const w = icoStruct("castle", 0, RS.done ? 1 : 0);

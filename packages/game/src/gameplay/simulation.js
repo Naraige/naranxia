@@ -1,6 +1,6 @@
 import { updateCamps } from "../ai/camps.js";
 import { updateRuins } from "./ruins.js";
-import { aiUnit, baseTrait, BASES, campLabel, TOWR, updateHordes } from "../ai/kingdoms.js";
+import { aiUnit, baseTrait, BASES, campLabel, towerReach, updateHordes } from "../ai/kingdoms.js";
 import { eventsTick, renownMul } from "./events.js";
 import { RHAS, roleTick } from "../ai/worker-roles.js";
 import { peasant, toLight } from "../ai/workers.js";
@@ -609,7 +609,7 @@ export function update0(dt) {
       s.cd -= dt;
       if (s.cd > 0) continue;
       const st = s.tier !== 0,
-        [b] = targetZ(s, TOWR * TS + (st ? 60 : 0));
+        [b] = targetZ(s, towerReach(s));
       if (!b || b.t === 0) {
         s.cd = 0.3;
         continue;
@@ -652,11 +652,13 @@ export function update0(dt) {
       s.rec = Math.max(0, (s.rec || 0) - dt);
       const tb = s.weapon === "trebuchet";
       if (s.wcd > 0) continue;
-      const hh = (s.bh || 0) + 3.4;
-      const spl = s.pl | 0;
+      const hh = (s.bh || 0) + (s.type === "tower" ? gtopOf(s) + 1.2 : 3.4);
+      const spl = s.pl | 0,
+        /* the engine of a tower reaches as far from the walls of the tower as it did from the old two-tile tower */
+        wo = s.type === "tower" ? s.sz * 0.375 * TS : 0;
       let b = null;
       if (!tb) {
-        [b] = targetZ(s, 720);
+        [b] = targetZ(s, 720 + wo);
         if (b && (!(b.type in T) || !simSeen(spl, b.x, b.y))) b = null;
       } else {
         let bs = -1,
@@ -664,7 +666,7 @@ export function update0(dt) {
         for (const e of sessionState.units) {
           if (e.t !== 1 || e.hp <= 0 || ++n > 90) continue;
           const dd = dist(s.x, s.y, e.x, e.y);
-          if (dd < 240 || dd > 1300 || !simSeen(spl, e.x, e.y)) continue;
+          if (dd < 240 + wo || dd > 1300 + wo || !simSeen(spl, e.x, e.y)) continue;
           let c = 0;
           for (const f of sessionState.units)
             if (f.t === 1 && Math.abs(f.x - e.x) < 110 && Math.abs(f.y - e.y) < 110 && dist(f.x, f.y, e.x, e.y) < 110)
@@ -676,7 +678,7 @@ export function update0(dt) {
         }
       }
       if (!b && tb) {
-        const i = swDense(s.x, s.y, 240, 1300);
+        const i = swDense(s.x, s.y, 240 + wo, 1300 + wo);
         if (i >= 0 && simSeen(spl, SW.x[i], SW.y[i])) {
           SWP.x = SW.x[i];
           SWP.y = SW.y[i];
@@ -716,7 +718,7 @@ export function update0(dt) {
         puff(s.x, s.y, "#ffe9a0", 5, 70, { T: 0.25, z: (s.bh || 0) + 3, vz: 0.5, s: 0.1 });
         const dx = Math.sin(s.aim),
           dy = Math.cos(s.aim),
-          L = 760;
+          L = 760 + wo;
         sessionState.fx.push({
           k: "bolt",
           x1: s.x,

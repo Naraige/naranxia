@@ -14,11 +14,19 @@ import { GVER } from "../core/version.js";
 import { diagnosticsState, ERRLOG } from "./diagnostics.js";
 import { bugReport, devAct, devToggle } from "./tools.js";
 import { ach, ACH, TOASTS } from "../gameplay/achievements.js";
-import { build, constructionState, setBuildHandler, siteFit, tilesFor, valid } from "../gameplay/construction.js";
+import {
+  build,
+  constructionState,
+  fortPlan,
+  setBuildHandler,
+  siteFit,
+  tilesFor,
+  valid,
+} from "../gameplay/construction.js";
 import { buy, economyState, FAT, PBASE, PRICE, priceTick, setTrainHandler, train } from "../gameplay/economy.js";
 import { mkU, spawnPos } from "../gameplay/entities.js";
 import { wavePreview } from "../gameplay/wave-preview.js";
-import { formationsState, order, setOrderHandler } from "../gameplay/formations.js";
+import { formationsState, garrison, garSlot, order, setOrderHandler } from "../gameplay/formations.js";
 import {
   kingOf,
   kingSkill,
@@ -36,7 +44,7 @@ import {
 import { openMenu, playAgain, quitGame, setStartGameHandler, startGame } from "../gameplay/lifecycle.js";
 import { LPL, playersState, setPl, setTier } from "../gameplay/players.js";
 import { pickLanes, reset } from "../gameplay/reset.js";
-import { BSZ, C, LH, RS, RS2, RT2, rulesState, rxLock, T, TH, TRAIN, TS, TW, UPC } from "../gameplay/rules.js";
+import { BSZ, C, FCELL, LH, RS, RS2, RT2, rulesState, rxLock, T, TH, TRAIN, TS, TW, UPC } from "../gameplay/rules.js";
 import { selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { simulationState } from "../gameplay/simulation.js";
@@ -410,6 +418,17 @@ export function installBrowserConsole() {
       get:
         () =>
         (type, x, y, R = 70) => {
+          if (type === "wall" || type === "tower" || type === "gate") {
+            /* a cursor tile from which the piece fits on the grid of the fortifications (a wall: on a whole free cell) */
+            for (let r = 0; r <= R; r++)
+              for (let dy = -r; dy <= r; dy++)
+                for (let dx = -r; dx <= r; dx++) {
+                  if (Math.max(Math.abs(dx), Math.abs(dy)) !== r || !gOK(x + dx, y + dy)) continue;
+                  const P = fortPlan(type, x + dx, y + dy);
+                  if (P.ok && (type !== "wall" || P.tiles.length === FCELL * FCELL)) return [x + dx, y + dy];
+                }
+            return null;
+          }
           if (!BSZ[type]) {
             for (let r = 0; r <= R; r++)
               for (let dy = -r; dy <= r; dy++)
@@ -432,6 +451,22 @@ export function installBrowserConsole() {
         },
     },
     siteFit: { get: () => siteFit },
+    fortPlan: { get: () => fortPlan },
+    /* is the tile closed to walking: for the living when gateSolid is false (they pass the gates), for the dead when it is true */
+    solidFor: {
+      get: () => (x, y, dead) => {
+        const g = terrainState.gateSolid;
+        terrainState.gateSolid = !!dead;
+        try {
+          return solid(x, y);
+        } finally {
+          terrainState.gateSolid = g;
+        }
+      },
+    },
+    garrison: { get: () => garrison },
+    garSlot: { get: () => garSlot },
+    FCELL: { get: () => FCELL },
     VOXB: { get: () => VOXB },
     fortOf: { get: () => fortOf },
     BPT: { get: () => BPT },

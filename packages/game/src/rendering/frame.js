@@ -5,20 +5,17 @@ import { snd } from "../audio/sound.js";
 import { dist } from "../core/math.js";
 import {
   constructionState,
-  gateAxAt,
-  gateOK,
+  fortPlan,
   moveOK,
   pathOK,
   placeErr,
   tfo,
-  tilesFor,
   valid,
-  wallAt,
   siteFit,
 } from "../gameplay/construction.js";
 import { ok } from "../gameplay/economy.js";
 import { HOMEC, stoneOn } from "../gameplay/players.js";
-import { C, RS, RS2, TH, TS, TW, UPC, WORK } from "../gameplay/rules.js";
+import { C, CSZ, footD, footW, FSZ, RS, RS2, TH, TS, TW, UPC, WORK } from "../gameplay/rules.js";
 import { selBs, selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { rampGroup, rampOK, tfOK } from "../gameplay/terraforming.js";
@@ -251,9 +248,9 @@ export let render3D = function render3D(dt) {
     groupBoxes(selBs(), sb);
     if (on) {
       const selB = sb;
-      const H = selH(selB),
-        w = selB.type === "gate" ? (selB.ax ? 1 : selB.gl || 2) : selB.sz,
-        d = selB.type === "gate" ? (selB.ax ? selB.gl || 2 : 1) : selB.sz;
+      const H = (selB.o3 && selB.o3.userData.mh) || selH(selB),
+        w = footW(selB),
+        d = footD(selB);
       MCSEL.position.set(selB.x / TS, selB.bh || LAND, selB.y / TS);
       MCSEL.scale.set(w + 0.04, H, d + 0.04);
     }
@@ -294,7 +291,7 @@ export let render3D = function render3D(dt) {
   for (const s of sessionState.structs) {
     if (s.t === 2 && s.o3) s.o3.visible = fowSeenAt(s.x, s.y);
     if (s.t === 0 && s.prog < 1 && !s.scaf && s.o3) {
-      const H =
+      const H0 =
           {
             wall: 2.1,
             gate: 2.8,
@@ -321,12 +318,13 @@ export let render3D = function render3D(dt) {
             torch: 1.5,
             keep: 4.9,
           }[s.type] || 2,
-        w = s.type === "gate" ? (s.gl || 2) * 1.05 : s.sz,
-        d = s.type === "gate" ? 0.9 : s.sz,
+        /* the fortifications say how tall they stand (rendering/structures.js) */
+        H = s.o3.userData.mh || H0,
+        w = footW(s),
+        d = footD(s),
         k = s.type + w + "x" + d + "x" + H,
         m = new THREE.Mesh(SGEO[k] || (SGEO[k] = scafGeo(w, d, H)), matV);
       m.position.set(s.x / TS, s.bh || HT[s.ty * TW + s.tx], s.y / TS);
-      if (s.type === "gate" && s.ax) m.rotation.y = Math.PI / 2;
       scene.add(m);
       s.scaf = m;
       SCAF.add(s);
@@ -378,7 +376,12 @@ export let render3D = function render3D(dt) {
     if (s.door) {
       let op = 0;
       for (const u of sessionState.units)
-        if (u.t === 0 && !u.gar && Math.abs(u.x - s.x) < TS * 2.1 && Math.abs(u.y - s.y) < TS * 2.1) {
+        if (
+          u.t === 0 &&
+          !u.gar &&
+          Math.abs(u.x - s.x) < TS * (footW(s) / 2 + 2) &&
+          Math.abs(u.y - s.y) < TS * (footD(s) / 2 + 2)
+        ) {
           op = 1;
           break;
         }
@@ -455,9 +458,12 @@ export let render3D = function render3D(dt) {
       }
       if (tx >= 0 && ty >= 0 && tx < TW && ty < TH && gOK(tx, ty)) {
         let good = (sessionState.mode === "path" ? pathOK(tx, ty) : valid(tx, ty)) && ok(C[sessionState.mode]);
-        if (sessionState.mode === "tower")
-          good =
-            tilesFor("tower", tx, ty, 2).every(([x, y]) => gOK(x, y) && (valid(x, y) || wallAt(x, y))) && ok(C.tower);
+        /* a wall, a tower or a gate goes on the grid of the fortifications: where it would land and whether it fits */
+        const FP =
+          sessionState.mode === "wall" || sessionState.mode === "tower" || sessionState.mode === "gate"
+            ? fortPlan(sessionState.mode, tx, ty)
+            : null;
+        if (FP) good = FP.ok && ok(C[sessionState.mode]);
         if (sessionState.mode === "ballista" || sessionState.mode === "trebuchet") {
           const o = occ.get(ty * TW + tx);
           good = !!o && o.type === "tower" && o.t === 0 && o.prog >= 1 && !o.weapon && ok(C[sessionState.mode]);
@@ -531,16 +537,10 @@ export let render3D = function render3D(dt) {
           gz = 1.02,
           cx2 = tx + 0.5,
           cz2 = ty + 0.5;
-        if (sessionState.mode === "gate") {
-          const ax = gateAxAt(tx, ty);
-          good = gateOK(tx, ty, ax, constructionState.gateLen) && ok(C.gate);
-          gx = ax ? 1.02 : constructionState.gateLen + 0.02;
-          gz = ax ? constructionState.gateLen + 0.02 : 1.02;
-          cx2 = tx + (ax ? 0.5 : constructionState.gateLen / 2);
-          cz2 = ty + (ax ? constructionState.gateLen / 2 : 0.5);
-        }
-        if (
-          sessionState.mode === "tower" ||
+        if (FP) {
+          cx2 = FP.x0 + FSZ.tower / 2;
+          cz2 = FP.y0 + FSZ.tower / 2;
+        } else if (
           sessionState.mode === "barracks" ||
           sessionState.mode === "farm" ||
           sessionState.mode === "storage" ||
@@ -614,7 +614,7 @@ export let render3D = function render3D(dt) {
           if (o && o.t === 0 && UPC[o.type] && o.tier === 0) {
             showG = false;
             good = o.prog >= 1 && ok(UPC[o.type]);
-            buildPreviewState.GHO = { tier: 1, rot: o.rot | 0, gl: o.gl || 2 };
+            buildPreviewState.GHO = { tier: 1, rot: o.rot | 0, gl: o.gl || 2, sz: o.sz, tiles: o.tiles };
             try {
               ghostMake(GB1, o.type, o.tx, o.ty, o.ax | 0, good, 0.62);
             } finally {
@@ -641,8 +641,8 @@ export let render3D = function render3D(dt) {
               rampBox(bi, (ii % TW) + 0.5, HT[ii] + 0.14, ((ii / TW) | 0) + 0.5, 1, 0.3, 1, false),
             );
           } else if (o) {
-            gx = o.sz * 1.04;
-            gz = o.sz * 1.04;
+            gx = footW(o) * 1.04;
+            gz = footD(o) * 1.04;
             cx2 = o.x / TS;
             cz2 = o.y / TS;
             hh = 2.4;
@@ -659,14 +659,21 @@ export let render3D = function render3D(dt) {
         ghost.scale.set(gx, hh, gz);
         ghost.position.set(cx2, yy, cz2);
         ghost.visible = showG && !GBM.has(sessionState.mode);
-        if (GBM.has(sessionState.mode)) {
-          const a2 = sessionState.mode === "gate" ? gateAxAt(tx, ty) : 0,
-            mc = sessionState.mode === "movec";
-          ghostMake(GB1, mc ? "castle" : sessionState.mode, mc ? tx - 2 : tx, mc ? ty - 2 : ty, a2, good, 0.62);
+        if (FP) ghostMake(GB1, sessionState.mode, FP.x0, FP.y0, FP.ax, good, 0.62, FP.tiles);
+        else if (GBM.has(sessionState.mode)) {
+          const mc = sessionState.mode === "movec",
+            h = CSZ >> 1;
+          ghostMake(GB1, mc ? "castle" : sessionState.mode, mc ? tx - h : tx, mc ? ty - h : ty, 0, good, 0.62);
         }
         if (sessionState.mode === "tower" || sessionState.mode === "ballista" || sessionState.mode === "trebuchet") {
-          const rr =
-            sessionState.mode === "tower" ? TOWR + (stoneOn() ? 1.5 : 0) : sessionState.mode === "ballista" ? 18 : 32;
+          /* the reach is counted from the walls of the tower (ai/kingdoms.js towerReach) */
+          const wo = FSZ.tower * 0.375,
+            rr =
+              (sessionState.mode === "tower"
+                ? TOWR + (stoneOn() ? 1.5 : 0)
+                : sessionState.mode === "ballista"
+                  ? 18
+                  : 32) + wo;
           rangeRing.scale.set(rr / 7.5, 1, rr / 7.5);
           rangeRing.position.set(cx2, h0 + 0.15, cz2);
           rangeRing.visible = true;

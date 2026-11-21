@@ -19,11 +19,10 @@ def need(c,msg):
     if not c:ok[0]=False;P('FAIL',msg)
 ST="()=>JSON.stringify({tick:MP.tick,ep:MP.ep,ds:MP.desync,pl:CURPL,cs:[CS.tx,CS.ty],cs2:CS2&&[CS2.tx,CS2.ty],h:mpHash()})"
 SL="()=>JSON.stringify(structs.filter(s=>s.t===0).map(s=>[s.sid,s.type,s.tx,s.ty,s.pl|0,!!s.o3]).sort((a,b)=>a[0]-b[0]))"
-SPOTS="""(n)=>{const me=CURPL?CS2:CS,ot=CURPL?CS:CS2,out=[];
- for(let r=5;r<24&&out.length<n;r++)for(let j=-r;j<=r&&out.length<n;j++)for(let i=-r;i<=r&&out.length<n;i++){if(Math.max(Math.abs(i),Math.abs(j))!==r)continue;const tx=me.tx+2+i,ty=me.ty+2+j;
-  let free=true;for(let b=-1;b<=2&&free;b++)for(let a=-1;a<=2&&free;a++){const k=(ty+b)*TW+tx+a;if(!valid(tx+a,ty+b)||occ.get(k)||ter[k]||pth[k]||HT[k]!==HT[ty*TW+tx])free=false}
-  if(!free||out.some(u=>Math.abs(u.tx-tx)<4&&Math.abs(u.ty-ty)<4))continue;
-  if(Math.hypot(tx-me.tx,ty-me.ty)>=Math.hypot(tx-ot.tx,ty-ot.ty))continue;out.push([tx,ty])}
+# places to build from: points round the player's own castle, on the side away from the other one (the site itself is found when the building
+# is ordered, for its own footprint: 12 to 24 tiles a side, a tower 8 on the grid of the fortifications)
+SPOTS="""(n)=>{const me=CURPL?CS2:CS,ot=CURPL?CS:CS2,out=[],cx=me.tx+10,cy=me.ty+10,a0=Math.atan2(cy-ot.ty-10,cx-ot.tx-10);
+ for(let k=0;k<n;k++){const a=a0+((k%5)-2)*.55,r=24+((k/5)|0)*16;out.push([Math.round(cx+Math.cos(a)*r),Math.round(cy+Math.sin(a)*r)])}
  return JSON.stringify(out)}"""
 KINDS=['house','farm','storage','barracks','forester','tower','house','farm']
 inbox={}
@@ -63,7 +62,7 @@ def profile(A,B,name,seed,dAB,dBA,fA,fB,rounds):
             act=rng.random()
             if act<.6 and used[who]<len(spots[who]):
                 kind=KINDS[kinds[who]%len(KINDS)];kinds[who]+=1;tx,ty=spots[who][used[who]];used[who]+=1
-                pg.evaluate("([k,x,y])=>{selB=CURPL?CS2:CS;build(k,x,y)}",[kind,tx,ty]);placed[who].append((kind,tx,ty))
+                pg.evaluate("([k,x,y])=>{selB=CURPL?CS2:CS;const f=freeSite(k,x,y,30);if(f)build(k,f[0],f[1])}",[kind,tx,ty]);placed[who].append((kind,tx,ty))
             elif act<.85:
                 pg.evaluate("()=>{selB=CURPL?CS2:CS;train('peasant')}")
             else:

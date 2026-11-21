@@ -4,7 +4,7 @@ import { REALR } from "../core/random.js";
 import { valid } from "./construction.js";
 import { ok, pay } from "./economy.js";
 import { LPL, playersState } from "./players.js";
-import { edgeDist, RS2, TS, TW } from "./rules.js";
+import { edgeDist, FCELL, RS2, TS, TW } from "./rules.js";
 import { sessionState } from "./session.js";
 import { ugNear, UGU } from "./spatial-index.js";
 import { SW, swSplash } from "./swarm.js";
@@ -140,7 +140,9 @@ export function trapTick(dt) {
           continue;
         if ((s.ot || 0) > sessionState.time) continue;
         s.ot = sessionState.time + 1.5 + ((s.sid | 0) % 8) * 0.04;
-        const Q = ugNear(1, s.x, s.y, TS * 1.3);
+        /* 1.3 tiles from its walls: the search starts at the middle of the piece, half a diagonal away */
+        const far = TS * 1.3 + (s.rad || 20) * 1.42,
+          Q = ugNear(1, s.x, s.y, far);
         let n = 0;
         for (let q = 0; q < Q.length; q++) {
           const z = UGU[Q[q]];
@@ -150,7 +152,8 @@ export function trapTick(dt) {
             n++;
           }
         }
-        n += swSplash(s.x, s.y, TS * 1.3, dm, 40) || 0;
+        /* the swarm is scalded in a circle: the half width of the piece (the half thickness of a gate) plus the same 1.3 tiles */
+        n += swSplash(s.x, s.y, TS * 1.3 + (s.gate ? (FCELL * TS) / 2 : s.rad || 20), dm, 40) || 0;
         if (n) {
           puff(s.x, s.y, "#ffb040", 4, 40, { T: 0.4, z: 0.8, vz: 1.2, g: 3, s: 0.1 });
           if (REALR() < 0.4) snd("sizzle", s.x, s.y);

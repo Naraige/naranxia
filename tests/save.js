@@ -38,7 +38,8 @@ async () => {
     ["house", 0, 12],
     ["market", -12, -6],
     ["wall", 6, 0],
-    ["wall", 6, 1],
+    ["wall", 6, 4],
+    ["gate", 30, 30],
   ]) {
     const q = f(a, b);
     if (q) build(t, q[0], q[1]);

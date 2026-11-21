@@ -3,11 +3,12 @@ import { GROWT, SAPL } from "../ai/workplaces.js";
 import { rngf } from "../core/random.js";
 import { constructionState, tilesFor } from "../gameplay/construction.js";
 import { HOMEC, stoneOn } from "../gameplay/players.js";
-import { bsz, ROTT, TH, TS, TW } from "../gameplay/rules.js";
+import { bsz, FCELL, footD, footW, ROTT, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { fowSeenAt } from "./fog.js";
 import { bxc, newG, quad, shade, toGeo } from "./geometry.js";
 import { matV } from "./materials.js";
+import { FORT_TOP } from "./models/builds/walls.js";
 import { ballHead, GEO, trebArm, trebBase, trebCW } from "./models/structures.js";
 import { CAM, scene, SHADOWS } from "./scene.js";
 import { buildStructMesh0, structuresState } from "./structures.js";
@@ -187,20 +188,24 @@ export function gbwShow(type, o, aim, good) {
     });
     scene.add(GBW);
   }
-  const M = GBW.userData.mat;
-  if (GBWK !== type) {
-    GBWK = type;
+  const M = GBW.userData.mat,
+    big = o.sz > FCELL,
+    top = big ? FORT_TOP.tower : FORT_TOP.tower1;
+  if (GBWK !== type + o.sz) {
+    GBWK = type + o.sz;
     while (GBW.children.length) GBW.remove(GBW.children[0]);
     if (type === "ballista") {
-      const h = new THREE.Mesh(GEO.bh || (GEO.bh = ballHead()), M);
-      h.scale.setScalar(0.82);
-      h.position.set(0, 3.58, 0);
+      const h = new THREE.Mesh(GEO.bh || (GEO.bh = ballHead()), M),
+        k = big ? 3 : 1.7;
+      h.scale.setScalar(k);
+      h.position.set(0, top + 0.32 * k, 0);
       GBW.add(h);
       GBW.userData.rot = h;
     } else {
-      const wg = new THREE.Group();
-      wg.scale.setScalar(0.4);
-      wg.position.set(-0.4, 3.28, -0.4);
+      const wg = new THREE.Group(),
+        k = big ? 2.4 : 1.3;
+      wg.scale.setScalar(k);
+      wg.position.set(-k, top, -k);
       wg.add(new THREE.Mesh(GEO.tb || (GEO.tb = trebBase()), M));
       const a = new THREE.Mesh(GEO.ta || (GEO.ta = trebArm()), M);
       a.position.set(1, 1.78, 1);
@@ -217,37 +222,15 @@ export function gbwShow(type, o, aim, good) {
     if (m.isMesh) m.renderOrder = 7;
   });
   GBW.userData.rot.rotation.y = aim;
-  GBW.position.set(o.tx + 0.5, o.bh || HT[o.ty * TW + o.tx], o.ty + 0.5);
+  GBW.position.set(o.x / TS, o.bh || HT[o.ty * TW + o.tx], o.y / TS);
   M.color.set(good ? 0xa6ffb4 : 0xff8686);
   GBW.visible = true;
 }
 
-export function ghostMake(G, type, tx, ty, ax, good, alpha) {
-  const sz =
-      type === "castle"
-        ? bsz("castle")
-        : type === "tower" ||
-            type === "barracks" ||
-            type === "farm" ||
-            type === "storage" ||
-            type === "house" ||
-            type === "academy" ||
-            type === "market" ||
-            type === "forester" ||
-            type === "guild" ||
-            type === "observatory" ||
-            type === "granary" ||
-            type === "bell" ||
-            type === "sanctuary" ||
-            type === "beacon" ||
-            type === "orchard" ||
-            type === "forge" ||
-            type === "embassy" ||
-            type === "warroom" ||
-            type === "sappers" ||
-            type === "keep"
-          ? bsz(type)
-          : 1,
+/* tiles: the tiles the piece would stand on when they are not its whole footprint (a wall piece fitted against something) */
+export function ghostMake(G, type, tx, ty, ax, good, alpha, tiles) {
+  const GHO = buildPreviewState.GHO,
+    sz = GHO && GHO.sz ? GHO.sz : type === "gate" ? FCELL : type === "torch" ? 1 : bsz(type),
     wd = !(stoneOn() && (type === "barracks" || type === "wall" || type === "gate" || type === "tower")),
     tier = buildPreviewState.GHO ? buildPreviewState.GHO.tier : wd ? 0 : 1,
     gl = buildPreviewState.GHO ? buildPreviewState.GHO.gl : constructionState.gateLen,
@@ -260,7 +243,8 @@ export function ghostMake(G, type, tx, ty, ax, good, alpha) {
         : ROTT.has(type)
           ? constructionState.buildRot & 3
           : 0,
-    key = type + "|" + tx + "," + ty + "|" + (ax | 0) + "|" + tier + "|" + gl + "|" + rot;
+    tl = (GHO && GHO.tiles) || tiles || tilesFor(type, tx, ty, sz, ax, gl),
+    key = type + "|" + tx + "," + ty + "|" + (ax | 0) + "|" + tier + "|" + gl + "|" + rot + "|" + sz + "|" + tl.length;
   if (G.key !== key) {
     G.key = key;
     const s = {
@@ -273,13 +257,13 @@ export function ghostMake(G, type, tx, ty, ax, good, alpha) {
       ax: ax || 0,
       gl,
       rot,
-      tiles: tilesFor(type, tx, ty, sz, ax, gl),
+      tiles: tl,
       hp: 1,
       max: 1,
       prog: 1,
       ci: 0,
-      x: (tx + (type === "gate" ? (ax ? 0.5 : gl / 2) : sz / 2)) * TS,
-      y: (ty + (type === "gate" ? (ax ? gl / 2 : 0.5) : sz / 2)) * TS,
+      x: (tx + (type === "gate" ? ((ax ? 1 : gl) * FCELL) / 2 : sz / 2)) * TS,
+      y: (ty + (type === "gate" ? ((ax ? gl : 1) * FCELL) / 2 : sz / 2)) * TS,
     };
     while (G.g.children.length) G.g.remove(G.g.children[0]);
     s.o3 = G.g;
@@ -516,9 +500,9 @@ export function groupBoxes(L, sb) {
       MCSELP[n] = m;
     }
     n++;
-    const H = selH(s),
-      w = s.type === "gate" ? (s.ax ? 1 : s.gl || 2) : s.sz,
-      d = s.type === "gate" ? (s.ax ? s.gl || 2 : 1) : s.sz;
+    const H = (s.o3 && s.o3.userData.mh) || selH(s),
+      w = footW(s),
+      d = footD(s);
     m.position.set(s.x / TS, s.bh || LAND, s.y / TS);
     m.scale.set(w + 0.04, H, d + 0.04);
     m.visible = true;

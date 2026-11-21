@@ -161,6 +161,12 @@ const SHAPES = {
     [3, 3, 3, 13, 12, 13],
     [6, 12, 6, 10, 16, 10, 1],
   ]),
+  /* a length of a gate leaf: boards (gleaf), an iron strap across them (gband) */
+  gleaf: px([[6, 0, 0, 9, 16, 16]]),
+  gband: px([
+    [6, 0, 0, 9, 16, 16],
+    [5, 6, 0, 10, 10, 16, 1],
+  ]),
   /* a sharpened stake */
   stake: px([
     [4, 0, 4, 12, 12, 12],

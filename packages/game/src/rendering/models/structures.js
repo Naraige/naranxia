@@ -40,6 +40,7 @@ import {
   woodWallGeo,
 } from "./fortifications.js";
 import { PAL, thp } from "../../ui/kingdom-theme.js";
+import { gateLeaf, portcullis, wallLook } from "./builds/walls.js";
 import { BPT, fortOf, VOXB } from "./voxel-buildings.js";
 import { voxelGeo } from "../voxel-model.js";
 import { gOK } from "../../world/routes.js";
@@ -54,56 +55,30 @@ const ST3 = "#979797",
   STD = "#5f5f5f",
   IRON = "#4a4a52";
 
+/* a fortification stands on that tile (the pieces whose wall walks join) */
+const FORTT = { wall: 1, gate: 1, tower: 1, keep: 1 };
 export const isW = (tx, ty) => {
   const o = occ.get(ty * TW + tx);
-  return (
-    !!o && (o.type === "wall" || o.type === "gate" || o.type === "tower" || o.type === "castle" || o.type === "keep")
+  return !!o && !!FORTT[o.type];
+};
+/* the look of a wall piece, from the tiles it stands on and the fortifications around it (wallLook of builds/walls.js) */
+export const wallLookOf = (s) => {
+  const own = new Set();
+  for (const [x, y] of s.tiles) own.add(y * TW + x);
+  return wallLook(
+    (i, j) => own.has((s.ty + j) * TW + s.tx + i),
+    (i, j) => {
+      const o = gOK(s.tx + i, s.ty + j) && occ.get((s.ty + j) * TW + s.tx + i);
+      return !!o && o !== s && !!FORTT[o.type];
+    },
   );
 };
 
-const isWl = (tx, ty) => {
-  const o = occ.get(ty * TW + tx);
-  return !!o && o.type === "wall";
-};
-
-export const connMask = (s) => {
-  const x = s.tx,
-    y = s.ty,
-    n = isW(x, y - 1),
-    e = isW(x + 1, y),
-    so = isW(x, y + 1),
-    w = isW(x - 1, y);
-  let m = (n ? 1 : 0) | (e ? 2 : 0) | (so ? 4 : 0) | (w ? 8 : 0);
-  if (s.type === "wall") {
-    if (!e && !so && isWl(x + 1, y + 1)) m |= 16;
-    if (!w && !so && isWl(x - 1, y + 1)) m |= 32;
-  }
-  return m;
-};
-
-/* 2x2 tower: which of the 8 tiles around it hold rampart pieces (2 per side: N, E, S, W) */
-export const pMask = (s) => {
-  const x = s.tx,
-    y = s.ty,
-    q = (a, b) => {
-      const o = occ.get(b * TW + a);
-      return o && o !== s && isW(a, b);
-    };
-  let m = 0;
-  [
-    [x, y - 1],
-    [x + 1, y - 1],
-    [x + 2, y],
-    [x + 2, y + 1],
-    [x, y + 2],
-    [x + 1, y + 2],
-    [x - 1, y],
-    [x - 1, y + 1],
-  ].forEach(([a, b], i) => {
-    if (gOK(a, b) && q(a, b)) m |= 1 << i;
-  });
-  return m;
-};
+/* the doors of a gate, drawn apart from it because they move: a leaf of the timber gate (sd -1: hinged on the west post, 1: on the east one;
+   it reaches two blocks toward the middle) and the portcullis of the stone gate, both about the middle of the gate's thickness */
+export const leafGeo = (sd) =>
+  GEO["gleaf" + sd] || (GEO["gleaf" + sd] = voxelGeo(gateLeaf(), { ox: sd < 0 ? 0 : -2, oz: -0.5, k: 1 }));
+export const portcGeo = () => GEO.portc || (GEO.portc = voxelGeo(portcullis(), { ox: -2, oz: -0.5, k: 1 }));
 
 export const WH = 1.7;
 export const WT = 0.3;

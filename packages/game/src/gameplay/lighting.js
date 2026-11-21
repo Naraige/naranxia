@@ -1,6 +1,6 @@
 import { snd } from "../audio/sound.js";
 import { rnd } from "../core/math.js";
-import { T, TS } from "./rules.js";
+import { lampWall, T, TS } from "./rules.js";
 import { sessionState } from "./session.js";
 import { hordeDist, smst, wavesState } from "./waves.js";
 import { puff } from "../rendering/effects.js";
@@ -62,8 +62,6 @@ const LIGHTR = {
   warroom: 5,
   sappers: 4,
 };
-
-const lampWall = (s) => s.type === "wall" && (s.tiles[0][0] + s.tiles[0][1] * 3) % 5 === 0;
 
 export function lightSources() {
   const L = [];

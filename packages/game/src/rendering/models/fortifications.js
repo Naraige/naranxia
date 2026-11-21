@@ -1,4 +1,4 @@
-import { GTOP } from "../../gameplay/rules.js";
+import { FCELL, GTOP } from "../../gameplay/rules.js";
 import { FORT_TOP } from "./builds/walls.js";
 import { newG, toGeo } from "../geometry.js";
 import {
@@ -269,8 +269,7 @@ export function woodGateGeo3() {
 }
 
 /* ---- v79 towers: 2x2 keeps of their own (coordinates 0..2, centre 1,1) - four archers stand on the roof ---- */
-const TT2S = 3.55,
-  TT2W = 3.1;
+const TT2S = 3.55;
 
 const TSTB = [
   [0.5, 0],
@@ -440,12 +439,8 @@ export function gtopOf(s) {
   /* block-built pieces: the top of their deck, in blocks (= tiles) */
   if (s.type === "wall") return FORT_TOP.wall;
   if (s.type === "gate") return FORT_TOP.gate;
-  if (s.type === "tower") return s.sz === 2 ? FORT_TOP.tower2 : FORT_TOP.tower;
+  if (s.type === "tower") return s.sz > FCELL ? FORT_TOP.tower : FORT_TOP.tower1;
   if (s.type === "keep") return FORT_TOP.keep;
-  const st = s.tier !== 0;
-  if (s.type === "wall") return st ? WALLH + 0.07 : WDH + 0.06;
-  if (s.type === "gate") return (s.gl || 2) === 3 ? (st ? 2.72 : 2.05) : 2.1;
-  if (s.type === "tower") return s.sz === 2 ? (st ? TT2S : TT2W + 0.02) : st ? 3.28 : 3.2;
   return GTOP[s.type] || 2;
 }
 
@@ -688,31 +683,5 @@ export function woodGateGeo() {
   qBan(G, 0, 1.56, 0.25, true, 1, 0.26, 0.36);
   qBan(G, 0, 1.56, -0.25, true, -1, 0.26, 0.36);
   bP(G, 0, 0, 0, 1.0, 0.05, 0.84, "#6a5a3a");
-  return toGeo(G);
-}
-
-export function doorGeo() {
-  const G = newG(),
-    w = 0.92;
-  for (let k = 0; k < 9; k++) {
-    const x = -w / 2 + 0.05 + (k * (w - 0.1)) / 8;
-    bP(G, x, -1.3, 0, 0.045, 1.28, 0.05, QIR);
-    bM(G, x, -1.4, 0, 0.03, 0.1, 0.03, QBR);
-  }
-  for (const y of [-1.15, -0.75, -0.35]) bP(G, 0, y, 0, w, 0.045, 0.06, QIR);
-  bM(G, 0, -0.06, 0, w, 0.06, 0.07, QBR);
-  return toGeo(G);
-}
-
-export function doorGeoW() {
-  const G = newG(),
-    w = 0.92;
-  for (let k = 0; k < 6; k++) {
-    const x = -w / 2 + w / 12 + (k * w) / 6;
-    bW(G, x, -1.3, 0, w / 6 - 0.01, 1.3, 0.07, k % 2 ? QW1 : QW3);
-  }
-  bW(G, 0, -1.3, 0, 0.03, 1.3, 0.09, QW2);
-  for (const y of [-1.1, -0.42]) bP(G, 0, y, 0, w, 0.07, 0.09, QIR);
-  for (const x of [-0.12, 0.12]) bM(G, x, -0.72, 0.05, 0.05, 0.05, 0.03, QBR);
   return toGeo(G);
 }

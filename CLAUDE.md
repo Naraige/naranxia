@@ -104,6 +104,10 @@ The King chose "versions directes": code a batch, test it, release it as the nex
 - When the hashes differ the host freezes the lockstep, sends a snapshot (save format, `mpResync`), the guest loads it, then the host
   loads the same snapshot (`mpResApply`); command and hash messages carry an epoch (`MP.ep`). Anything that must survive a resync
   has to be in `SAVA` (the save registry) or on units / structures (saved whole).
+- Fortifications are laid on a grid of 4 tiles (`FCELL` in `gameplay/rules.js`), the scale of the block-built buildings: a wall piece is one cell
+  (the free tiles of it: it closes against buildings, rock, ramps, spans shore water), the tower of the menu 2 x 2 cells, a gate 3 cells long with a
+  passage one cell wide (`gatePost`), camp towers and gates 1 and 2 cells. Placement goes through `fortPlan` (construction.js); a wall is drawn per
+  piece from what stands around it (`wallLook` in `models/builds/walls.js`), so `refreshNear` must run when a fortification appears or goes.
 - Every text shown to players goes through `T_()` / `L()` with its translations (EN, FR, ES, DE, IT, PT) in `i18n/translations.js`.
   Templates use `{0}`; `L()` also splits on ' - ', ' | ' and 3 spaces, not on ': '. French uses "vous", German "du", Portuguese is European.
   Dutch, Polish and Turkish live in `i18n/langs/{nl,pl,tr}.js` and must get every new key too.

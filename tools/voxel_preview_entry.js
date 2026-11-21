@@ -1,27 +1,48 @@
 /* global window, document */
 import { voxelGeo } from "../packages/game/src/rendering/voxel-model.js";
 import { VOXB, BPT } from "../packages/game/src/rendering/models/voxel-buildings.js";
-import { gate, keep, torch, tower1, tower2, wall } from "../packages/game/src/rendering/models/builds/walls.js";
+import {
+  footing,
+  gate,
+  gateLeaf,
+  keep,
+  portcullis,
+  torch,
+  tower,
+  tower1,
+  wall,
+  wallLook,
+} from "../packages/game/src/rendering/models/builds/walls.js";
 import { initializeMaterials, matV, LMU } from "../packages/game/src/rendering/materials.js";
 import { BLKV, BK, matOfKind } from "../packages/game/src/rendering/blocks.js";
 import { turnedLogs } from "../packages/game/src/rendering/models/structures.js";
 import { treeShape } from "../packages/game/src/rendering/terrain-props-blocks.js";
 import { VB } from "../packages/game/src/rendering/voxel-build.js";
 const THREE = globalThis.THREE;
-/* a little fortress to look at the fortifications together: [piece, tile x, tile z] (1-tile pieces and gates by their middle, 2-tile pieces by their corner) */
-const FORT = (t) => [
-  [tower1(t, false), 0.5, 0.5],
-  ...[1, 2, 3, 4].map((x) => [wall(t, x & 1), x + 0.5, 0.5]),
-  [gate(t, 2), 6, 0.5],
-  ...[7, 8, 9].map((x) => [wall(t, x & 1), x + 0.5, 0.5]),
-  [tower1(t, true), 10.5, 0.5],
-  ...[11, 12].map((x) => [wall(t, x & 1), x + 0.5, 0.5]),
-  [gate(t, 3), 14.5, 0.5],
-  [wall(t, 0), 16.5, 0.5],
-  [tower2(t, false), 17, 0],
-  [tower2(t, true), 17, 4],
-  [keep(t), 2, 4],
-  [torch(), 8.5, 4.5],
+/* a little fortress to look at the fortifications together, on the grid of four tiles: [kind, tile x, tile z, option]
+   (w: a wall cell, or its tiles when the option lists them; T: the tower, with an engine when the option is set; t: the tower of one cell;
+   g: a gate, the option its length in cells; k: the keep; o: a torch) */
+const FORT = [
+  ["T", 0, 0],
+  ["w", 8, 4],
+  ["w", 12, 4],
+  ["w", 16, 4],
+  ["g", 20, 4, 3],
+  ["w", 32, 4],
+  ["w", 36, 4],
+  ["w", 40, 4],
+  ["w", 40, 8],
+  ["w", 40, 12],
+  ["t", 40, 16],
+  ["w", 36, 16],
+  ["g", 28, 16, 2],
+  ["w", 24, 16],
+  ["w", 20, 16, "1100110011101111"],
+  ["k", 4, 14],
+  ["T", 48, 2, 1],
+  ["t", 52, 14, 1],
+  ["w", 50, 22],
+  ["o", 46, 24],
 ];
 let R = null,
   sc = null,
@@ -92,6 +113,7 @@ function put(geo, x, z, rot) {
   m.castShadow = m.receiveShadow = true;
   sc.add(m);
   objs.push(m);
+  return m;
 }
 /* window.__go(names, tier, yaw, pitch, dist, cols, opts): lay the named buildings out in a grid (tile scale) and photograph them.
    names: "house:2@1!0" = house, look 2, turned one quarter, tier 0; "fort"; "trees" (a strip of the world's trees) */
@@ -104,11 +126,58 @@ window.__go = (names, tier, yaw, pitch, dist, cols, o = {}) => {
   const CW = o.cw || 8,
     info = [];
   if (names[0] === "fort") {
-    for (const [B, x, z] of FORT(tier))
-      put(voxelGeo(B.M, { ox: B.o, oz: B.oz === undefined ? B.o : B.oz, k: 1 / BPT }), x, z, 0);
+    const occ = new Set(),
+      tiles = (k, x, z, o) => {
+        const w = k === "g" ? o * 4 : k === "T" || k === "k" ? 8 : 4,
+          l = k === "g" || k === "w" || k === "t" ? 4 : 8,
+          r = [];
+        for (let j = 0; j < l; j++)
+          for (let i2 = 0; i2 < w; i2++)
+            if (k !== "w" || typeof o !== "string" || o[j * 4 + i2] === "1") r.push([x + i2, z + j]);
+        return r;
+      },
+      seen = new Set(),
+      geo = (B, name) => {
+        const g = voxelGeo(B.M, { ox: B.o, oz: B.oz === undefined ? B.o : B.oz, k: 1 / BPT });
+        if (name && !seen.has(name)) {
+          seen.add(name);
+          info.push(name + " " + B.M.w + "x" + B.M.h + "x" + B.M.l + " tris " + (g.index ? g.index.count / 3 : 0));
+        }
+        return g;
+      };
+    for (const [k, x, z, o] of FORT) if (k !== "o") for (const [a, b] of tiles(k, x, z, o)) occ.add(a + "," + b);
+    for (const [k, x, z, o] of FORT) {
+      if (k === "w") {
+        const own = new Set(tiles(k, x, z, o).map(([a, b]) => a + "," + b)),
+          look = wallLook(
+            (i2, j) => own.has(x + i2 + "," + (z + j)),
+            (i2, j) => occ.has(x + i2 + "," + (z + j)) && !own.has(x + i2 + "," + (z + j)),
+          ),
+          lamp = ((x >> 2) + (z >> 2) * 3) % 5 === 0;
+        put(geo(wall(tier, look + (lamp ? "L" : ""), ((x >> 2) * 7 + (z >> 2) * 13) % 3), "wall " + look), x, z, 0);
+        if (x === 36 && z === 4) {
+          /* the ground falls away under this piece */
+          const F = footing(tier, 4, 4, [0, 0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 3, 0, 0, 1, 2]),
+            m = put(voxelGeo(F.M, { ox: 0, oz: 0, k: 1 }), x, z, 0);
+          m.position.y = -F.D + 1.5;
+        }
+      } else if (k === "T") put(geo(tower(tier, !!o), "tower" + (o ? " with an engine" : "")), x, z, 0);
+      else if (k === "t") put(geo(tower1(tier, !!o), "tower of one cell" + (o ? " with an engine" : "")), x, z, 0);
+      else if (k === "k") put(geo(keep(tier), "keep"), x, z, 0);
+      else if (k === "o") put(geo(torch()), x + 0.5, z + 0.5, 0);
+      else {
+        put(geo(gate(tier, o), "gate " + o), x + o * 2, z + 2, 0);
+        if (tier) put(voxelGeo(portcullis(), { ox: -2, oz: -0.5, k: 1 }), x + o * 2, z + 2, 0);
+        else
+          for (const sd of [-1, 1]) {
+            const m = put(voxelGeo(gateLeaf(), { ox: sd < 0 ? 0 : -2, oz: -0.5, k: 1 }), x + o * 2 + sd * 2, z + 2, 0);
+            m.rotation.y = sd * -0.5;
+          }
+      }
+    }
     names = [];
-    mx = 19;
-    mz = 6;
+    mx = 58;
+    mz = 28;
   }
   if (names[0] === "trees") {
     /* the trees of the world, from the same shapes: three rows (broadleaf, birch, conifer), then a small wood where they touch */

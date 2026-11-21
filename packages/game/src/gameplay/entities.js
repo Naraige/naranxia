@@ -1,15 +1,16 @@
 import { rnd } from "../core/math.js";
 import { constructionState, doorTiles, tilesFor } from "./construction.js";
 import { playersState, stoneOn } from "./players.js";
-import { BT, C, ROTT, SH, T, TS, TW } from "./rules.js";
+import { BT, C, FCELL, ROTT, SH, T, TS, TW } from "./rules.js";
 import { sessionState } from "./session.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { occ, terrainState } from "../world/terrain-state.js";
 import { fv, solid, solidAt } from "../world/traversal.js";
 
-export function mk(t, type, tx, ty, sz, done, ax, gl) {
+/* tiles: the tiles a piece really stands on when they are not its whole footprint (a wall piece fitted against a building, a rock or a ramp) */
+export function mk(t, type, tx, ty, sz, done, ax, gl, tiles0) {
   gl = type === "gate" ? gl || 2 : 0;
-  const tiles = tilesFor(type, tx, ty, sz, ax, gl),
+  const tiles = tiles0 || tilesFor(type, tx, ty, sz, ax, gl),
     g = type === "gate",
     s = {
       sid: ++sessionState.SID,
@@ -23,9 +24,9 @@ export function mk(t, type, tx, ty, sz, done, ax, gl) {
       ax: ax || 0,
       gl,
       rot: t === 0 && type !== "castle" && ROTT.has(type) ? constructionState.buildRot & 3 : 0,
-      rad: g ? 20 * gl : sz * 20,
-      x: g ? (tx + (ax ? 0.5 : gl / 2)) * TS : (tx + sz / 2) * TS,
-      y: g ? (ty + (ax ? gl / 2 : 0.5)) * TS : (ty + sz / 2) * TS,
+      rad: g ? 20 * gl * FCELL : sz * 20,
+      x: g ? (tx + ((ax ? 1 : gl) * FCELL) / 2) * TS : (tx + sz / 2) * TS,
+      y: g ? (ty + ((ax ? gl : 1) * FCELL) / 2) * TS : (ty + sz / 2) * TS,
       hp: SH[type],
       max: SH[type],
       cd: 0,

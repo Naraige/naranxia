@@ -6,7 +6,7 @@ import { doUpgrade, ok, pay } from "./economy.js";
 import { mk } from "./entities.js";
 import { ungar } from "./formations.js";
 import { HOMEC, LPL, playersState, stoneOn } from "./players.js";
-import { bsz, BSZ, C, CSZ, DIR4, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
+import { bsz, BSZ, C, CSZ, DIR4, fcell, FCELL, FSZ, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { sessionState } from "./session.js";
 import { demolish, rampGroup, tfOrder } from "./terraforming.js";
@@ -22,7 +22,7 @@ import { hudDisplayState } from "../ui/hud-state.js";
 import { mmTile } from "../world/minimap.js";
 import { gOK } from "../world/routes.js";
 import { amt, HT, occ, pth, stairs, ter, terrainState } from "../world/terrain-state.js";
-import { levelGround, solid } from "../world/traversal.js";
+import { freeTile, levelGround, solid } from "../world/traversal.js";
 
 export const constructionState = {
   gateLen: 3,
@@ -45,9 +45,12 @@ export function gateAxAt(_tx, _ty) {
 
 export function tilesFor(type, tx, ty, sz, ax, gl) {
   if (type === "gate") {
+    /* gl cells long (along x, or along y when ax), one cell thick */
     gl = gl || constructionState.gateLen;
-    const t = [];
-    for (let k = 0; k < gl; k++) t.push(ax ? [tx, ty + k] : [tx + k, ty]);
+    const t = [],
+      w = (ax ? 1 : gl) * FCELL,
+      h = (ax ? gl : 1) * FCELL;
+    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) t.push([tx + i, ty + j]);
     return t;
   }
   const t = [];
@@ -76,23 +79,114 @@ export function siteFit(type, tx, ty) {
   hs.sort((a, b) => a - b);
   return hs[hs.length - 1] - hs[0] > 3 ? -1 : hs[hs.length >> 1];
 }
-function clearSite(tx, ty, z) {
-  for (let j = 0; j < z; j++)
-    for (let i = 0; i < z; i++) {
-      const q = (ty + j) * TW + tx + i;
-      if (ter[q] >= 2 && ter[q] <= 4) {
-        ter[q] = 0;
-        amt[q] = 0;
-        mmTile(q);
-        markP(tx + i, ty + j);
-      }
+function clearTiles(T) {
+  for (const [x, y] of T) {
+    const q = y * TW + x;
+    if (ter[q] >= 2 && ter[q] <= 4) {
+      ter[q] = 0;
+      amt[q] = 0;
+      mmTile(q);
+      markP(x, y);
     }
+  }
 }
+const clearSite = (tx, ty, z) => clearTiles(tilesFor("", tx, ty, z));
 
-export function gateOK(tx, ty, ax, gl) {
-  const t = tilesFor("gate", tx, ty, 1, ax, gl),
-    hs = t.map(([x, y]) => HT[y * TW + x]);
-  return t.every(([x, y]) => gOK(x, y) && valid(x, y)) && Math.max(...hs) - Math.min(...hs) <= 2;
+/* ---- fortifications. Walls, towers and gates are laid on the grid of FCELL tiles (rules.js), so pieces always line up.
+   A wall piece takes the free tiles of its cell: it closes against a building, a rock face, a ramp or the castle door, spans the water of a shore,
+   and follows the ground as it is (no levelling: it stands on the highest tile of its cell). A tower or a gate needs its whole footprint and is
+   levelled like a building; finished walls of the player in the way are replaced and refunded. ---- */
+/* the corner of the footprint for the cursor tile: the cell under the cursor for a wall (and the passage of a three-cell gate); a footprint
+   of two cells is centred on the nearest corner of the grid */
+export function fortAt(type, tx, ty, ax, gl) {
+  const two = (c) => fcell(c + FCELL / 2) - FCELL;
+  if (type === "wall") return [fcell(tx), fcell(ty)];
+  if (type === "gate") {
+    const along = (c) => ((gl || constructionState.gateLen) === 3 ? fcell(c) - FCELL : two(c));
+    return ax ? [fcell(tx), along(ty)] : [along(tx), fcell(ty)];
+  }
+  return [two(tx), two(ty)];
+}
+/* the tiles a wall piece would stand on in the cell at (x0, y0), or null when no land of the cell is free */
+export function wallTiles(x0, y0) {
+  const t = [];
+  let land = 0;
+  for (let j = 0; j < FCELL; j++)
+    for (let i = 0; i < FCELL; i++) {
+      const x = x0 + i,
+        y = y0 + j;
+      if (!gOK(x, y)) continue;
+      const q = y * TW + x;
+      if (ter[q] === 5 || occ.has(q) || stairs.has(q) || inDoor(x, y)) continue;
+      t.push([x, y]);
+      if (ter[q] !== 1) land++;
+    }
+  return land ? t : null;
+}
+/* can a tower or a gate stand on these tiles? { h: the level it is built on, walls: the wall pieces it replaces }, or null */
+export function fortFit(tiles) {
+  const hs = [],
+    walls = [];
+  for (const [x, y] of tiles) {
+    if (!gOK(x, y)) return null;
+    const q = y * TW + x,
+      o = occ.get(q);
+    /* (a wall piece may reach over water; what replaces it may not) */
+    if (ter[q] === 1 || ter[q] === 5) return null;
+    if (o) {
+      if (wallAt(x, y) !== o) return null;
+      if (!walls.includes(o)) walls.push(o);
+    } else if (!siteTile(x, y)) return null;
+    hs.push(HT[q]);
+  }
+  hs.sort((a, b) => a - b);
+  return hs[hs.length - 1] - hs[0] > 3 ? null : { h: hs[hs.length >> 1], walls };
+}
+/* what building a wall, a tower or a gate with the cursor on (tx, ty) would give: its corner, its tiles, and whether it fits (ok) */
+export function fortPlan(type, tx, ty) {
+  const ax = type === "gate" ? gateAxAt(tx, ty) : 0,
+    gl = type === "gate" ? constructionState.gateLen : 0,
+    [x0, y0] = fortAt(type, tx, ty, ax, gl);
+  if (type === "wall") {
+    const t = wallTiles(x0, y0);
+    return { x0, y0, ax, gl, sz: FCELL, tiles: t || tilesFor("wall", x0, y0, FCELL), ok: !!t, h: 0, walls: [] };
+  }
+  const sz = type === "gate" ? FCELL : FSZ.tower,
+    tiles = tilesFor(type, x0, y0, sz, ax, gl),
+    F = fortFit(tiles);
+  return { x0, y0, ax, gl, sz, tiles, ok: !!F, h: F ? F.h : 0, walls: F ? F.walls : [] };
+}
+/* nobody is walled in: whoever stands where a piece is laid steps off it, to the nearest free tile (a one-tile wall used to push them aside
+   by itself; the middle of a piece four tiles wide has no free tile beside it) */
+function stepOff(s) {
+  const on = new Set();
+  for (const [x, y] of s.tiles) on.add(y * TW + x);
+  for (const u of sessionState.units) {
+    if (u.gar || u.onF || u.shel || !(u.hp > 0)) continue;
+    const tx = Math.floor(u.x / TS),
+      ty = Math.floor(u.y / TS);
+    if (!on.has(ty * TW + tx)) continue;
+    const f = freeTile(tx, ty);
+    if (!f) continue;
+    u.x = (f[0] + 0.5) * TS;
+    u.y = (f[1] + 0.5) * TS;
+    u.lx = u.x;
+    u.ly = u.y;
+  }
+}
+function replaceWalls(L) {
+  for (const w of L) {
+    if (w.garr) w.garr.slice().forEach(ungar);
+    const Rr = playersState.RESP[w.pl | 0];
+    for (const k in w.cost || {}) Rr[k] += w.cost[k];
+    w.hp = -1;
+    w.noCrumble = true;
+    rmStruct(w);
+    for (const [a, b] of w.tiles) if (occ.get(b * TW + a) === w) occ.delete(b * TW + a);
+    sessionState.structs.splice(sessionState.structs.indexOf(w), 1);
+    refreshNear(w);
+  }
+  if (L.length) sessionState.fdDirty = true;
 }
 
 /* the rotation chosen when placing a castle, or the next one (clockwise) whose door opens on free ground */
@@ -173,39 +267,42 @@ export let build = function build(type, tx, ty) {
     return;
   }
   if (sessionState.over || !ok(C[type])) return;
-  if (type === "tower") {
-    const t = tilesFor("tower", tx, ty, 2);
-    if (!t.every(([x, y]) => gOK(x, y) && (valid(x, y) || wallAt(x, y)))) return;
-    const hs = t.map(([x, y]) => HT[y * TW + x]);
-    if (Math.max(...hs) - Math.min(...hs) > 2) return;
-    let rep = 0;
-    for (const [x, y] of t) {
-      const w = wallAt(x, y);
-      if (!w) continue;
-      rep++;
-      if (w.garr) w.garr.slice().forEach(ungar);
-      const Rr = playersState.RESP[w.pl | 0];
-      for (const k in w.cost || {}) Rr[k] += w.cost[k];
-      w.hp = -1;
-      w.noCrumble = true;
-      rmStruct(w);
-      for (const [a, b] of w.tiles) if (occ.get(b * TW + a) === w) occ.delete(b * TW + a);
-      sessionState.structs.splice(sessionState.structs.indexOf(w), 1);
-      refreshNear(w);
-    }
-    if (rep) {
-      sessionState.fdDirty = true;
-      if (!MP.on || playersState.CURPL === LPL()) {
-        hudDisplayState.msgS = "Walls replaced by the tower (refunded)";
-        hudDisplayState.msgT = 3;
-      }
-    }
-    pay(C.tower);
-    levelGround(tx, ty, 2, Math.max(...hs));
-    const s = mk(0, "tower", tx, ty, 2, false);
+  if (type === "wall") {
+    const P = fortPlan("wall", tx, ty);
+    if (!P.ok) return;
+    pay(C.wall);
+    clearTiles(P.tiles);
+    const s = mk(0, "wall", P.x0, P.y0, FCELL, false, 0, 0, P.tiles);
+    stepOff(s);
+    addStruct(s);
+    refreshNear(s);
+    puff(s.x, s.y, "#c9c9c9", 6, 50);
+    snd("build", s.x, s.y);
+    return;
+  }
+  if (type === "tower" || type === "gate") {
+    const P = fortPlan(type, tx, ty);
+    if (!P.ok) return;
+    const rep = P.walls.length;
+    replaceWalls(P.walls);
+    pay(C[type]);
+    clearTiles(P.tiles);
+    if (type === "gate")
+      for (let k = 0; k < P.gl; k++)
+        levelGround(P.x0 + (P.ax ? 0 : k * FCELL), P.y0 + (P.ax ? k * FCELL : 0), FCELL, P.h, true);
+    else levelGround(P.x0, P.y0, P.sz, P.h, true);
+    const s =
+      type === "gate" ? mk(0, "gate", P.x0, P.y0, FCELL, false, P.ax, P.gl) : mk(0, "tower", P.x0, P.y0, P.sz, false);
+    if (type === "gate") s.gate = true;
+    stepOff(s);
     if (rep) {
       s.prog = 0.3;
       s.hp = Math.max(s.hp, s.max * 0.3);
+      if (!MP.on || playersState.CURPL === LPL()) {
+        hudDisplayState.msgS =
+          type === "tower" ? "Walls replaced by the tower (refunded)" : "Walls replaced by the gate (refunded)";
+        hudDisplayState.msgT = 3;
+      }
     }
     addStruct(s);
     refreshNear(s);
@@ -224,7 +321,6 @@ export let build = function build(type, tx, ty) {
     return;
   }
   const i = ty * TW + tx;
-  const wRep = type === "tower" ? wallAt(tx, ty) : null;
   if (
     type === "ballista" ||
     type === "trebuchet" ||
@@ -234,10 +330,9 @@ export let build = function build(type, tx, ty) {
     type === "demolish" ||
     type === "rallyc" ||
     type === "rotate" ||
-    type === "movec" ||
-    wRep
+    type === "movec"
   ) {
-    /* These tools and wall replacement apply their own placement checks below. */
+    /* These tools apply their own placement checks below. */
   } else if (type === "path") {
     if (!pathOK(tx, ty)) return;
   } else if (BSZ[type]) {
@@ -444,22 +539,6 @@ export let build = function build(type, tx, ty) {
     snd("build", s.x, s.y);
     return;
   }
-  if (type === "gate") {
-    const ax = gateAxAt(tx, ty),
-      gl = constructionState.gateLen;
-    if (!gateOK(tx, ty, ax, gl)) return;
-    pay(C.gate);
-    const t = tilesFor("gate", tx, ty, 1, ax, gl),
-      h0 = Math.max(...t.map(([x, y]) => HT[y * TW + x]));
-    t.forEach(([x, y]) => levelGround(x, y, 1, h0));
-    const s = mk(0, "gate", tx, ty, 1, false, ax, gl);
-    s.gate = true;
-    addStruct(s);
-    refreshNear(s);
-    puff(s.x, s.y, "#c9c4b6", 8, 60, { soft: 1, T: 1, s: 0.38, z: 0.3, vz: 0.7, g: -0.3 });
-    snd("build", s.x, s.y);
-    return;
-  }
   if (type === "path") {
     const want = stoneOn() ? 2 : 1;
     if (pth[i] === want) return;
@@ -472,30 +551,10 @@ export let build = function build(type, tx, ty) {
     return;
   }
 
-  if (wRep) {
-    if (wRep.garr) wRep.garr.slice().forEach(ungar);
-    const Rr = playersState.RESP[wRep.pl | 0];
-    for (const k in wRep.cost || {}) Rr[k] += wRep.cost[k];
-    wRep.hp = -1;
-    wRep.noCrumble = true;
-    rmStruct(wRep);
-    for (const [x, y] of wRep.tiles) if (occ.get(y * TW + x) === wRep) occ.delete(y * TW + x);
-    sessionState.structs.splice(sessionState.structs.indexOf(wRep), 1);
-    refreshNear(wRep);
-    sessionState.fdDirty = true;
-    if (!MP.on || playersState.CURPL === LPL()) {
-      hudDisplayState.msgS = "Wall replaced by a tower (wall refunded)";
-      hudDisplayState.msgT = 3;
-    }
-  }
+  /* the one-tile pieces (the torch) */
   pay(C[type]);
   levelGround(tx, ty, 1, HT[i]);
   const s = mk(0, type, tx, ty, 1, false);
-  if (type === "gate") s.gate = true;
-  if (wRep) {
-    s.prog = 0.3;
-    s.hp = Math.max(s.hp, s.max * 0.3);
-  }
   addStruct(s);
   refreshNear(s);
   puff(s.x, s.y, "#c9c9c9", 6, 50);
@@ -512,13 +571,18 @@ export function wallAt(tx, ty) {
 export function mergeTowers() {
   const T0 = [];
   for (const s of sessionState.structs)
-    if (s.t === 0 && s.type === "tower" && s.prog >= 1 && s.hp > 0 && !s.merged) T0.push(s);
+    if (s.t === 0 && s.type === "tower" && s.sz === FCELL && s.prog >= 1 && s.hp > 0 && !s.merged) T0.push(s);
   if (T0.length < 4) return;
   const at = new Map();
   for (const s of T0) at.set(s.ty * TW + s.tx, s);
   for (const s of T0) {
     if (s.merged) continue;
-    const g = [s, at.get(s.ty * TW + s.tx + 1), at.get((s.ty + 1) * TW + s.tx), at.get((s.ty + 1) * TW + s.tx + 1)];
+    const g = [
+      s,
+      at.get(s.ty * TW + s.tx + FCELL),
+      at.get((s.ty + FCELL) * TW + s.tx),
+      at.get((s.ty + FCELL) * TW + s.tx + FCELL),
+    ];
     if (g.some((q) => !q || q.merged || (q.pl | 0) !== (s.pl | 0))) continue;
     const garr = [];
     let tier = 1;
@@ -542,7 +606,7 @@ export function mergeTowers() {
     playersState.CURPL = s.pl | 0;
     let k;
     try {
-      k = mk(0, "keep", s.tx, s.ty, 2, true);
+      k = mk(0, "keep", s.tx, s.ty, FSZ.keep, true);
     } finally {
       playersState.CURPL = prev;
     }

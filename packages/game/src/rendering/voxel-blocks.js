@@ -40,6 +40,9 @@ export const RULES = [
   [/^fire$/, { k: "small", c: "#ff8a2a", glow: 1 }],
   [/^path$/, { k: "slab", c: "#9c8c64", h: 0.12 }],
   [/^paving$/, { k: "slab", c: "#7c7a74", h: 0.14 }],
+  [/^flagstone$/, { k: "cube", c: "#76746e", v: 0.05 }],
+  [/^gate_leaf$/, { k: "gleaf", c: "#6d4c2f", c2: "#3a3f45" }],
+  [/^gate_band$/, { k: "gband", c: "#6d4c2f", c2: "#3a3f45" }],
   [/^paving_dark$/, { k: "slab", c: "#66645f", h: 0.14 }],
   [/^soil_low$/, { k: "slab", c: "#55391f", h: 0.2 }],
   [/^water_low$/, { k: "slab", c: "#3b6fb6", h: 0.14, glass: 1 }],
@@ -154,7 +157,7 @@ const TEX = [
   [/^crate$|chest$/, BKB.crate],
   [/^target$/, BKB.target],
   [/^path$/, BK.path],
-  [/^paving/, BKB.flagstone],
+  [/^paving|^flagstone$/, BKB.flagstone],
   [/^water/, BKB.water],
   [/^soil/, BKB.farmland],
   [/^crop_/, BKB.crop],
@@ -170,7 +173,7 @@ const TEX = [
   [/^heap_|^headstone$|^millstone$/, BK.stone],
   [/^(sconce|brazier|anvil|shield_\w+)$/, BKB.metal],
   [
-    /_planks$|_stairs$|_slab$|_fence$|_trapdoor$|_sign$|^ladder$|^scaffolding$|^lectern$|^composter$|^crafting_table$|^bookshelf$|^beehive$|^(table|stool|bench|stake|wheel|weapon_rack|hanging_sign)$/,
+    /_planks$|_stairs$|_slab$|_fence$|_trapdoor$|_sign$|^ladder$|^scaffolding$|^lectern$|^composter$|^crafting_table$|^bookshelf$|^beehive$|^(table|stool|bench|stake|wheel|weapon_rack|hanging_sign|gate_leaf|gate_band)$/,
     BKB.planks,
   ],
 ];

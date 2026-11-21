@@ -12,7 +12,7 @@ import { formationsState } from "../gameplay/formations.js";
 import { lightingState } from "../gameplay/lighting.js";
 import { BAD, playersState } from "../gameplay/players.js";
 import { CLM, RL } from "../gameplay/resources.js";
-import { C, RALLY, RALLYC, RS, RS2, rulesState, SH, T } from "../gameplay/rules.js";
+import { C, FCELL, FSZ, RALLY, RALLYC, RS, RS2, rulesState, SH, T } from "../gameplay/rules.js";
 import { qFix, questsState } from "../gameplay/quests.js";
 import { sessionState } from "../gameplay/session.js";
 import { simulationState } from "../gameplay/simulation.js";
@@ -529,10 +529,25 @@ export function svFix(D) {
     D.units = U;
   }
   if ("structs" in D) {
+    /* fortifications saved before they took the grid of four tiles (walls of one tile, towers of one or two, gates one tile thick) have no
+       place in this world: they are dropped like the types this build does not know, and the tiles they held are freed */
+    const oldFort = (q) =>
+      (q.type === "wall" && q.sz !== FCELL) ||
+      (q.type === "gate" && q.sz !== FCELL) ||
+      (q.type === "tower" && q.sz !== FCELL && q.sz !== FSZ.tower) ||
+      (q.type === "keep" && q.sz !== FSZ.keep);
     const Q = ok(D.structs).filter(
-      (q) => q && typeof q === "object" && (q.type in SH || q.type in C || q.type === "wall" || q.type === "gate"),
+      (q) =>
+        q &&
+        typeof q === "object" &&
+        (q.type in SH || q.type in C || q.type === "wall" || q.type === "gate") &&
+        !oldFort(q),
     );
     for (const q of Q) if (!Number.isFinite(q.hp)) q.hp = SH[q.type] || 100;
+    if (D.occ instanceof Map && Q.length !== ok(D.structs).length) {
+      const live = new Set(Q);
+      for (const [k, v] of [...D.occ]) if (!live.has(v)) D.occ.delete(k);
+    }
     D.structs = Q;
     if (D.units) {
       const set = new Set(Q);

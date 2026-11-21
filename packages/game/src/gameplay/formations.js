@@ -7,7 +7,7 @@ import { mkU } from "./entities.js";
 import { chase, losClear, moveTo, stepF, walk } from "./movement.js";
 import { LPL, playersState } from "./players.js";
 import { CLM } from "./resources.js";
-import { GCAP, T, TS, TW } from "./rules.js";
+import { FCELL, GCAP, T, TS, TW } from "./rules.js";
 import { sel } from "./selection.js";
 import { sessionState } from "./session.js";
 import { simulationState } from "./simulation.js";
@@ -95,32 +95,46 @@ export function capField(C) {
   return C.cfg;
 }
 
+/* where the j-th man of a garrison stands (sim units): the wall walk of a wall piece, the four corners of a tower's fighting top (three spots
+   on a one-cell tower), over the passage of a gate, a ring on a keep */
 export function garSlot(s, j) {
   if (s.type === "keep") {
     const a = (j / 12) * 6.283;
-    return { x: s.x + Math.cos(a) * 26, y: s.y + Math.sin(a) * 26 };
+    return { x: s.x + Math.cos(a) * 104, y: s.y + Math.sin(a) * 104 };
   }
   if (s.type === "tower") {
-    if (s.sz === 2) {
+    if (s.sz > FCELL) {
       const o = [
-        [-22, -22],
-        [22, -22],
-        [-22, 22],
-        [22, 22],
+        [-100, -100],
+        [100, -100],
+        [-100, 100],
+        [100, 100],
       ][j % 4];
       return { x: s.x + o[0], y: s.y + o[1] };
     }
     const o = [
-      [-12, -9],
-      [12, -9],
-      [0, 12],
+      [-40, -30],
+      [40, -30],
+      [0, 40],
     ][j % 3];
     return { x: s.x + o[0], y: s.y + o[1] };
   }
   if (s.type === "gate") {
-    const d = j ? 1 : -1,
-      o = s.gl === 3 ? 40 : 30;
-    return s.ax ? { x: s.x, y: s.y + d * o } : { x: s.x + d * o, y: s.y };
+    const d = j ? 40 : -40;
+    return s.ax ? { x: s.x, y: s.y + d } : { x: s.x + d, y: s.y };
+  }
+  if (s.type === "wall" && s.tiles.length < FCELL * FCELL) {
+    /* a piece fitted against something: the tile of it nearest to the middle of its cell */
+    let b = s.tiles[0],
+      bd = 1e9;
+    for (const t of s.tiles) {
+      const d = Math.abs((t[0] + 0.5) * TS - s.x) + Math.abs((t[1] + 0.5) * TS - s.y);
+      if (d < bd) {
+        bd = d;
+        b = t;
+      }
+    }
+    return { x: (b[0] + 0.5) * TS, y: (b[1] + 0.5) * TS };
   }
   return { x: s.x, y: s.y };
 }
