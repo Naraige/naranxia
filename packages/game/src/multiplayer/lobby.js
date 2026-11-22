@@ -8,7 +8,8 @@ import { lobbyHost, lobbyJoin } from "./connection.js";
 import { mpBegin, mpSend } from "./lockstep.js";
 import { registryHide, registryList, registryOn } from "./registry.js";
 import { MP } from "./session.js";
-import { setThemeSaved, THEME } from "../ui/kingdom-theme.js";
+import { PAL, setThemeSaved, THEME } from "../ui/kingdom-theme.js";
+import { partnerTheme } from "../rendering/owner-theme.js";
 import { settingsState } from "../ui/panel-state.js";
 import { openPicker, setConfirmPickHandler, sitePickerState } from "../ui/site-picker.js";
 import { rollWorld, setRollWorldHandler } from "../world/terrain.js";
@@ -217,7 +218,13 @@ export function lobbyRender() {
       e.className = "pl" + (on ? " on" : " off") + (rdy ? " rdy" : "");
       e.children[1].textContent = name;
       e.children[2].textContent = txt;
-    };
+    },
+    /* each player is listed under the colour of his own kingdom (his profile) */
+    tint = (id, c) => {
+      $m(id).style.borderLeft = c ? "5px solid " + c : "";
+    },
+    mineC = PAL[THEME.c][1],
+    theirC = MP.conn ? PAL[partnerTheme().c][1] : "";
   const hostN = MP.host ? me : MP.pname || "Host",
     guestN = MP.host ? MP.pname || "" : me;
   row(
@@ -235,6 +242,8 @@ export function lobbyRender() {
     MP.host ? !!MP.theirs : !!MP.mine,
     g ? ((MP.host ? MP.theirs : MP.mine) ? "Castle placed - ready" : "Choosing a castle site...") : "",
   );
+  tint("mpP1", MP.host ? mineC : theirC);
+  tint("mpP2", MP.host ? theirC : mineC);
   $m("mpSite").textContent = MP.mine ? "Change my castle site" : "Choose my castle site";
   $m("mpSite").disabled = !MP.conn;
   const pb = $m("mpPlay");

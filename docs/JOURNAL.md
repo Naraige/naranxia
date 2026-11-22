@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-22 · v97
+- The King: "fait en sorte que chacun se connecte avec son profil en coop et assure toi que cela soit bien 2 joueur distinct dans la coop juste pas de teamkill principalement", then "ensuite diffuse la nouvelle maj": his go-ahead for v97, which ships every entry below down to "horde portals" (all marked unreleased until now).
+- Profile in co-op: each player links with his own (name, colours, pattern: "hello", then "prof" on a change, entry below); the lobby lists each player under the colour of his kingdom.
+- Two distinct players, audited in the code: resources per player (`RESP`), ownership `pl` on units and structures, selection / orders / training / demolition limited to one's own (`sel()`, `withSel`, `selB` and the demolish rule all test `pl === CURPL`), castles apart. No team kill: targets are picked by side and both players are side 0; every area effect (cannon, trebuchet, traps, oil, king skills) picks zombies only; a guard in `hit()` now refuses any strike on one's own side. `det` pins unchanged, so the guard never fired in the reference game.
+- Notes and announcement written for everything since v96 (`game/NOTES.md`, `announce/v97.md`, 9 languages).
+- Verified before the release: eslint, prettier, architecture, textaudit --notes, langcheck; PASS det, ui, save, features, mp_side, mpk, mp_resync, mp8. GitHub runs the full suite for the release.
+- Not tried: two real machines.
+
 ## 2026-11-22 · profile at the first launch: name and banner, the title army follows (unreleased)
 - The King: "ajoute la creation d'un profil au lancement avec la personnalisation du nom et de la banniere qui adapt aussi la cinematic du menu".
 - `ui/title-menu.js`: the kingdom card (banner as it will hang, name, colour, second colour, 16 patterns) is now `kingdomCard()`, shared by New kingdom and by the new screen `drawProfile` ("Create your kingdom" the first time, "Your kingdom" after; `settingsState.profOpen`). It opens by itself on the title when no kingdom was ever saved on the machine (`themeFresh()` in `ui/kingdom-theme.js`: no `dk_theme`), and from the new row "Your kingdom" of the title card. Closing it saves the theme. Not opened by itself under browser automation (`navigator.webdriver`, same rule as `core/boot.js`), so the tests start on the menu as before.

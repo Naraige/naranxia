@@ -1726,4 +1726,19 @@ export const TR = {
   "Its name and its banner fly over your castle, your men and the title army.":
     "Adı ve sancağı kalenin, adamlarının ve menüdeki ordunun üzerinde dalgalanır.",
   "Found the kingdom": "Krallığı kur",
+  "A kingdom of your own: profile, pattern banners and a world built in blocks.":
+    "Kendi krallığın: profil, desenli sancaklar ve bloklardan kurulu bir dünya.",
+  'At the first launch you create your kingdom: its name, its two colours and the pattern of its banner. Change it at any time from "Your kingdom" on the title screen.':
+    'İlk açılışta krallığını kurarsın: adı, iki rengi ve sancağının deseni. Başlık ekranındaki "Krallığın" ile istediğin zaman değiştir.',
+  "Banners are made like Minecraft banners: 16 patterns, hung on gates, towers, the castle, the barracks and the war room, and carried by the bannerman.":
+    "Sancaklar Minecraft sancakları gibi yapılır: 16 desen; kapılara, kulelere, kaleye, kışlaya ve savaş odasına asılır, sancaktar da taşır.",
+  "Every roof wears the colour of your kingdom.": "Her çatı krallığının rengini taşır.",
+  "Co-op: each player keeps his own name, colours and banner on both screens, with the name of each kingdom over its castle. Players cannot hurt each other.":
+    "Eşli oyun: her oyuncu iki ekranda da kendi adını, renklerini ve sancağını korur; her krallığın adı kalesinin üstünde görünür. Oyuncular birbirine zarar veremez.",
+  "Every building is redrawn in blocks, one block to a tile: buildings are much larger and more detailed.":
+    "Tüm binalar bloklarla yeniden çizildi, her kareye bir blok: çok daha büyük ve ayrıntılılar.",
+  "Walls, towers and gates are laid on a grid of four tiles: thick ramparts with a wall walk, great towers, a gate with a portcullis.":
+    "Surlar, kuleler ve kapılar dört karelik bir ızgaraya kurulur: seyirdim yollu kalın surlar, büyük kuleler, demir parmaklıklı kapı.",
+  "Saves from older versions load without their old walls, towers and gates.":
+    "Eski sürümlerin kayıtları eski surları, kuleleri ve kapıları olmadan yüklenir.",
 };

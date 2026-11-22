@@ -102,6 +102,9 @@ function target0(u, range, tt) {
 }
 
 export function hit(u, e) {
+  /* no one strikes his own side: the two players of a co-op game are one side (t 0), so neither can hurt the other's men or buildings.
+     Every area effect (cannon, trebuchet, traps, oil, king skills) already picks zombies only */
+  if (u && e && u.t === e.t) return;
   if (u.type === "cannon") {
     cannonFire(u, e);
     return;

@@ -1728,4 +1728,19 @@ export const PL = {
   "Its name and its banner fly over your castle, your men and the title army.":
     "Jego nazwa i sztandar powiewają nad twoim zamkiem, twoimi ludźmi i armią w menu.",
   "Found the kingdom": "Załóż królestwo",
+  "A kingdom of your own: profile, pattern banners and a world built in blocks.":
+    "Własne królestwo: profil, sztandary ze wzorami i świat zbudowany z bloków.",
+  'At the first launch you create your kingdom: its name, its two colours and the pattern of its banner. Change it at any time from "Your kingdom" on the title screen.':
+    "Przy pierwszym uruchomieniu tworzysz swoje królestwo: nazwę, dwa kolory i wzór sztandaru. Zmienisz je w każdej chwili przez „Twoje królestwo” na ekranie tytułowym.",
+  "Banners are made like Minecraft banners: 16 patterns, hung on gates, towers, the castle, the barracks and the war room, and carried by the bannerman.":
+    "Sztandary powstają jak w Minecrafcie: 16 wzorów, zawieszone na bramach, wieżach, zamku, koszarach i sali wojennej oraz niesione przez chorążego.",
+  "Every roof wears the colour of your kingdom.": "Każdy dach nosi kolor twojego królestwa.",
+  "Co-op: each player keeps his own name, colours and banner on both screens, with the name of each kingdom over its castle. Players cannot hurt each other.":
+    "Kooperacja: każdy gracz zachowuje swoją nazwę, kolory i sztandar na obu ekranach, a nazwa każdego królestwa widnieje nad jego zamkiem. Gracze nie mogą się ranić.",
+  "Every building is redrawn in blocks, one block to a tile: buildings are much larger and more detailed.":
+    "Wszystkie budynki narysowano na nowo z bloków, jeden blok na pole: są znacznie większe i bardziej szczegółowe.",
+  "Walls, towers and gates are laid on a grid of four tiles: thick ramparts with a wall walk, great towers, a gate with a portcullis.":
+    "Mury, wieże i bramy stawia się na siatce czterech pól: grube wały z chodnikiem, wielkie wieże, brama z kratą.",
+  "Saves from older versions load without their old walls, towers and gates.":
+    "Zapisy ze starszych wersji wczytują się bez dawnych murów, wież i bram.",
 };

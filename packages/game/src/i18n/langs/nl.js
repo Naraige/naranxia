@@ -1742,4 +1742,19 @@ export const NL = {
   "Its name and its banner fly over your castle, your men and the title army.":
     "Zijn naam en zijn banier wapperen boven je kasteel, je mannen en het leger in het menu.",
   "Found the kingdom": "Koninkrijk stichten",
+  "A kingdom of your own: profile, pattern banners and a world built in blocks.":
+    "Een eigen koninkrijk: profiel, banieren met patronen en een wereld van blokken.",
+  'At the first launch you create your kingdom: its name, its two colours and the pattern of its banner. Change it at any time from "Your kingdom" on the title screen.':
+    'Bij de eerste start sticht je je koninkrijk: de naam, de twee kleuren en het patroon van de banier. Wijzig het wanneer je wilt via "Je koninkrijk" op het titelscherm.',
+  "Banners are made like Minecraft banners: 16 patterns, hung on gates, towers, the castle, the barracks and the war room, and carried by the bannerman.":
+    "Banieren zijn gemaakt zoals Minecraft-banieren: 16 patronen, opgehangen aan poorten, torens, het kasteel, de kazerne en de krijgsraad, en gedragen door de vaandeldrager.",
+  "Every roof wears the colour of your kingdom.": "Elk dak draagt de kleur van je koninkrijk.",
+  "Co-op: each player keeps his own name, colours and banner on both screens, with the name of each kingdom over its castle. Players cannot hurt each other.":
+    "Co-op: elke speler houdt zijn eigen naam, kleuren en banier op beide schermen, met de naam van elk koninkrijk boven zijn kasteel. Spelers kunnen elkaar geen schade doen.",
+  "Every building is redrawn in blocks, one block to a tile: buildings are much larger and more detailed.":
+    "Alle gebouwen zijn opnieuw getekend in blokken, één blok per tegel: ze zijn veel groter en gedetailleerder.",
+  "Walls, towers and gates are laid on a grid of four tiles: thick ramparts with a wall walk, great towers, a gate with a portcullis.":
+    "Muren, torens en poorten staan op een raster van vier tegels: dikke wallen met weergang, grote torens, een poort met valhek.",
+  "Saves from older versions load without their old walls, towers and gates.":
+    "Opgeslagen spellen van oudere versies laden zonder hun oude muren, torens en poorten.",
 };
