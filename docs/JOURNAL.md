@@ -17,6 +17,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
   Convoy trial 18, a real fault: only the first porter's route was checked when a convoy left; the second stood behind a rock massif, walked to the foot of it and its share came back after two minutes. `sendConvoy0` now checks each porter and the ones with a route carry everything.
   The sweeps get a 45 minute deadline (`tools/test_all.mjs`): 24 waves that end take about 19 minutes on a GitHub runner, the old limit was 20.
 - Verified: PASS convoy_probe (76 assertions), mp_convoy, det (hashes unchanged), runner; waves_probe: all 24 worlds end in 329 to 661 s with nothing left (23 in one run cut by my own time limit, world 23 alone).
+- Third release run green (full suite, sweeps): GitHub release v97 published, launchers update, Discord posted; game artifact and CHANGELOG updated.
 - Not tried: two real machines.
 
 ## 2026-11-22 · profile at the first launch: name and banner, the title army follows (unreleased)
