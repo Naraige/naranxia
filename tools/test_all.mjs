@@ -121,7 +121,13 @@ for (const html of ["naranxia_readable.html", "naranxia.html"]) {
   const names = selection.selected.filter((name) => suite[name].kind === "browser" && suite[name].html === html);
   const regular = names.filter((name) => !suite[name].heavy);
   for (const name of names.filter((name) => suite[name].heavy))
-    jobs.push({ names: [name], command: python, args: ["tools/browser_suite.py", suite[name].file, "--html", html] });
+    jobs.push({
+      names: [name],
+      command: python,
+      args: ["tools/browser_suite.py", suite[name].file, "--html", html],
+      /* a world sweep plays up to 24 whole waves: about 19 minutes on a GitHub runner */
+      timeout: 45 * 60 * 1000,
+    });
   if (regular.length)
     jobs.push({
       names: regular,
@@ -142,7 +148,7 @@ async function worker() {
   while (next < jobs.length) {
     const job = jobs[next++];
     const label = job.names.length > 1 ? "browser-" + suite[job.names[0]].html : job.names[0];
-    const child = await execute(job.command, job.args, label);
+    const child = await execute(job.command, job.args, label, job.timeout);
     const validation = validateResults(child.code, child.timedOut, child.output, job.names);
     outcomes.push({
       names: job.names,

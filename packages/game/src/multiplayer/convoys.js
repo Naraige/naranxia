@@ -55,8 +55,8 @@ export function sendConvoy0(c) {
       dist(x.x, x.y, from.x, from.y) - dist(y.x, y.y, from.x, from.y) ||
       x.uid - y.uid,
   );
-  const n = Math.min(P.length, Math.max(1, Math.min(5, Math.ceil(tot / 100))));
-  if (!n) {
+  const n0 = Math.min(P.length, Math.max(1, Math.min(5, Math.ceil(tot / 100))));
+  if (!n0) {
     if (p === LPL()) {
       hudDisplayState.msgS = "No peasant free to carry the convoy";
       hudDisplayState.msgT = 3;
@@ -73,12 +73,17 @@ export function sendConvoy0(c) {
     }
     return;
   }
+  /* the other porters start from where they stand: one that a rock massif cuts off from the route stays at work (it stopped at
+     the foot of it, and after two minutes its share went back), the others carry its share */
+  const Q = [P[0]];
+  for (let i = 1; i < n0; i++) if (cvRoute(P[i].x / TS, P[i].y / TS, to)) Q.push(P[i]);
+  const n = Q.length;
   R.g -= a.g;
   R.w -= a.w;
   R.s -= a.s;
   R.f = (R.f || 0) - a.f;
   for (let i = 0; i < n; i++) {
-    const u = P[i],
+    const u = Q[i],
       sh = (k) => Math.floor(a[k] / n) + (i < a[k] % n ? 1 : 0);
     u.cv = { to: q, from: p, g: sh("g"), w: sh("w"), s: sh("s"), f: sh("f"), back: false, t: 0, tt: 0, rt: 0 };
     u.job = null;

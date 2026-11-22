@@ -11,6 +11,12 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - Notes and announcement written for everything since v96 (`game/NOTES.md`, `announce/v97.md`, 9 languages).
 - Verified before the release: eslint, prettier, architecture, textaudit --notes, langcheck; PASS det, ui, save, features, mp_side, mpk, mp_resync, mp8. GitHub runs the full suite for the release.
 - The first release run failed in `mp_resync_deep` (never run since the buildings grew: full runs only happen on releases): its case 5 never resynced because the game was already over. The test sets zombies on rings of 9 and 10 tiles round the middle of each castle, which is inside a castle now 20 tiles wide, so a castle fell before the fifth corruption. Rings moved to 17 and 18 tiles (the same distance beyond the walls); the test prints why when a resync does not come. PASS locally (19 assertions); the release workflow was started again by hand on the fixed commit.
+- The second release run passed the full suite and failed in the world sweeps, which also had not run since the buildings grew. Three causes, none in what v97 adds:
+  `waves_probe` killed zombies within 8 tiles of a castle that is now 20 wide (they stop 10 tiles from its centre): no wave could end, every world ran its 900 s and the sweep hit its deadline. Now 16, as `tests/waves.js`.
+  Both sweeps drew castle pairs the lobby refuses (`sitesFar`: 44 tiles on one axis), so `mpStart` did nothing and the trial played the game of the world before (convoy trials 15 and 27 "returned" at second 0). The pairs now obey the rule.
+  Convoy trial 18, a real fault: only the first porter's route was checked when a convoy left; the second stood behind a rock massif, walked to the foot of it and its share came back after two minutes. `sendConvoy0` now checks each porter and the ones with a route carry everything.
+  The sweeps get a 45 minute deadline (`tools/test_all.mjs`): 24 waves that end take about 19 minutes on a GitHub runner, the old limit was 20.
+- Verified: PASS convoy_probe (76 assertions), mp_convoy, det (hashes unchanged), runner; waves_probe: all 24 worlds end in 329 to 661 s with nothing left (23 in one run cut by my own time limit, world 23 alone).
 - Not tried: two real machines.
 
 ## 2026-11-22 · profile at the first launch: name and banner, the title army follows (unreleased)

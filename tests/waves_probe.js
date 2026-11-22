@@ -9,7 +9,8 @@ async () => {
   renderer.render = function () {};
   const N = typeof WPN === "number" ? WPN : 24,
     W0 = typeof WPW === "number" ? WPW : 3,
-    KR = 8,
+    /* 16 as tests/waves.js: the castle is 20 tiles wide, the horde stops 10 tiles from its centre */
+    KR = 16,
     out = [];
   let bad = 0,
     n = 0;
@@ -35,7 +36,8 @@ async () => {
       if (!a) a = s;
       else {
         const d = Math.hypot(a.tx - s.tx, a.ty - s.ty);
-        if (d >= 48 && d <= 84) b = s;
+        /* and far enough for the game to take the pair (sitesFar of the lobby: two castle sides and 4 tiles on one axis) */
+        if (d >= 48 && d <= 84 && Math.max(Math.abs(a.tx - s.tx), Math.abs(a.ty - s.ty)) >= 44) b = s;
       }
     }
     if (coop && !b) {

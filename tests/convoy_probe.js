@@ -38,7 +38,8 @@ async () => {
       if (!a) a = s;
       else {
         const d = Math.hypot(a.tx - s.tx, a.ty - s.ty);
-        if (d >= 48 && d <= 84) b = s;
+        /* and far enough for the game to take the pair (sitesFar of the lobby: two castle sides and 4 tiles on one axis) */
+        if (d >= 48 && d <= 84 && Math.max(Math.abs(a.tx - s.tx), Math.abs(a.ty - s.ty)) >= 44) b = s;
       }
     }
     Math.random = RR;
