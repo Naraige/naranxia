@@ -851,6 +851,14 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v97 */
 Object.assign(TRD,{
+"Cross":["Croix","Cruz","Kreuz","Croce","Cruz"],
+"Pale":["Pal","Palo","Pfahl","Palo","Pala"],
+"Lozenge":["Losange","Losange","Raute","Losanga","Losango"],
+"Roundel":["Tourteau","Roel","Scheibe","Tondo","Arruela"],
+"Per bend":["Tranché","Tronchado","Schräggeteilt","Trinciato","Fendido"],
+"Pile":["Pile","Pila","Keil","Pila","Pilha"],
+"Checky":["Échiqueté","Jaquelado","Geschacht","Scaccato","Xadrezado"],
+"Gradient":["Dégradé","Degradado","Farbverlauf","Sfumatura","Gradiente"],
 "A new portal tears open in the ":["Un nouveau portail s'ouvre au ","Se abre un nuevo portal al ","Ein neues Portal öffnet sich im ","Si apre un nuovo portale a ","Abre-se um novo portal a "],
 "World size (next game)":["Taille du monde (prochaine partie)","Tamaño del mundo (próxima partida)","Weltgröße (nächstes Spiel)","Dimensione del mondo (prossima partita)","Tamanho do mundo (próximo jogo)"],
 "Medium":["Moyenne","Mediano","Mittel","Media","Médio"],

@@ -8,7 +8,7 @@ import { sessionState } from "../gameplay/session.js";
 import { BOSSN } from "../ai/wave-boss.js";
 import { drawFlag, drawLang, L, LANG, LANGS, languageState, T_, TC, tw } from "../i18n/language.js";
 import { MP } from "../multiplayer/session.js";
-import { bannerPattern, drawEmblemR, EMB, gemSwatch, saveTheme, shieldTile } from "../rendering/kingdom-banner.js";
+import { bannerTile, gemSwatch, saveTheme } from "../rendering/kingdom-banner.js";
 import { bannerIcon } from "../rendering/banner-icon.js";
 import { retheme } from "../rendering/structures.js";
 import { TFADE } from "../rendering/title-scene.js";
@@ -889,6 +889,26 @@ const MCSPL = [
   "Hold the last light",
 ];
 
+/* the patterns of a banner, in the order of PATS (rendering/banner-art.js) */
+const PATN = [
+  "Plain",
+  "Per pale",
+  "Chevron",
+  "Bend",
+  "Quarterly",
+  "Fess",
+  "Bordure",
+  "Saltire",
+  "Cross",
+  "Pale",
+  "Lozenge",
+  "Roundel",
+  "Per bend",
+  "Pile",
+  "Checky",
+  "Gradient",
+];
+
 /* ================= New kingdom ================= */
 function drawSetup(UW, UH, fh, back) {
   const b = kitScreen(UW, UH, { key: "new", title: "New kingdom", close: back, fh, maxW: 440 }),
@@ -926,16 +946,17 @@ function drawSetup(UW, UH, fh, back) {
   const LW = small ? 0 : 58,
     rx = ex + LW,
     rw = ew - LW,
-    row = (lab, n, yy, sz, draw, sel, pick, tip) => {
-      if (LW) T_(lab, ex, yy + (sz - 9 * 0.72) / 2, "#c4a37a", 0.72);
+    /* a row of n tiles sz wide and th high (square when th is left out), wrapped on the width of the card */
+    row = (lab, n, yy, sz, draw, sel, pick, tip, th = sz) => {
+      if (LW) T_(lab, ex, yy + (th - 9 * 0.72) / 2, "#c4a37a", 0.72);
       const per = Math.max(1, Math.floor((rw + 2.5) / (sz + 2.5)));
       for (let i = 0; i < n; i++) {
         const sx2 = rx + (i % per) * (sz + 2.5),
-          sy = yy + ((i / per) | 0) * (sz + 3);
+          sy = yy + ((i / per) | 0) * (th + 3);
         draw(sx2, sy, sz, i);
-        if (i === sel) gold(sx2 - 1, sy - 1, sz + 2, sz + 2, 4);
+        if (i === sel) gold(sx2 - 1, sy - 1, sz + 2, th + 2, 4);
         hudState.uiHits.push({
-          ...U(sx2, sy, sz, sz),
+          ...U(sx2, sy, sz, th),
           fn: () => {
             pick(i);
             saveTheme();
@@ -944,8 +965,10 @@ function drawSetup(UW, UH, fh, back) {
           tip: tip(i),
         });
       }
-      return Math.ceil(n / per) * (sz + 3);
+      return Math.ceil(n / per) * (th + 3);
     };
+  /* the rows share the height the card has left: a little air between them when it is the large card */
+  const gp = small ? 0 : 5;
   let ry = fy + 20;
   const sw = Math.max(8, Math.min(15, (rw + 2.5) / PAL.length - 2.5));
   ry += row(
@@ -960,6 +983,7 @@ function drawSetup(UW, UH, fh, back) {
     },
     (i) => [PAL[i][0] + " colours"],
   );
+  ry += gp;
   if (!small)
     ry += row(
       "2nd colour",
@@ -987,35 +1011,28 @@ function drawSetup(UW, UH, fh, back) {
       },
       (i) => ["Pattern colour: " + PAL[i][0]],
     );
-  if (!small)
-    ry += row(
+  ry += gp;
+  /* the pattern: the 16 banners the two colours can make, each drawn as it will hang (rendering/banner-art.js), as large as the card allows */
+  {
+    const pwd = Math.max(7, Math.min(sw + 3, (rw + 2.5) / PATN.length - 2.5, (y + eh - 5 - ry) / 2));
+    row(
       "Pattern",
-      8,
+      PATN.length,
       ry,
-      sw + 3,
-      (x, yy, sz, i) =>
-        shieldTile(x, yy, sz, (X, Y, W, H) => {
-          canvasesState.ctx.translate(X, Y);
-          bannerPattern(canvasesState.ctx, W, H, i, PAL[THEME.c2][1]);
-        }),
+      pwd,
+      (x, yy, sz, i) => {
+        canvasesState.ctx.imageSmoothingEnabled = false;
+        canvasesState.ctx.drawImage(bannerTile(i), x, yy, sz, sz * 2);
+        canvasesState.ctx.imageSmoothingEnabled = true;
+      },
       THEME.p | 0,
       (i) => {
         THEME.p = i;
       },
-      (i) => [["Plain", "Per pale", "Chevron", "Bend", "Quarterly", "Fess", "Bordure", "Saltire"][i]],
+      (i) => [PATN[i]],
+      pwd * 2,
     );
-  row(
-    "Emblem",
-    EMB.length,
-    ry,
-    sw + 3,
-    (x, yy, sz, i) => shieldTile(x, yy, sz, (X, Y, W, H) => drawEmblemR(X + W * 0.14, Y + H * 0.1, W * 0.72, i)),
-    THEME.e,
-    (i) => {
-      THEME.e = i;
-    },
-    () => ["Emblem"],
-  );
+  }
   y += eh + 8;
   {
     const s = "Long calm between waves, then a slow swarm. It grows stronger each wave.";

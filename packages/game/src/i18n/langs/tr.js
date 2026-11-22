@@ -1714,4 +1714,12 @@ export const TR = {
   "Waiting for the host to start the rematch": "Ev sahibinin rövanşı başlatması bekleniyor.",
   "World size (next game)": "Dünya boyutu (sonraki oyun)",
   "Medium": "Orta",
+  "Cross": "Haç",
+  "Pale": "Dikey şerit",
+  "Lozenge": "Baklava",
+  "Roundel": "Daire",
+  "Per bend": "Çapraz bölünmüş",
+  "Pile": "Kama",
+  "Checky": "Damalı",
+  "Gradient": "Renk geçişi",
 };

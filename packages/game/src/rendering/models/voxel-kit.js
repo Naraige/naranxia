@@ -841,16 +841,19 @@ export function butt(vb, P, x, z, y = 0) {
   vb.set(x, y, z, P.fence).set(x, y + 1, z, "target");
 }
 
-/* a banner hanging from a wall, two blocks tall: a crossbar, a cloth with a band of gold, a gold hem with three tassels (the banners of a
-   guild or of a foreign realm; the banners of the kingdom itself are hung by rendering/structures.js) */
-export function banner(vb, x, y, z, face, color) {
-  vb.set(x, y, z, `banner_${color}[facing=${face}]`).set(x, y - 1, z, `bannerlow_${color}[facing=${face}]`);
+/* The cloth banners are not blocks. A builder marks where one hangs and rendering/structures.js hangs the banner model there
+   (models/banner.js: a crossbar and a cloth of 20 x 40 pixels that swings), in the colours and pattern of the kingdom, or in those of a guild
+   or a foreign realm (th = { c, c2, p }: colour, second colour and pattern, as in ui/kingdom-theme.js and rendering/banner-art.js).
+   A banner on a wall: x, y, z is the middle of its crossbar on the face of the wall, which looks `face`; k: blocks to 16 pixels (a cloth is
+   1.25 k wide and 2.5 k long) */
+export function banner(vb, x, y, z, face, k = 1, th) {
+  vb.mark({ t: "wall", x, y, z, face, k, th });
 }
-/* a free-standing flag pole with a flag flying east */
-export function flagPole(vb, P, x, z, y0, h, color) {
+/* a pole with a banner hanging from a crossbar at its top, as a Minecraft banner stands on the ground: it shows both faces and turns a
+   little with the wind */
+export function flagPole(vb, P, x, z, y0, h, th, k = 1.2) {
   vb.box(x, y0, z, x, y0 + h - 1, z, P.fence);
-  vb.set(x + 1, y0 + h - 1, z, `flag_${color}[facing=south]`).set(x + 2, y0 + h - 1, z, `flag_${color}[facing=south]`);
-  vb.set(x + 1, y0 + h - 2, z, `flag_${color}[facing=south]`);
+  vb.mark({ t: "pole", x: x + 0.5, y: y0 + h, z: z + 0.5, k, th });
 }
 
 /* a street lamp: a post with a lantern hung from an arm */

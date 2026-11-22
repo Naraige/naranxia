@@ -28,3 +28,7 @@ Demande, mot pour mot: « i'm still not happy about the icon for banner rework t
 - Le point « texture 3D des bannières de pierre reste le dessin A » est traité: plus de texture, un modèle (`rendering/models/banner.js`: traverse à pommeaux d'or, drap de 20 x 40 pixels) peint par couches dans `rendering/banner-art.js` (champ, motif, dégradé, liseré, frange, emblème 14 x 14 en métal avec cerne sombre).
 - La variante A de l'interrupteur est maintenant cette bannière murale (`drawBanner`). `BANNER2='CA'`: petite image = gonfanon choisi par le Roi, grande image (carte Nouveau royaume) = la bannière murale. Détail dans `docs/JOURNAL.md` à la même date.
 - Toujours vrai: pastilles d'emblème du menu vectorielles, étendard du porte-étendard à lys fixe, sprite C avec les emblèmes 11 x 11.
+
+### 2026-11-22: des motifs seulement (le Roi: « stop with icon in banner just pattern »)
+- Plus d'emblème sur aucune bannière: 16 motifs (`PATS` de `rendering/banner-art.js`), la carte Nouveau royaume montre les 16 bannières possibles à la place des pastilles de motif et d'emblème. Les emblèmes vectoriels et 11 x 11 sont supprimés (historique git).
+- Les drapeaux en blocs (le L rouge de la caserne) sont remplacés par des bannières sur mât, façon bannière posée de Minecraft. Détail dans `docs/JOURNAL.md` à la même date.

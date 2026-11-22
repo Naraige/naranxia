@@ -20,6 +20,7 @@ export class VB {
     this.unk = new Set();
     /* shifts the pattern of mixed blocks, so two models of the same shape need not mix their stones alike */
     this.sx = 0;
+    this.marks = [];
   }
   id(b) {
     if (b === 0 || b === "air") return 0;
@@ -299,7 +300,13 @@ export class VB {
       this.box(x, y0, z, x, y1, z, log);
     return this;
   }
+  /* something that is not made of blocks and hangs on the model: a cloth banner (voxel-kit banner, flagPole). The marks go out with the model
+     and rendering/structures.js hangs the real thing on them */
+  mark(o) {
+    this.marks.push(o);
+    return this;
+  }
   model() {
-    return { w: this.w, h: this.h, l: this.l, defs: this.defs, vox: this.vox, unk: [...this.unk] };
+    return { w: this.w, h: this.h, l: this.l, defs: this.defs, vox: this.vox, unk: [...this.unk], marks: this.marks };
   }
 }

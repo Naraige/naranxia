@@ -208,6 +208,19 @@ export function market(t) {
   return vb.model();
 }
 
+/* the banners that are not the kingdom's own (colour, second colour, pattern: PAL of ui/kingdom-theme.js, PATS of rendering/banner-art.js):
+   the two of the guild (wine lozenge on gold, a gold roundel on teal) and those of the four realms that keep an envoy at the embassy */
+const GUILD_BN = [
+    { c: 10, c2: 13, p: 10 },
+    { c: 5, c2: 10, p: 11 },
+  ],
+  REALMS = [
+    { c: 1, c2: 11, p: 7 },
+    { c: 9, c2: 10, p: 1 },
+    { c: 7, c2: 12, p: 2 },
+    { c: 4, c2: 11, p: 5 },
+  ];
+
 /* the guild hall: a great timbered hall, its gable and an oriel to the street over a porch, a stair tower with a spire, a yard for the craftsmen */
 export function guild(t) {
   const P = palette(t, "slate"),
@@ -287,8 +300,8 @@ export function guild(t) {
       {},
     );
   }
-  banner(vb, 4, Hh.uy - 1, Hh.r1.z1 + 1, "south", "yellow");
-  banner(vb, 10, Hh.uy - 1, Hh.r1.z1 + 1, "south", "blue");
+  banner(vb, 4.5, Hh.uy - 0.1, Hh.r1.z1 + 1, "south", 0.8, GUILD_BN[0]);
+  banner(vb, 10.5, Hh.uy - 0.1, Hh.r1.z1 + 1, "south", 0.8, GUILD_BN[1]);
   dormer(vb, P, "west", 9, 2, Hh.top + 1);
   chimney(vb, P, 4, 6, Hh.top + 3, Hh.ridge - 1);
   /* the stair tower */
@@ -325,7 +338,7 @@ export function guild(t) {
     .add(17, 0, 16, "barrel")
     .add(14, 0, 17, "weapon_rack[facing=north]");
   fenceRect(vb, P.fence, 13, 10, 18, 18, 0, (x, z) => (z === 18 && x > 14 && x < 17) || z === 10 || x === 13);
-  flagPole(vb, P, 15, 18, 1, 5, "yellow");
+  flagPole(vb, P, 15, 18, 1, 5, GUILD_BN[0], 1);
   bed(vb, 0, 5, 1, 12, ["shrub", null, "grass_tuft", "flower_yellow", null, null]);
   vb.add(2, 0, 15, "pot_yellow").add(12, 0, 15, "pot_blue").add(1, 0, 16, "barrel").add(1, 0, 17, "crate");
   return vb.model();
@@ -723,8 +736,8 @@ export function embassy(t) {
       `${P.door}_door[facing=south,half=upper]`,
     );
   vb.set(9, 0, 14, stair(P.sst, "north")).set(10, 0, 14, stair(P.sst, "north"));
-  banner(vb, 8, 8, 13, "south", "red");
-  banner(vb, 11, 8, 13, "south", "blue");
+  banner(vb, 8.5, 8.9, 13, "south", 0.8, REALMS[0]);
+  banner(vb, 11.5, 8.9, 13, "south", 0.8, REALMS[1]);
   /* windows in ranks: shutters below, flower boxes above */
   for (const [y, h] of [
     [2, 2],
@@ -743,11 +756,11 @@ export function embassy(t) {
   /* the court: paving, the flags of four realms, hedges, a basin, gate piers */
   plaza(vb, 7, 15, 12, 19, T ? "paving" : "path", T ? "paving_dark" : "path");
   [
-    [5, 16, "red"],
-    [14, 16, "blue"],
-    [5, 19, "yellow"],
-    [14, 19, "green"],
-  ].forEach(([x, z, c]) => flagPole(vb, P, x, z, 0, 7, c));
+    [5, 16],
+    [14, 16],
+    [5, 19],
+    [14, 19],
+  ].forEach(([x, z], i) => flagPole(vb, P, x, z, 0, 7, REALMS[i]));
   hedge(vb, 1, 14, 3, 14, "red");
   hedge(vb, 1, 15, 1, 18);
   hedge(vb, 16, 14, 18, 14, "white");

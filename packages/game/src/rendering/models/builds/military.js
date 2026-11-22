@@ -1,4 +1,5 @@
 import {
+  banner,
   bed,
   breast,
   butt,
@@ -47,23 +48,15 @@ function ring(vb, P, x0, z0, x1, z1, gap) {
 }
 
 /* the barracks: a long hall with dormers and an armoury closing the north of a walled drill yard: dummies, archery butts, a sparring ring, tents, a gate between two turrets */
-/* where rendering/structures.js hangs the banners of the kingdom on these buildings: the middle of the crossbar (x, y), the face of the wall
-   behind it (z, a wall that looks south), and the size of the banner in blocks to 16 pixels */
-export const BARRACKS_BANNERS = [
-  [9.5, 5.7, 23, 1.2],
-  [14.5, 5.7, 23, 1.2],
-];
-export const WARROOM_BANNERS = [
-  [7, 8.9, 13, 1.5],
-  [13, 8.9, 13, 1.5],
-];
 export function barracks(t) {
   const P = palette(t, "red"),
     vb = model(24, 22, 24),
     T = P.t;
   for (let x = 1; x <= 22; x++) for (let z = 10; z <= 22; z++) vb.set(x, 0, z, "path");
   ring(vb, P, 0, 0, 23, 23, (x, z) => z === 23 && x >= 8 && x <= 15);
-  /* the gate: two turrets and a lintel; the banner of the kingdom hangs on each turret (BARRACKS_BANNERS) */
+  /* the gate: two turrets and a lintel; the banner of the kingdom hangs on each turret */
+  banner(vb, 9.5, 5.7, 23, "south", 1.2);
+  banner(vb, 14.5, 5.7, 23, "south", 1.2);
   for (const x0 of [8, 13]) {
     const r = rect(x0, 20, x0 + 2, 22);
     if (T) tower(vb, P, r, 0, 5, { slit: false, parapet: false });
@@ -183,7 +176,7 @@ export function barracks(t) {
     .add(18, 0, 20, "bench[facing=north]")
     .add(20, 0, 20, "bench[facing=north]")
     .add(21, 0, 18, "bench[facing=west]");
-  flagPole(vb, P, 2, 21, 0, 7, "red");
+  flagPole(vb, P, 2, 21, 0, 7);
   vb.add(16, 0, 21, "barrel")
     .add(17, 0, 22, "crate")
     .add(16, 1, 21, "sacks")
@@ -231,7 +224,7 @@ export function warroom(t) {
     windows(vb, P, s, z, [x], 12, 2, {});
   windows(vb, P, "east", 11, [7, 8], 12, 2, {});
   windows(vb, P, "west", 8, [7, 8], 12, 2, {});
-  spireTop(vb, P, k, 15, { prof: [1, 1, 2, 2], fin: [P.fin, P.fin, "flag_red[facing=south]"] });
+  spireTop(vb, P, k, 15, { prof: [1, 1, 2, 2], fin: [P.fin, P.fin, P.fin] });
   /* turrets on the four corners */
   for (const [cx, cz] of [
     [4.5, 3.5],
@@ -244,7 +237,9 @@ export function warroom(t) {
     vb.set(Math.floor(cx), 10, Math.floor(cz + (cz > 8 ? 1 : -1)), "iron_bars[east=true,west=true]");
     vb.cone(cx, cz, 1.6, 13, P.roof, [2, 3], 1, true, P.trim, [P.fin]);
   }
-  /* the gate and the braziers (the banners of the kingdom either side of the window over it: WARROOM_BANNERS) */
+  /* the gate and the braziers, the banners of the kingdom either side of the window over it */
+  banner(vb, 7, 8.9, 13, "south", 1.5);
+  banner(vb, 13, 8.9, 13, "south", 1.5);
   doorway(vb, P, "south", 12, 9, 1, { wide: true, arch: true, frame: T ? "polished_andesite" : true, step: false });
   vb.set(9, 0, 13, stair(P.sst, "north")).set(10, 0, 13, stair(P.sst, "north"));
   windows(vb, P, "south", 12, [6, 7, 12, 13], 2, 2, { sill: T });
@@ -261,7 +256,7 @@ export function warroom(t) {
   vb.add(15, 0, 18, "bench[facing=north]").add(18, 0, 13, "weapon_rack[facing=south]");
   for (let x = 0; x <= 5; x++) if (x % 2 === 0) vb.set(x, 0, 19, "stake").set(x, 0, 17, "stake");
   vb.add(2, 0, 15, "barrel").add(3, 0, 15, "crate").add(2, 1, 15, "sacks").add(1, 0, 13, "weapon_rack[facing=south]");
-  flagPole(vb, P, 3, 18, 0, 7, "red");
+  flagPole(vb, P, 3, 18, 0, 7);
   lampPost(vb, P, 6, 19);
   lampPost(vb, P, 13, 19);
   bed(vb, 0, 4, 2, 11, ["grass_tuft", null, null, "fern", null]);
@@ -400,14 +395,8 @@ export function beacon(t) {
 }
 
 /* the castle: a curtain wall between four round towers under pointed roofs, a gatehouse on the south (the gate is in the middle of the side),
-   and a great keep with a stair turret. The banners of the kingdom are hung on it by rendering/structures.js: its standard from the pole on the
-   keep roof (CASTLE_FLAG: the top of the pole, in blocks), one over the gate and two down the face of the keep (CASTLE_BANNERS) */
-export const CASTLE_FLAG = { x: 9.5, y: 29, z: 7.5 };
-export const CASTLE_BANNERS = [
-  [10, 7.9, 19, 1.5],
-  [8, 13.9, 12, 1.5],
-  [12, 13.9, 12, 1.5],
-];
+   and a great keep with a stair turret. It flies the banners of the kingdom: the standard on the pole of the keep roof, one over the gate,
+   two down the face of the keep */
 export function castle(t) {
   const P = palette(t, "blue"),
     vb = model(20, 30, 20),
@@ -453,6 +442,7 @@ export function castle(t) {
   for (const x of [9, 10]) vb.set(x, 3, 17, "iron_bars[east=true,west=true]");
   parapet(vb, P, gh, 8, { cb: T ? "stone_bricks" : P.plank });
   vb.set(8, 3, 19, "sconce[facing=south]").set(11, 3, 19, "sconce[facing=south]");
+  banner(vb, 10, 7.9, 19, "south", 1.5);
   for (const x of [9, 10]) vb.set(x, 6, 18, "iron_bars[east=true,west=true]");
   /* the keep: three stages, a parapet on corbels, a steep roof and the pole of the flag */
   const kp = rect(6, 4, 13, 11);
@@ -470,6 +460,8 @@ export function castle(t) {
   }
   doorway(vb, P, "south", 11, 9, 1, { wide: true, arch: true, step: false });
   vb.set(8, 3, 12, "sconce[facing=south]").set(11, 3, 12, "sconce[facing=south]");
+  banner(vb, 8, 13.9, 12, "south", 1.5);
+  banner(vb, 12, 13.9, 12, "south", 1.5);
   vb.hipRoof({
     x0: 6,
     z0: 4,
@@ -481,6 +473,8 @@ export function castle(t) {
     prof: [1, 1, 2, 2],
     fin: [P.fence, P.fence, P.fence, P.fence, P.fence],
   });
+  /* the standard of the kingdom hangs from the top of that pole */
+  vb.mark({ t: "pole", x: 9.5, y: 29, z: 7.5, k: 1.8 });
   /* bartizans on the corners of the parapet */
   for (const [x, z] of [
     [5, 12],

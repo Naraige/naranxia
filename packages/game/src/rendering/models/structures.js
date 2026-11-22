@@ -306,15 +306,31 @@ export function turnedLogs(g) {
 }
 const turned = (s) => ((ROTT.has(s.type) && !s.hm ? s.rot | 0 : 0) & 1) === 1;
 
-function voxGeo(s) {
+/* what hangs on a block building without being made of blocks (the marks of its model: cloth banners), kept by the same key as its geometry */
+const MARKS = {};
+const voxKey = (s) => {
   const B = VOXB[s.type],
-    v = B.variants ? ((((s.tx | 0) * 7 + (s.ty | 0) * 13) % B.variants) + B.variants) % B.variants : 0,
-    k = "vx" + s.type + (s.tier === 0 ? "w" : "s") + v,
+    v = B.variants ? ((((s.tx | 0) * 7 + (s.ty | 0) * 13) % B.variants) + B.variants) % B.variants : 0;
+  return [B, v, "vx" + s.type + (s.tier === 0 ? "w" : "s") + v];
+};
+const voxModel = (B, v, s, k) => {
+  const M = B.make(s.tier === 0 ? 0 : 1, v);
+  MARKS[k] = M.marks || [];
+  return M;
+};
+function voxGeo(s) {
+  const [B, v, k] = voxKey(s),
     kt = turned(s) ? k + "t" : k;
   if (GEO[kt]) return GEO[kt];
-  const g =
-    GEO[k] || (GEO[k] = voxelGeo(B.make(s.tier === 0 ? 0 : 1, v), { ox: B.ox || 0, oz: B.oz || 0, k: 1 / BPT }));
+  const g = GEO[k] || (GEO[k] = voxelGeo(voxModel(B, v, s, k), { ox: B.ox || 0, oz: B.oz || 0, k: 1 / BPT }));
   return kt === k ? g : (GEO[kt] = turnedLogs(g));
+}
+/* the marks of the model of a block building, in blocks from the corner of its footprint (the model is built once, with its geometry) */
+export function voxMarks(s) {
+  if (!VOXB[s.type]) return [];
+  const [B, v, k] = voxKey(s);
+  if (!MARKS[k]) voxModel(B, v, s, k);
+  return MARKS[k];
 }
 
 export function sGeo(s, m) {

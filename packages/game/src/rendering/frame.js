@@ -345,13 +345,13 @@ export let render3D = function render3D(dt) {
       glow(s.x / TS, hb, s.y / TS, 1.1 * (s.sz || 1) * fl, 1, 0.42, 0.1, 0.5);
       glow(s.x / TS, hb + 0.5, s.y / TS, 0.5 * fl, 1, 0.85, 0.4, 0.6);
     }
-    /* the standard on the keep turns a little with the wind; every banner swings out from its crossbar, each in its own time */
-    if (s.flag) s.flag.rotation.y = Math.sin(bnT * 0.7) * 0.4;
-    if (s.o3 && s.o3.userData.bn) {
-      const B = s.o3.userData.bn;
+    /* every banner swings out from its crossbar and a standard on a pole turns a little with the wind, each in its own time */
+    const B = s.o3 && s.o3.userData.bn,
+      F = s.o3 && s.o3.userData.fl;
+    if (B)
       for (let i = 0; i < B.length; i++)
         B[i].rotation.x = -0.045 - 0.035 * Math.sin(bnT * 1.6 + s.tx * 0.9 + s.ty * 1.7 + i * 2.1);
-    }
+    if (F) for (let i = 0; i < F.length; i++) F[i].rotation.y = Math.sin(bnT * 0.7 + s.tx * 1.3 + i * 2.4) * 0.4;
     if (s.o3) bldAnim(s, dt);
     if (s.bolt) {
       const c = s.wcd > 0 ? s.wcd : 0,

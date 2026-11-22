@@ -5,9 +5,8 @@ import { addBox, newG, rgb, toGeo } from "./geometry.js";
 import { drawBanner } from "./kingdom-banner.js";
 import { matV } from "./materials.js";
 import { icons3D } from "./model-icons.js";
+import { bannerArt } from "./banner-art.js";
 import { bannerGeo } from "./models/banner.js";
-import { VOXB } from "./models/voxel-buildings.js";
-import { BARRACKS_BANNERS, CASTLE_BANNERS, CASTLE_FLAG, WARROOM_BANNERS } from "./models/builds/military.js";
 import { footing, FORT_H, wallLamp } from "./models/builds/walls.js";
 import { gtopOf } from "./models/fortifications.js";
 import {
@@ -18,6 +17,7 @@ import {
   leafGeo,
   portcGeo,
   sGeo,
+  voxMarks,
   structureModelsState,
   trebArm,
   trebBase,
@@ -46,27 +46,39 @@ const stairO = new Set();
 
 /* the picture of the banner of the kingdom (kingdom-banner.js drawBanner paints it) */
 export let BANNER;
-/* hangs a banner of the kingdom (models/banner.js: a crossbar, a cloth of 20 x 40 pixels) on g: the middle of its crossbar at x, y, z, the cloth
-   facing ry, k blocks to 16 pixels; both: painted on its back too. Against a wall the crossbar sits a pixel and a half out. The cloth swings
-   about its crossbar: rendering/frame.js turns the banners listed in userData.bn */
-const hang = (g, x, y, z, ry, k, both) => {
-  if (structuresState.BPLOFF) return null;
-  const key = "banner" + k + (both ? "b" : ""),
-    m = new THREE.Mesh(GEO[key] || (GEO[key] = bannerGeo(THEME, k, both)), matV);
-  m.position.set(x, y, z);
+/* hangs a cloth banner (models/banner.js: a crossbar, a cloth of 20 x 40 pixels in patterns) on the structure drawn in g. k: blocks to 16
+   pixels; th: its colours and pattern (rendering/banner-art.js), the kingdom's when left out.
+   On a wall: x, y, z is the middle of its crossbar, the cloth faces ry; it takes the shadows of the wall and throws none (one draw less in the
+   shadow pass). On a pole (pole: true): x, y, z is the top of the pole; the crossbar sits in front of it, the cloth is painted on both faces
+   and the whole turns about the pole. rendering/frame.js swings the cloths (userData.bn) and turns the standards (userData.fl).
+   None on the ghost of a building (BPLOFF) */
+const hang = (g, x, y, z, ry, k, th, pole) => {
+  if (structuresState.BPLOFF) return;
+  const key = "banner" + k + (pole ? "b:" : ":") + bannerArt(th || THEME).key,
+    m = new THREE.Mesh(GEO[key] || (GEO[key] = bannerGeo(th || THEME, k, !!pole)), matV);
   m.rotation.order = "YXZ";
-  m.rotation.y = ry || 0;
-  /* a banner against a wall takes the shadows of the wall but throws none (one draw less per banner in the shadow pass) */
-  m.castShadow = both ? SHADOWS : false;
+  m.castShadow = pole ? SHADOWS : false;
   m.receiveShadow = SHADOWS;
-  g.add(m);
+  if (pole) {
+    const fg = new THREE.Group();
+    fg.position.set(x, y, z);
+    m.position.set(0, -0.15, 0.1 + k / 16);
+    fg.add(m);
+    g.add(fg);
+    (g.userData.fl || (g.userData.fl = [])).push(fg);
+  } else {
+    m.position.set(x, y, z);
+    m.rotation.y = ry || 0;
+    g.add(m);
+  }
   (g.userData.bn || (g.userData.bn = [])).push(m);
-  return m;
 };
 /* how far the crossbar of a banner of one block to 16 pixels sits from the wall it hangs on (its half thickness and half a pixel of air) */
 const WALLBN = 1.5 / 16;
-/* the block buildings that fly the banners of the kingdom on a wall looking south: [x, y of the crossbar, z of the wall, blocks to 16 pixels] */
-const WALLBNS = { castle: CASTLE_BANNERS, barracks: BARRACKS_BANNERS, warroom: WARROOM_BANNERS };
+/* a wall that looks south, north, east or west: the way out from it (x, z) and the turn of a banner hung on it */
+const FACE = { south: [0, 1, 0], north: [0, -1, Math.PI], east: [1, 0, Math.PI / 2], west: [-1, 0, -Math.PI / 2] };
+/* the banners of a rebel camp: its colour crossed in the dark (or in ivory when the camp itself is dark) */
+const campBanner = (s) => ({ c: s.ci | 0, c2: (s.ci | 0) === 7 ? 11 : 7, p: 7 });
 
 export function retheme() {
   structureModelsState.BLU = thp();
@@ -85,12 +97,7 @@ export function retheme() {
 }
 
 export let buildStructMesh = function buildStructMesh(s) {
-  structuresState.BPLOFF = s.t === 2;
-  try {
-    buildStructMesh0(s);
-  } finally {
-    structuresState.BPLOFF = false;
-  }
+  buildStructMesh0(s);
 };
 
 export function buildStructMesh0(s) {
@@ -110,6 +117,7 @@ export function buildStructMesh0(s) {
   g.userData.mh = 0;
   g.userData.lamp = null;
   g.userData.bn = null;
+  g.userData.fl = null;
   const m = s.type === "wall" ? wallLookOf(s) + (lampWall(s) ? "L" : "") : 0,
     mesh = new THREE.Mesh(sGeo(s, m), matV);
   mesh.castShadow = SHADOWS;
@@ -123,7 +131,6 @@ export function buildStructMesh0(s) {
     g.rotation.y = ROTT.has(s.type) && !s.weapon ? ((s.rot | 0) * Math.PI) / 2 : 0;
   } else g.position.set(s.tx, b, s.ty);
   s.door = null;
-  s.flag = null;
   if (fort)
     g.userData.mh =
       s.type === "gate"
@@ -172,10 +179,11 @@ export function buildStructMesh0(s) {
       by = s.gl === 3 ? 9.6 : 8.4,
       bk = s.gl === 3 ? 1.4 : 1,
       bz = 2 + WALLBN * bk;
-    for (const x of [-bx, bx]) {
-      hang(g, x, by, bz, 0, bk);
-      hang(g, x, by, -bz, Math.PI, bk);
-    }
+    if (s.t !== 2)
+      for (const x of [-bx, bx]) {
+        hang(g, x, by, bz, 0, bk);
+        hang(g, x, by, -bz, Math.PI, bk);
+      }
     const d = new THREE.Group();
     if (s.tier === 0)
       d.userData.lv = [-1, 1].map((sd) => {
@@ -292,24 +300,25 @@ export function buildStructMesh0(s) {
     const k = big ? 1.5 : 1,
       f = (big ? 1 : 0) - WALLBN * k,
       y = big ? (s.type === "keep" ? 12.9 : 8.9) : 6.9;
-    [
-      [tc, s.sz - f, 0],
-      [tc, f, Math.PI],
-      [s.sz - f, tc, Math.PI / 2],
-      [f, tc, -Math.PI / 2],
-    ].forEach(([x, z, r]) => hang(g, x, y, z, r, k));
+    if (s.t !== 2)
+      [
+        [tc, s.sz - f, 0],
+        [tc, f, Math.PI],
+        [s.sz - f, tc, Math.PI / 2],
+        [f, tc, -Math.PI / 2],
+      ].forEach(([x, z, r]) => hang(g, x, y, z, r, k));
   }
-  if (s.type === "castle" && VOXB.castle) {
-    /* the standard of the kingdom on the pole of the keep roof: it hangs from a crossbar in front of the pole and turns with the wind */
-    const fg = new THREE.Group();
-    fg.position.set(CASTLE_FLAG.x, CASTLE_FLAG.y, CASTLE_FLAG.z);
-    hang(fg, 0, -0.15, 0.2, 0, 1.8, true);
-    g.userData.bn = fg.userData.bn;
-    g.add(fg);
-    s.flag = fg;
+  /* the cloth banners marked on the model of a block building (voxel-kit banner and flagPole): on its walls and on its poles. Those without
+     colours of their own are the kingdom's, or the camp's on a building of a rebel camp */
+  for (const m of voxMarks(s)) {
+    const th = m.th || (s.t === 2 ? campBanner(s) : null);
+    if (m.t === "pole") hang(g, m.x, m.y, m.z, 0, m.k, th, true);
+    else {
+      const F = FACE[m.face] || FACE.south,
+        d = WALLBN * m.k;
+      hang(g, m.x + F[0] * d, m.y, m.z + F[1] * d, F[2], m.k, th);
+    }
   }
-  /* the banners on the walls of the castle (over its gate, down the face of its keep), of the barracks and of the war room */
-  if (WALLBNS[s.type] && VOXB[s.type]) for (const [x, y, z, k] of WALLBNS[s.type]) hang(g, x, y, z + WALLBN * k, 0, k);
   if (s.sz >= 2 && s.type !== "gate") {
     const sz = s.sz,
       inner = new THREE.Group();

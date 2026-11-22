@@ -116,6 +116,9 @@ The King chose "versions directes": code a batch, test it, release it as the nex
   8x12x4 body, 4x12x4 limbs, outer layer with transparent pixels) plus 2 or 3 extra cubes per unit, the detail in pixel
   textures; gear in the Blockbench item manner (voxel weapons; shields built like the Minecraft shield: 12x22x1 planks,
   iron rim, rivets, bracket handle). Take the style of a reference, never copy a third-party model.
+  Banners are made of patterns only, no emblem or icon (the King: "just pattern"): a cloth of 20 x 40 pixels like a Minecraft banner
+  (`rendering/banner-art.js`, 16 patterns), hung from a crossbar on walls or on a pole. A building model marks where they hang
+  (`banner`, `flagPole` in `models/voxel-kit.js`); never build a flag out of blocks.
   Visual choices go to the King as a review page (`tools/board.py`) published to https://claude.ai/artifact/HsTZDU2YgpyBYxceCBFiJr
   (same URL for every board), numbered rows of lettered variants; he answers with a code like "1A 2B".
 

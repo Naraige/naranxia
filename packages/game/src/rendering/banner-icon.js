@@ -1,5 +1,5 @@
 import { hex } from "../core/math.js";
-import { bannerPattern } from "./kingdom-banner.js";
+import { blend, patShare } from "./banner-art.js";
 import { BANNER } from "./structures.js";
 import { cvs } from "../ui/canvases.js";
 import { PAL, THEME } from "../ui/kingdom-theme.js";
@@ -8,8 +8,8 @@ import { PAL, THEME } from "../ui/kingdom-theme.js";
    BANNER2 is the single switch: '' or 'A' = the BANNER canvas (128x192: the banner that hangs on the walls, rendering/banner-art.js),
    'B' = the bannerman's standard (spear point, pennant, crossbar, swallow tail), 'C' = gonfalon on a side pole (title scene),
    'D' = wall banner hung from a gold rod (pointed cloth). B, C, D are pixel sprites on a 24x36 grid (same 2:3 box as A), drawn from
-   the kingdom theme (colour, 2nd colour, pattern, emblem). Two letters = small picture (HUD, save list) then large one (New kingdom
-   card), e.g. 'CB'; 'A' = the wall banner. window.__BANNER2 overrides it for previews only.
+   the kingdom theme (colour, 2nd colour, pattern: no emblem, a banner is made of patterns only). Two letters = small picture (HUD, save
+   list) then large one (New kingdom card), e.g. 'CB'; 'A' = the wall banner. window.__BANNER2 overrides it for previews only.
    Now 'CA': the gonfalon the King chose for the small picture, and on the card where the banner is composed the banner itself, as it
    will hang on the walls. Visual only: never read by the simulation. */
 export const BANNER2 = "CA";
@@ -34,45 +34,11 @@ const mul = (c, k) =>
     )
     .join("");
 
-/* the 16 emblems of EMB (same order) redrawn on an 11x11 pixel grid */
-const EMB11 = [
-  "....###....|....###....|....###....|###########|###########|###########|....###....|....###....|....###....|....###....|....###....",
-  ".....#.....|.....#.....|....###....|###########|.#########.|..#######..|...#####...|..#######..|..###.###..|.##.....##.|.#.......#.",
-  "...........|#....#....#|#....#....#|##..###..##|###.###.###|###########|###########|###########|.#########.|###########|###########",
-  "#.........#|##.......##|.##.....##.|..##...##..|...##.##...|....###....|...##.##...|..##...##..|####...####|.##.....##.|##.......##",
-  "##.##.##.##|##.##.##.##|###########|###########|.#########.|..#######..|..#######..|..###.###..|..##...##..|..##...##..|.#########.",
-  ".....#.....|.#...#...#.|..#.....#..|....###....|...#####...|##.#####.##|...#####...|....###....|..#.....#..|.#...#...#.|.....#.....",
-  ".....#.....|....###....|...#####...|..#######..|....###....|...#####...|..#######..|.#########.|....###....|....###....|...#####...",
-  "......###..|.....###...|....###....|...###.....|..#######..|.....###...|....###....|...###.....|..###......|..##.......|..#........",
-  "...####....|..####.....|.####....#.|.###....###|####.....#.|####.......|####.......|.####....#.|.#####..##.|..#######..|...#####...",
-  "....###....|....#.#....|....###....|.....#.....|..#######..|.....#.....|.....#.....|#....#....#|##...#...##|.###.#.###.|...#####...",
-  "....###....|...#####...|...##.##...|...#####...|....###....|.....#.....|.....#.....|.....###...|.....#.....|.....###...|.....#.....",
-  ".....###...|....######.|...#######.|...#######.|....#####..|...##.##...|..##.......|.##........|##.........|#..........|...........",
-  ".....#.....|....###....|....###....|#...###...#|##..###..##|###.###.###|.#########.|...#####...|.#########.|...#####...|....###....",
-  ".....#.....|....###....|#...###...#|##.#####.##|###########|.#########.|..#######..|...#####...|...#####...|..##.#.##..|.....#.....",
-  ".....#.....|.....##....|....###....|...####....|..######...|..#######..|.####.###..|.###...###.|.###...###.|..###.###..|...#####...",
-  "###########|###########|#####.#####|####...####|###..#..###|##..###..##|.#########.|.#########.|..#######..|...#####...|.....#.....",
-].map((s) => s.split("|"));
-
-/* the theme pattern (bannerPattern, the vector one) cut to hard pixels on a w x h cloth */
-function patMask(p, w, h) {
-  const m = new Uint8Array(w * h);
-  if (!p) return m;
-  const c = cvs(w, h),
-    g = c.getContext("2d");
-  bannerPattern(g, w, h, p, "#000");
-  const d = g.getImageData(0, 0, w, h).data;
-  for (let i = 0; i < w * h; i++) m[i] = d[i * 4 + 3] >= 128 ? 1 : 0;
-  return m;
-}
-
 function sprite(v) {
   const c = THEME.c | 0,
     P = PAL[c][1],
     S = PAL[c][2],
     C2 = PAL[THEME.c2 | 0][1],
-    silver = c === 3 || c === 10 || c === 11,
-    M = silver ? ["#ffffff", "#d6dce8", "#8a94a8"] : ["#fff1b0", "#f2c64a", "#a8741a"],
     px = new Array(W * H).fill(null),
     at = (x, y) => (x >= 0 && y >= 0 && x < W && y < H ? px[y * W + x] : null),
     set = (x, y, col) => {
@@ -94,30 +60,18 @@ function sprite(v) {
     },
     /* cloth: field in the kingdom colour with the pattern in the 2nd colour, fold shading every 4th column, darker towards the bottom, a 1 px edge */
     cloth = (x0, y0, w, h, inside, edge) => {
-      const pm = patMask(THEME.p | 0, w, h),
+      const pm = patShare(THEME.p | 0, w, h),
         m = (i, j) => i >= 0 && j >= 0 && i < w && j < h && inside(i, j);
       for (let j = 0; j < h; j++)
         for (let i = 0; i < w; i++) {
           if (!m(i, j)) continue;
-          let col = pm[j * w + i] ? C2 : P;
+          const f = pm[j * w + i];
+          let col = f <= 0 ? P : f >= 1 ? C2 : blend(P, C2, f);
           if (i % 4 === 3) col = mul(col, 0.84);
           else if (i % 4 === 1) col = mul(col, 1.1);
           if (j > h * 0.6) col = mul(col, 0.9);
           if (!m(i - 1, j) || !m(i + 1, j) || !m(i, j + 1)) col = typeof edge === "function" ? edge(i, j) : edge;
           set(x0 + i, y0 + j, col);
-        }
-    },
-    /* emblem: 3 metal tones (lit from the top), a dark rim cut into the cloth */
-    emb = (x0, y0) => {
-      const E = EMB11[(THEME.e | 0) % EMB11.length],
-        on = (i, j) => j >= 0 && j < 11 && i >= 0 && i < 11 && E[j][i] === "#";
-      for (let j = -1; j < 12; j++)
-        for (let i = -1; i < 12; i++) {
-          if (on(i, j)) set(x0 + i, y0 + j, !on(i, j - 1) ? M[0] : !on(i, j + 1) || !on(i + 1, j) ? M[2] : M[1]);
-          else if (on(i - 1, j) || on(i + 1, j) || on(i, j - 1) || on(i, j + 1) || on(i - 1, j - 1)) {
-            const q = at(x0 + i, y0 + j);
-            if (q) set(x0 + i, y0 + j, mul(q, 0.5));
-          }
         }
     },
     pennant = (x, y) => {
@@ -147,7 +101,6 @@ function sprite(v) {
     R(4, 10, 15, 1, GD[0]);
     R(4, 11, 15, 1, mul(P, 0.68));
     R(4, 24, 15, 1, GD[1]);
-    emb(6, 12);
     set(4, 31, GD[2]);
     set(18, 31, GD[2]);
   } else if (v === "C") {
@@ -171,7 +124,6 @@ function sprite(v) {
     R(8, 8, 13, 1, GD[1]);
     R(9, 8, 11, 1, GD[0]);
     R(9, 9, 11, 1, mul(P, 0.68));
-    emb(9, 12);
   } else {
     /* 'D' wall banner: nail and cords, gold rod with ball ends, wide cloth with a light edge ending in a point, gold tassel */
     set(11, 1, ST[0]);
@@ -187,7 +139,6 @@ function sprite(v) {
     knob(20, 5);
     cloth(3, 7, 17, 27, (i, j) => j < 19 || Math.abs(i - 8) <= 26 - j, S);
     R(4, 7, 15, 1, mul(P, 0.68));
-    emb(6, 11);
     set(11, 34, GD[1]);
   }
   /* dark ink outline, as the other pixel icons */
@@ -213,6 +164,6 @@ export function bannerIcon(large) {
   const q = banner2Sig(),
     v = q.length > 1 ? q[large ? 1 : 0] : q;
   if (v !== "B" && v !== "C" && v !== "D") return BANNER;
-  const k = v + "|" + THEME.c + "|" + THEME.c2 + "|" + THEME.p + "|" + THEME.e;
+  const k = v + "|" + THEME.c + "|" + THEME.c2 + "|" + THEME.p;
   return CACHE[k] || (CACHE[k] = sprite(v));
 }

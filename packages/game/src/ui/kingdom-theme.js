@@ -52,8 +52,11 @@ export const thp = () => PAL[THEME.c][1],
     );
   };
 
+/* The kingdom: its name, its colour c and second colour c2 (PAL), and the pattern p of its banner (the 16 of rendering/banner-art.js PATS).
+   A banner is made of patterns only: the emblem a kingdom once carried on it (e in older saved themes) is gone. v marks a theme saved since:
+   an older one that showed the cross emblem on a plain field becomes the cross pattern, the banner it always had */
 export function initializeKingdomTheme() {
-  THEME = { n: KNAMES[(Math.random() * KNAMES.length) | 0], c: 0, e: 0, c2: 10, p: 0 };
+  THEME = { n: KNAMES[(Math.random() * KNAMES.length) | 0], c: 0, c2: 10, p: 8, v: 2 };
 
   try {
     const t = JSON.parse(localStorage.getItem("dk_theme") || "null");
@@ -61,9 +64,9 @@ export function initializeKingdomTheme() {
       THEME = {
         n: t.n.slice(0, 18),
         c: Math.abs(t.c | 0) % PAL.length,
-        e: Math.abs(t.e | 0) % 16,
         c2: t.c2 == null ? 10 : Math.abs(t.c2 | 0) % PAL.length,
-        p: Math.abs(t.p | 0) % 8,
+        p: t.v !== 2 && !(t.p | 0) && !(t.e | 0) ? 8 : Math.abs(t.p | 0) % 16,
+        v: 2,
       };
   } catch {
     /* Malformed or unavailable storage leaves the default kingdom theme. */

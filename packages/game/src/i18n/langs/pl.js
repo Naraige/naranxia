@@ -1716,4 +1716,12 @@ export const PL = {
   "Waiting for the host to start the rematch": "Czekanie, aż gospodarz rozpocznie rewanż.",
   "World size (next game)": "Rozmiar świata (następna gra)",
   "Medium": "Średni",
+  "Cross": "Krzyż",
+  "Pale": "Słup",
+  "Lozenge": "Romb",
+  "Roundel": "Krąg",
+  "Per bend": "Dzielony w skos",
+  "Pile": "Klin",
+  "Checky": "Szachownica",
+  "Gradient": "Gradient",
 };

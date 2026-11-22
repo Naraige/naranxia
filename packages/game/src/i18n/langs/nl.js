@@ -1730,4 +1730,12 @@ export const NL = {
   "Waiting for the host to start the rematch": "Wachten tot de host de herkansing start.",
   "World size (next game)": "Wereldgrootte (volgend spel)",
   "Medium": "Gemiddeld",
+  "Cross": "Kruis",
+  "Pale": "Paal",
+  "Lozenge": "Ruit",
+  "Roundel": "Schijf",
+  "Per bend": "Geschuind",
+  "Pile": "Punt",
+  "Checky": "Geschaakt",
+  "Gradient": "Kleurverloop",
 };
