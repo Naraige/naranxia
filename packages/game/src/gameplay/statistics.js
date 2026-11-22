@@ -1,4 +1,5 @@
 import { THEME } from "../ui/kingdom-theme.js";
+import { MP } from "../multiplayer/session.js";
 import { rngf } from "../core/random.js";
 import { diagnosticsState } from "../debug/diagnostics.js";
 import { kingTick } from "./king-skills.js";
@@ -114,8 +115,10 @@ export function sbRec() {
         n: String((THEME && THEME.n) || "").slice(0, 24),
       };
     a.push(r);
+    /* in co-op the ranking lists every player: the partner's kingdom gets its own line with the same score */
+    if (MP.on) a.push({ ...r, n: String(MP.pname || "Partner").slice(0, 24), co: 1 });
     a.sort((x, y) => y.s - x.s || x.d - y.d);
-    const top = a.slice(0, 3);
+    const top = a.slice(0, MP.on ? 6 : 3);
     all[k] = top;
     const ks = Object.keys(all);
     if (ks.length > 60) {

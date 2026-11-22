@@ -59,8 +59,10 @@ export function tilesFor(type, tx, ty, sz, ax, gl) {
 }
 
 /* ---- the site of a block-built building. Its footprint is large (12 to 24 tiles a side), so the ground is prepared for it: trees, stone and gold
-   standing on it are cleared away, and the footprint is levelled to its middle height when the ground varies by 3 levels at most. Water, other buildings,
+   standing on it are cleared away, and the footprint is levelled to its middle height when the ground varies by SITE_DH levels at most. Water, other buildings,
    stairs and the castle door stay in the way. ---- */
+/* a footprint of 12 to 24 tiles is rarely flatter than 3 levels: it is levelled anyway, so more is allowed */
+export const SITE_DH = 6;
 export const siteTile = (x, y) => {
   if (!gOK(x, y)) return false;
   const i = y * TW + x,
@@ -77,7 +79,7 @@ export function siteFit(type, tx, ty) {
       hs.push(HT[(ty + j) * TW + tx + i]);
     }
   hs.sort((a, b) => a - b);
-  return hs[hs.length - 1] - hs[0] > 3 ? -1 : hs[hs.length >> 1];
+  return hs[hs.length - 1] - hs[0] > SITE_DH ? -1 : hs[hs.length >> 1];
 }
 function clearTiles(T) {
   for (const [x, y] of T) {

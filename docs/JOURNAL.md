@@ -4,6 +4,16 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-22 · tailles, portées, classement (#48, #49), pour v100
+
+- Demande du Roi: unités / zone de construction / portée des bâtiments à réajuster; classement avec tous les joueurs même en coop; « château détruit = game over pour le joueur » (noté sur #47, pas codé).
+- Portée des garnisons `GRNG`: mur et porte 1,6 -> 2,4, tour 2,3 -> 3,6, donjon 2,8 -> 4,2 (portée = archer x coef + 20; la tour fait 8 cases, l'ancienne portée dépassait à peine son pied). La fiche affiche maintenant la vraie portée en cases.
+- Sites des bâtiments: écart de hauteur toléré 3 -> 6 (`SITE_DH`, construction.js), le terrain est nivelé de toute façon. Camps rebelles inchangés.
+- Unités dessinées à 100 % (`UNITK` 0,76 -> 1), visuel seulement; rayons de collision inchangés.
+- Classement: en coop chaque joueur a sa ligne (nom du partenaire `MP.pname`, même score), 6 lignes par carte au lieu de 3.
+- Vérifié: quality, `det` re-fixé (même partie deux fois = mêmes empreintes), features, ui, save, waves, mp8, mpk PASS. Non vérifié: rendu (unités plus grandes à côté des bâtiments), ligne du partenaire à l'écran.
+- Reste: game over par joueur (avec le lot 4 joueurs #47), jouer sur des cartes vraiment plus plates si 6 niveaux ne suffit pas.
+
 ## 2026-11-22 · co-op window like the menus (#46), for v100
 - The King, with two captures of the co-op window: "adapter la fenetre de coop comme le menu pour les couleurs buttons", then "un button copier coller pour le code".
 - `styles/coop.css`: the buttons of the window are the bevel buttons of the menus (`BV.dark` and `BV.go` of `ui/menu-kit.js`: pixel font, square, lit top line, dark lip that sinks when pressed), green for the action that goes on, slate for the others; pixel title in the orange gold of the menu titles, darker panel, green "ready" marks.

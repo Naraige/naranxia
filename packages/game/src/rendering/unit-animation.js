@@ -18,8 +18,8 @@ import { unitG } from "./terrain.js";
 import { THREE } from "./three.js";
 import { buildUnitGroup, CARRYG, uiUMW, UL } from "./unit-instances.js";
 
-/* units are drawn at 76% so a man stands about a quarter of a house high (the title screen keeps its own framing) */
-export const UNITK = 0.76;
+/* units are drawn at 100% (they were 76%: lost next to the large buildings); the title screen keeps its own framing */
+export const UNITK = 1;
 
 const T_C = (_u) => T.cannon.cdt;
 

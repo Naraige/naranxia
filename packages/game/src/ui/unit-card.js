@@ -1,4 +1,4 @@
-import { C, CSTONE, CWOOD, T, TRAIN, BT, GCAP, GRNG } from "../gameplay/rules.js";
+import { C, CSTONE, CWOOD, T, TRAIN, BT, GCAP, GRNG, TS } from "../gameplay/rules.js";
 import { sel, selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { L, T_, TTL, tw } from "../i18n/language.js";
@@ -128,7 +128,7 @@ function content() {
     const t = b.type,
       rows = [["heart", "Health", Math.ceil(b.hp) + " / " + Math.round(b.max || b.hp)]];
     if (GCAP[t]) rows.push(["archer", "Garrison", GCAP[t] + " archers"]);
-    if (GRNG[t]) rows.push(["range", "Range", GRNG[t] + " tiles"]);
+    if (GRNG[t]) rows.push(["range", "Range", Math.round((T.archer.rng * GRNG[t] + 20) / TS) + " tiles"]);
     if (BT[t]) rows.push(["hammer", "Build time", BT[t] + " s"]);
     const c = (b.tier ? CSTONE : CWOOD)[t] || C[t];
     if (c && Object.keys(c).length) rows.push(["coin", "Cost", { cost: c }]);

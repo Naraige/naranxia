@@ -87,7 +87,8 @@ export const TRAIN = {
   CSZ = BSZ_CASTLE,
   CHALF = BSZ_CASTLE >> 1,
   GCAP = { wall: 1, gate: 2, tower: 3 },
-  GRNG = { wall: 1.6, gate: 1.6, tower: 2.3 },
+  /* reach of a garrison: times the archer's range. A tower is 8 tiles wide, so the old 2.3 barely cleared its own foot (7 tiles from its middle) */
+  GRNG = { wall: 2.4, gate: 2.4, tower: 3.6 },
   GTOP = { wall: 5, gate: 8, tower: 11 },
   /* the fortifications are laid on a grid of FCELL tiles, the scale of the block-built buildings: a wall piece is one cell (the free tiles of it),
      the tower of the build menu 2 x 2 cells (the camps raise towers of one cell), a gate 2 or 3 cells long and one cell thick with a passage
@@ -362,7 +363,7 @@ export function initializeRules() {
   Object.assign(SH, { keep: 2400 });
   Object.assign(BT, { keep: 30 });
   Object.assign(GCAP, { keep: 12, tower: 4 });
-  Object.assign(GRNG, { keep: 2.8 });
+  Object.assign(GRNG, { keep: 4.2 });
   Object.assign(GTOP, { keep: 15 });
   UPC.keep = { s: 360, w: 80 };
 }

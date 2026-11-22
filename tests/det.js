@@ -160,19 +160,19 @@ async () => {
     same = JSON.stringify(a) === JSON.stringify(b);
   // Captured from the v95 polish lots (lot A: route reach 112 tiles, contour spread of crowded hordes, terrain-aware lane routes #30, spawn patch that widens with the wave size, weighted unit separation with body block), identical on two runs: v94 release branch (main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix, spike removal) plus route bending.
   const expected = [
-    "386421547:21750:4:0:1106:1.0000:sh9:nl0.90:f150:sp0:ro00:wk0:T1487526880:z133:pu3:fg1:fp0",
-    "-727594608:26000:6:0:1119:1.0000:sh9:nl0.98:f150:sp0:ro00:wk0:T1487526880:z131:pu1:fg0:fp9",
-    "1564213548:26000:6:0:1119:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z131:pu0:fg0:fp9",
-    "-2075841376:26000:6:0:1119:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z131:pu0:fg0:fp9",
-    "-582753881:26000:8:0:1125:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z129:pu0:fg0:fp9",
-    "-974307333:25998:30:0:1185:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z109:pu0:fg0:fp9",
-    "-1365033590:25915:121:0:1209:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z102:pu0:fg0:fp8",
-    "756355120:25812:229:2:1225:1.0000:sh0:nl1.00:f156:sp0:ro00:wk2:T1373884307:z110:pu0:fg0:fp6",
+    "256284857:21750:5:1:1070:0.9614:sh9:nl0.90:f150:sp0:ro00:wk0:T44458432:z132:pu0:fg0:fp7",
+    "264509877:26000:6:1:1078:0.9768:sh9:nl0.98:f150:sp0:ro00:wk0:T44458432:z131:pu0:fg0:fp7",
+    "1849746932:26000:6:0:1078:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T44458432:z131:pu0:fg0:fp6",
+    "-1585826418:26000:6:0:1078:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T44458432:z131:pu0:fg0:fp6",
+    "-909647788:26000:6:0:1078:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T803928576:z131:pu0:fg0:fp6",
+    "533553106:25997:33:0:1147:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T803928576:z110:pu0:fg0:fp3",
+    "663384726:25963:74:0:1167:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-660796063:z106:pu0:fg0:fp1",
+    "128347198:25893:144:0:1171:0.9982:sh0:nl1.00:f150:sp0:ro00:wk0:T1206955144:z113:pu0:fg0:fp1",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   __test.check("repeated simulation fingerprints", a, b);
   __test.check(
-    "pinned fingerprints (re-pinned v98: the dark veil of the night holds units at the edge of the light)",
+    "pinned fingerprints (re-pinned v100: garrison reach of towers and walls, sites on rougher ground)",
     a,
     expected,
   );
