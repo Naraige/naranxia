@@ -1,10 +1,12 @@
 // Naranxia desktop launcher: checks GitHub for a newer game build at every launch,
 // keeps the game playable offline, and stores save files in the user's app-data folder.
-const { app, BrowserWindow, ipcMain, shell, Menu } = require("electron");
+const { app, BrowserWindow, ipcMain, shell, Menu, nativeImage } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const https = require("https");
 const http = require("http");
+const os = require("os");
+const icons = require("./icons.js");
 
 let CFG = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), "utf8"));
 const BUNDLED = path.join(__dirname, "game", "naranxia.html");
@@ -95,6 +97,13 @@ async function checkUpdate(curVer) {
   const api = CFG.api || "https://api.github.com";
   const rel = JSON.parse((await get(`${api}/repos/${CFG.repo}/releases/latest`)).toString("utf8"));
   const tag = rel.tag_name || rel.name;
+  /* the picture of the launcher and of its shortcuts follows the release too (icons.js); it never holds the game back */
+  icons
+    .syncIcon(rel, get, iconEnv())
+    .then((r) => r.changed && status("New launcher picture", 0.4))
+    .catch(() => {
+      /* The picture in use stays. */
+    });
   if (!newer(tag, curVer)) return { ok: true, latest: tag, updated: false };
   const asset = (rel.assets || []).find((a) => /\.html$/i.test(a.name));
   if (!asset) return { ok: false, why: "release has no .html asset" };
@@ -104,6 +113,17 @@ async function checkUpdate(curVer) {
   install(html, tag);
   return { ok: true, latest: tag, updated: true, notes: rel.body || "" };
 }
+
+const iconEnv = () => ({
+  platform: process.platform,
+  userData: UD(),
+  app,
+  shell,
+  nativeImage,
+  win,
+  home: os.homedir(),
+  exe: process.execPath,
+});
 
 function createWindow() {
   try {
@@ -119,7 +139,7 @@ function createWindow() {
     backgroundColor: "#0d1220",
     show: false,
     title: "Naranxia",
-    icon: path.join(__dirname, "icon.png"),
+    icon: icons.storedPng(UD()) || path.join(__dirname, "icon.png"),
     webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false },
   });
   Menu.setApplicationMenu(null);
@@ -138,6 +158,11 @@ function createWindow() {
   win.webContents.once("did-finish-load", async () => {
     let ver = ensureInstalled(),
       info;
+    try {
+      icons.applyIcon(iconEnv()); /* offline too: the picture taken from an earlier release */
+    } catch {
+      /* The bundled picture stays. */
+    }
     status("Checking for updates...", 0.2);
     try {
       info = await checkUpdate(ver);

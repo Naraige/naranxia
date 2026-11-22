@@ -29,10 +29,10 @@ jobs:
         run: |
           V=$(tr -d '[:space:]' < game/VERSION)
           if gh release view "$V" >/dev/null 2>&1; then
-            gh release upload "$V" dist/naranxia.html --clobber
+            gh release upload "$V" dist/naranxia.html apps/desktop/src/icon.png --clobber
           else
             NOTES="Naranxia $V"; [ -f game/NOTES.md ] && NOTES="$(cat game/NOTES.md)"
-            gh release create "$V" dist/naranxia.html --title "Naranxia $V" --notes "$NOTES"
+            gh release create "$V" dist/naranxia.html apps/desktop/src/icon.png --title "Naranxia $V" --notes "$NOTES"
             echo "new=1" >> "$GITHUB_OUTPUT"
           fi
       - name: Update banner for the announcement

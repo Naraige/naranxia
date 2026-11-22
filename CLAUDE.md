@@ -47,6 +47,7 @@ node tools/langcheck.mjs                                  # NL, PL, TR tables (i
 python3 tools/qa_shots.py dist/qa/NAME [steps]            # many screenshots in one page load (title, guide, quests, HUD...)
 python3 tools/announce_shots.py                           # the 4 announcement pictures, written to dist/announce-shots/
 python3 tools/voxel_preview.py out.png house:1/1/0.6/0.5/34 # block buildings with the game's material, no game boot (seconds); SHOT = names/tier/yaw/pitch/dist, see its header
+python3 tools/icons.py [--check]                          # launcher pictures (icon.ico, icon.icns) from apps/desktop/src/icon.png; pushed, installed launchers and their shortcuts take the new picture
 python3 tools/announce_banner.py [vNN] ["tagline"]         # update banner 1280x320 for the Discord announcement, written to dist/announce-shots/banner-vNN.png
 node tools/test_all.mjs det ui                            # run tests without rebuilding (npm test rebuilds first)
 bash tools/release.sh vNN "title"                         # bump, build, test, commit, and push (see Releasing)

@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-22 · launcher picture follows the releases (#41)
+- The King: "can you make a thing that update can update the shortcut image ? for futur change".
+- `apps/desktop/src/icons.js`: at each start the launcher looks for `icon.png` in the latest release (the answer it already asks for the game); when the asset changed it is downloaded to `<app-data>/icon`, checked (PNG, 4 MB at most, drawable) and used for the window (dock on Mac) and for the shortcuts: on Windows an `.ico` of 7 sizes is written under a new name and the desktop, start menu and pinned shortcuts whose target is the launcher are pointed at it (`shell.writeShortcutLink`, a new path because Windows keeps the picture of a path it knows); on Linux the `Icon=` line of the menu entry. Best effort, never holds the game back.
+- One source: `apps/desktop/src/icon.png`. `tools/icons.py` makes `icon.ico` / `icon.icns` from it (`--check` in the installers workflow). `release.yml` and `installers.yml` attach `icon.png` to the release.
+- To change the picture: replace the PNG, `python3 tools/icons.py`, push. No game version needed.
+- Limits: launchers installed before this do not have the code, players install the new launcher once. The picture inside `Naranxia.exe` (taskbar of a running game on Windows) and the Mac app in Finder change only with a new installer.
+- Verified: PASS desktop (92 assertions: Windows shortcuts, foreign shortcut left alone, no second download, bad download refused, Linux entry), runner; the sync run inside real Electron 33 (the `.ico` opens with its 7 sizes). Not tried: a real Windows desktop.
+
 ## 2026-11-22 · v97
 - The King: "fait en sorte que chacun se connecte avec son profil en coop et assure toi que cela soit bien 2 joueur distinct dans la coop juste pas de teamkill principalement", then "ensuite diffuse la nouvelle maj": his go-ahead for v97, which ships every entry below down to "horde portals" (all marked unreleased until now).
 - Profile in co-op: each player links with his own (name, colours, pattern: "hello", then "prof" on a change, entry below); the lobby lists each player under the colour of his kingdom.
