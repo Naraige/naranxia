@@ -19,6 +19,7 @@ import { hudState, U } from "./hud.js";
 import { hudDisplayState } from "./hud-state.js";
 import { dIc, IC } from "./icons.js";
 import { PAL, THEME } from "./kingdom-theme.js";
+import { ownerTheme } from "../rendering/owner-theme.js";
 import { FFP } from "./typography.js";
 import { mc, NCX, NCY, RUINS, terrainState } from "../world/terrain-state.js";
 
@@ -427,7 +428,9 @@ function dwBase(x, y, w, h, big) {
     canvasesState.ctx.stroke();
   });
   for (const s of sessionState.structs) {
-    canvasesState.ctx.fillStyle = s.type === "castle" ? "#ffd23c" : cb("#7fb2ff", "#56b4e9");
+    /* in co-op the buildings of the partner are dotted in his colour, a castle keeps its gold with a ring of its kingdom */
+    const oth = s.t === 0 && ownerTheme(s);
+    canvasesState.ctx.fillStyle = s.type === "castle" ? "#ffd23c" : oth ? PAL[oth.c][1] : cb("#7fb2ff", "#56b4e9");
     const z = s.type === "castle" ? (big ? 4 : Math.max(3, 3 * sx)) : big ? 2 : Math.max(1.4, sx);
     if (cbOn()) shp("c", ox + (s.x / TS) * sx, oy + (s.y / TS) * sy, Math.max(2.4, z));
     else canvasesState.ctx.fillRect(ox + (s.x / TS) * sx - z / 2, oy + (s.y / TS) * sy - z / 2, z, z);
@@ -530,7 +533,8 @@ function dwBase(x, y, w, h, big) {
   }
   for (const u of sessionState.units) {
     if (u.t === 2 || u.shel || (u.t && !fowVisAt(u.x, u.y))) continue;
-    canvasesState.ctx.fillStyle = u.t ? cb("#ff5bff", "#f0e442") : "#ffffff";
+    const ou = u.t === 0 && ownerTheme(u);
+    canvasesState.ctx.fillStyle = u.t ? cb("#ff5bff", "#f0e442") : ou ? PAL[ou.c][2] : "#ffffff";
     const z = u.type === "brute" ? 3 : big ? 1.8 : 1.2;
     if (cbOn()) shp(u.t ? "d" : "c", ox + (u.x / TS) * sx, oy + (u.y / TS) * sy, Math.max(u.t ? 2.8 : 2.2, z));
     else canvasesState.ctx.fillRect(ox + (u.x / TS) * sx - z / 2, oy + (u.y / TS) * sy - z / 2, z, z);

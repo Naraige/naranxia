@@ -23,6 +23,9 @@ export const ROOF = {
   clay: R("clay_tile_stairs", "clay_tile_slab", "clay_tiles"),
   blue: R("blue_tile_stairs", "blue_tile_slab", "blue_tiles"),
   green: R("green_tile_stairs", "green_tile_slab", "green_tiles"),
+  /* the roofs of the kingdom, in its colour (voxel-blocks defOf): tiles in stone, painted shingles in timber */
+  kingdom: R("kingdom_tile_stairs", "kingdom_tile_slab", "kingdom_tiles"),
+  kingdomShingle: R("kingdom_shingle_stairs", "kingdom_shingle_slab", "kingdom_shingle"),
   thatch: R("thatch_stairs", "thatch_slab", "thatch"),
   thatchDark: R("thatch_dark_stairs", "thatch_dark_slab", "thatch_dark"),
   copper: R("cut_copper_stairs", "cut_copper_slab", "cut_copper"),
@@ -36,8 +39,10 @@ export const ROOF = {
    `accent` is the roof a building type is known by in stone; in timber every roof is thatch (accent "thatch", or o.wood) or shingles */
 export function palette(t, accent, o = {}) {
   const stone = t !== 0,
-    roof = stone ? ROOF[accent || "slate"] : ROOF[o.wood || (accent === "thatch" ? "thatch" : "shingle")],
-    thatch = roof === ROOF.thatch,
+    /* every roof wears the colour of the kingdom (the King: "all roof color match the kingdom banner color"); the accent a building
+       type had (red barracks, blue castle, thatch) no longer picks the roof */
+    roof = stone ? ROOF.kingdom : ROOF.kingdomShingle,
+    thatch = false,
     trim = thatch
       ? ROOF.thatchDark
       : stone

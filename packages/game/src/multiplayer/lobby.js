@@ -29,7 +29,8 @@ export function mpConnected() {
   MP.conn = true;
   MP.mine = null;
   MP.theirs = null;
-  mpSend({ k: "hello", n: THEME.n, v: GVER });
+  /* the name and the colours of this kingdom: the partner draws our men, roofs and banners in them (rendering/owner-theme.js) */
+  mpSend({ k: "hello", n: THEME.n, v: GVER, c: THEME.c, c2: THEME.c2, p: THEME.p });
   if (MP.host) mpWorldSync();
   lobbyRender();
   lobbyShow();

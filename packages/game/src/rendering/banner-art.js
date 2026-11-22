@@ -1,5 +1,5 @@
 import { hex } from "../core/math.js";
-import { PAL, THEME } from "../ui/kingdom-theme.js";
+import { drawTheme, PAL } from "../ui/kingdom-theme.js";
 
 /* ================= THE BANNERS, THE MINECRAFT WAY =================
    A cloth of 20 x 40 pixels (the size of a Minecraft banner) made of patterns only, no emblem (the King: "stop with icon in banner just
@@ -81,7 +81,7 @@ const CACHE = {};
 
 /* the banner of a kingdom, a guild or a foreign realm (th: colour c, second colour c2, pattern p; the kingdom of the player when left out):
    { px: BW * BH colours from the top left, key } */
-export function bannerArt(th = THEME) {
+export function bannerArt(th = drawTheme()) {
   const c = Math.abs(th.c | 0) % PAL.length,
     c2 = Math.abs(th.c2 | 0) % PAL.length,
     p = Math.abs(th.p | 0) % PATS.length,

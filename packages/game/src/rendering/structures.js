@@ -13,6 +13,7 @@ import {
   ballBolt,
   ballHead,
   CONNT,
+  clearGeo,
   GEO,
   leafGeo,
   portcGeo,
@@ -33,7 +34,8 @@ import { titleSceneState } from "./title-scene.js";
 import { voxelGeo } from "./voxel-model.js";
 import { cv, cvs } from "../ui/canvases.js";
 import { thIcons } from "../ui/icons.js";
-import { THEME, thp } from "../ui/kingdom-theme.js";
+import { drawTheme, thp, withTheme } from "../ui/kingdom-theme.js";
+import { ownerTheme, setPartnerRedraw } from "./owner-theme.js";
 import { D8 } from "../world/routes.js";
 import { CH, HT, LAND, occ, ter } from "../world/terrain-state.js";
 
@@ -54,8 +56,8 @@ export let BANNER;
    None on the ghost of a building (BPLOFF) */
 const hang = (g, x, y, z, ry, k, th, pole) => {
   if (structuresState.BPLOFF) return;
-  const key = "banner" + k + (pole ? "b:" : ":") + bannerArt(th || THEME).key,
-    m = new THREE.Mesh(GEO[key] || (GEO[key] = bannerGeo(th || THEME, k, !!pole)), matV);
+  const key = "banner" + k + (pole ? "b:" : ":") + bannerArt(th || drawTheme()).key,
+    m = new THREE.Mesh(GEO[key] || (GEO[key] = bannerGeo(th || drawTheme(), k, !!pole)), matV);
   m.rotation.order = "YXZ";
   m.castShadow = pole ? SHADOWS : false;
   m.receiveShadow = SHADOWS;
@@ -77,12 +79,10 @@ const hang = (g, x, y, z, ry, k, th, pole) => {
 const WALLBN = 1.5 / 16;
 /* a wall that looks south, north, east or west: the way out from it (x, z) and the turn of a banner hung on it */
 const FACE = { south: [0, 1, 0], north: [0, -1, Math.PI], east: [1, 0, Math.PI / 2], west: [-1, 0, -Math.PI / 2] };
-/* the banners of a rebel camp: its colour crossed in the dark (or in ivory when the camp itself is dark) */
-const campBanner = (s) => ({ c: s.ci | 0, c2: (s.ci | 0) === 7 ? 11 : 7, p: 7 });
 
 export function retheme() {
   structureModelsState.BLU = thp();
-  for (const k in GEO) delete GEO[k];
+  clearGeo();
   for (const k in UM) delete UM[k];
   thIcons();
   icons3D();
@@ -96,8 +96,17 @@ export function retheme() {
   titleSceneState.titleDirty = true;
 }
 
+/* a structure is drawn in the colours of its kingdom: the player's, the co-op partner's or its camp's (rendering/owner-theme.js) */
 export let buildStructMesh = function buildStructMesh(s) {
-  buildStructMesh0(s);
+  withTheme(ownerTheme(s), () => {
+    const sv = structureModelsState.BLU;
+    structureModelsState.BLU = thp();
+    try {
+      buildStructMesh0(s);
+    } finally {
+      structureModelsState.BLU = sv;
+    }
+  });
 };
 
 export function buildStructMesh0(s) {
@@ -309,9 +318,9 @@ export function buildStructMesh0(s) {
       ].forEach(([x, z, r]) => hang(g, x, y, z, r, k));
   }
   /* the cloth banners marked on the model of a block building (voxel-kit banner and flagPole): on its walls and on its poles. Those without
-     colours of their own are the kingdom's, or the camp's on a building of a rebel camp */
+     colours of their own wear those of the kingdom being drawn (the player's, the co-op partner's, the camp's) */
   for (const m of voxMarks(s)) {
-    const th = m.th || (s.t === 2 ? campBanner(s) : null);
+    const th = m.th;
     if (m.t === "pole") hang(g, m.x, m.y, m.z, 0, m.k, th, true);
     else {
       const F = FACE[m.face] || FACE.south,
@@ -457,6 +466,7 @@ export function setAddStairsHandler(handler) {
 }
 
 export function initializeStructures() {
+  setPartnerRedraw(retheme);
   // Preserve Three.js allocation order and UUID random draws.
   new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
   BANNER = cvs(128, 192);

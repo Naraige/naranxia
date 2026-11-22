@@ -326,6 +326,9 @@ export let mpMsg = function mpMsg(m) {
   else if (m.k === "hello") {
     MP.pname = String(m.n || "Player").slice(0, 24);
     MP.pver = String(m.v || "?");
+    /* visual only: the colours and pattern of the partner's kingdom (an older build sends none) */
+    MP.pth = m.c === undefined ? null : { c: m.c | 0, c2: m.c2 | 0, p: m.p | 0 };
+    MP.pthNew = true;
     snd("spawn");
     lobbyNote(
       m.v === GVER
@@ -423,5 +426,6 @@ export function initializeMultiplayerFrame() {
   MP.mine = null;
   MP.theirs = null;
   MP.pname = "";
+  MP.pth = null;
   MP.code = "";
 }

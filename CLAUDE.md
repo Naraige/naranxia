@@ -119,6 +119,9 @@ The King chose "versions directes": code a batch, test it, release it as the nex
   Banners are made of patterns only, no emblem or icon (the King: "just pattern"): a cloth of 20 x 40 pixels like a Minecraft banner
   (`rendering/banner-art.js`, 16 patterns), hung from a crossbar on walls or on a pole. A building model marks where they hang
   (`banner`, `flagPole` in `models/voxel-kit.js`); never build a flag out of blocks.
+  Everything of a kingdom wears its colours: every roof (`palette()` of the kit), banners, the cloth of its men. Models read them through
+  `thp()` / `thd()` / `drawTheme()` (`ui/kingdom-theme.js`), never `THEME` directly: in co-op the partner's things are drawn in his
+  colours (`rendering/owner-theme.js`, sent with the "hello" message, visual only).
   Visual choices go to the King as a review page (`tools/board.py`) published to https://claude.ai/artifact/HsTZDU2YgpyBYxceCBFiJr
   (same URL for every board), numbered rows of lettered variants; he answers with a code like "1A 2B".
 

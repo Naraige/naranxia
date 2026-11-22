@@ -1,3 +1,4 @@
+import { withTheme } from "../ui/kingdom-theme.js";
 import { frameState } from "./frame.js";
 import { bxc, newG, toGeo } from "./geometry.js";
 import { GLN, LMU, matV } from "./materials.js";
@@ -88,7 +89,8 @@ const RS3 = {
   envoy: 0.3,
 };
 
-export function buildUnitGroup(type, t, zv, rk) {
+/* th: the kingdom whose colours the unit wears when it is not the player's own (the co-op partner: rendering/owner-theme.js) */
+export function buildUnitGroup(type, t, zv, rk, th) {
   unitsState.ALB = t === 0 ? alv() : 0;
   rk = rk | 0;
   const k =
@@ -101,7 +103,8 @@ export function buildUnitGroup(type, t, zv, rk) {
       (rk ? "k" + rk : "") +
       (uv2(type) ? "n" : "") +
       (mut2(zv && zv.hint === "boss" ? "boss" : type) ? "m" : "") +
-      gearSig(),
+      gearSig() +
+      (th ? "c" + th.c + "_" + th.c2 + "_" + th.p : ""),
     mdl =
       UM[k] ||
       (UM[k] = (() => {
@@ -109,7 +112,7 @@ export function buildUnitGroup(type, t, zv, rk) {
         zombiesState.ZVAR = zv || null;
         unitsState.RKB = rk;
         try {
-          return mkModel(type, t);
+          return withTheme(th, () => mkModel(type, t));
         } finally {
           zombiesState.ZVAR = zo;
           unitsState.RKB = 0;

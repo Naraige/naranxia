@@ -1,3 +1,4 @@
+import { ownerTheme } from "./owner-theme.js";
 import { rmotion } from "../core/prefs.js";
 import { snd } from "../audio/sound.js";
 import { HEAL_R } from "../gameplay/construction.js";
@@ -65,6 +66,7 @@ export function mkUnit(u) {
       zKeyOf(u) ||
         (u.type === "peasant" && u.t !== 1 ? { v: (((u.uid | 0) * 2654435761) >>> 0) % 6, hint: "p" } : null),
       rkOf(u),
+      u.t === 0 ? ownerTheme(u) : null,
     ),
     mdl = g.userData.mdl,
     mat = g.userData.mat;
@@ -77,7 +79,7 @@ export function mkUnit(u) {
     g.add(cn);
     g.userData.cn = cn;
     g.userData.cnz = 0.26 / s0;
-    const c2 = buildUnitGroup("gunner2", u.t, null),
+    const c2 = buildUnitGroup("gunner2", u.t, null, 0, u.t === 0 ? ownerTheme(u) : null),
       e2 = c2.userData;
     c2.remove(e2.ring);
     c2.traverse((o) => {

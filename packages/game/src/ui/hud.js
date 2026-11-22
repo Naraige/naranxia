@@ -50,7 +50,8 @@ import { convoyPanelState, drawConvoy } from "./convoy-panel.js";
 import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, RDB, SLOT, TIPP, UIT } from "./drawing.js";
 import { hudDisplayState, topBox } from "./hud-state.js";
 import { dIc, IC } from "./icons.js";
-import { THEME } from "./kingdom-theme.js";
+import { PAL, THEME } from "./kingdom-theme.js";
+import { ownerName, ownerTheme } from "../rendering/owner-theme.js";
 import { bar, drawMapModal, drawWorld, mmss } from "./minimap.js";
 import { KB, kdisp } from "./settings.js";
 import { settingsState } from "./panel-state.js";
@@ -956,6 +957,22 @@ export function drawBars() {
       }
     }
   for (const s of sessionState.structs) {
+    /* co-op: the name of its kingdom over each castle, in the colour of that kingdom */
+    if (MP.on && s.type === "castle" && s.t === 0) {
+      const q = scr(s.x / TS, (s.bh || LAND) + 32, s.y / TS);
+      if (q.ok) {
+        const th = ownerTheme(s) || THEME,
+          nm = ownerName(s);
+        drew = 1;
+        canvasesState.ctx.font = "bold " + Math.round(9 * k * 1.9) + "px " + FF;
+        canvasesState.ctx.textAlign = "center";
+        canvasesState.ctx.lineWidth = 3;
+        canvasesState.ctx.strokeStyle = "rgba(0,0,0,.8)";
+        canvasesState.ctx.strokeText(nm, q.x, q.y);
+        canvasesState.ctx.fillStyle = PAL[th.c][2];
+        canvasesState.ctx.fillText(nm, q.x, q.y);
+      }
+    }
     if (s.garr && s.garr.length) {
       const q = scr(s.x / TS, (s.bh || LAND) + ((s.o3 && s.o3.userData.mh) || 2.1) + 0.6, s.y / TS);
       if (q.ok) {

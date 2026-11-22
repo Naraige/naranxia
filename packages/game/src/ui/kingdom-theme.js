@@ -36,10 +36,25 @@ export const KNAMES = [
 
 export let THEME;
 
-export const thp = () => PAL[THEME.c][1],
-  ths = () => PAL[THEME.c][2],
+/* the kingdom being drawn: the player's own, unless a thing of the co-op partner or of a camp is being built (withTheme; who wears what is
+   rendering/owner-theme.js). Every colour a model takes from the kingdom goes through thp / ths / thd / drawTheme */
+let ACT = null;
+export const drawTheme = () => ACT || THEME;
+export const themeSig = () => (ACT ? ACT.c + "|" + ACT.c2 + "|" + ACT.p : "");
+export const withTheme = (th, fn) => {
+  const o = ACT;
+  ACT = th || null;
+  try {
+    return fn();
+  } finally {
+    ACT = o;
+  }
+};
+
+export const thp = () => PAL[drawTheme().c][1],
+  ths = () => PAL[drawTheme().c][2],
   thd = () => {
-    const h = hex(PAL[THEME.c][1]);
+    const h = hex(PAL[drawTheme().c][1]);
     return (
       "#" +
       h

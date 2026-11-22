@@ -39,7 +39,7 @@ import {
   woodTowerGeo2,
   woodWallGeo,
 } from "./fortifications.js";
-import { PAL, thp } from "../../ui/kingdom-theme.js";
+import { PAL, themeSig, thp } from "../../ui/kingdom-theme.js";
 import { gateLeaf, portcullis, wallLook } from "./builds/walls.js";
 import { BPT, fortOf, VOXB } from "./voxel-buildings.js";
 import { voxelGeo } from "../voxel-model.js";
@@ -221,7 +221,22 @@ export function trebCW() {
   return toGeo(G);
 }
 
-export const GEO = {};
+/* the geometries, by key. A key means one thing per kingdom drawn (roofs, banners and trims wear its colours): the kingdom of the player has
+   its store, the co-op partner and each camp theirs (themeSig). clearGeo() empties them all when the kingdom changes its colours */
+const GEOS = {};
+const geoStore = () => GEOS[themeSig()] || (GEOS[themeSig()] = {});
+export const GEO = new Proxy(
+  {},
+  {
+    get: (_, k) => geoStore()[k],
+    set: (_, k, v) => ((geoStore()[k] = v), true),
+    has: (_, k) => k in geoStore(),
+    deleteProperty: (_, k) => delete geoStore()[k],
+  },
+);
+export const clearGeo = () => {
+  for (const k in GEOS) delete GEOS[k];
+};
 
 /* ---- wooden tier models ---- */
 export const ROPE = "#d9c28a";

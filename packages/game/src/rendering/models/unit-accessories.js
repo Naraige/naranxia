@@ -1,7 +1,8 @@
 import { newG, toGeo } from "../geometry.js";
-import { PD, PDP, pxBox, pxScene, PXV, teamPal } from "./pixel-geometry.js";
+import { PD, PDP, pxBox, pxScene, PXV, shadeHex, teamPal } from "./pixel-geometry.js";
 import { pBev, RDS, RWD } from "./weapons.js";
-import { thp } from "../../ui/kingdom-theme.js";
+import { blend, patShare } from "../banner-art.js";
+import { drawTheme, PAL, thp } from "../../ui/kingdom-theme.js";
 import { gear2 } from "./gear-style.js";
 import { g2Cannon } from "./gear2.js";
 
@@ -104,19 +105,7 @@ export function pxCapes(type, P0) {
 }
 
 /* the bannerman's banner: three chained cloth pieces painted as one 20 x 30 Minecraft banner: team field, gold border,
-   a gold fleur-de-lis, a swallow tail cut in the bottom */
-const FLEUR = [
-  "...GG...",
-  "..GGGG..",
-  "..GGGG..",
-  "G..GG..G",
-  "GG.GG.GG",
-  "GGGGGGGG",
-  ".GGGGGG.",
-  "...GG...",
-  "..GGGG..",
-  "...GG...",
-];
+   the pattern of the kingdom in its second colour, a swallow tail cut in the bottom */
 
 export function pxBanner(X) {
   const s = 1 / PXV,
@@ -127,7 +116,9 @@ export function pxBanner(X) {
     TOT = 16.6,
     W = 20,
     H = 30,
-    rp = TOT / H;
+    rp = TOT / H,
+    C2 = PAL[drawTheme().c2][1],
+    SHR = patShare(drawTheme().p, W, H);
   const px = (u, r) => {
     if (r >= 24) {
       const half = (r - 23) * 1.55;
@@ -137,11 +128,10 @@ export function pxBanner(X) {
     if (r === 1) return G[2];
     if (u === 0 || u === W - 1) return G[1];
     if (r === H - 1 || (r >= 24 && Math.abs(Math.abs(u - 9.5) - (r - 23) * 1.55) < 0.9)) return G[0];
-    const fr = r - 7,
-      fc = u - 6;
-    if (fr >= 0 && fr < 10 && fc >= 0 && fc < 8 && FLEUR[fr][fc] !== ".") return fc < 4 ? G[2] : G[1];
-    if (r === 3 || r === 21) return G[1];
-    return u % 4 === 3 ? Tm[2] : r > 18 ? Tm[2] : Tm[3];
+    /* the banner of the kingdom: its pattern in its second colour (rendering/banner-art.js), folds and a darker foot as before */
+    const f = SHR[r * W + u],
+      k = u % 4 === 3 || r > 18 ? 0.82 : 1;
+    return f <= 0 ? (k < 1 ? Tm[2] : Tm[3]) : shadeHex(f >= 1 ? C2 : blend(Tm[3], C2, f), k);
   };
   ["ban", "ban2", "ban3"].forEach((k, i) => {
     X[k] = newG();

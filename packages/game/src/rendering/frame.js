@@ -1,3 +1,4 @@
+import { partnerRefresh } from "./owner-theme.js";
 import { cbOn, rmotion } from "../core/prefs.js";
 import { syncRuins } from "./ruins.js";
 import { OWN, rangeOf, selH, TOWR } from "../ai/kingdoms.js";
@@ -288,6 +289,8 @@ export let render3D = function render3D(dt) {
       SCAF.delete(s);
     }
   }
+  /* the co-op partner sent the colours of his kingdom: everything of his is drawn again in them */
+  partnerRefresh();
   /* the banners move with the clock of the game, and stand still when motion is reduced */
   const bnT = rmotion() ? 0 : sessionState.clockT;
   for (const s of sessionState.structs) {

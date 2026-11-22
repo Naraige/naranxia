@@ -1,3 +1,4 @@
+import { thd } from "../ui/kingdom-theme.js";
 import { BK, BKB, matOfKind } from "./blocks.js";
 
 /* Minecraft block name -> how the game draws it: colour (average of the block's texture), kind (cube, slab, stair, fence, wall, pane, trapdoor, door, sign, post, lamp, small, plate, skip), optional end colour for logs, optional glow.
@@ -162,7 +163,7 @@ const TEX = [
   [/^crop_/, BKB.crop],
   [/^thatch|^hay_block$/, BKB.thatch],
   [/_wool$|_carpet$|_cloth|^sack|^sail/, BKB.wool],
-  [/deepslate_tile|^red_tile|^blue_tile|^green_tile|^clay_tile|shingle|cut_copper/, BKB.tiles],
+  [/deepslate_tile|^red_tile|^blue_tile|^green_tile|^clay_tile|^kingdom_tile|shingle|cut_copper/, BKB.tiles],
   [/stone_brick|deepslate_brick|blackstone_brick|prismarine_brick|furnace$|^smoker$/, BKB.stoneBricks],
   [/^cobblestone|^mossy_cobblestone/, BK.cobble],
   [/^bricks$|^brick_|nether_brick|^mud_brick/, BKB.bricks],
@@ -270,6 +271,7 @@ const FAM = [
   [/^clay_tile/, "#8b3c21"],
   [/^blue_tile/, "#2c4474"],
   [/^green_tile/, "#204c3d"],
+  [/^kingdom_/, "#2c4474"],
   [/^dark_shingle/, "#35271e"],
   [/^shingle/, "#583a28"],
   [/^exposed_cut_copper/, "#a07a66"],
@@ -344,6 +346,8 @@ export function defOf(full, unknown) {
   else if (r.leaf) o.c = LEAF[n.replace(/_leaves$/, "")] || "#4d7a2c";
   else if (r.cropc) o.c = CROP[n.slice(5)] || "#cfb44e";
   else o.c = r.c || (fam ? (r.log ? fam[2] || fam[1] : fam[1]) : "#7a7a7a");
+  /* the roofs of a kingdom wear its colour, a shade deeper than its banner (the kingdom being drawn: ui/kingdom-theme.js) */
+  if (n.startsWith("kingdom_")) o.c = thd();
   if (r.log) {
     /* a log shows its bark (or its stripped wood) on its sides and the cut wood on its ends; FAM lists planks, stripped wood, bark */
     const st = n.startsWith("stripped");
