@@ -23,3 +23,8 @@ Demande, mot pour mot: « i'm still not happy about the icon for banner rework t
 - Les pastilles d'emblème de Nouveau royaume restent vectorielles: l'emblème 11x11 de la bannière n'est pas exactement le même dessin que la pastille.
 - Sprite plus fin que les autres icônes pixel (24x36 dans une boîte de 13x19,5 unités: environ 1 pixel écran par pixel du dessin en 1280x720); à 16 px de haut il est réduit en lissé.
 - Infobulle du HUD et textes inchangés. Pas de test `det` relancé: aucun fichier de simulation touché.
+
+### 2026-11-21: les bannières 3D refaites façon Minecraft (demande du Roi: « can you make better banner like minecraft »)
+- Le point « texture 3D des bannières de pierre reste le dessin A » est traité: plus de texture, un modèle (`rendering/models/banner.js`: traverse à pommeaux d'or, drap de 20 x 40 pixels) peint par couches dans `rendering/banner-art.js` (champ, motif, dégradé, liseré, frange, emblème 14 x 14 en métal avec cerne sombre).
+- La variante A de l'interrupteur est maintenant cette bannière murale (`drawBanner`). `BANNER2='CA'`: petite image = gonfanon choisi par le Roi, grande image (carte Nouveau royaume) = la bannière murale. Détail dans `docs/JOURNAL.md` à la même date.
+- Toujours vrai: pastilles d'emblème du menu vectorielles, étendard du porte-étendard à lys fixe, sprite C avec les emblèmes 11 x 11.

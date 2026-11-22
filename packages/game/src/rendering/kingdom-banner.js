@@ -1,5 +1,6 @@
 import { hex } from "../core/math.js";
-import { BANNER, bannerTex } from "./structures.js";
+import { bannerArt, BH, BW } from "./banner-art.js";
+import { BANNER } from "./structures.js";
 import { canvasesState, cvs } from "../ui/canvases.js";
 import { circ, ICN, ln, poly, rrg } from "../ui/drawing.js";
 import { IC, thIcons } from "../ui/icons.js";
@@ -381,74 +382,30 @@ export function bannerPattern(g, W, H, p, c2) {
   if (p) g.fill(p === 6 ? "evenodd" : "nonzero");
 }
 
+/* the picture of the banner that hangs on the walls of the kingdom (rendering/banner-art.js, models/banner.js): the crossbar with its gold
+   knobs and the cloth of 20 x 40 pixels, four canvas pixels to each, in the middle of the 128 x 192 canvas */
 export function drawBanner() {
   const g = BANNER.getContext("2d"),
-    W = 128,
-    H = 192,
-    p = PAL[THEME.c][1],
-    s = PAL[THEME.c][2];
-  g.clearRect(0, 0, W, H);
-  g.lineJoin = "round";
-  const path = () => {
-    g.beginPath();
-    g.moveTo(8, 4);
-    g.lineTo(W - 8, 4);
-    g.lineTo(W - 8, H - 30);
-    g.lineTo(W / 2, H - 58);
-    g.lineTo(8, H - 30);
-    g.closePath();
-  };
-  path();
-  const q = g.createLinearGradient(0, 0, 0, H);
-  q.addColorStop(0, lighten(p, 0.22));
-  q.addColorStop(1, p);
-  g.fillStyle = q;
-  g.fill();
-  g.save();
-  path();
-  g.clip();
-  bannerPattern(g, W, H, THEME.p | 0, PAL[THEME.c2 | 0][1]);
-  const sh = g.createLinearGradient(0, 0, W, 0);
-  sh.addColorStop(0, "rgba(255,255,255,.12)");
-  sh.addColorStop(0.5, "rgba(255,255,255,0)");
-  sh.addColorStop(1, "rgba(0,0,0,.18)");
-  g.fillStyle = sh;
-  g.fillRect(0, 0, W, H);
-  g.restore();
-  path();
-  g.lineWidth = 11;
-  g.strokeStyle = s;
-  g.stroke();
-  g.lineWidth = 2;
-  g.strokeStyle = "rgba(0,0,0,.4)";
-  g.stroke();
-  {
-    const im = embImg(THEME.e | 0, embMetal(THEME.c));
-    g.imageSmoothingEnabled = true;
-    g.imageSmoothingQuality = "high";
-    g.drawImage(im, W / 2 - 55, 31, 110, 110);
+    U = 4,
+    X = (128 - BW * U) / 2,
+    Y = (192 - (BH + 2) * U) / 2,
+    px = bannerArt().px;
+  g.clearRect(0, 0, 128, 192);
+  g.fillStyle = "#5a3e24";
+  g.fillRect(X, Y, BW * U, 2 * U);
+  g.fillStyle = "#7a5632";
+  g.fillRect(X, Y, BW * U, U);
+  for (const x of [X - U, X + BW * U]) {
+    g.fillStyle = "#d9a938";
+    g.fillRect(x, Y - U / 2, U, 3 * U);
+    g.fillStyle = "#f6dc7c";
+    g.fillRect(x, Y - U / 2, U, U);
   }
-  {
-    const rg = g.createLinearGradient(0, 0, 0, 9);
-    rg.addColorStop(0, "#fff1b0");
-    rg.addColorStop(0.5, "#c8922a");
-    rg.addColorStop(1, "#7a5410");
-    g.fillStyle = rg;
-    g.fillRect(2, 1, W - 4, 7);
-    g.strokeStyle = "#3a2406";
-    g.lineWidth = 1;
-    g.strokeRect(2.5, 1.5, W - 5, 6);
-    for (const fx of [4, W - 4]) {
-      const fg = g.createRadialGradient(fx - 1.5, 3, 1, fx, 4.5, 5);
-      fg.addColorStop(0, "#fff6c8");
-      fg.addColorStop(1, "#a8741a");
-      g.beginPath();
-      g.arc(fx, 4.5, 4.6, 0, 6.283);
-      g.fillStyle = fg;
-      g.fill();
-      g.stroke();
+  for (let i = 0; i < px.length; i++)
+    if (px[i]) {
+      g.fillStyle = px[i];
+      g.fillRect(X + (i % BW) * U, Y + (2 + ((i / BW) | 0)) * U, U, U);
     }
-  }
 }
 
 export function saveTheme() {
@@ -614,7 +571,6 @@ export function gemSwatch(x, y, s, col) {
 export function initializeKingdomBanner() {
   thIcons();
   drawBanner();
-  bannerTex.needsUpdate = true;
 
   IC.gear = ICN((g) => {
     for (let k = 0; k < 8; k++) {

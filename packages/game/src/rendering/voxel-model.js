@@ -189,6 +189,20 @@ const SHAPES = {
     [0, 13, 7, 14, 15, 9, 1],
     [4, 3, 6, 14, 12, 10],
   ]),
+  /* a banner on a wall, two blocks tall (voxel-kit banner). Its upper half: the crossbar, the cloth, a band of gold across it */
+  bannert: px([
+    [0, 14, 0, 2, 16, 16, 1],
+    [0.5, 0, 1, 1.5, 14, 15],
+    [0.5, 6, 1, 1.75, 8, 15, 2],
+  ]),
+  /* its lower half: the cloth, the gold hem and three tassels */
+  bannerb: px([
+    [0.5, 3, 1, 1.5, 16, 15],
+    [0.5, 2, 1, 1.75, 3, 15, 2],
+    [0.5, 0, 2, 1.5, 2, 4, 2],
+    [0.5, 0, 7, 1.5, 2, 9, 2],
+    [0.5, 0, 12, 1.5, 2, 14, 2],
+  ]),
   /* a shield hung on a wall, its boss in the middle */
   shield: px([
     [0, 2, 3, 2, 14, 13],

@@ -288,6 +288,8 @@ export let render3D = function render3D(dt) {
       SCAF.delete(s);
     }
   }
+  /* the banners move with the clock of the game, and stand still when motion is reduced */
+  const bnT = rmotion() ? 0 : sessionState.clockT;
   for (const s of sessionState.structs) {
     if (s.t === 2 && s.o3) s.o3.visible = fowSeenAt(s.x, s.y);
     if (s.t === 0 && s.prog < 1 && !s.scaf && s.o3) {
@@ -343,7 +345,13 @@ export let render3D = function render3D(dt) {
       glow(s.x / TS, hb, s.y / TS, 1.1 * (s.sz || 1) * fl, 1, 0.42, 0.1, 0.5);
       glow(s.x / TS, hb + 0.5, s.y / TS, 0.5 * fl, 1, 0.85, 0.4, 0.6);
     }
-    if (s.flag) s.flag.rotation.y = Math.sin(sessionState.clockT * 3) * 0.3;
+    /* the standard on the keep turns a little with the wind; every banner swings out from its crossbar, each in its own time */
+    if (s.flag) s.flag.rotation.y = Math.sin(bnT * 0.7) * 0.4;
+    if (s.o3 && s.o3.userData.bn) {
+      const B = s.o3.userData.bn;
+      for (let i = 0; i < B.length; i++)
+        B[i].rotation.x = -0.045 - 0.035 * Math.sin(bnT * 1.6 + s.tx * 0.9 + s.ty * 1.7 + i * 2.1);
+    }
     if (s.o3) bldAnim(s, dt);
     if (s.bolt) {
       const c = s.wcd > 0 ? s.wcd : 0,

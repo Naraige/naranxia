@@ -5,13 +5,14 @@ import { cvs } from "../ui/canvases.js";
 import { PAL, THEME } from "../ui/kingdom-theme.js";
 
 /* ================= BANNER BOARD (docs/studio-boards/banner): the kingdom banner picture of the HUD and the menus =================
-   BANNER2 is the single switch: '' = the current picture (A, the 128x192 BANNER canvas, also the texture of the stone banners),
+   BANNER2 is the single switch: '' or 'A' = the BANNER canvas (128x192: the banner that hangs on the walls, rendering/banner-art.js),
    'B' = the bannerman's standard (spear point, pennant, crossbar, swallow tail), 'C' = gonfalon on a side pole (title scene),
    'D' = wall banner hung from a gold rod (pointed cloth). B, C, D are pixel sprites on a 24x36 grid (same 2:3 box as A), drawn from
    the kingdom theme (colour, 2nd colour, pattern, emblem). Two letters = small picture (HUD, save list) then large one (New kingdom
-   card), e.g. 'CB'; 'A' = current. window.__BANNER2 overrides it for previews only.
-   Visual only: never read by the simulation; the 3D banner texture is not changed. */
-export const BANNER2 = "C";
+   card), e.g. 'CB'; 'A' = the wall banner. window.__BANNER2 overrides it for previews only.
+   Now 'CA': the gonfalon the King chose for the small picture, and on the card where the banner is composed the banner itself, as it
+   will hang on the walls. Visual only: never read by the simulation. */
+export const BANNER2 = "CA";
 
 export const banner2Sig = () =>
   typeof window !== "undefined" && window.__BANNER2 !== undefined ? String(window.__BANNER2) : BANNER2;

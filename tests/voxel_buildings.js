@@ -56,7 +56,32 @@ async () => {
     fort({ type: "keep", tier, sz: 2 * FCELL }, 0, false, 2 * FCELL + 2, 2 * FCELL + 2);
     fort({ type: "torch", tier }, 0, false, 1, 1);
   }
-  O.ok = O.types >= 18 && O.forts === 32 && O.bad.length === 0;
+  /* the banners of the kingdom: every emblem on every pattern paints the whole cloth of 20 x 40 pixels (the row of tassels apart), its
+     rectangles cover each painted pixel once in its own colour, and the model builds with a plain and with a painted back */
+  O.banners = 0;
+  for (let e = 0; e < 16; e++)
+    for (let p = 0; p < 8; p++) {
+      const px = bannerArt({ c: (e + p) % 14, c2: (e * 5 + 3) % 14, e, p }).px,
+        seen = new Uint8Array(px.length);
+      let n = 0,
+        bad = px.length !== 800;
+      for (const [x, y, w, h, c] of bannerRects(px))
+        for (let j = y; j < y + h; j++)
+          for (let i = x; i < x + w; i++) {
+            if (seen[j * 20 + i] || px[j * 20 + i] !== c) bad = true;
+            seen[j * 20 + i] = 1;
+            n++;
+          }
+      for (let i = 0; i < 780; i++) if (!/^#[0-9a-f]{6}$/.test(px[i] || "")) bad = true;
+      if (bad || n !== px.filter(Boolean).length) O.bad.push("banner: emblem " + e + " pattern " + p);
+      O.banners++;
+    }
+  for (const both of [false, true]) {
+    const g = bannerGeo({ c: 0, c2: 10, e: 0, p: 0 }, 1.5, both);
+    if (!g.attributes.mat || g.attributes.position.count < (both ? 800 : 400))
+      O.bad.push("banner: geometry" + (both ? " (both faces)" : ""));
+  }
+  O.ok = O.types >= 18 && O.forts === 32 && O.banners === 128 && O.bad.length === 0;
   window.__test.check("voxel buildings", O.ok, true);
   return JSON.stringify(O);
 };

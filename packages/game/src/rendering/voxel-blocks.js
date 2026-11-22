@@ -123,7 +123,9 @@ export const RULES = [
   [/_leaves$/, { k: "cube", leaf: 1 }],
   [/_carpet$/, { k: "slab", wool: 1, h: 0.08 }],
   [/_wool$|_cloth$/, { k: "cube", wool: 1 }],
-  [/^banner_(\w+)$/, { k: "flag", banner: 1 }],
+  [/^banner_(\w+)$/, { k: "bannert", banner: 1, c2: "#5a3e24", c3: "#d9a938" }],
+  [/^bannerlow_(\w+)$/, { k: "bannerb", banner: 1, c3: "#d9a938" }],
+  [/^flag_(\w+)$/, { k: "flag", banner: 1 }],
   [/^bookshelf$/, { k: "cube", c: "#6b4f2d", c2: "#a58451" }],
   [/^crafting_table$/, { k: "cube", c: "#8a5a2b" }],
   [/^glowstone$|^sea_lantern$|^shroomlight$/, { k: "cube", c: "#f2c25a", glow: 1 }],
@@ -162,7 +164,7 @@ const TEX = [
   [/^soil/, BKB.farmland],
   [/^crop_/, BKB.crop],
   [/^thatch|^hay_block$/, BKB.thatch],
-  [/_wool$|_carpet$|_cloth|^banner_|^sack|^sail/, BKB.wool],
+  [/_wool$|_carpet$|_cloth|^banner_|^bannerlow_|^flag_|^sack|^sail/, BKB.wool],
   [/deepslate_tile|^red_tile|^blue_tile|^green_tile|^clay_tile|shingle|cut_copper/, BKB.tiles],
   [/stone_brick|deepslate_brick|blackstone_brick|prismarine_brick|furnace$|^smoker$/, BKB.stoneBricks],
   [/^cobblestone|^mossy_cobblestone/, BK.cobble],
@@ -344,7 +346,7 @@ export function defOf(full, unknown) {
   else if (r.heapc) o.c = HEAP[n.slice(5)] || "#7b7b78";
   else if (r.leaf) o.c = LEAF[n.replace(/_leaves$/, "")] || "#4d7a2c";
   else if (r.cropc) o.c = CROP[n.slice(5)] || "#cfb44e";
-  else if (r.banner) o.c = WOOL[n.slice(7)] || "#a8322a";
+  else if (r.banner) o.c = WOOL[n.slice(n.indexOf("_") + 1)] || "#a8322a";
   else o.c = r.c || (fam ? (r.log ? fam[2] || fam[1] : fam[1]) : "#7a7a7a");
   if (r.log) {
     /* a log shows its bark (or its stripped wood) on its sides and the cut wood on its ends; FAM lists planks, stripped wood, bark */
@@ -356,6 +358,7 @@ export function defOf(full, unknown) {
     if (s.axis) o.ax = s.axis;
   }
   if (r.c2) o.c2 = r.c2;
+  if (r.c3) o.c3 = r.c3;
   if (r.boxc) o.c3 = FLOWER[n.slice(11)] || "#d8372b";
   if (r.potc) o.c3 = FLOWER[n.slice(4)] || "#d8372b";
   if (r.shrubc && n.length > 6) o.c3 = FLOWER[n.slice(6)] || "#f1f1ea";

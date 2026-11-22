@@ -84,6 +84,8 @@ export const BKB = {
   polished: 45,
   bars: 46,
   target: 47,
+  /* painted pixels, shown as they are (the cloth of a banner) */
+  plain: 48,
   glow: 59,
 };
 export const matOfKind = (k) => (k >= 20 ? 40 + k : 20 + k);
@@ -203,6 +205,7 @@ vec3 blkTex(float m,vec3 c,vec2 pc,float fz,bool up,float pf,float bf,vec3 wp){
  else if(m==45.){t=bq4(pn,.95,.99,1.02,1.05);if(ed)e=.84;}
  else if(m==46.){float bx=mod(pc.x,4.);t=bx<2.?(.95+.1*pn):.22;if(mod(pc.y,8.)<1.)t=.9;}
  else if(m==47.){float rg=max(abs(pin.x-7.5),abs(pin.y-7.5)),lu=.45+dot(c,vec3(.36));c=(mod(floor(rg/2.),2.)<.5?vec3(.78,.18,.14):vec3(.93,.9,.84))*lu;t=1.;}
+ else if(m==48.){t=1.;}
  else{t=bq4(pn,.9,.97,1.03,1.08);}
  return c*mix(1.,t,pf)*mix(1.,e,bf)*(m<6.5?.94+.12*bn:1.);}
 `;

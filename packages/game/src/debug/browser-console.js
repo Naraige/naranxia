@@ -64,6 +64,7 @@ import { MP } from "../multiplayer/session.js";
 import { svApply } from "../persistence/restore.js";
 import { SAVA, svAssign, svPack } from "../persistence/save-format.js";
 import { continueLast, saveMenuState, svPeek } from "../ui/save-menu.js";
+import { bannerArt, bannerRects } from "../rendering/banner-art.js";
 import { bannerIcon } from "../rendering/banner-icon.js";
 import { drawBanner } from "../rendering/kingdom-banner.js";
 import { THEME } from "../ui/kingdom-theme.js";
@@ -78,6 +79,7 @@ import { render3D, setRender3DHandler } from "../rendering/frame.js";
 import { matV } from "../rendering/materials.js";
 import { icoUnit } from "../rendering/model-icons.js";
 import { icoPart } from "../rendering/pixel-icons.js";
+import { bannerGeo } from "../rendering/models/banner.js";
 import { shieldGeo } from "../rendering/models/heraldry.js";
 import { sGeo } from "../rendering/models/structures.js";
 import { toolGeos } from "../rendering/models/unit-parts.js";
@@ -88,7 +90,7 @@ import { BPT, fortOf, VOXB } from "../rendering/models/voxel-buildings.js";
 import { voxelGeo } from "../rendering/voxel-model.js";
 import { home as dbgHome, pickGround as dbgPickGround, scr as dbgScr } from "../rendering/camera.js";
 import { mpLost as dbgMpLost } from "../multiplayer/lockstep.js";
-import { buildStructMesh, setBuildStructMeshHandler } from "../rendering/structures.js";
+import { buildStructMesh, retheme, setBuildStructMeshHandler } from "../rendering/structures.js";
 import { unitG } from "../rendering/terrain.js";
 import { animUnit } from "../rendering/unit-animation.js";
 import { nightK } from "../rendering/lighting.js";
@@ -589,6 +591,10 @@ export function installBrowserConsole() {
     settingsState: { get: () => settingsState },
     THEME: { get: () => THEME },
     drawBanner: { get: () => drawBanner },
+    retheme: { get: () => retheme },
+    bannerArt: { get: () => bannerArt },
+    bannerRects: { get: () => bannerRects },
+    bannerGeo: { get: () => bannerGeo },
     bannerIcon: { get: () => bannerIcon },
     titleDebug: { get: () => titleDebug },
     guideState: { get: () => guideState },

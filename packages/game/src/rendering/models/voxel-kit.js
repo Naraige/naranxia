@@ -841,20 +841,16 @@ export function butt(vb, P, x, z, y = 0) {
   vb.set(x, y, z, P.fence).set(x, y + 1, z, "target");
 }
 
-/* a banner hanging from a wall (two blocks tall) */
+/* a banner hanging from a wall, two blocks tall: a crossbar, a cloth with a band of gold, a gold hem with three tassels (the banners of a
+   guild or of a foreign realm; the banners of the kingdom itself are hung by rendering/structures.js) */
 export function banner(vb, x, y, z, face, color) {
-  vb.set(x, y, z, `banner_${color}[facing=${face}]`).set(x, y - 1, z, `banner_${color}[facing=${face}]`);
+  vb.set(x, y, z, `banner_${color}[facing=${face}]`).set(x, y - 1, z, `bannerlow_${color}[facing=${face}]`);
 }
 /* a free-standing flag pole with a flag flying east */
 export function flagPole(vb, P, x, z, y0, h, color) {
   vb.box(x, y0, z, x, y0 + h - 1, z, P.fence);
-  vb.set(x + 1, y0 + h - 1, z, `banner_${color}[facing=south]`).set(
-    x + 2,
-    y0 + h - 1,
-    z,
-    `banner_${color}[facing=south]`,
-  );
-  vb.set(x + 1, y0 + h - 2, z, `banner_${color}[facing=south]`);
+  vb.set(x + 1, y0 + h - 1, z, `flag_${color}[facing=south]`).set(x + 2, y0 + h - 1, z, `flag_${color}[facing=south]`);
+  vb.set(x + 1, y0 + h - 2, z, `flag_${color}[facing=south]`);
 }
 
 /* a street lamp: a post with a lantern hung from an arm */
