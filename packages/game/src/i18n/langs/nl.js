@@ -1800,8 +1800,12 @@ export const NL = {
   "Your room code - your partner types it to join": "Je kamercode - je partner typt hem in om mee te doen",
   "Each player founds a castle on the same map and keeps their own resources. You fight the horde together.":
     "Elke speler sticht een kasteel op dezelfde kaart en houdt zijn eigen grondstoffen. Jullie bevechten de horde samen.",
-  "Dark veil, Knight of Darkness, Winter Feast: a night and a winter to survive.": "Donkere sluier, Ridder van de Duisternis, Winterfeest: een nacht en een winter om te overleven.",
-  "Towers, walls and gates reach farther, and the ranking lists every player in co-op.": "Torens, muren en poorten reiken verder, en het klassement toont alle spelers in coöp.",
-  "Units are drawn at full size, and buildings accept rougher ground.": "Eenheden worden op volle grootte getekend en gebouwen accepteren ruiger terrein.",
-  "The co-op window wears the menu buttons and has Copy and Paste for the room code.": "Het coöp-venster draagt de menuknoppen en heeft Kopiëren en Plakken voor de kamercode.",
+  "Dark veil, Knight of Darkness, Winter Feast: a night and a winter to survive.":
+    "Donkere sluier, Ridder van de Duisternis, Winterfeest: een nacht en een winter om te overleven.",
+  "Towers, walls and gates reach farther, and the ranking lists every player in co-op.":
+    "Torens, muren en poorten reiken verder, en het klassement toont alle spelers in coöp.",
+  "Units are drawn at full size, and buildings accept rougher ground.":
+    "Eenheden worden op volle grootte getekend en gebouwen accepteren ruiger terrein.",
+  "The co-op window wears the menu buttons and has Copy and Paste for the room code.":
+    "Het coöp-venster draagt de menuknoppen en heeft Kopiëren en Plakken voor de kamercode.",
 };

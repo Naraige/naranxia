@@ -1784,8 +1784,12 @@ export const TR = {
   "Your room code - your partner types it to join": "Oda kodun - ortağın katılmak için bunu yazar",
   "Each player founds a castle on the same map and keeps their own resources. You fight the horde together.":
     "Her oyuncu aynı haritada bir kale kurar ve kendi kaynaklarını korur. Sürüyle birlikte savaşırsınız.",
-  "Dark veil, Knight of Darkness, Winter Feast: a night and a winter to survive.": "Karanlık perde, Karanlık Şövalye, Kış Şöleni: hayatta kalınacak bir gece ve bir kış.",
-  "Towers, walls and gates reach farther, and the ranking lists every player in co-op.": "Kuleler, surlar ve kapılar daha uzağa erişir ve sıralama kooperatifte tüm oyuncuları listeler.",
-  "Units are drawn at full size, and buildings accept rougher ground.": "Birimler tam boyutta çizilir ve binalar daha engebeli arazide durabilir.",
-  "The co-op window wears the menu buttons and has Copy and Paste for the room code.": "Kooperatif penceresi menü düğmelerini taşır ve oda kodu için Kopyala ve Yapıştır içerir.",
+  "Dark veil, Knight of Darkness, Winter Feast: a night and a winter to survive.":
+    "Karanlık perde, Karanlık Şövalye, Kış Şöleni: hayatta kalınacak bir gece ve bir kış.",
+  "Towers, walls and gates reach farther, and the ranking lists every player in co-op.":
+    "Kuleler, surlar ve kapılar daha uzağa erişir ve sıralama kooperatifte tüm oyuncuları listeler.",
+  "Units are drawn at full size, and buildings accept rougher ground.":
+    "Birimler tam boyutta çizilir ve binalar daha engebeli arazide durabilir.",
+  "The co-op window wears the menu buttons and has Copy and Paste for the room code.":
+    "Kooperatif penceresi menü düğmelerini taşır ve oda kodu için Kopyala ve Yapıştır içerir.",
 };
