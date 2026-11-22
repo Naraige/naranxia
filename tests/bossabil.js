@@ -28,7 +28,8 @@ async () => {
     const b = mk(0);
     b.hp = 3000;
     for (let i = 0; i < 400; i++) update(0.05);
-    O.heal = b.hp > 3000;
+    /* the first boss is the Knight of Darkness (v98): he no longer heals, his power is the dark he carries (features test) */
+    O.heal = b.hp <= 3000;
     b.hp = 0;
   }
   {
