@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-22 · v100
+
+- Une seule mise à jour pour tout (demande du Roi): v98 (voile, Chevalier des Ténèbres, nom du roi), v99 (Festin d'hiver), fenêtre coop (#46), portées, tailles, classement (#48 #49). Les versions v98 et v99 ne sont jamais sorties (runs annulés); `announce/v98.md` et `v99.md` supprimés.
+- Notes et traductions: 3 lignes neuves + 1 ligne (tailles) pour l'annonce; les autres reprennent celles de v98/v99.
+- Détail de chaque lot: entrées ci-dessous.
+
 ## 2026-11-22 · tailles, portées, classement (#48, #49), pour v100
 
 - Demande du Roi: unités / zone de construction / portée des bâtiments à réajuster; classement avec tous les joueurs même en coop; « château détruit = game over pour le joueur » (noté sur #47, pas codé).

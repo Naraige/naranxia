@@ -1787,4 +1787,8 @@ export const PL = {
   "Your room code - your partner types it to join": "Kod twojego pokoju - partner wpisuje go, aby dołączyć",
   "Each player founds a castle on the same map and keeps their own resources. You fight the horde together.":
     "Każdy gracz zakłada zamek na tej samej mapie i zachowuje własne zasoby. Razem walczycie z hordą.",
+  "Dark veil, Knight of Darkness, Winter Feast: a night and a winter to survive.": "Mroczna zasłona, Rycerz Ciemności, Zimowa Uczta: noc i zima do przetrwania.",
+  "Towers, walls and gates reach farther, and the ranking lists every player in co-op.": "Wieże, mury i bramy sięgają dalej, a ranking pokazuje wszystkich graczy w koopie.",
+  "Units are drawn at full size, and buildings accept rougher ground.": "Jednostki są rysowane w pełnym rozmiarze, a budynki znoszą bardziej nierówny teren.",
+  "The co-op window wears the menu buttons and has Copy and Paste for the room code.": "Okno koopa nosi przyciski menu i ma Kopiuj i Wklej dla kodu pokoju.",
 };
