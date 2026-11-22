@@ -1,8 +1,6 @@
-The night closes in: a dark veil, a Knight of Darkness and a king with your name.
+The Winter Feast: a world under snow and gold walking with the horde.
 
-- At night the unlit ground becomes a dark veil: your units cannot walk into it, except to reach a lit place.
-- Bannermen and captains carry their light through the veil: a troop can follow them into the night.
-- The first boss is now the Knight of Darkness: black armour, a great sword, and every light near him grows dim.
-- Name your king in your profile: his name is written everywhere in the game.
-- Seasonal events are coming: the title screen announces the event of the day.
-- Co-op convoys: a porter cut off from the road stays at work and the others carry his share.
+- Seasonal events now change the game. A game started during an event keeps it to its end, in solo and in co-op.
+- Winter Feast, from 1 December to 6 January: the world stays in winter, under snow most of the time.
+- Gift bearers walk with the horde during the feast: tall husks that sparkle, hard to kill, and rich in gold for the player who strikes them down.
+- Three more events are on the calendar: Spring Fair, Midsummer Fires and Night of the Horde.

@@ -1,3 +1,4 @@
+import { eventId } from "../core/seasonal-events.js";
 import { campsState } from "../ai/camps.js";
 import { laneSpawnIdx, WSEE } from "../ai/zombie-lanes.js";
 import { initAI } from "../ai/kingdoms.js";
@@ -55,6 +56,8 @@ export function pickLanes() {
 
 export function reset() {
   sessionState.jrn = [];
+  sessionState.sev = sessionState.sevPick != null ? sessionState.sevPick : eventId();
+  sessionState.sevPick = null;
   evReset();
   diagnosticsState.DEVU = false;
   diagnosticsState.devOpen = false;

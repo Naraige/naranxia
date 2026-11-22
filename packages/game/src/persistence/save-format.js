@@ -216,6 +216,13 @@ export const SAVA = {
       sessionState.waveN = v;
     },
   ],
+  /* v99: the seasonal event of the game (absent from older saves: none) */
+  SEV: [
+    () => sessionState.sev || "",
+    (v) => {
+      sessionState.sev = typeof v === "string" ? v : "";
+    },
+  ],
   JRN: [
     () => sessionState.jrn || [],
     (v) => {

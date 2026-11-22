@@ -1766,4 +1766,17 @@ export const PL = {
   "Spring Fair": "Wiosenny Jarmark",
   "Midsummer Fires": "Ognie Sobótkowe",
   "Night of the Horde": "Noc Hordy",
+  "The Winter Feast: a world under snow and gold walking with the horde.":
+    "Zimowa Uczta: świat pod śniegiem i złoto idące z hordą.",
+  "Seasonal events now change the game. A game started during an event keeps it to its end, in solo and in co-op.":
+    "Wydarzenia sezonowe zmieniają teraz grę. Rozgrywka rozpoczęta podczas wydarzenia zachowuje je do końca, solo i w co-op.",
+  "Winter Feast, from 1 December to 6 January: the world stays in winter, under snow most of the time.":
+    "Zimowa Uczta, od 1 grudnia do 6 stycznia: świat pozostaje w zimie, przez większość czasu pod śniegiem.",
+  "Gift bearers walk with the horde during the feast: tall husks that sparkle, hard to kill, and rich in gold for the player who strikes them down.":
+    "Podczas uczty z hordą idą nosiciele darów: wysokie, skrzące się łupiny, trudne do zabicia i bogate w złoto dla gracza, który je powali.",
+  "Three more events are on the calendar: Spring Fair, Midsummer Fires and Night of the Horde.":
+    "W kalendarzu są jeszcze trzy wydarzenia: Wiosenny Jarmark, Ognie Sobótkowe i Noc Hordy.",
+  "Winter Feast - gift bearers walk with the horde, strike them down for gold":
+    "Zimowa Uczta - nosiciele darów idą z hordą, powal ich dla złota",
+  "Gift bearer slain: +{0} gold": "Nosiciel darów powalony: +{0} złota",
 };

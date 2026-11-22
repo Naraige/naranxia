@@ -340,6 +340,12 @@ export function installBrowserConsole() {
         wavesState.hordeOn = value;
       },
     },
+    sev: {
+      get: () => sessionState.sev,
+      set: (value) => {
+        sessionState.sev = value;
+      },
+    },
     hordeT: {
       get: () => wavesState.hordeT,
       set: (value) => {

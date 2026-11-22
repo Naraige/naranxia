@@ -18,6 +18,9 @@ export const sessionState = {
   kills: 0,
   best: { w: 0, k: 0 },
   jrn: [],
+  /* the seasonal event of this game ("" for none), taken when it starts; sevPick: the one the co-op host sent, null in solo */
+  sev: "",
+  sevPick: null,
   clockT: 0,
   camSave: null,
   units: undefined,

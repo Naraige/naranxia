@@ -31,8 +31,10 @@ let _wgF;
 let _wgS;
 let _wg;
 
+/* the Winter Feast (the seasonal event of the game, sessionState.sev) keeps the world in winter and under snow most of the time */
+const feast = () => sessionState.sev === "winter";
 export const seasonIdx = () =>
-  sessionState.inGame && sessionState.started ? (((sessionState.waveN | 0) / 4) | 0) % 4 : 0;
+  sessionState.inGame && sessionState.started ? (feast() ? 3 : (((sessionState.waveN | 0) / 4) | 0) % 4) : 0;
 
 /* weather of a wave (0 clear, 1 rain, 2 fog, 3 snow): also used by the title screen for the last game */
 export function wxKindFor(w) {
@@ -45,7 +47,12 @@ export function wxKindFor(w) {
   if (s === 2) return h < 30 ? 2 : h < 60 ? 1 : 0;
   return h < 55 ? 3 : h < 65 ? 2 : 0;
 }
-export const wxKind = () => (sessionState.inGame && sessionState.started ? wxKindFor(sessionState.waveN) : 0);
+export const wxKind = () => {
+  if (!sessionState.inGame || !sessionState.started) return 0;
+  if (!feast()) return wxKindFor(sessionState.waveN);
+  const h = (((sessionState.waveN | 0) * 2654435761) >>> 0) % 100;
+  return h < 72 ? 3 : h < 82 ? 2 : 0;
+};
 
 export const wxLabel = () => SEAS[seasonIdx()] + (wxKind() ? " - " + WXN[wxKind()] : "");
 

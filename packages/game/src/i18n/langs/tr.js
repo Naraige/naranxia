@@ -1763,4 +1763,17 @@ export const TR = {
   "Spring Fair": "Bahar Panayırı",
   "Midsummer Fires": "Yaz Ortası Ateşleri",
   "Night of the Horde": "Sürü Gecesi",
+  "The Winter Feast: a world under snow and gold walking with the horde.":
+    "Kış Şöleni: kar altında bir dünya ve sürüyle birlikte yürüyen altın.",
+  "Seasonal events now change the game. A game started during an event keeps it to its end, in solo and in co-op.":
+    "Mevsimlik etkinlikler artık oyunu değiştiriyor. Bir etkinlik sırasında başlayan oyun onu sonuna kadar korur, tek başına da co-op'ta da.",
+  "Winter Feast, from 1 December to 6 January: the world stays in winter, under snow most of the time.":
+    "Kış Şöleni, 1 Aralık'tan 6 Ocak'a: dünya kışta kalır, çoğu zaman kar altında.",
+  "Gift bearers walk with the horde during the feast: tall husks that sparkle, hard to kill, and rich in gold for the player who strikes them down.":
+    "Şölen boyunca armağan taşıyıcılar sürüyle yürür: ışıldayan, öldürmesi zor iri kabuklar; onları deviren oyuncuya bol altın verir.",
+  "Three more events are on the calendar: Spring Fair, Midsummer Fires and Night of the Horde.":
+    "Takvimde üç etkinlik daha var: Bahar Panayırı, Yaz Ortası Ateşleri ve Sürü Gecesi.",
+  "Winter Feast - gift bearers walk with the horde, strike them down for gold":
+    "Kış Şöleni - armağan taşıyıcılar sürüyle yürüyor, altınları için onları devir",
+  "Gift bearer slain: +{0} gold": "Armağan taşıyıcı devrildi: +{0} altın",
 };

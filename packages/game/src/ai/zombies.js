@@ -1,5 +1,5 @@
 import { absorbUnit } from "./kingdoms.js";
-import { bossAI } from "./wave-boss.js";
+import { bossAI, giftAI } from "./wave-boss.js";
 import { SAPL } from "./workplaces.js";
 import { baseZF, laneWalk } from "./zombie-lanes.js";
 import { snd } from "../audio/sound.js";
@@ -462,6 +462,7 @@ function zTgt(u, b, bd, d, dt) {
 
 export function zomb(u, d, dt) {
   if (u.boss) bossAI(u, dt);
+  if (u.gift) giftAI(u, dt);
   if (u.home) {
     const hm = u.home,
       far = dist(u.x, u.y, hm.x, hm.y);

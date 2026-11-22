@@ -247,6 +247,7 @@ export function mpBegin(st) {
   terrainState.CX = st.cx;
   terrainState.CY = st.cy;
   sessionState.CROT = st.cr & 3;
+  sessionState.sevPick = typeof st.ev === "string" ? st.ev : "";
   sessionState.diffI = 0;
   sessionState.mapSize = st.ms === 1 || st.ms === 2 ? st.ms : 0;
   swarmState.SWF = 100;

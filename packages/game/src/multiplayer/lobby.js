@@ -1,3 +1,4 @@
+import { eventId } from "../core/seasonal-events.js";
 import { GVER } from "../core/version.js";
 import { CSZ } from "../gameplay/rules.js";
 import { sessionState, worldSizePref } from "../gameplay/session.js";
@@ -119,6 +120,7 @@ export function mpStart() {
     d: sessionState.diffI,
     ms: worldSizePref(),
     sw: swarmState.SWF,
+    ev: eventId() /* the seasonal event of the host: both machines play it */,
   };
   mpSend(st);
   mpBegin(st);

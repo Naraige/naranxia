@@ -1779,4 +1779,17 @@ export const NL = {
   "Spring Fair": "Lentemarkt",
   "Midsummer Fires": "Midzomervuren",
   "Night of the Horde": "Nacht van de Horde",
+  "The Winter Feast: a world under snow and gold walking with the horde.":
+    "Het Winterfeest: een wereld onder de sneeuw en goud dat met de horde meeloopt.",
+  "Seasonal events now change the game. A game started during an event keeps it to its end, in solo and in co-op.":
+    "Seizoensevenementen veranderen nu het spel. Een spel dat tijdens een evenement begint, houdt het tot het einde, solo en in co-op.",
+  "Winter Feast, from 1 December to 6 January: the world stays in winter, under snow most of the time.":
+    "Winterfeest, van 1 december tot 6 januari: de wereld blijft in de winter, meestal onder de sneeuw.",
+  "Gift bearers walk with the horde during the feast: tall husks that sparkle, hard to kill, and rich in gold for the player who strikes them down.":
+    "Tijdens het feest lopen geschenkdragers met de horde mee: grote, fonkelende hulzen, moeilijk te doden en rijk aan goud voor de speler die ze neerslaat.",
+  "Three more events are on the calendar: Spring Fair, Midsummer Fires and Night of the Horde.":
+    "Er staan nog drie evenementen op de kalender: Lentemarkt, Midzomervuren en Nacht van de Horde.",
+  "Winter Feast - gift bearers walk with the horde, strike them down for gold":
+    "Winterfeest - geschenkdragers lopen met de horde mee, sla ze neer voor hun goud",
+  "Gift bearer slain: +{0} gold": "Geschenkdrager verslagen: +{0} goud",
 };

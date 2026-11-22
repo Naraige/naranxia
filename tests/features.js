@@ -225,6 +225,29 @@ async () => {
   chk("saveTraps", SPK.get(ti) === 77 && SPK.size === 1);
   chk("saveGoals", OBJ.w === 3 && OBJ.k === 2);
   chk("saveStats", GST.g === 1234 && GST.k.knight === 2);
+  /* Winter Feast (v99): the game that carries the event stays in winter, gift bearers walk with the horde and pay who strikes them */
+  {
+    const none = units.filter((u) => u.gift).length;
+    sev = "winter";
+    started = true;
+    waveN = 5;
+    const winter = seasonIdx() === 3;
+    wave();
+    const gifts = units.filter((u) => u.gift);
+    chk("feastWinter", winter && none === 0);
+    chk(
+      "feastGiftBearers",
+      gifts.length === 2 && gifts.every((u) => u.type === "husk" && u.sv === 1.5 && u.hp > T.husk.hp * 4),
+    );
+    const g0 = RESP[0].g;
+    for (const u of units) if (u.t === 1) u.hp = 0;
+    SW.n = 0;
+    for (let i = 0; i < 3; i++) update(0.05);
+    chk("feastGiftPays", RESP[0].g >= g0 + 2 * (60 + waveN * 6));
+    sev = "";
+    waveOn = hordeOn = false;
+    chk("feastOver", seasonIdx() !== 3 || ((waveN / 4) | 0) % 4 === 3);
+  }
   Math.random = RR;
   for (let i = 0; i < 3; i++) {
     render3D(0.05);

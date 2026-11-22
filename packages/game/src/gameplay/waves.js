@@ -1,7 +1,7 @@
 import { bastionHas } from "./economy.js";
 import { baseTrait, BASES, campLabel } from "../ai/kingdoms.js";
 import { evPush } from "./events.js";
-import { bossSpawn } from "../ai/wave-boss.js";
+import { bossSpawn, giftSpawn } from "../ai/wave-boss.js";
 import { laneSpawnIdx, zcount } from "../ai/zombie-lanes.js";
 import { snd } from "../audio/sound.js";
 import { hyp, rnd } from "../core/math.js";
@@ -67,6 +67,7 @@ export function wave() {
     sessionState.bannerS2 = "BLOOD MOON - a bigger, faster horde! " + sessionState.bannerS2;
   }
   bossSpawn(L0);
+  giftSpawn(L0);
   if (mc) {
     const g = 40 + sessionState.waveN * 10,
       w = 30 + sessionState.waveN * 6,

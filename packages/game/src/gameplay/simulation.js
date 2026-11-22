@@ -21,7 +21,7 @@ import { HOMEC, killPl, LPL, playersState, setPl } from "./players.js";
 import { edgeDist, GRNG, RS, RS2, RT_TIME, rulesState, SH, T, TS, TW } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { sessionState } from "./session.js";
-import { bossFell } from "../ai/wave-boss.js";
+import { bossFell, giftGold } from "../ai/wave-boss.js";
 import { kingKillXp } from "./king-skills.js";
 import { shelGo, shelState, shelTick } from "./shelter.js";
 import { ugBuild, ugNear, UGU } from "./spatial-index.js";
@@ -863,6 +863,16 @@ export function update0(dt) {
                         : 2;
           playersState.RESP[killPl(u)].g += gg;
           puff(u.x, u.y, "#ffd23c", 3, 50);
+          if (u.gift) {
+            /* Winter Feast: the gift bearer pays the player who struck it down */
+            playersState.RESP[killPl(u)].g += giftGold();
+            puff(u.x, u.y, "#ffd23c", 14, 90, { T: 1, z: 0.8, vz: 2.4, g: 4, s: 0.14 });
+            if (killPl(u) === LPL()) {
+              hudDisplayState.msgS = "Gift bearer slain: +" + giftGold() + " gold";
+              hudDisplayState.msgT = 3;
+              snd("convoy");
+            }
+          }
         }
       }
     }

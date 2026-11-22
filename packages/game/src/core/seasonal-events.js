@@ -1,8 +1,10 @@
 /* ================= SEASONAL EVENTS: the calendar (the King: "prepare seasonal event") =================
-   Events of the real year, by the date of the player's machine. This module is the groundwork: which event runs today, shown on the
-   title screen. It is visual only and must stay so as it is: the simulation never reads the clock (co-op runs in lockstep). An event
-   that changes the rules will have to be chosen by the host when the game starts and travel in the start message and the save, as the
-   world seed does.
+   Events of the real year, by the date of the player's machine: which event runs today, shown on the title screen.
+   The simulation never reads the clock (co-op runs in lockstep): a game takes its event once, when it starts (sessionState.sev, saved;
+   in co-op the host's, sent in the start message), and plays it to its end even if the feast is over by then.
+   What an event does in a game: the Winter Feast (v99) snows the world in (rendering/weather.js) and sends gift bearers with the horde
+   (ai/wave-boss.js). The three others only show on the title for now.
+   An automated browser has no event unless window.__EVENT names one: the tests play the same game all year.
    from / to: [month 1..12, day], both included; an event may run over the new year. */
 export const SEASONAL = [
   { id: "winter", name: "Winter Feast", from: [12, 1], to: [1, 6], col: "#bfe6ff" },
@@ -17,6 +19,7 @@ const key = (m, d) => m * 100 + d;
 export function seasonalEvent(now) {
   if (typeof window !== "undefined" && window.__EVENT !== undefined)
     return SEASONAL.find((e) => e.id === window.__EVENT) || null;
+  if (!now && typeof navigator !== "undefined" && navigator.webdriver) return null;
   const t = now || new Date(),
     k = key(t.getMonth() + 1, t.getDate());
   for (const e of SEASONAL) {
@@ -26,3 +29,6 @@ export function seasonalEvent(now) {
   }
   return null;
 }
+
+/* the event a game that starts now takes ("" for none) */
+export const eventId = () => (seasonalEvent() || { id: "" }).id;

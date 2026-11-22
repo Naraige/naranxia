@@ -11,6 +11,7 @@ import { spawnAnchor } from "../gameplay/waves.js";
 import { TC } from "../i18n/language.js";
 import { puff, ring, shake } from "../rendering/effects.js";
 import { canvasesState } from "../ui/canvases.js";
+import { hudDisplayState } from "../ui/hud-state.js";
 
 /* ================= WAVE BOSS (#7) =================
    Every 10th wave (10, 20, 30...) one giant brute joins the horde on the first route. It is a normal brute (flag `boss`, scale 1.6, much more
@@ -131,6 +132,37 @@ export function bossShade() {
     for (const u of B) if (dist(x, y, u.x, u.y) < SHADE_R) return SHADE_K;
     return 1;
   };
+}
+
+/* WINTER FEAST (sessionState.sev "winter"): gift bearers walk with the horde, one for every four waves and one more (six at most):
+   a husk half as tall again with five times the life, that pays GIFT gold to the player who strikes it down. Simulation, with the
+   seeded rnd of the wave; the sparkle that shows them is visual (puff). The unit keeps `gift` in saves. */
+export const giftGold = () => 60 + sessionState.waveN * 6;
+export function giftSpawn(L0) {
+  if (sessionState.sev !== "winter" || !L0.length) return;
+  const n = Math.min(6, 1 + ((sessionState.waveN / 4) | 0));
+  for (let i = 0; i < n; i++) {
+    const L = L0[i % L0.length],
+      an = spawnAnchor(L),
+      x = (an.p[0] + rnd(-4, 4)) * TS,
+      y = (an.p[1] + rnd(-4, 4)) * TS;
+    if (solidAt(x, y) || zcount() >= 720) continue;
+    const z = mkU(1, "husk", x, y, null, L);
+    z.gift = 1;
+    z.sv = 1.5;
+    z.hp *= 5 * (1 + 0.05 * sessionState.waveN);
+    z.ph = an.ph;
+    sessionState.units.push(z);
+  }
+  hudDisplayState.msgS = "Winter Feast - gift bearers walk with the horde, strike them down for gold";
+  hudDisplayState.msgT = 6;
+}
+export function giftAI(u, dt) {
+  u.gs = (u.gs || 0) - dt;
+  if (u.gs > 0) return;
+  u.gs = 0.5;
+  puff(u.x, u.y, "#ffd23c", 2, 26, { T: 0.9, z: 1.1, vz: 1.2, g: -0.5, s: 0.11 });
+  puff(u.x, u.y, "#e8f6ff", 1, 20, { T: 0.7, z: 1.3, vz: 0.8, g: -0.3, s: 0.09 });
 }
 
 export function bossAI(u, dt) {
