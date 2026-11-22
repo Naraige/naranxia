@@ -411,7 +411,7 @@ export function initializeLobby() {
     const b = $m("mpCopy"),
       code = MP.code || "";
     if (!code) return;
-    let ok = false;
+    let ok;
     try {
       await navigator.clipboard.writeText(code);
       ok = true;
