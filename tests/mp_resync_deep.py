@@ -81,6 +81,7 @@ def resync(lbl,page,js,state):
         pump(A,B)
         a=json.loads(A.evaluate(RSQ));b=json.loads(B.evaluate(RSQ))
         if a['ep']==ep+1 and b['ep']==ep+1 and not a['rsy'] and not b['rsy']:done=True;break
+    if not done:P(lbl,'stuck:',A.evaluate("()=>JSON.stringify({over:over,paused:paused,tick:MP.tick,stall:MP.stall,ds:MP.desync})"))
     need(done,lbl+': resync done');
     if not done:return
     t1=a['tick'];P(lbl,'resynced in',round(time.time()-t0,1),'s, epoch',ep+1,'ticks A',a['tick'],'B',b['tick'],'| state after A',A.evaluate(state),'B',B.evaluate(state))
@@ -121,7 +122,8 @@ with sync_playwright() as p:
     need('g' in json.loads(A.evaluate(CV))['cv'],'convoy on the road before resync 2')
     resync('2 convoy',B,"()=>{RESP[1].w+=9;const u=units.find(q=>q.cv)||units[0];u.x+=6}",CV)
     # 3. a raid: wave 7 brings the wolf pack, and zombies stand at both castles
-    A.evaluate("()=>{mpPush({k:'zw',n:6});mpPush({k:'zz',n:14,r:10,p:0});mpPush({k:'zz',n:14,r:10,p:1})}");waitT(3)
+    # (the rings are counted from the middle of a castle, which is 20 tiles wide since v97: 17 to 18 tiles is the old 9 to 10 beyond its walls)
+    A.evaluate("()=>{mpPush({k:'zw',n:6});mpPush({k:'zz',n:14,r:18,p:0});mpPush({k:'zz',n:14,r:18,p:1})}");waitT(3)
     RD="()=>JSON.stringify({wave:waveN,on:waveOn,z:units.filter(u=>u.t===1).length,sw:SW.n,run:units.filter(u=>u.type==='runner').length})"
     resync('3 raid',B,"()=>{RESP[0].g+=17;const u=units.find(q=>q.t===1)||units[0];u.hp-=2;u.y+=9}",RD)
     # 4. King skills running
@@ -132,7 +134,7 @@ with sync_playwright() as p:
     KS="()=>JSON.stringify({kings:units.filter(u=>u.type==='king').map(u=>[u.pl|0,u.kt|0,Math.round(u.hp),Object.keys(u).filter(k=>k.startsWith('sk_')||k==='chT'||k==='wcT').map(k=>k+'='+(+u[k]).toFixed(1)).join(' ')]),buffed:units.filter(u=>u.buff>1).length,time:+time.toFixed(1)})"
     resync('4 king skill',B,"()=>{RESP[0].g+=17;const u=units.find(q=>q.type==='king')||units[0];u.hp-=5}",KS)
     # 5. everything at once, and this time the HOST is the corrupted machine (its state is the one both keep)
-    A.evaluate("(e)=>{mpPush({k:'zev',e,ttl:600});mpPush({k:'zz',n:20,r:9,p:0});mpPush({k:'zz',n:20,r:9,p:1})}",{'k':'car','i':9005,'a':{'g':100,'w':60,'s':40}})
+    A.evaluate("(e)=>{mpPush({k:'zev',e,ttl:600});mpPush({k:'zz',n:20,r:17,p:0});mpPush({k:'zz',n:20,r:17,p:1})}",{'k':'car','i':9005,'a':{'g':100,'w':60,'s':40}})
     A.evaluate("()=>{sendConvoy({g:0,w:60,s:30,f:0})}");waitT(2.5)
     ALL="()=>JSON.stringify({ev:EVS.cur&&EVS.cur.i,q:EVS.q.length,cv:units.filter(u=>u.cv).length,z:units.filter(u=>u.t===1).length,sw:SW.n})"
     resync('5 all, host corrupted',A,"()=>{RESP[1].g+=31;const u=units.find(q=>q.t===1)||units[0];u.x+=12}",ALL)
