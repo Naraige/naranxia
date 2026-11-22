@@ -7,7 +7,7 @@ import fontroute
 import mp_harness as harness
 # co-op soak: a long game of two headless clients with everything going on (building by both players, training, fights at both castles,
 # waves, convoys both ways, choice events, quests, knights sent against a rebel camp, King skills) and NO corruption: the two machines
-# must never differ. Every tick is compared (epoch:tick) with the wide digest of mp_resync_deep.py; the first difference is printed as
+# must never differ. The castles are made very tough at the first horde: since the dark veil of the night (v98) soldiers hold at the edge of the light, and a fallen castle ends the game before the last tick. Every tick is compared (epoch:tick) with the wide digest of mp_resync_deep.py; the first difference is printed as
 # FIRST DIVERGENCE with the units / structures / parts that differ, and any resync (the epoch moves) fails the test.
 # usage: python3 tests/mp_soak.py [naranxia_readable.html] [ticks, default 6000]
 html=sys.argv[1] if len(sys.argv)>1 else 'naranxia_readable.html'
@@ -15,7 +15,7 @@ TICKS=int(sys.argv[2]) if len(sys.argv)>2 else 6000
 INIT="""()=>{'use strict';window.__out=[];MP.dc={readyState:'open',send:s=>window.__out.push(s)};
  render3D=function(){};
  const _e=mpExec;mpExec=function(c,m){if(c.k==='kx'){for(const k of units)if(k.type==='king')kingXp(k,c.n);return}
-  if(c.k==='zz'){const cs=c.p?CS2:CS;for(let i=0;i<c.n;i++){const a=i/c.n*6.283,f=freeTile(Math.round(cs.tx+Math.cos(a)*c.r),Math.round(cs.ty+Math.sin(a)*c.r));if(f)units.push(mkU(1,i%5===4?'runner':'zombie',(f[0]+.5)*TS,(f[1]+.5)*TS))}return}
+  if(c.k==='zz'){const cs=c.p?CS2:CS;CS.max=CS.hp=3e5;CS2.max=CS2.hp=3e5;for(let i=0;i<c.n;i++){const a=i/c.n*6.283,f=freeTile(Math.round(cs.tx+Math.cos(a)*c.r),Math.round(cs.ty+Math.sin(a)*c.r));if(f)units.push(mkU(1,i%5===4?'runner':'zombie',(f[0]+.5)*TS,(f[1]+.5)*TS))}return}
   if(c.k==='zev'){evPush(c.e);if(c.ttl&&EVS.cur&&EVS.cur.i===c.e.i)EVS.cur.exp=time+c.ttl;return}
   if(c.k==='zw'){waveN=c.n;waveT=0;return}
   if(c.k==='zk'){const cs=c.p?CS2:CS;setPl(c.p);for(let i=0;i<c.n;i++){const f=freeTile(cs.tx+7+i%4,cs.ty+7+((i/4)|0));if(f)units.push(mkU(0,i%3?'knight':'archer',(f[0]+.5)*TS,(f[1]+.5)*TS))}setPl(MP.host?0:1);return}
