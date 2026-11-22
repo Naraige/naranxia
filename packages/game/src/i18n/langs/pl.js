@@ -1417,11 +1417,9 @@ export const PL = {
   "A wave is about to start: gather your troops near the castle and walls":
     "Zaraz zacznie się fala: zbierz wojska przy zamku i murach",
   "Got it": "Rozumiem",
-  "The Hollow Warden": "Pusty Strażnik",
   "The Bell-Bearer": "Dzwonnik",
   "The Frost King": "Król Mrozu",
   "The Hive Queen": "Królowa Roju",
-  "Once he guarded the old gates. Now he guards nothing.": "Kiedyś strzegł starych bram. Teraz nie strzeże niczego.",
   "He rang the last bell of the old world. The dead still answer.":
     "Uderzył w ostatni dzwon starego świata. Umarli wciąż odpowiadają.",
   "He ruled the northern snows. The cold still obeys him.": "Władał śniegami północy. Chłód wciąż jest mu posłuszny.",
@@ -1431,8 +1429,8 @@ export const PL = {
   "Journal of the realm": "Dziennik królestwa",
   "Wave {0}: {1} walks with the horde.": "Fala {0}: {1} kroczy z hordą.",
   "Wave {0}: {1} has fallen. The bastion holds.": "Fala {0}: {1} poległ. Bastion się trzyma.",
-  "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.":
-    "Pusty Strażnik: Trzymał stare bramy, aż horda przez nie przeszła. Śmierć nie nauczyła go, by przestał strzec. Nauczyła go, by przestał wybierać, kogo wpuścić.",
+  "The Knight of Darkness: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.":
+    "Rycerz Ciemności: Trzymał stare bramy, aż horda przez nie przeszła. Śmierć nie nauczyła go, by przestał strzec. Nauczyła go, by przestał wybierać, kogo wpuścić.",
   "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.":
     "Dzwonnik: Uderzył w ostatni dzwon starego świata, a umarli przyszli słuchać. Teraz bije w niego znowu, a skorupy przychodzą na jego wezwanie.",
   "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.":
@@ -1743,4 +1741,29 @@ export const PL = {
     "Mury, wieże i bramy stawia się na siatce czterech pól: grube wały z chodnikiem, wielkie wieże, brama z kratą.",
   "Saves from older versions load without their old walls, towers and gates.":
     "Zapisy ze starszych wersji wczytują się bez dawnych murów, wież i bram.",
+  "The night closes in: a dark veil, a Knight of Darkness and a king with your name.":
+    "Noc się zaciska: mroczna zasłona, Rycerz Ciemności i król z twoim imieniem.",
+  "At night the unlit ground becomes a dark veil: your units cannot walk into it, except to reach a lit place.":
+    "Nocą nieoświetlona ziemia staje się mroczną zasłoną: twoje jednostki nie mogą w nią wejść, chyba że idą do oświetlonego miejsca.",
+  "Bannermen and captains carry their light through the veil: a troop can follow them into the night.":
+    "Chorążowie i kapitanowie niosą swoje światło przez zasłonę: oddział może pójść za nimi w noc.",
+  "The first boss is now the Knight of Darkness: black armour, a great sword, and every light near him grows dim.":
+    "Pierwszym bossem jest teraz Rycerz Ciemności: czarna zbroja, wielki miecz, a każde światło przy nim słabnie.",
+  "Name your king in your profile: his name is written everywhere in the game.":
+    "Nadaj imię swojemu królowi w profilu: jego imię pojawia się w całej grze.",
+  "Seasonal events are coming: the title screen announces the event of the day.":
+    "Nadchodzą wydarzenia sezonowe: ekran tytułowy zapowiada wydarzenie dnia.",
+  "Co-op convoys: a porter cut off from the road stays at work and the others carry his share.":
+    "Konwoje w co-op: tragarz odcięty od drogi zostaje przy pracy, a pozostali niosą jego część.",
+  "The dark veil bars the way - only a bannerman or a captain carries light through the night":
+    "Mroczna zasłona zagradza drogę - tylko chorąży lub kapitan niesie światło przez noc",
+  "Your king": "Twój król",
+  "The Knight of Darkness": "Rycerz Ciemności",
+  "He swore to hold the light. The dark kept his oath, and kept him.":
+    "Przysiągł strzec światła. Ciemność zachowała jego przysięgę, i jego samego.",
+  "Seasonal event": "Wydarzenie sezonowe",
+  "Winter Feast": "Zimowa Uczta",
+  "Spring Fair": "Wiosenny Jarmark",
+  "Midsummer Fires": "Ognie Sobótkowe",
+  "Night of the Horde": "Noc Hordy",
 };

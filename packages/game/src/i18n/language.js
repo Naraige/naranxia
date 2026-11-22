@@ -26,11 +26,24 @@ export const LANGS = [
 
 export let LANG = 0;
 
+/* the king of the player: every text names King Naraige, and the name chosen in the profile takes his place (the credits keep theirs) */
+const KING0 = "Naraige";
+let kingIn = null;
+const crown = (s, r) =>
+  languageState.king && r.indexOf(KING0) >= 0 && s.indexOf("Made by") !== 0
+    ? r.split(KING0).join(languageState.king)
+    : r;
+
 export function L(s) {
-  if (!LANG || typeof s !== "string" || !s) return s;
+  if (typeof s !== "string" || !s) return s;
+  if (!LANG) return crown(s, s);
+  if (kingIn !== languageState.king) {
+    kingIn = languageState.king;
+    TRC.clear();
+  }
   let r = TRC.get(s);
   if (r !== undefined) return r;
-  r = tr0(s);
+  r = crown(s, tr0(s));
   if (TRC.size > 8000) TRC.clear();
   TRC.set(s, r);
   return r;

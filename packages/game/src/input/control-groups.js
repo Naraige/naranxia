@@ -5,7 +5,7 @@ import { sessionState } from "../gameplay/session.js";
 import { mpChatI } from "../multiplayer/chat.js";
 import { CAM } from "../rendering/scene.js";
 import { hudDisplayState } from "../ui/hud-state.js";
-import { nmI } from "../ui/settings.js";
+import { nameTyping } from "../ui/settings.js";
 
 /* ---- control groups: Shift+1..9 recall, Ctrl+1..9 (or Shift+Alt+1..9) save ---- */
 const CG = {};
@@ -14,13 +14,7 @@ export function initializeControlGroups() {
   addEventListener(
     "keydown",
     (e) => {
-      if (
-        !sessionState.started ||
-        sessionState.over ||
-        document.activeElement === nmI ||
-        document.activeElement === mpChatI
-      )
-        return;
+      if (!sessionState.started || sessionState.over || nameTyping() || document.activeElement === mpChatI) return;
       const m = /^Digit([1-9])$/.exec(e.code);
       if (!m || !(e.ctrlKey || e.shiftKey || e.metaKey)) return;
       const d = m[1];

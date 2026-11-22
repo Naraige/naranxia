@@ -112,6 +112,10 @@ The King chose "versions directes": code a batch, test it, release it as the nex
 - Every text shown to players goes through `T_()` / `L()` with its translations (EN, FR, ES, DE, IT, PT) in `i18n/translations.js`.
   Templates use `{0}`; `L()` also splits on ' - ', ' | ' and 3 spaces, not on ': '. French uses "vous", German "du", Portuguese is European.
   Dutch, Polish and Turkish live in `i18n/langs/{nl,pl,tr}.js` and must get every new key too.
+- Night: while it is deep the unlit ground is the dark veil (`gameplay/light-state.js`): a player's unit in the light cannot step into it unless its order ends
+  in the light; bannerman and captain carry light. Lights are `lightSources()` (gameplay/lighting.js), refreshed twice a second into `LITL` (saved).
+  Seasonal events (`core/seasonal-events.js`) follow the real calendar and are visual only: the simulation never reads the clock.
+- The king's name of the player (`THEME.k`) replaces "Naraige" in every text inside `L()`: keep writing "King Naraige" in the English keys.
 - Test mode (F10) is solo only and blocks achievements and the best score (`DEVU`); the bug report (F8) only reads state.
 - Art direction approved by the King: Minecraft characters made the Blockbench way: the MC player model (8 px head,
   8x12x4 body, 4x12x4 limbs, outer layer with transparent pixels) plus 2 or 3 extra cubes per unit, the detail in pixel

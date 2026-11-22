@@ -190,6 +190,7 @@ export function vflash(x, y, h, s, c, T, ring) {
 let litTm = -9;
 
 export function updateLit() {
+  FOWU.litP.value.w = sessionState.clockT % 600; /* the clock of the dark veil (fog.js) */
   if (nightK < 0.02 || sessionState.clockT - litTm < 0.25) return;
   litTm = sessionState.clockT;
   litTex.fill(0);

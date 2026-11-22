@@ -962,7 +962,8 @@ export function zBuild(S, E) {
 export function zombieKit(type, ZV, P) {
   if (PXON && !window.__ZOLD) {
     const mk = ZV && ZV.hint === "boss" ? "boss" : type;
-    if (mut2(mk)) pxMutant(mk, type, ZV, P);
+    /* the first boss (bn 0) is the Knight of Darkness */
+    if (mut2(mk)) pxMutant(mk === "boss" && !(ZV.v | 0) ? "darkknight" : mk, type, ZV, P);
     else pxZombie(type, ZV, P);
     return;
   }

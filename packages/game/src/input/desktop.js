@@ -32,7 +32,7 @@ import { BK, NAMES } from "../ui/build-catalog.js";
 import { cv } from "../ui/canvases.js";
 import { hudState, inR, mmRect, selIdle, selPeas } from "../ui/hud.js";
 import { hudDisplayState } from "../ui/hud-state.js";
-import { isCode, KB, kbAct, kbCustom, kbPhys, layNote, nmI, saveKB } from "../ui/settings.js";
+import { isCode, KB, kbAct, kbCustom, kbPhys, layNote, nameTyping, saveKB } from "../ui/settings.js";
 import { mmToWorld } from "../ui/minimap.js";
 import { settingsState } from "../ui/panel-state.js";
 import { confirmPick, openPicker, pkRotate, PVH, PVW, sitePickerState } from "../ui/site-picker.js";
@@ -536,7 +536,7 @@ export function initializeDesktopInput() {
      Hard-wired beside the settings, only when the key is bound to no action: p = pan mode, + and = zoom in, - zoom out, , idle workers. */
   addEventListener("keydown", (e) => {
     aInit();
-    if (document.activeElement === nmI) return;
+    if (nameTyping()) return;
     let k = e.key.toLowerCase();
     const c = e.code || "";
     if (!e.ctrlKey && !e.altKey && !e.metaKey) layNote(c, e.key);

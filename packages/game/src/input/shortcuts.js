@@ -8,18 +8,18 @@ import { mpChatI } from "../multiplayer/chat.js";
 import { CAM } from "../rendering/scene.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { openMenu } from "../gameplay/lifecycle.js";
-import { nmI, settingsDebug, settingsState } from "../ui/settings.js";
+import { nameTyping, settingsDebug, settingsState } from "../ui/settings.js";
 import { troopPanelState } from "../ui/troop-panel.js";
 
 export function initializeShortcuts() {
   /* ---- Tab: jump to the last attack ---- */
   addEventListener("keydown", (e) => {
-    if (e.key === "F8" && document.activeElement !== mpChatI && document.activeElement !== nmI) {
+    if (e.key === "F8" && document.activeElement !== mpChatI && !nameTyping()) {
       e.preventDefault();
       bugReport();
       return;
     }
-    if (e.key === "F1" && document.activeElement !== mpChatI && document.activeElement !== nmI) {
+    if (e.key === "F1" && document.activeElement !== mpChatI && !nameTyping()) {
       e.preventDefault();
       if (sessionState.started && !settingsState.settingsOpen) {
         openMenu();
@@ -38,7 +38,7 @@ export function initializeShortcuts() {
       (e.key === "F2" || e.key === "²" || e.key === "`") &&
       sessionState.started &&
       document.activeElement !== mpChatI &&
-      document.activeElement !== nmI
+      !nameTyping()
     ) {
       e.preventDefault();
       troopPanelState.troopsOpen = !troopPanelState.troopsOpen;
@@ -78,6 +78,6 @@ export function initializeBuildShortcuts() {
   });
 
   addEventListener("keydown", (_e) => {
-    if (!sessionState.started || sessionState.over || document.activeElement === nmI) return;
+    if (!sessionState.started || sessionState.over || nameTyping()) return;
   });
 }

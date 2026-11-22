@@ -160,17 +160,21 @@ async () => {
     same = JSON.stringify(a) === JSON.stringify(b);
   // Captured from the v95 polish lots (lot A: route reach 112 tiles, contour spread of crowded hordes, terrain-aware lane routes #30, spawn patch that widens with the wave size, weighted unit separation with body block), identical on two runs: v94 release branch (main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix, spike removal) plus route bending.
   const expected = [
-    "-583886026:21750:4:0:1106:1.0000:sh9:nl0.90:f150:sp0:ro00:wk0:T1487526880:z133:pu3:fg1:fp0",
-    "666410675:26000:6:0:1119:1.0000:sh9:nl0.98:f150:sp0:ro00:wk0:T1487526880:z131:pu2:fg0:fp8",
-    "-1617127513:26000:6:0:1119:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z131:pu0:fg0:fp8",
-    "2073540987:26000:6:0:1119:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z131:pu0:fg0:fp8",
-    "-1677473867:26000:7:0:1122:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z130:pu0:fg0:fp8",
-    "1385208361:26000:30:0:1186:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z114:pu0:fg0:fp3",
-    "-218268378:25994:38:4:1190:1.0000:sh0:nl1.00:f150:sp0:ro11:wk2:T1487526880:z118:pu0:fg0:fp1",
-    "915996813:25910:122:0:1195:1.0000:sh0:nl1.00:f180:sp0:ro00:wk0:T-1883015902:z118:pu0:fg0:fp1",
+    "386421547:21750:4:0:1106:1.0000:sh9:nl0.90:f150:sp0:ro00:wk0:T1487526880:z133:pu3:fg1:fp0",
+    "-727594608:26000:6:0:1119:1.0000:sh9:nl0.98:f150:sp0:ro00:wk0:T1487526880:z131:pu1:fg0:fp9",
+    "1564213548:26000:6:0:1119:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z131:pu0:fg0:fp9",
+    "-2075841376:26000:6:0:1119:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z131:pu0:fg0:fp9",
+    "-582753881:26000:8:0:1125:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z129:pu0:fg0:fp9",
+    "-974307333:25998:30:0:1185:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z109:pu0:fg0:fp9",
+    "-1365033590:25915:121:0:1209:1.0000:sh9:nl1.00:f150:sp0:ro00:wk0:T1487526880:z102:pu0:fg0:fp8",
+    "756355120:25812:229:2:1225:1.0000:sh0:nl1.00:f156:sp0:ro00:wk2:T1373884307:z110:pu0:fg0:fp6",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   __test.check("repeated simulation fingerprints", a, b);
-  __test.check("pinned fingerprints (re-pinned: fortifications on the grid of four tiles)", a, expected);
+  __test.check(
+    "pinned fingerprints (re-pinned v98: the dark veil of the night holds units at the edge of the light)",
+    a,
+    expected,
+  );
   return JSON.stringify({ ok: same && reference, same, reference, a, b });
 };

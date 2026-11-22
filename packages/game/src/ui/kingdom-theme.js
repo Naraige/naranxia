@@ -1,4 +1,5 @@
 import { hex } from "../core/math.js";
+import { languageState } from "../i18n/language-state.js";
 
 export const PAL = [
   ["Azure", "#3f6fd0", "#8ab4ff"],
@@ -75,15 +76,26 @@ let onSaved = null;
 export const setThemeSaved = (fn) => {
   onSaved = fn;
 };
+/* the name of the king (THEME.k, 14 letters; Naraige when left empty) is written in every text by L() */
+export const KING = "Naraige";
+export const kingName = (v) =>
+  String(v == null ? "" : v)
+    .replace(/[^\p{L}\p{N} '.-]/gu, "")
+    .trim()
+    .slice(0, 14) || KING;
+export const crownKing = () => {
+  languageState.king = THEME.k && THEME.k !== KING ? THEME.k : null;
+};
 export const themeSaved = () => {
   fresh = false;
+  crownKing();
   if (onSaved) onSaved();
 };
 /* no kingdom was saved on this machine yet: the title opens the profile screen (ui/title-menu.js) */
 let fresh = true;
 export const themeFresh = () => fresh;
 export function initializeKingdomTheme() {
-  THEME = { n: KNAMES[(Math.random() * KNAMES.length) | 0], c: 0, c2: 10, p: 8, v: 2 };
+  THEME = { n: KNAMES[(Math.random() * KNAMES.length) | 0], k: KING, c: 0, c2: 10, p: 8, v: 2 };
 
   try {
     const t = JSON.parse(localStorage.getItem("dk_theme") || "null");
@@ -91,6 +103,7 @@ export function initializeKingdomTheme() {
     if (t && typeof t.n === "string")
       THEME = {
         n: t.n.slice(0, 18),
+        k: kingName(t.k),
         c: Math.abs(t.c | 0) % PAL.length,
         c2: t.c2 == null ? 10 : Math.abs(t.c2 | 0) % PAL.length,
         p: t.v !== 2 && !(t.p | 0) && !(t.e | 0) ? 8 : Math.abs(t.p | 0) % 16,
@@ -99,4 +112,5 @@ export function initializeKingdomTheme() {
   } catch {
     /* Malformed or unavailable storage leaves the default kingdom theme. */
   }
+  crownKing();
 }

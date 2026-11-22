@@ -3,7 +3,7 @@ import { sessionState } from "../gameplay/session.js";
 import { mpMsg, mpSend, setMpMsgHandler } from "./lockstep.js";
 import { addPing } from "./pings.js";
 import { MP } from "./session.js";
-import { nmI } from "../ui/settings.js";
+import { nameTyping } from "../ui/settings.js";
 
 /* ---- co-op chat & pings ---- */
 let mpChatBox;
@@ -83,13 +83,7 @@ export function initializeChat() {
   addEventListener(
     "keydown",
     (e) => {
-      if (
-        e.key === "Enter" &&
-        MP.conn &&
-        sessionState.started &&
-        document.activeElement !== mpChatI &&
-        document.activeElement !== nmI
-      ) {
+      if (e.key === "Enter" && MP.conn && sessionState.started && document.activeElement !== mpChatI && !nameTyping()) {
         e.preventDefault();
         mpChatI.style.display = "block";
         mpChatI.focus();

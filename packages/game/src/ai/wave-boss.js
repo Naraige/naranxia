@@ -4,6 +4,7 @@ import { zcount } from "./zombie-lanes.js";
 import { solidAt } from "../world/traversal.js";
 import { target } from "../gameplay/combat.js";
 import { mkU } from "../gameplay/entities.js";
+import { setLightShade } from "../gameplay/light-state.js";
 import { edgeDist, T, TS } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { spawnAnchor } from "../gameplay/waves.js";
@@ -16,10 +17,10 @@ import { canvasesState } from "../ui/canvases.js";
    hp) with a stomp every 6.5 s when something is within 3 tiles: it hurts every unit and building around it. All of it runs in the
    simulation with its own timer `bt` (sim time), so both co-op machines agree; the units keep the flag in saves (units are saved whole). */
 /* named bosses (lore: the old world's fallen leaders), by order of appearance; the index is stored on the unit */
-export const BOSSN = ["The Hollow Warden", "The Bell-Bearer", "The Frost King", "The Hive Queen"];
+export const BOSSN = ["The Knight of Darkness", "The Bell-Bearer", "The Frost King", "The Hive Queen"];
 /* legend shown on the banner when each boss appears (same order as BOSSN); text only, no effect on the simulation */
 export const BOSSL = [
-  "Once he guarded the old gates. Now he guards nothing.",
+  "He swore to hold the light. The dark kept his oath, and kept him.",
   "He rang the last bell of the old world. The dead still answer.",
   "He ruled the northern snows. The cold still obeys him.",
   "She fed a whole city to her brood. The brood remembers.",
@@ -56,8 +57,8 @@ export function bossStomp(u) {
     x = u.x,
     y = u.y;
   snd("boom", x, y);
-  ring(x, y, "#d8c090", 22, 300);
-  puff(x, y, "#8a7058", 14, 100, { T: 0.8, z: 0.3, vz: 3.4, g: 9, s: 0.15 });
+  ring(x, y, u.bn ? "#d8c090" : "#9a3cff", 22, 300);
+  puff(x, y, u.bn ? "#8a7058" : "#3a1e5a", 14, 100, { T: 0.8, z: 0.3, vz: 3.4, g: 9, s: 0.15 });
   shake(0.4);
   for (const s of sessionState.structs)
     if (s.hp > 0 && s.t !== 1 && s.prog >= 1) {
@@ -77,7 +78,7 @@ export function bossStomp(u) {
 }
 
 /* each named boss has one more ability on its own timer `bs` (sim time, saved with the unit):
-   0 Hollow Warden regrows 4 % hp every 12 s, 1 Bell-Bearer calls 6 husks every 16 s, 2 Frost King chills troops within 6 tiles every 9 s,
+   0 Knight of Darkness dims every light within 7 tiles of him (bossShade, no timer: the dark veil walks with him), 1 Bell-Bearer calls 6 husks every 16 s, 2 Frost King chills troops within 6 tiles every 9 s,
    3 Hive Queen lays 4 runners every 12 s. Summons use the same seeded rnd as the wave spawns, so both co-op machines agree. */
 function bossPower(u, dt) {
   u.bs = (u.bs || 8) - dt;
@@ -87,9 +88,9 @@ function bossPower(u, dt) {
     y = u.y,
     wn = sessionState.waveN;
   if (n === 0) {
-    u.bs = 12;
-    u.hp = Math.min(u.bmax || u.hp, u.hp + (u.bmax || 0) * 0.04);
-    ring(x, y, "#b9ffb0", 14, 220);
+    /* his power is the dark he carries (bossShade below, read by the lights of the night): the ring only shows how far it reaches */
+    u.bs = 5;
+    ring(x, y, "#9a3cff", 18, SHADE_R);
   } else if (n === 1 || n === 3) {
     u.bs = n === 1 ? 16 : 12;
     const k = n === 1 ? 6 : 4,
@@ -116,6 +117,20 @@ function bossPower(u, dt) {
         e.hurt = 0.25;
       }
   }
+}
+
+/* the Knight of Darkness (bn 0) carries the dark: a light within SHADE_R of him (centre to centre) keeps SHADE_K of its radius, the
+   castle and the keep excepted. Asked by lightSources (gameplay/lighting.js) twice a second; simulation state only */
+const SHADE_R = TS * 7,
+  SHADE_K = 0.55;
+export function bossShade() {
+  const B = [];
+  for (const u of sessionState.units) if (u.boss && u.t === 1 && u.hp > 0 && !(u.bn | 0)) B.push(u);
+  if (!B.length) return null;
+  return (x, y) => {
+    for (const u of B) if (dist(x, y, u.x, u.y) < SHADE_R) return SHADE_K;
+    return 1;
+  };
 }
 
 export function bossAI(u, dt) {
@@ -152,3 +167,5 @@ export function bossBar(UW, y) {
   canvasesState.ctx.fillRect(bx, by, fw, 1);
   return 20;
 }
+
+setLightShade(bossShade);

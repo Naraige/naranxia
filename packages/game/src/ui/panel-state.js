@@ -14,6 +14,7 @@ export const saveMenuState = {
 
 export const settingsState = {
   nameBox: null,
+  kingBox: null,
   TOPH: 28,
   fromGame: false,
   setupOpen: false,

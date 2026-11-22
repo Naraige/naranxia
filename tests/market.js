@@ -76,7 +76,7 @@ async () => {
   chk("w3", b.ev.includes("Blood Moon") && b.kinds.includes("Runners"));
   chk(
     "w10",
-    c.boss === "The Hollow Warden" &&
+    c.boss === "The Knight of Darkness" &&
       c.ev.includes("Boss") &&
       c.kinds.includes("Brutes") &&
       c.kinds.includes("Acid spitters"),

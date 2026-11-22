@@ -1427,12 +1427,9 @@ export const NL = {
   "A wave is about to start: gather your troops near the castle and walls":
     "Er begint zo een golf: verzamel je troepen bij het kasteel en de muren",
   "Got it": "Begrepen",
-  "The Hollow Warden": "De Holle Wachter",
   "The Bell-Bearer": "De Klokkendrager",
   "The Frost King": "De Vorstkoning",
   "The Hive Queen": "De Korfkoningin",
-  "Once he guarded the old gates. Now he guards nothing.":
-    "Ooit bewaakte hij de oude poorten. Nu bewaakt hij niets meer.",
   "He rang the last bell of the old world. The dead still answer.":
     "Hij luidde de laatste klok van de oude wereld. De doden antwoorden nog steeds.",
   "He ruled the northern snows. The cold still obeys him.":
@@ -1444,8 +1441,8 @@ export const NL = {
   "Journal of the realm": "Dagboek van het rijk",
   "Wave {0}: {1} walks with the horde.": "Golf {0}: {1} loopt mee met de horde.",
   "Wave {0}: {1} has fallen. The bastion holds.": "Golf {0}: {1} is gevallen. Het bastion houdt stand.",
-  "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.":
-    "De Holle Wachter: Hij hield de oude poorten tot de horde erdoorheen liep. De dood leerde hem niet om te stoppen met waken. Hij leerde hem niet meer te kiezen wie er binnen mag.",
+  "The Knight of Darkness: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.":
+    "De Ridder der Duisternis: Hij hield de oude poorten tot de horde erdoorheen liep. De dood leerde hem niet om te stoppen met waken. Hij leerde hem niet meer te kiezen wie er binnen mag.",
   "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.":
     "De Klokkendrager: Hij luidde de laatste klok van de oude wereld, en de doden kwamen luisteren. Nu luidt hij haar opnieuw, en de hulzen komen als hij roept.",
   "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.":
@@ -1757,4 +1754,29 @@ export const NL = {
     "Muren, torens en poorten staan op een raster van vier tegels: dikke wallen met weergang, grote torens, een poort met valhek.",
   "Saves from older versions load without their old walls, towers and gates.":
     "Opgeslagen spellen van oudere versies laden zonder hun oude muren, torens en poorten.",
+  "The night closes in: a dark veil, a Knight of Darkness and a king with your name.":
+    "De nacht sluit zich: een duistere sluier, een Ridder der Duisternis en een koning met jouw naam.",
+  "At night the unlit ground becomes a dark veil: your units cannot walk into it, except to reach a lit place.":
+    "'s Nachts wordt de onverlichte grond een duistere sluier: je eenheden kunnen er niet in, behalve om een verlichte plek te bereiken.",
+  "Bannermen and captains carry their light through the veil: a troop can follow them into the night.":
+    "Vaandeldragers en kapiteins dragen hun licht door de sluier: een troep kan hen de nacht in volgen.",
+  "The first boss is now the Knight of Darkness: black armour, a great sword, and every light near him grows dim.":
+    "De eerste baas is nu de Ridder der Duisternis: zwart harnas, een groot zwaard, en elk licht bij hem wordt zwakker.",
+  "Name your king in your profile: his name is written everywhere in the game.":
+    "Geef je koning een naam in je profiel: zijn naam staat overal in het spel.",
+  "Seasonal events are coming: the title screen announces the event of the day.":
+    "Seizoensevenementen komen eraan: het titelscherm kondigt het evenement van de dag aan.",
+  "Co-op convoys: a porter cut off from the road stays at work and the others carry his share.":
+    "Co-op-konvooien: een drager die van de weg is afgesneden blijft aan het werk en de anderen dragen zijn deel.",
+  "The dark veil bars the way - only a bannerman or a captain carries light through the night":
+    "De duistere sluier verspert de weg - alleen een vaandeldrager of een kapitein draagt licht door de nacht",
+  "Your king": "Jouw koning",
+  "The Knight of Darkness": "De Ridder der Duisternis",
+  "He swore to hold the light. The dark kept his oath, and kept him.":
+    "Hij zwoer het licht te bewaren. Het duister hield zijn eed, en hem erbij.",
+  "Seasonal event": "Seizoensevenement",
+  "Winter Feast": "Winterfeest",
+  "Spring Fair": "Lentemarkt",
+  "Midsummer Fires": "Midzomervuren",
+  "Night of the Horde": "Nacht van de Horde",
 };

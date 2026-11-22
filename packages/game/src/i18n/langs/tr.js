@@ -1413,12 +1413,9 @@ export const TR = {
   "A wave is about to start: gather your troops near the castle and walls":
     "Bir dalga başlamak üzere: birliklerini kalenin ve surların yanında topla",
   "Got it": "Anladım",
-  "The Hollow Warden": "Oyuk Bekçi",
   "The Bell-Bearer": "Çan Taşıyan",
   "The Frost King": "Ayaz Kralı",
   "The Hive Queen": "Kovan Kraliçesi",
-  "Once he guarded the old gates. Now he guards nothing.":
-    "Bir zamanlar eski kapıları korurdu. Şimdi hiçbir şeyi korumuyor.",
   "He rang the last bell of the old world. The dead still answer.":
     "Eski dünyanın son çanını o çaldı. Ölüler hâlâ cevap veriyor.",
   "He ruled the northern snows. The cold still obeys him.":
@@ -1429,8 +1426,8 @@ export const TR = {
   "Journal of the realm": "Krallık günlüğü",
   "Wave {0}: {1} walks with the horde.": "Dalga {0}: {1} orduyla yürüyor.",
   "Wave {0}: {1} has fallen. The bastion holds.": "Dalga {0}: {1} düştü. Tabya dayanıyor.",
-  "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.":
-    "Oyuk Bekçi: Ordu içlerinden geçene dek eski kapıları tuttu. Ölüm ona nöbeti bırakmayı öğretmedi. Kimi içeri alacağını seçmeyi bırakmayı öğretti.",
+  "The Knight of Darkness: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.":
+    "Karanlığın Şövalyesi: Ordu içlerinden geçene dek eski kapıları tuttu. Ölüm ona nöbeti bırakmayı öğretmedi. Kimi içeri alacağını seçmeyi bırakmayı öğretti.",
   "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.":
     "Çan Taşıyan: Eski dünyanın son çanını çaldı ve ölüler dinlemeye geldi. Şimdi yine çalıyor ve kabuklar çağrısına geliyor.",
   "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.":
@@ -1741,4 +1738,29 @@ export const TR = {
     "Surlar, kuleler ve kapılar dört karelik bir ızgaraya kurulur: seyirdim yollu kalın surlar, büyük kuleler, demir parmaklıklı kapı.",
   "Saves from older versions load without their old walls, towers and gates.":
     "Eski sürümlerin kayıtları eski surları, kuleleri ve kapıları olmadan yüklenir.",
+  "The night closes in: a dark veil, a Knight of Darkness and a king with your name.":
+    "Gece kapanıyor: karanlık bir örtü, bir Karanlığın Şövalyesi ve senin adını taşıyan bir kral.",
+  "At night the unlit ground becomes a dark veil: your units cannot walk into it, except to reach a lit place.":
+    "Geceleyin ışıksız toprak karanlık bir örtüye dönüşür: birliklerin içine giremez, ancak aydınlık bir yere ulaşmak için geçebilir.",
+  "Bannermen and captains carry their light through the veil: a troop can follow them into the night.":
+    "Sancaktarlar ve yüzbaşılar ışıklarını örtünün içinden taşır: bir birlik onları gecenin içine izleyebilir.",
+  "The first boss is now the Knight of Darkness: black armour, a great sword, and every light near him grows dim.":
+    "İlk boss artık Karanlığın Şövalyesi: kara zırh, büyük bir kılıç ve yanındaki her ışık solar.",
+  "Name your king in your profile: his name is written everywhere in the game.":
+    "Profilinde kralına ad ver: adı oyunun her yerinde yazar.",
+  "Seasonal events are coming: the title screen announces the event of the day.":
+    "Mevsimlik etkinlikler geliyor: başlık ekranı günün etkinliğini duyurur.",
+  "Co-op convoys: a porter cut off from the road stays at work and the others carry his share.":
+    "Co-op konvoyları: yoldan kopan bir hamal işinde kalır, payını diğerleri taşır.",
+  "The dark veil bars the way - only a bannerman or a captain carries light through the night":
+    "Karanlık örtü yolu kesiyor - geceye ışığı yalnızca bir sancaktar ya da yüzbaşı taşır",
+  "Your king": "Kralın",
+  "The Knight of Darkness": "Karanlığın Şövalyesi",
+  "He swore to hold the light. The dark kept his oath, and kept him.":
+    "Işığı koruyacağına yemin etti. Karanlık yeminini de onu da alıkoydu.",
+  "Seasonal event": "Mevsimlik etkinlik",
+  "Winter Feast": "Kış Şöleni",
+  "Spring Fair": "Bahar Panayırı",
+  "Midsummer Fires": "Yaz Ortası Ateşleri",
+  "Night of the Horde": "Sürü Gecesi",
 };

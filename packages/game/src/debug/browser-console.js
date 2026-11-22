@@ -1,3 +1,5 @@
+import { seasonalEvent } from "../core/seasonal-events.js";
+import { litAt } from "../gameplay/light-state.js";
 import { baseTrait, BASES, campDebug, campLabel, inTerr, spearN, TRAITS } from "../ai/kingdoms.js";
 import { markP, markT } from "../world/terrain-invalidation.js";
 import { evChoose, eventsState, eventsTick, evPush, renownMul, resolveEvent0 } from "../gameplay/events.js";
@@ -395,6 +397,8 @@ export function installBrowserConsole() {
     matUI: { get: () => matUI },
     matV: { get: () => matV },
     mkU: { get: () => mkU },
+    litAt: { get: () => litAt },
+    seasonalEvent: { get: () => seasonalEvent },
     mode: {
       get: () => sessionState.mode,
       set: (value) => {

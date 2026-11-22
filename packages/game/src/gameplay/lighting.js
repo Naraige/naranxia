@@ -1,15 +1,14 @@
 import { snd } from "../audio/sound.js";
 import { rnd } from "../core/math.js";
+import { LPL } from "./players.js";
 import { lampWall, T, TS } from "./rules.js";
 import { sessionState } from "./session.js";
+import { lightingState, lightShade, litAt } from "./light-state.js";
 import { hordeDist, smst, wavesState } from "./waves.js";
 import { puff } from "../rendering/effects.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 
-export const lightingState = {
-  LITL: [],
-  darkT: 0,
-};
+export { lightingState, litAt };
 
 export function nightTick(dt) {
   wavesState.nightCk -= dt;
@@ -64,28 +63,22 @@ const LIGHTR = {
 };
 
 export function lightSources() {
-  const L = [];
+  const L = [],
+    /* the Knight of Darkness dims the lights around him, the castle and the keep excepted */
+    shade = lightShade();
   for (const s of sessionState.structs) {
     if (s.prog < 1 || s.hp <= 0) continue;
     let r = LIGHTR[s.type] || (lampWall(s) ? 4 : 0);
     if (s.type === "castle" && s.tier) r = 18;
-    if (r) L.push([s.x, s.y, r * TS]);
+    if (r) L.push([s.x, s.y, r * TS * (shade && s.type !== "castle" && s.type !== "keep" ? shade(s.x, s.y) : 1)]);
   }
   for (const u of sessionState.units)
     if (u.hp > 0 && u.t !== 1 && !u.gar && (u.type === "bannerman" || u.type === "captain"))
-      L.push([u.x, u.y, (u.type === "bannerman" ? 5.5 : 4.5) * TS]);
+      L.push([u.x, u.y, (u.type === "bannerman" ? 5.5 : 4.5) * TS * (shade ? shade(u.x, u.y) : 1)]);
   return L;
 }
-let darkMsg = -1e9;
-
-export const litAt = (x, y) => {
-  for (const l of lightingState.LITL) {
-    const dx = x - l[0],
-      dy = y - l[1];
-    if (dx * dx + dy * dy < l[2] * l[2]) return true;
-  }
-  return false;
-};
+let darkMsg = -1e9,
+  veilMsg = -1e9;
 
 export function darkTick(dt) {
   lightingState.darkT -= dt;
@@ -99,13 +92,15 @@ export function darkTick(dt) {
     return;
   }
   lightingState.LITL = lightSources();
-  let hurt = 0;
+  let hurt = 0,
+    held = 0;
   for (const u of sessionState.units) {
     if (u.t !== 0 || u.hp <= 0 || u.gar) {
       u.dk = false;
       continue;
     }
     u.dk = !litAt(u.x, u.y);
+    if (u.vbT > sessionState.time - 0.6 && (u.pl | 0) === LPL()) held++;
     if (u.dk) {
       u.hp -= Math.max(0.3, T[u.type].hp * 0.01);
       u.hurt = 0.1;
@@ -120,6 +115,11 @@ export function darkTick(dt) {
       if (Math.random() < 0.2)
         puff(s.x + rnd(-14, 14), s.y + rnd(-14, 14), "#2e1e40", 2, 22, { T: 1.1, z: 1, vz: 0.6, g: -0.3, s: 0.13 });
     }
+  }
+  if (held && !hurt && sessionState.time - veilMsg > 40) {
+    veilMsg = sessionState.time;
+    hudDisplayState.msgS = "The dark veil bars the way - only a bannerman or a captain carries light through the night";
+    hudDisplayState.msgT = 5;
   }
   if (hurt && sessionState.time - darkMsg > 45) {
     darkMsg = sessionState.time;

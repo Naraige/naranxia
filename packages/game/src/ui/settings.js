@@ -16,27 +16,37 @@ import { applyCB } from "./drawing.js";
 import { bevelBtn, keyChip, kitRow, kitScreen, listBegin, listEnd } from "./menu-kit.js";
 import { hudDisplayState } from "./hud-state.js";
 import { settingsState } from "./panel-state.js";
-import { THEME } from "./kingdom-theme.js";
+import { KING, kingName, THEME } from "./kingdom-theme.js";
 import { FF, FFP } from "./typography.js";
 
 export { settingsState };
 
 export let nmI;
+/* the name of the king, beside the name of the kingdom on the card of the profile */
+export let kgI;
 
-export function placeInput() {
-  if (!settingsState.nameBox || sessionState.started) {
-    nmI.style.display = "none";
+function placeOne(el, box, value) {
+  if (!box || sessionState.started) {
+    el.style.display = "none";
     return;
   }
   const k = hudDisplayState.UIS / inputState.DPR,
-    s = nmI.style;
+    s = el.style;
   s.display = "block";
-  s.left = settingsState.nameBox.x * k + "px";
-  s.top = settingsState.nameBox.y * k + "px";
-  s.width = settingsState.nameBox.w * k + "px";
-  s.height = settingsState.nameBox.h * k + "px";
+  s.left = box.x * k + "px";
+  s.top = box.y * k + "px";
+  s.width = box.w * k + "px";
+  s.height = box.h * k + "px";
   s.fontSize = 9.5 * k + "px";
-  if (document.activeElement !== nmI && nmI.value !== THEME.n) nmI.value = THEME.n;
+  if (document.activeElement !== el && el.value !== value) el.value = value;
+}
+
+/* a name is being typed (kingdom or king): the keys belong to the field */
+export const nameTyping = () => document.activeElement === nmI || document.activeElement === kgI;
+
+export function placeInput() {
+  placeOne(nmI, settingsState.nameBox, THEME.n);
+  placeOne(kgI, settingsState.nameBox && settingsState.kingBox, THEME.k || KING);
 }
 
 export let uiMul = 1;
@@ -629,37 +639,45 @@ export function settingsBack() {
 }
 
 export function initializeSettings() {
-  nmI = document.createElement("input");
-  nmI.type = "text";
-  nmI.maxLength = 18;
-  nmI.spellcheck = false;
-  nmI.autocomplete = "off";
-  nmI.setAttribute("aria-label", "Kingdom name");
-
-  Object.assign(nmI.style, {
-    position: "fixed",
-    display: "none",
-    zIndex: 5,
-    color: "#f2e4c4",
-    background: "#0b0f17",
-    border: "1px solid #c9a24f",
-    borderRadius: "0",
-    padding: "0 7px",
-    outline: "none",
-    boxSizing: "border-box",
-    fontWeight: "400",
-    fontFamily: FF,
-  });
-
-  document.body.appendChild(nmI);
+  const field = (label, max) => {
+    const el = document.createElement("input");
+    el.type = "text";
+    el.maxLength = max;
+    el.spellcheck = false;
+    el.autocomplete = "off";
+    el.setAttribute("aria-label", label);
+    Object.assign(el.style, {
+      position: "fixed",
+      display: "none",
+      zIndex: 5,
+      color: "#f2e4c4",
+      background: "#0b0f17",
+      border: "1px solid #c9a24f",
+      borderRadius: "0",
+      padding: "0 7px",
+      outline: "none",
+      boxSizing: "border-box",
+      fontWeight: "400",
+      fontFamily: FF,
+    });
+    document.body.appendChild(el);
+    el.onkeydown = (e) => {
+      e.stopPropagation();
+      if (e.key === "Enter") el.blur();
+    };
+    return el;
+  };
+  nmI = field("Kingdom name", 18);
   nmI.value = THEME.n;
   nmI.oninput = () => {
     THEME.n = nmI.value.slice(0, 18) || "Nameless";
     saveTheme();
   };
-  nmI.onkeydown = (e) => {
-    e.stopPropagation();
-    if (e.key === "Enter") nmI.blur();
+  kgI = field("King name", 14);
+  kgI.value = THEME.k || KING;
+  kgI.oninput = () => {
+    THEME.k = kingName(kgI.value);
+    saveTheme();
   };
   try {
     uiMul = +localStorage.getItem("dk_ui") || 1;

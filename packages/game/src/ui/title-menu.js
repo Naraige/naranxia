@@ -1,3 +1,4 @@
+import { seasonalEvent } from "../core/seasonal-events.js";
 import { AC, sndOn, toggleSound } from "../audio/sound.js";
 import { inputState } from "../input/state.js";
 import { GNOTES } from "../core/version.js";
@@ -368,6 +369,13 @@ function drawLobby(UW, UH) {
     g.fillText(sp, sx, y);
     g.restore();
     y += S + (low ? 5 : 9);
+    /* the seasonal event of the day (core/seasonal-events.js) */
+    const ev = seasonalEvent();
+    if (ev) {
+      g.globalAlpha = ent(0.3, 0.9);
+      (nar ? TC : T_)("Seasonal event - " + ev.name, sx, y - (low ? 3 : 5), ev.col, 0.85);
+      y += low ? 9 : 11;
+    }
   }
   /* --- counters with hexagon icons (wide screens) --- */
   g.globalAlpha = ent(0.3, 0.9);
@@ -832,7 +840,7 @@ const CHFR = [
   ],
   [
     10,
-    "The Hollow Warden: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.",
+    "The Knight of Darkness: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.",
   ],
   [15, "Wave 15: The wolves come down from the hills. Even the wild has chosen a side, and it is not yours."],
   [20, "Wave 20: A rebel envoy leaves a message at the gate: the camps know the King's light cannot burn forever."],
@@ -946,10 +954,15 @@ function kingdomCard(b, y, small) {
   const ex = bnx + bnw + 10,
     ew = b.x + pw - 10 - ex;
   T_("Your kingdom", ex, y + 5, "#c4a37a", 0.8);
-  const fy = y + 15;
-  settingsState.nameBox = { x: ex, y: fy, w: ew - 24, h: 15 };
+  const fy = y + 15,
+    /* the name of the kingdom, the dice, then the name of its king */
+    nw = Math.floor((ew - 28) * 0.56),
+    kx = ex + nw + 28;
+  T_("Your king", kx, y + 5, "#c4a37a", 0.8);
+  settingsState.nameBox = { x: ex, y: fy, w: nw, h: 15 };
+  settingsState.kingBox = { x: kx, y: fy, w: ex + ew - kx, h: 15 };
   uiBtn(
-    ex + ew - 22,
+    ex + nw + 3,
     fy,
     22,
     15,

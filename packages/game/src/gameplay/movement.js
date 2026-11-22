@@ -1,4 +1,5 @@
 import { dist, hyp } from "../core/math.js";
+import { veilBars } from "./light-state.js";
 import { H, T, TH, TS, TW, W } from "./rules.js";
 import { sessionState } from "./session.js";
 import { dust, SLOWK } from "../rendering/effects.js";
@@ -31,6 +32,22 @@ export function moveTo(u, x, y, dt) {
   u.x += dx * st;
   u.y += dy * st;
   if (u.t === 0 && !u.gar && !u.onF) pushOut(u, ox, oy);
+  /* the dark veil of the night (light-state.js): held at the edge of the light, sliding along it when one axis stays lit */
+  if (u.t === 0 && !u.gar && veilBars(u, ox, oy)) {
+    const ny = u.y;
+    u.y = oy;
+    if (veilBars(u, ox, oy) || solidAt(u.x, u.y)) {
+      u.x = ox;
+      u.y = ny;
+      if (veilBars(u, ox, oy) || solidAt(u.x, u.y)) {
+        u.y = oy;
+        u.mv = false;
+        u.walk = 0;
+      }
+    }
+    u.vb = (u.vb || 0) + dt;
+    u.vbT = sessionState.time;
+  } else if (u.vb) u.vb = 0;
 }
 
 function pushOut(u, ox, oy) {
@@ -217,6 +234,14 @@ export function walk(u, dt) {
     o.bp = pr;
     o.sp = 0;
   } else o.sp = (o.sp || 0) + dt;
+  /* held by the dark veil for half a second: the order ends there, at the edge of the light */
+  if (u.vb > 0.5) {
+    u.vb = 0;
+    u.o = null;
+    u.gx = u.x;
+    u.gy = u.y;
+    return;
+  }
   if (dd < 16 || (dd < 60 && solidAt(o.x, o.y)) || (dd < TS * 2.6 && o.st > 1.1) || (o.sp > 6 && g.big)) {
     u.o = null;
     u.gx = u.x;

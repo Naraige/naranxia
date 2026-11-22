@@ -1,9 +1,8 @@
-A kingdom of your own: profile, pattern banners and a world built in blocks.
+The night closes in: a dark veil, a Knight of Darkness and a king with your name.
 
-- At the first launch you create your kingdom: its name, its two colours and the pattern of its banner. Change it at any time from "Your kingdom" on the title screen.
-- Banners are made like Minecraft banners: 16 patterns, hung on gates, towers, the castle, the barracks and the war room, and carried by the bannerman.
-- Every roof wears the colour of your kingdom.
-- Co-op: each player keeps his own name, colours and banner on both screens, with the name of each kingdom over its castle. Players cannot hurt each other.
-- Every building is redrawn in blocks, one block to a tile: buildings are much larger and more detailed.
-- Walls, towers and gates are laid on a grid of four tiles: thick ramparts with a wall walk, great towers, a gate with a portcullis.
-- Saves from older versions load without their old walls, towers and gates.
+- At night the unlit ground becomes a dark veil: your units cannot walk into it, except to reach a lit place.
+- Bannermen and captains carry their light through the veil: a troop can follow them into the night.
+- The first boss is now the Knight of Darkness: black armour, a great sword, and every light near him grows dim.
+- Name your king in your profile: his name is written everywhere in the game.
+- Seasonal events are coming: the title screen announces the event of the day.
+- Co-op convoys: a porter cut off from the road stays at work and the others carry his share.

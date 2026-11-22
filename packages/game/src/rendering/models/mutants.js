@@ -278,6 +278,125 @@ export function pxMutant(kind, type, ZV, P) {
     return;
   }
 
+  /* ---------------- THE KNIGHT OF DARKNESS (the first boss, v98) ----------------
+     a knight in black plate taller than a brute: great helm with a glowing slit and two swept horns, spiked pauldrons, a torn cape,
+     a great sword whose edge glows and a kite shield. Same rig as the other boss; accent: violet, the colour of the dark veil */
+  if (kind === "darkknight") {
+    const AR = PP(["#0d0b13", "#1d1929", "#3b3452"]),
+      AR2 = PP(["#08070c", "#14111d", "#2a2440"]),
+      CL = PP(["#0c0814", "#1a1026", "#2c1a40"]),
+      VI = C("#9a3cff"),
+      VL = C("#dcaaff"),
+      plate = tone(AR, K, { bl: 0.16, hl: 0.08 }),
+      dplate = tone(AR2, K + 5, { bl: 0.2, hl: 0.05 }),
+      /* a plate with a band of the light tone r rows from its top */
+      band = (r0) => over(plate, (f, u, v, W, H, r) => (f !== "T" && f !== "D" && r === r0 ? AR[2] : undefined)),
+      glow = (c) => ({ m: 5, g: c, ao: false });
+    pxScene(() => {
+      /* the torn cape first, behind everything */
+      b(
+        G,
+        -7,
+        5,
+        -5.7,
+        7,
+        25.4,
+        -4.7,
+        (f, u, v) =>
+          v < 5 && N(K + 21, u, 0) * 6 > v ? null : (u + (v >> 2)) % 5 === 0 ? CL[0] : v > 16 ? CL[2] : CL[1],
+        { g: [14, 20, 1], ao: false },
+      );
+      /* fauld and belt, breastplate with a glowing seam and two ribs of light */
+      b(G, -5, 9.6, -3, 5, 16, 3, band(1));
+      b(G, -5.3, 14.6, -3.3, 5.3, 16.2, 3.3, (f, u) => (u % 4 === 1 ? AR[2] : AR[0]), { m: 4, g: [10, 1, 6] });
+      b(G, -7.6, 15, -4, 7.6, 25.6, 4.6, band(2));
+      b(G, -0.5, 16.6, 4.6, 0.5, 24.4, 4.74, (f, u, v) => (v % 3 === 1 ? VL : VI), glow([1, 8, 1]));
+      for (const y of [19, 22])
+        b(G, -5.2, y, 4.6, 5.2, y + 0.7, 4.72, (f, u) => (Math.abs(u - 5) < 2 ? null : VI), glow([10, 1, 1]));
+      /* gorget, pauldrons with a spike each */
+      b(G, -3.6, 25.2, -2.6, 3.6, 26.6, 5, dplate);
+      for (const s of [-1, 1]) {
+        const x0 = s > 0 ? 6.2 : -10.6;
+        b(G, x0, 21.8, -4.6, x0 + 4.4, 27.2, 5.2, band(0));
+        b(G, x0 + 0.4, 23.6, 5.2, x0 + 4, 24.3, 5.3, flat(VI), glow([4, 1, 1]));
+        b(G, x0 + 1.4, 27.2, -0.8, x0 + 3, 29.6, 0.8, dplate);
+        b(G, x0 + 1.8, 29.6, -0.4, x0 + 2.6, 31.4, 0.4, flat(AR[2]));
+      }
+      /* the great helm: a slit of light, breathing holes, a ridge, two horns swept back */
+      b(
+        HG,
+        -3.9,
+        24.2,
+        -0.4,
+        3.9,
+        31.6,
+        7.4,
+        over(plate, (f, u, v, W, H, r) => {
+          if (f === "F") {
+            if (r === 3 && u >= 1 && u <= W - 2) return DK;
+            if (r >= 5 && (u === 2 || u === W - 3) && r % 2) return DK;
+            if (u === W >> 1 && r !== 3) return AR[2];
+          }
+          if (f === "T" && u === W >> 1) return AR[2];
+        }),
+      );
+      b(HG, -2.9, 27.9, 7.4, -0.6, 28.6, 7.52, (f, u) => (u ? VL : VI), glow([2, 1, 1]));
+      b(HG, 0.6, 27.9, 7.4, 2.9, 28.6, 7.52, (f, u) => (u ? VI : VL), glow([2, 1, 1]));
+      b(HG, -0.5, 31.6, 0.4, 0.5, 33, 6.6, dplate, { g: [1, 2, 6] });
+      for (const s of [-1, 1]) {
+        const x0 = s > 0 ? 3.9 : -6.3;
+        b(HG, x0, 28.6, 2, x0 + 2.4, 30.4, 4, dplate);
+        const x1 = s > 0 ? 5.3 : -6.9;
+        b(HG, x1, 30.4, 1, x1 + 1.6, 34.4, 3, dplate);
+        b(HG, x1 + 0.2, 34.4, -1.4, x1 + 1.4, 36, 2, flat(AR[2]));
+      }
+      /* greaves with a knee plate, sabatons */
+      b(LG, -3, -12, -3, 3, 0, 3, band(3));
+      b(LG, -3.3, -5.4, 2.6, 3.3, -2.6, 4, dplate);
+      b(LG, -3.3, -12, -2.8, 3.3, -10.2, 4.6, dplate);
+      ground();
+    });
+    const arm = (R) => (T) => {
+      b(T, -3, -4, -4, 5.6, 3.4, 4, band(0));
+      b(T, -2.4, -10, -3, 4.6, -3.6, 3, dplate);
+      b(T, -3, -16.6, -3.8, 5.6, -9.4, 3.8, band(1));
+      b(T, -3.1, -11.4, -3.9, 5.7, -10.7, 3.9, flat(VI), glow([9, 1, 8]));
+      if (R) {
+        /* the great sword: cross guard, a black blade, an edge of light */
+        b(T, -2.4, -15.4, 3.8, 5, -12.6, 5.4, (f, u, v, W, H) => (v === H - 1 ? AR[2] : AR[0]), { m: 4 });
+        b(T, 0.3, -14.9, 5.4, 2.3, -13.1, 31, (f, u) => (f === "T" ? AR[2] : u % 5 === 2 ? AR[1] : AR[0]), {
+          m: 4,
+          g: [2, 2, 26],
+        });
+        b(T, 0.9, -15.1, 6, 1.7, -14.9, 33, flat(VI), glow([1, 1, 27]));
+        b(T, 0.9, -13.1, 6, 1.7, -12.9, 31.6, flat(VL), glow([1, 1, 26]));
+        b(T, 0.7, -14.5, 31, 1.9, -13.5, 33.4, flat(AR[2]));
+      } else {
+        /* the kite shield before the forearm: black field, a rim of steel, a pale of light */
+        b(
+          T,
+          -4.4,
+          -20.6,
+          3.9,
+          7,
+          -4.6,
+          5.1,
+          (f, u, v, W, H) => {
+            const e = Math.abs(u - (W - 1) / 2);
+            if (v < 6 && e > 1.2 + v * 0.75) return null;
+            if (f !== "F") return AR[0];
+            if (u === 0 || u === W - 1 || v === H - 1 || (v < 6 && e > 0.2 + v * 0.75)) return AR[2];
+            return e < 1 ? null : (u + v) % 7 === 0 ? AR[0] : AR[1];
+          },
+          { m: 4, g: [11, 16, 1] },
+        );
+        b(T, 0.8, -18.6, 4.6, 1.8, -5.6, 5.16, (f, u, v) => (v % 4 === 2 ? VL : VI), glow([1, 13, 1]));
+      }
+    };
+    arms2(P, arm(1), arm(0));
+    return;
+  }
+
   /* ---------------- BOSS ---------------- */
   if (kind === "boss") {
     const SK = PP(["#342f3c", "#544c5e", "#766c84"]),

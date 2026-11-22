@@ -92,7 +92,7 @@ async () => {
   waveN = 9;
   wave();
   const bs = units.find((u) => u.boss);
-  chk("bossSpawn", !!bs && bs.type === "brute" && bs.hp > T.brute.hp * 3 && bs.sv > 1.5);
+  chk("bossSpawn", !!bs && bs.bn === 0 && bs.type === "brute" && bs.hp > T.brute.hp * 3 && bs.sv > 1.5);
   if (bs) {
     const pe = mkU(0, "knight", bs.x + TS * 1.2, bs.y, null, -1);
     units.push(pe);
@@ -102,6 +102,80 @@ async () => {
   }
   for (const u of units) if (u.boss) u.hp = 0;
   for (let i = 0; i < 3; i++) update(0.05);
+  /* the calendar of seasonal events: the feast runs over the new year, nothing in February */
+  chk(
+    "seasonalCalendar",
+    ["2026-12-24", "2027-01-06", "2027-01-07", "2027-02-10", "2027-03-20", "2027-06-30", "2027-10-31", "2027-11-03"]
+      .map((d) => (seasonalEvent(new Date(d + "T12:00:00")) || { id: "-" }).id)
+      .join() === "winter,winter,-,-,spring,summer,horde,-",
+  );
+  /* the dark veil (v98): in the deep night a unit in the light cannot walk into the dark, a bannerman can, and the dark does not hold
+     a unit that ends its walk in the light */
+  {
+    const cs = structs.find((s) => s.type === "castle"),
+      far = cs.x + TS * 60,
+      edge = cs.x + TS * 13;
+    hordeOn = true;
+    hordeT = time;
+    nightLv = 1;
+    for (let i = 0; i < 12; i++) update(0.05);
+    const put = (type, dy) => {
+      const u = mkU(0, type, edge, cs.y + dy * TS, null, -1);
+      units.push(u);
+      return u;
+    };
+    const kn = put("knight", 0);
+    chk("veilLit", litAt(kn.x, kn.y) && !litAt(far, cs.y));
+    const walk = (u, n) => {
+      let out = false;
+      mpExec({ k: "o", i: [u.uid], x: far, y: cs.y, f: 0 }, true);
+      for (let i = 0; i < n; i++) {
+        hordeOn = true; /* no horde in this scene: hold the night */
+        hordeT = time;
+        nightLv = 1;
+        update(0.05);
+        for (const c of structs) if (c.type === "castle") c.hp = c.max;
+        if (!litAt(kn.x, kn.y)) out = true;
+      }
+      return out;
+    };
+    chk("veilHolds", !walk(kn, 300) && kn.x > edge + TS && !kn.o && kn.hp > 0);
+    const held = Math.round((kn.x - cs.x) / TS);
+    /* a bannerman carries his light: he walks out; the knight may then join him, his order ends in the light */
+    const bn = put("bannerman", 1);
+    walk(bn, 200);
+    chk("veilBannerman", bn.x > cs.x + TS * 24 && litAt(bn.x, bn.y));
+    walk(kn, 300);
+    chk("veilLitGoal", kn.x > cs.x + TS * 50 && litAt(kn.x, kn.y));
+    O.veil = [held, Math.round((bn.x - cs.x) / TS), Math.round((kn.x - cs.x) / TS)];
+    /* the Knight of Darkness dims the lights near him: the bannerman's reach falls from 5.5 tiles to 3 */
+    const hold = (n) => {
+      for (let i = 0; i < n; i++) {
+        hordeOn = true;
+        hordeT = time;
+        nightLv = 1;
+        update(0.05);
+        kn.hp = bn.hp = 500;
+      }
+    };
+    const rim = () => litAt(bn.x, bn.y + TS * 4.5);
+    hold(12);
+    const lit0 = rim(),
+      dkk = mkU(1, "brute", bn.x, bn.y - TS * 5, null, -1);
+    dkk.boss = 1;
+    dkk.bn = 0;
+    dkk.hp = dkk.bmax = 1e6;
+    units.push(dkk);
+    hold(12);
+    chk("knightOfDarknessDimsLights", lit0 && !rim() && litAt(bn.x, bn.y));
+    dkk.hp = 0;
+    kn.hp = bn.hp = 0;
+    hordeOn = false;
+    nightLv = 0;
+    hordeT = time - 60;
+    for (let i = 0; i < 12; i++) update(0.05);
+    chk("veilLiftsAtDawn", !litAt(cs.x, cs.y));
+  }
   /* king skills: cry buffs the units around, charge speeds the king up, both go on cooldown */
   let kg = kingOf(0);
   if (!kg) {
