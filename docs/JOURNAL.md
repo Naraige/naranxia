@@ -10,6 +10,7 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 - The cinematic: the screen has a light veil, the title scene plays behind it; each change calls `retheme()`, which rebuilds the title army (cloth, shields, the bannermen's banners in the pattern of the kingdom). Nothing else in the scene carried colours.
 - Texts: "Create your kingdom", "Found the kingdom", one line of explanation (9 languages).
 - Verified: eslint, prettier, architecture (807), textaudit, langcheck; PASS ui, smoke, tools, features, save, det, compat, frame_guard, voxel_buildings, azerty_probe. Seen: the profile screen over the title scene with a crimson and gold saltire, the army behind in those colours.
+- Co-op (the King: "make sure that the profil is saved even for the coop part"): the profile is saved on each machine at every change (`saveTheme`: name typed, colour or pattern picked, screen closed) and goes to the partner with "hello" when the two link; a change made while linked is sent at once ("prof" message, `setThemeSaved` / `themeSaved`), the partner redraws our things and the lobby shows the new name. Visual only. PASS after it: ui, smoke, det, save, mp_side, mp_resync, mp_build, mp8.
 - Not seen: the automatic opening itself (the headless browser is automation, where it is switched off); narrow screens.
 
 ## 2026-11-22 · roofs in the kingdom colour, each co-op player in his own colours, the bannerman carries the kingdom banner (unreleased)

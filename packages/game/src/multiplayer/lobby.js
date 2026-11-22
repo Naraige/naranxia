@@ -8,7 +8,7 @@ import { lobbyHost, lobbyJoin } from "./connection.js";
 import { mpBegin, mpSend } from "./lockstep.js";
 import { registryHide, registryList, registryOn } from "./registry.js";
 import { MP } from "./session.js";
-import { THEME } from "../ui/kingdom-theme.js";
+import { setThemeSaved, THEME } from "../ui/kingdom-theme.js";
 import { settingsState } from "../ui/panel-state.js";
 import { openPicker, setConfirmPickHandler, sitePickerState } from "../ui/site-picker.js";
 import { rollWorld, setRollWorldHandler } from "../world/terrain.js";
@@ -29,8 +29,12 @@ export function mpConnected() {
   MP.conn = true;
   MP.mine = null;
   MP.theirs = null;
-  /* the name and the colours of this kingdom: the partner draws our men, roofs and banners in them (rendering/owner-theme.js) */
+  /* the name and the colours of this kingdom: the partner draws our men, roofs and banners in them (rendering/owner-theme.js).
+     The profile is kept on each machine (dk_theme) and sent again whenever it is changed while the two are linked ("prof") */
   mpSend({ k: "hello", n: THEME.n, v: GVER, c: THEME.c, c2: THEME.c2, p: THEME.p });
+  setThemeSaved(() => {
+    if (MP.conn) mpSend({ k: "prof", n: THEME.n, c: THEME.c, c2: THEME.c2, p: THEME.p });
+  });
   if (MP.host) mpWorldSync();
   lobbyRender();
   lobbyShow();

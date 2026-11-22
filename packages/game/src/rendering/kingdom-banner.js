@@ -4,7 +4,7 @@ import { BANNER } from "./structures.js";
 import { canvasesState, cvs } from "../ui/canvases.js";
 import { circ, ICN, ln, poly } from "../ui/drawing.js";
 import { IC, thIcons } from "../ui/icons.js";
-import { THEME } from "../ui/kingdom-theme.js";
+import { THEME, themeSaved } from "../ui/kingdom-theme.js";
 
 /* ---- the banner of the kingdom: its picture, the tiles of the menu where it is composed ---- */
 export const lighten = (c, k) => {
@@ -53,6 +53,7 @@ export function saveTheme() {
   } catch {
     /* The selected banner theme remains active in memory for this session. */
   }
+  themeSaved();
 }
 
 /* a banner of the kingdom's two colours in pattern p, one canvas pixel to each pixel of the cloth (20 x 40): the tiles of the menu */

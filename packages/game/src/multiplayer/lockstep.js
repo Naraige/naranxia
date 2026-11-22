@@ -323,7 +323,13 @@ export let mpMsg = function mpMsg(m) {
     mpResMsg(m);
     return;
   } else if (m.k === "p") sessionState.paused = m.v;
-  else if (m.k === "hello") {
+  else if (m.k === "prof") {
+    /* the partner changed his name or his banner: visual only */
+    MP.pname = String(m.n || "Player").slice(0, 24);
+    MP.pth = { c: m.c | 0, c2: m.c2 | 0, p: m.p | 0 };
+    MP.pthNew = true;
+    lobbyRender();
+  } else if (m.k === "hello") {
     MP.pname = String(m.n || "Player").slice(0, 24);
     MP.pver = String(m.v || "?");
     /* visual only: the colours and pattern of the partner's kingdom (an older build sends none) */

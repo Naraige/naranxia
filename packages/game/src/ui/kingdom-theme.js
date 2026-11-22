@@ -70,6 +70,15 @@ export const thp = () => PAL[drawTheme().c][1],
 /* The kingdom: its name, its colour c and second colour c2 (PAL), and the pattern p of its banner (the 16 of rendering/banner-art.js PATS).
    A banner is made of patterns only: the emblem a kingdom once carried on it (e in older saved themes) is gone. v marks a theme saved since:
    an older one that showed the cross emblem on a plain field becomes the cross pattern, the banner it always had */
+/* what else must hear that the kingdom was changed and saved: the co-op link sends it to the partner (multiplayer/lobby.js) */
+let onSaved = null;
+export const setThemeSaved = (fn) => {
+  onSaved = fn;
+};
+export const themeSaved = () => {
+  fresh = false;
+  if (onSaved) onSaved();
+};
 /* no kingdom was saved on this machine yet: the title opens the profile screen (ui/title-menu.js) */
 let fresh = true;
 export const themeFresh = () => fresh;
