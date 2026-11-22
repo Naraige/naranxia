@@ -70,11 +70,15 @@ export const thp = () => PAL[drawTheme().c][1],
 /* The kingdom: its name, its colour c and second colour c2 (PAL), and the pattern p of its banner (the 16 of rendering/banner-art.js PATS).
    A banner is made of patterns only: the emblem a kingdom once carried on it (e in older saved themes) is gone. v marks a theme saved since:
    an older one that showed the cross emblem on a plain field becomes the cross pattern, the banner it always had */
+/* no kingdom was saved on this machine yet: the title opens the profile screen (ui/title-menu.js) */
+let fresh = true;
+export const themeFresh = () => fresh;
 export function initializeKingdomTheme() {
   THEME = { n: KNAMES[(Math.random() * KNAMES.length) | 0], c: 0, c2: 10, p: 8, v: 2 };
 
   try {
     const t = JSON.parse(localStorage.getItem("dk_theme") || "null");
+    fresh = !(t && typeof t.n === "string");
     if (t && typeof t.n === "string")
       THEME = {
         n: t.n.slice(0, 18),

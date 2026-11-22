@@ -17,6 +17,7 @@ export const settingsState = {
   TOPH: 28,
   fromGame: false,
   setupOpen: false,
+  profOpen: false,
   settingsOpen: false,
   rebind: null,
   sliderDrag: null,

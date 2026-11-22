@@ -1724,4 +1724,8 @@ export const PL = {
   "Pile": "Klin",
   "Checky": "Szachownica",
   "Gradient": "Gradient",
+  "Create your kingdom": "Stwórz swoje królestwo",
+  "Its name and its banner fly over your castle, your men and the title army.":
+    "Jego nazwa i sztandar powiewają nad twoim zamkiem, twoimi ludźmi i armią w menu.",
+  "Found the kingdom": "Załóż królestwo",
 };

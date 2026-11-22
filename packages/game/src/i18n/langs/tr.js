@@ -1722,4 +1722,8 @@ export const TR = {
   "Pile": "Kama",
   "Checky": "Damalı",
   "Gradient": "Renk geçişi",
+  "Create your kingdom": "Krallığını kur",
+  "Its name and its banner fly over your castle, your men and the title army.":
+    "Adı ve sancağı kalenin, adamlarının ve menüdeki ordunun üzerinde dalgalanır.",
+  "Found the kingdom": "Krallığı kur",
 };

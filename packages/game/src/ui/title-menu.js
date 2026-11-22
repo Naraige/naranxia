@@ -19,7 +19,7 @@ import { BTN, BTNH, focusRing, gold, menuSkin } from "./drawing.js";
 import { hudState, inR, U } from "./hud.js";
 import { NAV, navAdd, navBegin, navEnd, navPoll } from "./menu-nav.js";
 import { dIc, IC } from "./icons.js";
-import { KNAMES, PAL, THEME } from "./kingdom-theme.js";
+import { KNAMES, PAL, THEME, themeFresh } from "./kingdom-theme.js";
 import { continueLast, drawSaves, saveMenuState, svPeek } from "./save-menu.js";
 import { drawSettings, nmI, settingsBack, settingsState } from "./settings.js";
 import { openPicker } from "./site-picker.js";
@@ -139,6 +139,7 @@ function drawTitleScreen(UW, UH) {
     saveMenuState.saveOpen ||
     languageState.langOpen ||
     settingsState.setupOpen ||
+    settingsState.profOpen ||
     modeState.open ||
     notesOpen ||
     aboutOpen ||
@@ -150,6 +151,14 @@ function drawTitleScreen(UW, UH) {
     g.fillRect(0, 0, UW, UH);
   }
   if (TT0 < 0) TT0 = performance.now();
+  /* first launch on this machine: no kingdom saved yet, the player makes his before the menu */
+  if (profFirst === undefined) {
+    profFirst = themeFresh() && !ig && !(navigator.webdriver && !window.__nxBootReal);
+    if (profFirst) {
+      profNew = true;
+      settingsState.profOpen = true;
+    }
+  }
   {
     const sk = settingsState.settingsOpen
       ? "set"
@@ -161,17 +170,19 @@ function drawTitleScreen(UW, UH) {
             ? "gui"
             : settingsState.setupOpen
               ? "new"
-              : modeState.open
-                ? "mod"
-                : notesOpen
-                  ? "not"
-                  : aboutOpen
-                    ? "abt"
-                    : chrOpen
-                      ? "chr"
-                      : recOpen
-                        ? "rec"
-                        : "main";
+              : settingsState.profOpen
+                ? "prof"
+                : modeState.open
+                  ? "mod"
+                  : notesOpen
+                    ? "not"
+                    : aboutOpen
+                      ? "abt"
+                      : chrOpen
+                        ? "chr"
+                        : recOpen
+                          ? "rec"
+                          : "main";
     if (sk !== scrKey) {
       scrKey = sk;
       NAV.sel = -1;
@@ -232,6 +243,16 @@ function drawTitleScreen(UW, UH) {
     drawSetup(UW, UH, fh, b);
     kitEnd();
     FT(b, 1);
+    navEnd();
+    return;
+  }
+  if (settingsState.profOpen) {
+    NAV.onEsc = null;
+    navBegin(true);
+    navPoll();
+    drawProfile(UW, UH, fh, closeProfile);
+    kitEnd();
+    FT(closeProfile, 1);
     navEnd();
     return;
   }
@@ -386,6 +407,7 @@ function drawLobby(UW, UH) {
       },
     ],
   ];
+  items.unshift(["Your kingdom", openProfile]);
   if (GNOTES) items.unshift(["Update", openNotes, notesNew()]);
   const cw = nar ? UW - 2 * m : Math.min(184, UW * 0.3),
     cx0 = nar ? m : UW - m - cw,
@@ -909,13 +931,11 @@ const PATN = [
   "Gradient",
 ];
 
-/* ================= New kingdom ================= */
-function drawSetup(UW, UH, fh, back) {
-  const b = kitScreen(UW, UH, { key: "new", title: "New kingdom", close: back, fh, maxW: 440 }),
-    small = b.h < 190,
-    pw = b.w,
-    cx = b.x + pw / 2;
-  let y = b.y + 2;
+/* the card where a kingdom is made: its banner as it will hang, its name, its two colours and its pattern. Used by the profile screen
+   (first launch, "Your kingdom" on the title) and by New kingdom. Every change is saved and redraws the world and the title scene.
+   Returns its height */
+function kingdomCard(b, y, small) {
+  const pw = b.w;
   const eh = small ? 86 : 138;
   kitCard(b.x, y, pw, eh);
   const bnx = b.x + 10,
@@ -1033,6 +1053,56 @@ function drawSetup(UW, UH, fh, back) {
       pwd * 2,
     );
   }
+  return eh;
+}
+
+/* ================= Your kingdom: the profile, made at the first launch =================
+   The name and the banner of the player, kept on this machine (dk_theme). The title scene shows through the veil, so the army behind
+   changes its colours and banners while they are chosen. Under browser automation (the tests) it is never opened by itself */
+let profFirst;
+function drawProfile(UW, UH, fh, back) {
+  const b = kitScreen(UW, UH, {
+      key: "prof",
+      title: profNew ? "Create your kingdom" : "Your kingdom",
+      close: back,
+      fh,
+      maxW: 440,
+      veil: "rgba(6,5,10,.42)",
+    }),
+    small = b.h < 190,
+    cx = b.x + b.w / 2;
+  let y = b.y + 2;
+  y += kingdomCard(b, y, small) + 8;
+  {
+    const s = "Its name and its banner fly over your castle, your men and the title army.";
+    let sc = 0.85;
+    while (sc > 0.6 && tw(s, sc) > b.w) sc -= 0.03;
+    TC(s, cx, y + 2, "#c4a37a", sc);
+    y += 18;
+  }
+  const bh = small ? 22 : 26;
+  bevelBtn(b.x, Math.min(b.y + b.h - bh - 2, y + 4), b.w, bh, profNew ? "Found the kingdom" : "Done", "go", back, {
+    sc: 0.95,
+  });
+}
+let profNew = false;
+const openProfile = () => {
+  settingsState.profOpen = true;
+};
+const closeProfile = () => {
+  settingsState.profOpen = false;
+  profNew = false;
+  saveTheme();
+};
+
+/* ================= New kingdom ================= */
+function drawSetup(UW, UH, fh, back) {
+  const b = kitScreen(UW, UH, { key: "new", title: "New kingdom", close: back, fh, maxW: 440 }),
+    small = b.h < 190,
+    pw = b.w,
+    cx = b.x + pw / 2;
+  let y = b.y + 2;
+  const eh = kingdomCard(b, y, small);
   y += eh + 8;
   {
     const s = "Long calm between waves, then a slow swarm. It grows stronger each wave.";

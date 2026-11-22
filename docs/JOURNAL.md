@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-22 · profile at the first launch: name and banner, the title army follows (unreleased)
+- The King: "ajoute la creation d'un profil au lancement avec la personnalisation du nom et de la banniere qui adapt aussi la cinematic du menu".
+- `ui/title-menu.js`: the kingdom card (banner as it will hang, name, colour, second colour, 16 patterns) is now `kingdomCard()`, shared by New kingdom and by the new screen `drawProfile` ("Create your kingdom" the first time, "Your kingdom" after; `settingsState.profOpen`). It opens by itself on the title when no kingdom was ever saved on the machine (`themeFresh()` in `ui/kingdom-theme.js`: no `dk_theme`), and from the new row "Your kingdom" of the title card. Closing it saves the theme. Not opened by itself under browser automation (`navigator.webdriver`, same rule as `core/boot.js`), so the tests start on the menu as before.
+- The cinematic: the screen has a light veil, the title scene plays behind it; each change calls `retheme()`, which rebuilds the title army (cloth, shields, the bannermen's banners in the pattern of the kingdom). Nothing else in the scene carried colours.
+- Texts: "Create your kingdom", "Found the kingdom", one line of explanation (9 languages).
+- Verified: eslint, prettier, architecture (807), textaudit, langcheck; PASS ui, smoke, tools, features, save, det, compat, frame_guard, voxel_buildings, azerty_probe. Seen: the profile screen over the title scene with a crimson and gold saltire, the army behind in those colours.
+- Not seen: the automatic opening itself (the headless browser is automation, where it is switched off); narrow screens.
+
 ## 2026-11-22 · roofs in the kingdom colour, each co-op player in his own colours, the bannerman carries the kingdom banner (unreleased)
 - The King: "Make sure that all roof color match the kingdom banner color", "Make sure also in coop that we notice more who is who", "make also the bannerman match the banner kingdom".
 - Roofs: `palette()` of the kit gives every building and fortification the roof of the kingdom, tiles in stone and painted shingles in timber (`ROOF.kingdom`, `ROOF.kingdomShingle`, blocks `kingdom_*` coloured by `thd()` in `defOf`); the accent a type had (red barracks, blue castle, thatch) no longer picks the roof. The forge (the King's own plan) keeps its roof.

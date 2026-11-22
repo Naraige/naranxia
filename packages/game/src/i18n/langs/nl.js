@@ -1738,4 +1738,8 @@ export const NL = {
   "Pile": "Punt",
   "Checky": "Geschaakt",
   "Gradient": "Kleurverloop",
+  "Create your kingdom": "Sticht je koninkrijk",
+  "Its name and its banner fly over your castle, your men and the title army.":
+    "Zijn naam en zijn banier wapperen boven je kasteel, je mannen en het leger in het menu.",
+  "Found the kingdom": "Koninkrijk stichten",
 };

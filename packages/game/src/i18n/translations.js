@@ -851,6 +851,9 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v97 */
 Object.assign(TRD,{
+"Create your kingdom":["Créez votre royaume","Crea tu reino","Erschaffe dein Königreich","Crea il tuo regno","Crie o seu reino"],
+"Its name and its banner fly over your castle, your men and the title army.":["Son nom et sa bannière flottent sur votre château, vos hommes et l'armée du menu.","Su nombre y su estandarte ondean sobre tu castillo, tus hombres y el ejército del menú.","Sein Name und sein Banner wehen über deiner Burg, deinen Männern und dem Heer im Menü.","Il suo nome e il suo stendardo sventolano sul tuo castello, sui tuoi uomini e sull'esercito del menu.","O seu nome e o seu estandarte flutuam sobre o seu castelo, os seus homens e o exército do menu."],
+"Found the kingdom":["Fonder le royaume","Fundar el reino","Königreich gründen","Fonda il regno","Fundar o reino"],
 "Cross":["Croix","Cruz","Kreuz","Croce","Cruz"],
 "Pale":["Pal","Palo","Pfahl","Palo","Pala"],
 "Lozenge":["Losange","Losange","Raute","Losanga","Losango"],
