@@ -398,6 +398,54 @@ export function initializeLobby() {
   $m("mpBack").onclick = pubBack;
 
   $m("mpGo").onclick = () => lobbyJoin($m("mpCode").value);
+  /* the room code travels by the clipboard: Copy beside the code of the host, Paste beside the field of the guest */
+  const flash = (b, t) => {
+    const was = b.dataset.t || (b.dataset.t = "Copy");
+    b.textContent = t;
+    clearTimeout(b._ft);
+    b._ft = setTimeout(() => {
+      b.textContent = was;
+    }, 1600);
+  };
+  $m("mpCopy").onclick = async () => {
+    const b = $m("mpCopy"),
+      code = MP.code || "";
+    if (!code) return;
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(code);
+      ok = true;
+    } catch {
+      /* no clipboard permission (an embedded page): the old way, through a selected field */
+      const t = document.createElement("textarea");
+      t.value = code;
+      t.style.cssText = "position:fixed;opacity:0;left:-99px";
+      document.body.appendChild(t);
+      t.select();
+      try {
+        ok = document.execCommand("copy");
+      } catch {
+        ok = false;
+      }
+      t.remove();
+    }
+    flash(b, ok ? "Copied!" : "Select the code and press Ctrl+C");
+  };
+  $m("mpPaste").dataset.t = "Paste";
+  $m("mpPaste").onclick = async () => {
+    try {
+      const v = (await navigator.clipboard.readText()).replace(/\s+/g, "").slice(0, 16);
+      if (v) {
+        $m("mpCode").value = v.toUpperCase();
+        $m("mpCode").focus();
+        return;
+      }
+    } catch {
+      /* the browser keeps the clipboard to itself: the keyboard still pastes */
+    }
+    $m("mpCode").focus();
+    mpStatus("Click the field and press Ctrl+V to paste the code");
+  };
 
   $m("mpCode").addEventListener("keydown", (e) => {
     e.stopPropagation();

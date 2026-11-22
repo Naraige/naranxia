@@ -444,26 +444,143 @@
   overflow-wrap: anywhere;
 }
 
-/* white buttons on the dark co-op window */
+/* the buttons and the colours of the menus (ui/menu-kit.js bevelBtn: BV.dark and BV.go), the King: "adapter la fenetre de coop comme le
+   menu pour les couleurs buttons". Pixel font, square corners, a lit top line and a dark lip that sinks when pressed; green for the
+   action that goes on (host, create, join, choose a site, play), slate for the others */
+#mp .bx {
+  background: linear-gradient(#121826, #0b0f17 70%) !important;
+}
+#mp h2 {
+  font-family: "Pixelify Sans", "Inter", "Segoe UI", system-ui, sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 27px !important;
+  background: linear-gradient(#ffd98a, #ffb340 50%, #f08a1e) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
 #mp button {
-  color: #17202e !important;
-  text-shadow: none !important;
-  background: linear-gradient(rgba(255, 255, 255, 0.88), rgba(240, 244, 250, 0.68)) !important;
-  border: 1px solid rgba(20, 30, 50, 0.25) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  font:
+    500 17px "Pixelify Sans",
+    "Inter",
+    "Segoe UI",
+    system-ui,
+    sans-serif !important;
+  letter-spacing: 0.3px;
+  color: #ece6d8 !important;
+  text-shadow: 0 1px 0 #0a0b10 !important;
+  background: linear-gradient(#3b404d, #2a2e39) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 8px 16px 9px !important;
+  margin: 6px 10px 9px 1px !important;
+  box-shadow:
+    inset 0 2px 0 -1px #5a6072,
+    inset 0 -1px 0 rgba(0, 0, 0, 0.16),
+    0 3px 0 #15171d,
+    0 0 0 1px #06070a,
+    0 3px 0 1px #06070a,
+    0 5px 0 rgba(0, 0, 0, 0.35) !important;
+  transition: none;
 }
 #mp button:hover:not(:disabled) {
-  background: rgba(47, 125, 246, 0.2) !important;
-  border-color: #2f7df6 !important;
+  background: linear-gradient(#4a5060, #353a47) !important;
   color: #fff !important;
-  box-shadow: 0 0 0 3px rgba(47, 125, 246, 0.25) !important;
+  border: 0 !important;
+  box-shadow:
+    inset 0 2px 0 -1px #6e7488,
+    inset 0 -1px 0 rgba(0, 0, 0, 0.16),
+    0 3px 0 #15171d,
+    0 0 0 1px #06070a,
+    0 3px 0 1px #06070a,
+    0 5px 0 rgba(0, 0, 0, 0.35) !important;
+}
+#mp button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 2px 0 -1px #5a6072,
+    0 1px 0 #15171d,
+    0 0 0 1px #06070a,
+    0 1px 0 1px #06070a !important;
 }
 #mp button.pri {
-  background: #2f7df6 !important;
-  border-color: #2f7df6 !important;
   color: #fff !important;
+  text-shadow: 0 1px 0 #123a0c !important;
+  background: linear-gradient(#63c93e, #3f9c28) !important;
+  box-shadow:
+    inset 0 2px 0 -1px #a6ee78,
+    inset 0 -1px 0 rgba(0, 0, 0, 0.16),
+    0 3px 0 #1e5a14,
+    0 0 0 1px #0a2208,
+    0 3px 0 1px #0a2208,
+    0 5px 0 rgba(0, 0, 0, 0.35) !important;
 }
 #mp button.pri:hover:not(:disabled) {
-  background: #4a8ef8 !important;
+  background: linear-gradient(#74d84e, #4aae32) !important;
+  box-shadow:
+    inset 0 2px 0 -1px #c0f79a,
+    inset 0 -1px 0 rgba(0, 0, 0, 0.16),
+    0 3px 0 #1e5a14,
+    0 0 0 1px #0a2208,
+    0 3px 0 1px #0a2208,
+    0 5px 0 rgba(0, 0, 0, 0.35) !important;
+}
+#mp button.pri:active:not(:disabled) {
+  box-shadow:
+    inset 0 2px 0 -1px #a6ee78,
+    0 1px 0 #1e5a14,
+    0 0 0 1px #0a2208,
+    0 1px 0 1px #0a2208 !important;
+}
+#mp button:disabled {
+  opacity: 1 !important;
+  color: #7c8190 !important;
+  text-shadow: none !important;
+  background: linear-gradient(#2b2e38, #23262e) !important;
+  box-shadow:
+    0 3px 0 #15171d,
+    0 0 0 1px #06070a,
+    0 3px 0 1px #06070a !important;
+}
+#mp .publ .pg button {
+  margin: 0 0 4px !important;
+}
+#mp .pubchk input {
+  accent-color: #c9a24f;
+}
+#mp input.cd,
+#mp .code {
+  font-family: "Pixelify Sans", "Inter", sans-serif !important;
+  border-radius: 0 !important;
+}
+#mp input.cd:focus {
+  border-color: #c9a24f !important;
+  box-shadow:
+    0 0 10px rgba(201, 162, 79, 0.3),
+    inset 0 2px 6px rgba(0, 0, 0, 0.6) !important;
+}
+#mp .pl.on .dot {
+  background: #63c93e !important;
+  box-shadow: 0 0 8px #63c93e !important;
+}
+#mp .pl.rdy .rd {
+  color: #a6ee78 !important;
+}
+
+/* the room code with its Copy button, the code field with its Paste button */
+#mp .coderow {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin: 6px 0 4px;
+}
+#mp .coderow .code,
+#mp .coderow input.cd {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+#mp .coderow button {
+  flex: none;
+  min-width: 92px;
+  margin: 0 1px 5px 0 !important;
 }

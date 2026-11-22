@@ -1779,4 +1779,12 @@ export const PL = {
   "Winter Feast - gift bearers walk with the horde, strike them down for gold":
     "Zimowa Uczta - nosiciele darów idą z hordą, powal ich dla złota",
   "Gift bearer slain: +{0} gold": "Nosiciel darów powalony: +{0} złota",
+  "Copy": "Kopiuj",
+  "Paste": "Wklej",
+  "Copied!": "Skopiowano!",
+  "Select the code and press Ctrl+C": "Zaznacz kod i naciśnij Ctrl+C",
+  "Click the field and press Ctrl+V to paste the code": "Kliknij pole i naciśnij Ctrl+V, aby wkleić kod",
+  "Your room code - your partner types it to join": "Kod twojego pokoju - partner wpisuje go, aby dołączyć",
+  "Each player founds a castle on the same map and keeps their own resources. You fight the horde together.":
+    "Każdy gracz zakłada zamek na tej samej mapie i zachowuje własne zasoby. Razem walczycie z hordą.",
 };

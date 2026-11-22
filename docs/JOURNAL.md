@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-22 · co-op window like the menus (#46), for v100
+- The King, with two captures of the co-op window: "adapter la fenetre de coop comme le menu pour les couleurs buttons", then "un button copier coller pour le code".
+- `styles/coop.css`: the buttons of the window are the bevel buttons of the menus (`BV.dark` and `BV.go` of `ui/menu-kit.js`: pixel font, square, lit top line, dark lip that sinks when pressed), green for the action that goes on, slate for the others; pixel title in the orange gold of the menu titles, darker panel, green "ready" marks.
+- Copy beside the room code (clipboard API, then `execCommand` when the page has no permission), Paste beside the code field of the guest (when the browser refuses to read the clipboard, a line says to press Ctrl+V).
+- The captures showed half-translated lines ("Each player fonde their own castle"): two texts of the window had no translation and `L()` translated single words. Both now have one in the 8 languages; the first also said "the economy is shared", which is no longer true (each player has his resources): rewritten.
+- Do not run prettier on `packages/game/index.html`: it reflows the template and the build fails.
+- Verified: quality, langcheck, a capture of the window in French looked at once, PASS ui, smoke. Not tried: the clipboard buttons in a real browser (the capture does not click them).
+- Not released yet: v98 and v99 are still in their release runs; this goes out as v100 after them.
+
 ## 2026-11-22 · v99
 - The King answered "j'accepte tout" to the v98 report, which ended on the question of what the seasonal events should do (decor only, or rules: enemies, rewards, weather). Read as: the v98 decisions stand, and the events get all of it. Done for the Winter Feast, the next one on the calendar (1 Dec); the three others still only show on the title (#45 stays the record).
 - An event travels with the game: `sessionState.sev` is taken in `reset()` (the date of the machine in solo, the host's `ev` of the start message in co-op through `sevPick`), saved as `SEV` (older saves: none), so a game keeps its event to the end and both machines agree. An automated browser has no event unless `window.__EVENT` names one: tests play the same game all year.

@@ -1792,4 +1792,12 @@ export const NL = {
   "Winter Feast - gift bearers walk with the horde, strike them down for gold":
     "Winterfeest - geschenkdragers lopen met de horde mee, sla ze neer voor hun goud",
   "Gift bearer slain: +{0} gold": "Geschenkdrager verslagen: +{0} goud",
+  "Copy": "Kopiëren",
+  "Paste": "Plakken",
+  "Copied!": "Gekopieerd!",
+  "Select the code and press Ctrl+C": "Selecteer de code en druk op Ctrl+C",
+  "Click the field and press Ctrl+V to paste the code": "Klik in het veld en druk op Ctrl+V om de code te plakken",
+  "Your room code - your partner types it to join": "Je kamercode - je partner typt hem in om mee te doen",
+  "Each player founds a castle on the same map and keeps their own resources. You fight the horde together.":
+    "Elke speler sticht een kasteel op dezelfde kaart en houdt zijn eigen grondstoffen. Jullie bevechten de horde samen.",
 };

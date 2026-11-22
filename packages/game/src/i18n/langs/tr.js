@@ -1776,4 +1776,12 @@ export const TR = {
   "Winter Feast - gift bearers walk with the horde, strike them down for gold":
     "Kış Şöleni - armağan taşıyıcılar sürüyle yürüyor, altınları için onları devir",
   "Gift bearer slain: +{0} gold": "Armağan taşıyıcı devrildi: +{0} altın",
+  "Copy": "Kopyala",
+  "Paste": "Yapıştır",
+  "Copied!": "Kopyalandı!",
+  "Select the code and press Ctrl+C": "Kodu seç ve Ctrl+C'ye bas",
+  "Click the field and press Ctrl+V to paste the code": "Alana tıkla ve kodu yapıştırmak için Ctrl+V'ye bas",
+  "Your room code - your partner types it to join": "Oda kodun - ortağın katılmak için bunu yazar",
+  "Each player founds a castle on the same map and keeps their own resources. You fight the horde together.":
+    "Her oyuncu aynı haritada bir kale kurar ve kendi kaynaklarını korur. Sürüyle birlikte savaşırsınız.",
 };

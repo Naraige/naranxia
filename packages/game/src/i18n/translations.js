@@ -849,7 +849,17 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v99 */
+  /* texts added in v100 */
+Object.assign(TRD,{
+"Copy":["Copier","Copiar","Kopieren","Copia","Copiar"],
+"Paste":["Coller","Pegar","Einfügen","Incolla","Colar"],
+"Copied!":["Copié !","¡Copiado!","Kopiert!","Copiato!","Copiado!"],
+"Select the code and press Ctrl+C":["Sélectionnez le code et appuyez sur Ctrl+C","Selecciona el código y pulsa Ctrl+C","Markiere den Code und drücke Strg+C","Seleziona il codice e premi Ctrl+C","Selecione o código e prima Ctrl+C"],
+"Click the field and press Ctrl+V to paste the code":["Cliquez dans le champ et appuyez sur Ctrl+V pour coller le code","Haz clic en el campo y pulsa Ctrl+V para pegar el código","Klicke in das Feld und drücke Strg+V, um den Code einzufügen","Clicca nel campo e premi Ctrl+V per incollare il codice","Clique no campo e prima Ctrl+V para colar o código"],
+"Your room code - your partner types it to join":["Le code de votre salon - votre partenaire le saisit pour vous rejoindre","El código de tu sala - tu compañero lo escribe para unirse","Dein Raumcode - dein Partner gibt ihn ein, um beizutreten","Il codice della tua stanza - il tuo compagno lo digita per entrare","O código da sua sala - o seu parceiro escreve-o para entrar"],
+"Each player founds a castle on the same map and keeps their own resources. You fight the horde together.":["Chaque joueur fonde un château sur la même carte et garde ses propres ressources. Vous combattez la horde ensemble.","Cada jugador funda un castillo en el mismo mapa y conserva sus propios recursos. Combatís juntos a la horda.","Jeder Spieler gründet eine Burg auf derselben Karte und behält seine eigenen Rohstoffe. Ihr bekämpft die Horde gemeinsam.","Ogni giocatore fonda un castello sulla stessa mappa e tiene le proprie risorse. Combattete l'orda insieme.","Cada jogador funda um castelo no mesmo mapa e mantém os seus próprios recursos. Combatem a horda juntos."]
+});
+/* texts added in v99 */
 Object.assign(TRD,{
 "The Winter Feast: a world under snow and gold walking with the horde.":["La Fête de l'Hiver : un monde sous la neige et de l'or qui marche avec la horde.","La Fiesta de Invierno: un mundo bajo la nieve y oro que camina con la horda.","Das Winterfest: eine Welt unter Schnee und Gold, das mit der Horde wandert.","La Festa d'Inverno: un mondo sotto la neve e oro che cammina con l'orda.","A Festa de Inverno: um mundo sob a neve e ouro a caminhar com a horda."],
 "Seasonal events now change the game. A game started during an event keeps it to its end, in solo and in co-op.":["Les événements saisonniers changent désormais le jeu. Une partie commencée pendant un événement le garde jusqu'à sa fin, en solo comme en coop.","Los eventos de temporada ahora cambian el juego. Una partida empezada durante un evento lo conserva hasta el final, en solitario y en cooperativo.","Saisonale Ereignisse verändern jetzt das Spiel. Eine während eines Ereignisses begonnene Partie behält es bis zum Ende, allein und im Koop.","Gli eventi stagionali ora cambiano il gioco. Una partita iniziata durante un evento lo mantiene fino alla fine, in solitaria e in co-op.","Os eventos sazonais agora mudam o jogo. Uma partida começada durante um evento mantém-no até ao fim, a solo e em co-op."],
