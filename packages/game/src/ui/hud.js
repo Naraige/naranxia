@@ -528,8 +528,29 @@ export function drawUI() {
     rx = UW - 6;
     ry = 23 + ex;
   }
+  /* big stocks: 12345 -> 12.3k, 1234567 -> 1.2M when the full number would push the next stock out of the bar (v101: stocks used to vanish) */
+  const shortN = (v) => {
+    const a = Math.abs(v);
+    if (a >= 1e6) return (v / 1e6).toFixed(a >= 1e7 ? 0 : 1) + "M";
+    if (a >= 1e4) return (v / 1e3).toFixed(a >= 1e5 ? 0 : 1) + "k";
+    return String(v);
+  };
+  const stocks = [sessionState.res.g, sessionState.res.w, sessionState.res.s, Math.floor(sessionState.res.f || 0)],
+    pop0 = popUsed(LPL()) + "/" + popCap(LPL()),
+    need =
+      stocks.reduce((a, v) => a + 16 + tw(v) + 10, 0) +
+      62 +
+      (16 + tw(pop0) + 10) +
+      (16 + tw(sessionState.units.filter((u) => u.t === 1).length + SW.n) + 10) +
+      (16 + tw(sessionState.kills) + 10),
+    compact = x + need > rx - 4;
   const item = (ic, s, col, tip) => {
-    const n = 16 + tw(s) + 10;
+    let n = 16 + tw(s) + 10;
+    if (typeof s === "number" && compact && Math.abs(s) >= 1e4) {
+      tip = tip.concat([String(s)]);
+      s = shortN(s);
+      n = 16 + tw(s) + 10;
+    }
     if (x + n > rx - 4) return;
     dIc(ic, x, ry + 2, 13);
     T_(s, x + 16, ry + 3.5, col);

@@ -121,7 +121,7 @@ export const BCATS = {
     def: ["Defense", ["wall", "gate", "tower", "torch", "beacon", "sappers", "spike"]],
     eco: ["Economy", ["farm", "forester", "storage", "market", "granary", "orchard", "embassy"]],
     town: ["Town", ["house", "barracks", "guild", "academy", "observatory", "bell", "sanctuary", "forge", "warroom"]],
-    land: ["Land", ["path", "raise", "dig", "ramp"]],
+    land: ["Land", ["raise", "dig", "ramp"]],
     siege: ["Siege", ["ballista", "trebuchet"]],
   },
   BCI = { def: "tower", eco: "farm", town: "house", land: "raise", siege: "ballista" };
@@ -137,5 +137,4 @@ export const BK = [
   "wall",
   "gate",
   "tower",
-  "path",
 ];

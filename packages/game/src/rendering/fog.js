@@ -2,6 +2,7 @@ import { TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { SW } from "../gameplay/swarm.js";
 import { matV, matWater } from "./materials.js";
+import { postFog } from "./post-fog.js";
 import { THREE } from "./three.js";
 import { setUNITSHHandler, UNITSH } from "./unit-instances.js";
 import { cvs } from "../ui/canvases.js";
@@ -222,6 +223,7 @@ export function initializeFog() {
   litT.generateMipmaps = false;
   litT.wrapS = litT.wrapT = THREE.ClampToEdgeWrapping;
   litT.unpackAlignment = 1;
+  postFog.u = FOWU;
   FOWU.tLit = { value: litT };
   FOWU.litP = { value: new THREE.Vector4(0, 0, 1 / LITN, 0) };
 
@@ -272,7 +274,7 @@ export function initializeFogOverlay() {
   FOWG = FOWC.getContext("2d");
   FOWI = FOWG.createImageData(FW, FH);
 
-  for (let i = 0; i < 256; i++) FLUT[i] = Math.round(i < 128 ? 238 - (i / 128) * 112 : 126 - ((i - 128) / 127) * 126);
+  for (let i = 0; i < 256; i++) FLUT[i] = Math.round(i < 128 ? 255 - (i / 128) * 129 : 126 - ((i - 128) / 127) * 126);
 
   for (let i = 0; i < FW * FH; i++) {
     FOWI.data[i * 4] = 6;

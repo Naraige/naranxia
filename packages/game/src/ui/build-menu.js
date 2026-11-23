@@ -245,11 +245,9 @@ function buildGroups(siege) {
   return [
     [
       "Build",
-      ["house", "farm", "wall", "cat:def", "cat:eco", "cat:town", "cat:land"].concat(
-        sg ? ["cat:siege"] : [],
-        RS.done ? ["upgtool"] : [],
-        ["demolish"],
-      ),
+      ["cat:def", "cat:eco", "cat:town", "cat:land"].concat(sg ? ["cat:siege"] : [], RS.done ? ["upgtool"] : [], [
+        "demolish",
+      ]),
     ],
   ];
 }

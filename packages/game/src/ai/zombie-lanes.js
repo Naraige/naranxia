@@ -38,14 +38,14 @@ export const zcount = () => {
 
 /* far from the castle a horde follows its lane through a chain of local path fields (one per few waypoints), so cliffs, lakes and woods no longer trap it at its spawn;
    where no path exists at all the zombies clamber over the obstacle */
-export const WSPN = 150,
+export const WSPN = 1e9,
   WSEE = 130,
   LSEG = 8,
   DETK = 2.2,
   DETA = 16,
   LFLD = new Map();
 
-/* where a horde of lane L appears: the far end of its route (the start of the map), as far as WSPN tiles of path from the castle the route leaves.
+/* where a horde of lane L appears: the far end of its route (the start of the map), at the very end of the route, on the shore of the island (WSPN is unlimited since v101: the portals open at the edge of the map).
    It must lie at least WSEE straight tiles from every castle of both players (the widest camera zoom shows about 90): when the point at WSPN is nearer,
    the search goes on outward to the map edge, then inward, and takes the first point that is far enough (else the farthest one).
    Pure geometry (route + castle tiles, no terrain, no RNG), so every client and pickLanes agree. Returns {i: route index (even), d: straight distance to the nearest castle, rem: path left} */

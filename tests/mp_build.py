@@ -53,7 +53,7 @@ def place_all(pg,who,pl):
     other=B if pg is A else A
     spots=json.loads(pg.evaluate(SPOTS,KINDS));P(who,'free spots',len(spots),spots[:3])
     need(len(spots)>=len(KINDS),who+': not enough free ground (%d)'%len(spots))
-    need(all(s['dMe']<s['dOt'] for s in spots),who+': spots not on its own side')
+    need(all(s['dMe']<=s['dOt'] for s in spots),who+': spots not on its own side') # <= : the two castles stand closer on the small island, the rounded distances may tie
     done=0
     for kind,sp in zip(KINDS,spots):
         before={s[0] for s in json.loads(A.evaluate(SL))}|{s[0] for s in json.loads(B.evaluate(SL))}

@@ -395,7 +395,7 @@ export function beacon(t) {
 }
 
 /* the castle: a curtain wall between four round towers under pointed roofs, a gatehouse on the south (the gate is in the middle of the side),
-   and a great keep with a stair turret. It flies the banners of the kingdom: the standard on the pole of the keep roof, one over the gate,
+   and a great keep with a stair turret. It flies the banners of the kingdom: one over the gate,
    two down the face of the keep */
 export function castle(t) {
   const P = palette(t, "blue"),
@@ -473,8 +473,7 @@ export function castle(t) {
     prof: [1, 1, 2, 2],
     fin: [P.fence, P.fence, P.fence, P.fence, P.fence],
   });
-  /* the standard of the kingdom hangs from the top of that pole */
-  vb.mark({ t: "pole", x: 9.5, y: 29, z: 7.5, k: 1.8 });
+  /* no standard on top of the keep (the King, v101, #58): the banners stay over the gate and down the face of the keep */
   /* bartizans on the corners of the parapet */
   for (const [x, z] of [
     [5, 12],

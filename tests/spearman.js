@@ -155,12 +155,15 @@ async () => {
     chk("refill_" + tr, r1 && cnt(b, "spearman") === sp && cnt(b, "knight") === kn);
   });
   O.camp = camp;
+  /* v101: the rival kingdoms (rebel camps) are no longer founded, so these camp checks only run on a world that has camps */
+  const noCamps = !bs.length;
   chk(
     "campOrder",
-    !!camp.warlike && +camp.warlike.split("k")[1].split("s")[0] > +camp.merchant.split("k")[1].split("s")[0],
+    noCamps ||
+      (!!camp.warlike && +camp.warlike.split("k")[1].split("s")[0] > +camp.merchant.split("k")[1].split("s")[0]),
   );
   /* a rebel spearman is a camp unit (team 2, camp colour) and fights like ours: reach, and the bonus against a brute */
-  {
+  if (!noCamps) {
     const b = bs[0],
       u = b.us.find((q) => q.type === "spearman" && q.hp > 0);
     chk("rebelUnit", u.t === 2 && u.base === b && u.ci === b.ci && u.hp === 85);
@@ -191,7 +194,10 @@ async () => {
   }
   /* the camps live on for 20 s of simulation with their spearmen, and the state hash is a number */
   for (let i = 0; i < 400; i++) update(0.05);
-  chk("runs", units.some((u) => u.t === 2 && u.type === "spearman" && u.hp > 0) && typeof mpHash() !== "undefined");
+  chk(
+    "runs",
+    noCamps || (units.some((u) => u.t === 2 && u.type === "spearman" && u.hp > 0) && typeof mpHash() !== "undefined"),
+  );
   /* hotkey (v93): F4 by default, used by nothing else; saved keys with the old default move once, a later choice of the player is kept */
   {
     const LS = localStorage,

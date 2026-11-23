@@ -1,5 +1,6 @@
 import { sessionState } from "../gameplay/session.js";
 import { nightK } from "./lighting.js";
+import { postFog } from "./post-fog.js";
 import { renderer } from "./scene.js";
 import { THREE } from "./three.js";
 
@@ -56,6 +57,10 @@ export function postRender(scn, cmr, sky) {
   U.uT.value = sessionState.clockT;
   U.uSky.value = sky ? 1 : 0;
   U.uInk.value = 1;
+  if (postFog.u) {
+    U.tFow.value = postFog.u.tFow.value;
+    U.fowP.value.copy(postFog.u.fowP.value);
+  }
   if (scn.fog) {
     U.fogR.value.set(scn.fog.near, scn.fog.far);
     U.uHor.value.copy(scn.fog.color);
@@ -78,7 +83,7 @@ let _zenK;
 export function initializePostProcessing() {
   POST = (() => {
     const VS = "varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}";
-    const FS = `uniform sampler2D tC,tD;uniform vec2 px,nf,fogR;uniform float lw,uN,uT,uSky,uInk;uniform mat4 uIPV;uniform vec3 uCam,uHor,uZen;varying vec2 vUv;
+    const FS = `uniform sampler2D tC,tD,tFow;uniform vec4 fowP;uniform vec2 px,nf,fogR;uniform float lw,uN,uT,uSky,uInk;uniform mat4 uIPV;uniform vec3 uCam,uHor,uZen;varying vec2 vUv;
  float W(vec2 u){float d=texture2D(tD,u).x;return(nf.y-d*(nf.y-nf.x))/(nf.x*nf.y);}
  float hs2(vec2 p){p=fract(p*vec2(.1031,.103));p+=dot(p,p.yx+33.33);return fract((p.x+p.y)*p.x);}
  float vn2(vec2 x){vec2 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);return mix(mix(hs2(i),hs2(i+vec2(1.,0.)),f.x),mix(hs2(i+vec2(0.,1.)),hs2(i+vec2(1.,1.)),f.x),f.y);}
@@ -93,6 +98,7 @@ export function initializePostProcessing() {
    float jmp=max(max(abs(wl-w0),abs(wr-w0)),max(abs(wd-w0),abs(wu-w0)));
    float z=1./w0,e=max(smoothstep(.0035,.011,lap/w0),smoothstep(.02,.06,jmp/w0));
    e*=1.-smoothstep(fogR.x,mix(fogR.x,fogR.y,.7),z);
+   if(fowP.w>.5){vec4 fw=uIPV*vec4(vUv*2.-1.,d0*2.-1.,1.);vec2 fq=(fw.xz/fw.w)*fowP.xy;e*=smoothstep(.02,.25,texture2D(tFow,fq).r);}
    c=mix(c,c*vec3(.07,.06,.09),e*.95);}
   float L=dot(c,vec3(.299,.587,.114));c=mix(vec3(L),c,1.08);
   vec3 cool=mix(vec3(.85,.96,1.1),vec3(.8,.78,1.16),uN),warm=mix(vec3(1.06,1.,.9),vec3(1.14,.9,.86),uN);
@@ -115,6 +121,8 @@ export function initializePostProcessing() {
       uT: { value: 0 },
       uSky: { value: 1 },
       uInk: { value: 1 },
+      tFow: { value: null },
+      fowP: { value: new THREE.Vector4() },
       uIPV: { value: new THREE.Matrix4() },
       uCam: { value: new THREE.Vector3() },
       uHor: { value: new THREE.Color() },

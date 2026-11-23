@@ -160,19 +160,19 @@ async () => {
     same = JSON.stringify(a) === JSON.stringify(b);
   // Captured from the v95 polish lots (lot A: route reach 112 tiles, contour spread of crowded hordes, terrain-aware lane routes #30, spawn patch that widens with the wave size, weighted unit separation with body block), identical on two runs: v94 release branch (main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix, spike removal) plus route bending.
   const expected = [
-    "256284857:21750:5:1:1070:0.9614:sh9:nl0.90:f150:sp0:ro00:wk0:T44458432:z132:pu0:fg0:fp7",
-    "264509877:26000:6:1:1078:0.9768:sh9:nl0.98:f150:sp0:ro00:wk0:T44458432:z131:pu0:fg0:fp7",
-    "1849746932:26000:6:0:1078:0.9875:sh9:nl1.00:f150:sp0:ro00:wk0:T44458432:z131:pu0:fg0:fp6",
-    "-1585826418:26000:6:0:1078:0.9934:sh9:nl1.00:f150:sp0:ro00:wk0:T44458432:z131:pu0:fg0:fp6",
-    "-909647788:26000:6:0:1078:0.9965:sh9:nl1.00:f150:sp0:ro00:wk0:T803928576:z131:pu0:fg0:fp6",
-    "533553106:25997:33:0:1147:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T803928576:z110:pu0:fg0:fp3",
-    "663384726:25963:74:0:1167:0.9982:sh9:nl1.00:f150:sp0:ro00:wk0:T-660796063:z106:pu0:fg0:fp1",
-    "128347198:25893:144:0:1171:0.9982:sh0:nl1.00:f150:sp0:ro00:wk0:T1206955144:z113:pu0:fg0:fp1",
+    "-1490282270:21696:6:0:1119:1.0000:sh0:nl0.04:f186:sp0:ro11:wk3:T890900605:z129:pu0:fg0:fp5",
+    "427646535:25927:6:0:1129:1.0000:sh0:nl0.10:f234:sp0:ro11:wk3:T-1729197379:z129:pu0:fg0:fp5",
+    "800995879:25927:6:0:1139:1.0000:sh0:nl0.17:f294:sp0:ro11:wk3:T-853636677:z129:pu0:fg0:fp5",
+    "-1522946231:25927:6:0:1139:1.0000:sh0:nl0.28:f342:sp0:ro11:wk3:T995238267:z129:pu0:fg0:fp5",
+    "869888421:25927:6:0:1149:1.0000:sh7:nl0.40:f354:sp0:ro11:wk1:T670851705:z129:pu0:fg0:fp5",
+    "-1795034862:25927:6:2:1149:1.0000:sh8:nl0.58:f354:sp0:ro11:wk0:T670851705:z129:pu0:fg0:fp5",
+    "-1584341303:25927:6:2:1149:1.0000:sh8:nl0.73:f354:sp0:ro11:wk0:T670851705:z129:pu0:fg0:fp5",
+    "1668723004:25927:6:0:1149:1.0000:sh8:nl0.83:f354:sp0:ro10:wk0:T670851705:z129:pu0:fg0:fp4",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   __test.check("repeated simulation fingerprints", a, b);
   __test.check(
-    "pinned fingerprints (re-pinned v100: garrison reach of towers and walls, sites on rougher ground)",
+    "pinned fingerprints (re-pinned v101: round island, no rival kingdoms, portals at the shore, kingdom paths, flatter world)",
     a,
     expected,
   );

@@ -1,4 +1,5 @@
 import { fb, hs, hyp } from "../core/math.js";
+import { ISL_SEA, islandCore, islandN } from "./island.js";
 import { CHALF, N, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { markP, markT } from "./terrain-invalidation.js";
@@ -142,13 +143,17 @@ export function baseHW(x, y) {
       0,
       u * Math.sqrt(Math.sqrt(u)) * P.am * 17 + Math.max(0, r - P.rg) * P.am * 55 + (dt - 0.5) * 2 * Math.min(1, u * 3),
     );
-  const h = LAND + (bn < 0.36 ? -1 : bn > 0.64 ? 1 : 0) + (E < 4 ? Math.round(E) : 4 + 2 * Math.round((E - 4) / 2));
+  let h = LAND + (bn < 0.36 ? -1 : bn > 0.64 ? 1 : 0) + (E < 4 ? Math.round(E) : 4 + 2 * Math.round((E - 4) / 2));
+  const core = islandCore(x, y);
+  if (core > 0) h = LAND + Math.round((h - LAND) * (1 - core));
   const lk = fb(x * 0.0042, y * 0.0042, sd + 1300),
     rv1 = Math.abs(fb(x * 0.0065, y * 0.0065, sd + 900) - 0.5),
     rv2 = Math.abs(fb(x * 0.011, y * 0.011, sd + 950) - 0.5),
     rw = 0.012 + P.rv * 0.5;
   let water = lk < 0.27 - (P.wl - 0.28) * 0.4;
   if (!water && h < LAND + 9 && (rv1 < rw || (rv2 < rw * 0.55 && lk < 0.42))) water = true;
+  if (core > 0.15) water = false;
+  else if (!water && islandN(x, y) > ISL_SEA) water = true;
   _bwat = water;
   return h;
 }
@@ -184,7 +189,8 @@ let RAWF;
 let RAWL;
 let SMH;
 let SMF;
-const FT = 56;
+const FT = 120,
+  WOOD_EDGE = 0.08;
 
 function rawAt(x, y) {
   const i = y * TW + x;
@@ -870,22 +876,22 @@ export function genChunk(cx, cy) {
       }
       const al = HT[i] - LAND,
         f = fb(x * 0.06, y * 0.06, sd + 50),
-        d = (f - P.tr) / 0.2;
-      /* woods, dense at heart and thinning at the edges; lone trees in the meadows */
-      if (d > 0 && al < 14 && hs(x, y, sd + 11) < Math.min(0.9, d * 0.95 + 0.1)) {
+        d = (f - P.tr) / WOOD_EDGE;
+      /* woods: compact, dense groves with a short edge (v101, #56); a few lone trees in the meadows */
+      if (d > 0 && al < 14 && hs(x, y, sd + 11) < Math.min(0.92, d * 0.95 + 0.4)) {
         ter[i] = 2;
         amt[i] = 3;
         continue;
       }
-      if (al < 12 && hs(x, y, sd + 12) < P.tc) {
+      if (al < 12 && hs(x, y, sd + 12) < P.tc * 0.25) {
         ter[i] = 2;
         amt[i] = 3;
         continue;
       }
       /* stone: boulder fields in clusters, more of them in the hills, and rockfall at the foot of the cliffs */
       const so = fb(x * 0.11, y * 0.11, sd + 70),
-        sth = 0.74 - Math.min(0.08, Math.max(0, al) * 0.01);
-      if (so > sth && hs(x, y, sd + 13) < (so - sth) * 5 + 0.1) {
+        sth = 0.76 - Math.min(0.06, Math.max(0, al) * 0.01);
+      if (so > sth && hs(x, y, sd + 13) < Math.min(0.9, (so - sth) * 14 + 0.45)) {
         if (so > sth + 0.06 && hs(x, y, sd + 20) < 0.2 * P.gd) {
           ter[i] = 4;
           amt[i] = 40;
@@ -896,7 +902,7 @@ export function genChunk(cx, cy) {
         continue;
       }
       const cf = cliffFoot(x, y, HT[i]);
-      if (cf && hs(x, y, sd + 17) < 0.12) {
+      if (cf && hs(x, y, sd + 17) < 0.04) {
         ter[i] = 3;
         amt[i] = 8;
         continue;
@@ -907,17 +913,17 @@ export function genChunk(cx, cy) {
         amt[i] = 40;
         continue;
       }
-      if (cf && al >= 1 && hs(x, y, sd + 18) < 0.03 * P.gd) {
+      if (cf && al >= 1 && hs(x, y, sd + 18) < 0.008 * P.gd) {
         ter[i] = 4;
         amt[i] = 40;
         continue;
       }
-      if (al >= 4 && hs(x, y, sd + 16) < 0.004 * P.gd) {
+      if (al >= 4 && hs(x, y, sd + 16) < 0.001 * P.gd) {
         ter[i] = 4;
         amt[i] = 40;
         continue;
       }
-      if (al >= 3 && hs(x, y, sd + 19) < 0.006 + 0.002 * al) {
+      if (al >= 3 && hs(x, y, sd + 19) < 0.001 + 0.0004 * al) {
         ter[i] = 3;
         amt[i] = 8;
       }
@@ -950,13 +956,14 @@ export function ensureRect(x0, y0, w, h) {
 export let rollWorld = function rollWorld() {
   terrainState.SEED = Math.random() * 500;
   const R = Math.random;
+  /* flatter worlds for the big block buildings (v101, #50): fewer mountains, lakes and rivers, gentler heights */
   terrainState.GPR = {
     fq: 0.009 + R() * 0.007,
-    wl: 0.28 + R() * 0.08,
-    mt: 0.5 + R() * 0.1,
-    rv: 0.008 + R() * 0.008,
+    wl: 0.26 + R() * 0.05,
+    mt: 0.58 + R() * 0.06,
+    rv: 0.008 + R() * 0.006,
     rg: 0.93 + R() * 0.03,
-    am: 0.7 + R() * 0.5,
+    am: 0.6 + R() * 0.4,
     tr: 0.5 + R() * 0.2,
     gd: 0.8 + R() * 0.5,
     tc: 0.003 + R() * 0.01,
@@ -969,7 +976,7 @@ function routeGround(x, y) {
     al = h - LAND;
   if (_bwat) return 8;
   let c = al > 0 ? Math.min(al, 12) * 0.9 : 0;
-  const d = (fb(x * 0.06, y * 0.06, terrainState.SEED + 50) - terrainState.GPR.tr) / 0.2;
+  const d = (fb(x * 0.06, y * 0.06, terrainState.SEED + 50) - terrainState.GPR.tr) / WOOD_EDGE;
   if (d > 0 && al < 14) c += Math.min(1, d) * 3;
   return c;
 }

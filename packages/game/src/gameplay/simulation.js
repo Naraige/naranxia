@@ -35,6 +35,7 @@ import { effectsState, ember, puff, ring, shake, smoke, spark, vflash } from "..
 import { fowUpdate, VRN, vsnOf } from "../rendering/fog.js";
 import { gtopOf } from "../rendering/models/fortifications.js";
 import { refreshNear, rmStruct } from "../rendering/structures.js";
+import { autoPaths } from "./auto-paths.js";
 import { gh } from "../world/terrain-queries.js";
 import { markP, markT } from "../world/terrain-invalidation.js";
 import { mcCorpse } from "../rendering/unit-animation.js";
@@ -66,6 +67,7 @@ export function update0(dt) {
   extraSim(dt);
   fgTick(dt);
   sessionState.time += dt;
+  autoPaths();
   eventsTick();
   if (sessionState.inGame) fowUpdate(dt);
   if (RS.on) {

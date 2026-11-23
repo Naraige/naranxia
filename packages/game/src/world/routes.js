@@ -2,6 +2,7 @@ import { fb, hs } from "../core/math.js";
 import { TH, TW } from "../gameplay/rules.js";
 import { MAPD, sessionState } from "../gameplay/session.js";
 import { amt, CH, FLG, genF, HT, NCX, NCY, occ, stairs, ter, terrainState } from "./terrain-state.js";
+import { islandReach } from "./island.js";
 import { canStep } from "./traversal-rules.js";
 
 export const D4 = [
@@ -118,9 +119,7 @@ export function mkRoutes(ground) {
       ph = Math.random() * 90,
       pts = [],
       wps = [];
-    const dX = ex > 1e-6 ? (TW - 12 - CX) / ex : ex < -1e-6 ? (12 - CX) / ex : 1e9,
-      dY = ey > 1e-6 ? (TH - 12 - CY) / ey : ey < -1e-6 ? (12 - CY) / ey : 1e9,
-      D = Math.min(dX, dY, MAPD[sessionState.mapSize | 0] || 1e9),
+    const D = Math.min(islandReach(CX, CY, ex, ey), MAPD[sessionState.mapSize | 0] || 1e9),
       lats = [];
     for (let d = D; d >= 8; d -= 1.5)
       lats.push(
@@ -207,7 +206,7 @@ export function carveRamps(cx, cy) {
         const diff = HT[Q] - HT[P];
         if (diff < 1 || diff > 12) continue;
         if (hs(x * 1.3 + di, y * 1.7, sd + 31) > 0.085) continue;
-        const step = diff <= 6 ? 1 : 2,
+        const step = 1 /* stairs rise one block a step (v101, #55) */,
           n = Math.ceil(diff / step),
           lo = HT[P],
           hi = HT[Q],
@@ -287,7 +286,7 @@ function rampCarve(P, dd, x0, y0, x1, y1, low, wide) {
     hi = HT[Q],
     diff = hi - lo;
   if (diff < 1 || diff > 12) return false;
-  const step = diff <= 6 ? 1 : 2,
+  const step = 1 /* stairs rise one block a step (v101, #55) */,
     n = Math.ceil(diff / step),
     mx = -dy,
     my = dx,

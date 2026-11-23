@@ -18,8 +18,8 @@ import { unitG } from "./terrain.js";
 import { THREE } from "./three.js";
 import { buildUnitGroup, CARRYG, uiUMW, UL } from "./unit-instances.js";
 
-/* units are drawn at 100% (they were 76%: lost next to the large buildings); the title screen keeps its own framing */
-export const UNITK = 1;
+/* units are drawn like a Minecraft player next to the blocks (v101): a block is one tile, a player 1.8 blocks (the model alone is 1.03 tiles); the title screen keeps its own framing */
+export const UNITK = 1.75;
 
 const T_C = (_u) => T.cannon.cdt;
 

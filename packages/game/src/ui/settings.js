@@ -285,7 +285,6 @@ function syncHK() {
     "wall",
     "gate",
     "tower",
-    "path",
     "upgrade",
     "barracks",
     "farm",

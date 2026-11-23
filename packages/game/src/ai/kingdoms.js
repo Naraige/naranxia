@@ -429,7 +429,8 @@ function updateBases(D) {
    Rival kingdoms play like a player: each starts with a castle and a few peasants, gathers wood, stone and gold,
    farms, builds houses, a barracks, towers, then walls and stone, trains an army and holds off the hordes.
    They are on your side against the dead; when a castle falls its people turn. Everything runs in the simulation (co-op safe). */
-const AIK_N = 4,
+/* the King removed the rival kingdoms (v101, #51): no AI castle is founded any more; the code stays for old saves */
+const AIK_N = 0,
   AIR = 60,
   AIC = {
     house: { w: 40 },
