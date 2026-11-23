@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Posts one version announcement to Discord as an embed, with the screenshots of announce/img/<version>/ attached.
 # usage: HOOK=<webhook> bash tools/announce.sh vNN notes.md      (DRY=1 prints the payload summary and posts nothing)
-# The webhook comes only from the environment (GitHub secret DISCORD_WEBHOOK); it is never printed.
+# The payload goes with --form-string: -F would cut it at every ";" (v100 failed on one). The webhook comes only from the environment (GitHub secret DISCORD_WEBHOOK); it is never printed.
 set -euo pipefail
 V="${1:?version, e.g. v92}"; NOTES_FILE="${2:?notes file}"
 REPO="${GITHUB_REPOSITORY:-Naraige/naranxia}"
@@ -38,7 +38,7 @@ PAYLOAD=$(jq -n --argjson e "$EMBEDS" '{username:"Naranxia",allowed_mentions:{pa
 if [ "${DRY:-0}" = 1 ]; then echo "$PAYLOAD" | jq -c '{embeds:[.embeds[]|{title,desc_len:(.description|length),image:.image.url,fields:[.fields[]?|{name,len:(.value|length)}]}],images:'"${#IMGS[@]}"'}'; exit 0; fi
 [ -n "${HOOK:-}" ] || { echo "DISCORD_WEBHOOK secret is not set"; exit 1; }
 if [ ${#IMGS[@]} -gt 0 ]; then
-  ARGS=(-F "payload_json=$PAYLOAD"); i=0
+  ARGS=(--form-string "payload_json=$PAYLOAD"); i=0
   for f in "${IMGS[@]}"; do ARGS+=(-F "files[$i]=@$f;filename=$(basename "$f")"); i=$((i+1)); done
   CODE=$(curl -sS -o /tmp/announce.resp -w '%{http_code}' "${ARGS[@]}" "$HOOK")
 else
