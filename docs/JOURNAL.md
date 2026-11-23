@@ -6,14 +6,14 @@ End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAU
 
 ## 2026-11-23 · lot carte ronde, sans IA, chemins auto (#50 à #62), pas de version
 
-- Demandes du Roi (liste, une issue chacune): carte plus plate pour les gros bâtiments (#50), plus d'IA / autres châteaux (#51), carte ronde (#52), portails au bord de la carte (#53), unités à l'échelle Minecraft (#54), escaliers à hauteur d'un bloc (#55), ressources compactes et séparées (#56), chemins automatiques (#57), bannière du donjon retirée (#58), HUD avec gros stocks (#59), brouillard (#60), menu Bâtir par catégories (#61), même design que le menu principal (#62, pas fait: attend un tableau de choix).
+- Demandes du Roi (liste, une issue chacune): carte plus plate pour les gros bâtiments (#50), plus d'IA / autres châteaux (#51), carte ronde (#52), portails au bord de la carte (#53), unités à l'échelle Minecraft (#54), escaliers à hauteur d'un bloc (#55), ressources compactes et séparées (#56), chemins automatiques (#57), bannière du donjon retirée (#58), HUD avec gros stocks (#59), brouillard (#60), menu Bâtir par catégories (#61), même design que le menu principal (#62, fait ensuite: le HUD est dessiné avec la peau du menu `menuSkin`, plaques bleu nuit et bordures or).
 - Carte: île ronde de 260 cases de rayon au centre de la carte (`world/island.js`), mer autour; cœur plat et sec (rayon 78) où l'on fonde le château (`ISL_SITE` 0,3). Routes: fin à 0,8 du rayon, portails au bout de la route (`WSPN` illimité): le bord de l'île est à 150-270 cases du château. Avec l'ancien rectangle 2250 x 1250 le bord était à 600-1000 cases: l'essaim avance lentement et n'arrivait pas en 900 s (test waves).
 - IA: `AIK_N = 0`, plus aucun camp rival (code gardé pour les vieilles sauvegardes); la quête de l'envoyé se saute seule.
 - Unités `UNITK` 1,75 (un bloc = une case, le modèle fait 1,03 case, Minecraft 1,8). Escaliers naturels: toujours 1 niveau par marche. Relief: monts, lacs, rivières réduits (`GPR`), `FT` 120. Ressources: bois en bosquets compacts, pierre en amas, moins de cailloux isolés.
 - Chemins: l'outil est retiré du menu; `gameplay/auto-paths.js` pose, quand un bâtiment (tour et porte comprises, pas les murs) est fini, un chemin du château au bâtiment (Dijkstra, les chemins existants coûtent moins); `s.lnk` dit qu'il est relié; un bâtiment par tick.
 - Brouillard: les contours noirs ne sont plus dessinés sur le terrain inexploré (`post-fog.js`), la mini-carte est opaque hors du vu. HUD: stocks >= 10000 en 12,3k / 1,2M quand la barre manque de place (la valeur exacte dans l'infobulle). Menu Bâtir: seulement les catégories.
 - Tests adaptés (monde différent): det re-fixé, features seed 25, waves (ends2 800 s, lac, eau à 90 cases), quests (convoySame sans le hash), spearman (camps seulement s'il y en a), mp_build (<=). quality, ui, save, smoke, tools, mp8, mpk, mp_resync, mp_convoy, mp_quests, mp_events, mp_build, spearman, runner, desktop PASS en local.
-- Reste: #62 (design du menu principal partout, tableau de choix), `mp_soak` et `--full` non lancés, rendu des escaliers non regardé de près, aucune version publiée (le Roi décide).
+- Reste: `mp_soak` et `--full` non lancés, rendu des escaliers non regardé de près, aucune version publiée (le Roi décide).
 
 ## 2026-11-23 · icône du lanceur
 

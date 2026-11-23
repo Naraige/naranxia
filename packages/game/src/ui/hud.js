@@ -47,7 +47,23 @@ import {
 import { NAMES } from "./build-catalog.js";
 import { canvasesState, cv } from "./canvases.js";
 import { convoyPanelState, drawConvoy } from "./convoy-panel.js";
-import { BTN, BTNH, CHAT, frame, GRN, GRNH, hearts, INV, MAPF, PAN, RDB, SLOT, TIPP, UIT } from "./drawing.js";
+import {
+  BTN,
+  BTNH,
+  CHAT,
+  frame,
+  GRN,
+  GRNH,
+  hearts,
+  INV,
+  MAPF,
+  menuSkin,
+  PAN,
+  RDB,
+  SLOT,
+  TIPP,
+  UIT,
+} from "./drawing.js";
 import { hudDisplayState, topBox } from "./hud-state.js";
 import { dIc, IC } from "./icons.js";
 import { PAL, THEME } from "./kingdom-theme.js";
@@ -364,8 +380,17 @@ function drawToasts(UW) {
   }
 }
 
-/* ---- main HUD ---- */
+/* ---- main HUD ---- (drawn with the menu skin of the title screen: night-blue bevel plates and gold borders, v101 #62) */
 export function drawUI() {
+  menuSkin(true);
+  try {
+    drawUIBody();
+  } finally {
+    menuSkin(false);
+  }
+}
+
+function drawUIBody() {
   canvasesState.ctx.setTransform(hudDisplayState.UIS, 0, 0, hudDisplayState.UIS, 0, 0);
   canvasesState.ctx.imageSmoothingEnabled = true;
   hudState.uiHits = [];
