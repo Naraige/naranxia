@@ -40,8 +40,10 @@ if [ "${DRY:-0}" = 1 ]; then echo "$PAYLOAD" | jq -c '{embeds:[.embeds[]|{title,
 if [ ${#IMGS[@]} -gt 0 ]; then
   ARGS=(-F "payload_json=$PAYLOAD"); i=0
   for f in "${IMGS[@]}"; do ARGS+=(-F "files[$i]=@$f;filename=$(basename "$f")"); i=$((i+1)); done
-  curl -fsS -o /dev/null "${ARGS[@]}" "$HOOK"
+  CODE=$(curl -sS -o /tmp/announce.resp -w '%{http_code}' "${ARGS[@]}" "$HOOK")
 else
-  curl -fsS -o /dev/null -H 'Content-Type: application/json' -d "$PAYLOAD" "$HOOK"
+  CODE=$(curl -sS -o /tmp/announce.resp -w '%{http_code}' -H 'Content-Type: application/json' -d "$PAYLOAD" "$HOOK")
 fi
+# Discord explains a refusal in its answer (it never contains the webhook): show it
+case "$CODE" in 2*) ;; *) echo "Discord answered $CODE: $(head -c 600 /tmp/announce.resp)"; exit 1;; esac
 echo "announced $V (${#IMGS[@]} images)"
