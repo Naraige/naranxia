@@ -58,7 +58,7 @@ async () => {
   selB = null;
   buy("spearman");
   chk("notAtCastle", !queue.some((q) => q.type === "spearman"));
-  /* reach: a zombie held 40 px away is struck by a spearman standing still, not by a knight */
+  /* reach: a zombie held 48 px away (v101: the bodies are 1.6 times wider, the knight reaches 40) is struck by a spearman standing still, not by a knight */
   const f = freeTile(CS.tx + 16, CS.ty + 16),
     X = (f[0] + 0.5) * TS,
     Y = (f[1] + 0.5) * TS;
@@ -85,8 +85,8 @@ async () => {
     for (let i = 0; i < 3; i++) update(0.05);
     return Math.round(dm * 100) / 100;
   };
-  const zS = firstHit("spearman", "zombie", 40),
-    zK = firstHit("knight", "zombie", 40);
+  const zS = firstHit("spearman", "zombie", 48),
+    zK = firstHit("knight", "zombie", 48);
   O.zS = zS;
   O.zK = zK;
   chk("reach", zS === 11 && zK === 0);

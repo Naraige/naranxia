@@ -291,7 +291,7 @@ function swOpen(tx, ty, dx, dy, B) {
 
 /* from SWSD zombies on a tile, the crowd also spreads along the contour of the field: a neighbour of the same field value (not downhill) counts too, at SWSP2 extra, so a zombie takes it
    only where it is emptier by more than that. Else a horde that comes down a pass in a cone piles up on the middle tiles while the sides stand empty */
-const SWSD = 12,
+const SWSD = 5,
   SWSP2 = 8;
 
 function swPick(S, tx, ty, terr, o) {

@@ -10,19 +10,21 @@ export const TW = 2250,
   H = TH * TS,
   N = TW * TH;
 
+/* the body radius r (px) is 1.6 times the old one (v101): the units are drawn 1.75 times bigger (a player of 1.8 blocks), so they stand and fight
+   one body apart; the reach of a melee blow is rng + r from the middle, the speeds and the ranged ranges are in tiles per second and tiles and stay */
 export const T = {
-  cannon: { r: 9, hp: 180, spd: 62, dmg: 45, rng: 520, cdt: 5.5, col: "#4a4a50" },
-  peasant: { r: 5, hp: 30, spd: 120, col: "#d9a65a" },
-  knight: { r: 10, hp: 130, spd: 110, dmg: 16, rng: 14, cdt: 0.8, col: "#4a7bd8" },
-  archer: { r: 6, hp: 45, spd: 100, dmg: 9, rng: 120, cdt: 1, col: "#4caf50" },
-  zombie: { r: 6, hp: 55, spd: 150, dmg: 7, rng: 10, cdt: 1.1, col: "#7fae5a" },
-  bannerman: { r: 6, hp: 85, spd: 104, dmg: 5, rng: 12, cdt: 1.2, col: "#e8c040" },
-  captain: { r: 9, hp: 230, spd: 108, dmg: 22, rng: 15, cdt: 0.85, col: "#f0b830" },
-  runner: { r: 5, hp: 34, spd: 215, dmg: 5, rng: 10, cdt: 0.8, col: "#c8785a" },
-  husk: { r: 4, hp: 24, spd: 158, dmg: 3, rng: 9, cdt: 1, col: "#9ab87a" },
-  brute: { r: 11, hp: 430, spd: 112, dmg: 26, rng: 15, cdt: 1.5, col: "#5f8a4a" },
-  king: { r: 11, hp: 950, spd: 100, dmg: 44, rng: 17, cdt: 0.9, col: "#3f6fd0" },
-  guard: { r: 9, hp: 340, spd: 100, dmg: 26, rng: 28, cdt: 1.1, col: "#3f6fd0" },
+  cannon: { r: 14, hp: 180, spd: 62, dmg: 45, rng: 520, cdt: 5.5, col: "#4a4a50" },
+  peasant: { r: 8, hp: 30, spd: 120, col: "#d9a65a" },
+  knight: { r: 16, hp: 130, spd: 110, dmg: 16, rng: 14, cdt: 0.8, col: "#4a7bd8" },
+  archer: { r: 10, hp: 45, spd: 100, dmg: 9, rng: 120, cdt: 1, col: "#4caf50" },
+  zombie: { r: 10, hp: 55, spd: 150, dmg: 7, rng: 10, cdt: 1.1, col: "#7fae5a" },
+  bannerman: { r: 10, hp: 85, spd: 104, dmg: 5, rng: 12, cdt: 1.2, col: "#e8c040" },
+  captain: { r: 14, hp: 230, spd: 108, dmg: 22, rng: 15, cdt: 0.85, col: "#f0b830" },
+  runner: { r: 8, hp: 34, spd: 215, dmg: 5, rng: 10, cdt: 0.8, col: "#c8785a" },
+  husk: { r: 6, hp: 24, spd: 158, dmg: 3, rng: 9, cdt: 1, col: "#9ab87a" },
+  brute: { r: 18, hp: 430, spd: 112, dmg: 26, rng: 15, cdt: 1.5, col: "#5f8a4a" },
+  king: { r: 18, hp: 950, spd: 100, dmg: 44, rng: 17, cdt: 0.9, col: "#3f6fd0" },
+  guard: { r: 14, hp: 340, spd: 100, dmg: 26, rng: 28, cdt: 1.1, col: "#3f6fd0" },
 };
 
 export const C = {
@@ -274,9 +276,9 @@ export function initializeRules() {
   /* cinematic state (declared early: reset() touches it) */
 
   Object.assign(T, {
-    bomber: { r: 7, hp: 90, spd: 120, dmg: 4, rng: 10, cdt: 1.2, col: "#a08a3a" },
-    acid: { r: 6, hp: 60, spd: 135, dmg: 6, rng: 115, cdt: 2.4, col: "#9ac23a" },
-    miner: { r: 6, hp: 120, spd: 140, dmg: 10, rng: 10, cdt: 1.1, col: "#8a6a4a" },
+    bomber: { r: 11, hp: 90, spd: 120, dmg: 4, rng: 10, cdt: 1.2, col: "#a08a3a" },
+    acid: { r: 10, hp: 60, spd: 135, dmg: 6, rng: 115, cdt: 2.4, col: "#9ac23a" },
+    miner: { r: 10, hp: 120, spd: 140, dmg: 10, rng: 10, cdt: 1.1, col: "#8a6a4a" },
   });
 
   Object.assign(C, {
@@ -352,7 +354,7 @@ export function initializeRules() {
     envoy: { r: 5, hp: 45, spd: 120, dmg: 1, rng: 10, cdt: 2, col: "#d9d2c0" },
   });
   /* spearman: cheap line holder (barracks, from the start). Reach 36 against the knight's 14: he strikes over a front rank; SPEAR_BIG against brutes and bosses; no stone in his cost */
-  Object.assign(T, { spearman: { r: 7, hp: 85, spd: 108, dmg: 11, rng: 36, cdt: 1, col: "#5a8fd0" } });
+  Object.assign(T, { spearman: { r: 11, hp: 85, spd: 108, dmg: 11, rng: 36, cdt: 1, col: "#5a8fd0" } });
   Object.assign(C, { spearman: { g: 90, w: 30, f: 25 } });
   Object.assign(TRAIN, { spearman: 15 });
   Object.assign(C, { scout: { g: 40, f: 20 }, engineer: { g: 70, w: 40, s: 20 }, envoy: { g: 80, f: 20 } });
@@ -367,3 +369,6 @@ export function initializeRules() {
   Object.assign(GTOP, { keep: 15 });
   UPC.keep = { s: 360, w: 80 };
 }
+
+/* rival kingdoms (rebel camps) founded per world: the King removed them (v101, #51); UI hides what needs a camp */
+export const AIK_N = 0;

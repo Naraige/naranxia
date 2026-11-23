@@ -38,6 +38,7 @@ import {
   RXOR,
   T,
   UPC,
+  AIK_N,
 } from "../gameplay/rules.js";
 import { curB, sel, selBs, selectionState, TRB } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
@@ -327,7 +328,9 @@ function ctxGroups() {
   return [
     [
       "Train",
-      ["peasant", "engineer"].concat(bastionHas(HOMEC().pl | 0, "embassy") ? ["envoy"] : []).concat(royalBtns()),
+      ["peasant", "engineer"]
+        .concat(bastionHas(HOMEC().pl | 0, "embassy") && AIK_N > 0 ? ["envoy"] : [])
+        .concat(royalBtns()),
     ],
     ...buildGroups(true),
     ["Command", upI(HOMEC()).concat(["army", "idle", "rallyc", "repair", "rotate", "movec", "form", "mode"])],

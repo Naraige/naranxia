@@ -908,17 +908,17 @@ export function genChunk(cx, cy) {
         continue;
       }
       /* gold: veins in the hills and in the heart of the boulder fields, a few specks where the cliffs rise */
-      if (al >= 2 && fb(x * 0.05, y * 0.05, sd + 60) > 0.765 && hs(x, y, sd + 14) < 0.45 * P.gd) {
+      if (al >= 1 && fb(x * 0.05, y * 0.05, sd + 60) > 0.745 && hs(x, y, sd + 14) < 0.6 * P.gd) {
         ter[i] = 4;
         amt[i] = 40;
         continue;
       }
-      if (cf && al >= 1 && hs(x, y, sd + 18) < 0.008 * P.gd) {
+      if (cf && al >= 1 && hs(x, y, sd + 18) < 0.02 * P.gd) {
         ter[i] = 4;
         amt[i] = 40;
         continue;
       }
-      if (al >= 4 && hs(x, y, sd + 16) < 0.001 * P.gd) {
+      if (al >= 4 && hs(x, y, sd + 16) < 0.003 * P.gd) {
         ter[i] = 4;
         amt[i] = 40;
         continue;
