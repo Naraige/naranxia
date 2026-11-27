@@ -1898,4 +1898,15 @@ export const TR = {
   "DRAGON DOWN": "EJDERHA DÜŞTÜ",
   "It was carried back to the castle and will fly again soon": "Kaleye taşındı, yakında yeniden uçacak",
   "Dragon down": "Ejderha düştü",
+  "Call the wave: +{0} gold": "Dalgayı çağır: +{0} altın",
+  "A chieftain leads the horde: while he lives it runs to your walls":
+    "Bir reis orduya önderlik ediyor: o yaşadıkça ordu surlarına kadar koşar",
+  "A scout saw your walls: the horde comes where you are least guarded":
+    "Bir gözcü surlarını gördü: ordu en zayıf olduğun yerden geliyor",
+  "A scout saw your walls: the next horde will come where you are least guarded":
+    "Bir gözcü surlarını gördü: sıradaki ordu en zayıf olduğun yerden gelecek",
+  "The scouts are slain: the next horde comes blind": "Gözcüler öldürüldü: sıradaki ordu körlemesine geliyor",
+  "Wave {0}: {1} slain by the kingdom, {2} by the dragon, {3} lost":
+    "Dalga {0}: krallık {1}, ejderha {2} öldürdü, {3} kayıp",
+  "Wave {0}: {1} slain, {2} lost": "Dalga {0}: {1} öldürüldü, {2} kayıp",
 };

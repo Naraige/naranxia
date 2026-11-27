@@ -4,6 +4,19 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · lot d'idées 1: éclaireurs, chef de horde, tournée du Roi, hauteur, bouton de vague, bilan (#78, #83, #84, #86, #87, #89, #91, #94), branche `claude/castle-dragon-roles`, pas de version
+
+- 20 idées proposées au Roi, réponse « fait tout »: une issue par idée (#75 à #94). Ce lot en fait 8; les 12 autres restent ouvertes.
+- Éclaireurs (#83) et annonce (#84), `waves.js` + `reset.js`: une fois les traînards brûlés par le soleil, 3 coureurs partent du portail (dès le repos après la vague 2). Si l'un arrive à 26 cases d'un château, la horde re-choisit les routes de la vague suivante par leur garde (`pickLanes(true)`), message et cor; si les trois sont tués, message « la horde vient à l'aveugle ». Remplace le tirage 2 fois sur 3 du lot précédent. `sessionState.scRep` (0 rien, 1 vu, 2 tués) est dans SAVA.
+- Chef de horde (#86): dès la vague 4, une brute marquée `chief` (vie x1,6) sur la première route; tant qu'elle vit, l'essaim court jusqu'à 40 cases du château au lieu de 95 (`swRunTo`). Message à la vague. Rien ne le distingue encore à l'écran d'une brute ordinaire.
+- Tournée du Roi (#87, `gameplay/king-round.js`, module à part pour ne pas créer de cycle): un paysan à moins de 12 cases de son Roi travaille 25 % plus vite.
+- Hauteur (#89, `towerHigh` dans kingdoms.js): +0,5 case de portée par niveau au-dessus de la plaine, 6 niveaux au plus.
+- Portails (#78): chaque portail grossit de 6 % par vague depuis son ouverture (jusqu'à x2).
+- Bouton « Appeler la vague : +N or » (#91) dans les barres du centre pendant le repos (la touche existait seule). Bilan de fin de vague (#94): tués par le royaume, par le dragon, pertes.
+- 7 textes dans les 8 langues. Test neuf `horde` (11 assertions). det re-fixé.
+- Constat #76 (pont défendable): rien n'interdit de bâtir sur la chaussée, mais elle fait 9 cases de large et une porte en demande 12: à élargir avant de dire que c'est fait. #85 (sapeurs): bombardiers (vague 5) et mineurs (vague 15) existent déjà.
+- Non vérifié: tout cela en vraie partie (les éclaireurs sont-ils interceptables ? le chef rend-il la vague trop dure ?), le bouton et le bilan à l'écran.
+
 ## 2026-11-27 · arbres: abords du château dégagés (#74), branche `claude/castle-dragon-roles`, pas de version
 
 - Le Roi: « oui pour les arbres ». Constat: les arbres font 4 à 8 blocs pour une unité de 1,8 (rapport Minecraft); ce qui gênait, c'étaient ceux collés au château en vue du Roi.

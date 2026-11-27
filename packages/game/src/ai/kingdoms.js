@@ -145,7 +145,9 @@ export const selH = (s) =>
 export const TOWR = 11;
 /* how far a tower shoots from its middle (sim units): TOWR tiles (a tile and a half more in stone), plus what its footprint grew since the towers
    of two tiles (3/8 of its side), so the reach beyond its walls is what it always was; the engines on it get the same allowance */
-export const towerReach = (s) => TOWR * TS + (s.tier !== 0 ? 60 : 0) + s.sz * 0.375 * TS;
+/* a tower on high ground shoots further (#89): half a tile per level above the plain, six levels at most (a cliff top, a hill) */
+export const towerHigh = (s) => Math.max(0, Math.min(6, (HT[(s.ty | 0) * TW + (s.tx | 0)] | 0) - LAND)) * 0.5 * TS;
+export const towerReach = (s) => TOWR * TS + (s.tier !== 0 ? 60 : 0) + s.sz * 0.375 * TS + towerHigh(s);
 export const TR_CASTLE = 45;
 export const TR_TOWER = 15;
 export const aiR = (b) => 26 + b.lvl * 5;

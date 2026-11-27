@@ -19,7 +19,7 @@ import { sessionState } from "../gameplay/session.js";
 import { simulationState } from "../gameplay/simulation.js";
 import { gstBest, statisticsState } from "../gameplay/statistics.js";
 import { SW, swPending } from "../gameplay/swarm.js";
-import { wavesState } from "../gameplay/waves.js";
+import { callWave, wavesState } from "../gameplay/waves.js";
 import { L, T_, TC, TTL, TTS, tw, twH } from "../i18n/language.js";
 import { camZoom } from "../input/desktop.js";
 import { inputState } from "../input/state.js";
@@ -69,7 +69,7 @@ import { hudDisplayState, topBox } from "./hud-state.js";
 import { dIc, IC } from "./icons.js";
 import { PAL, THEME } from "./kingdom-theme.js";
 import { ownerName, ownerTheme } from "../rendering/owner-theme.js";
-import { bar, drawMapModal, drawWorld, mmss } from "./minimap.js";
+import { bar, drawMapModal, drawWorld, mmss, pill } from "./minimap.js";
 import { KB, kdisp } from "./settings.js";
 import { settingsState } from "./panel-state.js";
 import { drawPicker, sitePickerState } from "./site-picker.js";
@@ -382,6 +382,33 @@ function drawToasts(UW) {
 }
 
 /* ---- main HUD ---- (drawn with the menu skin of the title screen: night-blue bevel plates and gold borders, v101 #62) */
+/* a visible button to call the next wave during the rest (#91; the key did it alone before): it shows the gold the call pays now */
+function waveCallBar(UW, y) {
+  if (
+    wavesState.waveOn ||
+    !sessionState.inGame ||
+    sessionState.waveT < 30 ||
+    sessionState.waveN < 1 ||
+    roleHooks.rider()
+  )
+    return 0;
+  const b = Math.round((10 + sessionState.waveN * 4) * Math.max(1, sessionState.waveT / 200)),
+    w = Math.min(210, UW - 16);
+  pill(
+    Math.round(UW / 2 - w / 2),
+    y + 2,
+    w,
+    15,
+    "Call the wave: +" + b + " gold",
+    BTN,
+    BTNH,
+    () => callWave(),
+    null,
+    0.8,
+  );
+  return 19;
+}
+
 export function drawUI() {
   menuSkin(true);
   try {
@@ -819,6 +846,7 @@ function drawUIBody() {
   bossY += objBar(UW, settingsState.TOPH + bossY);
   bossY += kingBar(UW, settingsState.TOPH + bossY);
   bossY += roleHooks.bar(UW, settingsState.TOPH + bossY);
+  if (!sessionState.over) bossY += waveCallBar(UW, settingsState.TOPH + bossY);
   bossY += hintBar(UW, settingsState.TOPH + bossY);
   if (!sessionState.over) bossY += eventBar(UW, settingsState.TOPH + bossY);
   /* where the quest panel (left, 184 wide) reaches the centre bars, it sits under them next frame, one message line lower */

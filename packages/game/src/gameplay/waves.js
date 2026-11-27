@@ -10,9 +10,9 @@ import { mkU } from "./entities.js";
 import { kingWaveXp } from "./king-skills.js";
 import { aliveC, playersState } from "./players.js";
 import { pickLanes } from "./reset.js";
-import { TS } from "./rules.js";
+import { rulesState, TS } from "./rules.js";
 import { D_, sessionState } from "./session.js";
-import { SW, swarmState, swPending, swQueue } from "./swarm.js";
+import { SW, swarmState, swPending, swQueue, swRunTo } from "./swarm.js";
 import { MP } from "../multiplayer/session.js";
 import { puff } from "../rendering/effects.js";
 import { hudDisplayState } from "../ui/hud-state.js";
@@ -168,6 +168,12 @@ const laneK = (L, Ls) => {
 };
 
 function wave0() {
+  /* what the scouts of the rest brought back (#83): 1 one of them saw the walls, the roads of this wave were re-picked by it */
+  const knew = sessionState.scRep === 1;
+  sessionState.scRep = 0;
+  wavesState.k0 = sessionState.kills | 0;
+  wavesState.d0 = sessionState.DRG ? sessionState.DRG.kills | 0 : 0;
+  wavesState.l0 = rulesState.GST ? rulesState.GST.lost | 0 : 0;
   sessionState.waveN++;
   if (sessionState.waveN > 1) kingWaveXp();
   wmsg = "";
@@ -209,6 +215,15 @@ function wave0() {
         sessionState.units.push(zu);
       }
     };
+    /* the chieftain (#86): from wave 4 one leads the horde on its first road; while he lives it keeps running much closer to the walls */
+    if (sessionState.waveN >= 4 && L === sessionState.nextL[0] && zcount() < 720) {
+      const ch = mkU(1, "brute", p[0] * TS, p[1] * TS, null, L);
+      ch.hp *= 1.6 * (1 + 0.05 * sessionState.waveN);
+      ch.chief = 1;
+      ch.ph = an.ph;
+      sessionState.units.push(ch);
+      if (!wmsg) wmsg = "A chieftain leads the horde: while he lives it runs to your walls";
+    }
     const n0 = sessionState.units.length;
     if (swarmState.SWF > 0) swQueue(L, an, nh * swarmState.SWF);
     else add("husk", nh, 4.5);
@@ -262,6 +277,7 @@ function wave0() {
       "NEW ZOMBIES: " + zn[0] + "!  -  from " + sessionState.nextL.map((L) => terrainState.ROUTES[L].dir).join(" + ");
   sessionState.nextL = pickLanes();
   hudDisplayState.msgT = 0;
+  if (knew) wmsg = "A scout saw your walls: the horde comes where you are least guarded";
   if (wmsg) {
     hudDisplayState.msgS = wmsg;
     hudDisplayState.msgT = 5;
@@ -301,8 +317,37 @@ export const restT = () => 600 * D_().tm;
 
 /* the wave is finished when only a handful of stragglers is left (2%, or after 15 min at worst): the rest timer starts, and at dawn the sun burns the stragglers */
 export function waveTick() {
-  let rem = SW.n + swPending();
-  for (const u of sessionState.units) if (u.t === 1 && u.lane >= 0) rem++;
+  let rem = SW.n + swPending(),
+    chief = false,
+    scouts = 0;
+  for (const u of sessionState.units)
+    if (u.t === 1 && u.lane >= 0) {
+      rem++;
+      if (u.hp > 0) {
+        if (u.chief) chief = true;
+        if (u.sc) {
+          scouts++;
+          if (scoutSees(u)) {
+            /* it saw the walls: the horde re-picks the roads of the next wave by what guards them */
+            u.sc = 0;
+            if (!sessionState.scRep) {
+              sessionState.scRep = 1;
+              sessionState.nextL = pickLanes(true);
+              hudDisplayState.msgS = "A scout saw your walls: the next horde will come where you are least guarded";
+              hudDisplayState.msgT = 6;
+              snd("horn");
+            }
+          }
+        }
+      }
+    }
+  swRunTo(chief ? 40 : 95);
+  if (wavesState.scOut && !scouts && !sessionState.scRep) {
+    sessionState.scRep = 2;
+    hudDisplayState.msgS = "The scouts are slain: the next horde comes blind";
+    hudDisplayState.msgT = 5;
+  }
+  wavesState.scOut = scouts > 0;
   wavesState.hordeOn =
     wavesState.waveOn &&
     (SW.q.length > 0 || rem > Math.max(6, wavesState.WAVEZ * 0.02)) &&
@@ -316,6 +361,14 @@ export function waveTick() {
     sessionState.bannerS = "WAVE " + sessionState.waveN + " BEATEN";
     sessionState.bannerS2 = "Dawn is coming - next wave in " + mmss(sessionState.waveT);
     snd("victory");
+    /* what the wave cost (#94) */
+    const kd = sessionState.DRG ? Math.max(0, (sessionState.DRG.kills | 0) - (wavesState.d0 | 0)) : 0,
+      kl = Math.max(0, (sessionState.kills | 0) - (wavesState.k0 | 0)),
+      lo = Math.max(0, (rulesState.GST ? rulesState.GST.lost | 0 : 0) - (wavesState.l0 | 0));
+    hudDisplayState.msgS = sessionState.DRG
+      ? "Wave " + sessionState.waveN + ": " + kl + " slain by the kingdom, " + kd + " by the dragon, " + lo + " lost"
+      : "Wave " + sessionState.waveN + ": " + kl + " slain, " + lo + " lost";
+    hudDisplayState.msgT = 8;
   }
   if (wavesState.burnAt && sessionState.time >= wavesState.burnAt) {
     wavesState.burnAt = 0;
@@ -335,7 +388,38 @@ export function waveTick() {
       hudDisplayState.msgS = "The sun burns the last zombies";
       hudDisplayState.msgT = 3;
     }
+    scoutsOut();
   }
+}
+
+/* ---- scouts (#83): once the sun has burnt the stragglers, three runners leave the portal of the next wave's first road. One that comes
+   within 26 tiles of a castle has seen the walls (the horde then picks its roads by their guard, gameplay/reset.js); kill all three on the
+   way and the horde comes blind. They are ordinary runners otherwise. From the rest after wave 2. */
+function scoutsOut() {
+  if (sessionState.waveN < 2 || sessionState.over || !sessionState.nextL || !sessionState.nextL.length) return;
+  const L = sessionState.nextL[0],
+    an = spawnAnchor(L);
+  for (let i = 0; i < 3; i++) {
+    if (zcount() >= 720) break;
+    const x = (an.p[0] + rnd(-2, 2)) * TS,
+      y = (an.p[1] + rnd(-2, 2)) * TS;
+    if (solidAt(x, y)) continue;
+    const z = mkU(1, "runner", x, y, null, L);
+    z.sc = 1;
+    z.ph = an.ph;
+    sessionState.units.push(z);
+  }
+}
+function scoutSees(u) {
+  const R = 26 * TS,
+    dx = u.x - (terrainState.CX + 0.5) * TS,
+    dy = u.y - (terrainState.CY + 0.5) * TS;
+  if (dx * dx + dy * dy < R * R) return true;
+  const s2 = sessionState.SITE2;
+  if (!s2) return false;
+  const ex = u.x - (s2.tx + 0.5) * TS,
+    ey = u.y - (s2.ty + 0.5) * TS;
+  return ex * ex + ey * ey < R * R;
 }
 
 export const smst = (a, b, x) => {

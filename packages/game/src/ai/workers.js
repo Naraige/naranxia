@@ -8,6 +8,7 @@ import { lightingState, litAt } from "../gameplay/lighting.js";
 import { stepF, walk } from "../gameplay/movement.js";
 import { BAD, dpt, homeOf, LPL, playersState } from "../gameplay/players.js";
 import { CLM, nearest, nearestLocal, rclaimed } from "../gameplay/resources.js";
+import { kingRound } from "../gameplay/king-round.js";
 import { edgeDist, CODE, GET, RS2, TS, TW, WORK } from "../gameplay/rules.js";
 import { selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
@@ -300,7 +301,7 @@ function peasant0(u, dt) {
     const tx = ((u.tl % TW) + 0.5) * TS,
       ty = (((u.tl / TW) | 0) + 0.5) * TS;
     if (dist(u.x, u.y, tx, ty) < 44) {
-      u.work += dt;
+      u.work += dt * kingRound(u);
       u.face = Math.atan2(tx - u.x, ty - u.y);
       if (u.work > 2.4) {
         u.work = 0;
@@ -431,7 +432,7 @@ function peasant0(u, dt) {
   const tx = ((u.tl % TW) + 0.5) * TS,
     ty = (((u.tl / TW) | 0) + 0.5) * TS;
   if (dist(u.x, u.y, tx, ty) < 42) {
-    u.work += dt;
+    u.work += dt * kingRound(u);
     u.face = Math.atan2(tx - u.x, ty - u.y);
     if (u.work > WORK * (RS2.done.tools ? 0.75 : 1)) {
       snd(u.job === "w" ? "chop" : "mine", u.x, u.y);

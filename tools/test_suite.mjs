@@ -9,6 +9,7 @@ const browserNames = [
   "spearman",
   "dragon",
   "kingview",
+  "horde",
   "kingxp",
   "compat",
   "bossabil",
@@ -81,6 +82,7 @@ const purposes = {
   det: "Repeated 6000-tick simulation with pinned reference fingerprints",
   features: "Seasons, trap/oil damage, boss, King skills, statistics, records and co-op goals",
   dragon: "Dragon breath damage, reach clamp, idle breath and save round trip",
+  horde: "Scouts and the scouted horde, chieftain, King's round, towers on high ground",
   kingview:
     "Solo King view: start beside the King, camera keys walk him, build menu and view key switch to the view from above",
   spearman: "Training costs, reach, exact damage, camp composition and keyboard migration",
@@ -141,6 +143,7 @@ export const tiers = {
     "spearman",
     "dragon",
     "kingview",
+    "horde",
     "traps",
     "stance",
     "frame_guard",

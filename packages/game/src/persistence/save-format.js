@@ -238,6 +238,12 @@ export const SAVA = {
     },
   ],
   EVT: [() => eventsState, null],
+  scRep: [
+    () => sessionState.scRep | 0,
+    (v) => {
+      sessionState.scRep = v | 0;
+    },
+  ],
   nextL: [
     () => sessionState.nextL,
     (v) => {

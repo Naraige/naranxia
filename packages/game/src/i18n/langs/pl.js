@@ -1901,4 +1901,15 @@ export const PL = {
   "DRAGON DOWN": "SMOK POWALONY",
   "It was carried back to the castle and will fly again soon": "Zaniesiono go do zamku i wkrótce znów poleci",
   "Dragon down": "Smok powalony",
+  "Call the wave: +{0} gold": "Wezwij falę: +{0} złota",
+  "A chieftain leads the horde: while he lives it runs to your walls":
+    "Wódz prowadzi hordę: póki żyje, biegnie ona aż pod twoje mury",
+  "A scout saw your walls: the horde comes where you are least guarded":
+    "Zwiadowca widział twoje mury: horda idzie tam, gdzie jesteś najsłabszy",
+  "A scout saw your walls: the next horde will come where you are least guarded":
+    "Zwiadowca widział twoje mury: następna horda przyjdzie tam, gdzie jesteś najsłabszy",
+  "The scouts are slain: the next horde comes blind": "Zwiadowcy zabici: następna horda idzie na ślepo",
+  "Wave {0}: {1} slain by the kingdom, {2} by the dragon, {3} lost":
+    "Fala {0}: {1} zabitych przez królestwo, {2} przez smoka, {3} straconych",
+  "Wave {0}: {1} slain, {2} lost": "Fala {0}: {1} zabitych, {2} straconych",
 };

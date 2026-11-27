@@ -1,6 +1,17 @@
 import { seasonalEvent } from "../core/seasonal-events.js";
 import { litAt } from "../gameplay/light-state.js";
-import { baseTrait, BASES, campDebug, campLabel, inTerr, spearN, TRAITS } from "../ai/kingdoms.js";
+import {
+  baseTrait,
+  BASES,
+  campDebug,
+  campLabel,
+  inTerr,
+  spearN,
+  towerHigh,
+  towerReach,
+  TRAITS,
+} from "../ai/kingdoms.js";
+import { kingRound } from "../gameplay/king-round.js";
 import { markP, markT } from "../world/terrain-invalidation.js";
 import { evChoose, eventsState, eventsTick, evPush, renownMul, resolveEvent0 } from "../gameplay/events.js";
 import { bossStomp } from "../ai/wave-boss.js";
@@ -53,7 +64,7 @@ import { simulationState } from "../gameplay/simulation.js";
 import { gstBest, sbRec, setUpdateHandler, statisticsState, update } from "../gameplay/statistics.js";
 import { SW, swarmState, SWD } from "../gameplay/swarm.js";
 import { laneFieldQ, LFLD } from "../ai/zombie-lanes.js";
-import { callWave, restT, setCallWaveHandler, spawnAnchor, wave, wavesState } from "../gameplay/waves.js";
+import { callWave, restT, setCallWaveHandler, spawnAnchor, wave, wavesState, waveTick } from "../gameplay/waves.js";
 import { _N, mpExec, mpPush, questSwitch, roleAdj, sendConvoy, setMpExecHandler } from "../multiplayer/commands.js";
 import { convoyLinked, convoyStep, setConvoyStepHandler } from "../multiplayer/convoys.js";
 import { mpBanner, mpStart, mpWorldSync } from "../multiplayer/lobby.js";
@@ -124,7 +135,7 @@ import {
 } from "../ui/site-picker.js";
 import { FD, gOK } from "../world/routes.js";
 import { _bwat, baseHW, rollWorld, ensureAround, setRollWorldHandler, starterTiles } from "../world/terrain.js";
-import { HT, occ, pth, RUINS, stairs, ter, terrainState, TFL } from "../world/terrain-state.js";
+import { HT, LAND, occ, pth, RUINS, stairs, ter, terrainState, TFL } from "../world/terrain-state.js";
 import { bfsW, canStep, canStepZ, freeTile, fv, solid } from "../world/traversal.js";
 
 // Browser automation and the in-repo preview tools evaluate these names in the page.
@@ -705,8 +716,20 @@ export function installBrowserConsole() {
       },
     },
     wave: { get: () => wave },
+    waveTick: { get: () => waveTick },
+    wavesState: { get: () => wavesState },
+    kingRound: { get: () => kingRound },
+    towerHigh: { get: () => towerHigh },
+    towerReach: { get: () => towerReach },
+    LAND: { get: () => LAND },
     spawnAnchor: { get: () => spawnAnchor },
     pickLanes: { get: () => pickLanes },
+    scRep: {
+      get: () => sessionState.scRep | 0,
+      set: (value) => {
+        sessionState.scRep = value;
+      },
+    },
     waveN: {
       get: () => sessionState.waveN,
       set: (value) => {

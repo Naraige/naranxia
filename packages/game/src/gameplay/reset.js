@@ -42,10 +42,11 @@ const farFirst = (A) => {
   return A.slice().sort((a, b) => sc[A.indexOf(b)] - sc[A.indexOf(a)]);
 };
 /* ---- a smarter enemy (#73): the horde scouts the defences ----
-   One difficulty only (the King), but the horde no longer picks its roads blindly. From wave 3 on it weighs every road by what guards its
-   last 90 tiles (towers, ballistas and cannons count full, walls, gates and traps a little, the soldiers standing there too) and takes the
-   least guarded ones first: a kingdom fortified on one side only is attacked on the other. Two times out of three; the third it comes as it
-   pleases, so a road is never certain to stay quiet. Simulation state and the seeded RNG only, so both machines agree. */
+   One difficulty only (the King), but the horde no longer picks its roads blindly. Between two waves it sends scouts (#83, gameplay/waves.js):
+   if one of them comes within sight of a castle and lives, the horde weighs every road by what guards its last 90 tiles (towers, ballistas and
+   cannons count full, walls, gates and traps a little, the soldiers standing there too) and takes the least guarded ones first: a kingdom
+   fortified on one side only is attacked on the other. If every scout is slain on the way, the horde comes blind, as it always did.
+   Simulation state and the seeded RNG only, so both machines agree. */
 const GUARD = { tower: 3, ballista: 5, cannon: 6, bastion: 4, wall: 0.25, gate: 0.5 };
 export function laneGuard(L) {
   const R = terrainState.ROUTES[L];
@@ -74,9 +75,8 @@ const weakFirst = (A) => {
   const g = A.map(laneGuard);
   return A.slice().sort((a, b) => g[A.indexOf(a)] - g[A.indexOf(b)]);
 };
-export function pickLanes() {
-  const smart = sessionState.waveN >= 2 && Math.random() < 0.67,
-    order = (A) => (smart ? weakFirst(farFirst(A)) : farFirst(A)),
+export function pickLanes(smart) {
+  const order = (A) => (smart ? weakFirst(farFirst(A)) : farFirst(A)),
     n = Math.min(
       3,
       1 + (sessionState.waveN > 2 ? 1 : 0) + (sessionState.waveN > 6 ? 1 : 0) + (Math.random() < 0.25 ? 1 : 0),

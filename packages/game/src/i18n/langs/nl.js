@@ -1914,4 +1914,15 @@ export const NL = {
   "DRAGON DOWN": "DRAAK NEER",
   "It was carried back to the castle and will fly again soon": "Hij is naar het kasteel gebracht en vliegt snel weer",
   "Dragon down": "Draak neer",
+  "Call the wave: +{0} gold": "Golf roepen: +{0} goud",
+  "A chieftain leads the horde: while he lives it runs to your walls":
+    "Een hoofdman leidt de horde: zolang hij leeft, rent ze tot aan je muren",
+  "A scout saw your walls: the horde comes where you are least guarded":
+    "Een verkenner zag je muren: de horde komt waar je het zwakst bent",
+  "A scout saw your walls: the next horde will come where you are least guarded":
+    "Een verkenner zag je muren: de volgende horde komt waar je het zwakst bent",
+  "The scouts are slain: the next horde comes blind": "De verkenners zijn gedood: de volgende horde komt blind",
+  "Wave {0}: {1} slain by the kingdom, {2} by the dragon, {3} lost":
+    "Golf {0}: {1} gedood door het rijk, {2} door de draak, {3} verloren",
+  "Wave {0}: {1} slain, {2} lost": "Golf {0}: {1} gedood, {2} verloren",
 };

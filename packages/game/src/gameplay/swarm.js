@@ -277,8 +277,12 @@ for (let v = 0; v < 256; v++) SWLT[v] = (v / 127.5 - 1) * SWBW * TS;
 for (let v = 0; v < 16; v++) SWV[v] = SWSP * (v & 8 ? 1.08 : 1) * (0.9 + (v & 7) * 0.03);
 
 /* the horde runs while it is further than SWFARD tiles from every castle (#71): the way from the bridge is long, the fight is at the walls */
-const SWRUN = 1.7,
-  SWFARD = 95 * TS;
+const SWRUN = 1.7;
+let SWFARD = 95 * TS;
+/* a chieftain alive keeps the horde running much closer to the walls (#86): gameplay/waves.js sets this every tick */
+export function swRunTo(tiles) {
+  SWFARD = tiles * TS;
+}
 function SWFAR(x, y) {
   const dx = x - (terrainState.CX + 0.5) * TS,
     dy = y - (terrainState.CY + 0.5) * TS;

@@ -60,6 +60,8 @@ function buildOne(q) {
   o.add(pl);
   o.position.set(q.x, h0, q.y);
   o.rotation.y = -ang + Math.PI / 2;
+  /* a portal grows with every wave that came out of it since it opened (#78): the threat is read from afar */
+  o.scale.setScalar(1 + Math.min(1, 0.06 * Math.max(0, (sessionState.waveN | 0) - (q.w | 0))));
   return o;
 }
 
@@ -67,7 +69,7 @@ function buildOne(q) {
 export function pulsePortals() {
   if (!inited) return;
   const P = sessionState.portals || [],
-    key = P.map((q) => q.L + ":" + q.x + ":" + q.y).join("|");
+    key = (sessionState.waveN | 0) + "|" + P.map((q) => q.L + ":" + q.x + ":" + q.y).join("|");
   if (key !== built) {
     built = key;
     for (const c of group.children.slice()) {
