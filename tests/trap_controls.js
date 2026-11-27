@@ -14,6 +14,9 @@ async () => {
   paused = true;
   renderer.render = () => {};
   const f = freeTile(CS.tx + 6, CS.ty + 6);
+  /* the view from above (the game opens beside the King since v101): the click of this test aims at a tile from above */
+  kingViewState.want = false;
+  roleHooks.frame(0.016, keys);
   CAM.x = f[0] + 0.5;
   CAM.z = f[1] + 0.5;
   render3D(0);

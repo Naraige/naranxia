@@ -471,7 +471,9 @@ const aiNear = (x, y, r) => {
 function aiInit() {
   const P = [[terrainState.CX, terrainState.CY]];
   if (sessionState.SITE2) P.push([sessionState.SITE2.tx, sessionState.SITE2.ty]);
-  for (let a = 0; a < 900 && BASES.length < AIK_N; a++) {
+  /* no rival camp is founded in a game (AIK_N 0, #51); the tests of the camp code (envoys, traits, events) ask for some with __CAMPS */
+  const want = typeof globalThis.__CAMPS === "number" ? globalThis.__CAMPS : AIK_N;
+  for (let a = 0; a < 900 && BASES.length < want; a++) {
     const tx = rI(110, TW - 110),
       ty = rI(100, TH - 100);
     if (P.some(([x, y]) => hyp(tx - x, ty - y) < 170)) continue;

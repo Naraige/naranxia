@@ -67,7 +67,8 @@ async () => {
   /* a placement after the load lands on the guest side, owned by player 2 */
   let placed = null;
   const n0 = structs.length;
-  for (let r = 6; r < 16 && !placed; r++)
+  /* the castle is 20 tiles wide and a house 12 since the block buildings: look for a free site further out than before */
+  for (let r = 12; r < 46 && !placed; r++)
     for (let i = -r; i <= r && !placed; i += 3) {
       const tx = CS2.tx + 2 + i,
         ty = CS2.ty + 2 + r;

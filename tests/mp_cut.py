@@ -5,8 +5,8 @@ import os
 # NOT in the quick suite (two page loads; run by hand): co-op on a map where the two castles have NO land route between them.
 # The convoy quest must be skipped (state 2, no reward) on both machines at the same tick, with equal hashes all along, the guest's
 # convoy must be refused, and the land-route check (convoyLinked, every 30 s of simulation) must stay cheap: it is timed on both pages.
-# World and sites: trial T of tests/convoy_cut_probe.js (default 62: a river between the castles; 16 and 49: castles on closed ledges).
-# The cut pairs move when the site rules do (castle size, spacing): rerun the probe and pick one from its list.
+# World and sites: trial T of tests/convoy_cut_probe.js (default 62). Since the island of v101 no seeded pair is cut by nature:
+# the test command `ct` digs a moat around the guest's castle.
 # Test-only commands go through the lockstep like player commands: `qa` sets the gathered counters, `qd` marks quests done
 # without reward (to reach the convoy quest), `zz` spawns zombies around a castle.
 # usage: python3 tests/mp_cut.py [naranxia_readable.html] [trial, default 62]
@@ -19,6 +19,7 @@ INIT="""()=>{'use strict';window.__out=[];window.__q=[];MP.dc={readyState:'open'
  renderer.render=function(){};
  const _e=mpExec;mpExec=function(c,m){
   if(c.k==='qa'){QST.a=[c.g,c.w,c.s];return}
+  if(c.k==='ct'){const cx=CS2.tx+(CS2.sz>>1),cy=CS2.ty+(CS2.sz>>1);for(let y=cy-36;y<=cy+36;y++)for(let x=cx-36;x<=cx+36;x++){const d=Math.hypot(x-cx,y-cy);if(d>=30&&d<34)ter[y*TW+x]=1}return}
   if(c.k==='qd'){for(const id of c.ids)if(!QST.d[id])QST.d[id]=2;return}
   if(c.k==='zz'){const cs=c.p?CS2:CS;for(let i=0;i<c.n;i++){const a=i/c.n*6.283,f=freeTile(Math.round(cs.tx+Math.cos(a)*c.r),Math.round(cs.ty+Math.sin(a)*c.r));if(f)units.push(mkU(1,'zombie',(f[0]+.5)*TS,(f[1]+.5)*TS))}return}
   return _e(c,m)};
@@ -81,6 +82,8 @@ with sync_playwright() as p:
      Math.random=R0;window.__ab=[a,b];mpWorldSync()}""",TRIAL);pump(A,B,3)
     r=A.evaluate("""()=>{const a=window.__ab[0],b=window.__ab[1];MP.mine=a;MP.theirs=b;mpStart();return JSON.stringify({a,b,on:MP.on})}""")
     harness.flush(A,B);A.evaluate(REC);B.evaluate(REC);harness.observe(A,B);pump(A,B,1);P('start',r)
+    # the island of v101 is one piece of land: the cut is dug by a test command, a moat of water around the guest's castle (same tick on both)
+    A.evaluate("()=>{mpPush({k:'ct'})}")
     waitT(4)
     check();P('begin A',json.dumps(st(A)));P('begin B',json.dumps(st(B)))
     ok=[]

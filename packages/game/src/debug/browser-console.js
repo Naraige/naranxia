@@ -64,7 +64,7 @@ import { selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { simulationState } from "../gameplay/simulation.js";
 import { gstBest, sbRec, setUpdateHandler, statisticsState, update } from "../gameplay/statistics.js";
-import { SW, swarmState, SWD } from "../gameplay/swarm.js";
+import { SW, swarmState, SWD, swReset } from "../gameplay/swarm.js";
 import { laneFieldQ, LFLD } from "../ai/zombie-lanes.js";
 import { callWave, restT, setCallWaveHandler, spawnAnchor, wave, wavesState, waveTick } from "../gameplay/waves.js";
 import { _N, mpExec, mpPush, questSwitch, roleAdj, sendConvoy, setMpExecHandler } from "../multiplayer/commands.js";
@@ -357,7 +357,9 @@ export function installBrowserConsole() {
         return _bwat ? -1 : h;
       },
     },
-    swDbg: { get: () => ({ FD, swarmState, SWD, laneFieldQ, LFLD, fv, canStep, canStepZ, solid, wavesState }) },
+    swDbg: {
+      get: () => ({ FD, swarmState, SWD, laneFieldQ, LFLD, fv, canStep, canStepZ, solid, wavesState, swReset }),
+    },
     freeTile: { get: () => freeTile },
     gOK: { get: () => gOK },
     gstBest: { get: () => gstBest },

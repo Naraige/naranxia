@@ -28,8 +28,8 @@ const cases = [
   {
     id: "damage",
     file: "gameplay/rules.js",
-    from: "spearman: { r: 7, hp: 85, spd: 108, dmg: 11,",
-    to: "spearman: { r: 7, hp: 85, spd: 108, dmg: 1,",
+    from: "spearman: { r: 11, hp: 85, spd: 108, dmg: 11,",
+    to: "spearman: { r: 11, hp: 85, spd: 108, dmg: 1,",
     test: "spearman",
   },
   {

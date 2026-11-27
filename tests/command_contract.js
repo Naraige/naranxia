@@ -41,6 +41,9 @@ async () => {
   mpExec(command, true);
   __test.check("queued switch applied", QST.on, before ? 0 : 1);
   const snapshots = RESP.map((r) => [r.g, r.w, r.s, r.f]);
+  /* every kingdom starts with its King and two guards since v101: this contract is about summoning one, so they leave first */
+  for (let i = units.length - 1; i >= 0; i--)
+    if (units[i].type === "king" || units[i].type === "guard") units.splice(i, 1);
   mpExec({ k: "t", t: "king", b: CS.sid }, false);
   // curB deliberately falls back to HOMEC for an invalid selection. The
   // invariant is that the foreign castle and its owner's stock are untouched.

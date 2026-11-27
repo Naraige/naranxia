@@ -81,7 +81,7 @@ async () => {
     if (!g.attributes.mat || g.attributes.position.count < (both ? 300 : 200))
       O.bad.push("banner: geometry" + (both ? " (both faces)" : ""));
   }
-  /* the banners marked on the building models: the castle flies a standard and three banners, barracks and war room a standard and two,
+  /* the banners marked on the building models: the castle flies three banners (the standard on the keep roof was removed in v101, #58), barracks and war room a standard and two,
      the guild and the embassy theirs in colours of their own */
   O.marks = {};
   for (const t of ["castle", "barracks", "warroom", "guild", "embassy"])
@@ -89,7 +89,7 @@ async () => {
       const M = VOXB[t].make(tier).marks || [],
         poles = M.filter((m) => m.t === "pole").length;
       O.marks[t] = poles + "+" + (M.length - poles);
-      const want = { castle: "1+3", barracks: "1+2", warroom: "1+2", guild: "1+2", embassy: "4+2" }[t];
+      const want = { castle: "0+3", barracks: "1+2", warroom: "1+2", guild: "1+2", embassy: "4+2" }[t];
       if (O.marks[t] !== want) O.bad.push(t + ": banners " + O.marks[t] + ", expected " + want + " (poles + walls)");
       if (M.some((m) => !(m.k > 0) || !isFinite(m.x + m.y + m.z)))
         O.bad.push(t + ": a banner mark without place or size");

@@ -28,7 +28,8 @@ async () => {
   O.small = far(2);
   window.__test.check("smallLanesWithin170", O.small <= 172 && O.small > 100, true);
   window.__test.check("mediumLanesWithin380", O.medium <= 382 && O.medium > 172, true);
-  window.__test.check("largeIsLongest", O.large > O.medium, true);
+  /* the world is one island since v101: its roads (about 300 tiles) fit inside the Medium limit, so Large and Medium can be equal */
+  window.__test.check("largeIsLongest", O.large >= O.medium, true);
   /* saved and restored */
   const pk = await svPack();
   O.packed = !!pk;
@@ -36,6 +37,6 @@ async () => {
   Math.random = RR;
   if (k0 === null) LS.removeItem("dk_msize");
   else LS.setItem("dk_msize", k0);
-  O.ok = O.small <= 172 && O.medium <= 382 && O.large > O.medium && O.packed;
+  O.ok = O.small <= 172 && O.medium <= 382 && O.large >= O.medium && O.packed;
   return JSON.stringify(O);
 };

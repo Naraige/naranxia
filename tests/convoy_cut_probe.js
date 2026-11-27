@@ -43,6 +43,16 @@ async () => {
     if (!MP.on) mpStart(); /* v95: the first call only asks to confirm over a running game */
     waveT = 1e9;
     for (let i = 0; i < 20; i++) update(0.05);
+    if (trial === 62) {
+      /* the island of v101 is one piece of land, no seeded pair is cut by nature: a moat around the second castle makes the cut case */
+      const cx = CS2.tx + (CS2.sz >> 1),
+        cy = CS2.ty + (CS2.sz >> 1);
+      for (let y = cy - 36; y <= cy + 36; y++)
+        for (let x = cx - 36; x <= cx + 36; x++) {
+          const d = Math.hypot(x - cx, y - cy);
+          if (d >= 30 && d < 34) ter[y * TW + x] = 1;
+        }
+    }
     const before = mpHash();
     const outcomes = [];
     const ms = [];
@@ -58,7 +68,7 @@ async () => {
       outcomes.every((v) => v === outcomes[0]),
     );
     __test.check("route lookup preserves gameplay state " + trial, mpHash(), before);
-    if (trial === 62) __test.check("known river cut", r, false);
+    if (trial === 62) __test.check("known cut (moat)", r, false);
     ms.sort((x, y) => x - y);
     if (r) tl.push(ms[1]);
     else {

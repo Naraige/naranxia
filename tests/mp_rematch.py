@@ -60,9 +60,10 @@ with sync_playwright() as p:
     a=st(A);b=st(B);P('game 2',a['tick'],b['tick'],a['ep'],b['ep'])
     harness.check('second game runs on both',a['on'] and b['on'] and a['tick']>20 and b['tick']>20)
     harness.check('no resync or desync',a['ep']==0 and b['ep']==0 and not a['ds'] and not b['ds'])
-    RT="()=>JSON.stringify({far:Math.round(Math.max(...ROUTES.map(r=>Math.max(...r.pts.map(p=>Math.min(Math.hypot(p[0]-CS.tx,p[1]-CS.ty),CS2?Math.hypot(p[0]-CS2.tx,p[1]-CS2.ty):1e9)))))),n:ROUTES.length,p0:ROUTES[0].pts[0]})"
+    RT="()=>JSON.stringify({len:ROUTES.map(r=>r.pts.length),d0:ROUTES.map(r=>Math.round(Math.hypot(r.pts[0][0]-CS.tx,r.pts[0][1]-CS.ty))),d2:ROUTES.map(r=>Math.round(Math.hypot(r.pts[0][0]-CS2.tx,r.pts[0][1]-CS2.ty))),far:Math.round(Math.max(...ROUTES.map(r=>Math.max(...r.pts.map(p=>Math.min(Math.hypot(p[0]-CS.tx,p[1]-CS.ty),CS2?Math.hypot(p[0]-CS2.tx,p[1]-CS2.ty):1e9)))))),n:ROUTES.length,p0:ROUTES[0].pts[0]})"
     ra=json.loads(A.evaluate(RT));rb=json.loads(B.evaluate(RT));P('routes',ra,rb)
-    harness.check('host lanes are short (small world)',ra['far']<=190)
+    # since the island of v101 a lane whose bridge head is within the limit goes on over the bridge to the islet (about 90 tiles more)
+    harness.check('host lanes are short (small world)',ra['far']<=270)
     harness.check('the guest follows the host world size',rb==ra)
     A.evaluate("()=>localStorage.removeItem('dk_msize')")
     harness.finish('mp_rematch',True,A,B,ea+eb,None)

@@ -62,7 +62,7 @@ def profile(A,B,name,seed,dAB,dBA,fA,fB,rounds):
             act=rng.random()
             if act<.6 and used[who]<len(spots[who]):
                 kind=KINDS[kinds[who]%len(KINDS)];kinds[who]+=1;tx,ty=spots[who][used[who]];used[who]+=1
-                pg.evaluate("([k,x,y])=>{selB=CURPL?CS2:CS;const f=freeSite(k,x,y,30);if(f)build(k,f[0],f[1])}",[kind,tx,ty]);placed[who].append((kind,tx,ty))
+                pg.evaluate("([k,x,y])=>{selB=CURPL?CS2:CS;const f=freeSite(k,x,y,18);if(f)build(k,f[0],f[1])}",[kind,tx,ty]);placed[who].append((kind,tx,ty))
             elif act<.85:
                 pg.evaluate("()=>{selB=CURPL?CS2:CS;train('peasant')}")
             else:

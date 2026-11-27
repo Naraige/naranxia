@@ -10,6 +10,9 @@ async () => {
   pickPos = { tx: pickPos.tx, ty: pickPos.ty, ok: true };
   confirmPick();
   waveT = 1e9;
+  /* every kingdom starts with its King and two guards since v101: they would cut down what the bosses summon before it is counted */
+  for (let i = units.length - 1; i >= 0; i--)
+    if (units[i].type === "king" || units[i].type === "guard") units.splice(i, 1);
   const O = {};
   const x = (CX + 14.5) * TS,
     y = (CY + 14.5) * TS;

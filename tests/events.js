@@ -11,6 +11,7 @@ async () => {
     window.__test.check(m, !!c);
     if (!c) bad.push(m);
   };
+  globalThis.__CAMPS = 3; /* rival camps are no longer founded in a game (#51): this test of their code asks for some */
   rollWorld();
   randomSite();
   pickPos = { tx: pickPos.tx, ty: pickPos.ty, ok: true };

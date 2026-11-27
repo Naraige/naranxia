@@ -5,6 +5,7 @@ async () => {
     s = (s * 16807) % 2147483647;
     return (s - 1) / 2147483646;
   };
+  globalThis.__CAMPS = 3; /* rival camps are no longer founded in a game (#51): this test of their code asks for some */
   rollWorld();
   randomSite();
   pickPos = { tx: pickPos.tx, ty: pickPos.ty, ok: true };

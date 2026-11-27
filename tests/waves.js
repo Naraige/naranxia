@@ -275,6 +275,7 @@ async () => {
   }
   /* last resort: a zombie that still stands 80 s after giving up its path is taken away, without a kill */
   {
+    swDbg.swReset(); /* the horde that waded out above lives on (v101): without this its deaths at the walls would count as kills here */
     const c = CS,
       f = freeTile(c.tx - 30, c.ty - 30);
     SW.q.push({ ln: 0, x: f[0] + 0.5, y: f[1] + 0.5, ph: 65535, left: 1, rate: 600, hp: 5 });
