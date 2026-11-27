@@ -600,6 +600,7 @@ export function initializeDesktopInput() {
       return;
     }
     if (k === "escape") {
+      if (roleHooks.key(k)) return;
       if (questPanelState.log) questPanelState.log = false;
       else if (sessionState.showMap) sessionState.showMap = false;
       else if (sessionState.mode || sel().length) {
@@ -643,7 +644,8 @@ export function initializeDesktopInput() {
     }
     /* the dragon rider commands nothing: Space is his take-off, the other keys do nothing */
     if (roleHooks.rider()) {
-      if (a === "pause") e.preventDefault();
+      if (roleHooks.key(k)) e.preventDefault();
+      else if (a === "pause") e.preventDefault();
       return;
     }
     if (a === "cry" || a === "charge") {

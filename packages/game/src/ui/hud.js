@@ -921,7 +921,10 @@ function drawUIBody() {
   drawToasts(UW);
   fxGameIn(UW, UH);
   if (sessionState.showMap) drawMapModal(UW, UH);
-  else questLog(UW, UH);
+  else {
+    questLog(UW, UH);
+    roleHooks.panel(UW, UH);
+  }
   if (sessionState.over) drawEnd(UW, UH);
   canvasesState.ctx.setTransform(1, 0, 0, 1, 0, 0);
 }

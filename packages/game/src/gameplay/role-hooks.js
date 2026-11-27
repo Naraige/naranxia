@@ -15,6 +15,10 @@ export const roleHooks = {
   viewToggle: () => {},
   /* the rider's gauges under the top bar: returns their height */
   bar: (_UW, _y) => 0,
+  /* the rider's keys (U window, Esc closes it): true when taken */
+  key: (_k) => false,
+  /* the rider's window, drawn over the game after the quest log */
+  panel: (_UW, _UH) => {},
   /* simulation: the breath burns, once a tick */
   tick: (_dt) => {},
   /* simulation: the 'dg' command */

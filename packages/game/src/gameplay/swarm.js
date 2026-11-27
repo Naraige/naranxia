@@ -276,6 +276,18 @@ const SWLT = new Float64Array(256);
 for (let v = 0; v < 256; v++) SWLT[v] = (v / 127.5 - 1) * SWBW * TS;
 for (let v = 0; v < 16; v++) SWV[v] = SWSP * (v & 8 ? 1.08 : 1) * (0.9 + (v & 7) * 0.03);
 
+/* a disc where the horde walks slower (the dragon's roar, gameplay/dragon.js sets it every tick; radius 0 = none) */
+let SWSLX = 0,
+  SWSLY = 0,
+  SWSLR2 = 0,
+  SWSLF = 1;
+export function swSlow(x, y, r, f) {
+  SWSLX = x;
+  SWSLY = y;
+  SWSLR2 = r * r;
+  SWSLF = f;
+}
+
 /* a step from (tx,ty) by (dx,dy) is open (same test as fmask, for tiles it did not list) */
 function swOpen(tx, ty, dx, dy, B) {
   const X = tx + dx,
@@ -722,7 +734,12 @@ function swStep() {
       vy += pu > 0.6 ? 0.6 : pu < -0.6 ? -0.6 : pu;
       if (D0 > 6 && !cl) jam = D0 < 64 ? SWJAM[D0] : 0.75;
     }
-    const sp = SWV[(sK[i] ? 8 : 0) | (o >> 13)] * jam * SWDT;
+    let sp = SWV[(sK[i] ? 8 : 0) | (o >> 13)] * jam * SWDT;
+    if (SWSLR2 > 0) {
+      const sx = x - SWSLX,
+        sy = y - SWSLY;
+      if (sx * sx + sy * sy < SWSLR2) sp *= SWSLF;
+    }
     let nx = x + vx * sp,
       ny = y + vy * sp;
     nx = nx < TS ? TS : nx > W - TS ? W - TS : nx;

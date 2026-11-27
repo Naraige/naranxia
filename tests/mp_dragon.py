@@ -56,6 +56,15 @@ def play(p,host_rides):
     da=json.loads(A.evaluate("()=>JSON.stringify(DRG)"));need(da['f']==1,tag+': the breath did not reach the simulation')
     R.evaluate("()=>{dragonViewState.fire=false}");waitT(1.5)
     need(json.loads(A.evaluate("()=>JSON.stringify(DRG)"))['f']==0,tag+': the breath did not stop')
+    # level, skills, fireball and roar (#66): the rider's skills reach both machines, the fireball bursts and the roar starts on both
+    R.evaluate("()=>{PR.xp=2500;PR.tree={f1:1,f2:1,b1:1,r1:1,w1:1};PR.lk=1;PR.fc=2;prSend()}");waitT(1)
+    da=json.loads(A.evaluate("()=>JSON.stringify(DRG)"));db=json.loads(B.evaluate("()=>JSON.stringify(DRG)"))
+    need(da['lv']==8 and da['u'][0]==2 and da['u'][3]==1 and da['lk']==1 and da==db,tag+': the skills did not reach both machines: %s'%da)
+    R.evaluate("()=>{keys.e=true}");waitT(.3);R.evaluate("()=>{keys.e=false;keys.r=true}");waitT(.3);R.evaluate("()=>{keys.r=false}")
+    da=json.loads(A.evaluate("()=>JSON.stringify(DRG)"));need(da['cb']>0 and da['cr']>0,tag+': the fireball or the roar did not start: %s'%da)
+    waitT(1.5)
+    da=json.loads(A.evaluate("()=>JSON.stringify(DRG)"));db=json.loads(B.evaluate("()=>JSON.stringify(DRG)"))
+    need(da['bl']==[] and da==db,tag+': the fireball did not burst the same on both machines')
     # the rider's keys must not build or select anything
     n0=A.evaluate("()=>structs.length");R.evaluate("()=>{dispatchEvent(new KeyboardEvent('keydown',{key:'c',code:'KeyC'}))}");waitT(.5)
     need(R.evaluate("()=>mode")is None and A.evaluate("()=>structs.length")==n0,tag+': a rider key opened a building tool')

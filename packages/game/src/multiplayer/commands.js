@@ -141,8 +141,8 @@ export const kingDrive = function (w) {
 };
 
 /* the dragon rider's machine tells where its dragon is (gameplay/dragon.js); alone (a test, a partner gone) the command runs at once */
-export const dragonSend = function (c) {
-  c.k = "dg";
+export const dragonSend = function (c, k) {
+  c.k = k || "dg";
   if (gated()) {
     mpPush(c);
     return;
@@ -254,6 +254,9 @@ export let mpExec = function mpExec(c, mine) {
         kingDrive0(c);
         break;
       case "dg":
+      case "dk":
+      case "db":
+      case "dr":
         roleHooks.dragonSet(c);
         break;
       case "cq":

@@ -1812,4 +1812,170 @@ export const TR = {
   " will hold a castle": " bir kale tutacak",
   "{0} will ride the dragon": "{0} ejderhaya binecek",
   "{0} will hold a castle": "{0} bir kale tutacak",
+  "Searing Breath":
+    "Kavuran Nefes",
+  "+30% breath damage":
+    "+%30 nefes hasarı",
+  "Fireball":
+    "Ateş Topu",
+  "Key E: an explosive shot":
+    "E tuşu: patlayıcı bir atış",
+  "Meteor":
+    "Meteor",
+  "Fireball: wider blast, +35% damage":
+    "Ateş topu: daha geniş patlama, +%35 hasar",
+  "Inferno":
+    "Cehennem",
+  "Forge Lungs":
+    "Demirhane Ciğerleri",
+  "Heat builds slower and cools faster":
+    "Isı daha yavaş birikir ve daha hızlı soğur",
+  "Cataclysm":
+    "Felaket",
+  "Mighty Wings":
+    "Güçlü Kanatlar",
+  "+8% speed, turning and stamina":
+    "+%8 hız, dönüş ve dayanıklılık",
+  "Growth":
+    "Büyüme",
+  "The dragon grows 6% larger":
+    "Ejderha %6 büyür",
+  "Titan":
+    "Titan",
+  "Roar":
+    "Kükreme",
+  "Key R: slows the horde around the dragon":
+    "R tuşu: ejderhanın çevresindeki orduyu yavaşlatır",
+  "Thunder Roar":
+    "Gök Gürültüsü Kükremesi",
+  "The roar slows the horde 1 s longer":
+    "Kükreme orduyu 1 sn daha uzun yavaşlatır",
+  "Dread Roar":
+    "Dehşet Kükremesi",
+  "Wide Flame":
+    "Geniş Alev",
+  "+10% breath radius":
+    "+%10 nefes yarıçapı",
+  "Tribute":
+    "Haraç",
+  "+15% gold earned":
+    "+%15 kazanılan altın",
+  "Rider Bond":
+    "Binici Bağı",
+  "+10% dragon XP":
+    "+%10 ejderha XP",
+  "Royal Tribute":
+    "Kraliyet Haracı",
+  "Old Bond":
+    "Eski Bağ",
+  "Wyrmling":
+    "Ejderciğ",
+  "Drake":
+    "Genç Ejder",
+  "Wyvern":
+    "Wyvern",
+  "Elder Wyvern":
+    "Yaşlı Wyvern",
+  "Ancient":
+    "Kadim",
+  "Legend":
+    "Efsane",
+  "Recruit":
+    "Acemi",
+  "Sentinel":
+    "Nöbetçi",
+  "Sky Scout":
+    "Gök Kâşifi",
+  "Wing Knight":
+    "Kanat Şövalyesi",
+  "Warden of the Gate":
+    "Kapı Muhafızı",
+  "Dragon Knight":
+    "Ejder Şövalyesi",
+  "Dragonlord":
+    "Ejder Lordu",
+  "Shield of Naranxia":
+    "Naranxia'nın Kalkanı",
+  "King's Wing":
+    "Kralın Kanadı",
+  "Ash":
+    "Kül",
+  "Frost":
+    "Ayaz",
+  "Jade":
+    "Yeşim",
+  "Flame":
+    "Alev",
+  "Bastion":
+    "Hisar",
+  "Level":
+    "Seviye",
+  "Rank":
+    "Rütbe",
+  "max":
+    "maks",
+  "ready":
+    "hazır",
+  "locked":
+    "kilitli",
+  "Buy":
+    "Satın al",
+  "Owned":
+    "Alındı",
+  "Needs":
+    "Gerektirir",
+  "Needs dragon level":
+    "Ejderha seviyesi gerekli",
+  "Not enough gold":
+    "Yetersiz altın",
+  "Ready to buy":
+    "Satın almaya hazır",
+  "Stage":
+    "Aşama",
+  "renown":
+    "şöhret",
+  "evolves at level":
+    "seviyede evrimleşir",
+  "Dragon":
+    "Ejderha",
+  "Skills":
+    "Yetenekler",
+  "Skill tree":
+    "Yetenek ağacı",
+  "Look":
+    "Görünüm",
+  "The dragon grows and changes shape as it levels up.":
+    "Ejderha her seviyede büyür ve şekil değiştirir.",
+  "PROMOTED":
+    "TERFİ",
+  "EVOLVED":
+    "EVRİM",
+  "LEVEL UP":
+    "SEVİYE ATLADIN",
+  "New skills may be open: press U":
+    "Yeni yetenekler açılmış olabilir: U tuşu",
+  "auto":
+    "otomatik",
+  "Searing Breath II":
+    "Kavuran Nefes II",
+  "Searing Breath III":
+    "Kavuran Nefes III",
+  "Forge Lungs II":
+    "Demirhane Ciğerleri II",
+  "Forge Lungs III":
+    "Demirhane Ciğerleri III",
+  "Mighty Wings II":
+    "Güçlü Kanatlar II",
+  "Mighty Wings III":
+    "Güçlü Kanatlar III",
+  "Growth II":
+    "Büyüme II",
+  "Wide Flame II":
+    "Geniş Alev II",
+  "Wide Flame III":
+    "Geniş Alev III",
+  "Wide Flame IV":
+    "Geniş Alev IV",
+  "Wide Flame V":
+    "Geniş Alev V",
 };

@@ -4,6 +4,7 @@ import { roleHooks } from "../gameplay/role-hooks.js";
 import { sessionState } from "../gameplay/session.js";
 import { royalSpawn } from "../gameplay/squads.js";
 import { kingViewFrame, kingViewToggle, kingViewZoom } from "../input/king-view.js";
+import { dragonPanelDraw, dragonPanelKey } from "../ui/dragon-panel.js";
 import { dragonBar, dragonFrame, dragonMouse, dragonZoom } from "../rendering/dragon-rider.js";
 
 /* wires the King view and the Dragon role into the game (gameplay/role-hooks.js says why) */
@@ -14,6 +15,8 @@ export function initializeRoles() {
   roleHooks.rider = dragonMine;
   roleHooks.viewToggle = kingViewToggle;
   roleHooks.bar = dragonBar;
+  roleHooks.key = dragonPanelKey;
+  roleHooks.panel = dragonPanelDraw;
   roleHooks.tick = dragonTick;
   roleHooks.dragonSet = dragonSet0;
   roleHooks.mkDragon = mkDragon;

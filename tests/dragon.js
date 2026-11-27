@@ -17,7 +17,7 @@ async () => {
   const chk = (n, v) => window.__test.check(n, !!v);
   chk("a dragon waits by the castle", DRG && DRG.fl === 0 && DRG.f === 0);
   chk("the King stands at the start", units.filter((u) => u.type === "king").length === 1);
-  const near = mkU(1, "zombie", DRG.x + TS * 6, DRG.y),
+  let near = mkU(1, "zombie", DRG.x + TS * 6, DRG.y),
     far = mkU(1, "zombie", DRG.x + TS * 14, DRG.y);
   near.hp = far.hp = 5000;
   units.push(near, far);
@@ -37,6 +37,56 @@ async () => {
   DRG.x += 999;
   await svApply(txt);
   chk("the dragon survives a save", JSON.stringify(DRG) === before);
+  /* level, skills, fireball and roar (#66): the rider's command 'dk' sets them, the simulation does the rest */
+  /* the save restored new bodies: stand two fresh ones where the first pair stood */
+  near = mkU(1, "zombie", DRG.x + TS * 6, DRG.y);
+  far = mkU(1, "zombie", DRG.x + TS * 14, DRG.y);
+  near.hp = far.hp = 5000;
+  units.push(near, far);
+  dragonSend({ lv: 1, u: [0, 0, 0, 0, 0, 0, 0, 0, 0], lk: 0, fc: 0 }, "dk");
+  cmd(1, DRG.x + TS * 6);
+  near.hp = 5000;
+  for (let i = 0; i < 30; i++) dragonTick(1 / 30);
+  const base = 5000 - near.hp;
+  dragonSend({ lv: 5, u: [2, 0, 0, 1, 1, 0, 1, 0, 0], lk: 3, fc: 2 }, "dk");
+  chk("the level, skills and look are stored", DRG.lv === 5 && DRG.u[0] === 2 && DRG.lk === 3 && DRG.fc === 2);
+  near.hp = 5000;
+  for (let i = 0; i < 30; i++) dragonTick(1 / 30);
+  const boost = 5000 - near.hp;
+  chk(
+    "two breath skills and four levels burn about twice as much (" + (boost / base).toFixed(2) + ")",
+    boost / base > 1.7 && boost / base < 2.1,
+  );
+  cmd(0, DRG.x + TS * 6);
+  dragonSend({ lv: 1, u: [0, 0, 0, 0, 0, 0, 0, 0, 0], lk: 0, fc: 0 }, "dk");
+  dragonSend({ ax: DRG.x + TS * 6, ay: DRG.y }, "db");
+  chk("no fireball without the skill", DRG.bl.length === 0);
+  dragonSend({ lv: 5, u: [0, 0, 0, 1, 1, 0, 0, 0, 0], lk: 0, fc: 0 }, "dk");
+  near.hp = 5000;
+  dragonSend({ ax: DRG.x + TS * 6, ay: DRG.y }, "db");
+  chk("the fireball flies", DRG.bl.length === 1 && DRG.cb > 5);
+  dragonSend({ ax: DRG.x + TS * 6, ay: DRG.y }, "db");
+  chk("one fireball at a time, the cooldown holds", DRG.bl.length === 1);
+  for (let i = 0; i < 10; i++) dragonTick(1 / 30);
+  chk("it has not burst yet", near.hp === 5000 && DRG.bl.length === 1);
+  for (let i = 0; i < 20; i++) dragonTick(1 / 30);
+  chk(
+    "it bursts where it was thrown (" + (5000 - near.hp).toFixed(0) + ")",
+    DRG.bl.length === 0 && near.hp < 5000 - 120,
+  );
+  chk("and its blast reaches the one beside less than the one under it", far.hp === 5000 || far.hp > near.hp);
+  dragonSend({}, "dr");
+  chk("the roar starts, slows for 4 s and cools down", DRG.rt > 3.9 && DRG.rt <= 4 && DRG.cr > 17);
+  const rt = DRG.rt;
+  dragonSend({}, "dr");
+  chk("a second roar waits", DRG.rt === rt);
+  for (let i = 0; i < 150; i++) dragonTick(1 / 30);
+  chk("the roar ends", DRG.rt === 0 && DRG.cr > 12);
+  const b2 = JSON.stringify(DRG),
+    t2 = await svPack();
+  DRG.lv = 9;
+  await svApply(t2);
+  chk("level, skills and cooldowns survive a save", JSON.stringify(DRG) === b2);
   Math.random = RR;
   return JSON.stringify({ ok: true });
 };

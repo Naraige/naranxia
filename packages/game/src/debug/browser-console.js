@@ -105,6 +105,8 @@ import { inputState, keys } from "../input/state.js";
 import { kingViewState } from "../input/king-view.js";
 import { dragonViewState } from "../rendering/dragon-rider.js";
 import { dragonTick } from "../gameplay/dragon.js";
+import { PR, prBuy, prGain, prSend } from "../gameplay/dragon-prog.js";
+import { dragonPanelKey, dragonPanelState } from "../ui/dragon-panel.js";
 import { dragonSend } from "../multiplayer/commands.js";
 import { mmGo } from "../input/desktop.js";
 import { mmLook, mmToWorld, mmView } from "../ui/minimap.js";
@@ -408,6 +410,12 @@ export function installBrowserConsole() {
     kingViewState: { get: () => kingViewState },
     dragonViewState: { get: () => dragonViewState },
     dragonTick: { get: () => dragonTick },
+    PR: { get: () => PR },
+    prBuy: { get: () => prBuy },
+    prGain: { get: () => prGain },
+    prSend: { get: () => prSend },
+    dragonPanelKey: { get: () => dragonPanelKey },
+    dragonPanelState: { get: () => dragonPanelState },
     dragonSend: { get: () => dragonSend },
     mmGo: { get: () => mmGo },
     mmRect: { get: () => mmRect },

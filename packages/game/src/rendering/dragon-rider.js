@@ -1,7 +1,10 @@
-import { dragonMine } from "../gameplay/dragon.js";
+import { snd } from "../audio/sound.js";
+import { DRAGON, dragonMine } from "../gameplay/dragon.js";
+import { PR, prGain, prLoad, prLvl, prRankName, prSend, prUp } from "../gameplay/dragon-prog.js";
+import { DR_EVS, DR_FLAMES, DR_LOOKS, DR_STAGES, drEv, drLvlXp } from "../gameplay/dragon-skills.js";
 import { TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
-import { T_ } from "../i18n/language.js";
+import { L, T_ } from "../i18n/language.js";
 import { inputState } from "../input/state.js";
 import { dragonSend } from "../multiplayer/commands.js";
 import { canvasesState, cv } from "../ui/canvases.js";
@@ -37,7 +40,19 @@ const V = {
   dist: 21,
   told: false,
   fxT: 0,
+  key: "" /* what the dragon on screen was built from (look, flame, stage, size) */,
+  balls: new Map() /* fireball in the simulation -> its mesh */,
+  rt: 0,
+  k0: -1 /* kills and wave already paid to the rider */,
+  w0: -1,
+  eK: false,
+  rK: false,
+  told2: false,
+  panel: false /* the skill window is open: the dragon hangs still */,
 };
+const keyOf = (d) => [d.lk | 0, d.fc | 0, drEv(d.lv || 1), d.u ? d.u[5] : 0].join();
+let ballGeo = null,
+  ballMat = null;
 export const dragonViewState = V;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v)),
   damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt)),
@@ -54,16 +69,22 @@ function drop() {
     scene.remove(V.holder);
     dragonKit().disposeOwn(V.rig.root);
   }
+  for (const m of V.balls.values()) scene.remove(m);
+  V.balls.clear();
   V.holder = V.rig = V.d = V.P = V.sm = null;
+  V.key = "";
   CAM.fly = null;
   CUTU.value.w = 0;
 }
 
 function make(d) {
   const K = dragonKit(),
-    look = Object.assign({}, K.look, { ev: 2 });
+    ev = drEv(d.lv || 1),
+    fl = DR_FLAMES[d.fc | 0],
+    look = Object.assign({}, K.look, DR_LOOKS[d.lk | 0][1], fl ? { flame: fl } : {}, { ev });
+  V.key = keyOf(d);
   V.rig = K.buildDragon(look);
-  V.S = look.size * DRK;
+  V.S = look.size * DRK * DR_EVS[ev] * (1 + 0.06 * (d.u ? d.u[5] : 0));
   V.rig.root.scale.setScalar(V.S);
   V.rig.root.position.y = -V.rig.cy * V.S;
   V.holder = new THREE.Group();
@@ -99,6 +120,9 @@ export function dragonMouse(e, down) {
   if (e.button === 0) V.fire = down;
   return true;
 }
+export function dragonPanelOpen(on) {
+  V.panel = !!on;
+}
 export function dragonZoom(d) {
   if (!dragonMine()) return false;
   V.dist = clamp(V.dist * (d > 0 ? 1.12 : 1 / 1.12), 11, 40);
@@ -113,17 +137,19 @@ function fly(dt, keys) {
     my = m && m.x >= 0 ? (m.y / cv.height) * 2 - 1 : 0;
   mx = Math.abs(mx) < 0.07 ? 0 : (mx - Math.sign(mx) * 0.07) / 0.93;
   my = Math.abs(my) < 0.07 ? 0 : (my - Math.sign(my) * 0.07) / 0.93;
-  const up = keys[KB.up] || keys.arrowup,
+  const U = prUp(),
+    ag = 1 + 0.08 * U[2] /* the wings */,
+    up = keys[KB.up] || keys.arrowup,
     dn = keys[KB.down] || keys.arrowdown,
     sp = keys[" "] || keys.space,
     g = gh(P.x, P.z);
   if (P.fly) {
     const boost = up && V.sta > 0;
-    V.sta = boost ? Math.max(0, V.sta - 26 * dt) : Math.min(100, V.sta + 16 * dt);
-    P.turn = damp(P.turn, -mx * 1.5, 5, dt);
+    V.sta = boost ? Math.max(0, V.sta - (26 * dt) / ag) : Math.min(100, V.sta + 16 * dt);
+    P.turn = damp(P.turn, -mx * 1.5 * ag, 5, dt);
     P.yaw += P.turn * dt;
     P.pit = damp(P.pit, clamp(-my * 0.75 + (sp ? 0.35 : 0), -0.8, 0.65), 3.5, dt);
-    P.spd = damp(P.spd, (boost ? 25 : dn ? 8 : 15) - Math.sin(P.pit) * 9, 1.4, dt);
+    P.spd = damp(P.spd, ((boost ? 25 : dn ? 8 : 15) - Math.sin(P.pit) * 9) * ag, 1.4, dt);
     P.roll = damp(P.roll, clamp(-P.turn * 0.55, -0.7, 0.7), 4, dt);
     const ch = Math.cos(P.pit) * P.spd;
     P.vy = Math.sin(P.pit) * P.spd;
@@ -159,16 +185,31 @@ function fly(dt, keys) {
   P.z = clamp(P.z, 6, TH - 6);
   const firing = V.fire && !V.over;
   if (firing) {
-    V.heat = Math.min(100, V.heat + 34 * dt);
+    V.heat = Math.min(100, V.heat + (34 * dt) / (1 + 0.18 * U[1]));
     if (V.heat >= 100) V.over = true;
   } else {
-    V.heat = Math.max(0, V.heat - (V.over ? 18 : 30) * dt);
+    V.heat = Math.max(0, V.heat - (V.over ? 18 : 30) * (1 + 0.2 * U[1]) * dt);
     if (V.over && V.heat <= 30) V.over = false;
   }
   /* the breath lands on the ground ahead: further when the dragon flies higher */
   const r = clamp((P.y - g) * 1.4 + 5, 5, 16),
     ax = P.x + Math.sin(P.yaw) * r,
     az = P.z + Math.cos(P.yaw) * r;
+  /* E throws a fireball where the breath would land, R roars (the simulation checks the skill and the cooldown) */
+  const e = !!keys.e,
+    rr = !!keys.r,
+    d0 = V.d;
+  if (e && !V.eK && U[3] > 0 && d0.cb <= 0)
+    dragonSend(
+      {
+        ax: Math.round((P.x + Math.sin(P.yaw) * r * 1.4) * TS),
+        ay: Math.round((P.z + Math.cos(P.yaw) * r * 1.4) * TS),
+      },
+      "db",
+    );
+  if (rr && !V.rK && U[4] > 0 && d0.cr <= 0) dragonSend({}, "dr");
+  V.eK = e;
+  V.rK = rr;
   V.sendT -= dt;
   if (V.sendT <= 0 || firing !== V.sentF) {
     V.sendT = 0.1;
@@ -198,6 +239,93 @@ function fly(dt, keys) {
   return firing;
 }
 
+/* the rider's machine: tells both machines his level and skills once, pays him xp, renown and gold for the horde burnt and the waves held */
+function rider(d) {
+  prLoad();
+  if (!V.told2) {
+    V.told2 = true;
+    prSend();
+  }
+  const w = sessionState.waveN | 0;
+  if (V.k0 < 0 || d.kills < V.k0) V.k0 = d.kills;
+  if (V.w0 < 0) V.w0 = w;
+  const k = d.kills - V.k0,
+    wn = Math.max(0, w - V.w0);
+  V.k0 = d.kills;
+  V.w0 = w;
+  if (!k && !wn) return;
+  const news = prGain(k * 2 + wn * (10 + w * 5), k * 0.4 + wn * w * 2, k + wn * (20 + w * 10));
+  if (!news) return;
+  sessionState.bannerT = 4;
+  if (news[0] < 0) {
+    sessionState.bannerS = "PROMOTED";
+    sessionState.bannerS2 = L(prRankName());
+  } else if (drEv(news[1]) > drEv(news[0])) {
+    sessionState.bannerS = "EVOLVED";
+    sessionState.bannerS2 = L(DR_STAGES[drEv(news[1])]);
+  } else {
+    sessionState.bannerS = "LEVEL UP";
+    sessionState.bannerS2 = L("Level") + " " + news[1] + "  -  " + L("New skills may be open: press U");
+  }
+  snd("dragonlevel");
+}
+
+/* what the simulation holds, drawn on both machines: fireballs in flight and bursting, the roar */
+function effects(d, dt, live) {
+  if (!live) return;
+  if (!ballGeo) {
+    ballGeo = new THREE.SphereGeometry(0.55, 10, 8);
+    ballMat = new THREE.MeshBasicMaterial({ color: 0xffa030 });
+  }
+  const seen = new Set();
+  for (const b of d.bl || []) {
+    seen.add(b);
+    let m = V.balls.get(b);
+    if (!m) {
+      m = new THREE.Mesh(ballGeo, ballMat);
+      scene.add(m);
+      V.balls.set(b, m);
+      snd("dragonball", b[3], b[4]);
+    }
+    const q = Math.min(1, b[2] / DRAGON.flight),
+      x = (b[3] + (b[0] - b[3]) * q) / TS,
+      z = (b[4] + (b[1] - b[4]) * q) / TS,
+      y0 = b[5] / 100,
+      y1 = gh(b[0] / TS, b[1] / TS) + 0.6;
+    m.position.set(x, y0 + (y1 - y0) * q + Math.sin(q * Math.PI) * 1.2, z);
+    m.scale.setScalar(1 + 0.25 * Math.sin(V.t * 30));
+    if (V.t - (m.userData.f || 0) > 0.03) {
+      m.userData.f = V.t;
+      puff(x * TS, z * TS, "#ff8a1f", 1, 25, { T: 0.4, z: m.position.y - gh(x, z), vz: 0, g: 0, s: 0.3 });
+    }
+  }
+  for (const [b, m] of V.balls)
+    if (!seen.has(b)) {
+      /* it burst: flames and a boom where it landed */
+      const x = b[0],
+        y = b[1];
+      for (let i = 0; i < 14; i++)
+        puff(x, y, i & 1 ? "#ffb23c" : "#ff6a1a", 2, 140, { T: 0.7, z: 0.5, vz: 2.5, g: -3, s: 0.5 });
+      snd("boom", x, y);
+      scene.remove(m);
+      V.balls.delete(b);
+    }
+  if (d.rt > V.rt + 0.5) {
+    snd("dragonroar", d.rx, d.ry);
+    for (let i = 0; i < 24; i++) {
+      const a = (i / 24) * 6.283;
+      puff(d.rx + Math.cos(a) * TS * 5, d.ry + Math.sin(a) * TS * 5, "#e8e0c8", 1, 90, {
+        T: 0.9,
+        z: 1.5,
+        vz: 0.2,
+        g: 0,
+        s: 0.45,
+      });
+    }
+  }
+  V.rt = d.rt || 0;
+}
+
 /* every frame, before the camera keys are read; true when the keys were the rider's */
 export function dragonFrame(dt, keys) {
   const d = sessionState.started && sessionState.inGame ? sessionState.DRG : null;
@@ -205,12 +333,23 @@ export function dragonFrame(dt, keys) {
     if (V.holder) drop();
     return false;
   }
-  if (d !== V.d) {
+  if (d !== V.d || V.key !== keyOf(d)) {
+    /* the same dragon grown, evolved or re-coloured: rebuilt where it stands */
+    const keep = d === V.d && V.P ? { P: V.P, sm: V.sm, sta: V.sta, heat: V.heat } : null;
     if (V.holder) drop();
     make(d);
+    if (keep) {
+      V.P = keep.P;
+      V.sm = keep.sm;
+      V.sta = keep.sta;
+      V.heat = keep.heat;
+    }
   }
   const mine = dragonMine(),
-    live = !sessionState.paused && !sessionState.over && !sessionState.showMap;
+    live = !sessionState.paused && !sessionState.over && !sessionState.showMap && !V.panel;
+  if (V.panel) V.fire = false;
+  if (mine) rider(d);
+  effects(d, dt, live);
   V.t += dt;
   let firing = !!d.f,
     S;
@@ -315,18 +454,46 @@ export function dragonBar(UW, y) {
   if (!dragonMine() || sessionState.over) return 0;
   const c = canvasesState.ctx,
     w = Math.min(120, (UW - 30) / 2),
-    bar = (x, v, lab, c1, c2) => {
+    bar = (x, v, lab, c1, c2, yy) => {
+      yy = yy === undefined ? y : yy;
       c.fillStyle = "rgba(8,8,12,.82)";
-      c.fillRect(x - 1, y - 1, w + 2, 13);
+      c.fillRect(x - 1, yy - 1, w + 2, 13);
       c.fillStyle = "#23262e";
-      c.fillRect(x, y, w, 11);
+      c.fillRect(x, yy, w, 11);
       c.fillStyle = c1;
-      c.fillRect(x, y, Math.round((w * v) / 100), 11);
+      c.fillRect(x, yy, Math.round((w * v) / 100), 11);
       c.fillStyle = c2;
-      c.fillRect(x, y, Math.round((w * v) / 100), 2);
-      T_(lab, x + 4, y + 2, "#fff6dc", 0.78);
+      c.fillRect(x, yy, Math.round((w * v) / 100), 2);
+      T_(lab, x + 4, yy + 2, "#fff6dc", 0.78);
     };
   bar(Math.round(UW / 2 - w - 3), V.sta, "Stamina", "#2f86b0", "#7fc8e8");
   bar(Math.round(UW / 2 + 3), V.heat, V.over ? "Overheated" : "Breath heat", V.over ? "#c8402e" : "#e08a1e", "#ffd27a");
-  return 16;
+  /* second row: level with its experience, then the two keys of the skills */
+  const l = prLvl(),
+    a = drLvlXp(l),
+    b = drLvlXp(l + 1),
+    U = prUp(),
+    d = V.d,
+    y2 = y + 15,
+    cd = (c, n, k) => (!n ? L(k) + " (U)" : c > 0 ? Math.ceil(c) + " s" : L("ready")),
+    x1 = Math.round(UW / 2 - w - 3);
+  bar(
+    x1,
+    l >= 20 ? 100 : ((PR.xp - a) / (b - a)) * 100,
+    L("Level") + " " + l + " " + L(DR_STAGES[drEv(l)]),
+    "#7a4fb0",
+    "#c77dff",
+    y2,
+  );
+  c.fillStyle = "rgba(8,8,12,.82)";
+  c.fillRect(x1 + w + 5, y2 - 1, w + 2, 25);
+  T_(
+    "E " + L("Fireball") + " " + cd(d ? d.cb : 0, U[3], "locked"),
+    x1 + w + 9,
+    y2 + 2,
+    U[3] ? "#ffd27a" : "#8a8a92",
+    0.7,
+  );
+  T_("R " + L("Roar") + " " + cd(d ? d.cr : 0, U[4], "locked"), x1 + w + 9, y2 + 13, U[4] ? "#e8e0c8" : "#8a8a92", 0.7);
+  return 44;
 }

@@ -4,6 +4,19 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · Dragon: niveaux, talents, apparence, sons, boule de feu, rugissement (#66), branche `claude/castle-dragon-roles`, pas de version
+
+- Suite de #63 (le Roi: « nous avons dans un sens merge les deux jeux »). Prototype lu dans l'artefact Dragon Rider, porté dans le rôle Dragon.
+- Progression du chevaucheur (`gameplay/dragon-prog.js`, `dragon-skills.js`): xp -> niveau 1 à 20, étapes visuelles (Dragonnet... Légende, taille et forme reconstruites), renommée -> 9 rangs, or gagné en brûlant la horde et en tenant les vagues, 28 talents en 3 branches (Flamme, Ciel, Bastion) achetés à l'or. Tout est gardé sur SA machine (localStorage `dk_dr_prog`), pas dans la sauvegarde.
+- Simulation: la commande `dk` (niveau, 9 compteurs de talents, apparence, couleur de flamme, entiers) arrive sur les deux machines; `db` lance une boule de feu (vol 0,7 s puis explosion, refroidissement 6 s), `dr` rugit (disque de 36 cases où l'essaim marche à 35 %, 3 + n secondes, 18 s). Tout est dans `sessionState.DRG` (sauvé, donc resync OK). `swSlow` dans swarm.js (rayon 0 = rien: les empreintes n'ont pas bougé).
+- Effets locaux au vol: ailes (vitesse, virage, endurance), poumons (chaleur). Talents de la 3e branche du prototype (portes) remplacés par « Flamme large » (+10 % de rayon du souffle): le jeu n'a pas de porte de bastion.
+- Écran du chevaucheur (`ui/dragon-panel.js`): touche U (Échap ferme), arbre de talents et onglet Dragon (6 apparences, 7 couleurs de flamme). Le jeu continue en coop: le dragon reste en l'air pendant que la fenêtre est ouverte. Jauges sous la barre: endurance, chaleur, niveau + xp, touches E et R avec leur délai.
+- Sons (synthétisés, `sound.js`): dragonball, dragonroar, dragonlevel, dragonbuy; l'explosion réutilise `boom`.
+- 83 textes neufs dans les 8 langues (addtexts + nl/pl/tr), textaudit et langcheck OK.
+- Tests: `dragon` (20 assertions: talents, boule de feu, rugissement, sauvegarde) et `mp_dragon` (44: talents, boule et rugissement identiques des deux côtés, les deux sens). PASS en local avec quality, det, ui, save, features, waves, mp8, mpk, mp_resync, mp_build, runner.
+- Décision: le dragon ne peut toujours pas être blessé (le Roi n'a pas répondu); la horde ne l'attaque pas.
+- Non vérifié: le vol à la souris et l'écran sur une vraie machine, la boule de feu vue de près, `mp_soak` et `--full`; les ennemis `units` (boss) ne sont pas ralentis par le rugissement (seulement l'essaim).
+
 ## 2026-11-27 · rôles Château / Dragon et vue du Roi (#63, #64), branche `claude/castle-dragon-roles`, pas de version
 
 - Demande du Roi: porter le gameplay du prototype Dragon Rider dans le jeu, en coop choisir Château ou Dragon avant de lancer; côté château, commencer en contrôlant le Roi, la vue de dessus pour bâtir.
