@@ -102,6 +102,7 @@ const KDEF = {
   right: "KeyD",
   rotL: "KeyZ",
   rotR: "KeyX",
+  view: "*",
 };
 
 const ACTL = {
@@ -157,6 +158,7 @@ const ACTL = {
   right: "Camera right",
   rotL: "Turn camera left",
   rotR: "Turn camera right",
+  view: "King view / view from above",
 };
 
 export let KB;

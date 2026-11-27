@@ -30,7 +30,7 @@ export function leaveSquad(u) {
   }
 }
 
-export function royalSpawn(nu, b) {
+export function royalSpawn(nu, b, quiet) {
   const pl = nu.pl | 0;
   if (nu.type === "king") {
     nu.sq = [];
@@ -49,7 +49,7 @@ export function royalSpawn(nu, b) {
       sessionState.units.push(q);
       nu.sq.push(q);
     }
-    if (pl === LPL()) {
+    if (pl === LPL() && !quiet) {
       sessionState.bannerT = 4.5;
       sessionState.bannerS = "LONG LIVE KING NARAIGE";
       sessionState.bannerS2 = "King Naraige rides out with his royal guard";

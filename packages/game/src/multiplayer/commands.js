@@ -15,7 +15,13 @@ import {
 } from "../gameplay/economy.js";
 import { formationsState, order, setOrderHandler, setSetStanceHandler, setStance } from "../gameplay/formations.js";
 import { evCur, resolveEvent0, setEvChooseHandler } from "../gameplay/events.js";
-import { kingSkill0, kingTalent0, setKingSkillHandler, setKingTalentHandler } from "../gameplay/king-skills.js";
+import {
+  kingOf,
+  kingSkill0,
+  kingTalent0,
+  setKingSkillHandler,
+  setKingTalentHandler,
+} from "../gameplay/king-skills.js";
 import { LPL, playersState, setPl, setTier } from "../gameplay/players.js";
 import { RN2, RS, RS2 } from "../gameplay/rules.js";
 import { curB, sel, selectionState } from "../gameplay/selection.js";
@@ -119,6 +125,26 @@ function withSel(S, fn) {
   }
 }
 
+/* King view: the camera keys walk the King. An ordinary move order for him alone, whatever is selected; whole numbers so both machines read the same point */
+export function kingDrive0(w) {
+  const k = kingOf(playersState.CURPL | 0);
+  if (!k) return;
+  formationsState.quiet = 1;
+  try {
+    withSel(new Set([k.uid]), () => _N.order({ x: w.x, y: w.y }));
+  } finally {
+    formationsState.quiet = 0;
+  }
+}
+export const kingDrive = function (w) {
+  const c = { k: "kd", x: Math.round(w.x), y: Math.round(w.y) };
+  if (gated()) {
+    mpPush(c);
+    return;
+  }
+  return kingDrive0(c);
+};
+
 export let mpExec = function mpExec(c, mine) {
   const m0 = hudDisplayState.msgS,
     mt0 = hudDisplayState.msgT,
@@ -218,6 +244,9 @@ export let mpExec = function mpExec(c, mine) {
         break;
       case "kt":
         kingTalent0(c.b);
+        break;
+      case "kd":
+        kingDrive0(c);
         break;
       case "cq":
         cancelTrain0(c.b, c.i);

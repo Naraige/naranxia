@@ -34,6 +34,9 @@ export let matV;
 
 export let matWater;
 export const WUT = { value: 0 };
+/* see-through cone of the close views (King view, dragon): xyz = the point looked at, w = its radius in tiles (0 = off). Whatever stands
+   higher than that point between it and the camera (tree tops, walls, a hill) is not drawn, so the King is never hidden. */
+export const CUTU = { value: new THREE.Vector4(0, 0, 0, 0) };
 
 export let matT;
 
@@ -48,6 +51,7 @@ export function initializeMaterials() {
     sh.uniforms.uBlk = BLKV;
     sh.uniforms.uBpx = BPXU;
     sh.uniforms.uSeas = BSEAS;
+    sh.uniforms.uCut = CUTU;
     sh.vertexShader = sh.vertexShader
       .replace("#include <common>", "#include <common>\nvarying vec3 vWP;attribute float mat;varying float vMat;")
       .replace(
@@ -57,7 +61,7 @@ export function initializeMaterials() {
     sh.fragmentShader = sh.fragmentShader
       .replace(
         "#include <common>",
-        "#include <common>\nvarying vec3 vWP;varying float vMat;uniform float uHQ;uniform float uLMax;uniform float uNight;" +
+        "#include <common>\nvarying vec3 vWP;varying float vMat;uniform float uHQ;uniform float uLMax;uniform float uNight;uniform vec4 uCut;" +
           GLN +
           GLBUMP +
           GLINK +
@@ -66,6 +70,8 @@ export function initializeMaterials() {
       .replace(
         "#include <color_fragment>",
         `#include <color_fragment>
+ if(uCut.w>0.&&vWP.y>uCut.y+1.7){vec3 ca=cameraPosition,cb=uCut.xyz-ca;float ct=clamp(dot(vWP-ca,cb)/dot(cb,cb),0.,1.);
+  if(length(vWP-(ca+cb*ct))<uCut.w*(.3+ct))discard;}
  vec3 wN=normalize(cross(dFdx(vWP),dFdy(vWP)));vec3 aN=abs(wN);vec3 wq=vWP-wN*.002;
  vec2 uv=aN.y>.5?wq.xz:(aN.x>.5?wq.zy:wq.xy);
  float fw=max(length(dFdx(uv)),length(dFdy(uv)));

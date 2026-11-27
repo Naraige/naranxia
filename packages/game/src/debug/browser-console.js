@@ -102,6 +102,7 @@ import { cv } from "../ui/canvases.js";
 import { convoyPanelState, CVA } from "../ui/convoy-panel.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { inputState, keys } from "../input/state.js";
+import { kingViewState } from "../input/king-view.js";
 import { mmGo } from "../input/desktop.js";
 import { mmLook, mmToWorld, mmView } from "../ui/minimap.js";
 import { drawUI, hudState, mmRect } from "../ui/hud.js";
@@ -394,6 +395,7 @@ export function installBrowserConsole() {
     layInit: { get: () => layInit },
     layNote: { get: () => layNote },
     keys: { get: () => keys },
+    kingViewState: { get: () => kingViewState },
     mmGo: { get: () => mmGo },
     mmRect: { get: () => mmRect },
     mmLook: { get: () => mmLook },

@@ -27,6 +27,7 @@ import { solid, solidAt } from "../world/traversal.js";
 export const formationsState = {
   FGS: [],
   FORCEF: null,
+  quiet: 0 /* an order walked by the keys (King view): no order sound several times a second */,
 };
 
 /* bodyguard: strike whatever comes near the King, otherwise stand at your post beside him (march with him when he walks) */
@@ -619,7 +620,7 @@ export let order = function order(w) {
       u.rk = 0;
     }
   });
-  snd("order");
+  if (!formationsState.quiet) snd("order");
   if (slots)
     fgMake(
       FM.filter((u) => slots.has(u)),

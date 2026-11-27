@@ -10,6 +10,7 @@ import { build, constructionState, FORMS, tfo } from "../gameplay/construction.j
 import { army, buy } from "../gameplay/economy.js";
 import { formationsState, order, setStance } from "../gameplay/formations.js";
 import { kingSkill } from "../gameplay/king-skills.js";
+import { kingViewToggle, kingViewZoom } from "./king-view.js";
 import { openMenu, startGame } from "../gameplay/lifecycle.js";
 import { HOMEC, playersState } from "../gameplay/players.js";
 import { ROTT, TH, TS, TW, UPC } from "../gameplay/rules.js";
@@ -53,6 +54,7 @@ export function mmGo(p) {
 
 let hovHit = "";
 export function camZoom(d) {
+  if (kingViewZoom(d)) return;
   CAM.dist = Math.max(7, Math.min(160, CAM.dist * (d > 0 ? 1.18 : 1 / 1.18)));
 }
 
@@ -639,6 +641,10 @@ export function initializeDesktopInput() {
     }
     if (a === "cry" || a === "charge") {
       kingSkill(a);
+      return;
+    }
+    if (a === "view") {
+      kingViewToggle();
       return;
     }
     if (sessionState.showMap) return;
