@@ -1926,4 +1926,22 @@ export const PL = {
   "No dragon code in the clipboard": "Brak kodu smoka w schowku",
   "Keys walk the King, left click strikes, right-drag turns the view. Build menu: view from above":
     "Klawisze prowadzą Króla, lewy klik uderza, przeciąganie prawym obraca widok. Menu budowy: widok z góry",
+  "One island, one bridge, a King to walk and a dragon to ride.":
+    "Jedna wyspa, jeden most, Król do prowadzenia i smok do dosiadania.",
+  "The world is one large island with cliffs and a wide heart to build on; a stone bridge is the only way in, and the portals of the horde stand beyond it.":
+    "Świat to jedna wielka wyspa z klifami i rozległym sercem pod zabudowę; kamienny most jest jedyną drogą, a portale hordy stoją za nim.",
+  "You play your King: the keys walk him, left click strikes, right-drag turns the view freely. The build menu lifts the view from above.":
+    "Grasz swoim Królem: klawisze nim chodzą, lewy przycisk uderza, przeciąganie prawym swobodnie obraca widok. Menu budowy unosi widok w górę.",
+  "Co-op roles, Castle or Dragon: one player holds the castle, the other rides a dragon over the horde.":
+    "Role w co-op, Zamek albo Smok: jeden gracz trzyma zamek, drugi dosiada smoka nad hordą.",
+  "The dragon grows with you: 20 levels, 6 shapes, a tree of 28 skills, fireball, roar, looks and flame colours.":
+    "Smok rośnie razem z tobą: 20 poziomów, 6 postaci, drzewo 28 umiejętności, kula ognia, ryk, wyglądy i kolory płomienia.",
+  "The horde thinks: kill its three scouts between waves or it comes by your least guarded road, and from wave 4 a chieftain leads it.":
+    "Horda myśli: zabij jej trzech zwiadowców między falami, bo przyjdzie twoją najsłabiej strzeżoną drogą, a od fali 4 prowadzi ją wódz.",
+  "Call the next wave for gold, read a summary after every wave, or play in peace without waves.":
+    "Wezwij następną falę za złoto, przeczytaj podsumowanie po każdej fali albo graj w pokoju bez fal.",
+  "Paths lay themselves from every building to the castle, units stand at the scale of the buildings, and the fog of war hides the shape of the land.":
+    "Ścieżki same układają się od każdego budynku do zamku, jednostki mają skalę budynków, a mgła wojny skrywa kształt lądu.",
+  "Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.":
+    "Bogatsze efekty i dźwięki oraz żywa kraina: motyle, ptaki, opadające liście i ryby.",
 };

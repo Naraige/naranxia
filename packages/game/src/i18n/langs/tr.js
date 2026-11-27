@@ -1923,4 +1923,22 @@ export const TR = {
   "No dragon code in the clipboard": "Panoda ejderha kodu yok",
   "Keys walk the King, left click strikes, right-drag turns the view. Build menu: view from above":
     "Tuşlar Kralı yürütür, sol tık vurur, sağ sürükleme görüşü çevirir. İnşa menüsü: üstten görünüm",
+  "One island, one bridge, a King to walk and a dragon to ride.":
+    "Bir ada, bir köprü, yönetilecek bir Kral ve binilecek bir ejderha.",
+  "The world is one large island with cliffs and a wide heart to build on; a stone bridge is the only way in, and the portals of the horde stand beyond it.":
+    "Dünya, uçurumları ve inşa edilecek geniş bir kalbi olan büyük bir ada; taş köprü tek giriş yolu ve sürünün geçitleri onun ötesinde duruyor.",
+  "You play your King: the keys walk him, left click strikes, right-drag turns the view freely. The build menu lifts the view from above.":
+    "Kralını sen oynarsın: tuşlar onu yürütür, sol tık vurur, sağ tuşla sürüklemek görüşü serbestçe çevirir. İnşa menüsü görüşü yukarı kaldırır.",
+  "Co-op roles, Castle or Dragon: one player holds the castle, the other rides a dragon over the horde.":
+    "Eşli oyun rolleri, Kale ya da Ejderha: bir oyuncu kaleyi tutar, diğeri sürünün üzerinde ejderhaya biner.",
+  "The dragon grows with you: 20 levels, 6 shapes, a tree of 28 skills, fireball, roar, looks and flame colours.":
+    "Ejderha seninle büyür: 20 seviye, 6 biçim, 28 yetenekli bir ağaç, ateş topu, kükreme, görünümler ve alev renkleri.",
+  "The horde thinks: kill its three scouts between waves or it comes by your least guarded road, and from wave 4 a chieftain leads it.":
+    "Sürü düşünüyor: dalgalar arasında üç gözcüsünü öldür, yoksa en az korunan yolundan gelir; 4. dalgadan itibaren ona bir reis önderlik eder.",
+  "Call the next wave for gold, read a summary after every wave, or play in peace without waves.":
+    "Altın karşılığı sıradaki dalgayı çağır, her dalgadan sonra özeti oku ya da dalgasız, huzur içinde oyna.",
+  "Paths lay themselves from every building to the castle, units stand at the scale of the buildings, and the fog of war hides the shape of the land.":
+    "Yollar her binadan kaleye kendiliğinden döşenir, birlikler binaların ölçeğindedir ve savaş sisi arazinin biçimini gizler.",
+  "Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.":
+    "Daha zengin efektler ve sesler, canlı bir diyar: kelebekler, kuşlar, düşen yapraklar ve balıklar.",
 };

@@ -1939,4 +1939,22 @@ export const NL = {
   "No dragon code in the clipboard": "Geen drakencode op het klembord",
   "Keys walk the King, left click strikes, right-drag turns the view. Build menu: view from above":
     "Toetsen laten de Koning lopen, linksklik slaat, rechts slepen draait het beeld. Bouwmenu: bovenaanzicht",
+  "One island, one bridge, a King to walk and a dragon to ride.":
+    "Eén eiland, één brug, een Koning om te leiden en een draak om te berijden.",
+  "The world is one large island with cliffs and a wide heart to build on; a stone bridge is the only way in, and the portals of the horde stand beyond it.":
+    "De wereld is één groot eiland met kliffen en een weids hart om op te bouwen; een stenen brug is de enige toegang, en de poorten van de horde staan erachter.",
+  "You play your King: the keys walk him, left click strikes, right-drag turns the view freely. The build menu lifts the view from above.":
+    "Je speelt je Koning: de toetsen laten hem lopen, linksklik slaat, rechts slepen draait het beeld vrij. Het bouwmenu tilt het beeld omhoog.",
+  "Co-op roles, Castle or Dragon: one player holds the castle, the other rides a dragon over the horde.":
+    "Co-oprollen, Kasteel of Draak: de ene speler houdt het kasteel, de andere berijdt een draak boven de horde.",
+  "The dragon grows with you: 20 levels, 6 shapes, a tree of 28 skills, fireball, roar, looks and flame colours.":
+    "De draak groeit met je mee: 20 niveaus, 6 gedaanten, een boom van 28 vaardigheden, vuurbal, gebrul, uiterlijken en vlamkleuren.",
+  "The horde thinks: kill its three scouts between waves or it comes by your least guarded road, and from wave 4 a chieftain leads it.":
+    "De horde denkt na: dood haar drie verkenners tussen de golven of ze komt langs je slechtst bewaakte weg, en vanaf golf 4 leidt een hoofdman haar.",
+  "Call the next wave for gold, read a summary after every wave, or play in peace without waves.":
+    "Roep de volgende golf op voor goud, lees na elke golf een overzicht, of speel in vrede zonder golven.",
+  "Paths lay themselves from every building to the castle, units stand at the scale of the buildings, and the fog of war hides the shape of the land.":
+    "Paden leggen zichzelf aan van elk gebouw naar het kasteel, eenheden staan op de schaal van de gebouwen, en de oorlogsmist verbergt de vorm van het land.",
+  "Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.":
+    "Rijkere effecten en geluiden, en een levend land: vlinders, vogels, vallende bladeren en vissen.",
 };

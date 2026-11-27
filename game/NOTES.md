@@ -1,10 +1,10 @@
-Dark veil, Knight of Darkness, Winter Feast: a night and a winter to survive.
+One island, one bridge, a King to walk and a dragon to ride.
 
-- At night the unlit ground becomes a dark veil: your units cannot walk into it, except to reach a lit place.
-- Bannermen and captains carry their light through the veil: a troop can follow them into the night.
-- The first boss is now the Knight of Darkness: black armour, a great sword, and every light near him grows dim.
-- Name your king in your profile: his name is written everywhere in the game.
-- Winter Feast, from 1 December to 6 January: the world stays in winter, under snow most of the time.
-- Gift bearers walk with the horde during the feast: tall husks that sparkle, hard to kill, and rich in gold for the player who strikes them down.
-- Towers, walls and gates reach farther, and the ranking lists every player in co-op.
-- The co-op window wears the menu buttons and has Copy and Paste for the room code.
+- The world is one large island with cliffs and a wide heart to build on; a stone bridge is the only way in, and the portals of the horde stand beyond it.
+- You play your King: the keys walk him, left click strikes, right-drag turns the view freely. The build menu lifts the view from above.
+- Co-op roles, Castle or Dragon: one player holds the castle, the other rides a dragon over the horde.
+- The dragon grows with you: 20 levels, 6 shapes, a tree of 28 skills, fireball, roar, looks and flame colours.
+- The horde thinks: kill its three scouts between waves or it comes by your least guarded road, and from wave 4 a chieftain leads it.
+- Call the next wave for gold, read a summary after every wave, or play in peace without waves.
+- Paths lay themselves from every building to the castle, units stand at the scale of the buildings, and the fog of war hides the shape of the land.
+- Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.

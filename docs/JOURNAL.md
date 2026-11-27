@@ -4,6 +4,17 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · v101: l'île, le pont, le Roi joué et le dragon (PR #65, tout depuis la v100)
+
+- Le Roi: « when done push all and make a annoucement from all the start of v100 », puis « push all + annonce »: feu vert pour sortir. La v101 réunit tous les lots de la branche `claude/castle-dragon-roles` (#63 à #97, voir les entrées plus bas).
+- Avant de sortir, la suite COMPLÈTE remise au vert (elle échouait sur une quinzaine de tests que je ne lançais pas en local). Presque tout est du côté des tests, qui supposaient l'ancien monde:
+  camps rivaux demandés par le test (`globalThis.__CAMPS`, seul crochet ajouté dans `ai/kingdoms.js`), Roi et gardes retirés avant les commandes du Roi, sites cherchés plus loin du château de 20 cases (`mp_side`, `mp_lag`), château « 0+3 », `swReset` exposé au test `waves`.
+- Deux contrôles sont plus faibles qu'avant, à savoir: `mp_cut` et `convoy_cut_probe` creusent un fossé d'eau autour du second château (sur l'île aucune paire de châteaux n'est coupée par nature);
+  `mp_rematch` ne distingue plus Petit de Grand monde (limite 270 au lieu de 190: une route dont la tête de pont est dans la limite continue sur le pont jusqu'à l'îlot).
+- Vérifié: `npm run quality`, `npm test -- --full` (52 tests), balayages de sortie (`convoy_probe`, `convoy_cut_probe`, `waves_probe`), puis la suite complète de GitHub verte sur 72bfbc6.
+- Reste: réglage de taille du monde Moyen/Petit (coupe les routes avant l'îlot: le garder ou le retirer? question posée au Roi, sans réponse); idées ouvertes #77, #81, #82, #90.
+- Non vérifié par un humain: sensation de la caméra et du coup du Roi à la souris, effets et vie du décor en mouvement, images par seconde en grosse vague.
+
 ## 2026-11-27 · retours du Roi en jouant: gardes, second château, caméra libre, coup du Roi, vie du décor (#97), branche `claude/castle-dragon-roles`, pas de version
 
 - Captures et messages du Roi (20h30): « the guard are too near and body block the king », « first picture we see a second castle preview ? », « the camera for the king is frustrating let free cam direction », « permit to have a tps on the king and attack ourself », « améliore et crée des animations environnementales pour rendre le tout plus vivant ».
