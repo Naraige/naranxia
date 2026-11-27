@@ -4,6 +4,14 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · QoL 1: fenêtre ronde de la vue du Roi, rugissement sur les gros (#67), branche `claude/castle-dragon-roles`, pas de version
+
+- Demande du Roi: « more QoL more logic smooth all gameplay ». Sondé d'abord ce qui existe (headless): les paysans prennent un métier seuls (or / bois / pierre), un paysan neuf aussi, un bâtisseur est choisi seul et retourne à son métier; revenu mesuré avec 3 paysans sur 3 min: +160 or, +120 bois, +28 pierre. Rien de cassé là: pas touché à l'équilibre.
+- Vue du Roi et dragon (`materials.js`): le cône de transparence a sa pointe à la caméra (rayon proportionnel à la distance, x2,3): une fenêtre ronde et large autour du Roi au lieu d'arcs noirs à travers l'arbre le plus proche de la caméra. Capture regardée.
+- Rugissement: ralentit aussi les unités ennemies (boss, brutes), marque `u.rsl` lue par `movement.js` (0,35 comme l'essaim).
+- Vérifié: quality, det (inchangé), dragon, ui, mp_dragon, mpk PASS.
+- Pistes QoL vues, pas faites (au Roi de dire): la pierre rentre 4 fois moins vite que le bois; les arbres font 6 à 8 cases et cachent la vue du Roi près des bois; la caméra de la vue du Roi suit la position de simulation (léger à-coup possible).
+
 ## 2026-11-27 · polissage 1: effets à l'échelle, bâtiments qui fument et brûlent, vue de dessus (#67), branche `claude/castle-dragon-roles`, pas de version
 
 - Demande du Roi: « Améliore le jeu de façon globale / les effets / les bâtiments tout ». Trop large pour un lot: premier lot = ce qui est objectivement en retard sur le changement de taille; le reste (allure des bâtiments) passe par une planche de choix.

@@ -26,7 +26,17 @@ export function moveTo(u, x, y, dt) {
   const tx = Math.max(0, Math.min(TW - 1, Math.floor(u.x / TS))),
     ty = Math.max(0, Math.min(TH - 1, Math.floor(u.y / TS))),
     k = pth[ty * TW + tx] === 2 ? 2.2 : pth[ty * TW + tx] ? 1.7 : 1;
-  const st = Math.min(d, T[u.type].spd * (u.t === 1 ? SLOWK : 1) * k * (u.spdK || 1) * (u.spj || 1) * dt) / d;
+  const st =
+    Math.min(
+      d,
+      T[u.type].spd *
+        (u.t === 1 ? SLOWK : 1) *
+        k *
+        (u.spdK || 1) *
+        (u.spj || 1) *
+        (u.rsl > sessionState.time ? 0.35 : 1) *
+        dt,
+    ) / d;
   const ox = u.x,
     oy = u.y;
   u.x += dx * st;

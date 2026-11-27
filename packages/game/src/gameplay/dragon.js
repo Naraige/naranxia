@@ -142,6 +142,11 @@ export function dragonTick(dt) {
   if (d.rt > 0) {
     d.rt = Math.max(0, d.rt - dt);
     swSlow(d.rx, d.ry, DRAGON.roarRad, DRAGON.roarSlow);
+    /* the big ones (bosses, brutes: units, not swarm bodies) are slowed too: marked for a moment, movement.js reads the mark */
+    const R2 = DRAGON.roarRad * DRAGON.roarRad;
+    for (const z of sessionState.units)
+      if (z.t === 1 && z.hp > 0 && (z.x - d.rx) * (z.x - d.rx) + (z.y - d.ry) * (z.y - d.ry) < R2)
+        z.rsl = sessionState.time + 0.3;
   } else swSlow(0, 0, 0, 1);
   if (sessionState.over) return;
   /* fireballs burst where they were thrown */

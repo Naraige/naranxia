@@ -35,7 +35,9 @@ export let matV;
 export let matWater;
 export const WUT = { value: 0 };
 /* see-through cone of the close views (King view, dragon): xyz = the point looked at, w = its radius in tiles (0 = off). Whatever stands
-   higher than that point between it and the camera (tree tops, walls, a hill) is not drawn, so the King is never hidden. */
+   higher than that point between it and the camera (tree tops, walls, a hill) is not drawn, so the King is never hidden.
+   The cone has its point at the camera (radius grows with the distance): on screen the hole is one round window around the King, the same
+   size whatever stands in the way, and not a wide arc through a tree that is close to the camera. */
 export const CUTU = { value: new THREE.Vector4(0, 0, 0, 0) };
 
 export let matT;
@@ -71,7 +73,7 @@ export function initializeMaterials() {
         "#include <color_fragment>",
         `#include <color_fragment>
  if(uCut.w>0.&&vWP.y>uCut.y+1.7){vec3 ca=cameraPosition,cb=uCut.xyz-ca;float ct=clamp(dot(vWP-ca,cb)/dot(cb,cb),0.,1.);
-  if(length(vWP-(ca+cb*ct))<uCut.w*(.3+ct))discard;}
+  if(length(vWP-(ca+cb*ct))<uCut.w*(.05+2.3*ct))discard;}
  vec3 wN=normalize(cross(dFdx(vWP),dFdy(vWP)));vec3 aN=abs(wN);vec3 wq=vWP-wN*.002;
  vec2 uv=aN.y>.5?wq.xz:(aN.x>.5?wq.zy:wq.xy);
  float fw=max(length(dFdx(uv)),length(dFdy(uv)));
