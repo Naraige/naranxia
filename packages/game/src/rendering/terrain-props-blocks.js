@@ -121,7 +121,7 @@ export function treeShape(sp, v, keep) {
     leaf(0, th, 0);
     if (v % 3) leaf(0, th + 1, 0);
   } else {
-    const th = 4 + (v % 3);
+    const th = 3 + (v % 3); /* a block lower than before (#74): the tallest trees hid the most */
     for (let k = 0; k < th; k++) B.push([0, k, 0, 0]);
     for (let k = 2; k < th; k++) {
       const wide = (th - k) % 2 === 0;

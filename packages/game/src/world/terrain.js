@@ -883,6 +883,14 @@ export function genChunk(cx, cy) {
         continue;
       }
       if (islandBridge(x, y)) continue; /* nothing grows on the causeway or on the islet of the portals */
+      /* a green round every castle (#74): no wood and no boulder within 16 tiles of its walls (the deposits of the start are set apart),
+         so the view beside the King is open and the first buildings fit */
+      {
+        let c = Math.max(Math.abs(x - terrainState.CX), Math.abs(y - terrainState.CY));
+        const s2 = sessionState.SITE2;
+        if (s2) c = Math.min(c, Math.max(Math.abs(x - s2.tx), Math.abs(y - s2.ty)));
+        if (c < CHALF + 16) continue;
+      }
       /* room to build in the heart of the island (#68): groves shrink, lone trees and boulder fields thin out */
       const open = islandCore(x, y),
         al = HT[i] - LAND,

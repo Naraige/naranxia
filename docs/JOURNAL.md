@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · arbres: abords du château dégagés (#74), branche `claude/castle-dragon-roles`, pas de version
+
+- Le Roi: « oui pour les arbres ». Constat: les arbres font 4 à 8 blocs pour une unité de 1,8 (rapport Minecraft); ce qui gênait, c'étaient ceux collés au château en vue du Roi.
+- `world/terrain.js` (genChunk): ni bois ni rocher naturel à moins de 16 cases des murs d'un château (les gisements de départ restent). `terrain-props-blocks.js`: conifères un bloc plus bas (les plus hauts).
+- Capture de la vue du Roi au départ regardée: plus aucun arbre devant. Place: 43 à 56 emplacements 12 x 12 dans 60 cases.
+- Tests: det re-fixé (même partie deux fois identique), features, waves, quests, spearman, kingview, save, mp8, mpk PASS.
+
 ## 2026-11-27 · rythme, dragon vulnérable, ennemi plus malin (#71, #72, #73), branche `claude/castle-dragon-roles`, pas de version
 
 - Panel simulé de 10 joueurs (pas de vrais joueurs; feuille « Naranxia : panel simulé de 10 joueurs »). Le Roi: « tout sauf avoir plusieurs difficultés, on reste sur de l'unique, mais peut-être avec un ennemi plus intelligent ».
