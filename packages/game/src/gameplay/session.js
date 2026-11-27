@@ -16,6 +16,7 @@ export const sessionState = {
   bannerS: "",
   bannerS2: "",
   kills: 0,
+  peace: 0 /* peaceful game (#93): no wave ever comes; no achievement, no best score. Chosen in the settings for the next solo game, saved */,
   best: { w: 0, k: 0 },
   jrn: [],
   /* the seasonal event of this game ("" for none), taken when it starts; sevPick: the one the co-op host sent, null in solo */

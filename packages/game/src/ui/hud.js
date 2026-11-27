@@ -386,6 +386,7 @@ function drawToasts(UW) {
 function waveCallBar(UW, y) {
   if (
     wavesState.waveOn ||
+    sessionState.peace ||
     !sessionState.inGame ||
     sessionState.waveT < 30 ||
     sessionState.waveN < 1 ||
@@ -506,7 +507,9 @@ function drawUIBody() {
           : wavesState.hordeD < 5000
             ? "Horde " + Math.round(wavesState.hordeD) + " tiles"
             : "Horde"
-        : "Next " + mmss(sessionState.waveT),
+        : sessionState.peace
+          ? "Peaceful"
+          : "Next " + mmss(sessionState.waveT),
       wavesState.waveOn
         ? wavesState.nightLv >= 0.5
           ? "#9fb4ff"

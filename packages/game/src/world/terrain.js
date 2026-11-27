@@ -875,6 +875,7 @@ export function genChunk(cx, cy) {
     for (let x = x0; x < x1; x++) {
       const i = y * TW + x;
       if (ter[i]) continue;
+      if (islandBridge(x, y) === 1) pth[i] = 2; /* the deck of the bridge is paved in stone (#75) */
       if (FLG[i]) {
         if ((FLG[i] & 15) === 8 && HT[i] <= LAND + 1 && hs(x, y, sd + 21) < 0.012 * P.gd) {
           ter[i] = 4;
@@ -882,7 +883,8 @@ export function genChunk(cx, cy) {
         }
         continue;
       }
-      if (islandBridge(x, y)) continue; /* nothing grows on the causeway or on the islet of the portals */
+      /* nothing grows on the bridge or on the islet of the portals; the deck of the bridge is paved in stone (#75) */
+      if (islandBridge(x, y)) continue;
       /* a green round every castle (#74): no wood and no boulder within 16 tiles of its walls (the deposits of the start are set apart),
          so the view beside the King is open and the first buildings fit */
       {

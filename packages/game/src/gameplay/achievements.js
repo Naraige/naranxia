@@ -1,3 +1,4 @@
+import { sessionState } from "./session.js";
 import { diagnosticsState } from "../debug/diagnostics.js";
 import { LPL } from "./players.js";
 
@@ -26,7 +27,7 @@ export const ACHD = {
 };
 
 export function ach(k) {
-  if (diagnosticsState.DEVU || ACH.has(k) || !ACHD[k]) return;
+  if (diagnosticsState.DEVU || sessionState.peace || ACH.has(k) || !ACHD[k]) return;
   ACH.add(k);
   TOASTS.push({ k, t: 0 });
   if (TOASTS.length > 3) TOASTS.shift();

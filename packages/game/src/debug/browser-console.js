@@ -1,3 +1,4 @@
+import { islandBridge, islandGate } from "../world/island.js";
 import { seasonalEvent } from "../core/seasonal-events.js";
 import { litAt } from "../gameplay/light-state.js";
 import {
@@ -724,6 +725,14 @@ export function installBrowserConsole() {
     LAND: { get: () => LAND },
     spawnAnchor: { get: () => spawnAnchor },
     pickLanes: { get: () => pickLanes },
+    peace: {
+      get: () => sessionState.peace | 0,
+      set: (value) => {
+        sessionState.peace = value;
+      },
+    },
+    islandGate: { get: () => islandGate },
+    islandBridge: { get: () => islandBridge },
     scRep: {
       get: () => sessionState.scRep | 0,
       set: (value) => {

@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · lot d'idées 2: pont de pierre défendable, mode paisible (#75, #76, #93), branche `claude/castle-dragon-roles`, pas de version
+
+- Le Roi: « continue ».
+- Pont (#75, #76, `world/island.js`): il part maintenant plein nord, est, sud ou ouest (la graine choisit), large de 12 cases posées sur la grille des fortifications (`BRIDGE_W`, `G.X0` / `G.Y0` multiples de 4): une porte (3 cellules) le ferme d'un bord à l'autre, murs et tours s'y alignent. Tablier pavé (`pth` 2, dans genChunk avant le test des drapeaux de route). Côtés en pierre dessinés dans l'eau le long des deux bords (`islandParapet`, terrain-props-blocks.js): parapet d'un bloc au-dessus du tablier, pile plus haute toutes les 8 cases. Dessin seul: rien ne gêne la marche. Capture regardée: tablier pavé, parapets, une porte en travers.
+- Mode paisible (#93): réglage « Paisible : aucune vague (prochaine partie solo) » (préférence `pz`), `sessionState.peace` (SAVA): le compte à rebours ne descend plus, pas de succès ni de meilleur score, les quêtes restent. Solo seulement. La barre du haut affiche « Paisible ».
+- Test `horde` étendu (15 assertions: pont de 12 sur la grille, pavé, porte posée, partie paisible). det re-fixé.
+- Vu: avec le réglage de carte « Moyenne » ou « Petite » (`MAPD`), les routes sont coupées à 380 / 170 cases et ne vont donc plus jusqu'à l'îlot: les portails s'ouvrent sur l'île. À trancher avec le Roi (retirer ce réglage ?).
+- Restent ouvertes: #77 fortin de tête de pont, #79 nid du dragon, #80 zone marquée, #81 transport, #82 ennemi volant, #88 tour de guet, #90 port de pêche, #92 export de la progression.
+
 ## 2026-11-27 · lot d'idées 1: éclaireurs, chef de horde, tournée du Roi, hauteur, bouton de vague, bilan (#78, #83, #84, #86, #87, #89, #91, #94), branche `claude/castle-dragon-roles`, pas de version
 
 - 20 idées proposées au Roi, réponse « fait tout »: une issue par idée (#75 à #94). Ce lot en fait 8; les 12 autres restent ouvertes.

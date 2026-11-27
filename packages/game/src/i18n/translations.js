@@ -851,6 +851,8 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v101 */
 Object.assign(TRD,{
+"Peaceful: no waves (next solo game)":["Paisible : aucune vague (prochaine partie solo)","Pacífico: sin oleadas (próxima partida en solitario)","Friedlich: keine Wellen (nächstes Solospiel)","Pacifico: nessuna ondata (prossima partita in solitaria)","Pacífico: sem ondas (próximo jogo a solo)"],
+"Peaceful":["Paisible","Pacífico","Friedlich","Pacifico","Pacífico"],
 "Call the wave: +{0} gold":["Appeler la vague : +{0} or","Llamar la oleada: +{0} oro","Welle rufen: +{0} Gold","Chiama l'ondata: +{0} oro","Chamar a onda: +{0} ouro"],
 "A chieftain leads the horde: while he lives it runs to your walls":["Un chef mène la horde : tant qu'il vit, elle court jusqu'à vos murs","Un caudillo guía a la horda: mientras viva, corre hasta tus muros","Ein Häuptling führt die Horde: solange er lebt, rennt sie bis an deine Mauern","Un capo guida l'orda: finché vive, corre fino alle tue mura","Um chefe lidera a horda: enquanto viver, ela corre até às suas muralhas"],
 "A scout saw your walls: the horde comes where you are least guarded":["Un éclaireur a vu vos murs : la horde vient là où vous êtes le moins gardé","Un explorador vio tus muros: la horda viene por donde menos defensa tienes","Ein Späher sah deine Mauern: die Horde kommt, wo du am schwächsten bist","Un esploratore ha visto le tue mura: l'orda arriva dove sei meno difeso","Um batedor viu as suas muralhas: a horda vem por onde está menos guardado"],

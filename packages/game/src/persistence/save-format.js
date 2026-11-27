@@ -238,6 +238,12 @@ export const SAVA = {
     },
   ],
   EVT: [() => eventsState, null],
+  peace: [
+    () => sessionState.peace | 0,
+    (v) => {
+      sessionState.peace = v ? 1 : 0;
+    },
+  ],
   scRep: [
     () => sessionState.scRep | 0,
     (v) => {

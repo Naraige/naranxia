@@ -1912,4 +1912,6 @@ export const PL = {
   "Wave {0}: {1} slain by the kingdom, {2} by the dragon, {3} lost":
     "Fala {0}: {1} zabitych przez królestwo, {2} przez smoka, {3} straconych",
   "Wave {0}: {1} slain, {2} lost": "Fala {0}: {1} zabitych, {2} straconych",
+  "Peaceful: no waves (next solo game)": "Pokojowo: bez fal (następna gra solo)",
+  "Peaceful": "Pokojowo",
 };

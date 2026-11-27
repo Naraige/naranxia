@@ -55,10 +55,7 @@ async () => {
   sc[0].x = CS.x + TS * 20;
   sc[0].y = CS.y;
   waveTick();
-  chk(
-    "one that comes near a castle reports",
-    scRep === 1 && !sc[0].sc && /scout/i.test(hudDisplayState.msgS),
-  );
+  chk("one that comes near a castle reports", scRep === 1 && !sc[0].sc && /scout/i.test(hudDisplayState.msgS));
   for (const u of sc) u.hp = 0;
   /* next rest: all three slain on the way */
   for (let n = 0; n < 5; n++) update(1 / 30);
@@ -69,10 +66,7 @@ async () => {
   waveTick();
   for (const u of sc2) u.hp = 0;
   waveTick();
-  chk(
-    "all scouts slain: the horde comes blind",
-    sc2.length === 3 && scRep === 2 && /blind/.test(hudDisplayState.msgS),
-  );
+  chk("all scouts slain: the horde comes blind", sc2.length === 3 && scRep === 2 && /blind/.test(hudDisplayState.msgS));
   /* the chieftain, and what a wave that knew says */
   scRep = 1;
   waveN = 3;
@@ -81,6 +75,40 @@ async () => {
   const ch = units.filter((u) => u.chief && u.hp > 0);
   chk("from wave 4 a chieftain leads the horde", waveN === 4 && ch.length === 1 && ch[0].type === "brute");
   chk("the wave that was scouted says so", /least guarded/.test(hudDisplayState.msgS) && scRep === 0);
+  /* the bridge (#75, #76): 12 tiles across on the fortification grid, paved, and a gate closes it */
+  const G = islandGate(),
+    mid = (G.H + G.R - 30) / 2,
+    mx = Math.round(G.cx + G.ex * mid),
+    my = Math.round(G.cy + G.ey * mid);
+  let wide = 0,
+    paved = 0;
+  ensureAround(mx, my, 2);
+  for (let c = -10; c < 22; c++) {
+    const x = G.ex ? mx : G.X0 + c,
+      y = G.ex ? G.Y0 + c : my;
+    if (islandBridge(x, y) === 1) {
+      wide++;
+      if (pth[y * TW + x] === 2 && ter[y * TW + x] === 0) paved++;
+    }
+  }
+  chk("the bridge is 12 tiles across, on the grid of the walls", wide === 12 && G.X0 % 4 === 0 && G.Y0 % 4 === 0);
+  chk("its deck is paved stone over the sea (" + paved + ")", paved === 12);
+  for (const R of RESP) R.w = R.s = R.g = 9000;
+  const n0 = structs.length;
+  build("gate", G.ex ? mx : G.X0 + 6, G.ex ? G.Y0 + 6 : my);
+  const gt = structs[n0];
+  chk(
+    "a gate can be laid across it",
+    structs.length === n0 + 1 && gt.type === "gate" && islandBridge(gt.tx, gt.ty) === 1,
+  );
+  /* peaceful game (#93): the countdown stands still, no wave comes */
+  const wn = waveN;
+  wavesState.waveOn = false;
+  peace = 1;
+  waveT = 3;
+  for (let n = 0; n < 200; n++) update(1 / 30);
+  chk("in a peaceful game no wave ever comes", waveN === wn && waveT === 3 && !wavesState.waveOn);
+  peace = 0;
   Math.random = RR;
   return JSON.stringify({ ok: true });
 };

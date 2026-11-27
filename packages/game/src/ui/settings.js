@@ -602,6 +602,7 @@ export function drawSettings(UW, UH, fh, back) {
         fn: () => pick((cur + 1) % 3),
       });
     }
+    prow(l, "Peaceful: no waves (next solo game)", "pz", false);
     prow(l, "Pause when away", "ap", true);
     prow(l, "Autosave", "as", true);
     {

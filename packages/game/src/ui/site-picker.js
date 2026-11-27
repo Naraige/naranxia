@@ -1,3 +1,4 @@
+import { pref } from "../core/prefs.js";
 import { snd } from "../audio/sound.js";
 import { ISL_R, ISL_SITE, islandSiteMid, islandSiteN } from "../world/island.js";
 import { startGame } from "../gameplay/lifecycle.js";
@@ -209,6 +210,7 @@ export let confirmPick = function confirmPick() {
   MP.side = 0;
   sessionState.mapSize = worldSizePref();
   reset();
+  sessionState.peace = !MP.on && pref("pz", false) ? 1 : 0;
   sessionState.inGame = false;
   startGame();
 };

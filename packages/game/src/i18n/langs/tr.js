@@ -1909,4 +1909,6 @@ export const TR = {
   "Wave {0}: {1} slain by the kingdom, {2} by the dragon, {3} lost":
     "Dalga {0}: krallık {1}, ejderha {2} öldürdü, {3} kayıp",
   "Wave {0}: {1} slain, {2} lost": "Dalga {0}: {1} öldürüldü, {2} kayıp",
+  "Peaceful: no waves (next solo game)": "Barışçıl: dalga yok (sıradaki tek kişilik oyun)",
+  "Peaceful": "Barışçıl",
 };

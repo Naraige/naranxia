@@ -5,6 +5,7 @@ import { newG, rgb, toGeo } from "./geometry.js";
 import { matV } from "./materials.js";
 import { scene, SHADOWS } from "./scene.js";
 import { THREE } from "./three.js";
+import { islandParapet } from "../world/island.js";
 import { CH, FLG, HT, LAND, occ, pth, stairs, ter, terrainState } from "../world/terrain-state.js";
 
 /* ================= BLOCK WORLD PROPS (switch `blocksState.on` + `decor`) =================
@@ -194,7 +195,17 @@ export function buildPropsB(cx, cy) {
     for (let x = Math.max(0, x0 - 1); x < Math.min(TW, x1 + 1); x++) {
       const i = y * TW + x,
         v = ter[i];
-      if (v === 1 || v === 5) continue;
+      if (v === 1) {
+        /* the stone sides of the bridge (#75): a parapet one block over the deck, down into the water; a taller pier every 8 tiles */
+        const pp = islandParapet(x, y);
+        if (pp) {
+          const b0 = Math.round(LAND / B);
+          for (let k = -3; k <= (pp === 2 ? 1 : 0); k++)
+            put((x - x0) * N, b0 + k, (y - y0) * N, BK.rock, ROCK[pp === 2 ? 3 : 0][k >= 0 ? 1 : 2]);
+        }
+        continue;
+      }
+      if (v === 5) continue;
       const hh = HT[i],
         al = hh - LAND,
         by = Math.round(hh / B),

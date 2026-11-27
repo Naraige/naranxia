@@ -999,7 +999,7 @@ export function update0(dt) {
   }
   if (effectsState.shakeT > 0) effectsState.shakeT -= dt;
   sessionState.pt = sessionState.pt.filter((p) => p.t > 0);
-  if (!wavesState.waveOn) {
+  if (!wavesState.waveOn && !sessionState.peace) {
     sessionState.waveT -= dt;
     if (sessionState.waveT <= 0) {
       wavesState.waveST = sessionState.time;

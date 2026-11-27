@@ -1925,4 +1925,6 @@ export const NL = {
   "Wave {0}: {1} slain by the kingdom, {2} by the dragon, {3} lost":
     "Golf {0}: {1} gedood door het rijk, {2} door de draak, {3} verloren",
   "Wave {0}: {1} slain, {2} lost": "Golf {0}: {1} gedood, {2} verloren",
+  "Peaceful: no waves (next solo game)": "Vredig: geen golven (volgende solospel)",
+  "Peaceful": "Vredig",
 };

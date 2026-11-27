@@ -19,7 +19,7 @@ export const statisticsState = {
 };
 
 export function saveBest() {
-  if (diagnosticsState.DEVU) return;
+  if (diagnosticsState.DEVU || sessionState.peace) return;
   sbRec();
   try {
     localStorage.setItem("dk_last", JSON.stringify({ w: sessionState.waveN, k: sessionState.kills }));

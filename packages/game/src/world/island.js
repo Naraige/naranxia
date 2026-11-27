@@ -55,34 +55,64 @@ export function islandCliff(x, y) {
 }
 /* ---- the bridge and the islet of the portals (#69) ----
    The King: "one huge island with a bridge, and on the far side of the bridge the portal of the zombies". Beyond the sea, in a direction the
-   seed picks, lies a small round islet; a straight causeway of land joins it to the island. Every route of the horde starts on the islet (its
+   seed picks, lies a small round islet; a straight bridge of 12 tiles joins it to the island. Every route of the horde starts on the islet (its
    portals stand there side by side), crosses the bridge, reaches the bridge head on the island and only then spreads towards the castles
    (world/routes.js). Nothing else joins the islet to the island: the bridge is the one way in. */
 export const ISLET_R = 16,
-  BRIDGE_HW = 4.5; /* half the width of the causeway, in tiles */
+  BRIDGE_W = 12; /* tiles across: three cells of the fortification grid, so one gate (#76) closes it from side to side */
 let GK = NaN,
   G = null;
+/* The bridge runs straight north, east, south or west (the seed picks), on the grid of the fortifications: walls, towers and a gate can be
+   laid across it without a gap. */
 export function islandGate() {
   if (GK === terrainState.SEED && G) return G;
   GK = terrainState.SEED;
-  const a = hs(3, 7, terrainState.SEED + 77) * 6.283185,
-    ex = Math.cos(a),
-    ey = Math.sin(a),
+  const q = Math.floor(hs(3, 7, terrainState.SEED + 77) * 4) & 3,
+    ex = [1, 0, -1, 0][q],
+    ey = [0, 1, 0, -1][q],
+    X0 = Math.round((TW / 2 - BRIDGE_W / 2) / 4) * 4,
+    Y0 = Math.round((TH / 2 - BRIDGE_W / 2) / 4) * 4,
+    cx = ex ? TW / 2 : X0 + BRIDGE_W / 2 /* a point of the middle line of the bridge */,
+    cy = ey ? TH / 2 : Y0 + BRIDGE_W / 2,
     R =
       ISL_R * (ISL_SEA + 0.045) + 18 + ISLET_R /* the shore at its furthest by the bridge, the open water, the islet */,
     H = ISL_R * 0.75; /* the bridge head, well inside the shore */
-  G = { a, ex, ey, R, H, x: TW / 2 + ex * R, y: TH / 2 + ey * R, hx: TW / 2 + ex * H, hy: TH / 2 + ey * H };
+  G = {
+    a: q * 1.5707963,
+    ex,
+    ey,
+    R,
+    H,
+    X0,
+    Y0,
+    cx,
+    cy,
+    x: cx + ex * R,
+    y: cy + ey * R,
+    hx: cx + ex * H,
+    hy: cy + ey * H,
+  };
   return G;
 }
+const along = (g, x, y) => (x - g.cx) * g.ex + (y - g.cy) * g.ey,
+  across = (g, x, y) => (g.ex ? y - g.Y0 : x - g.X0); /* 0 .. BRIDGE_W - 1 on the bridge */
 /* 2 on the islet, 1 on the causeway, 0 elsewhere */
 export function islandBridge(x, y) {
   const g = islandGate(),
-    dx = x - TW / 2,
-    dy = y - TH / 2,
-    t = dx * g.ex + dy * g.ey;
+    t = along(g, x, y);
   if (t < g.H) return 0;
   if (Math.hypot(x - g.x, y - g.y) < ISLET_R) return 2;
-  return t < g.R && Math.abs(dy * g.ex - dx * g.ey) < BRIDGE_HW ? 1 : 0;
+  const c = across(g, x, y);
+  return t < g.R && c >= 0 && c < BRIDGE_W ? 1 : 0;
+}
+/* the stone sides of the bridge (#75, drawing only): the water tiles that touch its two edges. 1 a length of parapet, 2 a pier (every 8th) */
+export function islandParapet(x, y) {
+  const g = islandGate(),
+    t = along(g, x, y);
+  if (t < g.H || t > g.R - ISLET_R + 3) return 0;
+  const c = across(g, x, y);
+  if (c !== -1 && c !== BRIDGE_W) return 0;
+  return (Math.floor(t) & 7) === 0 ? 2 : 1;
 }
 
 /* the middle of the disc where castles are founded, and how far (x, y) lies from it as a fraction of ISL_R (compare with ISL_SITE) */
