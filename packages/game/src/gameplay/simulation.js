@@ -990,10 +990,23 @@ export function update0(dt) {
       p.vz -= p.g * dt;
       if (p.z < 0.05) {
         p.z = 0.05;
-        p.vz = 0;
-        p.vx *= 0.8;
-        p.vy *= 0.8;
+        /* a chip that comes down hard bounces once or twice before it lies still (#96); smoke and dust just settle */
+        if (!p.soft && p.vz < -2.2) {
+          p.vz = -p.vz * 0.38;
+          p.vx *= 0.62;
+          p.vy *= 0.62;
+        } else {
+          p.vz = 0;
+          p.vx *= 0.8;
+          p.vy *= 0.8;
+        }
       }
+    }
+    /* smoke and dust billow out and slow down instead of sliding away at their first speed */
+    if (p.soft) {
+      const k = Math.max(0, 1 - 1.6 * dt);
+      p.vx *= k;
+      p.vy *= k;
     }
     p.t -= dt;
   }

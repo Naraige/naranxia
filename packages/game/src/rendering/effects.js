@@ -60,8 +60,13 @@ export const smoke = (x, y, z) => puff(x, y, "#5a5a60", 1, 12, { T: 1.6, z: z ||
 
 export const ember = (x, y) => puff(x, y, "#ff8a2a", 3, 40, { T: 1.0, z: 0.6, vz: 2, g: -0.4, s: 0.09 });
 
+/* a burst that runs out along the ground. Since #96 it also throws a short flash with a ring of light on the ground, in its own colour
+   and as wide as the burst runs: every war cry, stomp, blast and collapse of the game gets it at once. */
 export function ring(x, y, c, n, sp) {
   puff(x, y, c, n || 18, sp || 220, { T: 0.45, z: 0.15, vz: 0.1, s: 0.16 });
+  const k = colOf(c),
+    r = ((sp || 220) * 0.45) / TS;
+  vflash(x, y, gh(x / TS, y / TS) + 0.5, Math.max(1, r * 0.55), [k.r, k.g, k.b], 0.4, 1);
 }
 
 export const shake = (v) => {
@@ -267,6 +272,25 @@ const GLC = {
   "#b04bff": [0.7, 0.3, 1],
   "#e55": [1, 0.3, 0.25],
   "#ffe14a": [1, 0.86, 0.3],
+  /* more of the hot and the uncanny colours glow (#96): dragon fire, the King's mark, portals, dawn burning the dead, acid, healing */
+  "#ffb23c": [1, 0.66, 0.2],
+  "#ff6a1a": [1, 0.4, 0.1],
+  "#ff8a1f": [1, 0.5, 0.12],
+  "#ffd24a": [1, 0.8, 0.28],
+  "#ffc04a": [1, 0.72, 0.28],
+  "#ff9a3c": [1, 0.58, 0.22],
+  "#ffd040": [1, 0.8, 0.25],
+  "#ffd060": [1, 0.8, 0.36],
+  "#f2d060": [0.95, 0.8, 0.36],
+  "#f2c23a": [0.95, 0.75, 0.22],
+  "#b46bff": [0.7, 0.42, 1],
+  "#9a3cff": [0.6, 0.24, 1],
+  "#e070ff": [0.88, 0.44, 1],
+  "#9ad030": [0.6, 0.82, 0.2],
+  "#9fe870": [0.6, 0.9, 0.44],
+  "#9ad8ff": [0.6, 0.85, 1],
+  "#cfeaff": [0.8, 0.92, 1],
+  "#ffe08a": [1, 0.88, 0.54],
 };
 
 const tw3 = (wx, wy) => {
@@ -296,7 +320,11 @@ export function syncFx() {
       continue;
     }
     if (n >= PMAX) break;
-    const sz = (p.s ? p.s * (0.4 + 0.6 * a) * (a > 0.85 ? 1 + (1 - a) * 2 : 1) : 0.06 + 0.1 * a) * FXK;
+    /* a chip pops in, holds, and shrinks away in the last fifth of its life instead of vanishing at full size (#96) */
+    const sz =
+      (p.s ? p.s * (0.4 + 0.6 * a) * (a > 0.85 ? 1 + (1 - a) * 2 : 1) : 0.06 + 0.1 * a) *
+      FXK *
+      (a < 0.2 ? 0.25 + 3.75 * a : 1);
     const py_ = gh(p.x / TS, p.y / TS) + fxz(p.z !== undefined ? p.z : 0.25 + (1 - a) * 0.7),
       gc = GLC[p.c];
     if (gc) glow(p.x / TS, py_, p.y / TS, 0.14 + sz * 2.2, gc[0], gc[1], gc[2], 0.55 * a);

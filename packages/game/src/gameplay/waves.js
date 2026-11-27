@@ -14,7 +14,7 @@ import { rulesState, TS } from "./rules.js";
 import { D_, sessionState } from "./session.js";
 import { SW, swarmState, swPending, swQueue, swRunTo } from "./swarm.js";
 import { MP } from "../multiplayer/session.js";
-import { puff } from "../rendering/effects.js";
+import { puff, ring } from "../rendering/effects.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { mmss } from "../ui/minimap.js";
 import { saveGame } from "../ui/save-menu.js";
@@ -189,6 +189,7 @@ function wave0() {
       sessionState.portals.push({ L, x: p[0], y: p[1], w: sessionState.waveN });
       wmsg = "A new portal tears open in the " + terrainState.ROUTES[L].dir;
       puff(p[0] * TS, p[1] * TS, "#b46bff", 40, 90, { T: 1.2, z: 1, vz: 3, g: -0.5, s: 0.2 });
+      ring(p[0] * TS, p[1] * TS, "#b46bff", 26, 300);
     }
     const zf = (sessionState.SITE2 ? 0.8 : 1) * laneK(L, sessionState.nextL),
       nh = Math.min(260, Math.round((16 + sessionState.waveN * 10) * df.zm * zf)),

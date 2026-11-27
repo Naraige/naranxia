@@ -59,7 +59,7 @@ export function mkDragon(c) {
     x: Math.round(c.x),
     y: Math.round(c.y + c.rad + TS * 9),
     a: 0,
-    w: 0,
+    w: 3142 /* it faces its castle (#96): the camera behind it stands in the open, not inside the walls */,
     p: 0,
     f: 0,
     fl: 0,

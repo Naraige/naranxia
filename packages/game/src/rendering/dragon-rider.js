@@ -11,7 +11,7 @@ import { canvasesState, cv } from "../ui/canvases.js";
 import { KB } from "../ui/settings.js";
 import { LAND } from "../world/terrain-state.js";
 import { gh } from "../world/terrain-queries.js";
-import { puff } from "./effects.js";
+import { puff, shake, vflash } from "./effects.js";
 import { CUTU } from "./materials.js";
 import { dragonKit } from "./models/dragon.js";
 import { CAM, scene } from "./scene.js";
@@ -237,7 +237,12 @@ function fly(dt, keys) {
   CAM.yaw += angd(CAM.yaw, P.yaw + Math.PI) * a;
   CAM.pitch += (clamp(0.3 - P.pit * 0.45, 0.1, 0.9) - CAM.pitch) * a;
   CAM.dist += (V.dist - CAM.dist) * a;
-  CUTU.value.set(P.x, P.y - 1, P.z, 2.4);
+  CUTU.value.set(
+    P.x,
+    P.y - 1,
+    P.z,
+    4.6,
+  ); /* a wide window: the cone starts at the camera (materials.js), so this is its size at the dragon */
   return firing;
 }
 
@@ -364,12 +369,19 @@ function effects(d, dt, live) {
         y = b[1];
       for (let i = 0; i < 14; i++)
         puff(x, y, i & 1 ? "#ffb23c" : "#ff6a1a", 2, 140, { T: 0.7, z: 0.5, vz: 2.5, g: -3, s: 0.5 });
+      /* a blast worth the name (#96): flash and ring of light, debris that bounces, a column of smoke, the ground shakes */
+      vflash(x, y, gh(x / TS, y / TS) + 0.8, 4.6, [1, 0.6, 0.22], 0.65, 1);
+      puff(x, y, "#8a7058", 18, 130, { T: 0.9, z: 0.3, vz: 4.4, g: 10, s: 0.16 });
+      puff(x, y, "#3e3a38", 8, 55, { soft: 1, T: 2.6, s: 0.9, z: 0.8, vz: 1.9, g: -0.25 });
+      shake(0.3);
       snd("boom", x, y);
       scene.remove(m);
       V.balls.delete(b);
     }
   if (d.rt > V.rt + 0.5) {
     snd("dragonroar", d.rx, d.ry);
+    vflash(d.rx, d.ry, gh(d.rx / TS, d.ry / TS) + 1.5, 7, [0.9, 0.9, 1], 0.7, 1);
+    shake(0.2);
     for (let i = 0; i < 24; i++) {
       const a = (i / 24) * 6.283;
       puff(d.rx + Math.cos(a) * TS * 5, d.ry + Math.sin(a) * TS * 5, "#e8e0c8", 1, 90, {
@@ -383,6 +395,9 @@ function effects(d, dt, live) {
   }
   V.rt = d.rt || 0;
   /* the King's mark (#80): a ring of gold sparks where the fire burns harder */
+  if (d.mt > (V.mt0 || 0) + 0.5 && d.mk)
+    vflash(d.mk[0], d.mk[1], gh(d.mk[0] / TS, d.mk[1] / TS) + 0.5, 5, [1, 0.82, 0.3], 0.6, 1);
+  V.mt0 = d.mt || 0;
   if (d.mt > 0 && d.mk && V.t - (V.mkT || 0) > 0.12) {
     V.mkT = V.t;
     const a = V.t * 2.2;
@@ -438,6 +453,7 @@ export function dragonFrame(dt, keys) {
         sessionState.bannerS2 = L("It was carried back to the castle and will fly again soon");
         sessionState.bannerT = 4;
         snd("dragonroar", d.x, d.y);
+        shake(0.35);
       }
       firing = false;
       CAM.x = V.P.x;

@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · effets: le moteur de particules pour tous, explosions du dragon, vue du dragon (#96), branche `claude/castle-dragon-roles`, pas de version
+
+- Le Roi: « améliore tous les effets / animation / vfx ». Le jeu a environ 150 appels d'effets déjà écrits un par un: plutôt que de les retoucher tous, le lot change les primitives et le moteur, donc tout en profite.
+- Moteur (`simulation.js`, mise à jour des particules): un éclat qui retombe fort rebondit une ou deux fois; fumées et poussières ralentissent et s'étalent au lieu de glisser. Rendu (`effects.js`): un éclat rétrécit dans le dernier cinquième de sa vie au lieu de disparaître d'un coup; 18 couleurs chaudes ou étranges de plus ont un halo (`GLC`: feu du dragon, marque du Roi, portails, aube, acide, soin).
+- `ring()` lance aussi un éclair avec un anneau de lumière au sol, de sa couleur et de sa taille: cri de guerre, charge, coups des boss, effondrements, explosions (une vingtaine d'endroits) l'ont d'un coup.
+- Dragon: l'explosion de la boule de feu a éclair, anneau, débris qui rebondissent, colonne de fumée et secousse; le rugissement et la marque du Roi ont leur anneau; la chute secoue l'écran. Portail qui s'ouvre: anneau violet.
+- Trouvé en regardant une capture, corrigé: au départ la caméra du dragon était DANS le mur du château (le dragon tournait le dos au château) et la fenêtre de transparence ne montrait qu'un rond. Le dragon fait maintenant face à son château (`w` 3142) et sa fenêtre est plus large (4,6). Capture regardée après: vue dégagée.
+- Vérifié: quality, det (inchangé), dragon, horde, ui, kingview, features, mp_dragon, mp8 PASS. Non vérifié: les effets en mouvement (une image fixe seulement), le coût en images par seconde des halos en plus pendant une grosse vague.
+
 ## 2026-11-27 · qualité: sons, animations et lisibilité du dragon, chef et éclaireurs reconnaissables (#95), branche `claude/castle-dragon-roles`, pas de version
 
 - Le Roi: « améliore la qualité du jeu de manière globale son / image / model tout », puis « animation too ». Constat avant d'agir: le son (compresseur, réverbération, ambiances, musique) et l'image (post-traitement peint, FXAA, encres) du jeu de base sont déjà poussés; le retard est dans ce qui a été ajouté cette semaine. Le dragon n'avait ni bruit d'ailes ni bruit de souffle.
