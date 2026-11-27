@@ -1937,4 +1937,6 @@ export const NL = {
   "Could not reach the clipboard": "Klembord niet bereikbaar",
   "Progress loaded": "Voortgang geladen",
   "No dragon code in the clipboard": "Geen drakencode op het klembord",
+  "Keys walk the King, left click strikes, right-drag turns the view. Build menu: view from above":
+    "Toetsen laten de Koning lopen, linksklik slaat, rechts slepen draait het beeld. Bouwmenu: bovenaanzicht",
 };

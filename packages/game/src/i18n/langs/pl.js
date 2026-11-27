@@ -1924,4 +1924,6 @@ export const PL = {
   "Could not reach the clipboard": "Brak dostępu do schowka",
   "Progress loaded": "Postęp wczytany",
   "No dragon code in the clipboard": "Brak kodu smoka w schowku",
+  "Keys walk the King, left click strikes, right-drag turns the view. Build menu: view from above":
+    "Klawisze prowadzą Króla, lewy klik uderza, przeciąganie prawym obraca widok. Menu budowy: widok z góry",
 };

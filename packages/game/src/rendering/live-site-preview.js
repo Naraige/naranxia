@@ -19,7 +19,7 @@ import { PVS, PVW, siteMaskGet, siteOK, sitePickerState } from "../ui/site-picke
 import { FFT } from "../ui/typography.js";
 import { gOK } from "../world/routes.js";
 import { initWorld } from "../world/terrain.js";
-import { CH, genF, HT, LAND, NCX, NCY, terrainState } from "../world/terrain-state.js";
+import { CH, genF, HT, LAND, NCX, NCY, occ, terrainState } from "../world/terrain-state.js";
 
 /* ---- live castle placement: the real generated world, game camera, castle ghost like any building ---- */
 export const PKL = { on: false, seed: -1, hit: null, beam: null };
@@ -68,6 +68,15 @@ function pkLiveSync() {
 }
 
 export function renderPickLive(dt) {
+  /* whatever way the live view was entered: the world map's detail left a real castle with its King and men in the game state, which
+     showed here as a second castle beside the ghost (the King, 2026-11-27). Nothing is founded yet: take it out. */
+  if (sessionState.structs.length || sessionState.units.length) {
+    for (const st of sessionState.structs) if (st.o3 && st.o3.parent) st.o3.parent.remove(st.o3);
+    sessionState.structs.length = 0;
+    sessionState.units.length = 0;
+    occ.clear();
+    sitePickerState.detailDrop = true;
+  }
   if (PKL.seed !== terrainState.SEED) pkLivePrep();
   pkLiveSync();
   if (!PKL.beam) {

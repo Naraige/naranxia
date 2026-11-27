@@ -50,7 +50,7 @@ export function royalEscort(u, d, dt) {
     stop = 3;
   if (solidAt(P.x, P.y)) {
     const f = [Math.sin(fa), Math.cos(fa)],
-      bk = TS * (0.9 + j * 0.7);
+      bk = TS * (1.6 + j * 1.1);
     P = { x: K.x - f[0] * bk, y: K.y - f[1] * bk };
     if (solidAt(P.x, P.y)) {
       P = { x: K.x, y: K.y };

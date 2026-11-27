@@ -1,20 +1,26 @@
+import { ambientLife } from "../rendering/ambient-life.js";
+import { kingStrikeSim } from "../gameplay/king-strike.js";
 import { dragonSend } from "../multiplayer/commands.js";
 import { dragonMine, dragonSet0, dragonTick, mkDragon } from "../gameplay/dragon.js";
 import { mkU, spawnPos } from "../gameplay/entities.js";
 import { roleHooks } from "../gameplay/role-hooks.js";
 import { sessionState } from "../gameplay/session.js";
 import { royalSpawn } from "../gameplay/squads.js";
-import { kingViewFrame, kingViewToggle, kingViewZoom } from "../input/king-view.js";
+import { kingViewFrame, kingViewToggle, kingViewZoom, kingViewMouse } from "../input/king-view.js";
 import { dragonPanelDraw, dragonPanelKey } from "../ui/dragon-panel.js";
 import { dragonBar, dragonFrame, dragonMouse, dragonZoom } from "../rendering/dragon-rider.js";
 
 /* wires the King view and the Dragon role into the game (gameplay/role-hooks.js says why) */
 export function initializeRoles() {
-  roleHooks.frame = (dt, keys) => dragonFrame(dt, keys) || kingViewFrame(dt, keys);
+  roleHooks.frame = (dt, keys) => {
+    ambientLife(dt);
+    return dragonFrame(dt, keys) || kingViewFrame(dt, keys);
+  };
   roleHooks.zoom = (d) => dragonZoom(d) || kingViewZoom(d);
-  roleHooks.mouse = dragonMouse;
+  roleHooks.mouse = (e, down) => dragonMouse(e, down) || kingViewMouse(e, down);
   roleHooks.rider = dragonMine;
   roleHooks.viewToggle = kingViewToggle;
+  roleHooks.kingStrike = kingStrikeSim;
   roleHooks.bar = dragonBar;
   roleHooks.key = dragonPanelKey;
   roleHooks.mark = (k) => dragonSend({ x: Math.round(k.x), y: Math.round(k.y) }, "km");

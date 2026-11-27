@@ -4,6 +4,18 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · retours du Roi en jouant: gardes, second château, caméra libre, coup du Roi, vie du décor (#97), branche `claude/castle-dragon-roles`, pas de version
+
+- Captures et messages du Roi (20h30): « the guard are too near and body block the king », « first picture we see a second castle preview ? », « the camera for the king is frustrating let free cam direction », « permit to have a tps on the king and attack ourself », « améliore et crée des animations environnementales pour rendre le tout plus vivant ».
+- Gardes (`squads.js`): leurs postes étaient à 27 et 20 unités (deux tiers de case), donc DANS le Roi depuis que les corps font 1,75 fois plus: 62 de côté, 40 en arrière. Test: jamais à moins de 1,2 case de lui.
+- Second château (`live-site-preview.js`): la vue « Carte du monde » du choix du site appelle `reset()` et met un vrai château (avec Roi, gardes, paysans) dans l'état du jeu; de retour dans la vue 3D il restait dessiné à côté du fantôme. Reproduit (1 structure, 6 unités), corrigé: la vue 3D vide l'état à chaque image tant que rien n'est fondé (0, 0 après).
+- Caméra du Roi (`king-view.js`): l'inclinaison n'est plus ramenée de force à chaque image; elle descend à l'ouverture de la vue puis le clic droit maintenu tourne et incline librement, et l'angle laissé est retrouvé.
+- Coup du Roi (`gameplay/king-strike.js`, commande lockstep `ka`, branchée par `roleHooks` pour ne pas créer de cycle): clic gauche en vue du Roi = il se tourne vers le point visé et balaie devant lui (1,7 case, 4 corps de l'essaim au plus, dégâts x1,25), à son rythme d'attaque normal. En vue du Roi le clic gauche ne sélectionne donc plus: la sélection se fait de dessus.
+- Vie du décor (`rendering/ambient-life.js`, appelé par le crochet de rôle): papillons de jour (pas l'hiver), vols d'oiseaux en coin, feuilles qui tombent des bois (pétales au printemps, feuilles rousses en automne), reflets et poissons qui sautent sur l'eau. Dessin seul, coupé par « mouvement réduit ».
+- Tests: `kingview` 18 assertions (écart des gardes, inclinaison gardée, coup du Roi et son délai). det re-fixé (les postes des gardes changent la partie). PASS: quality, det, features, waves, quests, spearman, save, ui, tools, dragon, kingview, horde, smoke, mp8, mpk, mp_build, mp_dragon, mp_quests, mp_convoy, mp_events, mp_resync.
+- IMPORTANT, découvert en préparant la sortie demandée par le Roi (« when done push all and make an announcement from all the start of v100 »): la suite COMPLÈTE de GitHub échoue sur la branche pour une quinzaine de tests que je ne lançais pas en local (bossabil, envoy, events, map_size, voxel_buildings, mp_side, research, command_contract, mp_rematch, mp_resync_deep, mp_cut, observer, trap_controls, browser_faults). La sortie v101 et l'annonce Discord passent par cette suite: à remettre au vert d'abord.
+- Non vérifié: papillons et oiseaux en mouvement (image fixe: plus de carrés noirs, mais ils sont petits), la sensation de la caméra et du coup à la souris.
+
 ## 2026-11-27 · effets: le moteur de particules pour tous, explosions du dragon, vue du dragon (#96), branche `claude/castle-dragon-roles`, pas de version
 
 - Le Roi: « améliore tous les effets / animation / vfx ». Le jeu a environ 150 appels d'effets déjà écrits un par un: plutôt que de les retoucher tous, le lot change les primitives et le moteur, donc tout en profite.

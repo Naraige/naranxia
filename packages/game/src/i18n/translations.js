@@ -851,6 +851,7 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v101 */
 Object.assign(TRD,{
+"Keys walk the King, left click strikes, right-drag turns the view. Build menu: view from above":["Les touches font marcher le Roi, clic gauche pour frapper, clic droit maintenu pour tourner la vue. Menu Bâtir : vue de dessus","Las teclas mueven al Rey, clic izquierdo golpea, arrastrar con el derecho gira la vista. Menú Construir: vista desde arriba","Tasten bewegen den König, Linksklick schlägt zu, Rechtsziehen dreht die Sicht. Baumenü: Sicht von oben","I tasti muovono il Re, clic sinistro colpisce, trascina col destro per girare la vista. Menu Costruisci: vista dall'alto","As teclas movem o Rei, clique esquerdo ataca, arrastar com o direito roda a vista. Menu Construir: vista de cima"],
 "The dragon mends here and returns sooner":["Le dragon s'y soigne et revient plus vite","El dragón se cura aquí y vuelve antes","Der Drache heilt hier und kehrt schneller zurück","Il drago si cura qui e torna prima","O dragão cura-se aqui e regressa mais cedo"],
 "Mark for the dragon":["Marquer pour le dragon","Marcar para el dragón","Für den Drachen markieren","Segna per il drago","Marcar para o dragão"],
 "Mark for the dragon {0}s":["Marquer pour le dragon {0} s","Marcar para el dragón {0} s","Für den Drachen markieren {0} s","Segna per il drago {0} s","Marcar para o dragão {0} s"],

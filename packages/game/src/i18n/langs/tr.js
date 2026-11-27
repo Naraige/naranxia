@@ -1921,4 +1921,6 @@ export const TR = {
   "Could not reach the clipboard": "Panoya erişilemedi",
   "Progress loaded": "İlerleme yüklendi",
   "No dragon code in the clipboard": "Panoda ejderha kodu yok",
+  "Keys walk the King, left click strikes, right-drag turns the view. Build menu: view from above":
+    "Tuşlar Kralı yürütür, sol tık vurur, sağ sürükleme görüşü çevirir. İnşa menüsü: üstten görünüm",
 };

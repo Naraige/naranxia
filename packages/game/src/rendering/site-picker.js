@@ -14,7 +14,7 @@ import { cv } from "../ui/canvases.js";
 import { hudState, inR } from "../ui/hud.js";
 import { buildPreview, pvH, PVH, PVS, pvW, PVW, siteMaskGet, siteOK, sitePickerState } from "../ui/site-picker.js";
 import { genChunk } from "../world/terrain.js";
-import { BED, CH, LAND, NCX, NCY, ROCKH, SNOW, terrainState, WLV } from "../world/terrain-state.js";
+import { BED, CH, LAND, NCX, NCY, occ, ROCKH, SNOW, terrainState, WLV } from "../world/terrain-state.js";
 
 /* ---- 3D castle site picker ---- */
 export let PK = null;
@@ -281,6 +281,16 @@ function pkProps() {
 const PKR = 3;
 const PKD = { x: -1, y: -1, grp: null, t: 0 };
 
+/* leaving the world map for the live view: the detail built here put a real castle (and its King, guards and peasants) in the game state at
+   the site chosen then. Shown beside the ghost of the live view it looked like a second castle (the King, 2026-11-27): take it all out. */
+export function pkLeave() {
+  for (const st of sessionState.structs) if (st.o3 && st.o3.parent) st.o3.parent.remove(st.o3);
+  sessionState.structs.length = 0;
+  sessionState.units.length = 0;
+  occ.clear();
+  PKD.x = -1;
+}
+
 function pkDetail(tx, ty) {
   if (!PK || !PK.idx) return;
   const t0 = performance.now();
@@ -414,6 +424,10 @@ export function pkSet(tx, ty, ok) {
 }
 
 export let renderPick = function renderPick(dt) {
+  if (sitePickerState.detailDrop) {
+    sitePickerState.detailDrop = false;
+    PKD.x = -1; /* the live view cleared the castle of the detail: build it again */
+  }
   if (!PK || PK.key !== terrainState.SEED) {
     pkBuild();
     PKD.x = -1;

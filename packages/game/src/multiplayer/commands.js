@@ -131,6 +131,19 @@ export function kingDrive0(w) {
     formationsState.quiet = 0;
   }
 }
+/* the King strikes towards a point (King view, left click) */
+export function kingStrike0(w) {
+  const k = kingOf(playersState.CURPL | 0);
+  if (k) roleHooks.kingStrike(k, w.x, w.y);
+}
+export const kingStrike = function (w) {
+  const c = { k: "ka", x: Math.round(w.x), y: Math.round(w.y) };
+  if (gated()) {
+    mpPush(c);
+    return;
+  }
+  return kingStrike0(c);
+};
 export const kingDrive = function (w) {
   const c = { k: "kd", x: Math.round(w.x), y: Math.round(w.y) };
   if (gated()) {
@@ -252,6 +265,9 @@ export let mpExec = function mpExec(c, mine) {
         break;
       case "kd":
         kingDrive0(c);
+        break;
+      case "ka":
+        kingStrike0(c);
         break;
       case "dg":
       case "dk":

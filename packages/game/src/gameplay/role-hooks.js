@@ -15,6 +15,8 @@ export const roleHooks = {
   viewToggle: () => {},
   /* the rider's gauges under the top bar: returns their height */
   bar: (_UW, _y) => 0,
+  /* the King's own blow (#97, gameplay/king-strike.js) */
+  kingStrike: (_k, _x, _y) => false,
   /* the King marks the ground where he stands for the dragon (#80) */
   mark: (_k) => {},
   /* the rider's keys (U window, Esc closes it): true when taken */

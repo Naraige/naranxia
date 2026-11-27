@@ -3,7 +3,9 @@ import { kingOf } from "../gameplay/king-skills.js";
 import { LPL } from "../gameplay/players.js";
 import { TS } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
-import { kingDrive } from "../multiplayer/commands.js";
+import { kingDrive, kingStrike } from "../multiplayer/commands.js";
+import { pickGround } from "../rendering/camera.js";
+import { inputState } from "./state.js";
 import { CUTU } from "../rendering/materials.js";
 import { CAM } from "../rendering/scene.js";
 import { buildMenuState } from "../ui/build-menu.js";
@@ -23,6 +25,8 @@ export const kingViewState = {
   moving: false,
   told: false,
   kd: 0,
+  kp: 0 /* the tilt the player left the King view at */,
+  ease: 0,
   dx: 0,
   dy: 0,
 };
@@ -74,15 +78,22 @@ export function kingViewFrame(dt, keys) {
     s.on = true;
     s.top = { dist: CAM.dist, pitch: CAM.pitch };
     s.sendT = 0;
+    s.ease = 0.6;
     if (!s.told) {
       s.told = true;
-      hudDisplayState.msgS = "The camera keys walk the King. Open the build menu to see from above";
+      hudDisplayState.msgS =
+        "Keys walk the King, left click strikes, right-drag turns the view. Build menu: view from above";
       hudDisplayState.msgT = 7;
     }
   }
   const a = Math.min(1, dt * 6);
   CAM.dist += (Math.min(KV_DIST * 2, Math.max(7, s.kd || KV_DIST)) - CAM.dist) * a;
-  CAM.pitch += (KV_PITCH - CAM.pitch) * a;
+  /* the view is the player's (2026-11-27, "let free cam direction"): the camera comes down to its angle when the view opens, then
+     right-drag turns and tilts it as in the view from above, and the angle he leaves is the one he finds next time */
+  if (s.ease > 0) {
+    s.ease -= dt;
+    CAM.pitch += ((s.kp || KV_PITCH) - CAM.pitch) * a;
+  } else s.kp = CAM.pitch;
   CAM.x += (k.x / TS - CAM.x) * a;
   CAM.z += (k.y / TS - CAM.z) * a;
   CUTU.value.set(CAM.x, CAM.y, CAM.z, 3);
@@ -110,6 +121,20 @@ export function kingViewFrame(dt, keys) {
       kingDrive({ x: k.x + dx * TS * 3.5, y: k.y + dy * TS * 3.5 });
     }
   } else stop();
+  return true;
+}
+
+/* left click in the King view: he strikes towards the point under the cursor (#97). The click is the King's: selecting is done from above. */
+export function kingViewMouse(e, down) {
+  if (!kingViewState.on || e.button !== 0) return false;
+  if (down && !sessionState.paused) {
+    const k = kingOf(LPL()),
+      g = pickGround(inputState.mouse.x, inputState.mouse.y);
+    if (k)
+      kingStrike(
+        g ? { x: g.x * TS, y: g.z * TS } : { x: k.x - Math.sin(CAM.yaw) * TS * 2, y: k.y - Math.cos(CAM.yaw) * TS * 2 },
+      );
+  }
   return true;
 }
 

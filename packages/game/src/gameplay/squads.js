@@ -135,8 +135,10 @@ export let ungroupSel = function ungroupSel() {
   }
 };
 
-const RGS = 27,
-  RGF = -20;
+/* the posts of the two royal guards: beside and a little behind the King. Since the bodies are 1.75 times larger (v101) the old posts (27
+   and 20 units, two thirds of a tile) stood inside him and the guards blocked his way: now a tile and a half to the side, one tile back. */
+const RGS = 62,
+  RGF = -40;
 
 export function royalPost(K, j, fa) {
   const f = [Math.sin(fa), Math.cos(fa)],

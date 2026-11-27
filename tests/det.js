@@ -160,14 +160,14 @@ async () => {
     same = JSON.stringify(a) === JSON.stringify(b);
   // Captured from the v95 polish lots (lot A: route reach 112 tiles, contour spread of crowded hordes, terrain-aware lane routes #30, spawn patch that widens with the wave size, weighted unit separation with body block), identical on two runs: v94 release branch (main formatting merge, far wave spawn, horde pile-up fix, 10 Hz swarm, lane-field target fix, spike removal) plus route bending.
   const expected = [
-    "1022681633:21747:1:0:1064:0.9614:sh0:nl0.21:f168:sp0:ro11:wk3:T-1522692107:z137:pu4:fg1:fp0",
-    "-297210094:25997:6:2:1098:0.9768:sh5:nl0.62:f180:sp0:ro11:wk2:T-1522692107:z132:pu0:fg0:fp9",
-    "2028866382:25997:6:1:1098:0.9875:sh7:nl0.83:f180:sp0:ro11:wk1:T-1522692107:z132:pu0:fg0:fp9",
-    "1516166691:25997:6:0:1098:0.9934:sh7:nl0.97:f180:sp0:ro11:wk1:T-1522692107:z132:pu0:fg0:fp9",
-    "976746810:25997:6:0:1098:0.9965:sh7:nl1.00:f180:sp0:ro10:wk1:T-1522692107:z132:pu0:fg0:fp9",
-    "-764885364:25997:6:0:1098:0.9982:sh7:nl1.00:f180:sp0:ro10:wk1:T-1522692107:z132:pu0:fg0:fp9",
-    "1852688485:25986:20:0:1107:0.9982:sh7:nl1.00:f180:sp0:ro10:wk1:T-1522692107:z129:pu0:fg0:fp9",
-    "-677558417:25779:239:2:1275:0.9982:sh7:nl1.00:f230:sp0:ro10:wk1:T-1522692107:z118:pu0:fg0:fp8",
+    "-1199313630:21747:1:0:1064:0.9614:sh0:nl0.21:f168:sp0:ro11:wk3:T-1522692107:z137:pu4:fg1:fp0",
+    "-1695098926:25997:6:2:1098:0.9768:sh5:nl0.62:f180:sp0:ro11:wk2:T-1522692107:z132:pu0:fg0:fp9",
+    "1030017030:25997:6:1:1098:0.9875:sh7:nl0.83:f180:sp0:ro11:wk1:T-1522692107:z132:pu0:fg0:fp9",
+    "-2089744561:25997:6:0:1098:0.9934:sh7:nl0.97:f180:sp0:ro11:wk1:T-1522692107:z132:pu0:fg0:fp9",
+    "443037500:25997:6:0:1098:0.9965:sh7:nl1.00:f180:sp0:ro10:wk1:T-1522692107:z132:pu0:fg0:fp9",
+    "776042183:25996:7:0:1098:0.9982:sh7:nl1.00:f180:sp0:ro10:wk1:T-1522692107:z132:pu0:fg0:fp9",
+    "1765656712:25991:15:0:1107:0.9982:sh7:nl1.00:f180:sp0:ro10:wk1:T-1522692107:z129:pu0:fg0:fp9",
+    "-725495449:25687:333:18:1165:0.9982:sh0:nl1.00:f180:sp0:ro11:wk2:T-1522692107:z116:pu0:fg0:fp9",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   __test.check("repeated simulation fingerprints", a, b);

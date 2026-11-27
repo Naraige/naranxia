@@ -46,6 +46,24 @@ async () => {
   const p1 = { x: k.x, y: k.y };
   fr(60);
   chk("he stops when the keys are released", d(k, p1) < 1.5);
+  /* the guards keep their distance: they stood inside the King and blocked him (the King, 2026-11-27) */
+  const close = Math.min(...units.filter((u) => u.type === "guard").map((g) => d(g, k)));
+  chk("his guards stand off him, not on him (" + close.toFixed(2) + " tiles)", close > 1.2);
+  /* the view is the player's: a tilt he gives is kept, the King view does not pull it back */
+  CAM.pitch = 1.05;
+  fr(40);
+  chk("the camera keeps the tilt the player gave it", Math.abs(CAM.pitch - 1.05) < 0.01);
+  /* his own blow: what stands in front of him is hit, and his cooldown rules it */
+  const z = mkU(1, "zombie", k.x + TS * 1.4, k.y);
+  z.hp = 500;
+  units.push(z);
+  k.cd = 0;
+  const hit1 = roleHooks.kingStrike(k, z.x, z.y),
+    lost = 500 - z.hp,
+    hit2 = roleHooks.kingStrike(k, z.x, z.y);
+  chk("the King strikes what stands before him (" + lost.toFixed(0) + ")", hit1 && lost > 10 && k.atk > 0);
+  chk("a second blow waits for his arm", !hit2 && 500 - z.hp === lost);
+  z.hp = 0;
   /* building: a category of the build menu shows the kingdom from above, and the keys move the camera, not the King */
   buildMenuState.BCAT = "eco";
   fr(20);

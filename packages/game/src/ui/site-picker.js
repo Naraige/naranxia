@@ -9,7 +9,7 @@ import { L, T_, TTL, TTS, twH } from "../i18n/language.js";
 import { lobbyShow } from "../multiplayer/lobby.js";
 import { MP } from "../multiplayer/session.js";
 import { PKL, pkLiveFocus } from "../rendering/live-site-preview.js";
-import { PK, pkFocus, pkInit } from "../rendering/site-picker.js";
+import { PK, pkFocus, pkInit, pkLeave } from "../rendering/site-picker.js";
 import { cvs } from "./canvases.js";
 import { BTN, BTNH, frame, menuSkin, PAN } from "./drawing.js";
 import { bevelBtn } from "./menu-kit.js";
@@ -190,6 +190,7 @@ export function randomSite(mainOnly = true) {
 export function openPicker() {
   sitePickerState.picking = true;
   PKL.on = true;
+  pkLeave();
   sitePickerState.pickPos = null;
   sitePickerState.pickMsg = "";
   if (sitePickerState.pvKey !== terrainState.SEED) buildPreview();
@@ -253,6 +254,7 @@ function drawPickerIn(UW, UH) {
       BTNH,
       () => {
         PKL.on = !PKL.on;
+        if (PKL.on) pkLeave();
         if (PKL.on && sitePickerState.pickPos) pkLiveFocus(sitePickerState.pickPos.tx, sitePickerState.pickPos.ty);
         else if (PK) pkFocus();
       },

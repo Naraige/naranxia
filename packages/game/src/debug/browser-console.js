@@ -1,3 +1,4 @@
+import { PKL } from "../rendering/live-site-preview.js";
 import { islandBridge, islandGate } from "../world/island.js";
 import { seasonalEvent } from "../core/seasonal-events.js";
 import { litAt } from "../gameplay/light-state.js";
@@ -658,6 +659,7 @@ export function installBrowserConsole() {
     convoyLinked: { get: () => convoyLinked },
     icoPart: { get: () => icoPart },
     openPicker: { get: () => openPicker },
+    PKL: { get: () => PKL },
     sitePickerState: { get: () => sitePickerState },
     languageState: { get: () => languageState },
     setLang: { get: () => setLang },
