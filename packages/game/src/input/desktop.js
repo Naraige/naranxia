@@ -10,7 +10,7 @@ import { build, constructionState, FORMS, tfo } from "../gameplay/construction.j
 import { army, buy } from "../gameplay/economy.js";
 import { formationsState, order, setStance } from "../gameplay/formations.js";
 import { kingSkill } from "../gameplay/king-skills.js";
-import { kingViewToggle, kingViewZoom } from "./king-view.js";
+import { roleHooks } from "../gameplay/role-hooks.js";
 import { openMenu, startGame } from "../gameplay/lifecycle.js";
 import { HOMEC, playersState } from "../gameplay/players.js";
 import { ROTT, TH, TS, TW, UPC } from "../gameplay/rules.js";
@@ -54,7 +54,7 @@ export function mmGo(p) {
 
 let hovHit = "";
 export function camZoom(d) {
-  if (kingViewZoom(d)) return;
+  if (roleHooks.zoom(d)) return;
   CAM.dist = Math.max(7, Math.min(160, CAM.dist * (d > 0 ? 1.18 : 1 / 1.18)));
 }
 
@@ -136,6 +136,7 @@ export function initializeDesktopInput() {
     settingsState.sliderDrag = null;
   });
   addEventListener("mouseup", (e) => {
+    roleHooks.mouse(e, false);
     if (e.target !== cv) {
       inputState.ptr = null;
       inputState.box = null;
@@ -196,6 +197,7 @@ export function initializeDesktopInput() {
       return;
     }
     if (hudState.uiRects.some((r) => inR(p, r))) return;
+    if (roleHooks.mouse(e, true)) return;
     const fo = e.button === 2 && !sessionState.mode && sel().some((u) => u.type !== "peasant");
     inputState.ptr = {
       x: e.clientX,
@@ -639,12 +641,17 @@ export function initializeDesktopInput() {
       sessionState.showMap = !sessionState.showMap;
       return;
     }
+    /* the dragon rider commands nothing: Space is his take-off, the other keys do nothing */
+    if (roleHooks.rider()) {
+      if (a === "pause") e.preventDefault();
+      return;
+    }
     if (a === "cry" || a === "charge") {
       kingSkill(a);
       return;
     }
     if (a === "view") {
-      kingViewToggle();
+      roleHooks.viewToggle();
       return;
     }
     if (sessionState.showMap) return;

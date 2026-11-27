@@ -1,6 +1,6 @@
 async () => {
   /* v91 features: seasons and weather, spike trap, boiling oil, boss, king skills, stats, records, co-op goals, save round trip */
-  let s = 25; /* seed chosen for a clear walk east of the castle (the veil scene); the world changed in v101 (round island) */
+  let s = 29; /* seed chosen for a clear walk east of the castle (the veil scene) and two free spots for the gift bearers; re-chosen when the King joined the start (v101) */
   const RR = Math.random;
   Math.random = () => {
     s = (s * 16807) % 2147483647;

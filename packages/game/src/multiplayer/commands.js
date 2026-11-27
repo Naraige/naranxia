@@ -13,15 +13,10 @@ import {
   trade,
   train,
 } from "../gameplay/economy.js";
+import { roleHooks } from "../gameplay/role-hooks.js";
 import { formationsState, order, setOrderHandler, setSetStanceHandler, setStance } from "../gameplay/formations.js";
 import { evCur, resolveEvent0, setEvChooseHandler } from "../gameplay/events.js";
-import {
-  kingOf,
-  kingSkill0,
-  kingTalent0,
-  setKingSkillHandler,
-  setKingTalentHandler,
-} from "../gameplay/king-skills.js";
+import { kingOf, kingSkill0, kingTalent0, setKingSkillHandler, setKingTalentHandler } from "../gameplay/king-skills.js";
 import { LPL, playersState, setPl, setTier } from "../gameplay/players.js";
 import { RN2, RS, RS2 } from "../gameplay/rules.js";
 import { curB, sel, selectionState } from "../gameplay/selection.js";
@@ -145,6 +140,16 @@ export const kingDrive = function (w) {
   return kingDrive0(c);
 };
 
+/* the dragon rider's machine tells where its dragon is (gameplay/dragon.js); alone (a test, a partner gone) the command runs at once */
+export const dragonSend = function (c) {
+  c.k = "dg";
+  if (gated()) {
+    mpPush(c);
+    return;
+  }
+  return roleHooks.dragonSet(c);
+};
+
 export let mpExec = function mpExec(c, mine) {
   const m0 = hudDisplayState.msgS,
     mt0 = hudDisplayState.msgT,
@@ -247,6 +252,9 @@ export let mpExec = function mpExec(c, mine) {
         break;
       case "kd":
         kingDrive0(c);
+        break;
+      case "dg":
+        roleHooks.dragonSet(c);
         break;
       case "cq":
         cancelTrain0(c.b, c.i);

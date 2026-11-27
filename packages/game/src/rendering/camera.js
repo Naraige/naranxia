@@ -22,7 +22,9 @@ export function updateCamera(dt) {
         gh(CAM.x, CAM.z + 3) +
         gh(CAM.x, CAM.z - 3)) /
       6;
-    CAM.y += (gy0 - CAM.y) * Math.min(1, dt * 3);
+    /* a flying camera target (the dragon) keeps its own height */
+    if (CAM.fly != null) CAM.y = CAM.fly;
+    else CAM.y += (gy0 - CAM.y) * Math.min(1, dt * 3);
   }
   const d = CAM.dist,
     cp = Math.cos(CAM.pitch);

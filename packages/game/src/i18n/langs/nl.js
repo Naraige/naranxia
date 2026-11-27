@@ -1808,4 +1808,24 @@ export const NL = {
     "Eenheden worden op volle grootte getekend en gebouwen accepteren ruiger terrein.",
   "The co-op window wears the menu buttons and has Copy and Paste for the room code.":
     "Het coöp-venster draagt de menuknoppen en heeft Kopiëren en Plakken voor de kamercode.",
+  "King view: the camera keys walk the King": "Koningszicht: de cameratoetsen laten de Koning lopen",
+  "View from above": "Zicht van boven",
+  "The camera keys walk the King. Open the build menu to see from above":
+    "De cameratoetsen laten de Koning lopen. Open het bouwmenu om van boven te kijken",
+  "King view / view from above": "Koningszicht / zicht van boven",
+  "DRAGON RIDER": "DRAKENRIJDER",
+  "Space takes off, the mouse steers, hold the left button to breathe fire":
+    "Spatie stijgt op, de muis stuurt, houd de linkerknop ingedrukt om vuur te spuwen",
+  "Stamina": "Uithouding",
+  "Breath heat": "Adem-hitte",
+  "Overheated": "Oververhit",
+  "Role: Castle (change)": "Rol: Kasteel (wijzigen)",
+  "Role: Dragon rider (change)": "Rol: Drakenrijder (wijzigen)",
+  "Role: Castle": "Rol: Kasteel",
+  "Dragon rider - ready": "Drakenrijder - klaar",
+  "Play (one of you must hold a castle)": "Spelen (een van jullie moet een kasteel houden)",
+  " will ride the dragon": " berijdt de draak",
+  " will hold a castle": " houdt een kasteel",
+  "{0} will ride the dragon": "{0} berijdt de draak",
+  "{0} will hold a castle": "{0} houdt een kasteel",
 };

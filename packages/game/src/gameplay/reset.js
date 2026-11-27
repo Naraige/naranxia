@@ -9,8 +9,8 @@ import { diagnosticsState } from "../debug/diagnostics.js";
 import { ACH, TOASTS } from "./achievements.js";
 import { castleRotAt, tfo } from "./construction.js";
 import { ALERTS, LASTALERT, economyState, FAT, PBASE, PRICE, syncTradeC } from "./economy.js";
-import { mk, mkU, spawn, spawnPos } from "./entities.js";
-import { royalSpawn } from "./squads.js";
+import { mk, spawn } from "./entities.js";
+import { roleHooks } from "./role-hooks.js";
 import { formationsState } from "./formations.js";
 import { lightingState } from "./lighting.js";
 import { BAD, playersState, setPl } from "./players.js";
@@ -53,14 +53,6 @@ export function pickLanes() {
     1 + (sessionState.waveN > 2 ? 1 : 0) + (sessionState.waveN > 6 ? 1 : 0) + (Math.random() < 0.25 ? 1 : 0),
   );
   return A.concat(farFirst([3, 4, 5].sort(() => Math.random() - 0.5)).slice(0, n2));
-}
-
-/* v101: every kingdom starts with its King and his two guards at the castle door: the player walks him from the first second */
-function startKing(c) {
-  const p = spawnPos(c),
-    k = mkU(0, "king", p.x, p.y);
-  sessionState.units.push(k);
-  royalSpawn(k, c, true);
 }
 
 export function reset() {
@@ -169,13 +161,15 @@ export function reset() {
   calcFD();
   initAI();
   ["g", "w", "s"].forEach((j) => spawn(0, "peasant", 1, j));
-  startKing(sessionState.CS);
+  roleHooks.startKing(sessionState.CS);
   if (sessionState.CS2) {
     setPl(1);
     ["g", "w", "s"].forEach((j) => spawn(0, "peasant", 1, j, sessionState.CS2));
-    startKing(sessionState.CS2);
+    roleHooks.startKing(sessionState.CS2);
     setPl(0);
   }
+  /* co-op with a dragon rider: player 2 has no castle, his dragon waits by his partner's */
+  sessionState.DRG = sessionState.DRGP ? roleHooks.mkDragon(sessionState.CS) : null;
   build3D();
   home();
 }

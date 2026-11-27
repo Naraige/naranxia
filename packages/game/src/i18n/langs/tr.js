@@ -1792,4 +1792,24 @@ export const TR = {
     "Birimler tam boyutta çizilir ve binalar daha engebeli arazide durabilir.",
   "The co-op window wears the menu buttons and has Copy and Paste for the room code.":
     "Kooperatif penceresi menü düğmelerini taşır ve oda kodu için Kopyala ve Yapıştır içerir.",
+  "King view: the camera keys walk the King": "Kral görünümü: kamera tuşları Kralı yürütür",
+  "View from above": "Yukarıdan görünüm",
+  "The camera keys walk the King. Open the build menu to see from above":
+    "Kamera tuşları Kralı yürütür. Yukarıdan görmek için inşa menüsünü açın",
+  "King view / view from above": "Kral görünümü / yukarıdan görünüm",
+  "DRAGON RIDER": "EJDERHA SÜVARİSİ",
+  "Space takes off, the mouse steers, hold the left button to breathe fire":
+    "Boşluk havalanır, fare yönlendirir, ateş püskürtmek için sol tuşu basılı tutun",
+  "Stamina": "Dayanıklılık",
+  "Breath heat": "Nefes ısısı",
+  "Overheated": "Aşırı ısındı",
+  "Role: Castle (change)": "Rol: Kale (değiştir)",
+  "Role: Dragon rider (change)": "Rol: Ejderha süvarisi (değiştir)",
+  "Role: Castle": "Rol: Kale",
+  "Dragon rider - ready": "Ejderha süvarisi - hazır",
+  "Play (one of you must hold a castle)": "Oyna (biriniz bir kale tutmalı)",
+  " will ride the dragon": " ejderhaya binecek",
+  " will hold a castle": " bir kale tutacak",
+  "{0} will ride the dragon": "{0} ejderhaya binecek",
+  "{0} will hold a castle": "{0} bir kale tutacak",
 };

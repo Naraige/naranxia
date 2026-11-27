@@ -23,6 +23,7 @@ import { initializeBuildShortcuts, initializeShortcuts } from "./input/shortcuts
 import { initializeTouch } from "./input/touch.js";
 import { initializeChat, initializeChatMessages } from "./multiplayer/chat.js";
 import { initializeCommands } from "./multiplayer/commands.js";
+import { initializeRoles } from "./core/roles.js";
 import { initializeConnection } from "./multiplayer/connection.js";
 import { initializeLobby, initializeLobbyState, mpRematch } from "./multiplayer/lobby.js";
 import { initializeLockstep, initializeMultiplayerFrame } from "./multiplayer/lockstep.js";
@@ -136,6 +137,7 @@ runBoot(
     initializeFrameLoop,
     initializeLockstep,
     initializeCommands,
+    initializeRoles,
     initializeResync,
     initializeMultiplayerFrame,
     initializeLobbyState,

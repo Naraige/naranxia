@@ -1,3 +1,4 @@
+import { roleHooks } from "./role-hooks.js";
 import { THEME } from "../ui/kingdom-theme.js";
 import { MP } from "../multiplayer/session.js";
 import { rngf } from "../core/random.js";
@@ -60,6 +61,7 @@ export let update = function update(dt) {
   objTick();
   qTick();
   kingTick(dt);
+  roleHooks.tick(dt);
   trapTick(dt);
   eraTick(dt);
   const G = rulesState.GST;

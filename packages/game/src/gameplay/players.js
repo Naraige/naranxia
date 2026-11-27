@@ -35,7 +35,8 @@ export function setTier(v) {
 }
 /* the local player's index. A guest whose partner left goes on alone as player 2 (MP.side): it used to fall back to 0 and found itself
    running the host's kingdom (resources, buildings, home key) for the rest of the game */
-export const LPL = () => (MP.on ? (MP.host ? 0 : 1) : MP.side | 0),
+/* MP.swap: the host rides the dragon, so the guest holds the castle as player 1 and the host is player 2 */
+export const LPL = () => (MP.on ? (MP.host ? 0 : 1) ^ (MP.swap ? 1 : 0) : MP.side | 0),
   setPl = (p) => {
     playersState.CURPL = p;
     sessionState.res = playersState.RESP[p];

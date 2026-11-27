@@ -10,7 +10,7 @@ import { formSlots } from "../gameplay/formations.js";
 import { sel } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
 import { update } from "../gameplay/statistics.js";
-import { kingViewFrame } from "../input/king-view.js";
+import { roleHooks } from "../gameplay/role-hooks.js";
 import { inputState, keys } from "../input/state.js";
 import { mpFrame } from "../multiplayer/lockstep.js";
 import { drawPings, PINGS } from "../multiplayer/pings.js";
@@ -75,7 +75,7 @@ function frame(ts, warm) {
       c = Math.cos(CAM.yaw);
     let fx_ = 0,
       fz = 0;
-    if (kingViewFrame(dt, keys)) {
+    if (roleHooks.frame(dt, keys)) {
       /* the keys walked the King */
     } else if (!sessionState.showMap) {
       if (keys[KB.up] || keys.arrowup) fz -= 1;

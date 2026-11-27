@@ -95,6 +95,14 @@ export const SAVA = {
       sessionState.SITE2 = v;
     },
   ],
+  /* the dragon of the co-op Dragon role (gameplay/dragon.js): where it is and where its breath lands */
+  DRG: [
+    () => sessionState.DRG || null,
+    (v) => {
+      sessionState.DRG = v || null;
+      sessionState.DRGP = v ? 1 : 0;
+    },
+  ],
   /* a guest whose partner left goes on alone as player 2 (MP.side = 1): a save made then must load as player 2, not as the host's kingdom */
   MPSIDE: [
     () => MP.side | 0,

@@ -36,6 +36,8 @@ export async function svApply(txt) {
   terrainState.CY = S.R.CY;
   const D = await svDecode(S);
   sessionState.SITE2 = null;
+  sessionState.DRG = null;
+  sessionState.DRGP = 0;
   for (const s of sessionState.structs || []) rmStruct(s);
   initWorld();
   for (const k in SAVA) if (!(k in D) && !SAVA[k][1]) svAssign(k, undefined);

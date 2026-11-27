@@ -103,6 +103,9 @@ import { convoyPanelState, CVA } from "../ui/convoy-panel.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { inputState, keys } from "../input/state.js";
 import { kingViewState } from "../input/king-view.js";
+import { dragonViewState } from "../rendering/dragon-rider.js";
+import { dragonTick } from "../gameplay/dragon.js";
+import { dragonSend } from "../multiplayer/commands.js";
 import { mmGo } from "../input/desktop.js";
 import { mmLook, mmToWorld, mmView } from "../ui/minimap.js";
 import { drawUI, hudState, mmRect } from "../ui/hud.js";
@@ -241,6 +244,13 @@ export function installBrowserConsole() {
       get: () => terrainState.SEED,
       set: (value) => {
         terrainState.SEED = value;
+      },
+    },
+    DRG: { get: () => sessionState.DRG },
+    DRGDEV: {
+      get: () => sessionState.DRGDEV,
+      set: (value) => {
+        sessionState.DRGDEV = value;
       },
     },
     SITE2: {
@@ -396,6 +406,9 @@ export function installBrowserConsole() {
     layNote: { get: () => layNote },
     keys: { get: () => keys },
     kingViewState: { get: () => kingViewState },
+    dragonViewState: { get: () => dragonViewState },
+    dragonTick: { get: () => dragonTick },
+    dragonSend: { get: () => dragonSend },
     mmGo: { get: () => mmGo },
     mmRect: { get: () => mmRect },
     mmLook: { get: () => mmLook },

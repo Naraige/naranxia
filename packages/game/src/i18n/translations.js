@@ -849,7 +849,28 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v100 */
+  /* texts added in v101 */
+Object.assign(TRD,{
+"King view: the camera keys walk the King":["Vue du Roi : les touches de caméra font marcher le Roi","Vista del Rey: las teclas de cámara mueven al Rey","Königssicht: Die Kameratasten bewegen den König","Vista del Re: i tasti della telecamera muovono il Re","Vista do Rei: as teclas da câmara movem o Rei"],
+"View from above":["Vue de dessus","Vista desde arriba","Sicht von oben","Vista dall'alto","Vista de cima"],
+"The camera keys walk the King. Open the build menu to see from above":["Les touches de caméra font marcher le Roi. Ouvrez le menu Bâtir pour voir de dessus","Las teclas de cámara mueven al Rey. Abre el menú Construir para ver desde arriba","Die Kameratasten bewegen den König. Öffne das Baumenü für die Sicht von oben","I tasti della telecamera muovono il Re. Apri il menu Costruisci per vedere dall'alto","As teclas da câmara movem o Rei. Abra o menu Construir para ver de cima"],
+"King view / view from above":["Vue du Roi / vue de dessus","Vista del Rey / vista desde arriba","Königssicht / Sicht von oben","Vista del Re / vista dall'alto","Vista do Rei / vista de cima"],
+"DRAGON RIDER":["CHEVAUCHEUR DE DRAGON","JINETE DE DRAGÓN","DRACHENREITER","CAVALIERE DEL DRAGO","CAVALEIRO DO DRAGÃO"],
+"Space takes off, the mouse steers, hold the left button to breathe fire":["Espace décolle, la souris dirige, maintenez le bouton gauche pour cracher le feu","Espacio despega, el ratón dirige, mantén el botón izquierdo para escupir fuego","Leertaste hebt ab, die Maus lenkt, halte die linke Taste für den Feueratem","Spazio decolla, il mouse guida, tieni premuto il tasto sinistro per sputare fuoco","Espaço descola, o rato dirige, mantenha o botão esquerdo para cuspir fogo"],
+"Stamina":["Endurance","Resistencia","Ausdauer","Resistenza","Resistência"],
+"Breath heat":["Chaleur du souffle","Calor del aliento","Atemhitze","Calore del soffio","Calor do sopro"],
+"Overheated":["Surchauffe","Sobrecalentado","Überhitzt","Surriscaldato","Sobreaquecido"],
+"Role: Castle (change)":["Rôle : Château (changer)","Rol: Castillo (cambiar)","Rolle: Burg (ändern)","Ruolo: Castello (cambia)","Papel: Castelo (mudar)"],
+"Role: Dragon rider (change)":["Rôle : Chevaucheur de dragon (changer)","Rol: Jinete de dragón (cambiar)","Rolle: Drachenreiter (ändern)","Ruolo: Cavaliere del drago (cambia)","Papel: Cavaleiro do dragão (mudar)"],
+"Role: Castle":["Rôle : Château","Rol: Castillo","Rolle: Burg","Ruolo: Castello","Papel: Castelo"],
+"Dragon rider - ready":["Chevaucheur de dragon - prêt","Jinete de dragón - listo","Drachenreiter - bereit","Cavaliere del drago - pronto","Cavaleiro do dragão - pronto"],
+"Play (one of you must hold a castle)":["Jouer (l'un de vous doit tenir un château)","Jugar (uno de vosotros debe tener un castillo)","Spielen (einer von euch muss eine Burg halten)","Gioca (uno di voi deve tenere un castello)","Jogar (um de vocês tem de ter um castelo)"],
+" will ride the dragon":[" chevauchera le dragon"," montará el dragón"," reitet den Drachen"," cavalcherà il drago"," montará o dragão"],
+" will hold a castle":[" tiendra un château"," tendrá un castillo"," hält eine Burg"," terrà un castello"," terá um castelo"],
+"{0} will ride the dragon":["{0} chevauchera le dragon","{0} montará el dragón","{0} reitet den Drachen","{0} cavalcherà il drago","{0} montará o dragão"],
+"{0} will hold a castle":["{0} tiendra un château","{0} tendrá un castillo","{0} hält eine Burg","{0} terrà un castello","{0} terá um castelo"]
+});
+/* texts added in v100 */
 Object.assign(TRD,{
 "Dark veil, Knight of Darkness, Winter Feast: a night and a winter to survive.":["Voile ténébreux, Chevalier des Ténèbres, Festin d'hiver : une nuit et un hiver à survivre.","Velo oscuro, Caballero de la Oscuridad, Festín de invierno: una noche y un invierno que sobrevivir.","Dunkler Schleier, Ritter der Finsternis, Winterfest: eine Nacht und ein Winter zum Überleben.","Velo oscuro, Cavaliere delle Tenebre, Festa d'inverno: una notte e un inverno da sopravvivere.","Véu sombrio, Cavaleiro das Trevas, Festim de inverno: uma noite e um inverno para sobreviver."],
 "Towers, walls and gates reach farther, and the ranking lists every player in co-op.":["Les tours, murs et portes portent plus loin, et le classement liste tous les joueurs en coop.","Torres, muros y puertas alcanzan más lejos, y la clasificación incluye a todos los jugadores en cooperativo.","Türme, Mauern und Tore reichen weiter, und die Rangliste führt im Koop alle Spieler auf.","Torri, mura e porte arrivano più lontano, e la classifica elenca tutti i giocatori in co-op.","Torres, muralhas e portas alcançam mais longe, e a classificação lista todos os jogadores no cooperativo."],

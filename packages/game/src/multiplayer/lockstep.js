@@ -251,7 +251,10 @@ export function mpBegin(st) {
   sessionState.diffI = 0;
   sessionState.mapSize = st.ms === 1 || st.ms === 2 ? st.ms : 0;
   swarmState.SWF = 100;
-  sessionState.SITE2 = { tx: st.cx2, ty: st.cy2, rot: st.cr2 & 3 };
+  /* dr: 0 two castles, 1 the guest rides the dragon, 2 the host does (the castle is then the guest's, as player 1) */
+  sessionState.DRGP = st.dr ? 1 : 0;
+  MP.swap = st.dr === 2;
+  sessionState.SITE2 = st.dr ? null : { tx: st.cx2, ty: st.cy2, rot: st.cr2 & 3 };
   sitePickerState.picking = false;
   settingsState.setupOpen = false;
   settingsState.settingsOpen = false;
@@ -348,6 +351,8 @@ export let mpMsg = function mpMsg(m) {
             (m.v || "an older version") +
             ". Use the same version or the game will desync.",
     );
+    MP.prole = 0;
+    if (MP.role) mpSend({ k: "role", r: 1 });
     if (MP.host) mpWorldSync();
     if (!sitePickerState.picking && !MP.on) lobbyShow();
     else lobbyRender();
@@ -364,6 +369,11 @@ export let mpMsg = function mpMsg(m) {
     }
     lobbyNote("The host chose a map");
     lobbyRender();
+  } else if (m.k === "role") {
+    MP.prole = m.r ? 1 : 0;
+    snd("click");
+    lobbyNote(MP.pname + (m.r ? " will ride the dragon" : " will hold a castle"));
+    lobbyRender();
   } else if (m.k === "ready") {
     const again = !!MP.theirs;
     MP.theirs = { tx: m.cx, ty: m.cy, rot: m.r & 3 };
@@ -376,7 +386,7 @@ export let mpMsg = function mpMsg(m) {
 export function mpLost() {
   if (!MP.conn && !MP.on) return;
   const was = MP.on;
-  if (was && !MP.host && sessionState.CS2) MP.side = 1;
+  if (was && (sessionState.CS2 || sessionState.DRG)) MP.side = LPL();
   MP.conn = false;
   MP.on = false;
   MP.rsy = null;

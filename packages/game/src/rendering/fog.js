@@ -160,6 +160,7 @@ export function fowUpdate(dt) {
   fogState.fowTm = 0.2;
   for (const u of sessionState.units) if (u.t === 0 && u.hp > 0) fowStamp(u.x, u.y, VRN[u.type] || 10);
   for (const s of sessionState.structs) if (s.t === 0) fowStamp(s.x, s.y, s.prog >= 1 ? vsnOf(s) : 4);
+  if (sessionState.DRG) fowStamp(sessionState.DRG.x, sessionState.DRG.y, 30);
   if (SW.n) {
     const st = Math.max(1, Math.ceil(SW.n / 450));
     for (let i = 0; i < SW.n; i += st) if (SW.hp[i] > 0) fowStamp(SW.x[i], SW.y[i], 5);

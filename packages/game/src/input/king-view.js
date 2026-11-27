@@ -1,3 +1,4 @@
+import { dragonMine } from "../gameplay/dragon.js";
 import { kingOf } from "../gameplay/king-skills.js";
 import { LPL } from "../gameplay/players.js";
 import { TS } from "../gameplay/rules.js";
@@ -33,7 +34,7 @@ const allowed = () =>
   sessionState.started &&
   !sessionState.over &&
   !sessionState.showMap &&
-  !sessionState.DRG_ME &&
+  !dragonMine() &&
   !sessionState.mode &&
   !buildMenuState.BCAT;
 

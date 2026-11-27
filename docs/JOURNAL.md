@@ -4,6 +4,17 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · rôles Château / Dragon et vue du Roi (#63, #64), branche `claude/castle-dragon-roles`, pas de version
+
+- Demande du Roi: porter le gameplay du prototype Dragon Rider dans le jeu, en coop choisir Château ou Dragon avant de lancer; côté château, commencer en contrôlant le Roi, la vue de dessus pour bâtir.
+- Vue du Roi (#64): chaque royaume commence avec son Roi et ses deux gardes (`roleHooks.startKing` dans `reset()`). `input/king-view.js`: caméra proche qui suit le Roi, les touches de caméra le font marcher (commande `kd`, un ordre de marche pour lui seul, sans son), `*` bascule (action `view`), une catégorie du menu Bâtir ou un outil de pose remet la vue de dessus. Cône de transparence `CUTU` dans le shader des blocs (`materials.js`): ce qui dépasse entre la caméra et le Roi n'est pas dessiné (les arbres font 6 à 8 cases, sans cela il est caché).
+- Rôle Dragon (#63): bouton de rôle dans la fenêtre coop (`mpRole`, message `role`), au moins un château. Le chevaucheur est toujours le joueur 2 sans château (`st.dr`, `MP.swap` quand c'est l'hôte: `LPL()`), `sessionState.DRG` (sauvé, `SAVA.DRG`). Sa machine vole le dragon (`rendering/dragon-rider.js`: souris, Espace, clic gauche, jauges) et envoie sa place 10 fois par seconde (commande `dg`, nombres entiers); la simulation ne fait que brûler ce qui est sous le souffle (`gameplay/dragon.js`, `dragonTick`). Modèle du prototype porté tel quel (`rendering/models/dragon.js`), cavalier = le Capitaine du jeu.
+- Nouveaux modules branchés par `gameplay/role-hooks.js` + `core/roles.js` (aucun nouvel arc de cycle).
+- Tests: nouveaux `dragon` (souffle, portée, sauvegarde) et `mp_dragon` (les deux sens: invité puis hôte chevaucheur; 38 assertions). `det` re-fixé (Roi au départ), `features` graine 29, `mp_build` adapté (vue de dessus, un clic déplacé sous les barres du Roi). PASS en local: quality, det, features, ui, save, quests, kingxp, spearman, waves, tools, market, smoke, dragon, mp_dragon, mp8, mpk, mp_kxp, mp_resync, mp_build, mp_quests, mp_convoy, mp_events.
+- Déjà en échec sur main avant ce lot (vérifié sur b9b2ffb, non corrigés ici): `stance`, `research`, `mp_side`, `mp_rematch`.
+- Pas porté du prototype: niveaux et arbre de talents du dragon, apparence personnalisable, sons du dragon, boule de feu et rugissement. Non vérifié: vol à la souris sur une vraie machine, fenêtre coop à l'écran (bouton de rôle), nuit et brouillard sur le dragon, `mp_soak` et `--full`. Le dragon ne peut pas être blessé.
+- Décisions prises sans demander: le Roi et ses gardes sont gratuits au départ (la quête « Roi » est donc remplie d'office); un seul château quand un joueur chevauche; `game/` et la version ne bougent pas.
+
 ## 2026-11-23 · lot carte ronde, sans IA, chemins auto (#50 à #62), pas de version
 - Rééchelonnage (#159, #160): rayons de corps ×1.6, densité de l'essaim (SWSD 5), or plus proche du château, bouton d'émissaire caché sans camp (`AIK_N` dans rules.js, pas de cycle). Tests: det (re-pinned), ui, save, waves, spearman, mp8, mpk, mp_build, quality verts. Non lancé: mp_soak, --full.
 

@@ -84,8 +84,16 @@ export function mpWorldSync() {
 
 let _rw;
 
+/* roles (v101): 0 holds a castle, 1 rides the dragon (no castle to place). At least one castle. */
+const rdyMe = () => MP.role === 1 || !!MP.mine,
+  rdyThem = () => MP.prole === 1 || !!MP.theirs,
+  twoDragons = () => MP.role === 1 && MP.prole === 1;
+
 export function mpStart() {
-  if (!MP.host || !MP.mine || !MP.theirs) return;
+  if (!MP.host || !rdyMe() || !rdyThem() || twoDragons()) return;
+  const dr = MP.prole === 1 ? 1 : MP.role === 1 ? 2 : 0,
+    site = dr === 2 ? MP.theirs : MP.mine,
+    site2 = dr ? site : MP.theirs;
   if (MP.pver && MP.pver !== GVER) {
     lobbyNote(
       "Different versions (" +
@@ -96,7 +104,7 @@ export function mpStart() {
     );
     return;
   }
-  if (!sitesFar(MP.mine, MP.theirs)) {
+  if (!dr && !sitesFar(MP.mine, MP.theirs)) {
     lobbyNote("The two castles are too close: one of you must move.");
     return;
   }
@@ -111,12 +119,13 @@ export function mpStart() {
     k: "s",
     seed: terrainState.SEED,
     gpr: terrainState.GPR,
-    cx: MP.mine.tx,
-    cy: MP.mine.ty,
-    cr: MP.mine.rot | 0,
-    cx2: MP.theirs.tx,
-    cy2: MP.theirs.ty,
-    cr2: MP.theirs.rot | 0,
+    cx: site.tx,
+    cy: site.ty,
+    cr: site.rot | 0,
+    cx2: site2.tx,
+    cy2: site2.ty,
+    cr2: site2.rot | 0,
+    dr,
     d: sessionState.diffI,
     ms: worldSizePref(),
     sw: swarmState.SWF,
@@ -227,34 +236,38 @@ export function lobbyRender() {
     },
     mineC = PAL[THEME.c][1],
     theirC = MP.conn ? PAL[partnerTheme().c][1] : "";
+  /* what a row says: mine = the row of the local player */
+  const rowText = (mine) =>
+    (mine ? MP.role : MP.prole) === 1
+      ? "Dragon rider - ready"
+      : (mine ? MP.mine : MP.theirs)
+        ? "Castle placed - ready"
+        : "Choosing a castle site...";
   const hostN = MP.host ? me : MP.pname || "Host",
     guestN = MP.host ? MP.pname || "" : me;
-  row(
-    "mpP1",
-    hostN + " (host)",
-    MP.host || MP.conn,
-    MP.host ? !!MP.mine : !!MP.theirs,
-    (MP.host ? MP.mine : MP.theirs) ? "Castle placed - ready" : "Choosing a castle site...",
-  );
+  row("mpP1", hostN + " (host)", MP.host || MP.conn, MP.host ? rdyMe() : rdyThem(), rowText(MP.host));
   const g = MP.host ? MP.conn : true;
-  row(
-    "mpP2",
-    g ? guestN : "Waiting for player 2...",
-    g,
-    MP.host ? !!MP.theirs : !!MP.mine,
-    g ? ((MP.host ? MP.theirs : MP.mine) ? "Castle placed - ready" : "Choosing a castle site...") : "",
-  );
+  row("mpP2", g ? guestN : "Waiting for player 2...", g, MP.host ? rdyThem() : rdyMe(), g ? rowText(!MP.host) : "");
   tint("mpP1", MP.host ? mineC : theirC);
   tint("mpP2", MP.host ? theirC : mineC);
   $m("mpSite").textContent = MP.mine ? "Change my castle site" : "Choose my castle site";
   $m("mpSite").disabled = !MP.conn;
+  $m("mpSite").style.display = MP.role === 1 ? "none" : "inline-block";
+  $m("mpRole").textContent = MP.role === 1 ? "Role: Dragon rider (change)" : "Role: Castle (change)";
+  $m("mpRole").disabled = !MP.conn;
   const pb = $m("mpPlay");
   pb.style.display = MP.host ? "inline-block" : "none";
-  const rd = MP.conn && MP.mine && MP.theirs;
+  const rd = MP.conn && rdyMe() && rdyThem() && !twoDragons();
   pb.disabled = !rd;
   if (!rd) _runOk = false;
-  pb.textContent = rd ? (_runOk ? "Play again to confirm" : "Play") : "Play (both players must place a castle)";
-  if (!MP.host && MP.conn && MP.mine && MP.theirs) mpStatus("Waiting for the host to press Play...");
+  pb.textContent = rd
+    ? _runOk
+      ? "Play again to confirm"
+      : "Play"
+    : twoDragons()
+      ? "Play (one of you must hold a castle)"
+      : "Play (both players must place a castle)";
+  if (!MP.host && rd) mpStatus("Waiting for the host to press Play...");
   if (MP.conn && runningGame() && !_runOk)
     mpStatus(
       MP.host
@@ -273,6 +286,7 @@ export function initializeLobbyState() {
   setConfirmPickHandler(function () {
     if (!MP.conn) {
       sessionState.SITE2 = null;
+      sessionState.DRGP = sessionState.DRGDEV ? 1 : 0;
       return _N.confirmPick();
     }
     if (!sitePickerState.pickPos || !sitePickerState.pickPos.ok) return;
@@ -463,6 +477,12 @@ export function initializeLobby() {
   };
 
   $m("mpPlay").onclick = mpStart;
+  $m("mpRole").onclick = () => {
+    if (!MP.conn) return;
+    MP.role = MP.role === 1 ? 0 : 1;
+    mpSend({ k: "role", r: MP.role });
+    lobbyRender();
+  };
 
   setInterval(() => {
     if (MP.on) mpSend({ k: "pg", t: performance.now() });

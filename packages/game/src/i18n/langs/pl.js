@@ -1795,4 +1795,24 @@ export const PL = {
     "Jednostki są rysowane w pełnym rozmiarze, a budynki znoszą bardziej nierówny teren.",
   "The co-op window wears the menu buttons and has Copy and Paste for the room code.":
     "Okno koopa nosi przyciski menu i ma Kopiuj i Wklej dla kodu pokoju.",
+  "King view: the camera keys walk the King": "Widok Króla: klawisze kamery prowadzą Króla",
+  "View from above": "Widok z góry",
+  "The camera keys walk the King. Open the build menu to see from above":
+    "Klawisze kamery prowadzą Króla. Otwórz menu budowy, aby patrzeć z góry",
+  "King view / view from above": "Widok Króla / widok z góry",
+  "DRAGON RIDER": "JEŹDZIEC SMOKA",
+  "Space takes off, the mouse steers, hold the left button to breathe fire":
+    "Spacja startuje, mysz steruje, przytrzymaj lewy przycisk, aby zionąć ogniem",
+  "Stamina": "Wytrzymałość",
+  "Breath heat": "Żar oddechu",
+  "Overheated": "Przegrzanie",
+  "Role: Castle (change)": "Rola: Zamek (zmień)",
+  "Role: Dragon rider (change)": "Rola: Jeździec smoka (zmień)",
+  "Role: Castle": "Rola: Zamek",
+  "Dragon rider - ready": "Jeździec smoka - gotowy",
+  "Play (one of you must hold a castle)": "Graj (jedno z was musi trzymać zamek)",
+  " will ride the dragon": " dosiądzie smoka",
+  " will hold a castle": " będzie trzymać zamek",
+  "{0} will ride the dragon": "{0} dosiądzie smoka",
+  "{0} will hold a castle": "{0} będzie trzymać zamek",
 };

@@ -14,6 +14,8 @@ import mp_harness as harness
 html=sys.argv[1] if len(sys.argv)>1 else 'naranxia_readable.html'
 INIT="""()=>{'use strict';window.__out=[];MP.dc={readyState:'open',send:s=>window.__out.push(s)};
  renderer.render=function(){};
+ /* v101: the game opens on the King view; this scenario is about placing from above, so the player has pressed the view key */
+ kingViewState.want=false;
  const _sg=startGame;startGame=function(){_sg();for(const R of RESP){R.g=90000;R.w=90000;R.s=90000;R.f=90000}waveT=1e9};
  return 'ok'}"""
 def P(*a):print(*a,flush=True)
@@ -138,7 +140,7 @@ with sync_playwright() as p:
         for _ in range(60):
             if 'king' in A.evaluate("()=>units.map(u=>u.type).join()"):break
             waitT(1)
-        K="()=>JSON.stringify(units.filter(u=>u.type==='king').map(u=>[u.pl|0,Math.round(u.x/TS),Math.round(u.y/TS),Math.round(Math.hypot(u.x-CS2.x,u.y-CS2.y)/TS),Math.round(Math.hypot(u.x-CS.x,u.y-CS.y)/TS)]))"
+        K="()=>JSON.stringify(units.filter(u=>u.type==='king'&&(u.pl|0)===1).map(u=>[u.pl|0,Math.round(u.x/TS),Math.round(u.y/TS),Math.round(Math.hypot(u.x-CS2.x,u.y-CS2.y)/TS),Math.round(Math.hypot(u.x-CS.x,u.y-CS.y)/TS)]))"
         ka=json.loads(A.evaluate(K));kb=json.loads(B.evaluate(K));P('king',ka,kb)
         need(len(ka)==1 and len(kb)==1 and ka[0][0]==1 and kb[0][0]==1 and ka[0][3]<ka[0][4] and kb[0][3]<kb[0][4] and abs(ka[0][1]-kb[0][1])<=2 and abs(ka[0][2]-kb[0][2])<=2,'the guest King is not at the guest castle: %s %s'%(ka,kb))
         sa=json.loads(A.evaluate(ST));sb=json.loads(B.evaluate(ST));P('before resync A',sa);P('before resync B',sb)
@@ -220,7 +222,8 @@ with sync_playwright() as p:
         pg.mouse.wheel(0,-250);waitT(.3);P(who,'camera',pg.evaluate("()=>JSON.stringify([CAM.yaw.toFixed(2),CAM.pitch.toFixed(2),CAM.dist.toFixed(1)])"))
         sp=json.loads(pg.evaluate(SPOTSAT,[pl,6,5,['house','farm','storage','barracks','tower']]))
         need(len(sp)>=5,who+': no free spots for the wide test')
-        for (kind,fx,fy),spot in zip((('house',.55,.3),('farm',.7,.35),('storage',.5,.5),('barracks',.45,.58),('tower',.72,.55)),sp):
+        # v101: the King's bars stand under the top bar from the start, the first click moved down from .3 of the window
+        for (kind,fx,fy),spot in zip((('house',.6,.44),('farm',.7,.35),('storage',.5,.5),('barracks',.45,.58),('tower',.72,.55)),sp):
             click_build(pg,who+' (turned camera)',kind,spot,fx,fy,pl)
     # W2: the guest scrolls to the host's castle and builds beside it: it is built there, as the guest's (nothing in the rules forbids it); and the host beside the guest's castle
     spo=json.loads(B.evaluate(SPOTSAT,[0,4,3,['house','farm','barracks']]));P('guest next to the host castle',spo)

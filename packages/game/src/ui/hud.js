@@ -45,6 +45,7 @@ import {
   uiBtn,
 } from "./build-menu.js";
 import { NAMES } from "./build-catalog.js";
+import { roleHooks } from "../gameplay/role-hooks.js";
 import { canvasesState, cv } from "./canvases.js";
 import { convoyPanelState, drawConvoy } from "./convoy-panel.js";
 import {
@@ -617,8 +618,10 @@ function drawUIBody() {
   item(IC.skull, sessionState.units.filter((u) => u.t === 1).length + SW.n, "#c4ee98", ["Zombies alive"]);
   item(IC.sword, sessionState.kills, "#fbf0dc", ["Zombies slain"]);
   /* build menu */
-  const ML = menuItems(),
-    tbo = tabState.on,
+  /* the dragon rider builds nothing: no menu */
+  const rider = roleHooks.rider(),
+    ML = rider ? [] : menuItems(),
+    tbo = tabState.on && !rider,
     narrow = UW < 340,
     mw = narrow ? 100 : 150,
     mh = Math.round((mw * TH) / TW),
@@ -629,8 +632,10 @@ function drawUIBody() {
     pw = Math.max(f0.w + 10, tbo ? tabsWidth() + 10 : 0),
     px = narrow ? 4 : Math.max(4, (UW - mw - 18 - pw) >> 1);
   flow(ML, px + 5, py + 5, availW - 8, tbo);
-  frame(px, py, pw, ph, INV, 6);
-  hudState.uiRects.push(U(px, py, pw, ph));
+  if (!rider) {
+    frame(px, py, pw, ph, INV, 6);
+    hudState.uiRects.push(U(px, py, pw, ph));
+  }
   if (tbo) drawTabs(px, py, pw);
   for (const it of ML) if (it.gap === undefined) drawItem(it);
   const S2 = sel(),
@@ -813,6 +818,7 @@ function drawUIBody() {
   if (!sessionState.over) bossY += bossBar(UW, settingsState.TOPH + bossY);
   bossY += objBar(UW, settingsState.TOPH + bossY);
   bossY += kingBar(UW, settingsState.TOPH + bossY);
+  bossY += roleHooks.bar(UW, settingsState.TOPH + bossY);
   bossY += hintBar(UW, settingsState.TOPH + bossY);
   if (!sessionState.over) bossY += eventBar(UW, settingsState.TOPH + bossY);
   /* where the quest panel (left, 184 wide) reaches the centre bars, it sits under them next frame, one message line lower */
