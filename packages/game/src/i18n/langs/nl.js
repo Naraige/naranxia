@@ -1828,170 +1828,87 @@ export const NL = {
   " will hold a castle": " houdt een kasteel",
   "{0} will ride the dragon": "{0} berijdt de draak",
   "{0} will hold a castle": "{0} houdt een kasteel",
-  "Searing Breath":
-    "Brandende adem",
-  "+30% breath damage":
-    "+30% adem-schade",
-  "Fireball":
-    "Vuurbal",
-  "Key E: an explosive shot":
-    "Toets E: een explosief schot",
-  "Meteor":
-    "Meteoor",
-  "Fireball: wider blast, +35% damage":
-    "Vuurbal: bredere explosie, +35% schade",
-  "Inferno":
-    "Inferno",
-  "Forge Lungs":
-    "Smeedlongen",
-  "Heat builds slower and cools faster":
-    "Hitte loopt langzamer op en koelt sneller af",
-  "Cataclysm":
-    "Kataklysme",
-  "Mighty Wings":
-    "Machtige vleugels",
-  "+8% speed, turning and stamina":
-    "+8% snelheid, wendbaarheid en uithouding",
-  "Growth":
-    "Groei",
-  "The dragon grows 6% larger":
-    "De draak wordt 6% groter",
-  "Titan":
-    "Titaan",
-  "Roar":
-    "Gebrul",
-  "Key R: slows the horde around the dragon":
-    "Toets R: vertraagt de horde rond de draak",
-  "Thunder Roar":
-    "Donderend gebrul",
-  "The roar slows the horde 1 s longer":
-    "Het gebrul vertraagt de horde 1 s langer",
-  "Dread Roar":
-    "Schrikgebrul",
-  "Wide Flame":
-    "Brede vlam",
-  "+10% breath radius":
-    "+10% adem-straal",
-  "Tribute":
-    "Schatting",
-  "+15% gold earned":
-    "+15% verdiend goud",
-  "Rider Bond":
-    "Ruiterband",
-  "+10% dragon XP":
-    "+10% draak-XP",
-  "Royal Tribute":
-    "Koninklijke schatting",
-  "Old Bond":
-    "Oude band",
-  "Wyrmling":
-    "Drakenjong",
-  "Drake":
-    "Draak",
-  "Wyvern":
-    "Wyvern",
-  "Elder Wyvern":
-    "Oude wyvern",
-  "Ancient":
-    "Oeroud",
-  "Legend":
-    "Legende",
-  "Recruit":
-    "Rekruut",
-  "Sentinel":
-    "Schildwacht",
-  "Sky Scout":
-    "Hemelverkenner",
-  "Wing Knight":
-    "Vleugelridder",
-  "Warden of the Gate":
-    "Poortwachter",
-  "Dragon Knight":
-    "Drakenridder",
-  "Dragonlord":
-    "Drakenheer",
-  "Shield of Naranxia":
-    "Schild van Naranxia",
-  "King's Wing":
-    "Vleugel van de Koning",
-  "Ash":
-    "As",
-  "Frost":
-    "Vorst",
-  "Jade":
-    "Jade",
-  "Flame":
-    "Vlam",
-  "Bastion":
-    "Bastion",
-  "Level":
-    "Niveau",
-  "Rank":
-    "Rang",
-  "max":
-    "max",
-  "ready":
-    "klaar",
-  "locked":
-    "vergrendeld",
-  "Buy":
-    "Kopen",
-  "Owned":
-    "Gekocht",
-  "Needs":
-    "Vereist",
-  "Needs dragon level":
-    "Vereist drakenniveau",
-  "Not enough gold":
-    "Niet genoeg goud",
-  "Ready to buy":
-    "Klaar om te kopen",
-  "Stage":
-    "Stadium",
-  "renown":
-    "roem",
-  "evolves at level":
-    "evolueert op niveau",
-  "Dragon":
-    "Draak",
-  "Skills":
-    "Vaardigheden",
-  "Skill tree":
-    "Vaardighedenboom",
-  "Look":
-    "Uiterlijk",
-  "The dragon grows and changes shape as it levels up.":
-    "De draak groeit en verandert van vorm met elk niveau.",
-  "PROMOTED":
-    "BEVORDERD",
-  "EVOLVED":
-    "EVOLUTIE",
-  "LEVEL UP":
-    "NIVEAU OMHOOG",
-  "New skills may be open: press U":
-    "Nieuwe vaardigheden zijn misschien open: toets U",
-  "auto":
-    "auto",
-  "Searing Breath II":
-    "Brandende adem II",
-  "Searing Breath III":
-    "Brandende adem III",
-  "Forge Lungs II":
-    "Smeedlongen II",
-  "Forge Lungs III":
-    "Smeedlongen III",
-  "Mighty Wings II":
-    "Machtige vleugels II",
-  "Mighty Wings III":
-    "Machtige vleugels III",
-  "Growth II":
-    "Groei II",
-  "Wide Flame II":
-    "Brede vlam II",
-  "Wide Flame III":
-    "Brede vlam III",
-  "Wide Flame IV":
-    "Brede vlam IV",
-  "Wide Flame V":
-    "Brede vlam V",
+  "Searing Breath": "Brandende adem",
+  "+30% breath damage": "+30% adem-schade",
+  "Fireball": "Vuurbal",
+  "Key E: an explosive shot": "Toets E: een explosief schot",
+  "Meteor": "Meteoor",
+  "Fireball: wider blast, +35% damage": "Vuurbal: bredere explosie, +35% schade",
+  "Inferno": "Inferno",
+  "Forge Lungs": "Smeedlongen",
+  "Heat builds slower and cools faster": "Hitte loopt langzamer op en koelt sneller af",
+  "Cataclysm": "Kataklysme",
+  "Mighty Wings": "Machtige vleugels",
+  "+8% speed, turning and stamina": "+8% snelheid, wendbaarheid en uithouding",
+  "Growth": "Groei",
+  "The dragon grows 6% larger": "De draak wordt 6% groter",
+  "Titan": "Titaan",
+  "Roar": "Gebrul",
+  "Key R: slows the horde around the dragon": "Toets R: vertraagt de horde rond de draak",
+  "Thunder Roar": "Donderend gebrul",
+  "The roar slows the horde 1 s longer": "Het gebrul vertraagt de horde 1 s langer",
+  "Dread Roar": "Schrikgebrul",
+  "Wide Flame": "Brede vlam",
+  "+10% breath radius": "+10% adem-straal",
+  "Tribute": "Schatting",
+  "+15% gold earned": "+15% verdiend goud",
+  "Rider Bond": "Ruiterband",
+  "+10% dragon XP": "+10% draak-XP",
+  "Royal Tribute": "Koninklijke schatting",
+  "Old Bond": "Oude band",
+  "Wyrmling": "Drakenjong",
+  "Drake": "Draak",
+  "Wyvern": "Wyvern",
+  "Elder Wyvern": "Oude wyvern",
+  "Ancient": "Oeroud",
+  "Legend": "Legende",
+  "Recruit": "Rekruut",
+  "Sentinel": "Schildwacht",
+  "Sky Scout": "Hemelverkenner",
+  "Wing Knight": "Vleugelridder",
+  "Warden of the Gate": "Poortwachter",
+  "Dragon Knight": "Drakenridder",
+  "Dragonlord": "Drakenheer",
+  "Shield of Naranxia": "Schild van Naranxia",
+  "King's Wing": "Vleugel van de Koning",
+  "Ash": "As",
+  "Frost": "Vorst",
+  "Jade": "Jade",
+  "Flame": "Vlam",
+  "Bastion": "Bastion",
+  "Level": "Niveau",
+  "Rank": "Rang",
+  "max": "max",
+  "ready": "klaar",
+  "locked": "vergrendeld",
+  "Buy": "Kopen",
+  "Owned": "Gekocht",
+  "Needs": "Vereist",
+  "Needs dragon level": "Vereist drakenniveau",
+  "Not enough gold": "Niet genoeg goud",
+  "Ready to buy": "Klaar om te kopen",
+  "Stage": "Stadium",
+  "renown": "roem",
+  "evolves at level": "evolueert op niveau",
+  "Dragon": "Draak",
+  "Skills": "Vaardigheden",
+  "Skill tree": "Vaardighedenboom",
+  "Look": "Uiterlijk",
+  "The dragon grows and changes shape as it levels up.": "De draak groeit en verandert van vorm met elk niveau.",
+  "PROMOTED": "BEVORDERD",
+  "EVOLVED": "EVOLUTIE",
+  "LEVEL UP": "NIVEAU OMHOOG",
+  "New skills may be open: press U": "Nieuwe vaardigheden zijn misschien open: toets U",
+  "auto": "auto",
+  "Searing Breath II": "Brandende adem II",
+  "Searing Breath III": "Brandende adem III",
+  "Forge Lungs II": "Smeedlongen II",
+  "Forge Lungs III": "Smeedlongen III",
+  "Mighty Wings II": "Machtige vleugels II",
+  "Mighty Wings III": "Machtige vleugels III",
+  "Growth II": "Groei II",
+  "Wide Flame II": "Brede vlam II",
+  "Wide Flame III": "Brede vlam III",
+  "Wide Flame IV": "Brede vlam IV",
+  "Wide Flame V": "Brede vlam V",
 };

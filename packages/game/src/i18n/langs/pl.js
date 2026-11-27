@@ -1815,170 +1815,87 @@ export const PL = {
   " will hold a castle": " będzie trzymać zamek",
   "{0} will ride the dragon": "{0} dosiądzie smoka",
   "{0} will hold a castle": "{0} będzie trzymać zamek",
-  "Searing Breath":
-    "Palący oddech",
-  "+30% breath damage":
-    "+30% obrażeń oddechu",
-  "Fireball":
-    "Kula ognia",
-  "Key E: an explosive shot":
-    "Klawisz E: wybuchowy strzał",
-  "Meteor":
-    "Meteoryt",
-  "Fireball: wider blast, +35% damage":
-    "Kula ognia: większy wybuch, +35% obrażeń",
-  "Inferno":
-    "Piekło",
-  "Forge Lungs":
-    "Płuca kuźni",
-  "Heat builds slower and cools faster":
-    "Ciepło rośnie wolniej i opada szybciej",
-  "Cataclysm":
-    "Kataklizm",
-  "Mighty Wings":
-    "Potężne skrzydła",
-  "+8% speed, turning and stamina":
-    "+8% prędkości, zwrotności i wytrzymałości",
-  "Growth":
-    "Wzrost",
-  "The dragon grows 6% larger":
-    "Smok rośnie o 6%",
-  "Titan":
-    "Tytan",
-  "Roar":
-    "Ryk",
-  "Key R: slows the horde around the dragon":
-    "Klawisz R: spowalnia hordę wokół smoka",
-  "Thunder Roar":
-    "Grzmiący ryk",
-  "The roar slows the horde 1 s longer":
-    "Ryk spowalnia hordę o 1 s dłużej",
-  "Dread Roar":
-    "Przerażający ryk",
-  "Wide Flame":
-    "Szeroki płomień",
-  "+10% breath radius":
-    "+10% promienia oddechu",
-  "Tribute":
-    "Danina",
-  "+15% gold earned":
-    "+15% zdobytego złota",
-  "Rider Bond":
-    "Więź jeźdźca",
-  "+10% dragon XP":
-    "+10% PD smoka",
-  "Royal Tribute":
-    "Królewska danina",
-  "Old Bond":
-    "Dawna więź",
-  "Wyrmling":
-    "Smoczątko",
-  "Drake":
-    "Młody smok",
-  "Wyvern":
-    "Wiwerna",
-  "Elder Wyvern":
-    "Stara wiwerna",
-  "Ancient":
-    "Prastary",
-  "Legend":
-    "Legenda",
-  "Recruit":
-    "Rekrut",
-  "Sentinel":
-    "Wartownik",
-  "Sky Scout":
-    "Zwiadowca nieba",
-  "Wing Knight":
-    "Rycerz skrzydeł",
-  "Warden of the Gate":
-    "Strażnik bramy",
-  "Dragon Knight":
-    "Smoczy rycerz",
-  "Dragonlord":
-    "Pan smoków",
-  "Shield of Naranxia":
-    "Tarcza Naranxii",
-  "King's Wing":
-    "Skrzydło Króla",
-  "Ash":
-    "Popiół",
-  "Frost":
-    "Szron",
-  "Jade":
-    "Jadeit",
-  "Flame":
-    "Płomień",
-  "Bastion":
-    "Bastion",
-  "Level":
-    "Poziom",
-  "Rank":
-    "Ranga",
-  "max":
-    "maks.",
-  "ready":
-    "gotowe",
-  "locked":
-    "zablokowane",
-  "Buy":
-    "Kup",
-  "Owned":
-    "Posiadane",
-  "Needs":
-    "Wymaga",
-  "Needs dragon level":
-    "Wymaga poziomu smoka",
-  "Not enough gold":
-    "Za mało złota",
-  "Ready to buy":
-    "Gotowe do zakupu",
-  "Stage":
-    "Etap",
-  "renown":
-    "sława",
-  "evolves at level":
-    "ewoluuje na poziomie",
-  "Dragon":
-    "Smok",
-  "Skills":
-    "Umiejętności",
-  "Skill tree":
-    "Drzewko umiejętności",
-  "Look":
-    "Wygląd",
-  "The dragon grows and changes shape as it levels up.":
-    "Smok rośnie i zmienia kształt z każdym poziomem.",
-  "PROMOTED":
-    "AWANS",
-  "EVOLVED":
-    "EWOLUCJA",
-  "LEVEL UP":
-    "NOWY POZIOM",
-  "New skills may be open: press U":
-    "Mogą być nowe umiejętności: klawisz U",
-  "auto":
-    "auto",
-  "Searing Breath II":
-    "Palący oddech II",
-  "Searing Breath III":
-    "Palący oddech III",
-  "Forge Lungs II":
-    "Płuca kuźni II",
-  "Forge Lungs III":
-    "Płuca kuźni III",
-  "Mighty Wings II":
-    "Potężne skrzydła II",
-  "Mighty Wings III":
-    "Potężne skrzydła III",
-  "Growth II":
-    "Wzrost II",
-  "Wide Flame II":
-    "Szeroki płomień II",
-  "Wide Flame III":
-    "Szeroki płomień III",
-  "Wide Flame IV":
-    "Szeroki płomień IV",
-  "Wide Flame V":
-    "Szeroki płomień V",
+  "Searing Breath": "Palący oddech",
+  "+30% breath damage": "+30% obrażeń oddechu",
+  "Fireball": "Kula ognia",
+  "Key E: an explosive shot": "Klawisz E: wybuchowy strzał",
+  "Meteor": "Meteoryt",
+  "Fireball: wider blast, +35% damage": "Kula ognia: większy wybuch, +35% obrażeń",
+  "Inferno": "Piekło",
+  "Forge Lungs": "Płuca kuźni",
+  "Heat builds slower and cools faster": "Ciepło rośnie wolniej i opada szybciej",
+  "Cataclysm": "Kataklizm",
+  "Mighty Wings": "Potężne skrzydła",
+  "+8% speed, turning and stamina": "+8% prędkości, zwrotności i wytrzymałości",
+  "Growth": "Wzrost",
+  "The dragon grows 6% larger": "Smok rośnie o 6%",
+  "Titan": "Tytan",
+  "Roar": "Ryk",
+  "Key R: slows the horde around the dragon": "Klawisz R: spowalnia hordę wokół smoka",
+  "Thunder Roar": "Grzmiący ryk",
+  "The roar slows the horde 1 s longer": "Ryk spowalnia hordę o 1 s dłużej",
+  "Dread Roar": "Przerażający ryk",
+  "Wide Flame": "Szeroki płomień",
+  "+10% breath radius": "+10% promienia oddechu",
+  "Tribute": "Danina",
+  "+15% gold earned": "+15% zdobytego złota",
+  "Rider Bond": "Więź jeźdźca",
+  "+10% dragon XP": "+10% PD smoka",
+  "Royal Tribute": "Królewska danina",
+  "Old Bond": "Dawna więź",
+  "Wyrmling": "Smoczątko",
+  "Drake": "Młody smok",
+  "Wyvern": "Wiwerna",
+  "Elder Wyvern": "Stara wiwerna",
+  "Ancient": "Prastary",
+  "Legend": "Legenda",
+  "Recruit": "Rekrut",
+  "Sentinel": "Wartownik",
+  "Sky Scout": "Zwiadowca nieba",
+  "Wing Knight": "Rycerz skrzydeł",
+  "Warden of the Gate": "Strażnik bramy",
+  "Dragon Knight": "Smoczy rycerz",
+  "Dragonlord": "Pan smoków",
+  "Shield of Naranxia": "Tarcza Naranxii",
+  "King's Wing": "Skrzydło Króla",
+  "Ash": "Popiół",
+  "Frost": "Szron",
+  "Jade": "Jadeit",
+  "Flame": "Płomień",
+  "Bastion": "Bastion",
+  "Level": "Poziom",
+  "Rank": "Ranga",
+  "max": "maks.",
+  "ready": "gotowe",
+  "locked": "zablokowane",
+  "Buy": "Kup",
+  "Owned": "Posiadane",
+  "Needs": "Wymaga",
+  "Needs dragon level": "Wymaga poziomu smoka",
+  "Not enough gold": "Za mało złota",
+  "Ready to buy": "Gotowe do zakupu",
+  "Stage": "Etap",
+  "renown": "sława",
+  "evolves at level": "ewoluuje na poziomie",
+  "Dragon": "Smok",
+  "Skills": "Umiejętności",
+  "Skill tree": "Drzewko umiejętności",
+  "Look": "Wygląd",
+  "The dragon grows and changes shape as it levels up.": "Smok rośnie i zmienia kształt z każdym poziomem.",
+  "PROMOTED": "AWANS",
+  "EVOLVED": "EWOLUCJA",
+  "LEVEL UP": "NOWY POZIOM",
+  "New skills may be open: press U": "Mogą być nowe umiejętności: klawisz U",
+  "auto": "auto",
+  "Searing Breath II": "Palący oddech II",
+  "Searing Breath III": "Palący oddech III",
+  "Forge Lungs II": "Płuca kuźni II",
+  "Forge Lungs III": "Płuca kuźni III",
+  "Mighty Wings II": "Potężne skrzydła II",
+  "Mighty Wings III": "Potężne skrzydła III",
+  "Growth II": "Wzrost II",
+  "Wide Flame II": "Szeroki płomień II",
+  "Wide Flame III": "Szeroki płomień III",
+  "Wide Flame IV": "Szeroki płomień IV",
+  "Wide Flame V": "Szeroki płomień V",
 };
