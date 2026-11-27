@@ -142,7 +142,7 @@ const VSN = {
   granary: 7,
   bell: 7,
   sanctuary: 8,
-  beacon: 20,
+  beacon: 30,
   orchard: 6,
   forge: 8,
   embassy: 8,

@@ -32,7 +32,21 @@ export const DRAGON = {
   calm: 4 /* seconds without a wound before it mends */,
   mend: 5 /* life per second, three times that landed by its castle */,
   down: 20 /* seconds out of the fight when it falls */,
+  roost: 12 /* ... with a sanctuary standing (#79): the dragon's roost, where it also mends as fast as by its castle */,
+  markT: 12 /* seconds the King's mark lasts (#80), its radius, what the fire gains inside it, the wait before the next */,
+  markR: TS * 9,
+  markK: 1.5,
+  markCool: 30,
 };
+/* a finished sanctuary within 25 tiles (or any, with r = 0) */
+function roost(x, y, r) {
+  for (const s of sessionState.structs)
+    if (s.t === 0 && s.type === "sanctuary" && s.hp > 0 && s.prog >= 1) {
+      if (!r) return true;
+      if ((s.x - x) * (s.x - x) + (s.y - y) * (s.y - y) < r * r) return true;
+    }
+  return false;
+}
 export const dragonMaxHp = (d) => Math.round((DRAGON.hp + 25 * ((d.lv || 1) - 1)) * (1 + 0.1 * (d.u ? d.u[5] : 0)));
 const Z9 = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -69,6 +83,9 @@ export function mkDragon(c) {
     hx: Math.round(c.x) /* its castle: where it mends fastest and where it comes back */,
     hy: Math.round(c.y + c.rad + TS * 9),
     falls: 0,
+    mk: null /* the King's mark: [x, y], seconds left, seconds before the next */,
+    mt: 0,
+    mc: 0,
   };
 }
 
@@ -77,6 +94,7 @@ export function dragonSet0(c) {
   if (c.k === "dk") return dragonSkills0(c);
   if (c.k === "db") return dragonBall0(c);
   if (c.k === "dr") return dragonRoar0(c);
+  if (c.k === "km") return kingMark0(c);
   return dragonPos0(c);
 }
 
@@ -104,6 +122,15 @@ function dragonBall0(c) {
     ay = Math.round((ay / l) * DRAGON.reach * 1.6);
   }
   d.bl.push([d.x + ax, d.y + ay, 0, d.x, d.y, d.a]);
+}
+
+/* the King marks the ground where he stands (#80): for a while the dragon's breath and fireballs burn half again as hard there */
+function kingMark0(c) {
+  const d = sessionState.DRG;
+  if (!d || d.mc > 0) return;
+  d.mk = [c.x | 0, c.y | 0];
+  d.mt = DRAGON.markT;
+  d.mc = DRAGON.markCool;
 }
 
 function dragonRoar0() {
@@ -141,6 +168,8 @@ function dragonPos0(c) {
 
 /* everything the burst of a fireball or the breath does to the bodies standing in a disc */
 function burn(x, y, R, dm, cap, d) {
+  if (d.mt > 0 && d.mk && (x - d.mk[0]) * (x - d.mk[0]) + (y - d.mk[1]) * (y - d.mk[1]) < DRAGON.markR * DRAGON.markR)
+    dm *= DRAGON.markK;
   if (SW.n) d.kills += swSplash(x, y, R, dm, cap);
   for (const z of sessionState.units)
     if (z.t === 1 && z.hp > 0) {
@@ -199,7 +228,7 @@ function wounds(d, dt) {
     if (d.hp <= 0) {
       /* it falls: carried back before its castle, out of the fight for a while */
       d.hp = 0;
-      d.dn = DRAGON.down;
+      d.dn = roost(0, 0, 0) ? DRAGON.roost : DRAGON.down;
       d.falls = (d.falls | 0) + 1;
       d.f = d.fl = 0;
       d.x = d.hx;
@@ -211,7 +240,9 @@ function wounds(d, dt) {
   }
   d.ht += dt;
   if (d.ht > DRAGON.calm && d.hp < max) {
-    const home = !d.fl && (d.x - d.hx) * (d.x - d.hx) + (d.y - d.hy) * (d.y - d.hy) < TS * 25 * (TS * 25);
+    const home =
+      !d.fl &&
+      ((d.x - d.hx) * (d.x - d.hx) + (d.y - d.hy) * (d.y - d.hy) < TS * 25 * (TS * 25) || roost(d.x, d.y, TS * 25));
     d.hp = Math.min(max, d.hp + DRAGON.mend * (home ? 3 : 1) * dt);
   }
 }
@@ -221,6 +252,8 @@ export function dragonTick(dt) {
   if (!d) return;
   const u = d.u || Z9,
     lv = d.lv || 1;
+  d.mt = Math.max(0, (d.mt || 0) - dt);
+  d.mc = Math.max(0, (d.mc || 0) - dt);
   d.cb = Math.max(0, (d.cb || 0) - dt);
   d.cr = Math.max(0, (d.cr || 0) - dt);
   /* the roar: the horde in its disc walks slower while it lasts */

@@ -851,6 +851,16 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v101 */
 Object.assign(TRD,{
+"The dragon mends here and returns sooner":["Le dragon s'y soigne et revient plus vite","El dragón se cura aquí y vuelve antes","Der Drache heilt hier und kehrt schneller zurück","Il drago si cura qui e torna prima","O dragão cura-se aqui e regressa mais cedo"],
+"Mark for the dragon":["Marquer pour le dragon","Marcar para el dragón","Für den Drachen markieren","Segna per il drago","Marcar para o dragão"],
+"Mark for the dragon {0}s":["Marquer pour le dragon {0} s","Marcar para el dragón {0} s","Für den Drachen markieren {0} s","Segna per il drago {0} s","Marcar para o dragão {0} s"],
+"The dragon burns harder here":["Le dragon brûle plus fort ici","El dragón quema más fuerte aquí","Der Drache brennt hier stärker","Qui il drago brucia più forte","O dragão queima mais forte aqui"],
+"Copy progress code":["Copier le code de progression","Copiar código de progreso","Fortschrittscode kopieren","Copia codice dei progressi","Copiar código de progresso"],
+"Paste progress code":["Coller un code de progression","Pegar código de progreso","Fortschrittscode einfügen","Incolla codice dei progressi","Colar código de progresso"],
+"Code copied: paste it on the other machine":["Code copié : collez-le sur l'autre machine","Código copiado: pégalo en el otro equipo","Code kopiert: füge ihn auf dem anderen Gerät ein","Codice copiato: incollalo sull'altro computer","Código copiado: cole-o na outra máquina"],
+"Could not reach the clipboard":["Presse-papiers inaccessible","No se pudo acceder al portapapeles","Zwischenablage nicht erreichbar","Impossibile accedere agli appunti","Não foi possível aceder à área de transferência"],
+"Progress loaded":["Progression chargée","Progreso cargado","Fortschritt geladen","Progressi caricati","Progresso carregado"],
+"No dragon code in the clipboard":["Pas de code de dragon dans le presse-papiers","No hay código de dragón en el portapapeles","Kein Drachencode in der Zwischenablage","Nessun codice del drago negli appunti","Sem código de dragão na área de transferência"],
 "Peaceful: no waves (next solo game)":["Paisible : aucune vague (prochaine partie solo)","Pacífico: sin oleadas (próxima partida en solitario)","Friedlich: keine Wellen (nächstes Solospiel)","Pacifico: nessuna ondata (prossima partita in solitaria)","Pacífico: sem ondas (próximo jogo a solo)"],
 "Peaceful":["Paisible","Pacífico","Friedlich","Pacifico","Pacífico"],
 "Call the wave: +{0} gold":["Appeler la vague : +{0} or","Llamar la oleada: +{0} oro","Welle rufen: +{0} Gold","Chiama l'ondata: +{0} oro","Chamar a onda: +{0} ouro"],

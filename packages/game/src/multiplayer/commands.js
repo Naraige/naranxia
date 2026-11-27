@@ -257,6 +257,7 @@ export let mpExec = function mpExec(c, mine) {
       case "dk":
       case "db":
       case "dr":
+      case "km":
         roleHooks.dragonSet(c);
         break;
       case "cq":

@@ -118,7 +118,7 @@ import { kingViewState } from "../input/king-view.js";
 import { dragonViewState } from "../rendering/dragon-rider.js";
 import { dragonMaxHp, dragonTick } from "../gameplay/dragon.js";
 import { roleHooks } from "../gameplay/role-hooks.js";
-import { PR, prBuy, prGain, prSend } from "../gameplay/dragon-prog.js";
+import { PR, prBuy, prCode, prFromCode, prGain, prSend } from "../gameplay/dragon-prog.js";
 import { dragonPanelKey, dragonPanelState } from "../ui/dragon-panel.js";
 import { dragonSend } from "../multiplayer/commands.js";
 import { mmGo } from "../input/desktop.js";
@@ -428,6 +428,8 @@ export function installBrowserConsole() {
     roleHooks: { get: () => roleHooks },
     PR: { get: () => PR },
     prBuy: { get: () => prBuy },
+    prCode: { get: () => prCode },
+    prFromCode: { get: () => prFromCode },
     prGain: { get: () => prGain },
     prSend: { get: () => prSend },
     dragonPanelKey: { get: () => dragonPanelKey },

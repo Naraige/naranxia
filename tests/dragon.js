@@ -119,6 +119,55 @@ async () => {
   chk("it comes back with part of its life", DRG.dn === 0 && DRG.hp >= 132 && DRG.hp < 220);
   dragonSend({ lv: 5, u: [0, 0, 0, 0, 0, 1, 0, 0, 0], lk: 0, fc: 0 }, "dk");
   chk("levels and Growth raise its life (" + dragonMaxHp(DRG) + ")", dragonMaxHp(DRG) === 352);
+  /* the King's mark (#80): the fire burns half again as hard inside it, then it wears off and waits */
+  /* the save above restored new bodies: take the zombie that stands where the first one stood */
+  near = units
+    .filter((u) => u.t === 1 && u.hp > 0)
+    .sort((p, q) => Math.hypot(p.x - near.x, p.y - near.y) - Math.hypot(q.x - near.x, q.y - near.y))[0];
+  dragonSend({ lv: 1, u: [0, 0, 0, 0, 0, 0, 0, 0, 0], lk: 0, fc: 0 }, "dk");
+  const burnS = () => {
+    near.hp = 1e6;
+    dragonSend({ x: near.x - TS * 6, y: near.y, a: 2500, g: 2500, w: 0, p: 0, f: 1, fl: 1, ax: near.x, ay: near.y });
+    for (let i = 0; i < 30; i++) dragonTick(1 / 30);
+    return 1e6 - near.hp;
+  };
+  const b0 = burnS();
+  dragonSend({ x: Math.round(near.x), y: Math.round(near.y) }, "km");
+  chk("the King marks the ground", DRG.mt > 11 && DRG.mc > 29);
+  const b1 = burnS();
+  chk(
+    "inside the mark the breath burns half again as hard (" + (b1 / b0).toFixed(2) + ")",
+    b1 / b0 > 1.45 && b1 / b0 < 1.55,
+  );
+  const mt = DRG.mt;
+  dragonSend({ x: 0, y: 0 }, "km");
+  chk("a second mark waits its turn", DRG.mt === mt && DRG.mk[0] === Math.round(near.x));
+  for (let i = 0; i < 400; i++) dragonTick(1 / 30);
+  dragonSend({ x: near.x - TS * 6, y: near.y, a: 2500, g: 2500, w: 0, p: 0, f: 0, fl: 1, ax: near.x, ay: near.y });
+  chk("the mark wears off", DRG.mt === 0 && Math.abs(burnS() / b0 - 1) < 0.05);
+  /* the sanctuary is the dragon's roost (#79): with one standing it is down 12 s and not 20 */
+  dragonSend({ x: near.x, y: near.y, a: 2500, g: 300, w: 0, p: 0, f: 0, fl: 1, ax: near.x, ay: near.y });
+  structs.push({ t: 0, type: "sanctuary", x: DRG.hx + TS * 60, y: DRG.hy, hp: 100, max: 100, prog: 1, pl: 0, rad: TS });
+  DRG.hp = 1;
+  for (let i = 0; i < 20; i++) dragonTick(1 / 30);
+  chk("with a sanctuary it is down for 12 s", DRG.dn > 11 && DRG.dn <= 12);
+  structs.pop();
+  DRG.dn = 0;
+  DRG.hp = dragonMaxHp(DRG);
+  /* the progress code (#92) goes round */
+  prCode(); /* loads the stored progress once, before the test writes its own */
+  PR.xp = 1234;
+  PR.gold = 77;
+  PR.tree = { f1: 1, w1: 1 };
+  const code = prCode();
+  PR.xp = 0;
+  PR.gold = 0;
+  PR.tree = {};
+  chk(
+    "a progress code brings xp, gold and skills back",
+    prFromCode(code) && Math.floor(PR.xp) === 1234 && PR.gold === 77 && PR.tree.f1 && PR.tree.w1,
+  );
+  chk("anything else is refused and changes nothing", !prFromCode("hello") && PR.gold === 77);
   /* a smarter enemy (#73): a guarded road weighs more than a bare one */
   const g0 = [0, 1, 2].map(laneGuard),
     R1 = ROUTES[1].pts,

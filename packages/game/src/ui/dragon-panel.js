@@ -1,5 +1,16 @@
 import { snd } from "../audio/sound.js";
-import { PR, prBuy, prLoad, prLook, prLvl, prNode, prRank, prRankName } from "../gameplay/dragon-prog.js";
+import {
+  PR,
+  prBuy,
+  prCode,
+  prFromCode,
+  prLoad,
+  prLook,
+  prLvl,
+  prNode,
+  prRank,
+  prRankName,
+} from "../gameplay/dragon-prog.js";
 import {
   DR_BRANCH,
   DR_BYID,
@@ -25,7 +36,28 @@ import { btnReset } from "./typography.js";
 /* ---- the dragon rider's window (Dragon role, #66): skill tree and look ----
    Drawn over the game, which goes on (co-op cannot pause): the dragon hangs still while it is open. Opens with U (the rider's key), closes
    with U or Esc. Reads and writes only the rider's own progress (gameplay/dragon-prog.js), never the simulation. */
-const P = { open: false, tab: 0, sel: "f1" };
+const P = { open: false, tab: 0, sel: "f1", note: "" };
+/* the clipboard may be refused (an embedded page, an old browser): the note under the buttons says what happened */
+function codeOut() {
+  try {
+    navigator.clipboard.writeText(prCode()).then(
+      () => (P.note = "Code copied: paste it on the other machine"),
+      () => (P.note = "Could not reach the clipboard"),
+    );
+  } catch {
+    P.note = "Could not reach the clipboard";
+  }
+}
+function codeIn() {
+  try {
+    navigator.clipboard.readText().then(
+      (t) => (P.note = prFromCode(t) ? "Progress loaded" : "No dragon code in the clipboard"),
+      () => (P.note = "Could not reach the clipboard"),
+    );
+  } catch {
+    P.note = "Could not reach the clipboard";
+  }
+}
 export const dragonPanelState = P;
 
 function set(on) {
@@ -254,6 +286,10 @@ function drawLook(x, y, w, h) {
     "#f2d48a",
     0.78,
   );
+  /* carry the progress to another machine (#92) */
+  pill(x0, y + 138, 150, 16, "Copy progress code", BTN, BTNH, codeOut, null, 0.75);
+  pill(x0 + 156, y + 138, 150, 16, "Paste progress code", BTN, BTNH, codeIn, null, 0.75);
+  if (P.note) T_(P.note, x0, y + 158, "#a6ee78", 0.7);
   T_("The dragon grows and changes shape as it levels up.", x0, y + h - 22, "#a0a0a0", 0.68);
   void RDB;
 }

@@ -326,6 +326,19 @@ function effects(d, dt, live) {
     }
   }
   V.rt = d.rt || 0;
+  /* the King's mark (#80): a ring of gold sparks where the fire burns harder */
+  if (d.mt > 0 && d.mk && V.t - (V.mkT || 0) > 0.12) {
+    V.mkT = V.t;
+    const a = V.t * 2.2;
+    for (let i = 0; i < 3; i++)
+      puff(d.mk[0] + Math.cos(a + i * 2.094) * TS * 9, d.mk[1] + Math.sin(a + i * 2.094) * TS * 9, "#ffd24a", 1, 12, {
+        T: 0.9,
+        z: 0.4,
+        vz: 1.6,
+        g: 0,
+        s: 0.22,
+      });
+  }
 }
 
 /* every frame, before the camera keys are read; true when the keys were the rider's */

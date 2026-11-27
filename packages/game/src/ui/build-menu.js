@@ -93,7 +93,7 @@ const TIPS = {
   observatory: ["Observatory", "2x2 tower with a telescope: you see", "far over the land around it"],
   granary: ["Granary", "2x2 food store on stilts:", "+4 population limit"],
   bell: ["Alarm bell", "2x2 bell frame: troops around it", "attack 15% faster"],
-  sanctuary: ["Sanctuary", "2x2 chapel: troops around it", "slowly heal"],
+  sanctuary: ["Sanctuary", "2x2 chapel: troops around it", "slowly heal", "The dragon mends here and returns sooner"],
   beacon: ["Watch beacon", "2x2 tower with a living flame: a wide", "light at night, and a far view"],
   orchard: ["Orchard", "2x2 apple grove: a trickle of food", "without a peasant"],
   forge: ["Royal forge", "2x2 smithy: all your troops", "deal 8% more damage"],

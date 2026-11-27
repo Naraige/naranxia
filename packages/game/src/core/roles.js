@@ -1,3 +1,4 @@
+import { dragonSend } from "../multiplayer/commands.js";
 import { dragonMine, dragonSet0, dragonTick, mkDragon } from "../gameplay/dragon.js";
 import { mkU, spawnPos } from "../gameplay/entities.js";
 import { roleHooks } from "../gameplay/role-hooks.js";
@@ -16,6 +17,7 @@ export function initializeRoles() {
   roleHooks.viewToggle = kingViewToggle;
   roleHooks.bar = dragonBar;
   roleHooks.key = dragonPanelKey;
+  roleHooks.mark = (k) => dragonSend({ x: Math.round(k.x), y: Math.round(k.y) }, "km");
   roleHooks.panel = dragonPanelDraw;
   roleHooks.tick = dragonTick;
   roleHooks.dragonSet = dragonSet0;

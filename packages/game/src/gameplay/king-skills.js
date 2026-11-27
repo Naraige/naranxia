@@ -1,3 +1,4 @@
+import { roleHooks } from "./role-hooks.js";
 import { snd } from "../audio/sound.js";
 import { dist } from "../core/math.js";
 import { LPL, playersState } from "./players.js";
@@ -190,7 +191,25 @@ export function kingBar(UW, y) {
     const n = kCount(k);
     pill(x0, y2, w * 2 + 6, 15, n ? lab + "  Talents " + n : lab, BTN, BTNH, () => {}, null, 0.68, false, false);
   }
-  return 36;
+  /* third row, when a dragon flies for this kingdom (#80): mark the ground where the King stands */
+  const d = sessionState.DRG;
+  if (!d) return 36;
+  const mc = Math.ceil(d.mc || 0);
+  pill(
+    x0,
+    y2 + 17,
+    w * 2 + 6,
+    15,
+    d.mt > 0 ? "The dragon burns harder here" : mc > 0 ? "Mark for the dragon " + mc + "s" : "Mark for the dragon",
+    d.mt > 0 ? GRN : BTN,
+    d.mt > 0 ? GRNH : BTNH,
+    () => roleHooks.mark(k),
+    null,
+    0.68,
+    d.mt > 0,
+    mc > 0,
+  );
+  return 53;
 }
 
 export let kingSkill = function kingSkill(n) {

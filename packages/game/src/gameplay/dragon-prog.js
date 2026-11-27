@@ -76,3 +76,41 @@ export function prLook(lk, fc) {
   prSend();
 }
 export const prRankName = () => DR_RANKS[prRank()][1];
+
+/* the rider's progress as a short code (#92), to carry it to another machine */
+export function prCode() {
+  prLoad();
+  return (
+    "NXD1." +
+    btoa(
+      JSON.stringify({
+        xp: Math.floor(PR.xp),
+        ren: Math.floor(PR.ren),
+        gold: PR.gold,
+        tree: Object.keys(PR.tree),
+        lk: PR.lk,
+        fc: PR.fc,
+      }),
+    )
+  );
+}
+export function prFromCode(code) {
+  try {
+    const m = /^\s*NXD1\.([A-Za-z0-9+/=]+)\s*$/.exec(String(code));
+    if (!m) return false;
+    const o = JSON.parse(atob(m[1]));
+    prLoad();
+    PR.xp = Math.max(0, +o.xp || 0);
+    PR.ren = Math.max(0, +o.ren || 0);
+    PR.gold = Math.max(0, Math.floor(+o.gold || 0));
+    PR.tree = {};
+    for (const k of Array.isArray(o.tree) ? o.tree : []) if (DR_BYID[k]) PR.tree[k] = 1;
+    PR.lk = Math.max(0, Math.min(DR_LOOKS.length - 1, o.lk | 0));
+    PR.fc = Math.max(0, Math.min(DR_FLAMES.length - 1, o.fc | 0));
+    prSave();
+    prSend();
+    return true;
+  } catch {
+    return false;
+  }
+}

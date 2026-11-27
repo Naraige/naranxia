@@ -4,6 +4,17 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · lot d'idées 3: perchoir du dragon, marque du Roi, code de progression (#79, #80, #88, #92), branche `claude/castle-dragon-roles`, pas de version
+
+- Le Roi: « continue ».
+- Perchoir (#79): pas de nouveau bâtiment (un modèle neuf passe par une planche): le sanctuaire sert de perchoir. Un sanctuaire debout: dragon à terre 12 s au lieu de 20; posé à moins de 25 cases d'un sanctuaire il se soigne trois fois plus vite, comme près du château. Ligne ajoutée à l'infobulle du sanctuaire.
+- Marque du Roi (#80): bouton « Marquer pour le dragon » sous les talents du Roi quand un dragon vole pour le royaume. Commande lockstep `km` (position du Roi), `DRG.mk / mt / mc`: 12 s, rayon 9 cases, souffle et boules de feu x1,5 dedans, 30 s d'attente. Anneau d'étincelles dorées sur les deux machines.
+- Tour de guet (#88): elle existait (balise de guet, observatoire). Vue de la balise 20 -> 30 cases; issue fermée.
+- Code de progression (#92): onglet Dragon, « Copier / Coller le code de progression » (`prCode`, `prFromCode`, préfixe NXD1, presse-papiers du navigateur; message si refusé, ce qui est le cas dans l'artefact claude.ai).
+- 10 textes dans les 8 langues. Test `dragon` 36 assertions (marque, perchoir, code aller-retour). det re-fixé si besoin.
+- Restent ouvertes: #77 fortin de tête de pont, #81 transport par le dragon, #82 ennemi volant, #90 port de pêche (chacune demande un modèle ou une unité neuve: planche de choix d'abord).
+- Non vérifié: le bouton de marque à l'écran, le presse-papiers dans le lanceur Electron.
+
 ## 2026-11-27 · lot d'idées 2: pont de pierre défendable, mode paisible (#75, #76, #93), branche `claude/castle-dragon-roles`, pas de version
 
 - Le Roi: « continue ».
