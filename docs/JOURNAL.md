@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · test `kingview`: le joueur qui bâtit joue le Roi (#64)
+
+- Question du Roi: « as-tu testé le fait que le joueur qui build joue bien le roi ? ». Jusque-là seul `mp_dragon` le couvrait (coop: le tenant du château marche son Roi aux touches, vu des deux machines). Rien en solo, rien sur la bascule de vue.
+- Nouveau test solo `tests/kingview.js` (14 assertions, PASS): Roi et 2 gardes au départ, la partie s'ouvre en vue du Roi, caméra sur lui, les touches le font marcher (gardes et caméra suivent), il s'arrête au relâché; une catégorie du menu Bâtir ou un outil en main = vue de dessus où les touches ne le déplacent plus; fermer = retour au Roi; la touche de vue bascule dans les deux sens. `roleHooks` exposé à la console de test.
+- Non vérifié: à la main sur une vraie machine (sensation, à-coups), le clavier AZERTY réel, la manette.
+
 ## 2026-11-27 · carte: île plus grande, côte naturelle, falaises (#70), branche `claude/castle-dragon-roles`, pas de version
 
 - Le Roi: « do the map bigger and make it more natural and also with some cliff on some portion ».
