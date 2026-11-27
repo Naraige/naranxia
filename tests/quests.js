@@ -305,9 +305,10 @@ async () => {
       Math.random = rngf(999);
       const on0 = QST.on,
         hs = [];
-      for (let k = 0; k < 1400; k++) {
+      /* 70 s: the heart of the island is open meadow (#68), one woodcutter brings the 40 wood of the first quest in about a minute */
+      for (let k = 0; k < 2100; k++) {
         update(1 / 30);
-        if (k % 350 === 349)
+        if (k % 525 === 524)
           hs.push(mpHash() + ":" + cur() + ":" + RESP.map((R) => Math.round(R.g) + "/" + Math.round(R.w)).join(","));
       }
       return { on0, hs, q: JSON.stringify(QST) };

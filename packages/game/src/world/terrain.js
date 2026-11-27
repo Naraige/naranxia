@@ -1,5 +1,5 @@
 import { fb, hs, hyp } from "../core/math.js";
-import { ISL_SEA, islandCore, islandN } from "./island.js";
+import { ISL_SEA, islandBridge, islandCore, islandN } from "./island.js";
 import { CHALF, N, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { markP, markT } from "./terrain-invalidation.js";
@@ -154,6 +154,11 @@ export function baseHW(x, y) {
   if (!water && h < LAND + 9 && (rv1 < rw || (rv2 < rw * 0.55 && lk < 0.42))) water = true;
   if (core > 0.15) water = false;
   else if (!water && islandN(x, y) > ISL_SEA) water = true;
+  /* the causeway and the islet of the portals: flat dry land across the sea (#69) */
+  if (core <= 0 && islandBridge(x, y)) {
+    h = LAND;
+    water = false;
+  }
   _bwat = water;
   return h;
 }
@@ -798,20 +803,21 @@ export function starterTiles() {
     const okT = (x, y) => {
       if (x < 3 || y < 3 || x >= TW - 3 || y >= TH - 3) return false;
       const c = Math.max(Math.abs(x - X), Math.abs(y - Y));
-      if (c < CHALF + 8 || c > CHALF + 15) return false;
+      if (c < CHALF + 5 || c > CHALF + 12) return false;
       const i = y * TW + x;
       if (used.has(i) || STL0.has(i)) return false;
       const r = rawAt(x, y);
       return !(RAWF[r] & 19);
     };
+    /* the heart of the island is open meadow (#68): the first trees and rocks hold more, so the first minutes do not wait on a far grove */
     [
       [4, 40],
-      [3, 8],
-      [2, 3],
+      [3, 16],
+      [2, 10],
     ].forEach(([code, am], k) => {
       for (let s = 0; s < 44; s++) {
         const a = ga + k * 2.094 + (s % 2 ? 1 : -1) * Math.ceil(s / 2) * 0.11,
-          r = CHALF + 10.5 + (s >= 24 ? 1.5 : 0),
+          r = CHALF + 7.5 + (s >= 24 ? 1.5 : 0),
           ax = Math.round(X + Math.cos(a) * r),
           ay = Math.round(Y + Math.sin(a) * r);
         if (!okT(ax, ay)) continue;
@@ -874,25 +880,29 @@ export function genChunk(cx, cy) {
         }
         continue;
       }
-      const al = HT[i] - LAND,
+      if (islandBridge(x, y)) continue; /* nothing grows on the causeway or on the islet of the portals */
+      /* room to build in the heart of the island (#68): groves shrink, lone trees and boulder fields thin out */
+      const open = islandCore(x, y),
+        al = HT[i] - LAND,
         f = fb(x * 0.06, y * 0.06, sd + 50),
-        d = (f - P.tr) / WOOD_EDGE;
+        d = (f - P.tr) / WOOD_EDGE - open * 1.6;
       /* woods: compact, dense groves with a short edge (v101, #56); a few lone trees in the meadows */
       if (d > 0 && al < 14 && hs(x, y, sd + 11) < Math.min(0.92, d * 0.95 + 0.4)) {
         ter[i] = 2;
         amt[i] = 3;
         continue;
       }
-      if (al < 12 && hs(x, y, sd + 12) < P.tc * 0.25) {
+      if (al < 12 && hs(x, y, sd + 12) < P.tc * 0.25 * (1 - 0.7 * open)) {
         ter[i] = 2;
         amt[i] = 3;
         continue;
       }
       /* stone: boulder fields in clusters, more of them in the hills, and rockfall at the foot of the cliffs */
       const so = fb(x * 0.11, y * 0.11, sd + 70),
-        sth = 0.76 - Math.min(0.06, Math.max(0, al) * 0.01);
+        sth = 0.76 - Math.min(0.06, Math.max(0, al) * 0.01) + open * 0.012;
       if (so > sth && hs(x, y, sd + 13) < Math.min(0.9, (so - sth) * 14 + 0.45)) {
-        if (so > sth + 0.06 && hs(x, y, sd + 20) < 0.2 * P.gd) {
+        /* no hills in the heart, so no veins: its boulder fields carry more gold instead */
+        if (so > sth + 0.06 - open * 0.035 && hs(x, y, sd + 20) < (0.2 + 0.45 * open) * P.gd) {
           ter[i] = 4;
           amt[i] = 40;
         } else {

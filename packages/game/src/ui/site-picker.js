@@ -1,5 +1,5 @@
 import { snd } from "../audio/sound.js";
-import { ISL_R, ISL_SITE, islandN } from "../world/island.js";
+import { ISL_R, ISL_SITE, islandSiteMid, islandSiteN } from "../world/island.js";
 import { startGame } from "../gameplay/lifecycle.js";
 import { reset } from "../gameplay/reset.js";
 import { TH, TW } from "../gameplay/rules.js";
@@ -95,7 +95,7 @@ export function siteMaskGet() {
     for (let cx = 6; cx < W - 6; cx++) {
       const tx = cx * PVS + 1,
         ty = cy * PVS + 1;
-      if (tx < 140 || ty < 110 || tx > TW - 140 || ty > TH - 110 || islandN(tx, ty) > ISL_SITE) continue;
+      if (tx < 140 || ty < 110 || tx > TW - 140 || ty > TH - 110 || islandSiteN(tx, ty) > ISL_SITE) continue;
       const x0 = cx - 2,
         x1 = cx + 3,
         y0 = cy - 2,
@@ -107,7 +107,7 @@ export function siteMaskGet() {
 }
 
 export function siteOK(tx, ty) {
-  if (tx < 140 || ty < 110 || tx > TW - 140 || ty > TH - 110 || islandN(tx, ty) > ISL_SITE) return false;
+  if (tx < 140 || ty < 110 || tx > TW - 140 || ty > TH - 110 || islandSiteN(tx, ty) > ISL_SITE) return false;
   const cx = (tx / PVS) | 0,
     cy = (ty / PVS) | 0;
   for (let j = -2; j <= 2; j++)
@@ -176,8 +176,9 @@ export function randomSite(mainOnly = true) {
     for (let a = 0; a < 2000; a++) {
       const an = Math.random() * 6.2832,
         rr = Math.sqrt(Math.random()) * ISL_R * ISL_SITE,
-        tx = Math.round(TW / 2 + Math.cos(an) * rr),
-        ty = Math.round(TH / 2 + Math.sin(an) * rr);
+        mid = islandSiteMid(),
+        tx = Math.round(mid[0] + Math.cos(an) * rr),
+        ty = Math.round(mid[1] + Math.sin(an) * rr);
       if (siteOK(tx, ty) && (!main || siteOnMainland(tx, ty))) {
         sitePickerState.pickPos = { tx, ty, ok: true };
         return;

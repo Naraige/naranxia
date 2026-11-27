@@ -4,6 +4,16 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · carte: cœur ouvert pour bâtir (#68), pont et îlot des portails (#69), branche `claude/castle-dragon-roles`, pas de version
+
+- Le Roi: « il faut adapter la map pour qu'il y a plus d'espace pour build », puis « une sorte d'énorme île avec un pont et de l'autre côté du pont le portail des zombies qui envahissent ».
+- Place (#68): cœur plat et sec `ISL_CORE` 0,3 -> 0,6 (156 cases de rayon); dans ce cœur les bosquets rétrécissent, moins d'arbres isolés et de champs de rochers, plus d'or dans les rochers (plus de collines donc plus de filons). Mesuré sur 5 mondes, dans 60 cases autour du château: terrain libre 58-79 % -> 84-95 %, emplacements 12 x 12 libres 14-29 -> 34-53, plus d'eau. Gisements de départ plus près du mur (5 à 12 cases au lieu de 8 à 15) et plus riches (arbre 3 -> 10, pierre 8 -> 16).
+- Pont (#69, `world/island.js`): un îlot rond (rayon 16) au-delà de la mer, dans une direction tirée de la graine, relié par une chaussée de terre large de 9 cases (`islandGate`, `islandBridge`; `baseHW` y met de la terre plate, rien n'y pousse). `mkRoutes`: toutes les routes partent de l'îlot (3 bouts côte à côte = les portails), traversent le pont tout droit jusqu'à la tête de pont (0,75 R) puis serpentent chacune vers le château comme avant. Aucune autre entrée.
+- Sites: le disque où l'on fonde est décalé de 50 cases vers le pont et réduit (`ISL_SHIFT`, `ISL_SITE` 0,23, `islandSiteN`): la route de la horde fait 250 à 325 cases (avant: jusqu'à 286).
+- Tests adaptés au nouveau monde: det re-fixé (même partie deux fois = mêmes empreintes), features graine 30, spearman graine 34, quests `coopMoves` sur 70 s (un bûcheron rentre les 40 bois en une minute environ), waves cherche l'eau jusqu'à 190 cases.
+- Captures regardées: la clairière autour du château, la chaussée sur la mer. Non vérifié: les portails sur l'îlot à l'écran, l'allure « pont » (c'est une langue de terre et de sable, pas un ouvrage en pierre), le sélecteur de site à l'écran, `mp_soak`, `--full`.
+- Les 3 flèches de direction de la vague montrent maintenant la même lettre (tout vient du pont).
+
 ## 2026-11-27 · QoL 1: fenêtre ronde de la vue du Roi, rugissement sur les gros (#67), branche `claude/castle-dragon-roles`, pas de version
 
 - Demande du Roi: « more QoL more logic smooth all gameplay ». Sondé d'abord ce qui existe (headless): les paysans prennent un métier seuls (or / bois / pierre), un paysan neuf aussi, un bâtisseur est choisi seul et retourne à son métier; revenu mesuré avec 3 paysans sur 3 min: +160 or, +120 bois, +28 pierre. Rien de cassé là: pas touché à l'équilibre.

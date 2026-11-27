@@ -210,12 +210,12 @@ async () => {
       wt = null,
       bd = 1e9;
     for (const cc of [CS, CS2].filter(Boolean))
-      for (let j = -110; j <= 110; j++)
-        for (let i = -110; i <= 110; i++) {
+      for (let j = -190; j <= 190; j += 1)
+        for (let i = -190; i <= 190; i += 1) {
           const x = cc.tx + i,
             y = cc.ty + j,
             d = Math.hypot(i, j);
-          if (d < 12 || d > 110 || d >= bd || !gOK(x, y) || ter[y * TW + x] !== 1) continue;
+          if (d < 12 || d > 190 || d >= bd || !gOK(x, y) || ter[y * TW + x] !== 1) continue;
           let dp = true;
           for (const [dx, dy] of [
             [1, 0],

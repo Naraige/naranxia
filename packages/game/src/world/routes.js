@@ -2,7 +2,7 @@ import { fb, hs } from "../core/math.js";
 import { TH, TW } from "../gameplay/rules.js";
 import { MAPD, sessionState } from "../gameplay/session.js";
 import { amt, CH, FLG, genF, HT, NCX, NCY, occ, stairs, ter, terrainState } from "./terrain-state.js";
-import { islandReach } from "./island.js";
+import { islandGate } from "./island.js";
 import { canStep } from "./traversal-rules.js";
 
 export const D4 = [
@@ -100,7 +100,9 @@ function bendOffsets(ground, CX, CY, ex, ey, px, py, D, lat0, m) {
 export function mkRoutes(ground) {
   terrainState.ROUTES = [];
   terrainState.RCH = new Map();
-  const a0 = Math.random() * 6.283,
+  /* every route comes from the islet of the portals over the bridge (#69): straight from the islet to the bridge head, then it wanders to
+     its castle as before. The three routes of a castle part at the bridge head; on the islet their ends stand side by side. */
+  const G = islandGate(),
     CT = sessionState.SITE2
       ? [
           [terrainState.CX, terrainState.CY],
@@ -110,7 +112,7 @@ export function mkRoutes(ground) {
   for (let k = 0; k < 3 * CT.length; k++) {
     const CX = CT[(k / 3) | 0][0],
       CY = CT[(k / 3) | 0][1],
-      th = a0 + k * 2.094 + (Math.random() - 0.5) * 0.9,
+      th = Math.atan2(G.hy - CY, G.hx - CX),
       ex = Math.cos(th),
       ey = Math.sin(th),
       px = -ey,
@@ -119,8 +121,21 @@ export function mkRoutes(ground) {
       ph = Math.random() * 90,
       pts = [],
       wps = [];
-    const D = Math.min(islandReach(CX, CY, ex, ey), MAPD[sessionState.mapSize | 0] || 1e9),
+    const D1 = Math.hypot(G.hx - CX, G.hy - CY),
+      D = Math.min(D1, MAPD[sessionState.mapSize | 0] || 1e9),
       lats = [];
+    /* the bridge first (the far end of the route): from the islet to the bridge head */
+    if (D === D1) {
+      const side = ((k % 3) - 1) * 6,
+        LB = G.R - G.H;
+      for (let s = 0; s < LB; s += 1.5) {
+        const lat = side * Math.max(0, 1 - s / 14),
+          p = [G.x - G.ex * s - G.ey * lat + 0.5, G.y - G.ey * s + G.ex * lat + 0.5];
+        if (pts.length % 3 === 0) wps.push(p);
+        pts.push(p);
+      }
+    }
+    const n0 = pts.length;
     for (let d = D; d >= 8; d -= 1.5)
       lats.push(
         (fb(d * 0.02, ph, terrainState.SEED + k * 7) - 0.5) *
@@ -157,8 +172,8 @@ export function mkRoutes(ground) {
         Math.max(9, Math.min(TW - 10, CX + 0.5 + ex * d + px * lat)),
         Math.max(9, Math.min(TH - 10, CY + 0.5 + ey * d + py * lat)),
       ];
+      if ((n0 + n) % 3 === 0) wps.push(p);
       pts.push(p);
-      if (n % 3 === 0) wps.push(p);
     }
     terrainState.ROUTES.push({
       th,

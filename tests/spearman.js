@@ -1,6 +1,6 @@
 async () => {
   /* spearman: trained at the barracks for its cost, reach over a front rank, bonus against brutes, weaker than a knight per head */
-  let s = 33;
+  let s = 34;
   const RR = Math.random;
   Math.random = () => {
     s = (s * 16807) % 2147483647;
