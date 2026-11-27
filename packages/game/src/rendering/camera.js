@@ -138,7 +138,8 @@ export function home() {
   CAM.y = LAND;
   CAM.yaw = 0;
   CAM.pitch = 0.92;
-  CAM.dist = window.innerWidth >= 900 ? 46 : 56;
+  /* far enough to see the castle and the first buildings around it: they are built of blocks, 12 to 20 tiles wide */
+  CAM.dist = window.innerWidth >= 900 ? 62 : 72;
 }
 
 export function initializeCamera() {

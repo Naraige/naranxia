@@ -276,22 +276,28 @@ const tw3 = (wx, wy) => {
   return s && s.type === "tower" ? s.bh + gtopOf(s) - 0.15 : gh(wx / TS, wy / TS) + 0.42;
 };
 
+/* particles and missiles were sized for the small units of before v101: units are now 1.8 tiles tall (UNITK), so everything that flies
+   is drawn larger and higher by this factor (drawing only: the simulation keeps its numbers) */
+const FXK = 1.5;
+/* heights at the level of a unit grow with it; what is thrown from a roof or a tower top keeps its place */
+const fxz = (z) => z + Math.min(z, 2) * (FXK - 1);
+
 export function syncFx() {
   let n = 0;
   for (const p of sessionState.pt) {
     const a = Math.max(0, p.t / (p.T || 0.6));
     if (p.soft) {
-      const py_ = gh(p.x / TS, p.y / TS) + (p.z !== undefined ? p.z : 0.25 + (1 - a) * 0.7),
+      const py_ = gh(p.x / TS, p.y / TS) + fxz(p.z !== undefined ? p.z : 0.25 + (1 - a) * 0.7),
         c = colOf(p.c),
         al = Math.min(1, (1 - a) / 0.14) * a * 0.78,
-        ss = (p.s || 0.3) * (1.1 + (1 - a) * 2.2);
+        ss = (p.s || 0.3) * (1.1 + (1 - a) * 2.2) * FXK;
       if (p.r === undefined) p.r = REALR();
       smk(p.x / TS, py_, p.y / TS, ss, c.r, c.g, c.b, al, p.r * 6.28 + (1 - a) * p.sp * 0.25);
       continue;
     }
     if (n >= PMAX) break;
-    const sz = p.s ? p.s * (0.4 + 0.6 * a) * (a > 0.85 ? 1 + (1 - a) * 2 : 1) : 0.06 + 0.1 * a;
-    const py_ = gh(p.x / TS, p.y / TS) + (p.z !== undefined ? p.z : 0.25 + (1 - a) * 0.7),
+    const sz = (p.s ? p.s * (0.4 + 0.6 * a) * (a > 0.85 ? 1 + (1 - a) * 2 : 1) : 0.06 + 0.1 * a) * FXK;
+    const py_ = gh(p.x / TS, p.y / TS) + fxz(p.z !== undefined ? p.z : 0.25 + (1 - a) * 0.7),
       gc = GLC[p.c];
     if (gc) glow(p.x / TS, py_, p.y / TS, 0.14 + sz * 2.2, gc[0], gc[1], gc[2], 0.55 * a);
     if (p.r === undefined) p.r = REALR();
@@ -319,7 +325,7 @@ export function syncFx() {
         h = f.h0 + (h1 - f.h0) * p + Math.sin(p * Math.PI) * 8;
       _o.position.set(x / TS, h, y / TS);
       _o.rotation.set(p * 9, p * 5, 0);
-      _o.scale.set(0.42, 0.42, 0.42);
+      _o.scale.set(0.62, 0.62, 0.62);
       _o.updateMatrix();
       fxM.setMatrixAt(n, _o.matrix);
       fxM.setColorAt(n, colOf("#7f7f7f"));
@@ -331,7 +337,7 @@ export function syncFx() {
         h = f.h0 + (h1 - f.h0) * p + Math.sin(p * Math.PI) * ar;
       _o.position.set(x / TS, h, y / TS);
       _o.rotation.set(p * 7, p * 5, 0);
-      _o.scale.set(0.15, 0.15, 0.15);
+      _o.scale.set(0.22, 0.22, 0.22);
       _o.updateMatrix();
       fxM.setMatrixAt(n, _o.matrix);
       fxM.setColorAt(n, colOf("#a8e030"));
@@ -359,7 +365,7 @@ export function syncFx() {
         h = f.h0 + (h1 - f.h0) * p + Math.sin(p * Math.PI) * ar;
       _o.position.set(x / TS, h, y / TS);
       _o.rotation.set(p * 9, p * 6, 0);
-      _o.scale.set(0.13, 0.13, 0.13);
+      _o.scale.set(0.2, 0.2, 0.2);
       _o.updateMatrix();
       fxM.setMatrixAt(n, _o.matrix);
       fxM.setColorAt(n, colOf("#2a2a2e"));
@@ -369,7 +375,7 @@ export function syncFx() {
         h = f.h0 + (0.5 - f.h0 + gh(f.x2 / TS, f.y2 / TS)) * p * 0.6;
       _o.position.set(x / TS, h, y / TS);
       _o.lookAt(f.x2 / TS, h, f.y2 / TS);
-      _o.scale.set(0.12, 0.12, 1.5);
+      _o.scale.set(0.17, 0.17, 2.1);
       _o.updateMatrix();
       fxM.setMatrixAt(n, _o.matrix);
       fxM.setColorAt(n, colOf("#8a6a42"));
@@ -390,8 +396,8 @@ export function syncFx() {
           (f.y1 + (f.y2 - f.y1) * q) / TS,
         );
       } else _o.lookAt(f.x2 / TS, h1, f.y2 / TS);
-      if (f.arc) _o.scale.set(0.085, 0.085, 0.66);
-      else _o.scale.set(0.06, 0.06, 0.5);
+      if (f.arc) _o.scale.set(0.12, 0.12, 0.95);
+      else _o.scale.set(0.085, 0.085, 0.72);
       _o.updateMatrix();
       fxM.setMatrixAt(n, _o.matrix);
       fxM.setColorAt(n, colOf(f.f ? "#ff9a3a" : f.arc ? "#f4ead0" : "#d8c8a0"));

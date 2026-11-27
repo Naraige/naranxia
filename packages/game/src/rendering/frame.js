@@ -50,6 +50,7 @@ import {
   tgShow,
 } from "./build-preview.js";
 import { pickGround, updateCamera } from "./camera.js";
+import { REALR } from "../core/random.js";
 import { fireflies, glow, glowFlush, puff, rflagUpd, smkFlush, syncClouds, syncFx, updateLit } from "./effects.js";
 import { fowSeenAt, fowVisAt } from "./fog.js";
 import { applyDay, nightK } from "./lighting.js";
@@ -333,6 +334,45 @@ export let render3D = function render3D(dt) {
       scene.add(m);
       s.scaf = m;
       SCAF.add(s);
+    }
+    /* a building that took a beating smokes (under 60 % of its life), then burns (under 30 %): flames, embers and a dark plume over the
+       roof, more of them the worse it stands. Drawing only, from the real clock. */
+    if (
+      s.prog >= 1 &&
+      s.hp < s.max * 0.6 &&
+      s.hp > 0 &&
+      s.o3 &&
+      !sessionState.paused &&
+      Math.abs(s.x / TS - CAM.x) < CAM.dist * 2 + 30 &&
+      Math.abs(s.y / TS - CAM.z) < CAM.dist * 2 + 30
+    ) {
+      const bad = 1 - s.hp / (s.max * 0.6),
+        r = (s.rad || TS * 2) * 0.55,
+        top = roofOf(s);
+      if (REALR() < (3 + bad * 6) * dt)
+        puff(s.x + (REALR() - 0.5) * r * 2, s.y + (REALR() - 0.5) * r * 2, bad > 0.5 ? "#3a3438" : "#77737a", 1, 10, {
+          soft: 1,
+          T: 2.4,
+          s: 0.7 + bad * 0.6,
+          z: top,
+          vz: 1.5,
+          g: -0.3,
+        });
+      if (bad > 0.5 && REALR() < 6 * dt)
+        puff(
+          s.x + (REALR() - 0.5) * r * 2,
+          s.y + (REALR() - 0.5) * r * 2,
+          REALR() < 0.5 ? "#ff8a2a" : "#ffc04a",
+          1,
+          18,
+          {
+            T: 0.8,
+            z: top * (0.3 + REALR() * 0.6),
+            vz: 2.2,
+            g: -0.5,
+            s: 0.13,
+          },
+        );
     }
     if (
       s.prog >= 1 &&
@@ -698,6 +738,19 @@ export let render3D = function render3D(dt) {
   uiFlush();
   postRender(scene, camera, true);
 };
+
+/* how high a building's model stands over its ground, measured once per model (for the smoke of a burning one) */
+const ROOFH = new WeakMap(),
+  _bx = new THREE.Box3();
+function roofOf(s) {
+  let h = ROOFH.get(s.o3);
+  if (h === undefined) {
+    _bx.setFromObject(s.o3);
+    h = Math.max(1.5, Math.min(30, _bx.max.y - _bx.min.y));
+    ROOFH.set(s.o3, h);
+  }
+  return h;
+}
 
 export function setRender3DHandler(handler) {
   render3D = handler;

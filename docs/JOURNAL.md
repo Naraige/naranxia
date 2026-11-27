@@ -4,6 +4,16 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · polissage 1: effets à l'échelle, bâtiments qui fument et brûlent, vue de dessus (#67), branche `claude/castle-dragon-roles`, pas de version
+
+- Demande du Roi: « Améliore le jeu de façon globale / les effets / les bâtiments tout ». Trop large pour un lot: premier lot = ce qui est objectivement en retard sur le changement de taille; le reste (allure des bâtiments) passe par une planche de choix.
+- Effets (`rendering/effects.js`, `FXK` 1,5): particules et projectiles (flèches, carreaux, rochers, acide, boulets) dessinés 1,5 fois plus gros, hauteurs au niveau des unités relevées (`fxz`), ce qui part d'un toit garde sa place. Dessin seulement.
+- Bâtiments abîmés (`rendering/frame.js`): fumée au-dessus du toit sous 60 % de vie, flammes et braises sous 30 % (hauteur du modèle mesurée une fois, `roofOf`, WeakMap; rien sur la structure).
+- Vue de dessus au départ: distance 46 -> 62 (72 sur petit écran), on voit le château et ses premiers bâtiments.
+- CI: le run de 17aeeba échouait sur le format de nl/pl/tr.js (prettier), corrigé.
+- Vérifié: quality, det, ui, features, save PASS; une capture regardée (maison à 20 %: flammes et fumée). Non vérifié: fumée à 60 % en vrai (rare à 3 images/s en headless), projectiles vus de près.
+- Vu sans y toucher: `tools/qa_shots.py` étapes 50/51 finissent en défaite (la horde posée sur le château le tue en 2 s; pareil avant le rééchelonnage, commit 41a933d); l'anneau noir du cône de transparence en vue du Roi.
+
 ## 2026-11-27 · Dragon: niveaux, talents, apparence, sons, boule de feu, rugissement (#66), branche `claude/castle-dragon-roles`, pas de version
 
 - Suite de #63 (le Roi: « nous avons dans un sens merge les deux jeux »). Prototype lu dans l'artefact Dragon Rider, porté dans le rôle Dragon.
