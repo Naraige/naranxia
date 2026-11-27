@@ -45,7 +45,7 @@ import {
 } from "../gameplay/king-skills.js";
 import { openMenu, playAgain, quitGame, setStartGameHandler, startGame } from "../gameplay/lifecycle.js";
 import { LPL, playersState, setPl, setTier } from "../gameplay/players.js";
-import { pickLanes, reset } from "../gameplay/reset.js";
+import { laneGuard, pickLanes, reset } from "../gameplay/reset.js";
 import { BSZ, C, FCELL, LH, RS, RS2, RT2, rulesState, rxLock, T, TH, TRAIN, TS, TW, UPC } from "../gameplay/rules.js";
 import { selectionState } from "../gameplay/selection.js";
 import { sessionState } from "../gameplay/session.js";
@@ -104,7 +104,7 @@ import { hudDisplayState } from "../ui/hud-state.js";
 import { inputState, keys } from "../input/state.js";
 import { kingViewState } from "../input/king-view.js";
 import { dragonViewState } from "../rendering/dragon-rider.js";
-import { dragonTick } from "../gameplay/dragon.js";
+import { dragonMaxHp, dragonTick } from "../gameplay/dragon.js";
 import { roleHooks } from "../gameplay/role-hooks.js";
 import { PR, prBuy, prGain, prSend } from "../gameplay/dragon-prog.js";
 import { dragonPanelKey, dragonPanelState } from "../ui/dragon-panel.js";
@@ -411,6 +411,8 @@ export function installBrowserConsole() {
     kingViewState: { get: () => kingViewState },
     dragonViewState: { get: () => dragonViewState },
     dragonTick: { get: () => dragonTick },
+    dragonMaxHp: { get: () => dragonMaxHp },
+    laneGuard: { get: () => laneGuard },
     roleHooks: { get: () => roleHooks },
     PR: { get: () => PR },
     prBuy: { get: () => prBuy },

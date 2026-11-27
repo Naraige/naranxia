@@ -1898,4 +1898,7 @@ export const PL = {
   "Wide Flame III": "Szeroki płomień III",
   "Wide Flame IV": "Szeroki płomień IV",
   "Wide Flame V": "Szeroki płomień V",
+  "DRAGON DOWN": "SMOK POWALONY",
+  "It was carried back to the castle and will fly again soon": "Zaniesiono go do zamku i wkrótce znów poleci",
+  "Dragon down": "Smok powalony",
 };

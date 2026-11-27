@@ -15,7 +15,7 @@ import { formationsState } from "./formations.js";
 import { lightingState } from "./lighting.js";
 import { BAD, playersState, setPl } from "./players.js";
 import { CLM, RL } from "./resources.js";
-import { C, CHALF, CSZ, CWOOD, FOOD0, RALLY, RALLYC, RS, RS2 } from "./rules.js";
+import { C, CHALF, CSZ, CWOOD, FOOD0, RALLY, RALLYC, RS, RS2, TS } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { D_, sessionState } from "./session.js";
 import { simulationState } from "./simulation.js";
@@ -41,18 +41,53 @@ const farFirst = (A) => {
   const sc = A.map((L) => (laneSpawnIdx(L).d >= WSEE ? 1e9 : laneSpawnIdx(L).d));
   return A.slice().sort((a, b) => sc[A.indexOf(b)] - sc[A.indexOf(a)]);
 };
+/* ---- a smarter enemy (#73): the horde scouts the defences ----
+   One difficulty only (the King), but the horde no longer picks its roads blindly. From wave 3 on it weighs every road by what guards its
+   last 90 tiles (towers, ballistas and cannons count full, walls, gates and traps a little, the soldiers standing there too) and takes the
+   least guarded ones first: a kingdom fortified on one side only is attacked on the other. Two times out of three; the third it comes as it
+   pleases, so a road is never certain to stay quiet. Simulation state and the seeded RNG only, so both machines agree. */
+const GUARD = { tower: 3, ballista: 5, cannon: 6, bastion: 4, wall: 0.25, gate: 0.5 };
+export function laneGuard(L) {
+  const R = terrainState.ROUTES[L];
+  if (!R) return 0;
+  const P = R.pts,
+    n0 = Math.max(0, P.length - 60),
+    near = (x, y) => {
+      for (let i = n0; i < P.length; i += 4) {
+        const dx = P[i][0] - x,
+          dy = P[i][1] - y;
+        if (dx * dx + dy * dy < 14 * 14) return true;
+      }
+      return false;
+    };
+  let g = 0;
+  for (const s of sessionState.structs)
+    if (s.hp > 0 && s.prog >= 1) {
+      const w = GUARD[s.type] || (s.type.indexOf("trap") >= 0 ? 0.5 : 0);
+      if (w && near(s.x / TS, s.y / TS)) g += w;
+    }
+  for (const u of sessionState.units)
+    if (u.t === 0 && u.hp > 0 && u.type !== "peasant" && near(u.x / TS, u.y / TS)) g += 0.5;
+  return g;
+}
+const weakFirst = (A) => {
+  const g = A.map(laneGuard);
+  return A.slice().sort((a, b) => g[A.indexOf(a)] - g[A.indexOf(b)]);
+};
 export function pickLanes() {
-  const n = Math.min(
+  const smart = sessionState.waveN >= 2 && Math.random() < 0.67,
+    order = (A) => (smart ? weakFirst(farFirst(A)) : farFirst(A)),
+    n = Math.min(
       3,
       1 + (sessionState.waveN > 2 ? 1 : 0) + (sessionState.waveN > 6 ? 1 : 0) + (Math.random() < 0.25 ? 1 : 0),
     ),
-    A = farFirst([0, 1, 2].sort(() => Math.random() - 0.5)).slice(0, n);
+    A = order([0, 1, 2].sort(() => Math.random() - 0.5)).slice(0, n);
   if (!sessionState.SITE2) return A;
   const n2 = Math.min(
     3,
     1 + (sessionState.waveN > 2 ? 1 : 0) + (sessionState.waveN > 6 ? 1 : 0) + (Math.random() < 0.25 ? 1 : 0),
   );
-  return A.concat(farFirst([3, 4, 5].sort(() => Math.random() - 0.5)).slice(0, n2));
+  return A.concat(order([3, 4, 5].sort(() => Math.random() - 0.5)).slice(0, n2));
 }
 
 export function reset() {

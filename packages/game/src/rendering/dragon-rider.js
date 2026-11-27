@@ -1,5 +1,5 @@
 import { snd } from "../audio/sound.js";
-import { DRAGON, dragonMine } from "../gameplay/dragon.js";
+import { DRAGON, dragonMaxHp, dragonMine } from "../gameplay/dragon.js";
 import { PR, prGain, prLoad, prLvl, prRankName, prSend, prUp } from "../gameplay/dragon-prog.js";
 import { DR_EVS, DR_FLAMES, DR_LOOKS, DR_STAGES, drEv, drLvlXp } from "../gameplay/dragon-skills.js";
 import { TH, TS, TW } from "../gameplay/rules.js";
@@ -48,6 +48,7 @@ const V = {
   eK: false,
   rK: false,
   told2: false,
+  down: false,
   panel: false /* the skill window is open: the dragon hangs still */,
 };
 const keyOf = (d) => [d.lk | 0, d.fc | 0, drEv(d.lv || 1), d.u ? d.u[5] : 0].join();
@@ -222,6 +223,7 @@ function fly(dt, keys) {
       p: Math.round(P.pit * 1000),
       f: firing ? 1 : 0,
       fl: P.fly ? 1 : 0,
+      g: Math.max(0, Math.round((P.y - gh(P.x, P.z) - (P.fly ? 0 : V.rig.cy * V.S)) * 100)),
       ax: Math.round(ax * TS),
       ay: Math.round(az * TS),
     });
@@ -354,7 +356,27 @@ export function dragonFrame(dt, keys) {
   let firing = !!d.f,
     S;
   if (mine) {
-    if (live) firing = fly(dt, keys);
+    /* down (#72): the simulation carried it back before its castle; it lies there until it can fly again */
+    if (d.dn > 0) {
+      if (!V.down) {
+        V.down = true;
+        const x = d.x / TS,
+          z = d.y / TS;
+        Object.assign(V.P, { x, z, y: gh(x, z) + V.rig.cy * V.S, pit: 0, roll: 0, spd: 0, fly: false, turn: 0, vy: 0 });
+        V.fire = false;
+        V.heat = 0;
+        sessionState.bannerS = "DRAGON DOWN";
+        sessionState.bannerS2 = L("It was carried back to the castle and will fly again soon");
+        sessionState.bannerT = 4;
+        snd("dragonroar", d.x, d.y);
+      }
+      firing = false;
+      CAM.x = V.P.x;
+      CAM.z = V.P.z;
+    } else {
+      V.down = false;
+      if (live) firing = fly(dt, keys);
+    }
     const P = V.P;
     S = {
       x: P.x,
@@ -495,5 +517,26 @@ export function dragonBar(UW, y) {
     0.7,
   );
   T_("R " + L("Roar") + " " + cd(d ? d.cr : 0, U[4], "locked"), x1 + w + 9, y2 + 13, U[4] ? "#e8e0c8" : "#8a8a92", 0.7);
-  return 44;
+  /* third row: its life (#72), or the wait when it is down */
+  if (d) {
+    const mx = dragonMaxHp(d),
+      y3 = y2 + 28,
+      hp = d.hp === undefined ? mx : d.hp,
+      w3 = w * 2 + 6,
+      v = d.dn > 0 ? 1 - d.dn / DRAGON.down : hp / mx;
+    c.fillStyle = "rgba(8,8,12,.82)";
+    c.fillRect(x1 - 1, y3 - 1, w3 + 2, 13);
+    c.fillStyle = "#23262e";
+    c.fillRect(x1, y3, w3, 11);
+    c.fillStyle = d.dn > 0 ? "#6a6a72" : v < 0.3 ? "#c8402e" : "#3f9c28";
+    c.fillRect(x1, y3, Math.round(w3 * v), 11);
+    T_(
+      d.dn > 0 ? L("Dragon down") + "  " + Math.ceil(d.dn) + " s" : L("Dragon") + "  " + Math.ceil(hp) + " / " + mx,
+      x1 + 4,
+      y3 + 2,
+      "#fff6dc",
+      0.78,
+    );
+  }
+  return 58;
 }

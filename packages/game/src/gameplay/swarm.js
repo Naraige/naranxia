@@ -276,6 +276,20 @@ const SWLT = new Float64Array(256);
 for (let v = 0; v < 256; v++) SWLT[v] = (v / 127.5 - 1) * SWBW * TS;
 for (let v = 0; v < 16; v++) SWV[v] = SWSP * (v & 8 ? 1.08 : 1) * (0.9 + (v & 7) * 0.03);
 
+/* the horde runs while it is further than SWFARD tiles from every castle (#71): the way from the bridge is long, the fight is at the walls */
+const SWRUN = 1.7,
+  SWFARD = 95 * TS;
+function SWFAR(x, y) {
+  const dx = x - (terrainState.CX + 0.5) * TS,
+    dy = y - (terrainState.CY + 0.5) * TS;
+  if (dx * dx + dy * dy < SWFARD * SWFARD) return false;
+  const s2 = sessionState.SITE2;
+  if (!s2) return true;
+  const ex = x - (s2.tx + 0.5) * TS,
+    ey = y - (s2.ty + 0.5) * TS;
+  return ex * ex + ey * ey >= SWFARD * SWFARD;
+}
+
 /* a disc where the horde walks slower (the dragon's roar, gameplay/dragon.js sets it every tick; radius 0 = none) */
 let SWSLX = 0,
   SWSLY = 0,
@@ -735,6 +749,8 @@ function swStep() {
       if (D0 > 6 && !cl) jam = D0 < 64 ? SWJAM[D0] : 0.75;
     }
     let sp = SWV[(sK[i] ? 8 : 0) | (o >> 13)] * jam * SWDT;
+    /* forced march (#71): far from every castle the horde runs (bridge, open country), and falls back to its walk on the approach */
+    if (SWFAR(x, y)) sp *= SWRUN;
     if (SWSLR2 > 0) {
       const sx = x - SWSLX,
         sy = y - SWSLY;

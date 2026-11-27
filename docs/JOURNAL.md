@@ -4,6 +4,16 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · rythme, dragon vulnérable, ennemi plus malin (#71, #72, #73), branche `claude/castle-dragon-roles`, pas de version
+
+- Panel simulé de 10 joueurs (pas de vrais joueurs; feuille « Naranxia : panel simulé de 10 joueurs »). Le Roi: « tout sauf avoir plusieurs difficultés, on reste sur de l'unique, mais peut-être avec un ennemi plus intelligent ».
+- Rythme (#71): marche forcée de l'essaim, x1,7 à plus de 95 cases de tout château (`SWFAR`, swarm.js). Mesuré, même monde, route de 294 cases: arrivée 398 s -> 272 s. Économie re-mesurée après les gisements rapprochés du lot carte: en 3 min avec 3 paysans +180 or, +116 bois, +98 pierre (la pierre n'est plus en retard, rien changé de plus).
+- Dragon vulnérable (#72, `gameplay/dragon.js`): vie 220 + 25 par niveau, +10 % par talent Croissance. Griffé (14/s, +3 % par vague) quand il est à moins de 6 cases du sol avec la horde à 4,5 cases; les cracheurs (`acid`) l'atteignent jusqu'à 15 cases de haut (7/s chacun, 3 au plus). Sans blessure depuis 4 s il se soigne (5/s, x3 posé près de son château). À 0: à terre 20 s, ramené devant le château, ni souffle ni boule ni rugissement, revient à 60 %. La hauteur au sol part dans la commande `dg` (`g`). Barre de vie sous les jauges, bannière et son à la chute.
+- Ennemi plus malin (#73, `laneGuard` / `pickLanes`, reset.js): une seule difficulté, mais dès la vague 3, deux fois sur trois, la horde prend d'abord les routes les moins gardées sur leurs 90 dernières cases (tours 3, balistes 5, bastions 4, murs 0,25, portes et pièges 0,5, soldats 0,5). RNG de la simulation: identique en coop.
+- Pas fait, dit au Roi: brouillard (il l'a voulu total), rivaux et événements (ses décisions), certificat Windows (il faut en acheter un), arbres géants.
+- Tests: `dragon` 29 assertions (blessures, soin, chute, retour, route gardée), det re-fixé.
+- Non vérifié: l'équilibre réel (un dragon tombe-t-il trop vite ? la horde arrive-t-elle trop tôt ?), la barre de vie à l'écran, le message au joueur expliquant que la horde vise le côté faible (aucun texte ajouté).
+
 ## 2026-11-27 · test `kingview`: le joueur qui bâtit joue le Roi (#64)
 
 - Question du Roi: « as-tu testé le fait que le joueur qui build joue bien le roi ? ». Jusque-là seul `mp_dragon` le couvrait (coop: le tenant du château marche son Roi aux touches, vu des deux machines). Rien en solo, rien sur la bascule de vue.

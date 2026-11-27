@@ -1895,4 +1895,7 @@ export const TR = {
   "Wide Flame III": "Geniş Alev III",
   "Wide Flame IV": "Geniş Alev IV",
   "Wide Flame V": "Geniş Alev V",
+  "DRAGON DOWN": "EJDERHA DÜŞTÜ",
+  "It was carried back to the castle and will fly again soon": "Kaleye taşındı, yakında yeniden uçacak",
+  "Dragon down": "Ejderha düştü",
 };

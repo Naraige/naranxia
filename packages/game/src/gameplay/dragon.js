@@ -2,7 +2,7 @@ import { LPL } from "./players.js";
 import { TS } from "./rules.js";
 import { sessionState } from "./session.js";
 import { drBallDmg, drBallRad, drFire, drRad, drRoarT } from "./dragon-skills.js";
-import { SW, swSlow, swSplash } from "./swarm.js";
+import { SW, swNear, swSlow, swSplash } from "./swarm.js";
 
 /* ---- the Dragon role (co-op, v101) ----
    Before a co-op game each player chooses Castle or Dragon. The dragon rider founds nothing: he is player 2 without a castle and flies a
@@ -21,7 +21,19 @@ export const DRAGON = {
   roarRad: TS * 36,
   roarSlow: 0.35 /* walking speed of the horde in the roar */,
   ballCap: 70,
+  /* the dragon can be hurt (#72): the horde claws it when it flies or stands low over them, spitters reach it higher up */
+  hp: 220 /* at level 1; +25 a level, +10 % per Growth skill */,
+  low: 600 /* under this height over the ground (hundredths of a tile) claws reach it */,
+  claw: 14 /* life lost per second with the horde under it, +3 % a wave */,
+  clawR: TS * 4.5,
+  spitH: 1500,
+  spitR: TS * 11,
+  spit: 7 /* per spitter in reach, three at most */,
+  calm: 4 /* seconds without a wound before it mends */,
+  mend: 5 /* life per second, three times that landed by its castle */,
+  down: 20 /* seconds out of the fight when it falls */,
 };
+export const dragonMaxHp = (d) => Math.round((DRAGON.hp + 25 * ((d.lv || 1) - 1)) * (1 + 0.1 * (d.u ? d.u[5] : 0)));
 const Z9 = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 /* is the local player the dragon rider? (player 2 of a game with a dragon; DRGDEV lets a test fly it alone) */
@@ -50,6 +62,13 @@ export function mkDragon(c) {
     rx: 0,
     ry: 0,
     bl: [] /* fireballs in flight: [target x, target y, seconds flown, from x, from y, from height] */,
+    g: 0 /* height over the ground under it, hundredths of a tile (sent by the rider) */,
+    hp: DRAGON.hp,
+    ht: 0 /* seconds since the last wound */,
+    dn: 0 /* seconds it still lies out of the fight */,
+    hx: Math.round(c.x) /* its castle: where it mends fastest and where it comes back */,
+    hy: Math.round(c.y + c.rad + TS * 9),
+    falls: 0,
   };
 }
 
@@ -64,15 +83,18 @@ export function dragonSet0(c) {
 function dragonSkills0(c) {
   const d = sessionState.DRG;
   if (!d) return;
+  const m0 = dragonMaxHp(d);
   d.lv = Math.max(1, Math.min(20, c.lv | 0));
   d.u = Z9.map((_, i) => Math.max(0, Math.min(9, (c.u && c.u[i]) | 0)));
   d.lk = Math.max(0, Math.min(5, c.lk | 0));
   d.fc = Math.max(0, Math.min(6, c.fc | 0));
+  /* a level or a Growth skill raises its life by what the maximum gained */
+  if (d.hp !== undefined) d.hp = Math.min(dragonMaxHp(d), d.hp + Math.max(0, dragonMaxHp(d) - m0));
 }
 
 function dragonBall0(c) {
   const d = sessionState.DRG;
-  if (!d || !d.u || d.u[3] < 1 || d.cb > 0 || d.bl.length > 8) return;
+  if (!d || !d.u || d.u[3] < 1 || d.cb > 0 || d.bl.length > 8 || d.dn > 0) return;
   d.cb = DRAGON.ballCool;
   let ax = (c.ax | 0) - d.x,
     ay = (c.ay | 0) - d.y;
@@ -86,7 +108,7 @@ function dragonBall0(c) {
 
 function dragonRoar0() {
   const d = sessionState.DRG;
-  if (!d || !d.u || d.u[4] < 1 || d.cr > 0) return;
+  if (!d || !d.u || d.u[4] < 1 || d.cr > 0 || d.dn > 0) return;
   d.cr = DRAGON.roarCool;
   d.rt = drRoarT(d.u);
   d.rx = d.x;
@@ -97,10 +119,11 @@ function dragonRoar0() {
    radian; f breath on; fl in flight; ax, ay where the breath lands */
 function dragonPos0(c) {
   const d = sessionState.DRG;
-  if (!d) return;
+  if (!d || d.dn > 0) return; /* down: it lies where the simulation laid it */
   d.x = c.x | 0;
   d.y = c.y | 0;
   d.a = c.a | 0;
+  d.g = Math.max(0, c.g | 0);
   d.w = c.w | 0;
   d.p = c.p | 0;
   d.fl = c.fl ? 1 : 0;
@@ -131,6 +154,68 @@ function burn(x, y, R, dm, cap, d) {
     }
 }
 
+/* what hurts the dragon, how it mends, and its fall (#72). Old saves have no life yet: it starts whole. */
+function wounds(d, dt) {
+  const max = dragonMaxHp(d);
+  if (d.hp === undefined) {
+    d.hp = max;
+    d.ht = d.dn = d.g = d.falls = 0;
+    d.hx = d.x;
+    d.hy = d.y;
+  }
+  if (d.dn > 0) {
+    d.dn = Math.max(0, d.dn - dt);
+    if (d.dn === 0) d.hp = Math.round(max * 0.6);
+    return;
+  }
+  let hit = 0;
+  if (d.g < DRAGON.low) {
+    let foe = SW.n > 0 && swNear(d.x, d.y, DRAGON.clawR) >= 0;
+    if (!foe)
+      for (const z of sessionState.units)
+        if (
+          z.t === 1 &&
+          z.hp > 0 &&
+          (z.x - d.x) * (z.x - d.x) + (z.y - d.y) * (z.y - d.y) < DRAGON.clawR * DRAGON.clawR
+        ) {
+          foe = true;
+          break;
+        }
+    if (foe) hit += DRAGON.claw * (1 + 0.03 * sessionState.waveN);
+  }
+  if (d.g < DRAGON.spitH) {
+    let n = 0;
+    for (const z of sessionState.units)
+      if (z.t === 1 && z.hp > 0 && z.type === "acid" && n < 3) {
+        const dx = z.x - d.x,
+          dy = z.y - d.y;
+        if (dx * dx + dy * dy < DRAGON.spitR * DRAGON.spitR) n++;
+      }
+    hit += n * DRAGON.spit;
+  }
+  if (hit > 0) {
+    d.hp -= hit * dt;
+    d.ht = 0;
+    if (d.hp <= 0) {
+      /* it falls: carried back before its castle, out of the fight for a while */
+      d.hp = 0;
+      d.dn = DRAGON.down;
+      d.falls = (d.falls | 0) + 1;
+      d.f = d.fl = 0;
+      d.x = d.hx;
+      d.y = d.hy;
+      d.a = d.g = 0;
+      d.bl.length = 0;
+    }
+    return;
+  }
+  d.ht += dt;
+  if (d.ht > DRAGON.calm && d.hp < max) {
+    const home = !d.fl && (d.x - d.hx) * (d.x - d.hx) + (d.y - d.hy) * (d.y - d.hy) < TS * 25 * (TS * 25);
+    d.hp = Math.min(max, d.hp + DRAGON.mend * (home ? 3 : 1) * dt);
+  }
+}
+
 export function dragonTick(dt) {
   const d = sessionState.DRG;
   if (!d) return;
@@ -149,6 +234,7 @@ export function dragonTick(dt) {
         z.rsl = sessionState.time + 0.3;
   } else swSlow(0, 0, 0, 1);
   if (sessionState.over) return;
+  wounds(d, dt);
   /* fireballs burst where they were thrown */
   if (d.bl && d.bl.length) {
     const wv = 1 + 0.03 * sessionState.waveN;
@@ -160,7 +246,7 @@ export function dragonTick(dt) {
       burn(b[0], b[1], TS * drBallRad(u), drBallDmg(u) * wv, DRAGON.ballCap, d);
     }
   }
-  if (!d.f) return;
+  if (!d.f || d.dn > 0) return;
   const dm = DRAGON.dps * (1 + 0.03 * sessionState.waveN) * drFire(u, lv) * dt;
   burn(d.ax, d.ay, DRAGON.rad * drRad(u), dm, DRAGON.cap, d);
 }

@@ -1911,4 +1911,7 @@ export const NL = {
   "Wide Flame III": "Brede vlam III",
   "Wide Flame IV": "Brede vlam IV",
   "Wide Flame V": "Brede vlam V",
+  "DRAGON DOWN": "DRAAK NEER",
+  "It was carried back to the castle and will fly again soon": "Hij is naar het kasteel gebracht en vliegt snel weer",
+  "Dragon down": "Draak neer",
 };

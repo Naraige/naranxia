@@ -851,6 +851,9 @@ export const TRD={
 export function initializeTranslations() {
   /* texts added in v101 */
 Object.assign(TRD,{
+"DRAGON DOWN":["DRAGON À TERRE","DRAGÓN CAÍDO","DRACHE AM BODEN","DRAGO A TERRA","DRAGÃO CAÍDO"],
+"It was carried back to the castle and will fly again soon":["Il a été ramené au château et revolera bientôt","Lo han llevado al castillo y pronto volverá a volar","Er wurde zur Burg gebracht und fliegt bald wieder","È stato riportato al castello e presto volerà di nuovo","Foi levado para o castelo e voltará a voar em breve"],
+"Dragon down":["Dragon à terre","Dragón caído","Drache am Boden","Drago a terra","Dragão caído"],
 "Searing Breath":["Souffle brûlant","Aliento abrasador","Sengender Atem","Soffio rovente","Sopro abrasador"],
 "+30% breath damage":["+30 % de dégâts du souffle","+30 % de daño del aliento","+30 % Atemschaden","+30% di danno del soffio","+30% de dano do sopro"],
 "Fireball":["Boule de feu","Bola de fuego","Feuerball","Palla di fuoco","Bola de fogo"],

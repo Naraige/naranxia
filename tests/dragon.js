@@ -87,6 +87,46 @@ async () => {
   DRG.lv = 9;
   await svApply(t2);
   chk("level, skills and cooldowns survive a save", JSON.stringify(DRG) === b2);
+  /* the dragon can be hurt (#72): claws when it is low over the horde, none high up, it mends, falls, comes back */
+  const pos = (g, fl) => dragonSend({ x: near.x, y: near.y, a: 2500, g, w: 0, p: 0, f: 0, fl, ax: near.x, ay: near.y });
+  near.hp = far.hp = 1e6;
+  dragonSend({ lv: 1, u: [0, 0, 0, 0, 0, 0, 0, 0, 0], lk: 0, fc: 0 }, "dk");
+  DRG.hp = 220;
+  pos(2500, 1);
+  for (let i = 0; i < 60; i++) dragonTick(1 / 30);
+  chk("high over the horde nothing reaches it", DRG.hp === 220);
+  pos(300, 1);
+  for (let i = 0; i < 60; i++) dragonTick(1 / 30);
+  const lost = 220 - DRG.hp;
+  chk("low over a zombie it is clawed (" + lost.toFixed(1) + " in 2 s)", lost > 20 && lost < 40);
+  pos(2500, 1);
+  const h1 = DRG.hp;
+  for (let i = 0; i < 90; i++) dragonTick(1 / 30);
+  chk("no mending in the first seconds after a wound", DRG.hp === h1);
+  for (let i = 0; i < 120; i++) dragonTick(1 / 30);
+  chk("then it mends", DRG.hp > h1 + 5 && DRG.hp <= 220);
+  DRG.hp = 3;
+  pos(300, 1);
+  for (let i = 0; i < 30; i++) dragonTick(1 / 30);
+  chk(
+    "it falls: out of the fight, carried home",
+    DRG.dn > 18 && DRG.hp === 0 && DRG.x === DRG.hx && DRG.y === DRG.hy && !DRG.fl && DRG.falls === 1,
+  );
+  pos(300, 1);
+  dragonSend({}, "dr");
+  chk("down, it neither moves nor roars", DRG.x === DRG.hx && DRG.rt === 0);
+  for (let i = 0; i < 620; i++) dragonTick(1 / 30);
+  chk("it comes back with part of its life", DRG.dn === 0 && DRG.hp >= 132 && DRG.hp < 220);
+  dragonSend({ lv: 5, u: [0, 0, 0, 0, 0, 1, 0, 0, 0], lk: 0, fc: 0 }, "dk");
+  chk("levels and Growth raise its life (" + dragonMaxHp(DRG) + ")", dragonMaxHp(DRG) === 352);
+  /* a smarter enemy (#73): a guarded road weighs more than a bare one */
+  const g0 = [0, 1, 2].map(laneGuard),
+    R1 = ROUTES[1].pts,
+    q = R1[R1.length - 20];
+  structs.push({ type: "tower", x: q[0] * TS, y: q[1] * TS, hp: 100, max: 100, prog: 1, pl: 0, rad: TS });
+  const g1 = [0, 1, 2].map(laneGuard);
+  structs.pop();
+  chk("a tower on a road guards it (" + g0 + " -> " + g1 + ")", g1[1] >= g0[1] + 3);
   Math.random = RR;
   return JSON.stringify({ ok: true });
 };
