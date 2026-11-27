@@ -272,6 +272,62 @@ function rider(d) {
   snd("dragonlevel");
 }
 
+/* what the dragon's state sounds and looks like on both machines (#95): the beat of its wings, the gusts of its breath, a growl and sparks
+   when it is hurt, dark smoke when it is badly wounded or down, dust when it takes off and lands */
+function life(d, S, dt, live) {
+  if (!live) return;
+  const wx = S.x * TS,
+    wy = S.z * TS,
+    up = S.y - gh(S.x, S.z);
+  if (S.fly && !(d.dn > 0)) {
+    V.wingT = (V.wingT || 0) - dt;
+    if (V.wingT <= 0) {
+      V.wingT = S.spd > 19 * 1 ? 0.55 : 0.85;
+      snd("dragonwing", wx, wy);
+    }
+  }
+  if (d.f && !(d.dn > 0)) {
+    V.brT = (V.brT || 0) - dt;
+    if (V.brT <= 0) {
+      V.brT = 0.26;
+      snd("dragonbreath", wx, wy);
+    }
+  }
+  const hp = d.hp === undefined ? 1e9 : d.hp;
+  if (V.hp0 !== undefined && hp < V.hp0 - 0.01) {
+    V.hurtT = (V.hurtT || 0) - dt;
+    if (V.hurtT <= 0) {
+      V.hurtT = 0.5;
+      snd("dragonhurt", wx, wy);
+      for (let i = 0; i < 5; i++)
+        puff(wx, wy, i & 1 ? "#c8402e" : "#ffb23c", 1, 70, { T: 0.5, z: up + 0.8, vz: 1.2, g: -3, s: 0.16 });
+    }
+  }
+  V.hp0 = hp;
+  if (d.dn > 0 || hp < dragonMaxHp(d) * 0.3) {
+    V.smT = (V.smT || 0) - dt;
+    if (V.smT <= 0) {
+      V.smT = 0.18;
+      puff(wx, wy, "#3a3438", 1, 12, { soft: 1, T: 1.8, s: 0.8, z: up + 0.8, vz: 1.2, g: -0.2 });
+    }
+  }
+  if (V.wasFly !== undefined && V.wasFly !== S.fly) {
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * 6.283;
+      puff(wx + Math.cos(a) * TS * 1.5, wy + Math.sin(a) * TS * 1.5, "#c8b890", 1, 90, {
+        soft: 1,
+        T: 0.9,
+        s: 0.6,
+        z: 0.3,
+        vz: 0.5,
+        g: 0,
+      });
+    }
+    snd("dragonwing", wx, wy);
+  }
+  V.wasFly = S.fly;
+}
+
 /* what the simulation holds, drawn on both machines: fireballs in flight and bursting, the roar */
 function effects(d, dt, live) {
   if (!live) return;
@@ -439,8 +495,11 @@ export function dragonFrame(dt, keys) {
       turn,
     };
   }
-  V.holder.position.set(S.x, S.y, S.z);
-  V.holder.rotation.set(-S.pit, S.yaw, S.roll);
+  /* down (#72): it lies on its side before the castle; it rolls over and gets up as the wait runs out (#95) */
+  V.lie = damp(V.lie || 0, d.dn > 1.2 ? 1 : 0, 3, dt);
+  V.holder.position.set(S.x, S.y - V.lie * V.rig.cy * V.S * 0.45, S.z);
+  V.holder.rotation.set(-S.pit, S.yaw, S.roll + V.lie * 1.25);
+  life(d, S, dt, live);
   dragonKit().animRig(V.rig, {
     t: V.t,
     dt,

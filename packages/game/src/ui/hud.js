@@ -910,6 +910,9 @@ function drawUIBody() {
         Math.max(settingsState.TOPH + 8, UH * 0.2);
       for (const b of hudDisplayState.tbox)
         if (b[3] >= 30 && b[1] < yb + 9 * bs && b[1] + b[3] + 5 > yb) yb = b[1] + b[3] + 5;
+      /* and under the centre bars (King, dragon gauges, call-wave button): with the dragon's three rows they reach lower than a fifth of the screen (#95) */
+      const cb = hudDisplayState.cbar;
+      if (cb && yb < cb[1] + cb[3] + 6) yb = cb[1] + cb[3] + 6;
       hudDisplayState.bny = yb;
       TC(sessionState.bannerS, UW / 2, yb, "#ff5555", bs);
       TC(sessionState.bannerS2, UW / 2, yb + 9 * bs + 6, "#ffff55", b2);

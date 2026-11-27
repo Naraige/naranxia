@@ -614,6 +614,21 @@ const SFX = {
     ns(0.35, 0.3, "bandpass", 1500, 500, 1, 0.05);
     for (let i = 0; i < 5; i++) ns(0.04, 0.12, "highpass", 2500, 0, 1, 0.15 + i * 0.09 * R());
   },
+  /* the dragon (#95): a gust of fire for the breath (retriggered while it lasts), the beat of the wings, a growl when it is hurt */
+  dragonbreath: () => {
+    ns(0.42, 0.3, "bandpass", 520, 240, 0.8);
+    ns(0.36, 0.16, "highpass", 2400, 1500, 0.9, 0.02);
+    tn(74, 0.4, "sawtooth", 0.07, 58);
+  },
+  dragonwing: () => {
+    ns(0.34, 0.2, "lowpass", 620, 150, 0.7);
+    tn(58, 0.22, "sine", 0.1, 40, 0.03);
+  },
+  dragonhurt: () => {
+    tn(210, 0.34, "sawtooth", 0.15, 96);
+    tn(158, 0.38, "square", 0.06, 84, 0.02);
+    ns(0.26, 0.14, "bandpass", 900, 420, 1.4);
+  },
   dragonball: () => {
     ns(0.5, 0.34, "bandpass", 1200, 180, 1, 0.02);
     tn(150, 0.42, "triangle", 0.16, 62);
@@ -804,6 +819,9 @@ const META = {
     trebl: [2, 0.2, 0.7, 0.06, 0.9],
     boom: [2, 0.15, 1, 0.08, 0.7],
     dragonball: [2, 0.2, 0.6, 0.05, 0.7],
+    dragonbreath: [2, 0.24, 0.5, 0.08, 0.6],
+    dragonwing: [2, 0.4, 0.3, 0.1, 0.5],
+    dragonhurt: [2, 0.9, 0.8, 0.06, 0.8],
     dragonroar: [2, 1, 1.5, 0.3, 0.9],
     dragonlevel: [0, 0.5, 0.6, 0.1, 0.9],
     dragonbuy: [0, 0.2, 0.4, 0.05, 0.9],

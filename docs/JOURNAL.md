@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · qualité: sons, animations et lisibilité du dragon, chef et éclaireurs reconnaissables (#95), branche `claude/castle-dragon-roles`, pas de version
+
+- Le Roi: « améliore la qualité du jeu de manière globale son / image / model tout », puis « animation too ». Constat avant d'agir: le son (compresseur, réverbération, ambiances, musique) et l'image (post-traitement peint, FXAA, encres) du jeu de base sont déjà poussés; le retard est dans ce qui a été ajouté cette semaine. Le dragon n'avait ni bruit d'ailes ni bruit de souffle.
+- Sons (`sound.js`): `dragonbreath` (bouffée relancée tant qu'il crache), `dragonwing` (battement, plus rapide en accélération, aussi au décollage et à l'atterrissage), `dragonhurt` (grondement quand il est blessé). Joués à sa position sur les deux machines.
+- Animations (`dragon-rider.js`, `life`): à terre il se couche sur le flanc puis se relève à la fin de l'attente; étincelles quand il est touché; fumée noire sous 30 % de vie et à terre; anneau de poussière au décollage et à l'atterrissage. Les portails respirent (`portals.js`).
+- Modèles: le chef de horde est dessiné 1,4 fois plus grand, les éclaireurs 0,85 (`sv`).
+- Lisibilité: la grande bannière passe sous les barres du centre (elle recouvrait les jauges du dragon). Capture regardée: dragon couché, bannière dégagée.
+- Vérifié: quality, det (inchangé), dragon, horde, ui, kingview, mp_dragon, mpk PASS. Les sons n'ont pas été écoutés (aucun moyen ici): à juger à l'oreille par le Roi. Pas touché: modèles des bâtiments et des unités (planche de choix), image de base.
+
 ## 2026-11-27 · lot d'idées 3: perchoir du dragon, marque du Roi, code de progression (#79, #80, #88, #92), branche `claude/castle-dragon-roles`, pas de version
 
 - Le Roi: « continue ».

@@ -220,6 +220,7 @@ function wave0() {
       const ch = mkU(1, "brute", p[0] * TS, p[1] * TS, null, L);
       ch.hp *= 1.6 * (1 + 0.05 * sessionState.waveN);
       ch.chief = 1;
+      ch.sv = 1.4; /* a head taller than a brute (drawing: rendering/swarm.js reads sv) */
       ch.ph = an.ph;
       sessionState.units.push(ch);
       if (!wmsg) wmsg = "A chieftain leads the horde: while he lives it runs to your walls";
@@ -406,6 +407,7 @@ function scoutsOut() {
     if (solidAt(x, y)) continue;
     const z = mkU(1, "runner", x, y, null, L);
     z.sc = 1;
+    z.sv = 0.85;
     z.ph = an.ph;
     sessionState.units.push(z);
   }
