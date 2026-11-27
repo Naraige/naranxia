@@ -1,5 +1,5 @@
 import { fb, hs, hyp } from "../core/math.js";
-import { ISL_SEA, islandBridge, islandCore, islandN } from "./island.js";
+import { ISL_SEA, islandBridge, islandCliff, islandCore, islandN } from "./island.js";
 import { CHALF, N, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { markP, markT } from "./terrain-invalidation.js";
@@ -154,6 +154,8 @@ export function baseHW(x, y) {
   if (!water && h < LAND + 9 && (rv1 < rw || (rv2 < rw * 0.55 && lk < 0.42))) water = true;
   if (core > 0.15) water = false;
   else if (!water && islandN(x, y) > ISL_SEA) water = true;
+  /* cliffs on parts of the coast (#70) */
+  if (!water && core <= 0) h += islandCliff(x, y);
   /* the causeway and the islet of the portals: flat dry land across the sea (#69) */
   if (core <= 0 && islandBridge(x, y)) {
     h = LAND;

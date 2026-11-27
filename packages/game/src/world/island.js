@@ -2,38 +2,57 @@ import { fb, hs } from "../core/math.js";
 import { TH, TW } from "../gameplay/rules.js";
 import { terrainState } from "./terrain-state.js";
 
-/* the world is a round island (v101, #52). The King removed the rival kingdoms, so the land is small: a disc of ISL_R tiles around the middle of the map,
-   the sea beyond. The shore wobbles with a slow noise. The routes end ISL_END inside the sea line, where the portals open, so a horde never walks
-   more than a few hundred tiles (the swarm moves slowly: the old 2250 x 1250 rectangle had its edge 1000 tiles away). The heart of the island
-   (ISL_CORE) is a flat meadow without water: the castles are founded there (ISL_SITE) and the big block buildings fit.
-   The heart is wider than the founding disc (#68): wherever the castle stands it has at least 50 tiles of flat dry land on every side, and the
-   woods and boulder fields are thinner there (terrain.js), so a kingdom has room to grow before it meets hills, lakes or forest. */
-export const ISL_R = 260,
+/* the world is one island (v101, #52, #70) of about ISL_R tiles around the middle of the map, the sea beyond; the rival kingdoms are gone.
+   Its shore is natural (bays, headlands, coves), parts of it are cliffs. Around the founding disc (ISL_SITE, moved towards the bridge) lies the
+   heart: a flat dry meadow where the castles are founded and the big block buildings fit, with thinner woods and boulder fields (terrain.js).
+   The rest of the island keeps its hills, lakes, rivers and forests. */
+export const ISL_R = 340,
   ISL_SEA = 0.93,
-  ISL_END = 0.8,
-  ISL_CORE = 0.6,
-  ISL_SITE = 0.23 /* a castle is founded within this distance (a fraction of ISL_R) from the middle of the founding disc */,
-  ISL_SHIFT = 50; /* the founding disc is moved this many tiles towards the bridge, so the horde's road is 190 to 300 tiles whatever the site */
+  ISL_HEART = 135 /* tiles of flat dry meadow around the middle of the founding disc, fading out over ISL_FADE more */,
+  ISL_FADE = 45,
+  ISL_SITE = 0.18 /* a castle is founded within this distance (a fraction of ISL_R) from the middle of the founding disc */,
+  ISL_SHIFT = 110; /* the founding disc is moved this many tiles towards the bridge: the horde's road stays 220 to 340 tiles whatever the site */
 const rawN = (x, y) => Math.hypot(x - TW / 2, y - TH / 2) / ISL_R;
-export function islandN(x, y) {
-  return rawN(x, y) + (fb(x * 0.01, y * 0.01, terrainState.SEED + 1700) - 0.5) * 0.07;
+/* 1 away from the line of the bridge, 0.25 on it: the shore keeps to its circle where the causeway leaves the island */
+function calm(x, y) {
+  const g = islandGate(),
+    dx = x - TW / 2,
+    dy = y - TH / 2;
+  if (dx * g.ex + dy * g.ey < 0) return 1;
+  const l = (dy * g.ex - dx * g.ey) / 95;
+  return 1 - 0.75 * Math.exp(-l * l);
 }
-/* 1 in the flat heart of the island, 0 from ISL_CORE + 0.12 outwards */
+/* the island is bigger and its shore natural (#70): wide bays and headlands (a slow noise, up to an eighth of the radius) with small coves on
+   them, instead of a near circle. Sea where this is over ISL_SEA. */
+export function islandN(x, y) {
+  const sd = terrainState.SEED;
+  return (
+    rawN(x, y) +
+    ((fb(x * 0.0045, y * 0.0045, sd + 1700) - 0.5) * 0.28 + (fb(x * 0.018, y * 0.018, sd + 1750) - 0.5) * 0.05) *
+      calm(x, y)
+  );
+}
+/* 1 in the flat heart of the island (around the founding disc), 0 from ISL_HEART + ISL_FADE outwards */
 export function islandCore(x, y) {
-  const t = Math.max(0, Math.min(1, (rawN(x, y) - ISL_CORE) / 0.12));
+  /* its edge wanders (35 tiles either way) so the meadow does not read as a drawn circle */
+  const m = islandSiteMid(),
+    r = ISL_HEART + (fb(x * 0.012, y * 0.012, terrainState.SEED + 1800) - 0.5) * 70,
+    t = Math.max(0, Math.min(1, (Math.hypot(x - m[0], y - m[1]) - r) / ISL_FADE));
   return 1 - t * t * (3 - 2 * t);
 }
-/* the distance from (cx, cy) along the unit direction (ex, ey) to the circle where the routes end */
-export function islandReach(cx, cy, ex, ey) {
-  const px = cx - TW / 2,
-    py = cy - TH / 2,
-    R = ISL_END * ISL_R,
-    B = 2 * (px * ex + py * ey),
-    C = px * px + py * py - R * R,
-    d = B * B - 4 * C;
-  return d <= 0 || C > 0 ? 60 : (-B + Math.sqrt(d)) / 2;
+/* cliffs on parts of the coast (#70): how many levels the land rises here above its own height. Along stretches the seed picks (about a
+   third of the shore), the last dozen tiles before the sea climb 4 to 7 levels and drop sheer into the water; never by the bridge or in the
+   heart. */
+export function islandCliff(x, y) {
+  const n = islandN(x, y);
+  if (n < ISL_SEA - 0.045 || n > ISL_SEA) return 0;
+  const sd = terrainState.SEED,
+    m = (fb(x * 0.0038 + 31, y * 0.0038, sd + 1900) - 0.55) / 0.07;
+  if (m <= 0) return 0;
+  const c = calm(x, y),
+    k = Math.min(1, m) * Math.min(1, (n - (ISL_SEA - 0.045)) / 0.028) * (c < 0.8 ? 0 : 1) * (1 - islandCore(x, y));
+  return Math.round(k * (4 + 3 * fb(x * 0.02, y * 0.02, sd + 1950)));
 }
-
 /* ---- the bridge and the islet of the portals (#69) ----
    The King: "one huge island with a bridge, and on the far side of the bridge the portal of the zombies". Beyond the sea, in a direction the
    seed picks, lies a small round islet; a straight causeway of land joins it to the island. Every route of the horde starts on the islet (its
@@ -49,7 +68,8 @@ export function islandGate() {
   const a = hs(3, 7, terrainState.SEED + 77) * 6.283185,
     ex = Math.cos(a),
     ey = Math.sin(a),
-    R = ISL_R * ISL_SEA + 9 + 18 + ISLET_R /* shore, its wobble, the open water, the islet */,
+    R =
+      ISL_R * (ISL_SEA + 0.045) + 18 + ISLET_R /* the shore at its furthest by the bridge, the open water, the islet */,
     H = ISL_R * 0.75; /* the bridge head, well inside the shore */
   G = { a, ex, ey, R, H, x: TW / 2 + ex * R, y: TH / 2 + ey * R, hx: TW / 2 + ex * H, hy: TH / 2 + ey * H };
   return G;

@@ -4,6 +4,15 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-27 · carte: île plus grande, côte naturelle, falaises (#70), branche `claude/castle-dragon-roles`, pas de version
+
+- Le Roi: « do the map bigger and make it more natural and also with some cliff on some portion ».
+- `world/island.js`: `ISL_R` 260 -> 340. Côte: deux bruits (baies et caps jusqu'à 1/7 du rayon, petites criques), calmés près de l'axe du pont (`calm`) pour que la chaussée parte d'un rivage régulier. Falaises (`islandCliff`): sur un tiers de la côte environ (tronçons tirés de la graine), les 12 dernières cases montent de 4 à 7 niveaux et tombent à pic dans la mer; jamais près du pont ni dans le cœur.
+- Le cœur plat n'est plus centré sur l'île mais sur le disque de fondation (`ISL_HEART` 135 cases, bord qui ondule de 35, fondu 45): le reste de l'île garde collines, lacs, rivières, forêts. Disque de fondation: `ISL_SITE` 0,18 (61 cases), décalé de 110 vers le pont. Route de la horde mesurée: 277 à 356 cases (250 à 325 avant).
+- Vérifié par une image de 3 mondes (hauteurs, eau, routes) regardée une fois; place autour du château toujours 84-96 % libre, 33 à 59 emplacements 12 x 12.
+- Tests: det re-fixé, features graine 32.
+- Non vérifié: les falaises vues en jeu de près, la mini-carte et le sélecteur de site avec la grande île, `mp_soak`, `--full`.
+
 ## 2026-11-27 · carte: cœur ouvert pour bâtir (#68), pont et îlot des portails (#69), branche `claude/castle-dragon-roles`, pas de version
 
 - Le Roi: « il faut adapter la map pour qu'il y a plus d'espace pour build », puis « une sorte d'énorme île avec un pont et de l'autre côté du pont le portail des zombies qui envahissent ».
