@@ -68,8 +68,11 @@ export function lightSources() {
     shade = lightShade();
   for (const s of sessionState.structs) {
     if (s.prog < 1 || s.hp <= 0) continue;
-    let r = LIGHTR[s.type] || (lampWall(s) ? 4 : 0);
+    /* every building is lit (#106), a wall only where it carries a lamp. The reach is counted from the walls of the building, not from its
+       middle (a house is 12 tiles wide: 4 tiles from its middle lit nothing but its own floor), and half as far again as before */
+    let r = s.type === "wall" ? (lampWall(s) ? 4 : 0) : LIGHTR[s.type] || 4;
     if (s.type === "castle" && s.tier) r = 18;
+    if (r) r = r * 1.5 + (s.type === "wall" ? 0 : (s.sz || 2) / 2);
     if (r) L.push([s.x, s.y, r * TS * (shade && s.type !== "castle" && s.type !== "keep" ? shade(s.x, s.y) : 1)]);
   }
   for (const u of sessionState.units)

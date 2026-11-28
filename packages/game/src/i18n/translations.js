@@ -849,7 +849,11 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v101 */
+  /* texts added in v102 */
+Object.assign(TRD,{
+"Long range: volleys of 9 arrows":["Longue portée : volées de 9 flèches","Largo alcance: andanadas de 9 flechas","Große Reichweite: Salven aus 9 Pfeilen","Lungo raggio: raffiche di 9 frecce","Longo alcance: salvas de 9 flechas"]
+});
+/* texts added in v101 */
 Object.assign(TRD,{
 "One island, one bridge, a King to walk and a dragon to ride.":["Une île, un pont, un Roi à mener et un dragon à chevaucher.","Una isla, un puente, un Rey que guiar y un dragón que montar.","Eine Insel, eine Brücke, ein König zum Führen und ein Drache zum Reiten.","Un'isola, un ponte, un Re da guidare e un drago da cavalcare.","Uma ilha, uma ponte, um Rei para conduzir e um dragão para montar."],
 "The world is one large island with cliffs and a wide heart to build on; a stone bridge is the only way in, and the portals of the horde stand beyond it.":["Le monde est une grande île avec des falaises et un large cœur où bâtir ; un pont de pierre est le seul accès, et les portails de la horde se dressent au-delà.","El mundo es una gran isla con acantilados y un amplio corazón donde construir; un puente de piedra es la única entrada, y los portales de la horda se alzan más allá.","Die Welt ist eine große Insel mit Klippen und einem weiten Herzen zum Bauen; eine Steinbrücke ist der einzige Zugang, und die Portale der Horde stehen dahinter.","Il mondo è una grande isola con scogliere e un ampio cuore su cui costruire; un ponte di pietra è l'unico accesso, e i portali dell'orda sorgono al di là.","O mundo é uma grande ilha com falésias e um coração amplo onde construir; uma ponte de pedra é a única entrada, e os portais da horda erguem-se para lá dela."],

@@ -4,6 +4,34 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-28 · après la v101: la liste du Roi en jouant (#99 à #113, non sorti)
+
+Le Roi joue la v101 et envoie ses remarques une à une. Rien sous `game/`: attend son feu vert pour une v102.
+
+- #99 gardes: le Roi et ses propres gardes se traversent (`simulation.js`, séparation): un garde à son poste comptait triple et le bloquait.
+- #101 bras du Roi au repos: les mains se rejoignent sur le pommeau au lieu de se croiser à travers le torse (`unit-animation.js`).
+- #100 portées à l'échelle des bâtiments en blocs: tour 26 cases au-delà de ses murs (11), baliste 33 (18), trébuchet 47,5 (32,5), château 30 depuis son centre (10 = son propre mur),
+  garnisons `GRNG` mur 6, tour 9, donjon 10,5 (2,4 / 3,6 / 4,2). Le Roi disait « x3 »: j'ai pris environ x2,4 pour la tour, à lui de dire.
+- #109 tour: volée de 9 flèches à 15 (bois), 12 à 17 (pierre), plus étalée; texte « volleys of 9 arrows » traduit (8 langues).
+- #102 vue du Roi en vraie troisième personne: distance 7,5 (15), inclinaison 0,3, regard à hauteur d'épaules (`CAM.lift`, `rendering/camera.js`), molette de 4 à 30,
+  inclinaison presque à plat permise (`CAM.pmin`). La caméra s'arrête devant un bâtiment au lieu d'y entrer (`camRoom`, hauteurs approximatives `KV_BH`).
+- #103 fenêtre de visibilité: ne coupe plus que ce qui est ENTRE la caméra et le Roi (avant, le mur devant lequel il se tenait était troué aussi), rayon réduit, bord tramé.
+- #104 bannières: une bannière marquée sur un mur recule jusqu'à toucher des blocs pleins (`settle`, `models/structures.js`). Cas trouvé: la guilde (accrochées au bord de l'encorbellement).
+  Je n'ai pas pu identifier avec certitude le bâtiment de la capture du Roi: à revoir s'il le revoit.
+- #105 relief dans le noir: le noir des terres inexplorées prend maintenant la brume de distance (`fog.js`): à l'horizon il se fond dans le ciel au lieu de s'y découper.
+- #107 portes et chemins: un bâtiment posé tourne sa porte vers le château de son royaume (`faceRot`; R sur un bâtiment sélectionné le tourne toujours), la route du royaume finit devant sa porte
+  et fait 3 cases de large (1 case ne se voyait pas à côté de bâtiments de 12: c'était le « pas de chemins ? » du Roi).
+- #106 lumière: tous les bâtiments éclairent, portée comptée depuis leurs murs et moitié plus grande (`lighting.js`).
+- #110 voile: des colonnes violettes se dressent au bord de la lumière la nuit (`rendering/veil.js`, dessin seul), les yeux de la horde brûlent en violet.
+  Pas passé par une planche de choix: le Roi l'a demandé directement.
+- #108 départ: 2 chevaliers et 3 archers par château, en plus des 3 paysans, du Roi et de ses gardes.
+- #111 civils: 6 villageois se promènent autour de chaque château le jour (`rendering/civilians.js`): dessin seul, hors simulation, hors sauvegarde, propres à chaque machine.
+- #112 fermier: ses quatre points de travail étaient ceux de l'ancienne ferme de 2 cases, tous dans la grange; ils sont dans le champ.
+- #113 solo: l'écran « New kingdom » ne revient plus une fois le royaume fait (`dk_theme` présent): on passe au choix du site. « Your kingdom » sur le titre le modifie.
+- Tests: `det` ré-épinglé (répétable), `spearman` et `waves` retirent les soldats du départ et font taire le château (sa portée atteint maintenant leur zombie), `kingview` vérifie que deux gardes posés sur le Roi ne le poussent pas.
+- Vérifié à l'image: le fermier dans son champ, le voile de nuit, les routes, la vue du Roi. Non vérifié: les civils de près, les portes tournées vers le château bâtiment par bâtiment. `tools/voxel_preview.py` échoue sur le château (« reading 'c' »), pas cherché.
+- Équilibre à surveiller: portées et volée de la tour plus fortes + 5 soldats au départ = début plus facile.
+
 ## 2026-11-28 · après la v101: plus de Chronique ni d'À propos (#98, non sorti)
 
 - Le Roi: « delete chornique et a propos ». Les deux boutons et leurs écrans quittent le menu titre (`ui/title-menu.js`: `drawChronicle`, `drawAbout`, `CHRON`, `CHFR`); la carte de droite garde Mise à jour, Votre royaume, Classement.

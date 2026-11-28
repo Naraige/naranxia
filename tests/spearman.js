@@ -58,6 +58,10 @@ async () => {
   selB = null;
   buy("spearman");
   chk("notAtCastle", !queue.some((q) => q.type === "spearman"));
+  /* alone on the field: the soldiers a kingdom starts with (v102) and the arrows of the castle, which now reach here, would strike the zombie too */
+  for (let i = units.length - 1; i >= 0; i--)
+    if (units[i].t === 0 && ["king", "guard", "knight", "archer"].includes(units[i].type)) units.splice(i, 1);
+  CS.ccd = 1e9;
   /* reach: a zombie held 48 px away (v101: the bodies are 1.6 times wider, the knight reaches 40) is struck by a spearman standing still, not by a knight */
   const f = freeTile(CS.tx + 16, CS.ty + 16),
     X = (f[0] + 0.5) * TS,

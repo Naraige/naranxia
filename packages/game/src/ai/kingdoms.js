@@ -107,8 +107,8 @@ export function rangeOf(s) {
   if (s.type === "castle") return { r: CASTLE_RNG };
   if (s.type !== "tower") return null;
   const wo = s.sz * 0.375;
-  if (s.weapon === "ballista") return { r: 720 / TS + wo };
-  if (s.weapon === "trebuchet") return { r: 1300 / TS + wo, min: 240 / TS + wo };
+  if (s.weapon === "ballista") return { r: BALR / TS + wo };
+  if (s.weapon === "trebuchet") return { r: TRBR / TS + wo, min: 240 / TS + wo };
   return { r: towerReach(s) / TS };
 }
 
@@ -142,7 +142,11 @@ export const selH = (s) =>
     trebuchet: 3,
   })[s.type] || 2;
 
-export const TOWR = 11;
+/* the reach of the shooting buildings follows the block-built scale (the King, #100: "x3"): a tower 26 tiles beyond its walls (was 11),
+   a ballista 33 (18), a trebuchet 47.5 (32.5), the castle 30 from its middle (10, which was its own wall) */
+export const TOWR = 26;
+export const BALR = 1320,
+  TRBR = 1900;
 /* how far a tower shoots from its middle (sim units): TOWR tiles (a tile and a half more in stone), plus what its footprint grew since the towers
    of two tiles (3/8 of its side), so the reach beyond its walls is what it always was; the engines on it get the same allowance */
 /* a tower on high ground shoots further (#89): half a tile per level above the plain, six levels at most (a cliff top, a hill) */

@@ -29,7 +29,7 @@ export function updateCamera(dt) {
   const d = CAM.dist,
     cp = Math.cos(CAM.pitch);
   let px = CAM.x + d * Math.sin(CAM.yaw) * cp,
-    py = CAM.y + d * Math.sin(CAM.pitch),
+    py = CAM.y + (CAM.lift || 0) + d * Math.sin(CAM.pitch),
     pz = CAM.z + d * Math.cos(CAM.yaw) * cp;
   const gy = gh(px, pz) + 2.5;
   if (py < gy) py = gy;
@@ -47,7 +47,8 @@ export function updateCamera(dt) {
     pz += (Math.random() - 0.5) * k;
   }
   camera.position.set(px, py, pz);
-  camera.lookAt(CAM.x, CAM.y, CAM.z);
+  /* CAM.lift: the King view looks at his shoulders, not at his feet (input/king-view.js) */
+  camera.lookAt(CAM.x, CAM.y + (CAM.lift || 0), CAM.z);
   scene.fog.near = d * 0.55 + 6;
   scene.fog.far = d * 1.9 + 38;
   if (SHADOWS) {

@@ -185,14 +185,15 @@ function eyePair(X, Z, h, fa, lat, fwd, sz, a) {
     z = Z + fz * fwd;
   sz *= Math.max(1, CAM.dist / 13);
   if (CAM.dist > 22) {
-    eg(x, h, z, sz * 1.5, 1, 0.13, 0.05, a);
-    eg(x, h, z, sz * 0.5, 1, 0.6, 0.4, a * 0.7);
+    eg(x, h, z, sz * 1.5, 0.62, 0.16, 1, a);
+    eg(x, h, z, sz * 0.5, 0.9, 0.7, 1, a * 0.7);
     return;
   }
   const ex = fz * lat,
     ez = -fx * lat;
-  eg(x + ex, h, z + ez, sz, 1, 0.13, 0.05, a);
-  eg(x - ex, h, z - ez, sz, 1, 0.13, 0.05, a);
+  /* the eyes of the horde burn in the purple of the veil it comes out of (#110), no longer red */
+  eg(x + ex, h, z + ez, sz, 0.62, 0.16, 1, a);
+  eg(x - ex, h, z - ez, sz, 0.62, 0.16, 1, a);
 }
 
 const litV = (X, Z) => {

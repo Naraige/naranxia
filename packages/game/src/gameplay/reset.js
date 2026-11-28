@@ -195,11 +195,15 @@ export function reset() {
   sessionState.portals = [];
   calcFD();
   initAI();
+  /* a kingdom starts with three peasants, two knights and three archers (#108), its King and his guards */
+  const START = ["knight", "knight", "archer", "archer", "archer"];
   ["g", "w", "s"].forEach((j) => spawn(0, "peasant", 1, j));
+  START.forEach((u) => spawn(0, u, 1));
   roleHooks.startKing(sessionState.CS);
   if (sessionState.CS2) {
     setPl(1);
     ["g", "w", "s"].forEach((j) => spawn(0, "peasant", 1, j, sessionState.CS2));
+    START.forEach((u) => spawn(0, u, 1, undefined, sessionState.CS2));
     roleHooks.startKing(sessionState.CS2);
     setPl(0);
   }

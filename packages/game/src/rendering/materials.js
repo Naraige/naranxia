@@ -72,8 +72,10 @@ export function initializeMaterials() {
       .replace(
         "#include <color_fragment>",
         `#include <color_fragment>
- if(uCut.w>0.&&vWP.y>uCut.y+1.7){vec3 ca=cameraPosition,cb=uCut.xyz-ca;float ct=clamp(dot(vWP-ca,cb)/dot(cb,cb),0.,1.);
-  if(length(vWP-(ca+cb*ct))<uCut.w*(.05+2.3*ct))discard;}
+ if(uCut.w>0.&&vWP.y>uCut.y+1.7){vec3 ca=cameraPosition,cb=uCut.xyz-ca;float ct=dot(vWP-ca,cb)/dot(cb,cb);
+  /* only what stands BETWEEN the camera and the point (ct<1: the wall he stands in front of stays whole, #103), the edge dissolves in a dither */
+  if(ct>0.&&ct<.94){float cr=length(vWP-(ca+cb*ct))/(uCut.w*(.05+.95*ct));
+   if(cr<1.&&(cr<.72||fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(.06711056,.00583715))))>(cr-.72)/.28))discard;}}
  vec3 wN=normalize(cross(dFdx(vWP),dFdy(vWP)));vec3 aN=abs(wN);vec3 wq=vWP-wN*.002;
  vec2 uv=aN.y>.5?wq.xz:(aN.x>.5?wq.zy:wq.xy);
  float fw=max(length(dFdx(uv)),length(dFdy(uv)));

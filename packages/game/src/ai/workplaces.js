@@ -336,10 +336,13 @@ export function saplTick(dt) {
 }
 
 export function initializeWorkplaces() {
+  /* the furrows of the block-built farm (16 tiles, models/builds/homes.js): the field is south-west of its middle, its path at x = 5.
+     Tiles from the middle of the farm, plus one (farmSpot takes it off). The old spots were those of the farm of 2 tiles: all four fell
+     inside the barn, and the farmer was never seen (#112) */
   FSPOT = [
-    [1.35, 0.42, 0],
-    [1.6, 1.2, Math.PI],
-    [0.9, 1.58, Math.PI],
-    [0.4, 1.2, 0],
+    [-1.5, 4.7, 0],
+    [-1.5, 7.3, Math.PI],
+    [-4.5, 7.3, Math.PI],
+    [-4.5, 4.7, 0],
   ];
 }

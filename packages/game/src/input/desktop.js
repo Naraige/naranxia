@@ -268,7 +268,7 @@ export function initializeDesktopInput() {
         if (inputState.ptr.btn === 0) panCam(dx * k, dy * k);
         else {
           CAM.yaw -= dx * 0.007;
-          CAM.pitch = Math.max(0.35, Math.min(1.38, CAM.pitch + dy * 0.005));
+          CAM.pitch = Math.max(CAM.pmin || 0.35, Math.min(1.38, CAM.pitch + dy * 0.005));
         }
       }
       return;
@@ -294,7 +294,7 @@ export function initializeDesktopInput() {
     } else if (inputState.ptr.rot) {
       if (inputState.ptr.m > 8) {
         CAM.yaw -= dx * 0.007;
-        CAM.pitch = Math.max(0.35, Math.min(1.38, CAM.pitch + dy * 0.005));
+        CAM.pitch = Math.max(CAM.pmin || 0.35, Math.min(1.38, CAM.pitch + dy * 0.005));
       }
     } else if (inputState.ptr.pan) {
       if (inputState.ptr.m > 8) panCam(dx * k, dy * k);

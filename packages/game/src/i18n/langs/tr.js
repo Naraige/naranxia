@@ -1941,4 +1941,5 @@ export const TR = {
     "Yollar her binadan kaleye kendiliğinden döşenir, birlikler binaların ölçeğindedir ve savaş sisi arazinin biçimini gizler.",
   "Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.":
     "Daha zengin efektler ve sesler, canlı bir diyar: kelebekler, kuşlar, düşen yapraklar ve balıklar.",
+  "Long range: volleys of 9 arrows": "Uzun menzil: 9 okluk yaylım ateşi",
 };

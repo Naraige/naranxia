@@ -1944,4 +1944,5 @@ export const PL = {
     "Ścieżki same układają się od każdego budynku do zamku, jednostki mają skalę budynków, a mgła wojny skrywa kształt lądu.",
   "Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.":
     "Bogatsze efekty i dźwięki oraz żywa kraina: motyle, ptaki, opadające liście i ryby.",
+  "Long range: volleys of 9 arrows": "Duży zasięg: salwy po 9 strzał",
 };

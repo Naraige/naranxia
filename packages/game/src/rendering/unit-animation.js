@@ -403,10 +403,11 @@ export function animUnit(u, dt, anyDmg, frame) {
     const rest = !wl && atk < 0 && sessionState.clockT - (d.kcb || -99) > 2.2;
     if (rest) {
       const b = Math.sin(T * 1.1) * 0.015;
-      ar = -0.5 + b;
-      al = -0.5 + b;
-      arz = -0.52;
-      alz = 0.52;
+      /* the hands meet on the pommel, side by side: at 0.52 both arms reached the middle and went through each other (#101) */
+      ar = -0.6 + b;
+      al = -0.48 + b;
+      arz = -0.4;
+      alz = 0.3;
       wy = 0.451;
       u.kwr = 2.133 - b;
       lean = -0.03;

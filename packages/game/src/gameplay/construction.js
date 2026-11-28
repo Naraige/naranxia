@@ -5,7 +5,7 @@ import { ach } from "./achievements.js";
 import { doUpgrade, ok, pay } from "./economy.js";
 import { mk } from "./entities.js";
 import { ungar } from "./formations.js";
-import { HOMEC, LPL, playersState, stoneOn } from "./players.js";
+import { CASTLES, HOMEC, LPL, playersState, stoneOn } from "./players.js";
 import { bsz, BSZ, C, CSZ, DIR4, fcell, FCELL, FSZ, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { sessionState } from "./session.js";
@@ -203,6 +203,16 @@ export function castleRotAt(c, want) {
       return r;
   }
   return want & 3;
+}
+
+/* the door of a new building looks at the castle of its kingdom (#107): the quarter turn whose front is nearest to it. Pure, from the
+   tiles and the castle alone, so the ghost, the host and the guest agree; a building can still be turned afterwards (select it, R) */
+export function faceRot(tx, ty, sz, pl) {
+  const c = CASTLES()[pl | 0] || sessionState.CS;
+  if (!c) return 0;
+  const dx = c.x / TS - (tx + sz / 2),
+    dy = c.y / TS - (ty + sz / 2);
+  return Math.abs(dy) >= Math.abs(dx) ? (dy > 0 ? 0 : 2) : dx > 0 ? 1 : 3;
 }
 
 export function doorTiles(c, depth) {

@@ -1,6 +1,6 @@
 import { updateCamps } from "../ai/camps.js";
 import { updateRuins } from "./ruins.js";
-import { aiUnit, baseTrait, BASES, campLabel, towerReach, updateHordes } from "../ai/kingdoms.js";
+import { aiUnit, BALR, baseTrait, BASES, campLabel, towerReach, TRBR, updateHordes } from "../ai/kingdoms.js";
 import { eventsTick, renownMul } from "./events.js";
 import { RHAS, roleTick } from "../ai/worker-roles.js";
 import { peasant, toLight } from "../ai/workers.js";
@@ -616,8 +616,9 @@ export function update0(dt) {
         s.cd = 0.3;
         continue;
       }
-      const n = st ? 6 : 5,
-        dm = (st ? 12 : 11) * (RS2.done.fletch ? 1.4 : 1),
+      /* a volley in keeping with a tower of 8 tiles (#109): 9 arrows of 15 in wood, 12 of 17 in stone (were 5 of 11 and 6 of 12) */
+      const n = st ? 12 : 9,
+        dm = (st ? 17 : 15) * (RS2.done.fletch ? 1.4 : 1),
         dd = dist(s.x, s.y, b.x, b.y) || 1,
         fl = Math.min(0.75, 0.36 + dd / 1400),
         sw = !(b.type in T),
@@ -626,7 +627,7 @@ export function update0(dt) {
       snd("arrow", s.x, s.y);
       for (let k = 0; k < n; k++) {
         const a = Math.random() * 6.2832,
-          r = TS * (0.15 + 0.95 * Math.sqrt(Math.random())),
+          r = TS * (0.15 + 1.5 * Math.sqrt(Math.random())),
           t = fl + k * 0.035,
           x2 = k ? cx + Math.cos(a) * r : b.x,
           y2 = k ? cy + Math.sin(a) * r : b.y;
@@ -660,7 +661,7 @@ export function update0(dt) {
         wo = s.type === "tower" ? s.sz * 0.375 * TS : 0;
       let b = null;
       if (!tb) {
-        [b] = targetZ(s, 720 + wo);
+        [b] = targetZ(s, BALR + wo);
         if (b && (!(b.type in T) || !simSeen(spl, b.x, b.y))) b = null;
       } else {
         let bs = -1,
@@ -668,7 +669,7 @@ export function update0(dt) {
         for (const e of sessionState.units) {
           if (e.t !== 1 || e.hp <= 0 || ++n > 90) continue;
           const dd = dist(s.x, s.y, e.x, e.y);
-          if (dd < 240 + wo || dd > 1300 + wo || !simSeen(spl, e.x, e.y)) continue;
+          if (dd < 240 + wo || dd > TRBR + wo || !simSeen(spl, e.x, e.y)) continue;
           let c = 0;
           for (const f of sessionState.units)
             if (f.t === 1 && Math.abs(f.x - e.x) < 110 && Math.abs(f.y - e.y) < 110 && dist(f.x, f.y, e.x, e.y) < 110)
@@ -680,7 +681,7 @@ export function update0(dt) {
         }
       }
       if (!b && tb) {
-        const i = swDense(s.x, s.y, 240 + wo, 1300 + wo);
+        const i = swDense(s.x, s.y, 240 + wo, TRBR + wo);
         if (i >= 0 && simSeen(spl, SW.x[i], SW.y[i])) {
           SWP.x = SW.x[i];
           SWP.y = SW.y[i];
@@ -772,6 +773,8 @@ export function update0(dt) {
           for (let q = h; q >= 0; q = SEPN[q]) {
             const b = sessionState.units[q];
             if (b.gi <= a.gi) continue;
+            /* the King and his own royal guards pass through each other (#99): a guard standing at his post counted triple and blocked the way of the King */
+            if ((a.type === "king" && b.cap === a) || (b.type === "king" && a.cap === b)) continue;
             const m = (T[a.type].r + T[b.type].r) * 1.12;
             if (Math.abs(a.x - b.x) > m || Math.abs(a.y - b.y) > m) continue;
             let dd = dist(a.x, a.y, b.x, b.y);

@@ -1,8 +1,8 @@
 import { selH } from "../ai/kingdoms.js";
 import { GROWT, SAPL } from "../ai/workplaces.js";
 import { rngf } from "../core/random.js";
-import { constructionState, tilesFor } from "../gameplay/construction.js";
-import { HOMEC, stoneOn } from "../gameplay/players.js";
+import { constructionState, faceRot, tilesFor } from "../gameplay/construction.js";
+import { HOMEC, LPL, stoneOn } from "../gameplay/players.js";
 import { bsz, FCELL, footD, footW, ROTT, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { fowSeenAt } from "./fog.js";
@@ -241,7 +241,7 @@ export function ghostMake(G, type, tx, ty, ax, good, alpha, tiles) {
           ? HOMEC().rot | 0
           : 0
         : ROTT.has(type)
-          ? constructionState.buildRot & 3
+          ? faceRot(tx, ty, sz, LPL())
           : 0,
     tl = (GHO && GHO.tiles) || tiles || tilesFor(type, tx, ty, sz, ax, gl),
     key = type + "|" + tx + "," + ty + "|" + (ax | 0) + "|" + tier + "|" + gl + "|" + rot + "|" + sz + "|" + tl.length;

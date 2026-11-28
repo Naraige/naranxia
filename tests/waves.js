@@ -275,6 +275,10 @@ async () => {
   }
   /* last resort: a zombie that still stands 80 s after giving up its path is taken away, without a kill */
   {
+    /* nobody may kill the zombie held here: no soldiers of the start (v102), no arrows from the castle (its reach is 30 tiles now) */
+    for (let i = units.length - 1; i >= 0; i--)
+      if (units[i].t === 0 && ["knight", "archer"].includes(units[i].type)) units.splice(i, 1);
+    for (const k of castles()) k.ccd = 1e9;
     swDbg.swReset(); /* the horde that waded out above lives on (v101): without this its deaths at the walls would count as kills here */
     const c = CS,
       f = freeTile(c.tx - 30, c.ty - 30);

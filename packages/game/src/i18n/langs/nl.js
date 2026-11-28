@@ -1957,4 +1957,5 @@ export const NL = {
     "Paden leggen zichzelf aan van elk gebouw naar het kasteel, eenheden staan op de schaal van de gebouwen, en de oorlogsmist verbergt de vorm van het land.",
   "Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.":
     "Rijkere effecten en geluiden, en een levend land: vlinders, vogels, vallende bladeren en vissen.",
+  "Long range: volleys of 9 arrows": "Groot bereik: salvo's van 9 pijlen",
 };

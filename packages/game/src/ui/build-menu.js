@@ -175,7 +175,7 @@ const TIPS = {
   ],
   wall: ["Wooden wall", "Cheap and links to its neighbours", "Upgrade it to stone later"],
   gate: ["Wooden gate", "12 tiles long. R rotates it", "Your units pass, zombies must break it"],
-  tower: ["Wooden tower", "Long range: volleys of 5 arrows", "Lights the night. Archers garrison (3)"],
+  tower: ["Wooden tower", "Long range: volleys of 9 arrows", "Lights the night. Archers garrison (3)"],
   ballista: ["Ballista [B]", "Click a finished tower to mount it", "Pierces a whole line of zombies"],
   trebuchet: ["Trebuchet [T]", "Click a finished tower to mount it", "Huge range, boulders crush a crowd"],
   raise: [

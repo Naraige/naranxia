@@ -311,7 +311,7 @@ function hitSw(u, e) {
 }
 
 /* ---- the castle shoots arrows at the nearest zombie in range ---- */
-export const CASTLE_RNG = 10;
+export const CASTLE_RNG = 30; /* from its middle: the castle is 20 tiles wide, so 20 beyond its walls (#100) */
 
 export function castleFire(dt) {
   for (const c of aliveC()) {

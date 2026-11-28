@@ -219,6 +219,12 @@ function drawTitleScreen(UW, UH) {
     }, drawLang);
     return;
   }
+  if (settingsState.setupOpen && profileMade()) {
+    /* the kingdom has its name and colours already (#113): straight to the choice of the site. "Your kingdom" on the title changes them */
+    settingsState.setupOpen = false;
+    openPicker();
+    return;
+  }
   if (settingsState.setupOpen) {
     const b = () => {
       settingsState.setupOpen = false;
@@ -971,6 +977,13 @@ const closeProfile = () => {
 };
 
 /* ================= New kingdom ================= */
+const profileMade = () => {
+  try {
+    return !!localStorage.getItem("dk_theme");
+  } catch {
+    return false;
+  }
+};
 function drawSetup(UW, UH, fh, back) {
   const b = kitScreen(UW, UH, { key: "new", title: "New kingdom", close: back, fh, maxW: 440 }),
     small = b.h < 190,
@@ -997,6 +1010,18 @@ function drawSetup(UW, UH, fh, back) {
     byy = Math.min(b.y + b.h - bh - 2, y + 4),
     bw1 = Math.round(pw * 0.3),
     bw2 = pw - bw1 - 8;
-  bevelBtn(b.x + bw1 + 8, byy, bw2, bh, "Choose site", "go", openPicker, { sc: 0.95 });
+  bevelBtn(
+    b.x + bw1 + 8,
+    byy,
+    bw2,
+    bh,
+    "Choose site",
+    "go",
+    () => {
+      saveTheme(); /* the profile is made: the next game does not ask again */
+      openPicker();
+    },
+    { sc: 0.95 },
+  );
   bevelBtn(b.x, byy, bw1, bh, "Back", "dark", back, { sc: 0.85 });
 }

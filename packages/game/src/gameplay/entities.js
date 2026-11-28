@@ -1,5 +1,5 @@
 import { rnd } from "../core/math.js";
-import { constructionState, doorTiles, tilesFor } from "./construction.js";
+import { doorTiles, faceRot, tilesFor } from "./construction.js";
 import { playersState, stoneOn } from "./players.js";
 import { BT, C, FCELL, ROTT, SH, T, TS, TW } from "./rules.js";
 import { sessionState } from "./session.js";
@@ -23,7 +23,7 @@ export function mk(t, type, tx, ty, sz, done, ax, gl, tiles0) {
       tiles,
       ax: ax || 0,
       gl,
-      rot: t === 0 && type !== "castle" && ROTT.has(type) ? constructionState.buildRot & 3 : 0,
+      rot: t === 0 && type !== "castle" && ROTT.has(type) ? faceRot(tx, ty, sz, playersState.CURPL) : 0,
       rad: g ? 20 * gl * FCELL : sz * 20,
       x: g ? (tx + ((ax ? 1 : gl) * FCELL) / 2) * TS : (tx + sz / 2) * TS,
       y: g ? (ty + ((ax ? gl : 1) * FCELL) / 2) * TS : (ty + sz / 2) * TS,

@@ -49,6 +49,17 @@ async () => {
   /* the guards keep their distance: they stood inside the King and blocked him (the King, 2026-11-27) */
   const close = Math.min(...units.filter((u) => u.type === "guard").map((g) => d(g, k)));
   chk("his guards stand off him, not on him (" + close.toFixed(2) + " tiles)", close > 1.2);
+  /* and they never push him (#99): two guards put on him do not move the King */
+  {
+    const gs = units.filter((u) => u.type === "guard"),
+      pk = { x: k.x, y: k.y };
+    gs[0].x = k.x + 6;
+    gs[0].y = k.y;
+    gs[1].x = k.x - 6;
+    gs[1].y = k.y + 4;
+    fr(6);
+    chk("guards standing on the King do not push him (" + d(k, pk).toFixed(2) + " tiles)", d(k, pk) < 0.05);
+  }
   /* the view is the player's: a tilt he gives is kept, the King view does not pull it back */
   CAM.pitch = 1.05;
   fr(40);

@@ -89,8 +89,9 @@ export const TRAIN = {
   CSZ = BSZ_CASTLE,
   CHALF = BSZ_CASTLE >> 1,
   GCAP = { wall: 1, gate: 2, tower: 3 },
-  /* reach of a garrison: times the archer's range. A tower is 8 tiles wide, so the old 2.3 barely cleared its own foot (7 tiles from its middle) */
-  GRNG = { wall: 2.4, gate: 2.4, tower: 3.6 },
+  /* reach of a garrison: times the archer's range (3 tiles). The buildings are block-built since v97 (a tower 8 tiles wide, the castle 20):
+     the old reach (wall 7, tower 11 tiles from the middle) looked like nothing beside them (the King, #100: "x3"). Now 18 and 27 tiles: x2.5 */
+  GRNG = { wall: 6, gate: 6, tower: 9 },
   GTOP = { wall: 5, gate: 8, tower: 11 },
   /* the fortifications are laid on a grid of FCELL tiles, the scale of the block-built buildings: a wall piece is one cell (the free tiles of it),
      the tower of the build menu 2 x 2 cells (the camps raise towers of one cell), a gate 2 or 3 cells long and one cell thick with a passage
@@ -365,7 +366,7 @@ export function initializeRules() {
   Object.assign(SH, { keep: 2400 });
   Object.assign(BT, { keep: 30 });
   Object.assign(GCAP, { keep: 12, tower: 4 });
-  Object.assign(GRNG, { keep: 4.2 });
+  Object.assign(GRNG, { keep: 10.5 });
   Object.assign(GTOP, { keep: 15 });
   UPC.keep = { s: 360, w: 80 };
 }

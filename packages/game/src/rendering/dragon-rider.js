@@ -241,8 +241,8 @@ function fly(dt, keys) {
     P.x,
     P.y - 1,
     P.z,
-    4.6,
-  ); /* a wide window: the cone starts at the camera (materials.js), so this is its size at the dragon */
+    9,
+  ); /* a wide window: the cone starts at the camera (materials.js), this is its radius at the dragon */
   return firing;
 }
 

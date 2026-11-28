@@ -1,4 +1,6 @@
 import { ambientLife } from "../rendering/ambient-life.js";
+import { civilians } from "../rendering/civilians.js";
+import { veil3D } from "../rendering/veil.js";
 import { kingStrikeSim } from "../gameplay/king-strike.js";
 import { dragonSend } from "../multiplayer/commands.js";
 import { dragonMine, dragonSet0, dragonTick, mkDragon } from "../gameplay/dragon.js";
@@ -14,6 +16,8 @@ import { dragonBar, dragonFrame, dragonMouse, dragonZoom } from "../rendering/dr
 export function initializeRoles() {
   roleHooks.frame = (dt, keys) => {
     ambientLife(dt);
+    civilians(dt);
+    veil3D(dt);
     return dragonFrame(dt, keys) || kingViewFrame(dt, keys);
   };
   roleHooks.zoom = (d) => dragonZoom(d) || kingViewZoom(d);

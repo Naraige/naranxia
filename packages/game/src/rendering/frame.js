@@ -1,7 +1,7 @@
 import { partnerRefresh } from "./owner-theme.js";
 import { cbOn, rmotion } from "../core/prefs.js";
 import { syncRuins } from "./ruins.js";
-import { OWN, rangeOf, selH, TOWR } from "../ai/kingdoms.js";
+import { BALR, OWN, rangeOf, selH, TOWR, TRBR } from "../ai/kingdoms.js";
 import { snd } from "../audio/sound.js";
 import { dist } from "../core/math.js";
 import {
@@ -723,8 +723,8 @@ export let render3D = function render3D(dt) {
               (sessionState.mode === "tower"
                 ? TOWR + (stoneOn() ? 1.5 : 0)
                 : sessionState.mode === "ballista"
-                  ? 18
-                  : 32) + wo;
+                  ? BALR / TS
+                  : TRBR / TS) + wo;
           rangeRing.scale.set(rr / 7.5, 1, rr / 7.5);
           rangeRing.position.set(cx2, h0 + 0.15, cz2);
           rangeRing.visible = true;

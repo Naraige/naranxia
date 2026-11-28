@@ -328,9 +328,38 @@ const voxKey = (s) => {
     v = B.variants ? ((((s.tx | 0) * 7 + (s.ty | 0) * 13) % B.variants) + B.variants) % B.variants : 0;
   return [B, v, "vx" + s.type + (s.tier === 0 ? "w" : "s") + v];
 };
+/* a banner marked for a wall hangs ON a wall (#104): when the blocks behind its crossbar are air (the wall stands back behind posts or
+   under a jetty) the mark moves in, up to two blocks, until full blocks carry it. Returns the mark to use */
+const BNTHIN = new Set(
+  "pane small skip fence torch lamp trapdoor sign vine tuft shrub pot post stake blades sail sail_h wheel rack shield wbox table stool sacks rows".split(
+    " ",
+  ),
+);
+const BNOUT = { south: [0, 1], north: [0, -1], east: [1, 0], west: [-1, 0] };
+function settle(M, m) {
+  const F = BNOUT[m.face];
+  if (m.t !== "wall" || !F) return m;
+  const at = (x, y, z) =>
+      x < 0 || y < 0 || z < 0 || x >= M.w || y >= M.h || z >= M.l ? 0 : M.vox[(y * M.l + z) * M.w + x],
+    full = (i) => !!i && !BNTHIN.has(M.defs[i - 1].k);
+  /* asked at the middle of the cloth (2.5 blocks long at k = 1): a banner hung from the edge of a jetty had the beam behind its crossbar
+     and a block of air behind all the rest */
+  const y = Math.floor(m.y - 1.25 * (m.k || 1));
+  for (let d = 0; d <= 2; d++) {
+    /* the two cells behind the middle of the cloth, d blocks in */
+    const px = m.x - F[0] * (d + 0.5),
+      pz = m.z - F[1] * (d + 0.5),
+      a = F[0] ? at(Math.floor(px), y, Math.floor(pz - 0.4)) : at(Math.floor(px - 0.4), y, Math.floor(pz)),
+      b = F[0] ? at(Math.floor(px), y, Math.floor(pz + 0.4)) : at(Math.floor(px + 0.4), y, Math.floor(pz));
+    if (full(a) || full(b)) return d ? { ...m, x: m.x - F[0] * d, z: m.z - F[1] * d } : m;
+    /* something thin stands there (the bars over a gate, a window): the banner hangs in front of it, as marked */
+    if (a || b) return m;
+  }
+  return m;
+}
 const voxModel = (B, v, s, k) => {
   const M = B.make(s.tier === 0 ? 0 : 1, v);
-  MARKS[k] = M.marks || [];
+  MARKS[k] = (M.marks || []).map((m) => settle(M, m));
   return M;
 };
 function voxGeo(s) {

@@ -5,7 +5,7 @@ import { occ, pth, stairs, ter } from "../world/terrain-state.js";
 import { canStep } from "../world/traversal-rules.js";
 import { solid } from "../world/traversal.js";
 import { CASTLES } from "./players.js";
-import { DIR4, RS, TH, TW } from "./rules.js";
+import { DIR4, ROTT, RS, TH, TW } from "./rules.js";
 import { sessionState } from "./session.js";
 
 /* ---- paths laid by the kingdom (v101, #57): the King removed the path tool. When a building is finished a path is laid from the door of its castle to it, the
@@ -30,7 +30,7 @@ function doorFront(c) {
 }
 
 /* the road from the front of the castle door to the ring of tiles around building s; returns the tiles (building end first) or null */
-function route(c, s) {
+function route(c, s, door) {
   const src = doorFront(c),
     x0 = Math.max(1, Math.min(src[0], s.tx) - MARGIN),
     y0 = Math.max(1, Math.min(src[1], s.ty) - MARGIN),
@@ -41,12 +41,23 @@ function route(c, s) {
     D = new Int32Array(w * h).fill(1e9),
     prev = new Int32Array(w * h).fill(-1),
     goal = new Uint8Array(w * h);
-  for (let y = s.ty - 1; y <= s.ty + s.sz; y++)
-    for (let x = s.tx - 1; x <= s.tx + s.sz; x++) {
-      if (x >= s.tx && x < s.tx + s.sz && y >= s.ty && y < s.ty + s.sz) continue;
-      if (x < x0 || x > x1 || y < y0 || y > y1) continue;
-      goal[(y - y0) * w + x - x0] = 1;
+  /* the road ends at the door of the building (#107: the two tiles in front of the middle of its front, the side `rot` turns to the castle);
+     all around it when it has no front (door false: a gate, or a door that is walled in) */
+  if (door) {
+    const [dx, dy] = DIR4[(s.rot | 0) & 3],
+      m = (s.sz >> 1) - 1;
+    for (let a = m; a <= m + 1; a++) {
+      const x = dy ? s.tx + a : dx > 0 ? s.tx + s.sz : s.tx - 1,
+        y = dy ? (dy > 0 ? s.ty + s.sz : s.ty - 1) : s.ty + a;
+      if (x >= x0 && x <= x1 && y >= y0 && y <= y1) goal[(y - y0) * w + x - x0] = 1;
     }
+  } else
+    for (let y = s.ty - 1; y <= s.ty + s.sz; y++)
+      for (let x = s.tx - 1; x <= s.tx + s.sz; x++) {
+        if (x >= s.tx && x < s.tx + s.sz && y >= s.ty && y < s.ty + s.sz) continue;
+        if (x < x0 || x > x1 || y < y0 || y > y1) continue;
+        goal[(y - y0) * w + x - x0] = 1;
+      }
   const free = (x, y) => {
     if (!gOK(x, y)) return false;
     const i = y * TW + x;
@@ -93,16 +104,20 @@ function route(c, s) {
 function link(s) {
   const c = CASTLES()[s.pl | 0] || sessionState.CS;
   if (!c || c.hp <= 0) return;
-  const r = route(c, s);
+  const r = (ROTT.has(s.type) && s.sz >= 2 && route(c, s, true)) || route(c, s, false);
   if (!r) return;
   const want = RS.done ? 2 : 1;
-  for (const [x, y] of r) {
-    const i = y * TW + x;
-    if (ter[i] !== 0 || occ.has(i) || pth[i] >= want) continue;
-    pth[i] = want;
-    mmTile(i);
-    markT(x, y);
-  }
+  /* a road three tiles wide: one tile was a thread beside buildings of 12 (the King, v101: "les bâtiments ne font pas de chemins ?") */
+  for (const [rx, ry] of r)
+    for (let y = ry - 1; y <= ry + 1; y++)
+      for (let x = rx - 1; x <= rx + 1; x++) {
+        if (x < 1 || y < 1 || x >= TW - 1 || y >= TH - 1) continue;
+        const i = y * TW + x;
+        if (ter[i] !== 0 || occ.has(i) || stairs.has(i) || pth[i] >= want || !gOK(x, y)) continue;
+        pth[i] = want;
+        mmTile(i);
+        markT(x, y);
+      }
 }
 
 /* one building per call, so a loaded old save is linked a little at a time */
