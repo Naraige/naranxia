@@ -4,6 +4,23 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-28 · après la v102: onze des treize idées choisies par le Roi (non sorti)
+
+Le Roi a demandé « more than 10 suggestions », en a choisi 13 sur 14 (tout sauf l'esquive). Faites ici: 11. Restent #81 (le dragon transporte) et #82 (ennemi volant), plus lourdes (réseau du dragon): à faire dans une conversation neuve.
+
+- #114 début plus dur: vagues 1 à 5 multipliées par 1,8 / 1,7 / 1,55 / 1,4 / 1,2 (`EARLY`, `waves.js`), chef dès la vague 3 (4 avant). Chiffres au jugé, non joués.
+- #115 viseur: un anneau au sol là où tombe le coup du Roi, vers le curseur, pâle tant que son bras n'est pas prêt (`input/king-view.js`).
+- #116 ordres du Roi: deux boutons sous sa barre, « Follow me » (12 soldats au plus dans 16 cases, rangs de cinq DEVANT lui pour ne pas le cacher à la caméra; derrière si devant c'est un mur) et « Hold here ».
+  Commande `ko`, escouade portée par les unités (`kingRally`, `squads.js`): sauvegardée, survit à une resynchro.
+- #117 civils: ils vont aux portes des bâtiments en préférant les routes, courent au château quand la horde ou la nuit vient, sortent et acclament 8 s quand une vague est battue. Toujours dessin seul.
+- #118 violet: lueur violette sur le corps des zombies proches, le voile avance de 3 cases par-dessus le bord de la lumière pendant une vague de nuit (dessin seul, la lumière des règles ne bouge pas), son grave `veil`.
+- #77 forts de tête de pont: deux carrés pavés de 10 cases de part et d'autre de la route au débouché du pont (`bridgeFortSites`, `world/island.js`). Une tour posée dessus: +8 cases de portée, +4 flèches, 1,5 fois les points de vie.
+- #90 port de pêche: nouveau bâtiment `port` (12 cases, 80 bois), 3 nourriture toutes les 6 s sans paysan, doit avoir de l'eau à 5 cases. Modèle simple (cabane sur quai, ponton): pas passé par une planche de choix.
+- #119 améliorations de tour: une seule par tour, 80 or et 60 bois: portée +8, volées plus rapides (1,1 s au lieu de 1,7) ou flèches de feu (dégâts x1,5, sans effet de flamme à l'image pour l'instant). Commande `tu`, rangée de boutons quand la tour est sélectionnée.
+- #120 ralenti: 1,6 s à 30 % de vitesse quand une vague est battue, en solo seulement (en coop le pas verrouillé garde le temps).
+- Tests: `horde` +7 (ordres du Roi, amélioration de tour, fort, carré pavé), `det` ré-épinglé (répétable). Passent: det features save smoke waves quests kingview ui tools kingxp spearman horde voxel_buildings mpk mp8 mp_resync mp_build.
+- Vérifié à l'image: boutons du Roi, port. Non vérifié à l'image: viseur, civils qui acclament, voile qui avance, ralenti, forts sur la carte.
+
 ## 2026-11-28 · v102: le Roi de près, des tours qui portent, un royaume qui vit
 
 - Le Roi: « sors la v102 ». Sortie des trois entrées ci-dessous (#97 à #113): une seule taille de monde, plus de Chronique ni d'À propos, et sa liste en jouant.

@@ -162,17 +162,17 @@ async () => {
   const expected = [
     "-553333382:21749:4:0:1075:0.9614:sh0:nl0.22:f168:sp0:ro11:wk3:T-1522692107:z134:pu2:fg0:fp14",
     "1222367398:25999:6:0:1098:0.9768:sh6:nl0.62:f180:sp0:ro11:wk1:T-1522692107:z132:pu0:fg0:fp14",
-    "429063365:25999:6:0:1098:0.9875:sh8:nl0.83:f180:sp0:ro11:wk0:T-1522692107:z132:pu0:fg0:fp14",
-    "-1509943404:25999:6:0:1098:0.9934:sh8:nl0.97:f180:sp0:ro11:wk0:T-1522692107:z132:pu0:fg0:fp14",
-    "1474820702:25999:6:0:1098:0.9965:sh8:nl1.00:f180:sp0:ro11:wk0:T-1522692107:z132:pu0:fg0:fp14",
-    "-1438435998:25997:9:0:1101:0.9982:sh8:nl1.00:f180:sp0:ro11:wk0:T-1522692107:z131:pu0:fg0:fp14",
-    "1237467480:25939:76:0:1131:0.9982:sh8:nl1.00:f180:sp0:ro11:wk0:T-1522692107:z122:pu0:fg0:fp14",
-    "812390856:25652:369:0:1284:0.9982:sh8:nl1.00:f230:sp0:ro11:wk0:T-1522692107:z116:pu0:fg0:fp14",
+    "-1032532590:25999:6:0:1098:0.9875:sh8:nl0.83:f180:sp0:ro11:wk0:T-1522692107:z132:pu0:fg0:fp14",
+    "59484028:25999:6:0:1098:0.9934:sh8:nl0.97:f180:sp0:ro11:wk0:T-1522692107:z132:pu0:fg0:fp14",
+    "-327176285:25999:6:0:1098:0.9965:sh8:nl1.00:f180:sp0:ro11:wk0:T-1522692107:z132:pu0:fg0:fp14",
+    "144640993:25997:9:0:1101:0.9982:sh8:nl1.00:f180:sp0:ro11:wk0:T-1522692107:z131:pu0:fg0:fp14",
+    "-31848425:25915:101:0:1136:0.9982:sh8:nl1.00:f180:sp0:ro11:wk0:T-1522692107:z121:pu0:fg0:fp14",
+    "628804582:25622:402:0:1295:0.9982:sh8:nl1.00:f230:sp0:ro11:wk0:T-1522692107:z113:pu0:fg0:fp14",
   ];
   const reference = JSON.stringify(a) === JSON.stringify(expected);
   __test.check("repeated simulation fingerprints", a, b);
   __test.check(
-    "pinned fingerprints (re-pinned after v101: 2 knights and 3 archers at the start, reach of towers and castle, light of every building, roads 3 tiles wide to the doors, the King walks through his guards; before: v101 (King and guards at the start; rescale: body radii x1.6, swarm density 5): round island, no rival kingdoms, kingdom paths, flatter world; open heart, bridge and islet of the portals, bigger island with a natural shore and cliffs)",
+    "pinned fingerprints (re-pinned after v102: fuller first waves, chieftain from wave 3; after v101: 2 knights and 3 archers at the start, reach of towers and castle, light of every building, roads 3 tiles wide to the doors, the King walks through his guards; before: v101 (King and guards at the start; rescale: body radii x1.6, swarm density 5): round island, no rival kingdoms, kingdom paths, flatter world; open heart, bridge and islet of the portals, bigger island with a natural shore and cliffs)",
     a,
     expected,
   );

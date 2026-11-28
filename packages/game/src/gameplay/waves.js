@@ -192,8 +192,10 @@ function wave0() {
       ring(p[0] * TS, p[1] * TS, "#b46bff", 26, 300);
     }
     const zf = (sessionState.SITE2 ? 0.8 : 1) * laneK(L, sessionState.nextL),
-      nh = Math.min(260, Math.round((16 + sessionState.waveN * 10) * df.zm * zf)),
-      nz = Math.round(sessionState.waveN * 2.2 * df.zm * zf),
+      /* the first five waves are fuller (#114): a kingdom now starts with five soldiers and towers that reach, v102 made them a walk */
+      em = EARLY[sessionState.waveN - 1] || 1,
+      nh = Math.min(260, Math.round((16 + sessionState.waveN * 10) * df.zm * zf * em)),
+      nz = Math.round(sessionState.waveN * 2.2 * df.zm * zf * em),
       nr = sessionState.waveN >= 3 ? Math.round(sessionState.waveN * 0.8 * df.zm * zf) : 0,
       nb =
         sessionState.waveN % 5 === 0
@@ -216,8 +218,8 @@ function wave0() {
         sessionState.units.push(zu);
       }
     };
-    /* the chieftain (#86): from wave 4 one leads the horde on its first road; while he lives it keeps running much closer to the walls */
-    if (sessionState.waveN >= 4 && L === sessionState.nextL[0] && zcount() < 720) {
+    /* the chieftain (#86): from wave 3 (#114, was 4) one leads the horde on its first road; while he lives it keeps running much closer to the walls */
+    if (sessionState.waveN >= 3 && L === sessionState.nextL[0] && zcount() < 720) {
       const ch = mkU(1, "brute", p[0] * TS, p[1] * TS, null, L);
       ch.hp *= 1.6 * (1 + 0.05 * sessionState.waveN);
       ch.chief = 1;
@@ -315,6 +317,7 @@ export let callWave = function callWave() {
    the next wave only spawns once this one is finished, after the usual rest time;
    at night whatever stands outside the light is hurt by the darkness */
 
+const EARLY = [1.8, 1.7, 1.55, 1.4, 1.2];
 export const restT = () => 600 * D_().tm;
 
 /* the wave is finished when only a handful of stragglers is left (2%, or after 15 min at worst): the rest timer starts, and at dawn the sun burns the stragglers */
@@ -363,6 +366,7 @@ export function waveTick() {
     sessionState.bannerS = "WAVE " + sessionState.waveN + " BEATEN";
     sessionState.bannerS2 = "Dawn is coming - next wave in " + mmss(sessionState.waveT);
     snd("victory");
+    hudDisplayState.slowT = 1.6; /* the frame loop plays the next moments slowly (solo, core/frame-loop.js) */
     /* what the wave cost (#94) */
     const kd = sessionState.DRG ? Math.max(0, (sessionState.DRG.kills | 0) - (wavesState.d0 | 0)) : 0,
       kl = Math.max(0, (sessionState.kills | 0) - (wavesState.k0 | 0)),

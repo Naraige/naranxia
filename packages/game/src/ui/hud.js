@@ -848,6 +848,7 @@ function drawUIBody() {
   if (!sessionState.over) bossY += bossBar(UW, settingsState.TOPH + bossY);
   bossY += objBar(UW, settingsState.TOPH + bossY);
   bossY += kingBar(UW, settingsState.TOPH + bossY);
+  bossY += roleHooks.towerBar(UW, settingsState.TOPH + bossY);
   bossY += roleHooks.bar(UW, settingsState.TOPH + bossY);
   if (!sessionState.over) bossY += waveCallBar(UW, settingsState.TOPH + bossY);
   bossY += hintBar(UW, settingsState.TOPH + bossY);
@@ -1099,6 +1100,7 @@ export function drawBars() {
             sanctuary: 2.8,
             beacon: 3.6,
             orchard: 2.6,
+            port: 2.6,
             forge: 3.2,
             embassy: 3.0,
             warroom: 3.1,

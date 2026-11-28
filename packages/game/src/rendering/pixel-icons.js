@@ -838,6 +838,8 @@ function* mcIconsSteps() {
   yield;
   IC2.orchard = B(st("orchard", 0, 0));
   yield;
+  IC2.port = B(st("port", 0, 0));
+  yield;
   IC2.forge = B(st("forge", 0, 0));
   yield;
   IC2.embassy = B(st("embassy", 0, 0));

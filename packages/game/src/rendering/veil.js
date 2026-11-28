@@ -2,6 +2,8 @@ import { rmotion } from "../core/prefs.js";
 import { lightingState } from "../gameplay/light-state.js";
 import { TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
+import { wavesState } from "../gameplay/waves.js";
+import { snd } from "../audio/sound.js";
 import { nightK } from "./lighting.js";
 import { CAM, scene } from "./scene.js";
 import { THREE } from "./three.js";
@@ -14,9 +16,12 @@ import { gh } from "../world/terrain-queries.js";
    keeps (lightingState.LITL) and the real clock; with reduced motion the columns stand still. */
 const CAP = 900,
   STEP = 3 /* tiles between two columns */,
-  BAND = 12; /* how far beyond the light they stand */
+  BAND = 12 /* how far beyond the light they stand */,
+  CREEP = 3;
 let mesh = null,
-  amt = 0;
+  amt = 0,
+  creep = 0,
+  told = false;
 const o = new THREE.Object3D(),
   col = new THREE.Color();
 
@@ -60,6 +65,12 @@ export function veil3D(dt) {
   const L = lightingState.LITL,
     on = sessionState.started && !sessionState.over && !sessionState.showMap && L.length > 0 && nightK > 0.4;
   amt += ((on ? 1 : 0) - amt) * Math.min(1, dt * 1.5);
+  /* while the horde fights in the night the veil leans in over the edge of the light, up to CREEP tiles, and draws back when the wave is
+     beaten (#118). Drawing only: the lit ground of the rules does not move */
+  const push = on && wavesState.hordeOn && !sessionState.paused;
+  creep += ((push ? CREEP : 0) - creep) * Math.min(1, dt * (push ? 0.05 : 0.5));
+  if (push && !told) snd("veil");
+  told = push;
   if (amt < 0.02) {
     if (mesh) mesh.count = 0;
     return;
@@ -84,8 +95,8 @@ export function veil3D(dt) {
         if (e < d) d = e;
         if (d < 0) break;
       }
-      if (d < 0.5 || d > BAND) continue;
-      const k = 1 - d / BAND,
+      if (d < 0.5 - creep || d > BAND) continue;
+      const k = 1 - Math.max(0, d) / BAND,
         w = Math.sin(T * 0.5 + h1 * 6.28) * 0.5 + 0.5,
         ht = (5 + 9 * k) * (0.8 + 0.4 * w) * amt;
       o.position.set(

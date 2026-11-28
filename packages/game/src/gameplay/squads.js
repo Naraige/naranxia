@@ -14,6 +14,17 @@ const FRM_COLS = 5;
 export function slotPos(C, j) {
   const f = [Math.sin(C.fm || 0), Math.cos(C.fm || 0)],
     p = [f[1], -f[0]];
+  if (C.type === "king" && j >= 2) {
+    /* the soldiers he called (kingRally): rows of five AHEAD of him, the way he looks. Behind him they stood between the player and his
+       King in the third-person view */
+    const q = j - 2,
+      row = (q / FRM_COLS) | 0,
+      col = (q % FRM_COLS) - 2,
+      a = C.face || 0,
+      fx = Math.sin(a),
+      fy = Math.cos(a);
+    return { x: C.x + fx * (95 + row * 44) + fy * col * 46, y: C.y + fy * (95 + row * 44) - fx * col * 46 };
+  }
   if (C.type === "king") {
     const s = j ? 1 : -1;
     return { x: C.x + p[0] * s * 30 - f[0] * 8, y: C.y + p[1] * s * 30 - f[1] * 8 };
@@ -21,6 +32,52 @@ export function slotPos(C, j) {
   const row = j >= FRM_COLS ? 1 : 0,
     col = (j % FRM_COLS) - 2;
   return { x: C.x - f[0] * (34 + row * 30) + p[0] * col * 26, y: C.y - f[1] * (34 + row * 30) + p[1] * col * 26 };
+}
+
+/* the King's orders in the field (#116). on: the soldiers within 16 tiles who follow nobody (12 at most, the nearest first) fall in behind
+   him and march with him, like a captain's squad. off: they stop where they stand and hold that ground. Inside the simulation (lockstep
+   command 'ko'); the squad is on the units, so it is saved and survives a resync */
+export const RALLY_N = 12;
+export function kingRally(K, on) {
+  if (!K || K.hp <= 0) return 0;
+  K.sq = (K.sq || []).filter((u) => u.hp > 0);
+  if (!on) {
+    const out = K.sq.filter((u) => !u.rg);
+    for (const u of out) {
+      u.cap = null;
+      u.o = null;
+      u.stn = "hold";
+    }
+    K.sq = K.sq.filter((u) => u.rg);
+    return out.length;
+  }
+  const have = K.sq.filter((u) => !u.rg).length,
+    cand = sessionState.units
+      .filter(
+        (u) =>
+          u.t === 0 &&
+          (u.pl | 0) === (K.pl | 0) &&
+          !u.cap &&
+          !u.rg &&
+          !u.gar &&
+          u.hp > 0 &&
+          u.type !== "peasant" &&
+          u.type !== "captain" &&
+          u.type !== "king" &&
+          u.type !== "cannon" &&
+          dist(u.x, u.y, K.x, K.y) < TS * 16,
+      )
+      .sort((a, b) => dist(a.x, a.y, K.x, K.y) - dist(b.x, b.y, K.x, K.y) || a.uid - b.uid);
+  let n = 0;
+  for (const u of cand) {
+    if (have + n >= RALLY_N) break;
+    K.sq.push(u);
+    u.cap = K;
+    u.o = null;
+    u.stn = "agg";
+    n++;
+  }
+  return n;
 }
 
 export function leaveSquad(u) {

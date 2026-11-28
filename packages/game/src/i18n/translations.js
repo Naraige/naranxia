@@ -849,7 +849,21 @@ export const TRD={
 },TRX=new Map(),TRT=[],TRC=new Map();
 
 export function initializeTranslations() {
-  /* texts added in v102 */
+  /* texts added in v103 */
+Object.assign(TRD,{
+"Fishing port":["Port de pêche","Puerto pesquero","Fischerhafen","Porto di pesca","Porto de pesca"],
+"Food from the sea, without a peasant":["Nourriture de la mer, sans paysan","Comida del mar, sin campesino","Nahrung aus dem Meer, ohne Bauer","Cibo dal mare, senza contadino","Comida do mar, sem camponês"],
+"Must stand by the water":["Doit être au bord de l'eau","Debe estar junto al agua","Muss am Wasser stehen","Deve stare vicino all'acqua","Tem de ficar junto à água"],
+"A fishing port must stand by the water":["Un port de pêche doit être au bord de l'eau","Un puerto pesquero debe estar junto al agua","Ein Fischerhafen muss am Wasser stehen","Un porto di pesca deve stare vicino all'acqua","Um porto de pesca tem de ficar junto à água"],
+"Bridge fort: this tower reaches further, looses more arrows and stands longer":["Fort du pont : cette tour porte plus loin, tire plus de flèches et tient plus longtemps","Fuerte del puente: esta torre alcanza más lejos, dispara más flechas y resiste más","Brückenfort: Dieser Turm reicht weiter, schießt mehr Pfeile und hält länger","Forte del ponte: questa torre arriva più lontano, scocca più frecce e resiste più a lungo","Forte da ponte: esta torre alcança mais longe, dispara mais flechas e resiste mais"],
+"Follow me":["Suivez-moi","Seguidme","Folgt mir","Seguitemi","Sigam-me"],
+"Follow me ({0})":["Suivez-moi ({0})","Seguidme ({0})","Folgt mir ({0})","Seguitemi ({0})","Sigam-me ({0})"],
+"Hold here":["Tenez ici","Resistid aquí","Haltet hier","Tenete qui","Aguentem aqui"],
+"Reach +8":["Portée +8","Alcance +8","Reichweite +8","Gittata +8","Alcance +8"],
+"Faster volleys":["Volées rapides","Andanadas rápidas","Schnellere Salven","Raffiche rapide","Salvas rápidas"],
+"Tower upgrade: 80 gold, 60 wood":["Amélioration de tour : 80 or, 60 bois","Mejora de torre: 80 oro, 60 madera","Turmausbau: 80 Gold, 60 Holz","Potenziamento torre: 80 oro, 60 legno","Melhoria da torre: 80 ouro, 60 madeira"]
+});
+/* texts added in v102 */
 Object.assign(TRD,{
 "The King up close, towers that reach, a kingdom that lives.":["Le Roi de près, des tours qui portent, un royaume qui vit.","El Rey de cerca, torres que alcanzan, un reino que vive.","Der König aus der Nähe, Türme mit Reichweite, ein Königreich, das lebt.","Il Re da vicino, torri che arrivano lontano, un regno che vive.","O Rei de perto, torres que alcançam, um reino que vive."],
 "King view: a real third-person camera, close behind him; it stops in front of buildings and only what hides the King is cut away.":["Vue du Roi : une vraie caméra à la troisième personne, proche derrière lui ; elle s'arrête devant les bâtiments et seul ce qui cache le Roi est coupé.","Vista del Rey: una auténtica cámara en tercera persona, cerca tras él; se detiene ante los edificios y solo se recorta lo que oculta al Rey.","Königssicht: eine echte Third-Person-Kamera dicht hinter ihm; sie hält vor Gebäuden an, und nur was den König verdeckt, wird ausgeblendet.","Vista del Re: una vera telecamera in terza persona, vicina dietro di lui; si ferma davanti agli edifici e viene tagliato solo ciò che nasconde il Re.","Vista do Rei: uma verdadeira câmara na terceira pessoa, perto atrás dele; pára diante dos edifícios e só é cortado o que esconde o Rei."],

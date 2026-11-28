@@ -1,3 +1,4 @@
+import { bridgeFort } from "../world/island.js";
 import { rnd } from "../core/math.js";
 import { doorTiles, faceRot, tilesFor } from "./construction.js";
 import { playersState, stoneOn } from "./players.js";
@@ -27,12 +28,17 @@ export function mk(t, type, tx, ty, sz, done, ax, gl, tiles0) {
       rad: g ? 20 * gl * FCELL : sz * 20,
       x: g ? (tx + ((ax ? 1 : gl) * FCELL) / 2) * TS : (tx + sz / 2) * TS,
       y: g ? (ty + ((ax ? gl : 1) * FCELL) / 2) * TS : (ty + sz / 2) * TS,
-      hp: SH[type],
-      max: SH[type],
+      /* a bridge fort (#77) stands half as long again */
+      hp: SH[type] * (type === "tower" && t === 0 && bridgeFort(tx, ty, sz) ? 1.5 : 1),
+      max: SH[type] * (type === "tower" && t === 0 && bridgeFort(tx, ty, sz) ? 1.5 : 1),
       cd: 0,
       prog: done ? 1 : 0,
       bt: BT[type] || 1,
     };
+  if (t === 0 && type === "tower" && bridgeFort(tx, ty, sz)) {
+    hudDisplayState.msgS = "Bridge fort: this tower reaches further, looses more arrows and stands longer";
+    hudDisplayState.msgT = 6;
+  }
   s.tier = 1;
   if (t === 0) s.cost = { ...(C[type] || {}) };
   if (

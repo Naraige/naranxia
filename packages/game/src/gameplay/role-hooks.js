@@ -19,6 +19,10 @@ export const roleHooks = {
   kingStrike: (_k, _x, _y) => false,
   /* the King marks the ground where he stands for the dragon (#80) */
   mark: (_k) => {},
+  rally: (_on) => {},
+  towerUp: (_s, _u) => {},
+  towerUpSim: (_c) => {},
+  towerBar: (_w, _y) => 0,
   /* the rider's keys (U window, Esc closes it): true when taken */
   key: (_k) => false,
   /* the rider's window, drawn over the game after the quest log */

@@ -1,3 +1,4 @@
+import { bridgeFort } from "../world/island.js";
 import { zcount } from "./zombie-lanes.js";
 import { snd } from "../audio/sound.js";
 import { dist, hyp, rnd } from "../core/math.js";
@@ -132,6 +133,7 @@ export const selH = (s) =>
     sanctuary: 2.4,
     beacon: 3.2,
     orchard: 2.2,
+    port: 2.2,
     forge: 2.8,
     embassy: 2.6,
     warroom: 2.7,
@@ -151,7 +153,15 @@ export const BALR = 1320,
    of two tiles (3/8 of its side), so the reach beyond its walls is what it always was; the engines on it get the same allowance */
 /* a tower on high ground shoots further (#89): half a tile per level above the plain, six levels at most (a cliff top, a hill) */
 export const towerHigh = (s) => Math.max(0, Math.min(6, (HT[(s.ty | 0) * TW + (s.tx | 0)] | 0) - LAND)) * 0.5 * TS;
-export const towerReach = (s) => TOWR * TS + (s.tier !== 0 ? 60 : 0) + s.sz * 0.375 * TS + towerHigh(s);
+/* a tower on a square of the bridgehead is a bridge fort (#77): 8 tiles more */
+export const towerFort = (s) => s.type === "tower" && bridgeFort(s.tx, s.ty, s.sz || 8);
+export const towerReach = (s) =>
+  TOWR * TS +
+  (s.tier !== 0 ? 60 : 0) +
+  s.sz * 0.375 * TS +
+  towerHigh(s) +
+  (towerFort(s) ? 8 * TS : 0) +
+  (s.up === 1 ? 8 * TS : 0);
 export const TR_CASTLE = 45;
 export const TR_TOWER = 15;
 export const aiR = (b) => 26 + b.lvl * 5;

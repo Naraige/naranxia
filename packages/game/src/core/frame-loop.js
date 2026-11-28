@@ -1,6 +1,7 @@
 import { bootFrame } from "./boot.js";
 import { aInit } from "../audio/sound.js";
 import { diagnosticsState } from "../debug/diagnostics.js";
+import { rmotion } from "./prefs.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { bugCapture } from "../debug/tools.js";
 import { reset } from "../gameplay/reset.js";
@@ -87,8 +88,15 @@ function frame(ts, warm) {
       if (keys[KB.rotL]) CAM.yaw -= dt * 1.5;
       if (keys[KB.rotR]) CAM.yaw += dt * 1.5;
     }
-    if (!MP.on && !sessionState.over && !sessionState.paused && !sessionState.showMap)
-      for (let k = 0; k < sessionState.spd; k++) update(dt);
+    if (!MP.on && !sessionState.over && !sessionState.paused && !sessionState.showMap) {
+      /* the last blow of a wave is played slowly (#120): solo only (in co-op the lockstep keeps the time), not with reduced motion */
+      let k = 1;
+      if (hudDisplayState.slowT > 0) {
+        hudDisplayState.slowT -= dt;
+        if (!rmotion()) k = 0.3;
+      }
+      for (let i = 0; i < (k < 1 ? 1 : sessionState.spd); i++) update(dt * k);
+    }
   }
   if (MP.on) mpFrame(dt);
 

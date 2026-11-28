@@ -1961,4 +1961,16 @@ export const PL = {
     "Naprawiono: gwardziści królewscy nie blokują już Króla, rolnik pracuje na swoim polu, nieodkryty ląd nie rysuje się już na tle nieba, sztandary wiszą na swoich murach.",
   "One world size only, and no more Chronicle or About screens; in solo the kingdom you already made is not asked for again.":
     "Tylko jeden rozmiar świata i koniec z ekranami Kroniki i O grze; w grze solo nie trzeba już ponownie tworzyć gotowego królestwa.",
+  "Bridge fort: this tower reaches further, looses more arrows and stands longer":
+    "Fort przy moście: ta wieża sięga dalej, wypuszcza więcej strzał i stoi dłużej",
+  "Follow me": "Za mną",
+  "Follow me ({0})": "Za mną ({0})",
+  "Hold here": "Trzymać tutaj",
+  "Reach +8": "Zasięg +8",
+  "Faster volleys": "Szybsze salwy",
+  "Tower upgrade: 80 gold, 60 wood": "Ulepszenie wieży: 80 złota, 60 drewna",
+  "Fishing port": "Port rybacki",
+  "Food from the sea, without a peasant": "Żywność z morza, bez chłopa",
+  "Must stand by the water": "Musi stać nad wodą",
+  "A fishing port must stand by the water": "Port rybacki musi stać nad wodą",
 };

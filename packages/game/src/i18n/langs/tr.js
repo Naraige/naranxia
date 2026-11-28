@@ -1958,4 +1958,16 @@ export const TR = {
     "Düzeltildi: kraliyet muhafızları artık Kralı engellemiyor, çiftçi tarlasında çalışıyor, keşfedilmemiş topraklar artık gökyüzünde belirmiyor, sancaklar duvarlarında asılı.",
   "One world size only, and no more Chronicle or About screens; in solo the kingdom you already made is not asked for again.":
     "Tek bir dünya boyutu, Vakayiname ve Hakkında ekranları yok; tek kişilik oyunda zaten kurduğun krallık yeniden sorulmaz.",
+  "Bridge fort: this tower reaches further, looses more arrows and stands longer":
+    "Köprü kalesi: bu kule daha uzağa erişir, daha çok ok atar ve daha uzun dayanır",
+  "Follow me": "Beni izleyin",
+  "Follow me ({0})": "Beni izleyin ({0})",
+  "Hold here": "Burada tutun",
+  "Reach +8": "Menzil +8",
+  "Faster volleys": "Hızlı yaylım",
+  "Tower upgrade: 80 gold, 60 wood": "Kule geliştirmesi: 80 altın, 60 odun",
+  "Fishing port": "Balıkçı limanı",
+  "Food from the sea, without a peasant": "Denizden yiyecek, köylü gerekmez",
+  "Must stand by the water": "Su kenarında olmalı",
+  "A fishing port must stand by the water": "Balıkçı limanı su kenarında olmalı",
 };

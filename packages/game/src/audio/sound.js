@@ -633,6 +633,12 @@ const SFX = {
     ns(0.5, 0.34, "bandpass", 1200, 180, 1, 0.02);
     tn(150, 0.42, "triangle", 0.16, 62);
   },
+  /* the veil closing in (#118): a low swell under the night */
+  veil: () => {
+    tn(49, 2.6, "sine", 0.3, 41);
+    tn(73, 2.2, "sawtooth", 0.07, 55, 0.2);
+    ns(2.4, 0.12, "lowpass", 260, 90, 1, 0.2);
+  },
   dragonroar: () => {
     tn(128, 1.3, "sawtooth", 0.26, 50);
     tn(97, 1.3, "sawtooth", 0.2, 39);
@@ -822,6 +828,7 @@ const META = {
     dragonbreath: [2, 0.24, 0.5, 0.08, 0.6],
     dragonwing: [2, 0.4, 0.3, 0.1, 0.5],
     dragonhurt: [2, 0.9, 0.8, 0.06, 0.8],
+    veil: [1, 3, 2.8, 0, 0.8],
     dragonroar: [2, 1, 1.5, 0.3, 0.9],
     dragonlevel: [0, 0.5, 0.6, 0.1, 0.9],
     dragonbuy: [0, 0.2, 0.4, 0.05, 0.9],

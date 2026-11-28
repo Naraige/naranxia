@@ -1,6 +1,7 @@
 export const hudDisplayState = {
   UIS: 2,
   msgT: 0,
+  slowT: 0 /* seconds of slow motion left after a wave is beaten (solo) */,
   msgS: "",
   /* quest panel box of this frame [x, y, w, h] (null when not drawn) and height of the centre bars of the last frame */
   qbox: null,

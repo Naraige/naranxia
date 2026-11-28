@@ -674,6 +674,35 @@ export function forester(t) {
   return vb.model();
 }
 
+/* the fishing port (#90): a fisher's hut on a plank quay, a jetty on posts running out of its front, barrels, sacks and a lantern */
+export function port(t) {
+  const P = palette(t, "blue"),
+    vb = model(12, 10, 12),
+    hut = rect(1, 1, 7, 5),
+    ps = { south: [3, 5], north: [3, 5], east: [3], west: [3] };
+  vb.box(0, 0, 0, 11, 0, 7, P.plank);
+  plinth(vb, P, hut);
+  plankWalls(vb, P, hut, 1, 4, { ps });
+  gabled(vb, P, hut, 4, { alongX: true });
+  doorway(vb, P, "south", 5, 4, 1, { frame: true, step: false });
+  windows(vb, P, "south", 5, [2, 6], 2, 1, {});
+  /* the jetty */
+  vb.box(3, 0, 8, 6, 0, 11, P.plank);
+  for (const [x, z] of [
+    [3, 8],
+    [6, 8],
+    [3, 11],
+    [6, 11],
+  ])
+    vb.box(x, 0, z, x, 2, z, P.post);
+  vb.set(6, 3, 11, "lantern");
+  /* the catch and the gear on the quay */
+  vb.set(9, 1, 2, "barrel").set(10, 1, 2, "barrel").set(9, 1, 3, "sacks").set(9, 2, 2, "barrel");
+  vb.set(9, 1, 6, "hay_block").set(10, 1, 6, "basket_yellow");
+  for (const z of [1, 4, 7]) vb.box(11, 1, z, 11, 2, z, P.fence);
+  return vb.model();
+}
+
 /* the orchard: apple and cherry trees in rows inside a low wall with an arched gate, beehives, baskets, a ladder, a press house */
 export function orchard(t) {
   const P = palette(t, "red"),

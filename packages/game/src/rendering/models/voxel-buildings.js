@@ -1,5 +1,5 @@
 import { academy, bell, embassy, guild, market, observatory, sanctuary } from "./builds/civic.js";
-import { farm, forester, granary, house, orchard, storage } from "./builds/homes.js";
+import { farm, forester, granary, house, orchard, port, storage } from "./builds/homes.js";
 import { barracks, beacon, castle, sappers, warroom } from "./builds/military.js";
 import { FCELL } from "../../gameplay/rules.js";
 import { gate, keep, torch, tower, tower1, wall, WALL_RUN } from "./builds/walls.js";
@@ -31,6 +31,7 @@ export const VOXB = {
   sanctuary: { sz: 20, make: sanctuary },
   beacon: { sz: 12, make: beacon },
   orchard: { sz: 20, make: orchard },
+  port: { sz: 12, make: port },
   embassy: { sz: 20, make: embassy },
   warroom: { sz: 20, make: warroom },
   sappers: { sz: 16, make: sappers },

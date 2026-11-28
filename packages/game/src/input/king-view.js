@@ -7,7 +7,9 @@ import { kingDrive, kingStrike } from "../multiplayer/commands.js";
 import { pickGround } from "../rendering/camera.js";
 import { inputState } from "./state.js";
 import { CUTU } from "../rendering/materials.js";
-import { CAM } from "../rendering/scene.js";
+import { CAM, scene } from "../rendering/scene.js";
+import { THREE } from "../rendering/three.js";
+import { gh } from "../world/terrain-queries.js";
 import { buildMenuState } from "../ui/build-menu.js";
 import { hudDisplayState } from "../ui/hud-state.js";
 import { KB } from "../ui/settings.js";
@@ -77,6 +79,29 @@ function camRoom(k, want) {
   return want;
 }
 
+/* the reticle (#115): a ring on the ground where his blow would land, towards the cursor (the place and the size of gameplay/king-strike.js);
+   pale while his arm is not ready. Drawing only */
+let RET = null;
+function reticle(k) {
+  if (!RET) {
+    const g = new THREE.RingGeometry(1.5, 1.7, 44);
+    g.rotateX(-Math.PI / 2);
+    RET = new THREE.Mesh(
+      g,
+      new THREE.MeshBasicMaterial({ color: 0xffe9a0, transparent: true, opacity: 0.6, depthWrite: false, fog: false }),
+    );
+    RET.renderOrder = 7;
+    scene.add(RET);
+  }
+  const g = pickGround(inputState.mouse.x, inputState.mouse.y),
+    fa = g ? Math.atan2(g.x * TS - k.x, g.z * TS - k.y) : CAM.yaw + Math.PI,
+    x = k.x / TS + Math.sin(fa) * 1.3,
+    z = k.y / TS + Math.cos(fa) * 1.3;
+  RET.position.set(x, gh(x, z) + 0.14, z);
+  RET.material.opacity = k.cd > 0 ? 0.22 : 0.6;
+  RET.visible = true;
+}
+
 export function kingViewToggle() {
   kingViewState.want = !kingViewState.want;
   hudDisplayState.msgS = kingViewState.want ? "King view: the camera keys walk the King" : "View from above";
@@ -101,6 +126,7 @@ export function kingViewFrame(dt, keys) {
       CUTU.value.w = 0;
       stop();
       s.on = false;
+      if (RET) RET.visible = false;
       CAM.lift = 0;
       CAM.pmin = 0;
       if (s.top) {
@@ -139,6 +165,7 @@ export function kingViewFrame(dt, keys) {
   CAM.x += (k.x / TS - CAM.x) * a;
   CAM.z += (k.y / TS - CAM.z) * a;
   CUTU.value.set(CAM.x, CAM.y, CAM.z, 2.4);
+  reticle(k);
   let fx = 0,
     fz = 0;
   if (keys[KB.up] || keys.arrowup) fz -= 1;

@@ -22,7 +22,7 @@ import { RN2, RS, RS2 } from "../gameplay/rules.js";
 import { curB, sel, selectionState } from "../gameplay/selection.js";
 import { qSetOn0, questsState } from "../gameplay/quests.js";
 import { sessionState } from "../gameplay/session.js";
-import { groupSel, setGroupSelHandler, setUngroupSelHandler, ungroupSel } from "../gameplay/squads.js";
+import { groupSel, kingRally, setGroupSelHandler, setUngroupSelHandler, ungroupSel } from "../gameplay/squads.js";
 import { callWave, setCallWaveHandler } from "../gameplay/waves.js";
 import { sendConvoy0 } from "./convoys.js";
 import { MP } from "./session.js";
@@ -131,6 +131,28 @@ export function kingDrive0(w) {
     formationsState.quiet = 0;
   }
 }
+/* the one upgrade of a tower (gameplay/tower-upgrades.js) */
+export const towerUpCmd = function (s, u) {
+  const c = { k: "tu", x: s.tx, y: s.ty, u };
+  if (gated()) {
+    mpPush(c);
+    return;
+  }
+  return roleHooks.towerUpSim(c);
+};
+/* the King calls the soldiers around him to follow (m: 1) or tells them to hold where they stand (m: 0) */
+export function kingRally0(c) {
+  const k = kingOf(playersState.CURPL | 0);
+  if (k) kingRally(k, !!c.m);
+}
+export const kingRallyCmd = function (m) {
+  const c = { k: "ko", m: m ? 1 : 0 };
+  if (gated()) {
+    mpPush(c);
+    return;
+  }
+  return kingRally0(c);
+};
 /* the King strikes towards a point (King view, left click) */
 export function kingStrike0(w) {
   const k = kingOf(playersState.CURPL | 0);
@@ -268,6 +290,12 @@ export let mpExec = function mpExec(c, mine) {
         break;
       case "ka":
         kingStrike0(c);
+        break;
+      case "ko":
+        kingRally0(c);
+        break;
+      case "tu":
+        roleHooks.towerUpSim(c);
         break;
       case "dg":
       case "dk":

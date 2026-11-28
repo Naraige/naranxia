@@ -317,6 +317,7 @@ export let render3D = function render3D(dt) {
             sanctuary: 2.6,
             beacon: 3.4,
             orchard: 2.4,
+            port: 2.4,
             forge: 3.0,
             embassy: 2.8,
             warroom: 2.9,
@@ -550,7 +551,7 @@ export let render3D = function render3D(dt) {
                                 ? 2.2
                                 : sessionState.mode === "beacon"
                                   ? 2.8
-                                  : sessionState.mode === "orchard"
+                                  : sessionState.mode === "orchard" || sessionState.mode === "port"
                                     ? 2.0
                                     : sessionState.mode === "forge"
                                       ? 2.4
@@ -606,6 +607,7 @@ export let render3D = function render3D(dt) {
           sessionState.mode === "sanctuary" ||
           sessionState.mode === "beacon" ||
           sessionState.mode === "orchard" ||
+          sessionState.mode === "port" ||
           sessionState.mode === "forge" ||
           sessionState.mode === "embassy" ||
           sessionState.mode === "warroom" ||
@@ -632,6 +634,7 @@ export let render3D = function render3D(dt) {
           sessionState.mode === "sanctuary" ||
           sessionState.mode === "beacon" ||
           sessionState.mode === "orchard" ||
+          sessionState.mode === "port" ||
           sessionState.mode === "forge" ||
           sessionState.mode === "embassy" ||
           sessionState.mode === "warroom" ||

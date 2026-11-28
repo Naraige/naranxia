@@ -1,5 +1,5 @@
 import { fb, hs, hyp } from "../core/math.js";
-import { ISL_SEA, islandBridge, islandCliff, islandCore, islandN } from "./island.js";
+import { bridgeFortTile, ISL_SEA, islandBridge, islandCliff, islandCore, islandN } from "./island.js";
 import { CHALF, N, TH, TS, TW } from "../gameplay/rules.js";
 import { sessionState } from "../gameplay/session.js";
 import { markP, markT } from "./terrain-invalidation.js";
@@ -876,6 +876,10 @@ export function genChunk(cx, cy) {
       const i = y * TW + x;
       if (ter[i]) continue;
       if (islandBridge(x, y) === 1) pth[i] = 2; /* the deck of the bridge is paved in stone (#75) */
+      if (bridgeFortTile(x, y)) {
+        pth[i] = 2; /* the two squares of the bridgehead forts (#77): paved, nothing grows on them */
+        continue;
+      }
       if (FLG[i]) {
         if ((FLG[i] & 15) === 8 && HT[i] <= LAND + 1 && hs(x, y, sd + 21) < 0.012 * P.gd) {
           ter[i] = 4;

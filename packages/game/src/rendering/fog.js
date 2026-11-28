@@ -144,6 +144,7 @@ const VSN = {
   sanctuary: 8,
   beacon: 30,
   orchard: 6,
+  port: 6,
   forge: 8,
   embassy: 8,
   warroom: 8,

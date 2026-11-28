@@ -80,6 +80,7 @@ export const TRAIN = {
     sanctuary: 20,
     beacon: 12,
     orchard: 20,
+    port: 12,
     embassy: 20,
     warroom: 20,
     sappers: 16,
@@ -245,6 +246,7 @@ export const ROTT = new Set([
     "sanctuary",
     "beacon",
     "orchard",
+    "port",
     "forge",
     "embassy",
     "warroom",
@@ -338,6 +340,10 @@ export function initializeRules() {
   Object.assign(C, { beacon: { w: 40, s: 60 }, orchard: { w: 60 } });
   Object.assign(BT, { beacon: 20, orchard: 24 });
   Object.assign(SH, { beacon: 280, orchard: 200 });
+  /* fishing port (#90): food from the coast without a peasant, more than an orchard; it must stand by the water */
+  Object.assign(C, { port: { w: 80 } });
+  Object.assign(BT, { port: 24 });
+  Object.assign(SH, { port: 240 });
   /* forge: troops +8% damage; embassy: tribute and caravans +50%; war room: training 15% faster; sappers: nearby buildings repair themselves */
   Object.assign(C, {
     forge: { s: 100, g: 80 },

@@ -96,6 +96,7 @@ const TIPS = {
   sanctuary: ["Sanctuary", "2x2 chapel: troops around it", "slowly heal", "The dragon mends here and returns sooner"],
   beacon: ["Watch beacon", "2x2 tower with a living flame: a wide", "light at night, and a far view"],
   orchard: ["Orchard", "2x2 apple grove: a trickle of food", "without a peasant"],
+  port: ["Fishing port", "Food from the sea, without a peasant", "Must stand by the water"],
   forge: ["Royal forge", "2x2 smithy: all your troops", "deal 8% more damage"],
   embassy: ["Embassy", "2x2 hall for rebel envoys: tribute", "and caravans bring 50% more"],
   warroom: ["War room", "2x2 map hall: your barracks", "train units 15% faster"],

@@ -64,6 +64,7 @@ export const NAMES = {
     sanctuary: "Sanctuary",
     beacon: "Watch beacon",
     orchard: "Orchard",
+    port: "Fishing port",
     forge: "Royal forge",
     embassy: "Embassy",
     warroom: "War room",
@@ -119,7 +120,7 @@ export const NAMES = {
 
 export const BCATS = {
     def: ["Defense", ["wall", "gate", "tower", "torch", "beacon", "sappers", "spike"]],
-    eco: ["Economy", ["farm", "forester", "storage", "market", "granary", "orchard", "embassy"]],
+    eco: ["Economy", ["farm", "forester", "storage", "market", "granary", "orchard", "port", "embassy"]],
     town: ["Town", ["house", "barracks", "guild", "academy", "observatory", "bell", "sanctuary", "forge", "warroom"]],
     land: ["Land", ["raise", "dig", "ramp"]],
     siege: ["Siege", ["ballista", "trebuchet"]],

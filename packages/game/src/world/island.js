@@ -124,3 +124,25 @@ export function islandSiteN(x, y) {
   const m = islandSiteMid();
   return Math.hypot(x - m[0], y - m[1]) / ISL_R;
 }
+
+/* the bridgehead forts (#77): two paved squares of 10 tiles, one on each side of the road where the bridge comes ashore. A tower raised on
+   one of them is a bridge fort: it reaches further, looses more arrows and stands longer (ai/kingdoms.js towerReach, gameplay/simulation.js,
+   gameplay/entities.js). Pure, from the seed alone. */
+export const FORT_OFF = 13,
+  FORT_HALF = 5;
+export function bridgeFortSites() {
+  const g = islandGate();
+  return [1, -1].map((s) => [g.hx - g.ey * FORT_OFF * s, g.hy + g.ex * FORT_OFF * s]);
+}
+/* is the tile (x, y) on one of the two squares? */
+export function bridgeFortTile(x, y) {
+  for (const [sx, sy] of bridgeFortSites())
+    if (Math.abs(x + 0.5 - sx) < FORT_HALF && Math.abs(y + 0.5 - sy) < FORT_HALF) return true;
+  return false;
+}
+/* does the middle of a building of side sz at (tx, ty) stand on one of them? */
+export function bridgeFort(tx, ty, sz) {
+  for (const [sx, sy] of bridgeFortSites())
+    if (Math.abs(tx + sz / 2 - sx) < 3 && Math.abs(ty + sz / 2 - sy) < 3) return true;
+  return false;
+}

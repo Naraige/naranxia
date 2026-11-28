@@ -10,6 +10,7 @@ import {
   inTerr,
   spearN,
   towerHigh,
+  towerFort,
   towerReach,
   TRAITS,
 } from "../ai/kingdoms.js";
@@ -728,6 +729,7 @@ export function installBrowserConsole() {
     kingRound: { get: () => kingRound },
     towerHigh: { get: () => towerHigh },
     towerReach: { get: () => towerReach },
+    towerFort: { get: () => towerFort },
     LAND: { get: () => LAND },
     spawnAnchor: { get: () => spawnAnchor },
     pickLanes: { get: () => pickLanes },

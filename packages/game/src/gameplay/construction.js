@@ -6,7 +6,7 @@ import { doUpgrade, ok, pay } from "./economy.js";
 import { mk } from "./entities.js";
 import { ungar } from "./formations.js";
 import { CASTLES, HOMEC, LPL, playersState, stoneOn } from "./players.js";
-import { bsz, BSZ, C, CSZ, DIR4, fcell, FCELL, FSZ, GCAP, GTOP, ROTT, RS, SH, TS, TW } from "./rules.js";
+import { bsz, BSZ, C, CSZ, DIR4, fcell, FCELL, FSZ, GCAP, GTOP, ROTT, RS, SH, TH, TS, TW } from "./rules.js";
 import { selectionState } from "./selection.js";
 import { sessionState } from "./session.js";
 import { demolish, rampGroup, tfOrder } from "./terraforming.js";
@@ -261,6 +261,18 @@ export function placeErr(type, tx, ty) {
         Math.hypot(s.tx + h - cx, s.ty + h - cy) < 2 * FOR_R + 1
       )
         return "Too close to another forester: their planting areas would touch";
+  }
+  if (type === "port") {
+    /* a fishing port stands by the water (#90): some water within 5 tiles of its footprint */
+    const z = bsz("port");
+    let wet = false;
+    for (let y = ty - 5; y < ty + z + 5 && !wet; y++)
+      for (let x = tx - 5; x < tx + z + 5; x++)
+        if (x > 0 && y > 0 && x < TW - 1 && y < TH - 1 && ter[y * TW + x] === 1) {
+          wet = true;
+          break;
+        }
+    if (!wet) return "A fishing port must stand by the water";
   }
   return "";
 }
@@ -522,6 +534,7 @@ export let build = function build(type, tx, ty) {
     type === "sanctuary" ||
     type === "beacon" ||
     type === "orchard" ||
+    type === "port" ||
     type === "forge" ||
     type === "embassy" ||
     type === "warroom" ||

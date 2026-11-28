@@ -1974,4 +1974,16 @@ export const NL = {
     "Opgelost: de koninklijke wachters blokkeren de Koning niet meer, de boer werkt op zijn veld, onverkend land tekent zich niet meer af tegen de lucht, banieren hangen aan hun muren.",
   "One world size only, and no more Chronicle or About screens; in solo the kingdom you already made is not asked for again.":
     "Nog maar één wereldgrootte, en geen Kroniek- of Over-schermen meer; in solo wordt het koninkrijk dat je al maakte niet opnieuw gevraagd.",
+  "Bridge fort: this tower reaches further, looses more arrows and stands longer":
+    "Brugfort: deze toren reikt verder, schiet meer pijlen en houdt langer stand",
+  "Follow me": "Volg mij",
+  "Follow me ({0})": "Volg mij ({0})",
+  "Hold here": "Houd hier stand",
+  "Reach +8": "Bereik +8",
+  "Faster volleys": "Snellere salvo's",
+  "Tower upgrade: 80 gold, 60 wood": "Torenupgrade: 80 goud, 60 hout",
+  "Fishing port": "Vissershaven",
+  "Food from the sea, without a peasant": "Voedsel uit de zee, zonder boer",
+  "Must stand by the water": "Moet aan het water staan",
+  "A fishing port must stand by the water": "Een vissershaven moet aan het water staan",
 };

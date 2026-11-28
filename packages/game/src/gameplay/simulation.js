@@ -1,6 +1,16 @@
 import { updateCamps } from "../ai/camps.js";
 import { updateRuins } from "./ruins.js";
-import { aiUnit, BALR, baseTrait, BASES, campLabel, towerReach, TRBR, updateHordes } from "../ai/kingdoms.js";
+import {
+  aiUnit,
+  BALR,
+  baseTrait,
+  BASES,
+  campLabel,
+  towerFort,
+  towerReach,
+  TRBR,
+  updateHordes,
+} from "../ai/kingdoms.js";
 import { eventsTick, renownMul } from "./events.js";
 import { RHAS, roleTick } from "../ai/worker-roles.js";
 import { peasant, toLight } from "../ai/workers.js";
@@ -46,7 +56,7 @@ import { GF, mkG } from "../world/pathfinding.js";
 import { gOK } from "../world/routes.js";
 import { ensureAround } from "../world/terrain.js";
 import { CH, HT, LAND, NCX, occ, stairs, ter } from "../world/terrain-state.js";
-import { LVO } from "../world/traversal.js";
+import { LVO, solid } from "../world/traversal.js";
 
 export const simulationState = {
   SIMTK: 0,
@@ -395,6 +405,11 @@ export function update0(dt) {
           j = C.sq ? C.sq.indexOf(u) : -1;
         if (j >= 0) {
           const s = slotPos(C, j);
+          /* the King's followers stand ahead of him: when that is inside a wall or a cliff (he faces it) they take the same place behind */
+          if (C.type === "king" && j >= 2 && solid(Math.floor(s.x / TS), Math.floor(s.y / TS))) {
+            s.x = 2 * C.x - s.x;
+            s.y = 2 * C.y - s.y;
+          }
           if (dist(u.x, u.y, s.x, s.y) > 46) u.o = { x: s.x, y: s.y, g: capField(C) };
         }
       }
@@ -576,6 +591,16 @@ export function update0(dt) {
         puff(so.x, so.y, "#f2d060", 3, 30, { T: 0.8, z: 0.4, vz: 1.4, g: -0.6, s: 0.06 });
       }
     }
+  /* fishing port (#90): 3 food every 6 s */
+  for (const so of sessionState.structs)
+    if (so.t === 0 && so.type === "port" && so.prog >= 1 && so.hp > 0) {
+      so.fw = (so.fw || 0) + dt;
+      if (so.fw >= 6) {
+        so.fw -= 6;
+        playersState.RESP[so.pl | 0].f += 3;
+        puff(so.x, so.y, "#8fd0ff", 3, 30, { T: 0.8, z: 0.4, vz: 1.4, g: -0.6, s: 0.06 });
+      }
+    }
   for (const sb of sessionState.structs)
     if (sb.t === 0 && (sb.type === "sanctuary" || sb.type === "bell") && sb.prog >= 1 && sb.hp > 0) {
       const R = sb.type === "bell" ? HEAL_R * 1.15 : HEAL_R;
@@ -617,8 +642,8 @@ export function update0(dt) {
         continue;
       }
       /* a volley in keeping with a tower of 8 tiles (#109): 9 arrows of 15 in wood, 12 of 17 in stone (were 5 of 11 and 6 of 12) */
-      const n = st ? 12 : 9,
-        dm = (st ? 17 : 15) * (RS2.done.fletch ? 1.4 : 1),
+      const n = (st ? 12 : 9) + (towerFort(s) ? 4 : 0),
+        dm = (st ? 17 : 15) * (RS2.done.fletch ? 1.4 : 1) * (s.up === 3 ? 1.5 : 1),
         dd = dist(s.x, s.y, b.x, b.y) || 1,
         fl = Math.min(0.75, 0.36 + dd / 1400),
         sw = !(b.type in T),
@@ -633,7 +658,7 @@ export function update0(dt) {
           y2 = k ? cy + Math.sin(a) * r : b.y;
         sessionState.fx.push({ x1: s.x, y1: s.y, x2, y2, t, T: t, a: true, arc: 1, tw: 1, dmg: dm });
       }
-      s.cd = 1.7;
+      s.cd = s.up === 2 ? 1.1 : 1.7; /* the tower upgrades (#119): 1 reach (towerReach), 2 rate, 3 fire */
     }
   /* can the owner of s see this spot? (sight of their own buildings and units, same on every machine) */
   function simSeen(pl, x, y) {

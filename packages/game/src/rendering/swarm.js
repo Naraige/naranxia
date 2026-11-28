@@ -236,6 +236,9 @@ export function zEyes(u, a, vis) {
     X = u.x / TS,
     Z = u.y / TS;
   const eo = (mut2(u.type) && !u.boss && MUT2_EYE[u.type]) || EYO[u.type] || EYO0;
+  /* the purple of the veil clings to them (#118): a dim glow about the body of the nearest ones */
+  if (CAM.dist < 40)
+    eg(X, (vis && u.dy != null ? u.dy : gh(X, Z)) + eo[0] * s * 0.55, Z, 0.9 * s, 0.4, 0.1, 0.75, a * 0.16);
   eyePair(
     X,
     Z,

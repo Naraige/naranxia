@@ -191,13 +191,31 @@ export function kingBar(UW, y) {
     const n = kCount(k);
     pill(x0, y2, w * 2 + 6, 15, n ? lab + "  Talents " + n : lab, BTN, BTNH, () => {}, null, 0.68, false, false);
   }
-  /* third row, when a dragon flies for this kingdom (#80): mark the ground where the King stands */
+  /* third row (#116): his orders to the soldiers around him */
+  const led = k.sq ? k.sq.filter((u) => !u.rg && u.hp > 0).length : 0,
+    y3 = y2 + 17;
+  pill(
+    x0,
+    y3,
+    w,
+    15,
+    led ? "Follow me (" + led + ")" : "Follow me",
+    led ? GRN : BTN,
+    led ? GRNH : BTNH,
+    () => roleHooks.rally(1),
+    null,
+    0.68,
+    led > 0,
+    false,
+  );
+  pill(x0 + w + 6, y3, w, 15, "Hold here", BTN, BTNH, () => roleHooks.rally(0), null, 0.68, false, !led);
+  /* fourth row, when a dragon flies for this kingdom (#80): mark the ground where the King stands */
   const d = sessionState.DRG;
-  if (!d) return 36;
+  if (!d) return 53;
   const mc = Math.ceil(d.mc || 0);
   pill(
     x0,
-    y2 + 17,
+    y3 + 17,
     w * 2 + 6,
     15,
     d.mt > 0 ? "The dragon burns harder here" : mc > 0 ? "Mark for the dragon " + mc + "s" : "Mark for the dragon",
@@ -209,7 +227,7 @@ export function kingBar(UW, y) {
     d.mt > 0,
     mc > 0,
   );
-  return 53;
+  return 70;
 }
 
 export let kingSkill = function kingSkill(n) {
