@@ -47,24 +47,10 @@ export const sessionState = {
 
 const DIFFS = [{ n: "Normal", zm: 1, tm: 1, g: 200, first: 600 }];
 export const D_ = () => DIFFS[0];
-/* world size = how far from the castle the zombie lanes start (tiles): 0 Large is the whole world (the original rule, and what old saves and co-op messages without a size mean), 1 Medium, 2 Small.
-   Only read when the lanes are laid out (world/routes.js); chosen in the settings, kept in localStorage dk_msize, sent by the co-op host, saved with the game. */
+/* world size: there is one size only, the whole island (the King, v101: "juste une grande taille"). The Medium and Small limits (1, 2) are kept
+   for the saves made with them before: world/routes.js still reads them when such a save lays out its lanes. A new game is always 0. */
 export const MAPD = [1e9, 380, 170];
-export const mapSizeValid = (v) => (v === 1 || v === 2 ? v : 0);
-export const worldSizePref = () => {
-  try {
-    return mapSizeValid(+localStorage.getItem("dk_msize"));
-  } catch {
-    return 0;
-  }
-};
-export const setWorldSizePref = (v) => {
-  try {
-    localStorage.setItem("dk_msize", String(mapSizeValid(v)));
-  } catch {
-    /* Keep the default size when storage is unavailable. */
-  }
-};
+export const worldSizePref = () => 0;
 /* ================= GAME LOGIC ================= */
 
 export function initializeSessionPreferences() {

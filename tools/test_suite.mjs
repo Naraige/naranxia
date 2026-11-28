@@ -95,7 +95,7 @@ const purposes = {
   mp_rematch: "Co-op rematch: Play again returns both players to the lobby and a second game runs in step",
   voxel_buildings: "Block-built buildings: footprints match the models, every block is known, geometry builds",
   portals: "Horde portals: one per lane, opened by its first horde, saved and restored",
-  map_size: "World size: zombie lanes start within the chosen distance, Large keeps the whole world",
+  map_size: "World size: one size only, an old Medium or Small choice no longer shortens the lanes",
   frame_guard: "A frame that throws does not stop the loop and tells the player once",
   stance: "Defensive stance strikes in reach without chasing, aggressive moves, hold stays",
   mp_side: "Co-op save and load keeps each player on his own side",

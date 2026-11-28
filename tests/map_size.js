@@ -1,5 +1,5 @@
 async () => {
-  /* world size (#34): the zombie lanes start at most MAPD tiles from the castle (Large = the whole world, as before), the size is saved with the game and an old save without it means Large */
+  /* world size: one size only since v101 (the whole island). An old Medium or Small choice left in the browser no longer shortens the lanes of a new game. */
   renderer.render = function () {};
   const RR = Math.random,
     LS = localStorage,
@@ -13,7 +13,8 @@ async () => {
     };
   };
   const far = (sz) => {
-    LS.setItem("dk_msize", String(sz));
+    if (sz === null) LS.removeItem("dk_msize");
+    else LS.setItem("dk_msize", String(sz));
     seedR(77);
     rollWorld();
     randomSite();
@@ -23,20 +24,15 @@ async () => {
     for (const r of ROUTES) for (const p of r.pts) m = Math.max(m, Math.hypot(p[0] - CX - 0.5, p[1] - CY - 0.5));
     return Math.round(m);
   };
-  O.large = far(0);
-  O.medium = far(1);
-  O.small = far(2);
-  window.__test.check("smallLanesWithin170", O.small <= 172 && O.small > 100, true);
-  window.__test.check("mediumLanesWithin380", O.medium <= 382 && O.medium > 172, true);
-  /* the world is one island since v101: its roads (about 300 tiles) fit inside the Medium limit, so Large and Medium can be equal */
-  window.__test.check("largeIsLongest", O.large >= O.medium, true);
-  /* saved and restored */
+  O.plain = far(null);
+  O.oldSmall = far(2);
+  window.__test.check("lanesReachTheIslet", O.plain > 172, true);
+  window.__test.check("oldSmallChoiceIgnored", O.oldSmall, O.plain);
   const pk = await svPack();
   O.packed = !!pk;
-  LS.setItem("dk_msize", "0");
   Math.random = RR;
   if (k0 === null) LS.removeItem("dk_msize");
   else LS.setItem("dk_msize", k0);
-  O.ok = O.small <= 172 && O.medium <= 382 && O.large >= O.medium && O.packed;
+  O.ok = O.plain > 172 && O.oldSmall === O.plain && O.packed;
   return JSON.stringify(O);
 };

@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-28 · après la v101: une seule taille de monde (#97, non sorti)
+
+- Le Roi: « pas de reglage de taille juste une grande taille ». La ligne « World size (next game) » quitte les réglages; `worldSizePref()` rend toujours 0 (un ancien choix `dk_msize` Moyen/Petit dans le navigateur est ignoré).
+- Gardé exprès: `MAPD` et le champ `mapSize` des sauvegardes, pour qu'une partie sauvée en Moyen/Petit avant garde ses routes. L'hôte coop envoie toujours 0.
+- Tests: `map_size` réécrit (les routes vont jusqu'à l'îlot, l'ancien choix Petit ne change rien), `mp_rematch` sans sa partie « petit monde ». Vérifié: quality, `map_size mp_rematch det save` (empreintes `det` inchangées).
+- Les textes « World size (next game) » et « Medium » restent dans les tables de traduction, inutilisés. Pas de changement sous `game/`: attend le feu vert du Roi pour une v102.
+
 ## 2026-11-27 · v101: l'île, le pont, le Roi joué et le dragon (PR #65, tout depuis la v100)
 
 - Le Roi: « when done push all and make a annoucement from all the start of v100 », puis « push all + annonce »: feu vert pour sortir. La v101 réunit tous les lots de la branche `claude/castle-dragon-roles` (#63 à #97, voir les entrées plus bas).
