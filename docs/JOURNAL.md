@@ -4,6 +4,12 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-28 · v102: le Roi de près, des tours qui portent, un royaume qui vit
+
+- Le Roi: « sors la v102 ». Sortie des trois entrées ci-dessous (#97 à #113): une seule taille de monde, plus de Chronique ni d'À propos, et sa liste en jouant.
+- Vérifié avant de sortir: `npm run quality`, 44 tests en local (solo, coop, sauvegarde), tests de `main` sur GitHub. La suite complète tourne à la sortie.
+- À surveiller: le début de partie est plus facile (portées, volée de la tour, 5 soldats au départ). Bannière de sa capture non identifiée (seule la guilde corrigée).
+
 ## 2026-11-28 · après la v101: la liste du Roi en jouant (#99 à #113, non sorti)
 
 Le Roi joue la v101 et envoie ses remarques une à une. Rien sous `game/`: attend son feu vert pour une v102.

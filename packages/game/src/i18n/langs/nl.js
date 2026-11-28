@@ -1958,4 +1958,20 @@ export const NL = {
   "Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.":
     "Rijkere effecten en geluiden, en een levend land: vlinders, vogels, vallende bladeren en vissen.",
   "Long range: volleys of 9 arrows": "Groot bereik: salvo's van 9 pijlen",
+  "The King up close, towers that reach, a kingdom that lives.":
+    "De Koning van dichtbij, torens die ver reiken, een koninkrijk dat leeft.",
+  "King view: a real third-person camera, close behind him; it stops in front of buildings and only what hides the King is cut away.":
+    "Koningszicht: een echte third-person-camera, dicht achter hem; ze stopt voor gebouwen en alleen wat de Koning verbergt wordt weggesneden.",
+  "Towers, ballistas, trebuchets, the castle and garrisons shoot much further, in keeping with the size of the buildings; a tower looses 9 arrows a volley.":
+    "Torens, ballista's, trebuchets, het kasteel en garnizoenen schieten veel verder, passend bij de grootte van de gebouwen; een toren schiet 9 pijlen per salvo.",
+  "New buildings turn their door to the castle, and wider roads run from the castle to every door.":
+    "Nieuwe gebouwen draaien hun deur naar het kasteel, en bredere wegen lopen van het kasteel naar elke deur.",
+  "Every building lights the night with a larger halo, and the dark veil now stands up around the light in tall purple columns.":
+    "Elk gebouw verlicht de nacht met een grotere lichtkring, en de duistere sluier rijst nu rond het licht op in hoge paarse zuilen.",
+  "A kingdom starts with 2 knights and 3 archers, and villagers stroll around the castle by day.":
+    "Een koninkrijk begint met 2 ridders en 3 boogschutters, en overdag wandelen dorpelingen rond het kasteel.",
+  "Fixed: the royal guards no longer block the King, the farmer works in his field, the unexplored land no longer shows against the sky, banners hang on their walls.":
+    "Opgelost: de koninklijke wachters blokkeren de Koning niet meer, de boer werkt op zijn veld, onverkend land tekent zich niet meer af tegen de lucht, banieren hangen aan hun muren.",
+  "One world size only, and no more Chronicle or About screens; in solo the kingdom you already made is not asked for again.":
+    "Nog maar één wereldgrootte, en geen Kroniek- of Over-schermen meer; in solo wordt het koninkrijk dat je al maakte niet opnieuw gevraagd.",
 };

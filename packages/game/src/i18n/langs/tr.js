@@ -1942,4 +1942,20 @@ export const TR = {
   "Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.":
     "Daha zengin efektler ve sesler, canlı bir diyar: kelebekler, kuşlar, düşen yapraklar ve balıklar.",
   "Long range: volleys of 9 arrows": "Uzun menzil: 9 okluk yaylım ateşi",
+  "The King up close, towers that reach, a kingdom that lives.":
+    "Kral yakından, uzağa erişen kuleler, yaşayan bir krallık.",
+  "King view: a real third-person camera, close behind him; it stops in front of buildings and only what hides the King is cut away.":
+    "Kral görünümü: hemen arkasında gerçek bir üçüncü şahıs kamerası; binaların önünde durur ve yalnızca Kralı gizleyen şey kesilir.",
+  "Towers, ballistas, trebuchets, the castle and garrisons shoot much further, in keeping with the size of the buildings; a tower looses 9 arrows a volley.":
+    "Kuleler, balistalar, mancınıklar, kale ve garnizonlar binaların boyutuna uygun olarak çok daha uzağa atış yapar; bir kule yaylım başına 9 ok atar.",
+  "New buildings turn their door to the castle, and wider roads run from the castle to every door.":
+    "Yeni binalar kapılarını kaleye çevirir ve kaleden her kapıya daha geniş yollar uzanır.",
+  "Every building lights the night with a larger halo, and the dark veil now stands up around the light in tall purple columns.":
+    "Her bina geceyi daha geniş bir haleyle aydınlatır ve karanlık örtü artık ışığın çevresinde yüksek mor sütunlar halinde yükselir.",
+  "A kingdom starts with 2 knights and 3 archers, and villagers stroll around the castle by day.":
+    "Bir krallık 2 şövalye ve 3 okçuyla başlar ve gündüzleri köylüler kalenin çevresinde gezinir.",
+  "Fixed: the royal guards no longer block the King, the farmer works in his field, the unexplored land no longer shows against the sky, banners hang on their walls.":
+    "Düzeltildi: kraliyet muhafızları artık Kralı engellemiyor, çiftçi tarlasında çalışıyor, keşfedilmemiş topraklar artık gökyüzünde belirmiyor, sancaklar duvarlarında asılı.",
+  "One world size only, and no more Chronicle or About screens; in solo the kingdom you already made is not asked for again.":
+    "Tek bir dünya boyutu, Vakayiname ve Hakkında ekranları yok; tek kişilik oyunda zaten kurduğun krallık yeniden sorulmaz.",
 };

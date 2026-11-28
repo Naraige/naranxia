@@ -1,10 +1,9 @@
-One island, one bridge, a King to walk and a dragon to ride.
+The King up close, towers that reach, a kingdom that lives.
 
-- The world is one large island with cliffs and a wide heart to build on; a stone bridge is the only way in, and the portals of the horde stand beyond it.
-- You play your King: the keys walk him, left click strikes, right-drag turns the view freely. The build menu lifts the view from above.
-- Co-op roles, Castle or Dragon: one player holds the castle, the other rides a dragon over the horde.
-- The dragon grows with you: 20 levels, 6 shapes, a tree of 28 skills, fireball, roar, looks and flame colours.
-- The horde thinks: kill its three scouts between waves or it comes by your least guarded road, and from wave 4 a chieftain leads it.
-- Call the next wave for gold, read a summary after every wave, or play in peace without waves.
-- Paths lay themselves from every building to the castle, units stand at the scale of the buildings, and the fog of war hides the shape of the land.
-- Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.
+- King view: a real third-person camera, close behind him; it stops in front of buildings and only what hides the King is cut away.
+- Towers, ballistas, trebuchets, the castle and garrisons shoot much further, in keeping with the size of the buildings; a tower looses 9 arrows a volley.
+- New buildings turn their door to the castle, and wider roads run from the castle to every door.
+- Every building lights the night with a larger halo, and the dark veil now stands up around the light in tall purple columns.
+- A kingdom starts with 2 knights and 3 archers, and villagers stroll around the castle by day.
+- Fixed: the royal guards no longer block the King, the farmer works in his field, the unexplored land no longer shows against the sky, banners hang on their walls.
+- One world size only, and no more Chronicle or About screens; in solo the kingdom you already made is not asked for again.

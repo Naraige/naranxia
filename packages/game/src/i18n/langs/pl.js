@@ -1945,4 +1945,20 @@ export const PL = {
   "Richer effects and sounds, and a living land: butterflies, birds, falling leaves and fish.":
     "Bogatsze efekty i dźwięki oraz żywa kraina: motyle, ptaki, opadające liście i ryby.",
   "Long range: volleys of 9 arrows": "Duży zasięg: salwy po 9 strzał",
+  "The King up close, towers that reach, a kingdom that lives.":
+    "Król z bliska, wieże o dalekim zasięgu, królestwo, które żyje.",
+  "King view: a real third-person camera, close behind him; it stops in front of buildings and only what hides the King is cut away.":
+    "Widok Króla: prawdziwa kamera z trzeciej osoby, blisko za nim; zatrzymuje się przed budynkami, a wycinane jest tylko to, co zasłania Króla.",
+  "Towers, ballistas, trebuchets, the castle and garrisons shoot much further, in keeping with the size of the buildings; a tower looses 9 arrows a volley.":
+    "Wieże, balisty, trebusze, zamek i garnizony strzelają znacznie dalej, stosownie do wielkości budynków; wieża wypuszcza 9 strzał w salwie.",
+  "New buildings turn their door to the castle, and wider roads run from the castle to every door.":
+    "Nowe budynki zwracają drzwi ku zamkowi, a szersze drogi biegną od zamku do każdych drzwi.",
+  "Every building lights the night with a larger halo, and the dark veil now stands up around the light in tall purple columns.":
+    "Każdy budynek rozświetla noc większą poświatą, a mroczna zasłona wznosi się teraz wokół światła wysokimi fioletowymi kolumnami.",
+  "A kingdom starts with 2 knights and 3 archers, and villagers stroll around the castle by day.":
+    "Królestwo zaczyna z 2 rycerzami i 3 łucznikami, a za dnia wieśniacy przechadzają się wokół zamku.",
+  "Fixed: the royal guards no longer block the King, the farmer works in his field, the unexplored land no longer shows against the sky, banners hang on their walls.":
+    "Naprawiono: gwardziści królewscy nie blokują już Króla, rolnik pracuje na swoim polu, nieodkryty ląd nie rysuje się już na tle nieba, sztandary wiszą na swoich murach.",
+  "One world size only, and no more Chronicle or About screens; in solo the kingdom you already made is not asked for again.":
+    "Tylko jeden rozmiar świata i koniec z ekranami Kroniki i O grze; w grze solo nie trzeba już ponownie tworzyć gotowego królestwa.",
 };
