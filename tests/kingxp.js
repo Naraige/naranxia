@@ -26,6 +26,10 @@ async () => {
     C.push(!!v);
   };
   waveT = 1e9;
+  /* the measures below count blows on chosen units: the soldiers a kingdom starts with (v102) and the arrows of the castle (30 tiles now) stay out */
+  for (let i = units.length - 1; i >= 0; i--)
+    if (units[i].t === 0 && (units[i].type === "knight" || units[i].type === "archer")) units.splice(i, 1);
+  CS.ccd = 1e9;
   let kg = kingOf(0);
   if (!kg) {
     kg = mkU(0, "king", (CS.tx + 3.5) * TS, (CS.ty + 3.5) * TS, null, -1);
@@ -132,6 +136,8 @@ async () => {
   /* warlord ward: units under the cry take half of the Frost King chill */
   kn.wcT = 0;
   kn.hp = 100;
+  /* the boss of the charge above leaves: his own stomp fell on the first knight only and spoiled the comparison */
+  if (units.includes(bs)) units.splice(units.indexOf(bs), 1);
   const fk = mkU(1, "brute", kx + TS * 30, ky, null, -1);
   fk.boss = 1;
   fk.bn = 2;
