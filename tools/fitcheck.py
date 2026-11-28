@@ -33,7 +33,7 @@ with sync_playwright() as p:
         shot('lang', "()=>{languageState.langOpen=true}"); shot('', "()=>{languageState.langOpen=false}")
         # lot A-C screens: game mode cards, new kingdom, load game, chronicle
         shot('', "()=>{titleDebug.modes(true)}"); shot('', "()=>{titleDebug.modes(false);settingsState.setupOpen=true}"); shot('', "()=>{settingsState.setupOpen=false;saveMenuState.saveOpen=true}")
-        shot('', "()=>{saveMenuState.saveOpen=false;titleDebug.chr(true)}"); shot('', "()=>{titleDebug.chr(false)}")
+        shot('', "()=>{saveMenuState.saveOpen=false}")
         for t in range(4):
             shot('settings%d' % t, "()=>{settingsState.settingsOpen=true;settingsDebug.tab(%d)}" % t)
         shot('', "()=>{settingsState.settingsOpen=false;settingsDebug.tab(0)}")

@@ -4,6 +4,13 @@ Newest first. One entry per batch or work session: what changed, what was verifi
 Start of a session: read the top 2 entries and trust them (do not re-verify what is marked verified).
 End of a batch: add an entry on top (3 to 10 lines), close the issues, keep CLAUDE.md in step if a rule or a tool changed.
 
+## 2026-11-28 · après la v101: plus de Chronique ni d'À propos (#98, non sorti)
+
+- Le Roi: « delete chornique et a propos ». Les deux boutons et leurs écrans quittent le menu titre (`ui/title-menu.js`: `drawChronicle`, `drawAbout`, `CHRON`, `CHFR`); la carte de droite garde Mise à jour, Votre royaume, Classement.
+- Le journal du royaume (`sessionState.jrn`) reste enregistré dans les sauvegardes mais n'est plus affiché nulle part. Les textes de la Chronique restent dans les tables de traduction, inutilisés.
+- À savoir: l'À propos portait les crédits (Three.js, PeerJS) et la mention de licence des polices (SIL OFL). Signalé au Roi.
+- Vérifié: quality, `ui smoke`, une image du menu titre en 1280x720. `tools/fitcheck.py` n'ouvre plus la Chronique.
+
 ## 2026-11-28 · après la v101: une seule taille de monde (#97, non sorti)
 
 - Le Roi: « pas de reglage de taille juste une grande taille ». La ligne « World size (next game) » quitte les réglages; `worldSizePref()` rend toujours 0 (un ancien choix `dk_msize` Moyen/Petit dans le navigateur est ignoré).

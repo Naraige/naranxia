@@ -6,7 +6,6 @@ import { notesLines } from "../core/notes.js";
 import { GVER } from "../core/version.js";
 import { quitGame, startGame } from "../gameplay/lifecycle.js";
 import { sessionState } from "../gameplay/session.js";
-import { BOSSN } from "../ai/wave-boss.js";
 import { drawFlag, drawLang, L, LANG, LANGS, languageState, T_, TC, tw } from "../i18n/language.js";
 import { MP } from "../multiplayer/session.js";
 import { bannerTile, gemSwatch, saveTheme } from "../rendering/kingdom-banner.js";
@@ -48,8 +47,6 @@ import { hexBadge, tipBanner, titleBlur, titleEmbers, titleLogo, titleLogoW, tit
 let TT0 = -1;
 let scrKey = "main";
 let notesOpen = false;
-let aboutOpen = false;
-let chrOpen = false;
 let recOpen = false;
 export const titleDebug = {
   rec(v) {
@@ -57,12 +54,6 @@ export const titleDebug = {
   },
   notes(v) {
     notesOpen = v;
-  },
-  chr(v) {
-    chrOpen = v;
-  },
-  about(v) {
-    aboutOpen = v;
   },
   modes(v) {
     modeState.open = v;
@@ -143,8 +134,6 @@ function drawTitleScreen(UW, UH) {
     settingsState.profOpen ||
     modeState.open ||
     notesOpen ||
-    aboutOpen ||
-    chrOpen ||
     recOpen;
   titleBlur(!ig && !sub);
   if (!ig && TFADE > 0.003 && !window.__cam) {
@@ -177,13 +166,9 @@ function drawTitleScreen(UW, UH) {
                   ? "mod"
                   : notesOpen
                     ? "not"
-                    : aboutOpen
-                      ? "abt"
-                      : chrOpen
-                        ? "chr"
-                        : recOpen
-                          ? "rec"
-                          : "main";
+                    : recOpen
+                      ? "rec"
+                      : "main";
     if (sk !== scrKey) {
       scrKey = sk;
       NAV.sel = -1;
@@ -274,26 +259,6 @@ function drawTitleScreen(UW, UH) {
         notesOpen = false;
       },
       drawNotes,
-      0,
-    );
-    return;
-  }
-  if (aboutOpen) {
-    LS(
-      () => {
-        aboutOpen = false;
-      },
-      drawAbout,
-      0,
-    );
-    return;
-  }
-  if (chrOpen) {
-    LS(
-      () => {
-        chrOpen = false;
-      },
-      drawChronicle,
       0,
     );
     return;
@@ -394,24 +359,12 @@ function drawLobby(UW, UH) {
     cnt("skull", String(best.k), "Zombies slain");
     if (run) cnt("glass", String(run.w), "Last game");
   }
-  /* --- season card: version, season of the last game, What's new / Records / Chronicle --- */
+  /* --- season card: version, season of the last game, What's new / Records --- */
   const items = [
     [
       "Leaderboard",
       () => {
         recOpen = true;
-      },
-    ],
-    [
-      "Chronicle",
-      () => {
-        chrOpen = true;
-      },
-    ],
-    [
-      "About",
-      () => {
-        aboutOpen = true;
       },
     ],
   ];
@@ -806,97 +759,6 @@ function drawNotes(UW, UH, fh, back) {
     Each line is one translation key, looked up whole (tools/textaudit.mjs --notes refuses a release with a line left in English) */
   l.section(GVER);
   for (const it of notesLines(GNOTES)) it.h ? l.section(it.t) : l.para(it.t, "#ead8ba", 0.88, it.b);
-  listEnd();
-}
-
-/* ================= About: name, version, credits, where the saves live ================= */
-function drawAbout(UW, UH, fh, back) {
-  const b = kitScreen(UW, UH, { key: "abt", title: "About", close: back, fh, maxW: 500 }),
-    l = listBegin("abt", b.x, b.y, b.w, b.h);
-  l.section("Naranxia " + GVER);
-  l.para("Made by Naraige (King Naraige).", "#ead8ba", 0.88);
-  l.para(
-    "Built with Three.js and PeerJS. Fonts: Inter, Pixelify Sans, Cinzel and Marcellus (SIL Open Font License).",
-    "#ead8ba",
-    0.88,
-  );
-  l.para("Your saves stay on this device. In co-op, only game commands are sent to your partner.", "#ead8ba", 0.88);
-  l.para("All rights reserved.", "#ead8ba", 0.88);
-  listEnd();
-}
-
-const CHRON = [
-  "Long ago the old world fell to the horde. Naranxia is all that remains: the last bastion of humanity.",
-  "King Naraige keeps its walls and its last light. Every night the horde comes back, and every dawn the sun burns it away.",
-  "Around the bastion, other camps survive. They refused the King's rule: rebels, and neighbours. Some trade, some raid.",
-  "Hold the walls, feed your people, and learn what the camps want. The night is long, but dawn always comes.",
-];
-
-const CHFR = [
-  [5, "Wave 5: The first rebel scouts are seen on the hills. They watch the walls, and they do not wave."],
-  [
-    10,
-    "Wave 10: A giant walks with the horde. The old records call such things Wardens, the fallen leaders of the old world.",
-  ],
-  [
-    10,
-    "The Knight of Darkness: He held the old gates until the horde walked through them. Death did not teach him to stop guarding. It taught him to stop choosing who to let in.",
-  ],
-  [15, "Wave 15: The wolves come down from the hills. Even the wild has chosen a side, and it is not yours."],
-  [20, "Wave 20: A rebel envoy leaves a message at the gate: the camps know the King's light cannot burn forever."],
-  [
-    20,
-    "The Bell-Bearer: He rang the last bell of the old world, and the dead came to listen. Now he rings it again, and the husks come when he calls.",
-  ],
-  [
-    25,
-    "Wave 25: Under the old ruins the survivors left vaults. The King sends scouts to find them before the horde does.",
-  ],
-  [30, "Wave 30: Only the bastion still stands. If dawn comes again, Naranxia will be more than a refuge."],
-  [
-    30,
-    "The Frost King: He ruled the northern snows and refused every messenger from the south. The winter took him, and he took the winter with him.",
-  ],
-  [
-    40,
-    "The Hive Queen: She promised her people they would never be hungry. She kept the promise: the brood that follows her eats whatever she points at.",
-  ],
-  [
-    40,
-    "Wave 40: The eclipse has come and gone. The rebels no longer hide their fires; they watch the bastion as one watches a lighthouse.",
-  ],
-  [
-    50,
-    "Wave 50: Fifty waves. In the rebel camps they say the King does not hold the walls: the walls hold the King. Both are true.",
-  ],
-];
-
-/* ================= Chronicle: the story, the fragments unlocked by the best wave, the journal of the realm ================= */
-function drawChronicle(UW, UH, fh, back) {
-  const b = kitScreen(UW, UH, { key: "chr", title: "Chronicle", close: back, fh, maxW: 500 }),
-    l = listBegin("chr", b.x, b.y, b.w, b.h),
-    bw = (sessionState.best && sessionState.best.w) | 0;
-  l.section("The last bastion");
-  for (const t of CHRON) l.para(t, "#ead8ba", 0.9);
-  const fr = CHFR.filter((f) => bw >= f[0]);
-  if (fr.length) {
-    l.section("Fragments");
-    for (const f of fr) l.para(f[1], "#d9cfb8", 0.88, true);
-  }
-  if (CHFR.some((f) => bw < f[0])) l.para("Reach a higher wave to read more.", KC.dim, 0.82);
-  const jr = sessionState.jrn;
-  if (Array.isArray(jr) && jr.length) {
-    l.section("Journal of the realm");
-    for (const e of jr.slice(-12))
-      l.para(
-        e[1]
-          ? "Wave " + (e[0] | 0) + ": " + BOSSN[e[2] | 0] + " has fallen. The bastion holds."
-          : "Wave " + (e[0] | 0) + ": " + BOSSN[e[2] | 0] + " walks with the horde.",
-        "#d9cfb8",
-        0.88,
-        true,
-      );
-  }
   listEnd();
 }
 
